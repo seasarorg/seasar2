@@ -19,14 +19,18 @@ import org.seasar.extension.jdbc.query.AutoBatchDeleteImpl;
 import org.seasar.extension.jdbc.query.AutoBatchInsertImpl;
 import org.seasar.extension.jdbc.query.AutoBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.AutoDeleteImpl;
+import org.seasar.extension.jdbc.query.AutoFunctionCallImpl;
 import org.seasar.extension.jdbc.query.AutoInsertImpl;
+import org.seasar.extension.jdbc.query.AutoProcedureCallImpl;
 import org.seasar.extension.jdbc.query.AutoSelectImpl;
 import org.seasar.extension.jdbc.query.AutoUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlBatchUpdateImpl;
 import org.seasar.extension.jdbc.query.SqlFileBatchUpdateImpl;
+import org.seasar.extension.jdbc.query.SqlFileFunctionCallImpl;
 import org.seasar.extension.jdbc.query.SqlFileProcedureCallImpl;
 import org.seasar.extension.jdbc.query.SqlFileSelectImpl;
 import org.seasar.extension.jdbc.query.SqlFileUpdateImpl;
+import org.seasar.extension.jdbc.query.SqlFunctionCallImpl;
 import org.seasar.extension.jdbc.query.SqlProcedureCallImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
@@ -186,7 +190,25 @@ public class JdbcManagerImplTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testCallBySql() throws Exception {
+    public void testCall_procedure() throws Exception {
+        manager.maxRows = 100;
+        manager.fetchSize = 10;
+        manager.queryTimeout = 5;
+        AutoProcedureCallImpl query = (AutoProcedureCallImpl) manager.call(
+                "myProc", 1);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(100, query.getMaxRows());
+        assertEquals(10, query.getFetchSize());
+        assertEquals(5, query.getQueryTimeout());
+        assertEquals(1, query.getParameter());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCallBySql_procedure() throws Exception {
         manager.maxRows = 100;
         manager.fetchSize = 10;
         manager.queryTimeout = 5;
@@ -206,13 +228,71 @@ public class JdbcManagerImplTest extends TestCase {
      * @throws Exception
      * 
      */
-    public void testCallBySqlFile() throws Exception {
+    public void testCallBySqlFile_procedure() throws Exception {
         manager.maxRows = 100;
         manager.fetchSize = 10;
         manager.queryTimeout = 5;
         String path = "call.sql";
         SqlFileProcedureCallImpl query = (SqlFileProcedureCallImpl) manager
                 .callBySqlFile(path, 1);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(100, query.getMaxRows());
+        assertEquals(10, query.getFetchSize());
+        assertEquals(5, query.getQueryTimeout());
+        assertEquals(path, query.getPath());
+        assertEquals(1, query.getParameter());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCall_function() throws Exception {
+        manager.maxRows = 100;
+        manager.fetchSize = 10;
+        manager.queryTimeout = 5;
+        AutoFunctionCallImpl<String> query = (AutoFunctionCallImpl<String>) manager
+                .call(String.class, "myFunc", 1);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(100, query.getMaxRows());
+        assertEquals(10, query.getFetchSize());
+        assertEquals(5, query.getQueryTimeout());
+        assertEquals(1, query.getParameter());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCallBySql_function() throws Exception {
+        manager.maxRows = 100;
+        manager.fetchSize = 10;
+        manager.queryTimeout = 5;
+        String sql = "{? = call hoge(?)}";
+        SqlFunctionCallImpl<String> query = (SqlFunctionCallImpl<String>) manager
+                .callBySql(String.class, sql, 1);
+        assertNotNull(query);
+        assertSame(manager, query.getJdbcManager());
+        assertEquals(100, query.getMaxRows());
+        assertEquals(10, query.getFetchSize());
+        assertEquals(5, query.getQueryTimeout());
+        assertEquals(sql, query.getExecutedSql());
+        assertEquals(1, query.getParameter());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCallBySqlFile_function() throws Exception {
+        manager.maxRows = 100;
+        manager.fetchSize = 10;
+        manager.queryTimeout = 5;
+        String path = "call.sql";
+        SqlFileFunctionCallImpl<String> query = (SqlFileFunctionCallImpl<String>) manager
+                .callBySqlFile(String.class, path, 1);
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertEquals(100, query.getMaxRows());

@@ -16,36 +16,45 @@
 package org.seasar.extension.jdbc.query;
 
 import org.seasar.extension.jdbc.JdbcManagerImplementor;
-import org.seasar.extension.jdbc.SqlProcedureCall;
+import org.seasar.extension.jdbc.SqlFunctionCall;
+import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
 
 /**
- * {@link SqlProcedureCall}の実装クラスです。
+ * {@link SqlUpdate}の実装クラスです。
  * 
- * @author higa
+ * @author koichik
+ * @param <T>
+ *            ファンクションの戻り値の型。戻り値が結果セットの場合は<code>List</code>の要素の型
  */
-public class SqlProcedureCallImpl extends
-        AbstractProcedureCall<SqlProcedureCall> implements SqlProcedureCall {
+public class SqlFunctionCallImpl<T> extends
+        AbstractFunctionCall<T, SqlFunctionCall<T>> implements
+        SqlFunctionCall<T> {
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * インスタンスを構築します。
      * 
      * @param jdbcManager
      *            内部的なJDBCマネージャ
+     * @param resultClass
+     *            戻り値のクラス
      * @param sql
      *            SQL
-     * @see #SqlProcedureCallImpl(JdbcManagerImplementor, String, Object)
+     * @see #SqlFunctionCallImpl(JdbcManagerImplementor, String, Object)
      */
-    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql) {
-        this(jdbcManager, sql, null);
+    public SqlFunctionCallImpl(final JdbcManagerImplementor jdbcManager,
+            final Class<T> resultClass, final String sql) {
+        this(jdbcManager, resultClass, sql, null);
     }
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * インスタンスを構築します。
      * 
      * @param jdbcManager
      *            内部的なJDBCマネージャ
+     * @param resultClass
+     *            戻り値のクラス
      * @param sql
      *            SQL
      * @param param
@@ -67,9 +76,9 @@ public class SqlProcedureCallImpl extends
      *            継承もとのクラスのフィールドは認識しません。
      *            </p>
      */
-    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql,
-            Object param) {
-        super(jdbcManager);
+    public SqlFunctionCallImpl(final JdbcManagerImplementor jdbcManager,
+            final Class<T> resultClass, final String sql, final Object param) {
+        super(jdbcManager, resultClass);
         if (sql == null) {
             throw new NullPointerException("sql");
         }
@@ -78,8 +87,9 @@ public class SqlProcedureCallImpl extends
     }
 
     @Override
-    protected void prepare(String methodName) {
+    protected void prepare(final String methodName) {
         prepareCallerClassAndMethodName(methodName);
+        prepareReturnParameter();
         prepareParameter();
     }
 

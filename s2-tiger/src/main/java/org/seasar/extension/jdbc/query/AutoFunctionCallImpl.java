@@ -15,39 +15,50 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import org.seasar.extension.jdbc.AutoFunctionCall;
 import org.seasar.extension.jdbc.JdbcManagerImplementor;
-import org.seasar.extension.jdbc.SqlProcedureCall;
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
 
 /**
- * {@link SqlProcedureCall}の実装クラスです。
+ * {@link AutoFunctionCall}の実装クラスです。
  * 
- * @author higa
+ * @author koichik
+ * @param <T>
+ *            ファンクションの戻り値の型。戻り値が結果セットの場合は<code>List</code>の要素の型
  */
-public class SqlProcedureCallImpl extends
-        AbstractProcedureCall<SqlProcedureCall> implements SqlProcedureCall {
+public class AutoFunctionCallImpl<T> extends
+        AbstractFunctionCall<T, AutoFunctionCall<T>> implements
+        AutoFunctionCall<T> {
+
+    /** 呼び出すストアドファンクションの名前 */
+    protected String functionName;
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * インスタンスを構築します。
      * 
      * @param jdbcManager
      *            内部的なJDBCマネージャ
-     * @param sql
-     *            SQL
-     * @see #SqlProcedureCallImpl(JdbcManagerImplementor, String, Object)
+     * @param resultClass
+     *            戻り値のクラス
+     * @param functionName
+     *            呼び出すストアドファンクションの名前
+     * @see #AutoProcedureCallImpl(JdbcManagerImplementor, Object)
      */
-    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql) {
-        this(jdbcManager, sql, null);
+    public AutoFunctionCallImpl(final JdbcManagerImplementor jdbcManager,
+            final Class<T> resultClass, final String functionName) {
+        this(jdbcManager, resultClass, functionName, null);
     }
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * インスタンスを構築します。
      * 
      * @param jdbcManager
      *            内部的なJDBCマネージャ
-     * @param sql
-     *            SQL
+     * @param resultClass
+     *            戻り値のクラス
+     * @param functionName
+     *            呼び出すストアドファンクションの名前
      * @param param
      *            <p>
      *            パラメータです。
@@ -67,20 +78,41 @@ public class SqlProcedureCallImpl extends
      *            継承もとのクラスのフィールドは認識しません。
      *            </p>
      */
-    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql,
-            Object param) {
-        super(jdbcManager);
-        if (sql == null) {
-            throw new NullPointerException("sql");
+    public AutoFunctionCallImpl(final JdbcManagerImplementor jdbcManager,
+            final Class<T> resultClass, final String functionName,
+            final Object param) {
+        super(jdbcManager, resultClass);
+        if (functionName == null) {
+            throw new NullPointerException("functionName");
         }
-        this.executedSql = sql;
+        this.functionName = functionName;
         this.parameter = param;
     }
 
     @Override
-    protected void prepare(String methodName) {
+    protected void prepare(final String methodName) {
         prepareCallerClassAndMethodName(methodName);
+        prepareReturnParameter();
         prepareParameter();
+        prepareSql();
+    }
+
+    /**
+     * SQLを準備します。
+     */
+    protected void prepareSql() {
+        final StringBuilder buf = new StringBuilder(100).append("{? = call ")
+                .append(functionName);
+        final int paramSize = getParamSize();
+        if (paramSize > 1) {
+            buf.append("(");
+            for (int i = 1; i < paramSize; ++i) {
+                buf.append("?, ");
+            }
+            buf.setLength(buf.length() - 2);
+            buf.append(")");
+        }
+        executedSql = new String(buf.append("}"));
     }
 
 }

@@ -16,18 +16,30 @@
 package org.seasar.extension.jdbc;
 
 /**
- * ストアドプロシージャの呼び出しのベースとなるインターフェースです。
+ * 永続格納モジュール(ストアドプロシージャまたはストアドファンクション)の呼び出しのベースとなるインターフェースです。
  * 
  * @author higa
  * @param <S>
- *            <code>ProcudureCall</code>のサブタイプです。
+ *            <code>ModuleCall</code>のサブタイプです。
  */
-public interface ProcedureCall<S extends ProcedureCall<S>> extends
-        ModuleCall<S> {
+public interface ModuleCall<S extends ModuleCall<S>> extends Query<S> {
 
     /**
-     * ストアドプロシージャを呼び出します。
+     * 最大行数を設定します。
+     * 
+     * @param maxRows
+     *            最大行数
+     * @return このインスタンス自身
      */
-    void execute();
+    S maxRows(int maxRows);
+
+    /**
+     * フェッチ数を設定します。
+     * 
+     * @param fetchSize
+     *            フェッチ数
+     * @return このインスタンス自身
+     */
+    S fetchSize(int fetchSize);
 
 }

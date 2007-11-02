@@ -1,1 +1,1 @@
-{? = call hoge(?, ?)}
+{call hoge(?, ?, ?)}

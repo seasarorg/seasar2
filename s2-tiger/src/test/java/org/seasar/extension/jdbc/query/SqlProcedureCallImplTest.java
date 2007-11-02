@@ -28,6 +28,9 @@ import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.annotation.InOut;
+import org.seasar.extension.jdbc.annotation.Out;
+import org.seasar.extension.jdbc.annotation.ResultSet;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
@@ -39,7 +42,6 @@ import org.seasar.framework.mock.sql.MockDataSource;
 
 /**
  * @author higa
- * 
  */
 public class SqlProcedureCallImplTest extends TestCase {
 
@@ -52,7 +54,6 @@ public class SqlProcedureCallImplTest extends TestCase {
                 new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
-
     }
 
     @Override
@@ -64,7 +65,6 @@ public class SqlProcedureCallImplTest extends TestCase {
 
     /**
      * @throws Exception
-     * 
      */
     public void testPrepareParameter_simpleType() throws Exception {
         SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
@@ -78,29 +78,28 @@ public class SqlProcedureCallImplTest extends TestCase {
 
     /**
      * @throws Exception
-     * 
      */
     public void testPrepareParameter_dto() throws Exception {
         MyDto dto = new MyDto();
-        dto.arg1_IN_OUT = "aaa";
-        dto.arg2 = "bbb";
+        dto.arg2 = "aaa";
+        dto.arg3 = "bbb";
         SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
-                "{call hoge(?)}", dto);
+                "{call hoge(?, ?, ?)}", dto);
         query.prepareParameter();
         assertEquals(3, query.getParamSize());
         assertEquals(null, query.getParam(0).value);
         assertEquals(String.class, query.getParam(0).paramClass);
         assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
         assertEquals(ParamType.OUT, query.getParam(0).paramType);
-        assertEquals(MyDto.class.getDeclaredField("result_OUT"), query
-                .getParam(0).field);
+        assertEquals(MyDto.class.getDeclaredField("arg1"),
+                query.getParam(0).field);
 
         assertEquals("aaa", query.getParam(1).value);
         assertEquals(String.class, query.getParam(1).paramClass);
         assertEquals(ValueTypes.STRING, query.getParam(1).valueType);
         assertEquals(ParamType.IN_OUT, query.getParam(1).paramType);
-        assertEquals(MyDto.class.getDeclaredField("arg1_IN_OUT"), query
-                .getParam(1).field);
+        assertEquals(MyDto.class.getDeclaredField("arg2"),
+                query.getParam(1).field);
 
         assertEquals("bbb", query.getParam(2).value);
         assertEquals(String.class, query.getParam(2).paramClass);
@@ -111,23 +110,36 @@ public class SqlProcedureCallImplTest extends TestCase {
 
     /**
      * @throws Exception
-     * 
      */
     public void testPrepareParameter_resultSet() throws Exception {
         MyDto2 dto = new MyDto2();
+        dto.arg2 = "aaa";
         SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
-                "{call hoge(?)}", dto);
+                "{call hoge()}", dto);
         query.prepareParameter();
-        assertEquals(0, query.getParamSize());
+        assertEquals(2, query.getParamSize());
+        assertEquals(null, query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+        assertEquals(ParamType.OUT, query.getParam(0).paramType);
+        assertEquals(MyDto2.class.getDeclaredField("arg1"),
+                query.getParam(0).field);
+
+        assertEquals("aaa", query.getParam(1).value);
+        assertEquals(String.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(1).valueType);
+        assertEquals(ParamType.IN_OUT, query.getParam(1).paramType);
+        assertEquals(MyDto2.class.getDeclaredField("arg2"),
+                query.getParam(1).field);
+
         assertEquals(1, query.getNonParamSize());
         assertEquals(ParamType.OUT, query.getNonParam(0).paramType);
-        assertEquals(MyDto2.class.getDeclaredField("result_OUT"), query
+        assertEquals(MyDto2.class.getDeclaredField("result"), query
                 .getNonParam(0).field);
     }
 
     /**
      * @throws Exception
-     * 
      */
     public void testPrepareParameter_clob() throws Exception {
         MyDto3 dto = new MyDto3();
@@ -143,14 +155,13 @@ public class SqlProcedureCallImplTest extends TestCase {
 
     /**
      * @throws Exception
-     * 
      */
     public void testCall() throws Exception {
         MyDto dto = new MyDto();
-        dto.arg1_IN_OUT = "aaa";
-        dto.arg2 = "bbb";
+        dto.arg2 = "aaa";
+        dto.arg3 = "bbb";
         SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
-                "{? = call hoge(?, ?)}", dto) {
+                "{call hoge(?, ?, ?)}", dto) {
 
             @Override
             protected CallableStatement getCallableStatement(
@@ -167,46 +178,48 @@ public class SqlProcedureCallImplTest extends TestCase {
             }
         };
 
-        query.call();
-        assertEquals("aaa1", dto.result_OUT);
-        assertEquals("aaa2", dto.arg1_IN_OUT);
+        query.execute();
+        assertEquals("aaa1", dto.arg1);
+        assertEquals("aaa2", dto.arg2);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
-        assertEquals("{null = call hoge('aaa', 'bbb')}", sqlLog
-                .getCompleteSql());
+        assertEquals("{call hoge(null, 'aaa', 'bbb')}", sqlLog.getCompleteSql());
     }
 
     private static final class MyDto {
 
-        /**
-         * 
-         */
-        public String result_OUT;
+        /** */
+        @Out
+        public String arg1;
 
-        /**
-         * 
-         */
-        public String arg1_IN_OUT;
-
-        /**
-         * 
-         */
+        /** */
+        @InOut
         public String arg2;
+
+        /** */
+        public String arg3;
+
     }
 
     private static final class MyDto2 {
 
-        /**
-         * 
-         */
-        public List<Aaa> result_OUT;
+        /** */
+        @Out
+        public String arg1;
+
+        /** */
+        @InOut
+        public String arg2;
+
+        /** */
+        @ResultSet
+        public List<Aaa> result;
     }
 
     private static final class MyDto3 {
 
-        /**
-         * 
-         */
+        /** */
         @Lob
         public String largeName;
     }
+
 }

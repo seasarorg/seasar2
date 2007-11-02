@@ -13,21 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc;
+package org.seasar.extension.jdbc.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * ストアドプロシージャの呼び出しのベースとなるインターフェースです。
+ * ストアドプロシージャ／ファンクションの<code>OUT</code>パラメータを表します。
  * 
- * @author higa
- * @param <S>
- *            <code>ProcudureCall</code>のサブタイプです。
+ * @author koichik
  */
-public interface ProcedureCall<S extends ProcedureCall<S>> extends
-        ModuleCall<S> {
-
-    /**
-     * ストアドプロシージャを呼び出します。
-     */
-    void execute();
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Out {
 }

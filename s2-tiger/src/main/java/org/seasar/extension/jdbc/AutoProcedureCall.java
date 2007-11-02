@@ -16,18 +16,9 @@
 package org.seasar.extension.jdbc;
 
 /**
- * ストアドプロシージャの呼び出しのベースとなるインターフェースです。
+ * SQLを自動生成するプロシージャ呼び出しです。
  * 
- * @author higa
- * @param <S>
- *            <code>ProcudureCall</code>のサブタイプです。
+ * @author koichik
  */
-public interface ProcedureCall<S extends ProcedureCall<S>> extends
-        ModuleCall<S> {
-
-    /**
-     * ストアドプロシージャを呼び出します。
-     */
-    void execute();
-
+public interface AutoProcedureCall extends ProcedureCall<AutoProcedureCall> {
 }

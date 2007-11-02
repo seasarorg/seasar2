@@ -359,7 +359,7 @@ public class AbstractProcedureCallTest extends TestCase {
         MyDto2 dto = new MyDto2();
         query.parameter = dto;
         query.executedSql = "{? = call myfunc()}";
-        query.call();
+        query.execute();
         assertEquals("aaa", dto.hoge_OUT);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("{null = call myfunc()}", sqlLog.getCompleteSql());

@@ -16,18 +16,12 @@
 package org.seasar.extension.jdbc;
 
 /**
- * ストアドプロシージャの呼び出しのベースとなるインターフェースです。
+ * SQLファイルを使うファンクション呼び出しです。
  * 
- * @author higa
- * @param <S>
- *            <code>ProcudureCall</code>のサブタイプです。
+ * @author koichik
+ * @param <T>
+ *            ファンクションの戻り値の型。戻り値が結果セットの場合は<code>List</code>の要素の型
  */
-public interface ProcedureCall<S extends ProcedureCall<S>> extends
-        ModuleCall<S> {
-
-    /**
-     * ストアドプロシージャを呼び出します。
-     */
-    void execute();
-
+public interface SqlFileFunctionCall<T> extends
+        FunctionCall<T, SqlFileFunctionCall<T>> {
 }

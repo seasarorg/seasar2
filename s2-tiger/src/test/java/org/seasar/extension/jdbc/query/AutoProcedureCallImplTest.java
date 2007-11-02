@@ -37,18 +37,13 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
-import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.mock.sql.MockCallableStatement;
 import org.seasar.framework.mock.sql.MockDataSource;
 
 /**
- * @author taedium
+ * @author koichik
  */
-public class SqlFileProcedureCallImplTest extends TestCase {
-
-    private static final String PATH = SqlFileProcedureCallImplTest.class
-            .getName()
-            + "_call";
+public class AutoProcedureCallImplTest extends TestCase {
 
     private JdbcManagerImpl manager;
 
@@ -59,7 +54,6 @@ public class SqlFileProcedureCallImplTest extends TestCase {
                 new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
-
     }
 
     @Override
@@ -70,39 +64,23 @@ public class SqlFileProcedureCallImplTest extends TestCase {
     }
 
     /**
-     * 
+     * @throws Exception
      */
-    public void testPrepareNode() {
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                PATH, 1);
-        query.prepareCallerClassAndMethodName("execute");
-        query.prepareNode();
-        assertNotNull(query.node);
-    }
-
-    /**
-     * 
-     */
-    public void testPrepareNode_resourceNotFound() {
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", 1);
-        query.prepareCallerClassAndMethodName("execute");
-        try {
-            query.prepareNode();
-            fail();
-        } catch (ResourceNotFoundRuntimeException e) {
-            System.out.println(e);
-            assertEquals("xxx", e.getPath());
-        }
+    public void testPrepareParameter_noArg() throws Exception {
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager, "hoge");
+        query.prepare("execute");
+        assertEquals("{call hoge}", query.executedSql);
+        assertEquals(0, query.getParamSize());
     }
 
     /**
      * @throws Exception
      */
     public void testPrepareParameter_simpleType() throws Exception {
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", 1);
-        query.prepareParameter();
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager,
+                "hoge", 1);
+        query.prepare("execute");
+        assertEquals("{call hoge(?)}", query.executedSql);
         assertEquals(1, query.getParamSize());
         assertEquals(1, query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);
@@ -111,15 +89,15 @@ public class SqlFileProcedureCallImplTest extends TestCase {
 
     /**
      * @throws Exception
-     * 
      */
     public void testPrepareParameter_dto() throws Exception {
         MyDto dto = new MyDto();
         dto.arg2 = "aaa";
         dto.arg3 = "bbb";
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", dto);
-        query.prepareParameter();
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager,
+                "hoge", dto);
+        query.prepare("execute");
+        assertEquals("{call hoge(?, ?, ?)}", query.executedSql);
         assertEquals(3, query.getParamSize());
         assertEquals(null, query.getParam(0).value);
         assertEquals(String.class, query.getParam(0).paramClass);
@@ -147,13 +125,29 @@ public class SqlFileProcedureCallImplTest extends TestCase {
      */
     public void testPrepareParameter_resultSet() throws Exception {
         MyDto2 dto = new MyDto2();
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", dto);
-        query.prepareParameter();
-        assertEquals(0, query.getParamSize());
+        dto.arg2 = "aaa";
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager,
+                "hoge", dto);
+        query.prepare("execute");
+        assertEquals("{call hoge(?, ?)}", query.executedSql);
+        assertEquals(2, query.getParamSize());
+        assertEquals(null, query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+        assertEquals(ParamType.OUT, query.getParam(0).paramType);
+        assertEquals(MyDto2.class.getDeclaredField("arg1"),
+                query.getParam(0).field);
+
+        assertEquals("aaa", query.getParam(1).value);
+        assertEquals(String.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(1).valueType);
+        assertEquals(ParamType.IN_OUT, query.getParam(1).paramType);
+        assertEquals(MyDto2.class.getDeclaredField("arg2"),
+                query.getParam(1).field);
+
         assertEquals(1, query.getNonParamSize());
         assertEquals(ParamType.OUT, query.getNonParam(0).paramType);
-        assertEquals(MyDto2.class.getDeclaredField("arg1"), query
+        assertEquals(MyDto2.class.getDeclaredField("result"), query
                 .getNonParam(0).field);
     }
 
@@ -163,9 +157,10 @@ public class SqlFileProcedureCallImplTest extends TestCase {
     public void testPrepareParameter_clob() throws Exception {
         MyDto3 dto = new MyDto3();
         dto.largeName = "aaa";
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", dto);
-        query.prepareParameter();
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager,
+                "hoge", dto);
+        query.prepare("execute");
+        assertEquals("{call hoge(?)}", query.executedSql);
         assertEquals(1, query.getParamSize());
         assertEquals("aaa", query.getParam(0).value);
         assertEquals(ParamType.IN, query.getParam(0).paramType);
@@ -179,8 +174,8 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         MyDto dto = new MyDto();
         dto.arg2 = "aaa";
         dto.arg3 = "bbb";
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                PATH, dto) {
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager,
+                "hoge", dto) {
 
             @Override
             protected CallableStatement getCallableStatement(
@@ -198,6 +193,7 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         };
 
         query.execute();
+        assertEquals("{call hoge(?, ?, ?)}", query.executedSql);
         assertEquals("aaa1", dto.arg1);
         assertEquals("aaa2", dto.arg2);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
@@ -216,13 +212,23 @@ public class SqlFileProcedureCallImplTest extends TestCase {
 
         /** */
         public String arg3;
+
     }
 
     private static final class MyDto2 {
 
         /** */
+        @Out
+        public String arg1;
+
+        /** */
+        @InOut
+        public String arg2;
+
+        /** */
         @ResultSet
-        public List<Aaa> arg1;
+        public List<Aaa> result;
+
     }
 
     private static final class MyDto3 {
@@ -230,6 +236,7 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         /** */
         @Lob
         public String largeName;
+
     }
 
 }

@@ -15,39 +15,43 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import org.seasar.extension.jdbc.AutoProcedureCall;
 import org.seasar.extension.jdbc.JdbcManagerImplementor;
-import org.seasar.extension.jdbc.SqlProcedureCall;
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
 
 /**
- * {@link SqlProcedureCall}の実装クラスです。
+ * {@link AutoProcedureCall}の実装クラスです。
  * 
- * @author higa
+ * @author koichik
  */
-public class SqlProcedureCallImpl extends
-        AbstractProcedureCall<SqlProcedureCall> implements SqlProcedureCall {
+public class AutoProcedureCallImpl extends
+        AbstractProcedureCall<AutoProcedureCall> implements AutoProcedureCall {
+
+    /** 呼び出すストアドプロシージャの名前 */
+    protected String procedureName;
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * インスタンスを構築します。
      * 
      * @param jdbcManager
      *            内部的なJDBCマネージャ
-     * @param sql
-     *            SQL
-     * @see #SqlProcedureCallImpl(JdbcManagerImplementor, String, Object)
+     * @param procedureName
+     *            呼び出すストアドプロシージャの名前
+     * @see #AutoProcedureCallImpl(JdbcManagerImplementor, Object)
      */
-    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql) {
-        this(jdbcManager, sql, null);
+    public AutoProcedureCallImpl(final JdbcManagerImplementor jdbcManager,
+            final String procedureName) {
+        this(jdbcManager, procedureName, null);
     }
 
     /**
-     * {@link SqlProcedureCallImpl}を作成します。
+     * インスタンスを構築します。
      * 
      * @param jdbcManager
      *            内部的なJDBCマネージャ
-     * @param sql
-     *            SQL
+     * @param procedureName
+     *            呼び出すストアドプロシージャの名前
      * @param param
      *            <p>
      *            パラメータです。
@@ -67,20 +71,39 @@ public class SqlProcedureCallImpl extends
      *            継承もとのクラスのフィールドは認識しません。
      *            </p>
      */
-    public SqlProcedureCallImpl(JdbcManagerImplementor jdbcManager, String sql,
-            Object param) {
+    public AutoProcedureCallImpl(final JdbcManagerImplementor jdbcManager,
+            final String procedureName, final Object param) {
         super(jdbcManager);
-        if (sql == null) {
-            throw new NullPointerException("sql");
+        if (procedureName == null) {
+            throw new NullPointerException("procedureName");
         }
-        this.executedSql = sql;
+        this.procedureName = procedureName;
         this.parameter = param;
     }
 
     @Override
-    protected void prepare(String methodName) {
+    protected void prepare(final String methodName) {
         prepareCallerClassAndMethodName(methodName);
         prepareParameter();
+        prepareSql();
+    }
+
+    /**
+     * SQLを準備します。
+     */
+    protected void prepareSql() {
+        final StringBuilder buf = new StringBuilder(100).append("{call ")
+                .append(procedureName);
+        final int paramSize = getParamSize();
+        if (paramSize > 0) {
+            buf.append("(");
+            for (int i = 0; i < paramSize; ++i) {
+                buf.append("?, ");
+            }
+            buf.setLength(buf.length() - 2);
+            buf.append(")");
+        }
+        executedSql = new String(buf.append("}"));
     }
 
 }

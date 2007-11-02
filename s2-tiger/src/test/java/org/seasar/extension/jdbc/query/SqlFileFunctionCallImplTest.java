@@ -42,11 +42,11 @@ import org.seasar.framework.mock.sql.MockCallableStatement;
 import org.seasar.framework.mock.sql.MockDataSource;
 
 /**
- * @author taedium
+ * @author koichik
  */
-public class SqlFileProcedureCallImplTest extends TestCase {
+public class SqlFileFunctionCallImplTest extends TestCase {
 
-    private static final String PATH = SqlFileProcedureCallImplTest.class
+    private static final String PATH = SqlFileFunctionCallImplTest.class
             .getName()
             + "_call";
 
@@ -73,8 +73,8 @@ public class SqlFileProcedureCallImplTest extends TestCase {
      * 
      */
     public void testPrepareNode() {
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                PATH, 1);
+        SqlFileFunctionCallImpl<String> query = new SqlFileFunctionCallImpl<String>(
+                manager, String.class, PATH);
         query.prepareCallerClassAndMethodName("execute");
         query.prepareNode();
         assertNotNull(query.node);
@@ -84,8 +84,8 @@ public class SqlFileProcedureCallImplTest extends TestCase {
      * 
      */
     public void testPrepareNode_resourceNotFound() {
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", 1);
+        SqlFileFunctionCallImpl<String> query = new SqlFileFunctionCallImpl<String>(
+                manager, String.class, "xxx");
         query.prepareCallerClassAndMethodName("execute");
         try {
             query.prepareNode();
@@ -98,41 +98,90 @@ public class SqlFileProcedureCallImplTest extends TestCase {
 
     /**
      * @throws Exception
+     * 
      */
-    public void testPrepareParameter_simpleType() throws Exception {
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", 1);
+    public void testPrepareReturnParameter_simpleType() throws Exception {
+        SqlFileFunctionCallImpl<Integer> query = new SqlFileFunctionCallImpl<Integer>(
+                manager, Integer.class, "xxx");
+        query.prepareReturnParameter();
         query.prepareParameter();
         assertEquals(1, query.getParamSize());
-        assertEquals(1, query.getParam(0).value);
+        assertNull(query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);
         assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
     }
 
     /**
      * @throws Exception
-     * 
+     */
+    public void testPrepareReturnParameter_simpleList() throws Exception {
+        SqlFileFunctionCallImpl<Integer> query = new SqlFileFunctionCallImpl<Integer>(
+                manager, Integer.class, "xxx");
+        query.resultList = true;
+        query.prepareReturnParameter();
+        query.prepareParameter();
+        assertEquals(1, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.OBJECT, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareReturnParameter_dtoList() throws Exception {
+        SqlFileFunctionCallImpl<MyDto3> query = new SqlFileFunctionCallImpl<MyDto3>(
+                manager, MyDto3.class, "xxx");
+        query.resultList = true;
+        query.prepareReturnParameter();
+        query.prepareParameter();
+        assertEquals(1, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(MyDto3.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.OBJECT, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareParameter_simpleType() throws Exception {
+        SqlFileFunctionCallImpl<String> query = new SqlFileFunctionCallImpl<String>(
+                manager, String.class, "xxx", 1);
+        query.prepareReturnParameter();
+        query.prepareParameter();
+        assertEquals(2, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+
+        assertEquals(1, query.getParam(1).value);
+        assertEquals(Integer.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(1).valueType);
+    }
+
+    /**
+     * @throws Exception
      */
     public void testPrepareParameter_dto() throws Exception {
         MyDto dto = new MyDto();
-        dto.arg2 = "aaa";
-        dto.arg3 = "bbb";
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", dto);
+        dto.arg1 = "aaa";
+        dto.arg2 = "bbb";
+        SqlFileFunctionCallImpl<Integer> query = new SqlFileFunctionCallImpl<Integer>(
+                manager, Integer.class, "xxx", dto);
+        query.prepareReturnParameter();
         query.prepareParameter();
-        assertEquals(3, query.getParamSize());
+        assertEquals(4, query.getParamSize());
         assertEquals(null, query.getParam(0).value);
-        assertEquals(String.class, query.getParam(0).paramClass);
-        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
         assertEquals(ParamType.OUT, query.getParam(0).paramType);
-        assertEquals(MyDto.class.getDeclaredField("arg1"),
-                query.getParam(0).field);
+        assertNull(query.getParam(0).field);
 
         assertEquals("aaa", query.getParam(1).value);
         assertEquals(String.class, query.getParam(1).paramClass);
         assertEquals(ValueTypes.STRING, query.getParam(1).valueType);
         assertEquals(ParamType.IN_OUT, query.getParam(1).paramType);
-        assertEquals(MyDto.class.getDeclaredField("arg2"),
+        assertEquals(MyDto.class.getDeclaredField("arg1"),
                 query.getParam(1).field);
 
         assertEquals("bbb", query.getParam(2).value);
@@ -140,6 +189,13 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         assertEquals(ValueTypes.STRING, query.getParam(2).valueType);
         assertEquals(ParamType.IN, query.getParam(2).paramType);
         assertNull(query.getParam(2).field);
+
+        assertEquals(null, query.getParam(3).value);
+        assertEquals(String.class, query.getParam(3).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(3).valueType);
+        assertEquals(ParamType.OUT, query.getParam(3).paramType);
+        assertEquals(MyDto.class.getDeclaredField("arg3"),
+                query.getParam(3).field);
     }
 
     /**
@@ -147,10 +203,17 @@ public class SqlFileProcedureCallImplTest extends TestCase {
      */
     public void testPrepareParameter_resultSet() throws Exception {
         MyDto2 dto = new MyDto2();
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", dto);
+        SqlFileFunctionCallImpl<Integer> query = new SqlFileFunctionCallImpl<Integer>(
+                manager, Integer.class, "xxx", dto);
+        query.prepareReturnParameter();
         query.prepareParameter();
-        assertEquals(0, query.getParamSize());
+        assertEquals(1, query.getParamSize());
+        assertEquals(null, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
+        assertEquals(ParamType.OUT, query.getParam(0).paramType);
+        assertNull(query.getParam(0).field);
+
         assertEquals(1, query.getNonParamSize());
         assertEquals(ParamType.OUT, query.getNonParam(0).paramType);
         assertEquals(MyDto2.class.getDeclaredField("arg1"), query
@@ -163,13 +226,20 @@ public class SqlFileProcedureCallImplTest extends TestCase {
     public void testPrepareParameter_clob() throws Exception {
         MyDto3 dto = new MyDto3();
         dto.largeName = "aaa";
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                "xxx", dto);
+        SqlFileFunctionCallImpl<Integer> query = new SqlFileFunctionCallImpl<Integer>(
+                manager, Integer.class, "xxx", dto);
+        query.prepareReturnParameter();
         query.prepareParameter();
-        assertEquals(1, query.getParamSize());
-        assertEquals("aaa", query.getParam(0).value);
-        assertEquals(ParamType.IN, query.getParam(0).paramType);
-        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+        assertEquals(2, query.getParamSize());
+        assertEquals(null, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
+        assertEquals(ParamType.OUT, query.getParam(0).paramType);
+        assertNull(query.getParam(0).field);
+
+        assertEquals("aaa", query.getParam(1).value);
+        assertEquals(ParamType.IN, query.getParam(1).paramType);
+        assertEquals(ValueTypes.CLOB, query.getParam(1).valueType);
     }
 
     /**
@@ -177,10 +247,10 @@ public class SqlFileProcedureCallImplTest extends TestCase {
      */
     public void testCall() throws Exception {
         MyDto dto = new MyDto();
-        dto.arg2 = "aaa";
-        dto.arg3 = "bbb";
-        SqlFileProcedureCallImpl query = new SqlFileProcedureCallImpl(manager,
-                PATH, dto) {
+        dto.arg1 = "aaa";
+        dto.arg2 = "bbb";
+        SqlFileFunctionCallImpl<String> query = new SqlFileFunctionCallImpl<String>(
+                manager, String.class, PATH, dto) {
 
             @Override
             protected CallableStatement getCallableStatement(
@@ -197,25 +267,28 @@ public class SqlFileProcedureCallImplTest extends TestCase {
             }
         };
 
-        query.execute();
-        assertEquals("aaa1", dto.arg1);
-        assertEquals("aaa2", dto.arg2);
+        String result = query.getSingleResult();
+        assertEquals("aaa1", result);
+        assertEquals("aaa2", dto.arg1);
+        assertEquals("aaa4", dto.arg3);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
-        assertEquals("{call hoge(null, 'aaa', 'bbb')}", sqlLog.getCompleteSql());
+        assertEquals("{null = call hoge('aaa', 'bbb', null)}", sqlLog
+                .getCompleteSql());
     }
 
     private static final class MyDto {
 
         /** */
-        @Out
+        @InOut
         public String arg1;
 
         /** */
-        @InOut
         public String arg2;
 
         /** */
+        @Out
         public String arg3;
+
     }
 
     private static final class MyDto2 {
@@ -223,6 +296,7 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         /** */
         @ResultSet
         public List<Aaa> arg1;
+
     }
 
     private static final class MyDto3 {
@@ -230,6 +304,7 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         /** */
         @Lob
         public String largeName;
+
     }
 
 }
