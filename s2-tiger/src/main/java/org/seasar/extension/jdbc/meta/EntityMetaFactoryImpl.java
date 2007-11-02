@@ -209,6 +209,7 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
             if (!ModifierUtil.isInstanceField(f)) {
                 continue;
             }
+            f.setAccessible(true);
             entityMeta.addPropertyMeta(propertyMetaFactory.createPropertyMeta(
                     f, entityMeta));
         }
