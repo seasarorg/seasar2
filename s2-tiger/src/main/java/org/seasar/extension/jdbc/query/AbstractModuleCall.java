@@ -35,7 +35,9 @@ import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
 import org.seasar.extension.jdbc.exception.FieldNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
+import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
+import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.query.AbstractModuleCall.ParamDesc.ParameterType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;
@@ -313,7 +315,7 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
      */
     protected Object handleResultSet(final Field field, final ResultSet rs) {
         if (!List.class.isAssignableFrom(field.getType())) {
-            return handleResultSet(field.getType(), rs);
+            return handleSingleResult(field.getType(), rs);
         }
         final Class<?> elementClass = ReflectionUtil
                 .getElementTypeOfListFromFieldType(field);
@@ -322,11 +324,11 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
                     callerMethodName });
             throw new FieldNotGenericsRuntimeException(field);
         }
-        return handleResultSet(elementClass, rs);
+        return handleResultList(elementClass, rs);
     }
 
     /**
-     * 結果セットを処理します。
+     * 1行だけの結果セットを処理します。
      * 
      * @param resultClass
      *            結果のクラス
@@ -334,14 +336,36 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
      *            結果セット
      * @return 処理した結果
      */
-    protected Object handleResultSet(final Class<?> resultClass,
+    protected Object handleSingleResult(final Class<?> resultClass,
             final ResultSet rs) {
         final ResultSetHandler handler;
         if (ValueTypes.isSimpleType(resultClass)) {
-            handler = new ObjectListResultSetHandler(ValueTypes
-                    .getValueType(resultClass));
+            handler = new ObjectResultSetHandler(ValueTypes
+                    .getValueType(resultClass), null);
         } else {
-            handler = new BeanListResultSetHandler(resultClass, jdbcManager
+            handler = new BeanResultSetHandler(resultClass, jdbcManager
+                    .getDialect(), null);
+        }
+        return handleResultSet(handler, rs);
+    }
+
+    /**
+     * 複数の行を持つ結果セットを処理します。
+     * 
+     * @param elementClass
+     *            結果となるリストの要素型
+     * @param rs
+     *            結果セット
+     * @return 処理した結果のリスト
+     */
+    protected Object handleResultList(final Class<?> elementClass,
+            final ResultSet rs) {
+        final ResultSetHandler handler;
+        if (ValueTypes.isSimpleType(elementClass)) {
+            handler = new ObjectListResultSetHandler(ValueTypes
+                    .getValueType(elementClass));
+        } else {
+            handler = new BeanListResultSetHandler(elementClass, jdbcManager
                     .getDialect(), null);
         }
         return handleResultSet(handler, rs);
