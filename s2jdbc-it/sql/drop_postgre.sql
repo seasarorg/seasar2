@@ -1,8 +1,11 @@
-DROP FUNCTION no_param();
-DROP FUNCTION simpletype_param(param1 integer);
-DROP FUNCTION dto_param(IN param1 integer, INOUT param2 integer, OUT param3 integer);
-DROP FUNCTION one_result(OUT cur refcursor, IN employeeid integer);
-DROP FUNCTION two_results(OUT empcur refcursor, OUT deptcur refcursor, IN employeeid integer, IN departmentid integer);
+DROP FUNCTION PROC_NONE_PARAM();
+DROP FUNCTION PROC_SIMPLETYPE_PARAM(param1 integer);
+DROP FUNCTION PROC_DTO_PARAM(IN param1 integer, INOUT param2 integer, OUT param3 integer);
+DROP FUNCTION PROC_RESULTSET(OUT cur refcursor, IN employeeid integer);
+DROP FUNCTION PROC_RESULTSET_OUT(cur OUT refcursor, employeeId IN INTEGER, employeeCount OUT INTEGER);
+DROP FUNCTION PROC_RESULTSET_UPDATE(cur OUT refcursor, employeeId IN INTEGER);
+DROP FUNCTION PROC_RESULTSETS(OUT empcur refcursor, OUT deptcur refcursor, IN employeeid integer, IN departmentid integer);
+DROP FUNCTION PROC_RESULTSETS_UPDATES_OUT(empCur OUT refcursor, deptCur OUT refcursor, employeeId IN INTEGER, departmentId IN INTEGER, employeeCount OUT INTEGER);
 
 DROP TABLE EMPLOYEE;
 DROP TABLE ADDRESS;
@@ -25,4 +28,3 @@ DROP TABLE TABLE_STRATEGY2;
 
 DROP SEQUENCE SEQUENCE_STRATEGY_ID;
 DROP SEQUENCE MY_SEQUENCE_STRATEGY_ID;
-

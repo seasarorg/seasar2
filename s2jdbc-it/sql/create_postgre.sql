@@ -89,14 +89,14 @@ INSERT INTO COMP_KEY_EMPLOYEE VALUES(14,14,7934,'MILLER',7,7,'1982-01-23',1300,1
 INSERT INTO ID_GENERATOR VALUES('TABLE_STRATEGY_ID', 1);
 INSERT INTO MY_ID_GENERATOR VALUES('TableStrategy2', 1);
 
-CREATE OR REPLACE FUNCTION NO_PARAM() RETURNS void 
+CREATE OR REPLACE FUNCTION PROC_NONE_PARAM() RETURNS void 
 AS $$
 BEGIN
   RETURN;
 END;
 $$ language plpgsql;
 
-CREATE OR REPLACE FUNCTION SIMPLETYPE_PARAM(
+CREATE OR REPLACE FUNCTION PROC_SIMPLETYPE_PARAM(
   param1 IN INTEGER) RETURNS void 
 AS $$
 BEGIN
@@ -104,7 +104,7 @@ BEGIN
 END;
 $$ language plpgsql;
 
-CREATE OR REPLACE FUNCTION DTO_PARAM(
+CREATE OR REPLACE FUNCTION PROC_DTO_PARAM(
   param1 IN INTEGER,
   param2 INOUT INTEGER,
   param3 OUT INTEGER)
@@ -115,7 +115,7 @@ BEGIN
 END;
 $$ language plpgsql;
 
-CREATE OR REPLACE FUNCTION ONE_RESULT(
+CREATE OR REPLACE FUNCTION PROC_RESULTSET(
   cur OUT refcursor,
   employeeId IN INTEGER)
 AS $$
@@ -125,7 +125,32 @@ BEGIN
 END;
 $$ language plpgsql;
 
-CREATE OR REPLACE FUNCTION TWO_RESULTS(
+
+CREATE OR REPLACE FUNCTION PROC_RESULTSET_OUT(
+  cur OUT refcursor,
+  employeeId IN INTEGER,
+  employeeCount OUT INTEGER)
+AS $$
+BEGIN
+  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  SELECT COUNT(*) INTO employeeCount FROM EMPLOYEE;
+  RETURN;
+END;
+$$ language plpgsql;
+
+
+CREATE OR REPLACE FUNCTION PROC_RESULTSET_UPDATE(
+  cur OUT refcursor,
+  employeeId IN INTEGER)
+AS $$
+BEGIN
+  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  RETURN;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION PROC_RESULTSETS(
   empCur OUT refcursor,
   deptCur OUT refcursor,
   employeeId IN INTEGER,
@@ -134,6 +159,23 @@ AS $$
 BEGIN
   OPEN empCur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   OPEN deptCur FOR SELECT * FROM DEPARTMENT WHERE department_id > departmentId ORDER BY department_id;
+  RETURN;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION PROC_RESULTSETS_UPDATES_OUT(
+  empCur OUT refcursor,
+  deptCur OUT refcursor,
+  employeeId IN INTEGER,
+  departmentId IN INTEGER,
+  employeeCount OUT INTEGER)
+AS $$
+BEGIN
+  OPEN empCur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  UPDATE ADDRESS SET street = 'HOGE' WHERE address_id = 1;
+  OPEN deptCur FOR SELECT * FROM DEPARTMENT WHERE department_id > departmentId ORDER BY department_id;
+  UPDATE ADDRESS SET street = 'FOO' WHERE address_id = 2;  
+  SELECT COUNT(*) INTO employeeCount FROM EMPLOYEE;
   RETURN;
 END;
 $$ language plpgsql;
