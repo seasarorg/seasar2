@@ -19,6 +19,9 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.annotation.InOut;
+import org.seasar.extension.jdbc.annotation.Out;
+import org.seasar.extension.jdbc.annotation.ResultSet;
 import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
@@ -49,7 +52,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
             return;
         }
         String path = getClass().getName().replace(".", "/") + "_none" + ".sql";
-        jdbcManager.callBySqlFile(path).call();
+        jdbcManager.callBySqlFile(path).execute();
     }
 
     /**
@@ -62,7 +65,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         }
         String path =
             getClass().getName().replace(".", "/") + "_simpleType" + ".sql";
-        jdbcManager.callBySqlFile(path, 1).call();
+        jdbcManager.callBySqlFile(path, 1).execute();
     }
 
     /**
@@ -76,11 +79,11 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
         MyDto dto = new MyDto();
         dto.param1 = 3;
-        dto.param2_IN_OUT = 5;
-        jdbcManager.callBySqlFile(path, dto).call();
+        dto.param2 = 5;
+        jdbcManager.callBySqlFile(path, dto).execute();
         assertEquals(new Integer(3), dto.param1);
-        assertEquals(new Integer(8), dto.param2_IN_OUT);
-        assertEquals(new Integer(3), dto.param3_OUT);
+        assertEquals(new Integer(8), dto.param2);
+        assertEquals(new Integer(3), dto.param3);
     }
 
     /**
@@ -99,8 +102,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         }
         ResultSetDto dto = new ResultSetDto();
         dto.employeeId = 10;
-        jdbcManager.callBySqlFile(path, dto).call();
-        List<Employee> employees = dto.employees_OUT;
+        jdbcManager.callBySqlFile(path, dto).execute();
+        List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
@@ -125,15 +128,15 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         }
         ResultSetOutDto dto = new ResultSetOutDto();
         dto.employeeId = 10;
-        jdbcManager.callBySqlFile(path, dto).call();
-        List<Employee> employees = dto.employees_OUT;
+        jdbcManager.callBySqlFile(path, dto).execute();
+        List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
         assertEquals("JAMES", employees.get(1).employeeName);
         assertEquals("FORD", employees.get(2).employeeName);
         assertEquals("MILLER", employees.get(3).employeeName);
-        assertEquals(14, dto.employeeCount_OUT);
+        assertEquals(14, dto.employeeCount);
     }
 
     /**
@@ -153,8 +156,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         }
         ResultSetDto dto = new ResultSetDto();
         dto.employeeId = 10;
-        jdbcManager.callBySqlFile(path, dto).call();
-        List<Employee> employees = dto.employees_OUT;
+        jdbcManager.callBySqlFile(path, dto).execute();
+        List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
@@ -188,15 +191,15 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         ResultSetsDto dto = new ResultSetsDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
-        jdbcManager.callBySqlFile(path, dto).call();
-        List<Employee> employees = dto.employees_OUT;
+        jdbcManager.callBySqlFile(path, dto).execute();
+        List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
         assertEquals("JAMES", employees.get(1).employeeName);
         assertEquals("FORD", employees.get(2).employeeName);
         assertEquals("MILLER", employees.get(3).employeeName);
-        List<Department> departments = dto.departments_OUT;
+        List<Department> departments = dto.departments;
         assertNotNull(departments);
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
@@ -221,15 +224,15 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         ResultSetsUpdatesOutDto dto = new ResultSetsUpdatesOutDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
-        jdbcManager.callBySqlFile(path, dto).call();
-        List<Employee> employees = dto.employees_OUT;
+        jdbcManager.callBySqlFile(path, dto).execute();
+        List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
         assertEquals("JAMES", employees.get(1).employeeName);
         assertEquals("FORD", employees.get(2).employeeName);
         assertEquals("MILLER", employees.get(3).employeeName);
-        List<Department> departments = dto.departments_OUT;
+        List<Department> departments = dto.departments;
         assertNotNull(departments);
         assertEquals(2, departments.size());
         assertEquals("SALES", departments.get(0).departmentName);
@@ -246,7 +249,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
                 "select street from Address where address_id = ?",
                 2).getSingleResult();
         assertEquals("FOO", street);
-        assertEquals(14, dto.employeeCount_OUT);
+        assertEquals(14, dto.employeeCount);
     }
 
     /**
@@ -260,10 +263,12 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         public Integer param1;
 
         /** */
-        public Integer param2_IN_OUT;
+        @InOut
+        public Integer param2;
 
         /** */
-        public Integer param3_OUT;
+        @Out
+        public Integer param3;
     }
 
     /**
@@ -274,7 +279,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
     public class ResultSetDto {
 
         /** */
-        public List<Employee> employees_OUT;
+        @ResultSet
+        public List<Employee> employees;
 
         /** */
         public int employeeId;
@@ -288,13 +294,15 @@ public class SqlFileProcedureCallTest extends S2TestCase {
     public class ResultSetOutDto {
 
         /** */
-        public List<Employee> employees_OUT;
+        @ResultSet
+        public List<Employee> employees;
 
         /** */
         public int employeeId;
 
         /** */
-        public int employeeCount_OUT;
+        @Out
+        public int employeeCount;
 
     }
 
@@ -306,7 +314,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
     public class ResultSetUpdateDto {
 
         /** */
-        public List<Employee> employees_OUT;
+        @ResultSet
+        public List<Employee> employees;
 
         /** */
         public int employeeId;
@@ -321,10 +330,12 @@ public class SqlFileProcedureCallTest extends S2TestCase {
     public class ResultSetsDto {
 
         /** */
-        public List<Employee> employees_OUT;
+        @ResultSet
+        public List<Employee> employees;
 
         /** */
-        public List<Department> departments_OUT;
+        @ResultSet
+        public List<Department> departments;
 
         /** */
         public int employeeId;
@@ -341,10 +352,12 @@ public class SqlFileProcedureCallTest extends S2TestCase {
     public class ResultSetsUpdatesOutDto {
 
         /** */
-        public List<Employee> employees_OUT;
+        @ResultSet
+        public List<Employee> employees;
 
         /** */
-        public List<Department> departments_OUT;
+        @ResultSet
+        public List<Department> departments;
 
         /** */
         public int employeeId;
@@ -353,7 +366,8 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         public int departmentId;
 
         /** */
-        public int employeeCount_OUT;
+        @Out
+        public int employeeCount;
     }
 
 }
