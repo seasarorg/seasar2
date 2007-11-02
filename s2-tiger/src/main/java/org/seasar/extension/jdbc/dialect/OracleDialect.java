@@ -90,14 +90,14 @@ public class OracleDialect extends StandardDialect {
         boolean hasOffset = offset > 0;
         if (hasOffset) {
             buf
-                    .append("select * from ( select temp_.*, rownum rownum_ from ( ");
+                    .append("select * from ( select temp_.*, rownum rownumber_ from ( ");
             buf.append(sql);
             buf.append(" ) temp_");
             if (limit > 0) {
                 buf.append(" where rownum <= ");
                 buf.append(offset + limit);
             }
-            buf.append(" ) where rownum_ > ");
+            buf.append(" ) where rownumber_ > ");
             buf.append(offset);
         } else {
             buf.append("select * from ( ");
