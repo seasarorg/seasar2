@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - JdbcManager - SQLによる操作</title>
+	</properties>
+	<body>
+		<section name="SQLによる操作">
+			<ul>
+				<li>
+					<p>
+						<a href="#検索">検索</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#複数件検索">複数件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#1件検索">1件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ページング">ページング</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#挿入・更新・削除">挿入・更新・削除</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#1件挿入・更新・削除">1件挿入・更新・削除</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バッチ挿入・更新・削除">バッチ挿入・更新・削除</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#ストアドの呼び出し">ストアドの呼び出し</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#ストアドプロシージャの呼び出し">
+									ストアドプロシージャの呼び出し
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ストアドファンクションの呼び出し">
+									ストアドファンクションの呼び出し
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="検索">
+			<subsection name="複数件検索">
+				<p>
+					SQLを使って複数件検索をする場合は、
+					<code>selectBySql()</code>
+					と
+					<code>getResultList()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> results = jdbcManager.selectBySql(
+    EmployeeDto.class, "select ... where department_id = ?", 10)
+    .getResultList();
+]]></source>
+				<p>
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+List<RowMap> results = jdbcManager.selectBySql(
+    RowMap.class, "select ...")
+    .getResultList();
+]]></source>
+				<p>
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+			</subsection>
+
+			<subsection name="1件検索">
+				<p>
+					SQLを使って1件検索をする場合は、
+					<code>selectBySql()</code>
+					と
+					<code>getSingleResult()</code>
+					を組み合わせます。
+				</p>
+				<source><![CDATA[
+Integer count = jdbcManager.selectBySql(
+    Integer.class, "select count(*) from emp")
+    .getSingleResult();
+]]></source>
+				<p>
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+RowMap result = jdbcManager.selectBySql(
+    RowMap.class, "select ...")
+    .getSingleResult();
+]]></source>
+				<p>
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+			</subsection>
+
+			<subsection name="ページング">
+				<p>
+					ページングを指定する場合は、
+					<code>limit(), offset()</code>
+					を使います。
+					<code>limit()</code>
+					には、取得する行数を指定します。
+					<code>offset()</code>
+					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+					ページングを指定するには、必ず
+					<code>ordey by</code>
+					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
+				</p>
+				<source><![CDATA[
+jdbcManager.selectBySql(EmployeeDto.class,
+    "select id, name from employee order by name")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="挿入・更新・削除">
+			<subsection name="1件挿入・更新・削除">
+				<p>
+					SQLを使ってエンティティを更新する場合は、
+					<code>updateBySql()</code>
+					、
+					<code>params()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。
+					<code>updateBySql()</code>
+					の2番目以降の引数はパラメータのクラスの可変長引数です。 挿入、削除も
+					<code>updateBySql()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.updateBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class)
+    .params(null, 1)
+    .execute();
+]]></source>
+			</subsection>
+
+			<subsection name="バッチ挿入・更新・削除">
+				<p>
+					SQLを使って複数エンティティをバッチ更新する場合は、
+					<code>updateBatchBySql()</code>
+					、
+					<code>params()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。
+					<code>updateBatchBySql()</code>
+					の2番目以降の引数はパラメータのクラスの可変長引数です。 挿入、削除も
+					<code>updateBatchBySql()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> dtoList = ...;
+...
+SqlBatchUpdate batchUpdate = jdbcManager.updateBatchBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class);
+for (EmployeeDto dto : dtoList) {
+    batchUpdate.params(dto.salary, dto.id);
+}
+int[] countArray = batchUpdate.execute();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="ストアドの呼び出し">
+			<subsection name="ストアドプロシージャの呼び出し">
+				<p>
+					SQLを使ってストアドプロシージャを呼び出す場合は、
+					<code>callBySql()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+					<code>callBySql()</code>
+					の最初の引数は、 ストアドプロシージャを呼び出すSQLです。
+				</p>
+				<p>最初の例は、パラメータのない場合です。</p>
+				<source><![CDATA[
+jdbcManager.callBySql("{call myproc}").execute();
+]]></source>
+				<p>
+					INのパラメータが1つだけで、そのパラメータが
+					<code>null</code>
+					にならない場合は、
+					<code>callBySql()</code>
+					の2番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+jdbcManager.callBySql("{call myproc(?)}", "hoge").execute();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>callBySql()</code>
+					の2番目の引数にJavaBeansを指定します。
+					プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
+				</p>
+				<ul>
+					<li>
+						<p>
+							フィールドにアノテーションが付けられていない場合、
+							<code>IN</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Out</code>
+							アノテーションが付けられている場合、
+							<code>OUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@InOut</code>
+							アノテーションが付けられている場合、
+							<code>INOUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@ResultSet</code>
+							アノテーションが付けられている場合、 パラメータ以外で戻される結果セットになります。
+							ただし、 OracleやPostgreSQLのように、
+							パラメータ以外で結果セットを返すことが出来ないRDBMSの場合は、
+							<code>OUT</code>
+							パラメータとして扱われます。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Lob</code>
+							が付けられている場合、 そのパラメータはLOBとして扱われます。
+							<code>@Lob</code>
+							アノテーションは他のアノテーションと組み合わせて使用することが出来ます。
+						</p>
+					</li>
+				</ul>
+				<source><![CDATA[
+public class MyDto {
+    public String arg1; // 第1引数 (IN)
+
+    @Out
+    public String arg2; // 第2引数 (OUT)
+
+    @InOut
+    public int arg3;    // 第3引数 (INOUT)
+
+    @ResultSet
+    public List<String> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = "hoge";
+dto.arg3 = 2;
+jdbcManager.callBySql("{call myproc(?, ?, ?)}", dto).execute();
+System.out.println(dto.arg2);
+System.out.println(dto.arg3);
+System.out.println(dto.result);
+]]></source>
+				<p>
+					ストアドプロシージャが複数のカラムを持つ結果セットを返す場合は、
+					対応するフィールドの型をList&lt;結果セットの行に対応するJavaBeansの型&gt;にします。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+jdbcManager.callBySql("{call myproc(?)}", dto).execute();
+System.out.println(dto.result);
+]]></source>
+				<p>
+					オラクルとPostgreSQLの場合は、結果セットをパラメータで受け取る必要があります。
+					これらのRDBMSでは、
+					<code>@ResultSet</code>
+					アノテーションが付けられたパラメータは
+					<code>OUT</code>
+					パラメータとして扱われるので、
+					ストアドプロシージャ呼び出しのSQLの中に対応するバインド変数を付け加えます。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 第2引数 (OUT)
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+jdbcManager.callBySql("{call myproc(?, ?)}", dto).execute();
+System.out.println(dto.result);
+]]></source>
+			</subsection>
+
+			<subsection name="ストアドファンクションの呼び出し">
+				<p>
+					SQLを使ってストアドファンクションを呼び出す場合は、
+					<code>callBySql()</code>
+					と、
+					<code>getSingleResult()</code>
+					または
+					<code>getResultList()</code>
+					を組み合わせます。
+					<code>callBySql()</code>
+					の1番目の引数でストアドファンクションの戻り値の型を指定します。
+					2番目の引数でストアドファンクションを呼び出すSQLを指定します。
+				</p>
+				<p>最初の例はパラメータがなく、 戻り値が結果セットでない場合です。</p>
+				<source><![CDATA[
+String result = jdbcManager.callBySql(String.class, "{? = call myfunc}")
+                           .getSingleResult();
+]]></source>
+				<p>
+					OracleやPostgreSQLのように、
+					ストアドファンクションの戻り値で結果セットを返すことが出来る場合は
+					<code>getResultList()</code>
+					で結果の
+					<code>List</code>
+					を受け取ります。
+					<code>callBySql()</code>
+					の1番目の引数で
+					<code>List</code>
+					の要素の型を指定します。
+				</p>
+				<source><![CDATA[
+List<String> result = jdbcManager.callBySql(String.class, "{? = call myfunc}")
+                                 .getResultList();
+]]></source>
+				<p>
+					結果セットの行が複数のカラムを持つ場合は
+					<code>List</code>
+					の要素をJavaBeansにします。
+				</p>
+				<source><![CDATA[
+List<MyDto> result = jdbcManager.callBySql(MyDto.class, "{? = call myfunc}")
+                                .getResultList();
+]]></source>
+				<p>
+					INのパラメータが1つだけで、そのパラメータが
+					<code>null</code>
+					にならない場合は、
+					<code>callBySql()</code>
+					の3番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?)}", "hoge")
+                           .getSingleResult();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>callBySql()</code>
+					の3番目の引数にJavaBeansを指定します。
+					ストアドファンクションを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
+				</p>
+				<ul>
+					<li>
+						<p>
+							フィールドにアノテーションが付けられていない場合、
+							<code>IN</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Out</code>
+							アノテーションが付けられている場合、
+							<code>OUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@InOut</code>
+							アノテーションが付けられている場合、
+							<code>INOUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@ResultSet</code>
+							アノテーションが付けられている場合、 パラメータ以外で戻される結果セットになります。
+							ただし、 OracleやPostgreSQLのように、
+							パラメータ以外で結果セットを返すことが出来ないRDBMSの場合は、
+							<code>OUT</code>
+							パラメータとして扱われます。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Lob</code>
+							が付けられている場合、 そのパラメータはLOBとして扱われます。
+							<code>@Lob</code>
+							アノテーションは他のアノテーションと組み合わせて使用することが出来ます。
+						</p>
+					</li>
+				</ul>
+				<source><![CDATA[
+public class MyDto {
+    public String arg1; // 第1引数 (IN)
+
+    @Out
+    public String arg2; // 第2引数 (OUT)
+
+    @InOut
+    public int arg3;    // 第3引数 (INOUT)
+
+    @ResultSet
+    public List<String> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = "hoge";
+dto.arg3 = 2;
+String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?, ?, ?)}", dto)
+                           .getSingleResult();
+System.out.println(result);
+System.out.println(dto.arg1);
+System.out.println(dto.arg3);
+System.out.println(dto.result);
+]]></source>
+				<p>
+					ストアドファンクションが複数のカラムを持つ結果セットを返す場合は、
+					対応するフィールドの型をList&lt;結果セットの行に対応するJavaBeansの型&gt;にします。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?)}", dto)
+                           .getSingleResult();
+System.out.println(result);
+System.out.println(dto.result);
+]]></source>
+				<p>
+					オラクルとPostgreSQLの場合は、戻り値以外の結果セットをパラメータで受け取る必要があります。
+					これらのRDBMSでは、
+					<code>@ResultSet</code>
+					アノテーションが付けられたパラメータは
+					<code>OUT</code>
+					パラメータとして扱われるので、
+					ストアドファンクション呼び出しのSQLの中に対応するバインド変数を付け加えます。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 第2引数 (OUT)
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?, ?)}", dto)
+                           .getSingleResult();
+System.out.println(result);
+System.out.println(dto.result);
+]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>

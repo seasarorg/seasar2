@@ -1,0 +1,912 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - JdbcManager - SQLファイルによる操作</title>
+	</properties>
+	<body>
+		<section name="SQLファイルによる操作">
+			<ul>
+				<li>
+					<p>
+						<a href="#S2Dao譲りのSQLファイル">S2Dao譲りのSQLファイル</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#SQLファイルのパス">SQLファイルのパス</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#検索">検索</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#複数件検索">複数件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#1件検索">1件検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ページング">ページング</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#挿入・更新・削除">挿入・更新・削除</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#1件挿入・更新・削除">1件挿入・更新・削除</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バッチ挿入・更新・削除">バッチ挿入・更新・削除</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<a href="#ストアドの呼び出し">ストアドの呼び出し</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#ストアドプロシージャの呼び出し">
+									ストアドプロシージャの呼び出し
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#ストアドファンクションの呼び出し">
+									ストアドファンクションの呼び出し
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="S2Dao譲りのSQLファイル">
+			<p>S2Dao譲りのSQLファイルを使うこともできます。</p>
+			<p>
+				SQLファイルとは、SQLをソースコードに記述するのではなく、 ファイルに記述したものです。
+				単純なSQLだとソースコードに直接記述したほうが、
+				めんどくさくなくて楽(わざわざファイルを作る必要がない)ですが、
+				複雑なSQLは、ファイルに記述したほうが、メンテナンス性が高いでしょう。
+			</p>
+			<p>
+				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
+				<code>ルートパッケージ.entity.エンティティ名</code>
+				のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
+				<code>examples.entity.Employee</code>
+				エンティティに関するSQLファイルは、
+				<code>examples/entity/Employee</code>
+				ディレクトリにおくと良いでしょう。
+			</p>
+			<p>
+				複数のテーブルを結合するような場合は、 一番主軸となっているテーブルのエンティティを選びます。
+				プロシージャの場合も同様です。
+			</p>
+			<p>何のパラメータもない単純なSQLファイルは次のようになります。</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= 1000
+and salary <= 2000
+]]></source>
+			<p>
+				1000の部分を
+				<code>salaryMin</code>
+				というパラメータで置き換えるには、
+				次のように置き換えたいリテラルの左にSQLコメントでパラメータ名を埋め込みます。
+				リテラルを文字列として直接置き換えるのではなく、
+				<code>PreparedStatment</code>
+				を使ったバインド変数に置き換えるので、SQLインジェクション対策も問題ありません。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= 2000
+]]></source>
+			<p>
+				同様に2000の部分も
+				<code>salaryMax</code>
+				というパラメータで置き換えます。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= /*salaryMax*/2000
+]]></source>
+			<p>
+				<code>in</code>
+				を置き換える場合は次のようにします。 ()で囲まれている部分を置き換えます。
+				idのパラメータの型は、配列かリストになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+id in /*id*/(1, 2)
+]]></source>
+			<p>
+				<code>like</code>
+				を置き換える場合は次のようにします。 '(シングルクオート)で囲まれている部分を置き換えます。
+				ワイルドカードを使いたい場合は、パラメータの値に埋め込んでください。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+name like /*name*/'S%'
+]]></source>
+			<p>
+				検索条件の入力画面などで、何か条件が入力されていれば、
+				検索条件に追加し、入力されていなければ条件には追加しないということを実装してみましょう。
+				このような場合は、IFコメントとENDコメントを組み合わせます。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+/*IF salaryMin != null*/
+salary >= /*salaryMin*/1000
+/*END*/
+/*IF salaryMax != null*/
+and salary <= /*salaryMax*/2000
+/*END*/
+]]></source>
+			<p>
+				IFコメントの内容が
+				<code>true</code>
+				なら、 IFコメントとENDコメントで囲んでいる内容が出力されます。
+				IFコメントの条件は、OGNLによって評価されます。 詳しくは、
+				<a href="ognl.html">OGNLガイド</a>
+				を参照してください。
+			</p>
+			<p>
+				上記のように記述すると、salaryMinがnullでsalaryMaxがnullではないときは、
+				次のような不正(andがwhereの直後にある)なSQLになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+and salary <= ?
+]]></source>
+			<p>
+				また、salaryMinもsalaryMaxもnullの場合も、
+				次のような不正(whereだけがある)なSQLになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+]]></source>
+			<p>
+				こういう問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
+			</p>
+			<source><![CDATA[
+select * from employee
+/*BEGIN*/
+where
+/*IF salaryMin != null*/
+salary >= /*salaryMin*/1000
+/*END*/
+/*IF salaryMax != null*/
+and salary <= /*salaryMax*/2000
+/*END*/
+/*END*/
+]]></source>
+			<p>
+				このようにすると、salaryMinがnullでsalaryMaxがnullではないときは、
+				salaryMaxの条件は、BEGINコメントとENDコメントで囲まれた最初の条件なので、
+				<code>and</code>
+				の部分が自動的に削除されて次のようになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary <= ?
+]]></source>
+			<p>
+				また、salaryMinもsalaryMaxもnullの場合は、
+				BEGINコメントとENDコメントで囲まれた部分で1つも条件に一致するものがないので、
+				BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+]]></source>
+			<p>
+				バインド変数ではなく、SQLに直接リテラルを埋め込むには、 埋め込み変数コメントを使います。
+				<br />
+				埋め込み変数コメントは、/*$パラメータ名*/のように指定します。
+				直接リテラルを埋め込むとSQLインジェクションの危険がありますが、
+				埋め込み変数の値に、セミコロン(;)が入っていると例外にしているので、 問題はありません。
+			</p>
+			<p>
+				<code>order by</code>
+				句をパラメータで変えたい場合は、 /*$orderBy*/と指定します。
+			</p>
+			<source><![CDATA[
+select * from employee order by /*$orderBy*/id
+]]></source>
+			<p>ELSEコメントは、IFコメントとENDコメントの間に行コメントとして埋め込みます。</p>
+			<source><![CDATA[
+/*IF jobType != null*/
+jobType = /*jobType*/'CLERK'
+-- ELSE jobType is null
+/*END*/
+]]></source>
+
+			<subsection name="SQLファイルのパス">
+				<p>
+					SQLファイルのパスは、
+					<code>examples/entity/Employee/selectAll.sql</code>
+					のように指定します。 このパスに対するデフォルトの物理的なファイルは、 そのまま
+					<code>examples/entity/Employee/selectAll.sql</code>
+					になります。 ただし、
+					<a href="s2jdbc_setup.html#ダイアレクト">ダイアレクト</a>
+					のサフィックスに対応するファイルがあれば、 そちらが優先されます。
+				</p>
+				<p>
+					例えば、オラクルを使っている場合、
+					<code>
+						examples/entity/Employee/selectAll_oracle.sql
+					</code>
+					があれば、デフォルトより優先されます。
+				</p>
+			</subsection>
+		</section>
+
+		<section name="検索">
+			<subsection name="複数件検索">
+				<p>
+					SQLファイルを使って複数件検索をする場合は、
+					<code>selectBySqlFile()</code>
+					と
+					<code>getResultList()</code>
+					を組み合わせます。
+					<code>selectBySqlFile()</code>
+					の2番目の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。
+				</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<source><![CDATA[
+List<EmployeeDto> results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples/entity/Employee/selectAll.sql")
+    .getResultList();
+]]></source>
+				<p>
+					SQLファイルのパラメータが1つの場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples/entity/Employee/selectAll.sql", 10)
+    .getResultList();
+]]></source>
+				<p>
+					SQLファイルのパラメータが複数の場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<source><![CDATA[
+package examples.entity.Employee;
+
+public class SelectAllParam {
+    public BigDecimal salaryMin;
+    public BigDecimal salaryMax;
+}
+]]></source>
+				<source><![CDATA[
+select * from employee where
+salary <= /*salaryMin*/1000
+and salary >= /*salaryMax*/2000
+]]></source>
+				<source><![CDATA[
+SelectAllParam param = new SelectAllParam();
+param.salaryMin = new BigDecimal(1200);
+param.salaryMax = new BigDecimal(1800);
+List<EmployeeDto> results = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples/entity/Employee/selectAll.sql", param)
+    .getResultList();
+]]></source>
+				<p>
+					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+					ページングが行なわれます。
+				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>
+						limit,
+						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+					</p>
+				</div>
+				<p>
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+List<RowMap> results = jdbcManager.selectBySqlFile(
+    RowMap.class, "examples/entity/Employee/selectAll.sql")
+    .getResultList();
+]]></source>
+				<p>
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+			</subsection>
+
+			<subsection name="1件検索">
+				<p>
+					SQLファイルを使って1件検索をする場合は、
+					<code>selectBySqlFile()</code>
+					と
+					<code>getSingleResult()</code>
+					を組み合わせます。
+					<code>selectBySqlFile()</code>
+					の2番目の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。
+				</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<source><![CDATA[
+EmployeeDto result = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples/entity/Employee/selectSingle.sql")
+    .getSingleResult();
+]]></source>
+				<p>
+					SQLファイルのパラメータが1つの場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+EmployeeDto result = jdbcManager.selectBySqlFile(
+    EmployeeDto.class, "examples/entity/Employee/selectSingle.sql", 10)
+    .getSingleResult();
+]]></source>
+				<p>
+					SQLファイルのパラメータが複数の場合は、
+					<code>selectBySqlFile()</code>
+					の3番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<p>
+					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+					ページングが行なわれます。
+				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>
+						limit,
+						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+					</p>
+				</div>
+				<p>
+					結果を
+					<code>Map</code>
+					で受け取ることもできます。
+				</p>
+				<source><![CDATA[
+RowMap result = jdbcManager.selectBySqlFile(
+    RowMap.class, "examples/entity/Employee/selectSingle.sql")
+    .getSingleResult();
+]]></source>
+				<p>
+					RowMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
+				</p>
+				<p>
+					このルールは、convention.diconで指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+				</p>
+			</subsection>
+
+			<subsection name="ページング">
+				<p>
+					ページングを指定する場合は、
+					<code>limit(), offset()</code>
+					を使います。
+					<code>limit()</code>
+					には、取得する行数を指定します。
+					<code>offset()</code>
+					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+					ページングを指定するには、必ず
+					<code>ordey by</code>
+					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
+				</p>
+				<source><![CDATA[
+select id, name, ... from employee order by name
+]]></source>
+				<source><![CDATA[
+jdbcManager.selectBySqlFile(EmployeeDto.class,
+    "examples/entity/Employee/selectAll.sql")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="挿入・更新・削除">
+			<subsection name="1件挿入・更新・削除">
+				<p>
+					SQLファイルを使ってエンティティを更新する場合は、
+					<code>updateBySqlFile()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。 挿入、削除も
+					<code>updateBySqlFile()</code>
+					を使います。
+				</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<source><![CDATA[
+int count = jdbcManager.updateBySqlFile(
+    "examples/entity/Employee/update.sql")
+    .execute();
+]]></source>
+				<p>
+					SQLファイルのパラメータが1つで値が
+					<code>null</code>
+					にならない場合は、
+					<code>updateBySqlFile()</code>
+					の2番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+int count = jdbcManager.updateBySqlFile(
+    "examples/entity/Employee/update.sql", 10)
+    .execute();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>updateBySqlFile()</code>
+					の2番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<source><![CDATA[
+package examples.entity.Employee;
+
+public class UpdateParam {
+    public Integer id;
+    public BigDecimal salary;
+}
+]]></source>
+				<source><![CDATA[
+update emp set salary = /*salary*/1000
+where id = /*id*/1
+]]></source>
+				<source><![CDATA[
+UpdateParam param = new UpdateParam();
+param.salary = new BigDecimal(1200);
+param.id = 10;
+int count = jdbcManager.updateBySqlFile(
+    "examples/entity/Employee/update.sql", param)
+    .execute();
+]]></source>
+			</subsection>
+
+			<subsection name="バッチ挿入・更新・削除">
+				<p>
+					SQLファイルを使ってエンティティをバッチ更新する場合は、
+					<code>updateBatchBySqlFile()</code>
+					、
+					<code>execute()</code>
+					を組み合わせます。 挿入、削除も
+					<code>updateBatchBySqlFile()</code>
+					を使います。
+				</p>
+				<p>
+					SQLファイルのパラメータが1つで値が
+					<code>null</code>
+					にならない場合は、
+					<code>updateBatchBySqlFile()</code>
+					の2番目の引数で値のリストを指定します。
+				</p>
+				<source><![CDATA[
+List<Integer> paramList = new ArrayList<Integer>();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples/entity/Employee/update.sql", paramList)
+    .execute();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>updateBatchBySqlFile()</code>
+					の2番目の引数を、 JavaBeansのリストあるいは配列(可変長引数)にして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+				<source><![CDATA[
+package examples.entity.Employee;
+
+public class UpdateParam {
+    public Integer id;
+    public BigDecimal salary;
+}
+]]></source>
+				<source><![CDATA[
+update emp set salary = /*salary*/1000
+where id = /*id*/1
+]]></source>
+				<source><![CDATA[
+List<UpdateParam> paramList = new ArrayList<UpdateParam>();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples/entity/Employee/update.sql", paramList)
+    .execute();
+]]></source>
+			</subsection>
+		</section>
+
+		<section name="ストアドの呼び出し">
+			<subsection name="ストアドプロシージャの呼び出し">
+				<p>
+					SQLファイルを使ってストアドプロシージャを呼び出す場合は、
+					<code>callBySqlFile()</code>
+					と
+					<code>execute()</code>
+					を組み合わせます。
+					<code>callBySqlFile()</code>
+					の最初の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。
+				</p>
+				<p>最初の例は、パラメータのない場合です。</p>
+				<source><![CDATA[
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql").execute();
+]]></source>
+				<p>
+					INのパラメータが1つだけで、そのパラメータが
+					<code>null</code>
+					にならない場合は、
+					<code>callBySqlFile()</code>
+					の2番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", "hoge").execute();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>callBySqlFile()</code>
+					の2番目の引数にJavaBeansを指定します。
+					プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
+				</p>
+				<ul>
+					<li>
+						<p>
+							フィールドにアノテーションが付けられていない場合、
+							<code>IN</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Out</code>
+							アノテーションが付けられている場合、
+							<code>OUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@InOut</code>
+							アノテーションが付けられている場合、
+							<code>INOUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@ResultSet</code>
+							アノテーションが付けられている場合、 パラメータ以外で戻される結果セットになります。
+							ただし、 OracleやPostgreSQLのように、
+							パラメータ以外で結果セットを返すことが出来ないRDBMSの場合は、
+							<code>OUT</code>
+							パラメータとして扱われます。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Lob</code>
+							が付けられている場合、 そのパラメータはLOBとして扱われます。
+							<code>@Lob</code>
+							アノテーションは他のアノテーションと組み合わせて使用することが出来ます。
+						</p>
+					</li>
+				</ul>
+				<source><![CDATA[
+public class MyDto {
+    public String arg1; // 第1引数 (IN)
+
+    @Out
+    public String arg2; // 第2引数 (OUT)
+
+    @InOut
+    public int arg3;    // 第3引数 (INOUT)
+
+    @ResultSet
+    public List<String> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = "hoge";
+dto.arg3 = 2;
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", dto).execute();
+System.out.println(dto.arg2);
+System.out.println(dto.arg3);
+System.out.println(dto.result);
+]]></source>
+				<p>
+					ストアドプロシージャが複数のカラムを持つ結果セットを返す場合は、
+					対応するフィールドの型をList&lt;結果セットの行に対応するJavaBeansの型&gt;にします。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", dto).execute();
+System.out.println(dto.result);
+]]></source>
+				<p>
+					オラクルとPostgreSQLの場合は、結果セットをパラメータで受け取る必要があります。
+					これらのRDBMSでは、
+					<code>@ResultSet</code>
+					アノテーションが付けられたパラメータは
+					<code>OUT</code>
+					パラメータとして扱われるので、
+					ストアドプロシージャ呼び出しのSQLの中に対応するバインド変数を付け加えます。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 第2引数 (OUT)
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+jdbcManager.callBySql("examples/entity/Employee/callMyProc.sql", dto).execute();
+System.out.println(dto.result);
+]]></source>
+			</subsection>
+
+			<subsection name="ストアドファンクションの呼び出し">
+				<p>
+					SQLファイルを使ってストアドファンクションを呼び出す場合は、
+					<code>callBySqlFile()</code>
+					と、
+					<code>getSingleResult()</code>
+					または
+					<code>getResultList()</code>
+					を組み合わせます。
+					<code>callBySqlFile()</code>
+					の1番目の引数でストアドファンクションの戻り値の型を指定します。 2番目の引数は、
+					<a href="#SQLファイルのパス">SQLファイルのパス</a>
+					です。
+				</p>
+				<p>最初の例はパラメータがなく、 戻り値が結果セットでない場合です。</p>
+				<source><![CDATA[
+String result = 
+    jdbcManager
+        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql")
+        .getSingleResult();
+]]></source>
+				<p>
+					OracleやPostgreSQLのように、
+					ストアドファンクションの戻り値で結果セットを返すことが出来る場合は
+					<code>getResultList()</code>
+					で結果の
+					<code>List</code>
+					を受け取ります。
+					<code>callBySqlFile()</code>
+					の1番目の引数で
+					<code>List</code>
+					の要素の型を指定します。
+				</p>
+				<source><![CDATA[
+List<String> result = 
+    jdbcManager
+        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql")
+        .getResultList();
+]]></source>
+				<p>
+					結果セットの行が複数のカラムを持つ場合は
+					<code>List</code>
+					の要素をJavaBeansにします。
+				</p>
+				<source><![CDATA[
+List<MyDto> result =
+    jdbcManager
+        .callBySqlFile(MyDto.class, "examples/entity/Employee/callMyFunc.sql")
+        .getResultList();
+]]></source>
+				<p>
+					INのパラメータが1つだけで、そのパラメータが
+					<code>null</code>
+					にならない場合は、
+					<code>callBySqlFile()</code>
+					の3番目の引数で値を直接指定します。
+				</p>
+				<source><![CDATA[
+String result = 
+    jdbcManager
+        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", "hoge")
+        .getSingleResult();
+]]></source>
+				<p>
+					上記以外の場合は、
+					<code>callBySqlFile()</code>
+					の3番目の引数にJavaBeansを指定します。
+					ストアドファンクションを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
+				</p>
+				<ul>
+					<li>
+						<p>
+							フィールドにアノテーションが付けられていない場合、
+							<code>IN</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Out</code>
+							アノテーションが付けられている場合、
+							<code>OUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@InOut</code>
+							アノテーションが付けられている場合、
+							<code>INOUT</code>
+							パラメータになります。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@ResultSet</code>
+							アノテーションが付けられている場合、 パラメータ以外で戻される結果セットになります。
+							ただし、 OracleやPostgreSQLのように、
+							パラメータ以外で結果セットを返すことが出来ないRDBMSの場合は、
+							<code>OUT</code>
+							パラメータとして扱われます。
+						</p>
+					</li>
+					<li>
+						<p>
+							フィールドに
+							<code>@Lob</code>
+							が付けられている場合、 そのパラメータはLOBとして扱われます。
+							<code>@Lob</code>
+							アノテーションは他のアノテーションと組み合わせて使用することが出来ます。
+						</p>
+					</li>
+				</ul>
+				<source><![CDATA[
+public class MyDto {
+    public String arg1; // 第1引数 (IN)
+
+    @Out
+    public String arg2; // 第2引数 (OUT)
+
+    @InOut
+    public int arg3;    // 第3引数 (INOUT)
+
+    @ResultSet
+    public List<String> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = "hoge";
+dto.arg3 = 2;
+String result = 
+    jdbcManager
+        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", dto)
+        .getSingleResult();
+System.out.println(result);
+System.out.println(dto.arg1);
+System.out.println(dto.arg3);
+System.out.println(dto.result);
+]]></source>
+				<p>
+					ストアドファンクションが複数のカラムを持つ結果セットを返す場合は、
+					対応するフィールドの型をList&lt;結果セットの行に対応するJavaBeansの型&gt;にします。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 結果セット
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+String result = 
+    jdbcManager
+        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", dto)
+        .getSingleResult();
+System.out.println(result);
+System.out.println(dto.result);
+]]></source>
+				<p>
+					オラクルとPostgreSQLの場合は、戻り値以外の結果セットをパラメータで受け取る必要があります。
+					これらのRDBMSでは、
+					<code>@ResultSet</code>
+					アノテーションが付けられたパラメータは
+					<code>OUT</code>
+					パラメータとして扱われるので、
+					ストアドファンクション呼び出しのSQLの中に対応するバインド変数を付け加えます。
+				</p>
+				<source><![CDATA[
+public class MyDto {
+    public int arg1; // 第1引数 (IN)
+
+    @ResultSet
+    public List<EmployeeDto> result; // 第2引数 (OUT)
+}
+]]></source>
+				<source><![CDATA[
+MyDto dto = new MyDto();
+dto.arg1 = 1;
+String result = 
+    jdbcManager
+        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", dto)
+        .getSingleResult();
+System.out.println(result);
+System.out.println(dto.result);
+]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>
