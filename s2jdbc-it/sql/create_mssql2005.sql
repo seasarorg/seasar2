@@ -129,11 +129,11 @@ GO
 
 CREATE PROCEDURE [dbo].[PROC_RESULTSET_OUT]
     @employeeId int,
-    @count int OUTPUT
+    @employeeCount int OUTPUT
 AS
 BEGIN
     SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
-    SELECT @count = COUNT(*) FROM EMPLOYEE;
+    SELECT @employeeCount = COUNT(*) FROM EMPLOYEE;
 END
 GO
 
@@ -159,13 +159,13 @@ GO
 CREATE PROCEDURE [dbo].[PROC_RESULTSETS_UPDATES_OUT]
     @employeeId int,
     @departmentId int,
-    @count int OUTPUT
+    @employeeCount int OUTPUT
 AS
 BEGIN
     SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
     UPDATE ADDRESS SET STREET = 'HOGE' WHERE address_id = 1;
     SELECT * FROM DEPARTMENT WHERE department_id > @departmentId ORDER BY department_id;
     UPDATE ADDRESS SET STREET = 'FOO' WHERE address_id = 2;
-    SELECT @count = COUNT(*) FROM EMPLOYEE;
+    SELECT @employeeCount = COUNT(*) FROM EMPLOYEE;
 END
 GO

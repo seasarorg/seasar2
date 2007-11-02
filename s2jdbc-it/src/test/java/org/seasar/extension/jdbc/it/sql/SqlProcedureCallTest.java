@@ -129,7 +129,7 @@ public class SqlProcedureCallTest extends S2TestCase {
         assertEquals("JAMES", employees.get(1).employeeName);
         assertEquals("FORD", employees.get(2).employeeName);
         assertEquals("MILLER", employees.get(3).employeeName);
-        assertEquals(14, dto.count_OUT);
+        assertEquals(14, dto.employeeCount_OUT);
     }
 
     /**
@@ -240,7 +240,7 @@ public class SqlProcedureCallTest extends S2TestCase {
                 "select street from Address where address_id = ?",
                 2).getSingleResult();
         assertEquals("FOO", street);
-        assertEquals(14, dto.count_OUT);
+        assertEquals(14, dto.employeeCount_OUT);
     }
 
     /**
@@ -288,7 +288,7 @@ public class SqlProcedureCallTest extends S2TestCase {
         public int employeeId;
 
         /** */
-        public int count_OUT;
+        public int employeeCount_OUT;
 
     }
 
@@ -347,7 +347,7 @@ public class SqlProcedureCallTest extends S2TestCase {
         public int departmentId;
 
         /** */
-        public int count_OUT;
+        public int employeeCount_OUT;
     }
 
 }
