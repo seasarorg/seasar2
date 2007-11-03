@@ -22,6 +22,6 @@
 	<classpathentry kind="lib" path="lib/s2-extension-2.4.18-rc2-SNAPSHOT.jar" sourcepath="lib/sources/s2-extension-2.4.18-rc2-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/s2-framework-2.4.18-rc2-SNAPSHOT.jar" sourcepath="lib/sources/s2-framework-2.4.18-rc2-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="lib" path="lib/s2-tiger-2.4.18-rc2-SNAPSHOT.jar" sourcepath="lib/sources/s2-tiger-2.4.18-rc2-SNAPSHOT-sources.jar"/>
-	<classpathentry kind="lib" path="lib/h2-2007-04-29.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

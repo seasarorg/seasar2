@@ -13,43 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples.dto;
 
-import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
+import examples.entity.Employee;
 
 /**
- * 部署です。
- * 
  * @author higa
  * 
  */
-@Entity
-public class Department {
+public class EmployeeDto extends Employee {
 
 	/**
-	 * 識別子です。
+	 * 部署名です。
 	 */
-	@Id
-	public Integer id;
-
-	/**
-	 * 名前です。
-	 */
-	public String name;
-
-	/**
-	 * 従業員のリストです。
-	 */
-	@OneToMany(mappedBy = "department")
-	public List<Employee> employeeList;
-	/**
-	 * バージョンです。
-	 */
-	@Version
-	public Integer version;
+	public String departmentName;
 }
