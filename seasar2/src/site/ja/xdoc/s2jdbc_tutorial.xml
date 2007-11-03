@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - チュートリアル</title>
+	</properties>
+	<body>
+		<section name="目次">
+			<ul>
+				<li>
+					<p>
+						<a href="#セットアップ">セットアップ</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+
+		<section name="セットアップ">
+		<p>
+		S2JDBC-Tutorial-xxx.zipを解凍し、その中にあるs2jdbc-tutorialを
+		Eclipseにインポートしてください。これだけでセットアップは完了です。
+		このチュートリアルのデータベースは、H2を組み込みモードで使用しているので、
+		起動など特に必要ありません。
+		</p>
+		</section>
+		
+		<section name="エンティティ">
+		<p>
+		テーブルのデータとJavaのオブジェクトのマッピングは、
+		エンティティに対してアノテーションで指定します。
+		エンティティというのは、テーブルの1行に対応するJavaのオブジェクトだと
+		理解していれば良いでしょう。
+		</p>
+		<p>
+		それでは、Employeeエンティティを見てみましょう。
+		<code>src/main/java/examples/entity/Employee.java</code>を開いてください。
+		</p>
+		<source><![CDATA[
+package examples.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Version;
+
+@Entity
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
+
+    public String name;
+
+    public JobType jobType;
+
+    public Integer salary;
+
+    public Integer departmentId;
+
+    @ManyToOne
+    public Department department;
+
+    public Integer addressId;
+
+    @OneToOne
+    public Address address;
+
+    @Version
+    public Integer version;
+}
+]]></source>
+		</section>
+	</body>
+</document>

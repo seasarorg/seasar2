@@ -91,16 +91,16 @@
 			</p>
 			<p>
 				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
-				<code>ルートパッケージ.entity.エンティティ名</code>
+				<code>ルートパッケージ.sql.テーブル名</code>
 				のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
-				<code>examples.entity.Employee</code>
-				エンティティに関するSQLファイルは、
-				<code>examples/entity/Employee</code>
+				<code>employee</code>
+				テーブルに関するSQLファイルは、
+				<code>examples/sql/employee</code>
 				ディレクトリにおくと良いでしょう。
 			</p>
 			<p>
-				複数のテーブルを結合するような場合は、 一番主軸となっているテーブルのエンティティを選びます。
-				プロシージャの場合も同様です。
+				複数のテーブルを結合するような場合は、 一番主軸となっているテーブルを選びます。
+				プロシージャやファンクションの場合も同様です。
 			</p>
 			<p>何のパラメータもない単純なSQLファイルは次のようになります。</p>
 			<source><![CDATA[
@@ -254,9 +254,9 @@ jobType = /*jobType*/'CLERK'
 			<subsection name="SQLファイルのパス">
 				<p>
 					SQLファイルのパスは、
-					<code>examples/entity/Employee/selectAll.sql</code>
+					<code>examples/sql/employee/selectAll.sql</code>
 					のように指定します。 このパスに対するデフォルトの物理的なファイルは、 そのまま
-					<code>examples/entity/Employee/selectAll.sql</code>
+					<code>examples/sql/employee/selectAll.sql</code>
 					になります。 ただし、
 					<a href="s2jdbc_setup.html#ダイアレクト">ダイアレクト</a>
 					のサフィックスに対応するファイルがあれば、 そちらが優先されます。
@@ -264,7 +264,7 @@ jobType = /*jobType*/'CLERK'
 				<p>
 					例えば、オラクルを使っている場合、
 					<code>
-						examples/entity/Employee/selectAll_oracle.sql
+						examples/sql/employee/selectAll_oracle.sql
 					</code>
 					があれば、デフォルトより優先されます。
 				</p>
@@ -287,7 +287,7 @@ jobType = /*jobType*/'CLERK'
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/entity/Employee/selectAll.sql")
+    EmployeeDto.class, "examples/sql/employee/selectAll.sql")
     .getResultList();
 ]]></source>
 				<p>
@@ -297,7 +297,7 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 				</p>
 				<source><![CDATA[
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/entity/Employee/selectAll.sql", 10)
+    EmployeeDto.class, "examples/sql/employee/selectAll.sql", 10)
     .getResultList();
 ]]></source>
 				<p>
@@ -324,7 +324,7 @@ SelectAllParam param = new SelectAllParam();
 param.salaryMin = new BigDecimal(1200);
 param.salaryMax = new BigDecimal(1800);
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/entity/Employee/selectAll.sql", param)
+    EmployeeDto.class, "examples/sql/employee/selectAll.sql", param)
     .getResultList();
 ]]></source>
 				<p>
@@ -345,7 +345,7 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 				</p>
 				<source><![CDATA[
 List<RowMap> results = jdbcManager.selectBySqlFile(
-    RowMap.class, "examples/entity/Employee/selectAll.sql")
+    RowMap.class, "examples/sql/employee/selectAll.sql")
     .getResultList();
 ]]></source>
 				<p>
@@ -378,7 +378,7 @@ List<RowMap> results = jdbcManager.selectBySqlFile(
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
 EmployeeDto result = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/entity/Employee/selectSingle.sql")
+    EmployeeDto.class, "examples/sql/employee/selectSingle.sql")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -388,7 +388,7 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 				</p>
 				<source><![CDATA[
 EmployeeDto result = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/entity/Employee/selectSingle.sql", 10)
+    EmployeeDto.class, "examples/sql/employee/selectSingle.sql", 10)
     .getSingleResult();
 ]]></source>
 				<p>
@@ -415,7 +415,7 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 				</p>
 				<source><![CDATA[
 RowMap result = jdbcManager.selectBySqlFile(
-    RowMap.class, "examples/entity/Employee/selectSingle.sql")
+    RowMap.class, "examples/sql/employee/selectSingle.sql")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -451,7 +451,7 @@ select id, name, ... from employee order by name
 ]]></source>
 				<source><![CDATA[
 jdbcManager.selectBySqlFile(EmployeeDto.class,
-    "examples/entity/Employee/selectAll.sql")
+    "examples/sql/employee/selectAll.sql")
     .limit(100)
     .offset(10)
     .getResultList();
@@ -473,7 +473,7 @@ jdbcManager.selectBySqlFile(EmployeeDto.class,
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
 int count = jdbcManager.updateBySqlFile(
-    "examples/entity/Employee/update.sql")
+    "examples/sql/employee/update.sql")
     .execute();
 ]]></source>
 				<p>
@@ -485,7 +485,7 @@ int count = jdbcManager.updateBySqlFile(
 				</p>
 				<source><![CDATA[
 int count = jdbcManager.updateBySqlFile(
-    "examples/entity/Employee/update.sql", 10)
+    "examples/sql/employee/update.sql", 10)
     .execute();
 ]]></source>
 				<p>
@@ -511,7 +511,7 @@ UpdateParam param = new UpdateParam();
 param.salary = new BigDecimal(1200);
 param.id = 10;
 int count = jdbcManager.updateBySqlFile(
-    "examples/entity/Employee/update.sql", param)
+    "examples/sql/employee/update.sql", param)
     .execute();
 ]]></source>
 			</subsection>
@@ -537,7 +537,7 @@ int count = jdbcManager.updateBySqlFile(
 List<Integer> paramList = new ArrayList<Integer>();
 ...
 int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples/entity/Employee/update.sql", paramList)
+    "examples/sql/employee/update.sql", paramList)
     .execute();
 ]]></source>
 				<p>
@@ -562,7 +562,7 @@ where id = /*id*/1
 List<UpdateParam> paramList = new ArrayList<UpdateParam>();
 ...
 int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples/entity/Employee/update.sql", paramList)
+    "examples/sql/employee/update.sql", paramList)
     .execute();
 ]]></source>
 			</subsection>
@@ -583,7 +583,7 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
 				</p>
 				<p>最初の例は、パラメータのない場合です。</p>
 				<source><![CDATA[
-jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql").execute();
+jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql").execute();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -593,7 +593,7 @@ jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql").execute();
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", "hoge").execute();
+jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", "hoge").execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -666,7 +666,7 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", dto).execute();
+jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", dto).execute();
 System.out.println(dto.arg2);
 System.out.println(dto.arg3);
 System.out.println(dto.result);
@@ -686,7 +686,7 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.callBySqlFile("examples/entity/Employee/callMyProc.sql", dto).execute();
+jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", dto).execute();
 System.out.println(dto.result);
 ]]></source>
 				<p>
@@ -709,7 +709,7 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.callBySql("examples/entity/Employee/callMyProc.sql", dto).execute();
+jdbcManager.callBySql("examples/sql/employee/callMyProc.sql", dto).execute();
 System.out.println(dto.result);
 ]]></source>
 			</subsection>
@@ -732,7 +732,7 @@ System.out.println(dto.result);
 				<source><![CDATA[
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql")
+        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql")
         .getSingleResult();
 ]]></source>
 				<p>
@@ -750,7 +750,7 @@ String result =
 				<source><![CDATA[
 List<String> result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql")
+        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql")
         .getResultList();
 ]]></source>
 				<p>
@@ -761,7 +761,7 @@ List<String> result =
 				<source><![CDATA[
 List<MyDto> result =
     jdbcManager
-        .callBySqlFile(MyDto.class, "examples/entity/Employee/callMyFunc.sql")
+        .callBySqlFile(MyDto.class, "examples/sql/employee/callMyFunc.sql")
         .getResultList();
 ]]></source>
 				<p>
@@ -774,7 +774,7 @@ List<MyDto> result =
 				<source><![CDATA[
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", "hoge")
+        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", "hoge")
         .getSingleResult();
 ]]></source>
 				<p>
@@ -850,7 +850,7 @@ dto.arg1 = "hoge";
 dto.arg3 = 2;
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", dto)
+        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", dto)
         .getSingleResult();
 System.out.println(result);
 System.out.println(dto.arg1);
@@ -874,7 +874,7 @@ MyDto dto = new MyDto();
 dto.arg1 = 1;
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", dto)
+        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", dto)
         .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
@@ -901,7 +901,7 @@ MyDto dto = new MyDto();
 dto.arg1 = 1;
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/entity/Employee/callMyFunc.sql", dto)
+        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", dto)
         .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
