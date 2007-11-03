@@ -255,6 +255,9 @@ public Integer id2;
 					<dt>GenerationType.AUTO(デフォルト)</dt>
 					<dd>
 						データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。
+						IDENTITYが使える場合はIDENTITYに、
+						IDENTITYが使えなくてSEQUENCEが使える場合はSEQUENCEに、
+						IDENTITYもSEQUENCEも使えない場合はTABLEになります。
 					</dd>
 				</dl>
 
