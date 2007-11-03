@@ -16,6 +16,7 @@
 package examples.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -34,6 +35,7 @@ public class Employee {
 	 * 識別子です。
 	 */
 	@Id
+	@GeneratedValue
 	public Integer id;
 
 	/**

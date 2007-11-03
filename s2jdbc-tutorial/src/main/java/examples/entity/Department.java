@@ -18,6 +18,7 @@ package examples.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
@@ -35,6 +36,7 @@ public class Department {
 	 * 識別子です。
 	 */
 	@Id
+	@GeneratedValue
 	public Integer id;
 
 	/**

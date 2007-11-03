@@ -16,6 +16,7 @@
 package examples.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
@@ -33,6 +34,7 @@ public class Address {
 	 * 識別子です。
 	 */
 	@Id
+	@GeneratedValue
 	public Integer id;
 
 	/**
