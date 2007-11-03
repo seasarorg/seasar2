@@ -149,6 +149,8 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      * @return 更新された行数の配列
      */
     protected int[] executeBatch(final PreparedStatement ps) {
+        final int batchSize = this.batchSize > 0 ? this.batchSize : jdbcManager
+                .getDialect().getDefaultBatchSize();
         final int size = entities.size();
         final int[] updateRows = new int[size];
         int pos = 0;

@@ -108,12 +108,16 @@ public class StandardDialect implements DbmsDialect {
         return null;
     }
 
+    public int getDefaultBatchSize() {
+        return 0;
+    }
+
     /**
      * 行番号ファンクション名を返します。
      * 
      * @return 行番号ファンクション名
      */
-    public String getRowNumberFunctionName() {
+    protected String getRowNumberFunctionName() {
         return "row_number()";
     }
 

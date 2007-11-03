@@ -176,4 +176,11 @@ public interface DbmsDialect {
      */
     String getSequenceNextValString(String sequenceName);
 
+    /**
+     * デフォルトのバッチサイズを返します。
+     * 
+     * @return デフォルトのバッチサイズ
+     */
+    int getDefaultBatchSize();
+
 }
