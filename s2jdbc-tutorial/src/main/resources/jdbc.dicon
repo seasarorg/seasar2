@@ -4,7 +4,23 @@
 <components namespace="jdbc">
 	<include path="jta.dicon"/>
 
+	<!-- for HSQLDB -->
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.hsqldb.jdbcDriver"
+		</property>
+		<property name="URL">
+			"jdbc:hsqldb:file:"
+				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@examples.entity.Employee@class).getCanonicalPath()
+				+ "/data/test"
+		</property>
+		<property name="user">"sa"</property>
+		<property name="password">""</property>
+	</component>
+	
 	<!-- for H2 -->
+	<!--
 	<component name="xaDataSource"
 		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
 		<property name="driverClassName">
@@ -18,7 +34,7 @@
 		<property name="user">"sa"</property>
 		<property name="password"></property>
 	</component>
-
+	-->
 	<!-- for Oracle -->
 	<!--
 	<component name="xaDataSource"

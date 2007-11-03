@@ -8,7 +8,7 @@
 		<property name="maxRows">0</property>
 		<property name="fetchSize">0</property>
 		<property name="queryTimeout">0</property>
-		<property name="dialect">h2Dialect</property>
+		<property name="dialect">hsqlDialect</property>
 		<!--
 		<property name="dialect">db2390Dialect</property>
 		<property name="dialect">db2400Dialect</property>
