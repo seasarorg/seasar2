@@ -51,6 +51,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     /** エンティティメタデータ */
     protected final EntityMeta entityMeta;
 
+    /** バッチサイズ */
+    protected int batchSize;
+
     /**
      * @param jdbcManager
      *            内部的なJDBCマネージャ
@@ -74,17 +77,30 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     }
 
     /**
+     * バッチ更新のサイズを設定します。
+     * 
+     * @param batchSize
+     *            バッチ更新のサイズ
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public S batchSize(final int batchSize) {
+        this.batchSize = batchSize;
+        return (S) this;
+    }
+
+    public int[] execute() {
+        prepare("executeBatch");
+        return executeInternal();
+    }
+
+    /**
      * エンティティのリストを返します。
      * 
      * @return エンティティのリスト
      */
     public List<T> getEntities() {
         return entities;
-    }
-
-    public int[] execute() {
-        prepare("executeBatch");
-        return executeInternal();
     }
 
     /**
@@ -133,14 +149,23 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      * @return 更新された行数の配列
      */
     protected int[] executeBatch(final PreparedStatement ps) {
-        for (final T entity : entities) {
+        final int size = entities.size();
+        final int[] updateRows = new int[size];
+        int pos = 0;
+        for (int i = 0; i < size; ++i) {
+            final T entity = entities.get(i);
             prepareParams(entity);
             logSql();
             prepareInParams(ps);
             PreparedStatementUtil.addBatch(ps);
             resetParams();
+            if (i == size - 1 || (batchSize > 0 && (i + 1) % batchSize == 0)) {
+                final int[] rows = PreparedStatementUtil.executeBatch(ps);
+                System.arraycopy(rows, 0, updateRows, pos, rows.length);
+                pos = i + 1;
+            }
         }
-        return PreparedStatementUtil.executeBatch(ps);
+        return updateRows;
     }
 
     /**
