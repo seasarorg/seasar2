@@ -80,7 +80,6 @@ public class AbsAutoUpdateTest extends TestCase {
         entity.version = new Long(1);
         MyUpdate<Eee> query = new MyUpdate<Eee>(manager, entity);
         query.execute();
-        assertEquals(new Long(2), entity.version);
     }
 
     private static class MyUpdate<T> extends AbstractAutoUpdate<T, MyUpdate<T>> {

@@ -28,6 +28,8 @@ import org.seasar.extension.jdbc.SetClause;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.IntegerConversionUtil;
+import org.seasar.framework.util.LongConversionUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
@@ -240,6 +242,21 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
     @Override
     protected boolean isOptimisticLock() {
         return !includeVersion && entityMeta.hasVersionPropertyMeta();
+    }
+
+    @Override
+    protected void incrementVersion() {
+        final Field field = entityMeta.getVersionPropertyMeta().getField();
+        if (field.getType() == int.class || field.getType() == Integer.class) {
+            final int version = IntegerConversionUtil.toPrimitiveInt(FieldUtil
+                    .get(field, entity)) + 1;
+            FieldUtil.set(field, entity, Integer.valueOf(version));
+        } else if (field.getType() == long.class
+                || field.getType() == Long.class) {
+            final long version = LongConversionUtil.toPrimitiveLong(FieldUtil
+                    .get(field, entity)) + 1;
+            FieldUtil.set(field, entity, Long.valueOf(version));
+        }
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.IntegerConversionUtil;
+import org.seasar.framework.util.LongConversionUtil;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -110,6 +114,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
             if (isOptimisticLock()) {
                 validateRows(rows);
             }
+            if (entityMeta.hasVersionPropertyMeta()) {
+                incrementVersions();
+            }
             return rows;
         } finally {
             if (!jdbcContext.isTransactional()) {
@@ -192,6 +199,26 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
         for (int i = 0; i < rows.length; ++i) {
             if (rows[i] == 0) {
                 throw new SOptimisticLockException(entities.get(i));
+            }
+        }
+    }
+
+    /**
+     * バージョンの値を増加させます。
+     */
+    protected void incrementVersions() {
+        Field field = entityMeta.getVersionPropertyMeta().getField();
+        for (final T entity : entities) {
+            if (field.getType() == int.class
+                    || field.getType() == Integer.class) {
+                int version = IntegerConversionUtil.toPrimitiveInt(FieldUtil
+                        .get(field, entity)) + 1;
+                FieldUtil.set(field, entity, Integer.valueOf(version));
+            } else if (field.getType() == long.class
+                    || field.getType() == Long.class) {
+                long version = LongConversionUtil.toPrimitiveLong(FieldUtil
+                        .get(field, entity)) + 1;
+                FieldUtil.set(field, entity, Long.valueOf(version));
             }
         }
     }

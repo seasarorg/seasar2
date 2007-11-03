@@ -563,6 +563,9 @@ public class AutoBatchUpdateTest extends TestCase {
         assertEquals(1, result[0]);
         assertEquals(1, result[1]);
         assertEquals(0, result[2]);
+        assertEquals(new Long(1), entities.get(0).version);
+        assertEquals(new Long(1), entities.get(1).version);
+        assertEquals(new Long(1), entities.get(2).version);
     }
 
 }

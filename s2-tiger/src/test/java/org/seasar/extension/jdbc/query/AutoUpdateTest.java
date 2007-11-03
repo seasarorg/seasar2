@@ -664,6 +664,7 @@ public class AutoUpdateTest extends TestCase {
         };
         query.includesVersion();
         assertEquals(0, query.execute());
+        assertEquals(new Long(2), eee.version);
     }
 
 }
