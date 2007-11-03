@@ -28,7 +28,7 @@ import examples.dto.EmployeeDto;
  * @author higa
  * 
  */
-public class JdbcManagerTest extends S2TestCase {
+public class S2JDBCTest extends S2TestCase {
 
 	private static final String SELECT_EMPLOYEE_DTO = "select e.*, d.name as department_name"
 		+ " from employee e left outer join department d on e.department_id = d.id"
@@ -56,6 +56,20 @@ public class JdbcManagerTest extends S2TestCase {
 		for (Employee e : results) {
 			System.out.println(e.name);
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	public void testTotalBonus() throws Exception {
+		List<Employee> results = jdbcManager
+			.from(Employee.class)
+			.getResultList();
+		long totalBonus = 0;
+		for (Employee e : results) {
+			totalBonus += e.jobType.createStrategy().calculateBonus(e.salary);
+		}
+		System.out.println("Total Bonus:" + totalBonus);
 	}
 
 	/**

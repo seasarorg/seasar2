@@ -26,21 +26,53 @@ public enum JobType {
 	/**
 	 * クラークです。
 	 */
-	CLERK,
+	CLERK {
+		@Override
+		public JobStrategy createStrategy() {
+			return new Clerk();
+		}
+	},
 	/**
 	 * セールスマンです。
 	 */
-	SALESMAN,
+	SALESMAN {
+		@Override
+		public JobStrategy createStrategy() {
+			return new Salesman();
+		}
+	},
 	/**
 	 * マネージャです。
 	 */
-	MANAGER,
+	MANAGER {
+		@Override
+		public JobStrategy createStrategy() {
+			return new Manager();
+		}
+	},
 	/**
 	 * アナリストです。
 	 */
-	ANALYST,
+	ANALYST {
+		@Override
+		public JobStrategy createStrategy() {
+			return new Analyst();
+		}
+	},
 	/**
 	 * プレシデントです。
 	 */
-	PRESIDENT
+	PRESIDENT {
+		@Override
+		public JobStrategy createStrategy() {
+			return new President();
+		}
+	};
+
+	/**
+	 * 仕事に応じた振る舞いを定義するストラテジを作成します。
+	 * 
+	 * @return 仕事ストラテジ
+	 */
+	public abstract JobStrategy createStrategy();
 }
