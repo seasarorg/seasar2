@@ -51,7 +51,7 @@ import org.seasar.framework.util.ArrayMap;
  * @author higa
  * 
  */
-public class AbstractSelectTest extends TestCase {
+public class AbsSelectTest extends TestCase {
 
     private JdbcManagerImpl manager;
 

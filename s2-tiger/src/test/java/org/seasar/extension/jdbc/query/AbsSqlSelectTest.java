@@ -44,7 +44,7 @@ import org.seasar.framework.mock.sql.MockDataSource;
  * @author higa
  * 
  */
-public class AbstractSqlSelectTest extends TestCase {
+public class AbsSqlSelectTest extends TestCase {
 
     private JdbcManagerImpl manager;
 

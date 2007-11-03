@@ -49,7 +49,7 @@ import org.seasar.framework.util.ArrayMap;
  * @author higa
  * 
  */
-public class AbstractProcedureCallTest extends TestCase {
+public class AbsProcedureCallTest extends TestCase {
 
     private JdbcManagerImpl manager;
 

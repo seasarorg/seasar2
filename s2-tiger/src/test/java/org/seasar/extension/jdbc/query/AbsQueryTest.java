@@ -39,7 +39,7 @@ import org.seasar.framework.util.ArrayMap;
  * @author higa
  * 
  */
-public class AbstractQueryTest extends TestCase {
+public class AbsQueryTest extends TestCase {
 
     private JdbcManagerImpl manager;
 
