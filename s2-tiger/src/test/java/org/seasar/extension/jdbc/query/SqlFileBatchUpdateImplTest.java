@@ -50,9 +50,9 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
 
     private JdbcManagerImpl manager;
 
-    private int batchSize;
+    private int addedBatch;
 
-    private boolean executedBatch;
+    private int executedBatch;
 
     private boolean preparedBindVariables;
 
@@ -158,14 +158,13 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
 
                     @Override
                     public void addBatch() throws SQLException {
-                        batchSize++;
-
+                        ++addedBatch;
                         super.addBatch();
                     }
 
                     @Override
                     public int[] executeBatch() throws SQLException {
-                        executedBatch = true;
+                        ++executedBatch;
                         return new int[] { 1, 1 };
                     }
                 };
@@ -181,8 +180,8 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
         };
         int[] ret = query.execute();
         assertEquals(2, ret.length);
-        assertTrue(executedBatch);
-        assertEquals(2, batchSize);
+        assertEquals(2, addedBatch);
+        assertEquals(1, executedBatch);
         assertTrue(preparedBindVariables);
         assertEquals("update aaa set name = ? where id = 1", query.sqlContext
                 .getSql());
@@ -209,14 +208,13 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
 
                     @Override
                     public void addBatch() throws SQLException {
-                        batchSize++;
-
+                        ++addedBatch;
                         super.addBatch();
                     }
 
                     @Override
                     public int[] executeBatch() throws SQLException {
-                        executedBatch = true;
+                        ++executedBatch;
                         return new int[] { 1, 1 };
                     }
                 };
@@ -258,14 +256,13 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
 
                     @Override
                     public void addBatch() throws SQLException {
-                        batchSize++;
-
+                        ++addedBatch;
                         super.addBatch();
                     }
 
                     @Override
                     public int[] executeBatch() throws SQLException {
-                        executedBatch = true;
+                        ++executedBatch;
                         return new int[] { 1, 1 };
                     }
                 };
@@ -281,8 +278,8 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
         };
         int[] ret = query.execute();
         assertEquals(2, ret.length);
-        assertTrue(executedBatch);
-        assertEquals(2, batchSize);
+        assertEquals(1, executedBatch);
+        assertEquals(2, addedBatch);
         assertTrue(preparedBindVariables);
         assertEquals("update aaa set name = ? where id = ?", query.sqlContext
                 .getSql());
@@ -292,6 +289,119 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
                 .get(0).getCompleteSql());
         assertEquals("update aaa set name = 'bar' where id = 2", sqlLogRegistry
                 .get(1).getCompleteSql());
+    }
+
+    /**
+     * 
+     */
+    public void testExecuteBatch_batchSize1() {
+        SqlFileBatchUpdateImpl<String> query = new SqlFileBatchUpdateImpl<String>(
+                manager, PATH_SIMPLE, asList("foo", "bar", "baz")) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addedBatch;
+                        super.addBatch();
+                    }
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        ++executedBatch;
+                        return executedBatch == 1 ? new int[] { 1, 2 }
+                                : new int[] { 3 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
+        };
+        int[] ret = query.batchSize(2).execute();
+        assertEquals(3, addedBatch);
+        assertEquals(2, executedBatch);
+        assertEquals(3, ret.length);
+        assertEquals(1, ret[0]);
+        assertEquals(2, ret[1]);
+        assertEquals(3, ret[2]);
+        assertTrue(preparedBindVariables);
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+        assertEquals(3, sqlLogRegistry.getSize());
+        assertEquals("update aaa set name = 'foo' where id = 1", sqlLogRegistry
+                .get(0).getCompleteSql());
+        assertEquals("update aaa set name = 'bar' where id = 1", sqlLogRegistry
+                .get(1).getCompleteSql());
+        assertEquals("update aaa set name = 'baz' where id = 1", sqlLogRegistry
+                .get(2).getCompleteSql());
+    }
+
+    /**
+     * 
+     */
+    public void testExecuteBatch_batchSize2() {
+        SqlFileBatchUpdateImpl<String> query = new SqlFileBatchUpdateImpl<String>(
+                manager, PATH_SIMPLE, asList("hoge", "foo", "bar", "baz")) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addedBatch;
+                        super.addBatch();
+                    }
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        ++executedBatch;
+                        return executedBatch == 1 ? new int[] { 1, 2 }
+                                : new int[] { 3, 4 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
+        };
+        int[] ret = query.batchSize(2).execute();
+        assertEquals(4, addedBatch);
+        assertEquals(2, executedBatch);
+        assertEquals(4, ret.length);
+        assertEquals(1, ret[0]);
+        assertEquals(2, ret[1]);
+        assertEquals(3, ret[2]);
+        assertEquals(4, ret[3]);
+        assertTrue(preparedBindVariables);
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+        assertEquals(3, sqlLogRegistry.getSize());
+        assertEquals("update aaa set name = 'foo' where id = 1", sqlLogRegistry
+                .get(0).getCompleteSql());
+        assertEquals("update aaa set name = 'bar' where id = 1", sqlLogRegistry
+                .get(1).getCompleteSql());
+        assertEquals("update aaa set name = 'baz' where id = 1", sqlLogRegistry
+                .get(2).getCompleteSql());
     }
 
     private static class MyDto {

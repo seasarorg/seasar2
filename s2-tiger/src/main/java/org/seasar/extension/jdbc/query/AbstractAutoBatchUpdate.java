@@ -76,13 +76,6 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
                 entities.get(0).getClass());
     }
 
-    /**
-     * バッチ更新のサイズを設定します。
-     * 
-     * @param batchSize
-     *            バッチ更新のサイズ
-     * @return このインスタンス自身
-     */
     @SuppressWarnings("unchecked")
     public S batchSize(final int batchSize) {
         this.batchSize = batchSize;

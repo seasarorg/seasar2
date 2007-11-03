@@ -94,6 +94,13 @@
 								</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#バッチ挿入のサイズを指定する">
+									バッチ挿入のサイズを指定する
+								</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -146,6 +153,13 @@
 								</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#バッチ更新のサイズを指定する">
+									バッチ更新のサイズを指定する
+								</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -167,6 +181,13 @@
 							<p>
 								<a href="#バージョンをチェックしないで削除する">
 									バージョンをチェックしないで削除する
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#バッチ削除のサイズを指定する">
+									バッチ削除のサイズを指定する
 								</a>
 							</p>
 						</li>
@@ -843,6 +864,17 @@ int count = jdbcManager.insert(employee).includes("id", "name").execute();
 int count = jdbcManager.insert(employee).excludes("version").execute();
 ]]></source>
 			</subsection>
+
+			<subsection name="バッチ挿入のサイズを指定する">
+				<p>
+					バッチ挿入のサイズを設定するには
+					<code>batchSize()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager.insertBatch(employees).batchSize(50).execute();
+]]></source>
+			</subsection>
 		</section>
 
 		<section name="更新">
@@ -926,7 +958,7 @@ int count = jdbcManager.update(employee).includes("id", "name").execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.update(employee).excludes("version").execute();
+int count = jdbcManager.updateBatch(employees).excludes("version").execute();
 ]]></source>
 			</subsection>
 
@@ -934,11 +966,25 @@ int count = jdbcManager.update(employee).excludes("version").execute();
 				<p>
 					変更のあったプロパティのみを更新対象にする場合は、
 					<code>changedFrom()</code>
-					を使います。 最初の引数は、比較の対象にする以前のエンティティもしくはマップです。
+					を使います。バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、
+					変更のあったプロパティのみをバッチ更新することはできません。
+					なぜなら、変更のあったプロパティがすべてのエンティティで同じだとは限らないからです。
+					最初の引数は、比較の対象にする以前のエンティティもしくはマップです。
 				</p>
 				<source><![CDATA[
 Employee before = ...;
-int count = jdbcManager.update(employee).changedFrom(before).execute();
+int count = jdbcManager.updateBatch(employees).changedFrom(before).execute();
+]]></source>
+			</subsection>
+
+			<subsection name="バッチ更新のサイズを指定する">
+				<p>
+					バッチ更新のサイズを設定するには
+					<code>batchSize()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager.updateBatch(employees).batchSize(50).execute();
 ]]></source>
 			</subsection>
 		</section>
@@ -990,6 +1036,17 @@ int[] countArray = jdbcManager.deleteBatch(employees).execute();
 				</p>
 				<source><![CDATA[
 int count = jdbcManager.delete(employee).ignoreVersion().execute();
+]]></source>
+			</subsection>
+
+			<subsection name="バッチ削除のサイズを指定する">
+				<p>
+					バッチ削除のサイズを設定するには
+					<code>batchSize()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager.updateDelete(employees).batchSize(50).execute();
 ]]></source>
 			</subsection>
 		</section>

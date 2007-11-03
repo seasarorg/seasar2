@@ -41,9 +41,9 @@ public class SqlBatchUpdateImplTest extends TestCase {
 
     private JdbcManagerImpl manager;
 
-    private int batchSize;
+    private int addedBatch;
 
-    private boolean executedBatch;
+    private int executedBatch;
 
     private boolean preparedBindVariables;
 
@@ -145,13 +145,13 @@ public class SqlBatchUpdateImplTest extends TestCase {
 
                     @Override
                     public void addBatch() throws SQLException {
-                        batchSize++;
+                        ++addedBatch;
                         super.addBatch();
                     }
 
                     @Override
                     public int[] executeBatch() throws SQLException {
-                        executedBatch = true;
+                        ++executedBatch;
                         return new int[] { 1, 1 };
                     }
                 };
@@ -167,8 +167,8 @@ public class SqlBatchUpdateImplTest extends TestCase {
         };
         int[] ret = query.params("hoge", 1).params("hoge2", 2).execute();
         assertEquals(2, ret.length);
-        assertTrue(executedBatch);
-        assertEquals(2, batchSize);
+        assertEquals(1, executedBatch);
+        assertEquals(2, addedBatch);
         assertTrue(preparedBindVariables);
         SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
         assertEquals(2, registry.getSize());
@@ -177,6 +177,125 @@ public class SqlBatchUpdateImplTest extends TestCase {
                 .getCompleteSql());
         sqlLog = registry.get(1);
         assertEquals("update aaa set name = 'hoge2' where id = 2", sqlLog
+                .getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testExecuteBatch_batchSize1() throws Exception {
+        String sql = "update aaa set name = ? where id = ?";
+        SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager, sql,
+                String.class, Integer.class) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addedBatch;
+                        super.addBatch();
+                    }
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        ++executedBatch;
+                        return executedBatch == 1 ? new int[] { 1, 2 }
+                                : new int[] { 3 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
+        };
+        int[] ret = query.params("hoge", 1).params("hoge2", 2).params("hoge3",
+                3).batchSize(2).execute();
+        assertEquals(3, addedBatch);
+        assertEquals(2, executedBatch);
+        assertEquals(3, ret.length);
+        assertEquals(1, ret[0]);
+        assertEquals(2, ret[1]);
+        assertEquals(3, ret[2]);
+        assertTrue(preparedBindVariables);
+        SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
+        assertEquals(3, registry.getSize());
+        SqlLog sqlLog = registry.get(0);
+        assertEquals("update aaa set name = 'hoge' where id = 1", sqlLog
+                .getCompleteSql());
+        sqlLog = registry.get(1);
+        assertEquals("update aaa set name = 'hoge2' where id = 2", sqlLog
+                .getCompleteSql());
+        sqlLog = registry.get(2);
+        assertEquals("update aaa set name = 'hoge3' where id = 3", sqlLog
+                .getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testExecuteBatch_batchSize2() throws Exception {
+        String sql = "update aaa set name = ? where id = ?";
+        SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager, sql,
+                String.class, Integer.class) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addedBatch;
+                        super.addBatch();
+                    }
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        ++executedBatch;
+                        return executedBatch == 1 ? new int[] { 1, 2 }
+                                : new int[] { 3, 4 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
+        };
+        int[] ret = query.params("hoge", 1).params("hoge2", 2).params("hoge3",
+                3).params("hoge4", 4).batchSize(2).execute();
+        assertEquals(4, addedBatch);
+        assertEquals(2, executedBatch);
+        assertEquals(4, ret.length);
+        assertEquals(1, ret[0]);
+        assertEquals(2, ret[1]);
+        assertEquals(3, ret[2]);
+        assertEquals(4, ret[3]);
+        assertTrue(preparedBindVariables);
+        SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
+        assertEquals(3, registry.getSize());
+        SqlLog sqlLog = registry.get(0);
+        assertEquals("update aaa set name = 'hoge2' where id = 2", sqlLog
+                .getCompleteSql());
+        sqlLog = registry.get(1);
+        assertEquals("update aaa set name = 'hoge3' where id = 3", sqlLog
+                .getCompleteSql());
+        sqlLog = registry.get(2);
+        assertEquals("update aaa set name = 'hoge4' where id = 4", sqlLog
                 .getCompleteSql());
     }
 

@@ -25,6 +25,15 @@ package org.seasar.extension.jdbc;
 public interface BatchUpdate<S extends BatchUpdate<S>> extends Query<S> {
 
     /**
+     * バッチ更新のサイズを設定します。
+     * 
+     * @param batchSize
+     *            バッチ更新のサイズ
+     * @return このインスタンス自身
+     */
+    S batchSize(int batchSize);
+
+    /**
      * バッチ更新します。
      * 
      * @return 更新した行数の配列

@@ -55,6 +55,13 @@
 								<a href="#バッチ挿入・更新・削除">バッチ挿入・更新・削除</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#バッチ更新のサイズを指定する">
+									バッチ更新のサイズを指定する
+								</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -563,6 +570,22 @@ List<UpdateParam> paramList = new ArrayList<UpdateParam>();
 ...
 int[] countArray = jdbcManager.updateBatchBySqlFile(
     "examples/sql/employee/update.sql", paramList)
+    .execute();
+]]></source>
+			</subsection>
+
+			<subsection name="バッチ更新のサイズを指定する">
+				<p>
+					バッチ更新のサイズを設定するには
+					<code>batchSize()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+List<UpdateParam> paramList = new ArrayList<UpdateParam>();
+...
+int[] countArray = jdbcManager.updateBatchBySqlFile(
+    "examples/entity/Employee/update.sql", paramList)
+    .batchSize(50)
     .execute();
 ]]></source>
 			</subsection>

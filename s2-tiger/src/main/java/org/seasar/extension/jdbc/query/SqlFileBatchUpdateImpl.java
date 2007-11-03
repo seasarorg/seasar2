@@ -53,6 +53,9 @@ public class SqlFileBatchUpdateImpl<T> extends
      */
     protected List<T> parameterList;
 
+    /** バッチサイズ */
+    protected int batchSize;
+
     /**
      * SQLの解析ノードです。
      */
@@ -83,13 +86,23 @@ public class SqlFileBatchUpdateImpl<T> extends
         this.parameterList = parameterList;
     }
 
+    public SqlFileBatchUpdate<T> batchSize(final int batchSize) {
+        this.batchSize = batchSize;
+        return this;
+    }
+
     public int[] execute() {
         prepare("executeBatch");
-        int[] ret = null;
-        JdbcContext jdbcContext = jdbcManager.getJdbcContext();
+        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             PreparedStatement ps = null;
-            for (T parameter : parameterList) {
+            final int batchSize = this.batchSize > 0 ? this.batchSize
+                    : jdbcManager.getDialect().getDefaultBatchSize();
+            final int size = parameterList.size();
+            final int[] updateRows = new int[size];
+            int pos = 0;
+            for (int i = 0; i < size; ++i) {
+                final T parameter = parameterList.get(i);
                 prepareParameter(parameter);
                 if (ps == null) {
                     prepareSql();
@@ -99,14 +112,19 @@ public class SqlFileBatchUpdateImpl<T> extends
                 prepareInParams(ps);
                 PreparedStatementUtil.addBatch(ps);
                 resetParams();
+                if (i == size - 1
+                        || (batchSize > 0 && (i + 1) % batchSize == 0)) {
+                    final int[] rows = PreparedStatementUtil.executeBatch(ps);
+                    System.arraycopy(rows, 0, updateRows, pos, rows.length);
+                    pos = i + 1;
+                }
             }
-            ret = PreparedStatementUtil.executeBatch(ps);
+            return updateRows;
         } finally {
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
             }
         }
-        return ret;
     }
 
     /**

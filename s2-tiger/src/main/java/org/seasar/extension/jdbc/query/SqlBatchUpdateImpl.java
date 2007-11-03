@@ -21,20 +21,22 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlBatchUpdate;
-import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 
 /**
- * {@link SqlUpdate}の実装クラスです。
+ * {@link SqlBatchUpdate}の実装クラスです。
  * 
  * @author higa
  * 
  */
 public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
         SqlBatchUpdate {
+
+    /** バッチサイズ */
+    protected int batchSize;
 
     /**
      * パラメータの配列のリストです。
@@ -66,6 +68,11 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
         }
     }
 
+    public SqlBatchUpdate batchSize(final int batchSize) {
+        this.batchSize = batchSize;
+        return this;
+    }
+
     public SqlBatchUpdate params(Object... params) {
         paramsList.add(params);
         return this;
@@ -73,12 +80,16 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
 
     public int[] execute() {
         prepare("executeBatch");
-        int[] ret = null;
-        JdbcContext jdbcContext = jdbcManager.getJdbcContext();
+        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
-            PreparedStatement ps = getPreparedStatement(jdbcContext);
-            for (int i = 0; i < paramsList.size(); ++i) {
-                Object[] params = paramsList.get(i);
+            final PreparedStatement ps = getPreparedStatement(jdbcContext);
+            final int batchSize = this.batchSize > 0 ? this.batchSize
+                    : jdbcManager.getDialect().getDefaultBatchSize();
+            final int size = paramsList.size();
+            final int[] updateRows = new int[size];
+            int pos = 0;
+            for (int i = 0; i < size; ++i) {
+                final Object[] params = paramsList.get(i);
                 if (params.length != paramList.size()) {
                     logger.log("ESSR0709", new Object[] {
                             callerClass.getName(), callerMethodName });
@@ -86,20 +97,25 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
                             paramList.size());
                 }
                 for (int j = 0; j < params.length; j++) {
-                    Param param = getParam(j);
+                    final Param param = getParam(j);
                     param.value = params[j];
                 }
                 logSql();
                 prepareInParams(ps);
                 PreparedStatementUtil.addBatch(ps);
+                if (i == size - 1
+                        || (batchSize > 0 && (i + 1) % batchSize == 0)) {
+                    final int[] rows = PreparedStatementUtil.executeBatch(ps);
+                    System.arraycopy(rows, 0, updateRows, pos, rows.length);
+                    pos = i + 1;
+                }
             }
-            ret = PreparedStatementUtil.executeBatch(ps);
+            return updateRows;
         } finally {
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
             }
         }
-        return ret;
     }
 
     /**

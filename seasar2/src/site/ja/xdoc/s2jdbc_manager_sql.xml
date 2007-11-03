@@ -43,6 +43,13 @@
 								<a href="#バッチ挿入・更新・削除">バッチ挿入・更新・削除</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#バッチ更新のサイズを指定する">
+									バッチ更新のサイズを指定する
+								</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -215,6 +222,24 @@ for (EmployeeDto dto : dtoList) {
     batchUpdate.params(dto.salary, dto.id);
 }
 int[] countArray = batchUpdate.execute();
+]]></source>
+			</subsection>
+
+			<subsection name="バッチ更新のサイズを指定する">
+				<p>
+					バッチ更新のサイズを設定するには
+					<code>batchSize()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+List<EmployeeDto> dtoList = ...;
+...
+SqlBatchUpdate batchUpdate = jdbcManager.updateBatchBySql(
+    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class);
+for (EmployeeDto dto : dtoList) {
+    batchUpdate.params(dto.salary, dto.id);
+}
+int[] countArray = batchUpdate.batchSize(50).execute();
 ]]></source>
 			</subsection>
 		</section>
