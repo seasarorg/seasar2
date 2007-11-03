@@ -22,7 +22,6 @@ import java.util.Map;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.framework.util.StringUtil;
 
 /**
  * JavaBeans用のユーティリティです。
@@ -157,8 +156,8 @@ public final class BeanUtil {
                     && (prefix == null || prefix != null
                             && pd.getPropertyName().startsWith(prefix))) {
                 final Object value = pd.getValue(src);
-                String name = StringUtil.ltrim(pd.getPropertyName(), prefix)
-                        .replace('$', '.');
+                String name = pd.getPropertyName().substring(
+                        prefix == null ? 0 : prefix.length()).replace('$', '.');
                 map.put(name, value);
             }
         }

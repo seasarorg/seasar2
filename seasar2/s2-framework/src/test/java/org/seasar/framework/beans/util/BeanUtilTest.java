@@ -102,12 +102,14 @@ public class BeanUtilTest extends TestCase {
     public void testCreateProperties() throws Exception {
         HogeDto2 hoge = new HogeDto2();
         hoge.aaa = "1";
-        hoge.where_bbb = "2";
-        hoge.where_ccc$ddd = "3";
-        Map map = BeanUtil.createProperties(hoge, "where_");
-        assertEquals(2, map.size());
+        hoge.search_bbb = "2";
+        hoge.search_ccc$ddd = "3";
+        hoge.search_employee$name = "4";
+        Map map = BeanUtil.createProperties(hoge, "search_");
+        assertEquals(3, map.size());
         assertEquals("2", map.get("bbb"));
         assertEquals("3", map.get("ccc.ddd"));
+        assertEquals("4", map.get("employee.name"));
     }
 
     /**
@@ -116,13 +118,14 @@ public class BeanUtilTest extends TestCase {
     public void testCreateProperties_nonPrefix() throws Exception {
         HogeDto2 hoge = new HogeDto2();
         hoge.aaa = "1";
-        hoge.where_bbb = "2";
-        hoge.where_ccc$ddd = "3";
+        hoge.search_bbb = "2";
+        hoge.search_ccc$ddd = "3";
         Map map = BeanUtil.createProperties(hoge);
-        assertEquals(3, map.size());
+        assertEquals(4, map.size());
         assertEquals("1", map.get("aaa"));
-        assertEquals("2", map.get("where_bbb"));
-        assertEquals("3", map.get("where_ccc.ddd"));
+        assertEquals("2", map.get("search_bbb"));
+        assertEquals("3", map.get("search_ccc.ddd"));
+        assertNull(map.get("employee.name"));
     }
 
     /**
@@ -191,12 +194,17 @@ public class BeanUtilTest extends TestCase {
         /**
          * 
          */
-        public String where_bbb;
+        public String search_bbb;
 
         /**
          * 
          */
-        public String where_ccc$ddd;
+        public String search_ccc$ddd;
+
+        /**
+         * 
+         */
+        public String search_employee$name;
     }
 
     /**
