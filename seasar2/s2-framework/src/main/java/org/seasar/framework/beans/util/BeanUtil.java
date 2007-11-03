@@ -36,10 +36,12 @@ public final class BeanUtil {
     }
 
     /**
-     * {@link Map}の値をJavaBeansにコピーします。
+     * マップの値をJavaBeansにコピーします。
      * 
      * @param src
+     *            ソース
      * @param dest
+     *            あて先
      */
     public static void copyProperties(Map src, Object dest) {
         if (src == null || dest == null) {
@@ -59,10 +61,12 @@ public final class BeanUtil {
     }
 
     /**
-     * JavaBeansの値を{@link Map}にコピーします。
+     * JavaBeansの値をマップにコピーします。
      * 
      * @param src
+     *            ソース
      * @param dest
+     *            あて先
      */
     public static void copyProperties(Object src, Map dest) {
         if (src == null || dest == null) {
@@ -83,7 +87,9 @@ public final class BeanUtil {
      * JavaBeansの値をJavaBeansにコピーします。
      * 
      * @param src
+     *            ソース
      * @param dest
+     *            あて先
      */
     public static void copyProperties(final Object src, final Object dest) {
         copyProperties(src, dest, true);
@@ -93,8 +99,11 @@ public final class BeanUtil {
      * JavaBeansの値をJavaBeansにコピーします。
      * 
      * @param src
+     *            ソース
      * @param dest
+     *            あて先
      * @param includeNull
+     *            <code>null</code>を含めるかどうか
      */
     public static void copyProperties(final Object src, final Object dest,
             final boolean includeNull) {
@@ -124,24 +133,24 @@ public final class BeanUtil {
     }
 
     /**
-     * JavaBeansの値から{@link Map}を作成します。
+     * JavaBeansの値からマップを作成します。
      * 
      * @param src
      *            ソース
-     * @return JavaBeansの値を使ったマップ
+     * @return JavaBeansの値を持つマップ
      */
     public static Map createProperties(Object src) {
         return createProperties(src, null);
     }
 
     /**
-     * JavaBeansの値から{@link Map}を作成します。
+     * JavaBeansの値からマップを作成します。
      * 
      * @param src
      *            ソース
      * @param prefix
      *            プレフィックス
-     * @return JavaBeansの値を使ったマップ
+     * @return JavaBeansの値を持つマップ
      */
     public static Map createProperties(Object src, String prefix) {
         Map map = new HashMap();
@@ -152,13 +161,17 @@ public final class BeanUtil {
         final int size = beanDesc.getPropertyDescSize();
         for (int i = 0; i < size; ++i) {
             final PropertyDesc pd = beanDesc.getPropertyDesc(i);
-            if (pd.isReadable()
-                    && (prefix == null || prefix != null
-                            && pd.getPropertyName().startsWith(prefix))) {
-                final Object value = pd.getValue(src);
-                String name = pd.getPropertyName().substring(
-                        prefix == null ? 0 : prefix.length()).replace('$', '.');
-                map.put(name, value);
+            if (pd.isReadable()) {
+                if (prefix == null) {
+                    final Object value = pd.getValue(src);
+                    String name = pd.getPropertyName().replace('$', '.');
+                    map.put(name, value);
+                } else if (pd.getPropertyName().startsWith(prefix)) {
+                    final Object value = pd.getValue(src);
+                    String name = pd.getPropertyName().substring(
+                            prefix.length()).replace('$', '.');
+                    map.put(name, value);
+                }
             }
         }
         return map;
