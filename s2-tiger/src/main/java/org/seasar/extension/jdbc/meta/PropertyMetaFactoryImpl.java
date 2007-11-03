@@ -310,7 +310,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             return;
         }
         Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(field.getType());
-        if (!Number.class.isAssignableFrom(clazz)) {
+        if (clazz != Integer.class && clazz != Long.class && clazz != int.class
+                && clazz != long.class) {
             throw new VersionPropertyNotNumberRuntimeException(entityMeta
                     .getName(), propertyMeta.getName());
         }

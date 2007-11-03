@@ -311,6 +311,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
             factory.createPropertyMeta(field, entityMeta);
             fail();
         } catch (VersionPropertyNotNumberRuntimeException expected) {
+            System.out.println(expected);
         }
     }
 
