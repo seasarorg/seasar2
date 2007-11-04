@@ -179,3 +179,51 @@ BEGIN
   RETURN;
 END;
 $$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION FUNC_NONE_PARAM() RETURNS INTEGER 
+AS $$
+BEGIN
+  RETURN 10;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION FUNC_SIMPLETYPE_PARAM(
+  param1 IN INTEGER) RETURNS INTEGER 
+AS $$
+BEGIN
+  RETURN 20;
+END;
+$$ language plpgsql;
+
+
+CREATE OR REPLACE FUNCTION FUNC_DTO_PARAM(
+  param1 IN INTEGER,
+  param2 IN INTEGER) RETURNS INTEGER
+AS $$
+BEGIN
+  RETURN param2 + param1;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION FUNC_RESULTSET(
+  employeeId IN INTEGER) RETURNS refcursor
+AS $$
+DECLARE
+    cur refcursor;
+BEGIN
+  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  RETURN cur;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION FUNC_RESULTSET_UPDATE(
+  employeeId IN INTEGER) RETURNS refcursor
+AS $$
+DECLARE
+    cur refcursor;
+BEGIN
+  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  RETURN cur;
+END;
+$$ language plpgsql;

@@ -257,7 +257,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class MyDto {
+    public static class MyDto {
 
         /** */
         public Integer param1;
@@ -276,7 +276,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class ResultSetDto {
+    public static class ResultSetDto {
 
         /** */
         @ResultSet
@@ -291,7 +291,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class ResultSetOutDto {
+    public static class ResultSetOutDto {
 
         /** */
         @ResultSet
@@ -311,7 +311,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class ResultSetUpdateDto {
+    public static class ResultSetUpdateDto {
 
         /** */
         @ResultSet
@@ -327,7 +327,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class ResultSetsDto {
+    public static class ResultSetsDto {
 
         /** */
         @ResultSet
@@ -349,7 +349,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
      * @author taedium
      * 
      */
-    public class ResultSetsUpdatesOutDto {
+    public static class ResultSetsUpdatesOutDto {
 
         /** */
         @ResultSet

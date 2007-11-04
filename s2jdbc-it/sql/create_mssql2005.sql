@@ -169,3 +169,30 @@ BEGIN
     SELECT @employeeCount = COUNT(*) FROM EMPLOYEE;
 END
 GO
+
+CREATE FUNCTION [dbo].[FUNC_NONE_PARAM] ()
+RETURNS int
+AS
+BEGIN
+    RETURN 10;
+END
+GO
+
+CREATE FUNCTION [dbo].[FUNC_SIMPLETYPE_PARAM] (
+    @param1 int)
+RETURNS int
+AS
+BEGIN
+    RETURN 20;
+END
+GO
+
+CREATE FUNCTION [dbo].[FUNC_DTO_PARAM](
+    @param1 int,
+    @param2 int)
+RETURNS int
+AS
+BEGIN
+    RETURN @param2 + @param1;
+END
+GO
