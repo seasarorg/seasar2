@@ -69,6 +69,7 @@ public class AutoInsertTest extends S2TestCase {
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).execute();
         assertEquals(1, result);
+        assertEquals(1, department.version);
         department =
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 99)).getSingleResult();
@@ -89,6 +90,7 @@ public class AutoInsertTest extends S2TestCase {
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).excludesNull().execute();
         assertEquals(1, result);
+        assertEquals(1, department.version);
         department =
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 99)).getSingleResult();
@@ -117,6 +119,7 @@ public class AutoInsertTest extends S2TestCase {
                 "location",
                 "version").execute();
         assertEquals(1, result);
+        assertEquals(1, department.version);
         department =
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 99)).getSingleResult();
@@ -143,6 +146,7 @@ public class AutoInsertTest extends S2TestCase {
                 "departmentName",
                 "location").execute();
         assertEquals(1, result);
+        assertEquals(1, department.version);
         department =
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 99)).getSingleResult();
@@ -164,6 +168,7 @@ public class AutoInsertTest extends S2TestCase {
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).execute();
         assertEquals(1, result);
+        assertEquals(1, department.version);
         department =
             jdbcManager.from(CompKeyDepartment.class).where(
                 new SimpleWhere().eq("departmentId1", 99).eq(

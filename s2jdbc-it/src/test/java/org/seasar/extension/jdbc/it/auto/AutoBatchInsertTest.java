@@ -69,6 +69,8 @@ public class AutoBatchInsertTest extends S2TestCase {
 
         int[] result = jdbcManager.insertBatch(list).execute();
         assertEquals(2, result.length);
+        assertEquals(1, department.version);
+        assertEquals(1, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -117,6 +119,8 @@ public class AutoBatchInsertTest extends S2TestCase {
                 "location",
                 "version").execute();
         assertEquals(2, result.length);
+        assertEquals(1, department.version);
+        assertEquals(1, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -164,6 +168,8 @@ public class AutoBatchInsertTest extends S2TestCase {
                 .excludes("departmentName", "location")
                 .execute();
         assertEquals(2, result.length);
+        assertEquals(1, department.version);
+        assertEquals(1, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -203,6 +209,8 @@ public class AutoBatchInsertTest extends S2TestCase {
 
         int[] result = jdbcManager.insertBatch(list).execute();
         assertEquals(2, result.length);
+        assertEquals(1, department.version);
+        assertEquals(1, department2.version);
 
         department =
             jdbcManager.from(CompKeyDepartment.class).where(

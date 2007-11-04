@@ -13,6 +13,7 @@ http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/htdocs/jdbc_111060
 このプロジェクトのテストケースは複数のRDBMSに対応しています。
 特定のRDBMSを使用してテストを実行するには次の手順に従ってください。
 （デフォルトではHSQLDBを使用したテストが実行されます。HSQLDBを利用する場合は以下の1~3の手順は不要です。）
+（H2を利用する場合は1と3の手順が不要です。）
 
 1.xadatasource_xxx.diconを用意する。（xxxには任意の名称を指定してください）
   xadatasource_xxx.diconには次の2つのコンポーネントを指定してください。（xadatasource_hsqldb.diconが参考になります）
@@ -30,6 +31,6 @@ http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/htdocs/jdbc_111060
   d) MySQL
   e) PostgreSQL
   f) H2
-  ここに上げたRDBMSを使用する場合は、相当するDDLとデータを用意してください。
+  ここに挙げたRDBMS以外を使用する場合は、相当するDDLとデータを用意してください。
 
 4．JUnitを実行する。

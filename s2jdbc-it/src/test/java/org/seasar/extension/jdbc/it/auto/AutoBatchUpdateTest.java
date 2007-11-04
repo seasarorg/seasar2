@@ -64,6 +64,8 @@ public class AutoBatchUpdateTest extends S2TestCase {
 
         int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
+        assertEquals(2, department.version);
+        assertEquals(2, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -104,6 +106,8 @@ public class AutoBatchUpdateTest extends S2TestCase {
         int[] result =
             jdbcManager.updateBatch(list).includesVersion().execute();
         assertEquals(2, result.length);
+        assertEquals(100, department.version);
+        assertEquals(200, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -151,6 +155,8 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 .includes("departmentName", "location")
                 .execute();
         assertEquals(2, result.length);
+        assertEquals(2, department.version);
+        assertEquals(2, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -198,6 +204,8 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 .excludes("departmentName", "location")
                 .execute();
         assertEquals(2, result.length);
+        assertEquals(2, department.version);
+        assertEquals(2, department2.version);
 
         department =
             jdbcManager.from(Department.class).where(
@@ -239,6 +247,8 @@ public class AutoBatchUpdateTest extends S2TestCase {
 
         int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
+        assertEquals(2, department.version);
+        assertEquals(2, department2.version);
 
         department =
             jdbcManager
