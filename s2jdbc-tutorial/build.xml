@@ -3,9 +3,18 @@
 		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
 	</tstamp>
 	<property name="zipDir" value="target/site/download/${releaseDate}"/>
-	<property name="ver" value="2.4.18-rc2"/>
+	<property name="ver" value="2.4.18-rc2-SNAPSHOT"/>
 
-	<target name="dist">
+	<target name="copy">
+		<copy todir="lib" file="../seasar2/s2-framework/target/s2-framework-${ver}.jar"/>
+		<copy todir="lib" file="../seasar2/s2-extension/target/s2-extension-${ver}.jar"/>
+		<copy todir="lib" file="../s2-tiger/target/s2-tiger-${ver}.jar"/>
+		<copy todir="lib/sources" file="../seasar2/s2-framework/target/s2-framework-${ver}-sources.jar"/>
+		<copy todir="lib/sources" file="../seasar2/s2-extension/target/s2-extension-${ver}-sources.jar"/>
+	    <copy todir="lib/sources" file="../s2-tiger/target/s2-tiger-${ver}-sources.jar"/>		
+	</target>
+	
+	<target name="dist" depends="copy">
 		<mkdir dir="${zipDir}"/>
 		<zip zipfile="${zipDir}/S2JDBC-Tutorial-${ver}.zip">
 			<zipfileset prefix="s2jdbc-tutorial" dir=".">
