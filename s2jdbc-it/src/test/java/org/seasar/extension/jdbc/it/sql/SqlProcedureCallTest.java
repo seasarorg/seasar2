@@ -205,7 +205,7 @@ public class SqlProcedureCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void ignore_testParameter_resultSetsUpdatesOutTx() throws Exception {
+    public void testParameter_resultSetsUpdatesOutTx() throws Exception {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }

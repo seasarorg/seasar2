@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.it.sqlfile;
+package org.seasar.extension.jdbc.it.auto;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import org.seasar.extension.unit.S2TestCase;
  * @author taedium
  * 
  */
-public class SqlFileProcedureCallTest extends S2TestCase {
+public class AutoProcedureCallTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -51,8 +51,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_none" + ".sql";
-        jdbcManager.callBySqlFile(path).execute();
+        jdbcManager.call("PROC_NONE_PARAM").execute();
     }
 
     /**
@@ -63,9 +62,7 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path =
-            getClass().getName().replace(".", "/") + "_simpleType" + ".sql";
-        jdbcManager.callBySqlFile(path, 1).execute();
+        jdbcManager.call("PROC_SIMPLETYPE_PARAM", 1).execute();
     }
 
     /**
@@ -76,11 +73,10 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2 = 5;
-        jdbcManager.callBySqlFile(path, dto).execute();
+        jdbcManager.call("PROC_DTO_PARAM", dto).execute();
         assertEquals(new Integer(3), dto.param1);
         assertEquals(new Integer(8), dto.param2);
         assertEquals(new Integer(3), dto.param3);
@@ -94,15 +90,9 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_resultSet";
-        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            path += ".sql";
-        } else {
-            path += "2.sql";
-        }
         ResultSetDto dto = new ResultSetDto();
         dto.employeeId = 10;
-        jdbcManager.callBySqlFile(path, dto).execute();
+        jdbcManager.call("PROC_RESULTSET", dto).execute();
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
@@ -120,15 +110,9 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_resultSetOut";
-        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            path += ".sql";
-        } else {
-            path += "2.sql";
-        }
         ResultSetOutDto dto = new ResultSetOutDto();
         dto.employeeId = 10;
-        jdbcManager.callBySqlFile(path, dto).execute();
+        jdbcManager.call("PROC_RESULTSET_OUT", dto).execute();
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
@@ -147,16 +131,9 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path =
-            getClass().getName().replace(".", "/") + "_resultSetUpdate";
-        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            path += ".sql";
-        } else {
-            path += "2.sql";
-        }
-        ResultSetDto dto = new ResultSetDto();
+        ResultSetUpdateDto dto = new ResultSetUpdateDto();
         dto.employeeId = 10;
-        jdbcManager.callBySqlFile(path, dto).execute();
+        jdbcManager.call("PROC_RESULTSET_UPDATE", dto).execute();
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
@@ -182,16 +159,10 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path = getClass().getName().replace(".", "/") + "_resultSets";
-        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            path += ".sql";
-        } else {
-            path += "2.sql";
-        }
         ResultSetsDto dto = new ResultSetsDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
-        jdbcManager.callBySqlFile(path, dto).execute();
+        jdbcManager.call("PROC_RESULTSETS", dto).execute();
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
@@ -214,17 +185,10 @@ public class SqlFileProcedureCallTest extends S2TestCase {
         if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
             return;
         }
-        String path =
-            getClass().getName().replace(".", "/") + "_resultSetsUpdatesOut";
-        if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
-            path += ".sql";
-        } else {
-            path += "2.sql";
-        }
         ResultSetsUpdatesOutDto dto = new ResultSetsUpdatesOutDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
-        jdbcManager.callBySqlFile(path, dto).execute();
+        jdbcManager.call("PROC_RESULTSETS_UPDATES_OUT", dto).execute();
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
