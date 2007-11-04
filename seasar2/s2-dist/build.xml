@@ -44,5 +44,8 @@
 			<zipfileset prefix="seasar2/doc/s2-framework" dir="../s2-framework/target/site"/>
 			<zipfileset prefix="seasar2/doc/s2-extension" dir="../s2-extension/target/site"/>
 		</zip>
+		<ant dir="../../s2jdbc-tutorial" antfile="build.xml" target="dist">
+			<property name="zipDir" value="../seasar2/s2-dist/${zipDir}"/>
+		</ant>
 	</target>
 </project>

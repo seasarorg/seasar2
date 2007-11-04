@@ -20,13 +20,6 @@
 						<li><p>seasar2/s2-extension/pom.xml</p></li>
 						<li><p>seasar2/s2-dist/pom.xml</p></li>
 						<li><p>s2-tiger/pom.xml</p></li>
-						<li><p>s2jdbc-tutorial/pom.xml</p></li>
-					</ul>
-				</dd>
-				<dt>build.xmlの修正・コミット</dt>
-				<dd>
-					<ul>
-						<li><p>s2jdbc-tutorial/build.xml</p></li>
 					</ul>
 				</dd>
 				<dt>ドキュメントの修正・コミット</dt>
@@ -69,13 +62,6 @@
 <source>
 <kbd>cd s2-tiger</kbd>
 <kbd>mvn deploy -Dmaven.test.skip=true</kbd>
-</source>
-				</dd>
-				<dt>S2JDBC-Tutorialのデプロイ</dt>
-				<dd>
-<source>
-<kbd>cd s2jdbc-tutorial</kbd>
-<kbd>ant</kbd>
 </source>
 				</dd>
 				<dt>Seasar2のサイトデプロイ</dt>
