@@ -69,7 +69,7 @@ public class AutoProcedureCallImplTest extends TestCase {
     public void testPrepareParameter_noArg() throws Exception {
         AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager, "hoge");
         query.prepare("execute");
-        assertEquals("{call hoge}", query.executedSql);
+        assertEquals("{call hoge()}", query.executedSql);
         assertEquals(0, query.getParamSize());
     }
 
