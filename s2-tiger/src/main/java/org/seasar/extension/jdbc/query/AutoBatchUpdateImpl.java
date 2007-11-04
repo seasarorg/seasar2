@@ -199,6 +199,9 @@ public class AutoBatchUpdateImpl<T> extends
 
     @Override
     protected void incrementVersions() {
+        if (includeVersion) {
+            return;
+        }
         final Field field = entityMeta.getVersionPropertyMeta().getField();
         for (final T entity : entities) {
             if (field.getType() == int.class

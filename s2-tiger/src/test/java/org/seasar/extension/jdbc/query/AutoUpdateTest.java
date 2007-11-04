@@ -122,6 +122,27 @@ public class AutoUpdateTest extends TestCase {
     /**
      * 
      */
+    public void testIncrementVersions() {
+        Eee e = new Eee(1, "foo");
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, e);
+        query.incrementVersion();
+        assertEquals(new Long(1), e.version);
+    }
+
+    /**
+     * 
+     */
+    public void testIncrementVersions_includeVersion() {
+        Eee e = new Eee(1, "foo");
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, e);
+        query.includesVersion();
+        query.incrementVersion();
+        assertEquals(new Long(0), e.version);
+    }
+
+    /**
+     * 
+     */
     public void testExcludesNull() {
         AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, new Eee());
         assertFalse(query.excludesNull);
@@ -664,7 +685,7 @@ public class AutoUpdateTest extends TestCase {
         };
         query.includesVersion();
         assertEquals(0, query.execute());
-        assertEquals(new Long(2), eee.version);
+        assertEquals(new Long(1), eee.version);
     }
 
 }

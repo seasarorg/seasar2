@@ -122,7 +122,7 @@ public class AutoBatchUpdateTest extends TestCase {
     /**
      * 
      */
-    public void testIncludesVersion() {
+    public void testIncludeVersion() {
         List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
                 new Eee(2, "bar"), new Eee(3, "baz"));
         AutoBatchUpdateImpl<Eee> query = new AutoBatchUpdateImpl<Eee>(manager,
@@ -130,6 +130,35 @@ public class AutoBatchUpdateTest extends TestCase {
         assertFalse(query.includeVersion);
         assertSame(query, query.includesVersion());
         assertTrue(query.includeVersion);
+    }
+
+    /**
+     * 
+     */
+    public void testIncrementVersions() {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchUpdateImpl<Eee> query = new AutoBatchUpdateImpl<Eee>(manager,
+                entities);
+        query.incrementVersions();
+        for (Eee e : entities) {
+            assertEquals(new Long(1), e.version);
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testIncrementVersions_includeVersion() {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchUpdateImpl<Eee> query = new AutoBatchUpdateImpl<Eee>(manager,
+                entities);
+        query.includesVersion();
+        query.incrementVersions();
+        for (Eee e : entities) {
+            assertEquals(new Long(0), e.version);
+        }
     }
 
     /**
@@ -563,9 +592,9 @@ public class AutoBatchUpdateTest extends TestCase {
         assertEquals(1, result[0]);
         assertEquals(1, result[1]);
         assertEquals(0, result[2]);
-        assertEquals(new Long(1), entities.get(0).version);
-        assertEquals(new Long(1), entities.get(1).version);
-        assertEquals(new Long(1), entities.get(2).version);
+        assertEquals(new Long(0), entities.get(0).version);
+        assertEquals(new Long(0), entities.get(1).version);
+        assertEquals(new Long(0), entities.get(2).version);
     }
 
 }

@@ -246,6 +246,9 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
 
     @Override
     protected void incrementVersion() {
+        if (includeVersion) {
+            return;
+        }
         final Field field = entityMeta.getVersionPropertyMeta().getField();
         if (field.getType() == int.class || field.getType() == Integer.class) {
             final int version = IntegerConversionUtil.toPrimitiveInt(FieldUtil
