@@ -11,6 +11,26 @@
 						<a href="#セットアップ">セットアップ</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#エンティティ">エンティティ</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#複数件検索">複数件検索</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#1件検索">1件検索</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#結合">結合</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 
@@ -18,8 +38,12 @@
 		<p>
 		S2JDBC-Tutorial-xxx.zipを解凍し、その中にあるs2jdbc-tutorialを
 		Eclipseにインポートしてください。これだけでセットアップは完了です。
-		このチュートリアルのデータベースは、H2を組み込みモードで使用しているので、
+		</p>
+		このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、
 		起動など特に必要ありません。
+		データの追加や変更をしたい場合は、src/test/resources/data/test.script
+		を適当に変更してください。
+		<p>
 		</p>
 		</section>
 		
@@ -32,7 +56,7 @@
 		</p>
 		<p>
 		それでは、Employeeエンティティを見てみましょう。
-		<code>src/main/java/examples/entity/Employee.java</code>を開いてください。
+		src/main/java/examples/entity/Employee.javaを開いてください。
 		</p>
 		<source><![CDATA[
 package examples.entity;
@@ -49,7 +73,7 @@ import javax.persistence.Version;
 public class Employee {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     public Integer id;
 
     public String name;
@@ -72,6 +96,214 @@ public class Employee {
     public Integer version;
 }
 ]]></source>
+		<p>
+		エンティティであることを示すには、@Entityが必要です。
+		詳しくは、<a href="s2jdbc_entity.html#エンティティ定義">エンティティ定義</a>を参照してください。
+		</p>
+		<p>
+		識別子のフィールドには、@Idをつけます。
+		識別子をSeasar2に自動生成させる場合は、@GeneratedValueをつけます。
+		詳しくは、<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>を参照してください。
+		</p>
+		<p>
+		Seasar2では、publicフィールドを使ってシンプルにプロパティを定義することができます。
+		詳しくは、<a href="s2jdbc_abstract.html#シンプルなプロパティ">シンプルなプロパティ</a>
+		を参照してください。
+		</p>
+		<p>
+		カラム名とプロパティ名が同じなら、カラム用のアノテーションは特に必要ありません。
+		また、AAA_BBBのようなカラム名用の'_'記法を、
+		aaaBbbのようなプロパティ名用のキャメル記法へ変換することも
+		Seasar2によって自動的に行われるので、
+		アノテーションを指定する必要はありません。
+		詳しくは、<a href="s2jdbc_entity.html#カラム定義">カラム定義</a>を参照してください。
+		</p>
+		<p>
+		JobTypeは次のような列挙型です。
+		実際のソースではもう少し複雑ですが、
+		わかりやすくするために今回は簡略化しています。
+		</p>
+		<source><![CDATA[
+package examples.entity;
+
+public enum JobType {
+
+    CLERK,
+    SALESMAN,
+    MANAGER,
+    ANALYST,
+    PRESIDENT;
+}
+]]></source>
+        <p>
+        job_typeカラムを文字列で定義しておけば、
+        カラムには、'CLERK'のように文字列として格納され、
+        エンティティでは、列挙型に自動的にマッピングされます。
+        </p>
+        <p>
+        EmployeeとDepartmentには、多対一の関連があり、次のように定義されています。
+        </p>
+        <source><![CDATA[
+@ManyToOne
+public Department department;
+]]></source>
+		<p>
+		逆の立場から見ると、DepartmentとEmployeeは一対多の関連があり、
+		次のように定義されています。
+		</p>
+	　　<source><![CDATA[
+@OneToMany(mappedBy = "department")
+public List<Employee> employeeList;
+]]></source>
+        <p>
+        mappedBy属性によって関連の所有者側のプロパティを指定します。
+        関連の所有者側とは、外部キーを持っているほうを意味します。
+        今回のケースは、department_idという外部キー(プロパティ名はdepartmentId)をEmployeeが
+        持っているのでEmployeeが関連の所有者になります。
+        mappedBy属性によって、双方の関連がリンクされることになります。
+        </p>
+        <p>
+        EmployeeとAddressには、一対一の関連があり、次のように定義されています。
+        </p>
+        <source><![CDATA[
+@OneToOne
+public Address address;
+]]></source>
+		<p>
+		逆の立場から見ても、AddressとEmployeeは一対一の関連があり、
+		次のように定義されています。
+		</p>
+	　　<source><![CDATA[
+@OneToMany(mappedBy = "address")
+public Employee employee;
+]]></source>
+        <p>
+        mappedBy属性によって関連の所有者側のプロパティを指定します。
+        関連の所有者側とは、外部キーを持っているほうを意味します。
+        今回のケースは、address_idという外部キー(プロパティ名はaddressId)をEmployeeが
+        持っているのでEmployeeが関連の所有者になります。
+        mappedBy属性によって、双方の関連がリンクされることになります。
+        </p>
+        <p>
+        詳しくは、<a href="s2jdbc_entity.html#関連定義">関連定義</a>を参照してください。
+        </p>
+        <p>
+        楽観的排他制御をするには、int, long, Integer, Longの型を持つフィールドに
+        @Versionをつけます。
+        詳しくは、<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+        を参照してください。
+        </p>
+        <p>
+        これで、エンティティの基本的な説明は終わりました。
+        それでは、早速動かしてみましょう。
+        </p>
+        </section>
+        
+        <section name="複数件検索">
+        <p>
+        Seasar2の機能をいろいろ試してみるには、
+        S2TestCaseを継承したクラスを使うと便利です。
+        </p>
+        <p>
+        src/test/java/examples/entity/GetResultListTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+package examples.entity;
+
+import java.util.List;
+
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.unit.S2TestCase;
+
+public class GetResultListTest extends S2TestCase {
+
+    private JdbcManager jdbcManager;
+
+    protected void setUp() throws Exception {
+        include("app.dicon");
+    }
+
+    public void testGetResultList() throws Exception {
+        ...
+    }
+}
+]]></source>
+        <p>
+        setUp()でapp.diconを読み込み、JdbcManagerのフィールドを定義しておけば、
+        testXxx()の中で、JdbcManagerを使うことができます。
+        このJdbcManagerを使ってデータベースにアクセスします。
+        </p>
+        <p>
+        複数件検索を行うには、from()の引数に検索したいエンティティのクラスを指定し、
+        getResultList()を呼び出します。
+        このテストケースを実行するには、ソースを右クリックして、
+        Run As -> JUnit Testを選びます。
+        </p>
+        <source><![CDATA[
+List<Employee> results = jdbcManager
+    .from(Employee.class)
+    .getResultList();
+for (Employee e : results) {
+    System.out.println(e.name);
+}
+]]></source>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#複数件検索">複数件検索</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="1件検索">
+        <p>
+        1件検索を行うには、from()の引数に検索したいエンティティのクラスを指定し、
+        getSingleResult()を呼び出します。
+        </p>
+        <p>
+        src/test/java/examples/entity/GetSingleResultTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+Employee result = jdbcManager
+    .from(Employee.class)
+    .where("id = ?", 1)
+    .getSingleResult();
+System.out.println(result.name);
+]]></source>
+        <p>
+        where()で条件を指定することができます。
+        SQLでできることはすべて指定することができます。
+        SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
+        </p>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#1件検索">1件検索</a>と
+       <a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="結合">
+        <p>
+        他のエンティティと結合するには、
+        join()の引数に<b>関連のプロパティ名</b>を指定します。
+        エンティティ名ではないので注意してください。
+        </p>
+        <p>
+        src/test/java/examples/entity/JoinTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class).join(
+    "department").join("address").getResultList();
+for (Employee e : results) {
+    System.out.println(e.name + ", " + e.department.name + ", "
+        + e.address.name);
+}
+]]></source>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
+        を参照してください。
+        </p>
 		</section>
 	</body>
 </document>
