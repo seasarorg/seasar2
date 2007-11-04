@@ -15,6 +15,7 @@
 	</target>
 	
 	<target name="dist" depends="copy">
+		<delete dir="${zipDir}"/>
 		<mkdir dir="${zipDir}"/>
 		<zip zipfile="${zipDir}/S2JDBC-Tutorial-${ver}.zip">
 			<zipfileset prefix="s2jdbc-tutorial" dir=".">
