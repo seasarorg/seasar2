@@ -167,7 +167,7 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
             final Param param = getParam(0);
             final ResultSet rs = ResultSet.class.cast(param.valueType.getValue(
                     cs, 1));
-            return (List<T>) handleResultSet(param.field, rs);
+            return (List<T>) handleResultList(resultClass, rs);
         } catch (final SQLException e) {
             throw new SQLRuntimeException(e);
         }

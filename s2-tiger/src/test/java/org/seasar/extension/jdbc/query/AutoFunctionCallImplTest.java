@@ -70,7 +70,7 @@ public class AutoFunctionCallImplTest extends TestCase {
         AutoFunctionCallImpl<Integer> query = new AutoFunctionCallImpl<Integer>(
                 manager, Integer.class, "hoge");
         query.prepare("getSingleResult");
-        assertEquals("{? = call hoge}", query.executedSql);
+        assertEquals("{? = call hoge()}", query.executedSql);
         assertEquals(1, query.getParamSize());
         assertNull(query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);
@@ -85,7 +85,7 @@ public class AutoFunctionCallImplTest extends TestCase {
                 manager, Integer.class, "hoge");
         query.resultList = true;
         query.prepare("getResultList");
-        assertEquals("{? = call hoge}", query.executedSql);
+        assertEquals("{? = call hoge()}", query.executedSql);
         assertEquals(1, query.getParamSize());
         assertNull(query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);
@@ -100,7 +100,7 @@ public class AutoFunctionCallImplTest extends TestCase {
                 manager, MyDto3.class, "hoge");
         query.resultList = true;
         query.prepare("getResultList");
-        assertEquals("{? = call hoge}", query.executedSql);
+        assertEquals("{? = call hoge()}", query.executedSql);
         assertEquals(1, query.getParamSize());
         assertNull(query.getParam(0).value);
         assertEquals(MyDto3.class, query.getParam(0).paramClass);
@@ -172,7 +172,7 @@ public class AutoFunctionCallImplTest extends TestCase {
         AutoFunctionCallImpl<Integer> query = new AutoFunctionCallImpl<Integer>(
                 manager, Integer.class, "hoge", dto);
         query.prepare("getSingleResult");
-        assertEquals("{? = call hoge}", query.executedSql);
+        assertEquals("{? = call hoge()}", query.executedSql);
         assertEquals(1, query.getParamSize());
         assertEquals(null, query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);

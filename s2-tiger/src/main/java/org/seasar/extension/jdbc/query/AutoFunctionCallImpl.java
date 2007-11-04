@@ -104,14 +104,14 @@ public class AutoFunctionCallImpl<T> extends
         final StringBuilder buf = new StringBuilder(100).append("{? = call ")
                 .append(functionName);
         final int paramSize = getParamSize();
+        buf.append("(");
         if (paramSize > 1) {
-            buf.append("(");
             for (int i = 1; i < paramSize; ++i) {
                 buf.append("?, ");
             }
             buf.setLength(buf.length() - 2);
-            buf.append(")");
         }
+        buf.append(")");
         executedSql = new String(buf.append("}"));
     }
 
