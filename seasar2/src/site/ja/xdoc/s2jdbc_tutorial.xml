@@ -36,6 +36,21 @@
 						<a href="#where句の簡易指定">where句の簡易指定合</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#ソート順">ソート順</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#ページング">ページング</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#挿入">挿入</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 
@@ -313,6 +328,12 @@ for (Employee e : results) {
 }
 ]]></source>
         <p>
+        結合した関連エンティティのプロパティは、結合名.プロパティ名(例えばaddress.name)で指定します。
+        ネストした指定(aaa.bbb.ccc)も可能です。
+        ネストした指定をする場合は、必ずjoin()で指定しておく必要があります。
+        例えば、aaa.bbb.cccのプロパティを指定するには、join("aaa.bbb")を指定します。
+        </p>
+        <p>
         詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
         を参照してください。
         </p>
@@ -347,12 +368,104 @@ for (Employee e : results) {
 }
 ]]></source>
         <p>
-        starts()はlike '?%'に変換されます。
-        ends()はlike '%?'に変換されます。
+        starts()の最初の引数はプロパティ名で、like '?%'に変換されます。
+        ends()の最初の引数はプロパティ名で、like '%?'に変換されます。
         それぞれの条件は、andで結合されます。
+        上記のサンプルでは、"A"や"1"のように直接リテラルを渡していますが、
+        変数を渡した場合、変数がnullの場合は、条件に含まれなくなります。
         </p>
         <p>
         詳しくは、<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="ソート順">
+        <p>
+        orderBy()でソート順を指定することができます。
+        SQLでできることはすべて指定することができます。
+        SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
+        </p>
+        <p>
+        src/test/java/examples/entity/OrderByTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+List<Employee> results =
+    jdbcManager
+        .from(Employee.class)
+        .orderBy("name desc")
+        .getResultList();
+for (Employee e : results) {
+    System.out.println(e.name);
+}
+]]></source>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="ページング">
+        <p>
+		ページングを指定する場合は、
+		limit(), offset()を使います。
+		limit()には、取得する行数を指定します。
+		offset()には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+		ページングを指定するには、必ず
+		<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>の指定も必要です。
+        </p>
+        <p>
+        src/test/java/examples/entity/PagingTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+List<Employee> results =
+    jdbcManager
+        .from(Employee.class)
+        .orderBy("id")
+        .limit(5)
+        .offset(4)
+        .getResultList();
+for (Employee e : results) {
+    System.out.println(e.id);
+}
+]]></source>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#ページング">ページング</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="挿入">
+        <p>
+		エンティティを挿入する場合は、
+		insert()とexecute()を組み合わせます。
+        </p>
+        <p>
+        src/test/java/examples/entity/InsertTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+public void testInsertTx() throws Exception {
+    Employee emp = new Employee();
+    emp.name = "test";
+    emp.jobType = JobType.ANALYST;
+    emp.salary = 300;
+    jdbcManager.insert(emp).execute();
+    System.out.println(emp.id);
+}
+]]></source>
+        <p>
+        テストメソッドがTxで終わっていると、テスト時実行前にトランザクションが開始され、
+        テスト終了後に自動的にロールバックされます。
+        そのため、何度でも同じテストを繰り返すことができます。
+        </p>
+        <p>
+        識別子は@GeneratedValueが指定されているので自動的に設定されます。
+        </p>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#挿入">挿入</a>
         を参照してください。
         </p>
 		</section>
