@@ -1,0 +1,1 @@
+{? = call FUNC_NONE_PARAM()}

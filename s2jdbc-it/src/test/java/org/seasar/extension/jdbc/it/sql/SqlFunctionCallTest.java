@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.it.auto;
+package org.seasar.extension.jdbc.it.sql;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ import static junit.framework.Assert.*;
  */
 @RunWith(Seasar2.class)
 @Prerequisite("#ENV not in ('hsqldb', 'h2', 'db2')")
-public class AutoFunctionCallTest {
+public class SqlFunctionCallTest {
 
     private JdbcManager jdbcManager;
 
@@ -42,7 +42,7 @@ public class AutoFunctionCallTest {
     public void testParameter_noneTx() throws Exception {
         Integer result =
             jdbcManager
-                .call(Integer.class, "FUNC_NONE_PARAM")
+                .callBySql(Integer.class, "{? = call FUNC_NONE_PARAM()}")
                 .getSingleResult();
         assertEquals(new Integer(10), result);
     }
@@ -53,9 +53,10 @@ public class AutoFunctionCallTest {
      */
     public void testParameter_simpleTypeTx() throws Exception {
         Integer result =
-            jdbcManager
-                .call(Integer.class, "FUNC_SIMPLETYPE_PARAM", 1)
-                .getSingleResult();
+            jdbcManager.callBySql(
+                Integer.class,
+                "{? = call FUNC_SIMPLETYPE_PARAM(?)}",
+                1).getSingleResult();
         assertEquals(new Integer(20), result);
     }
 
@@ -68,9 +69,10 @@ public class AutoFunctionCallTest {
         dto.param1 = 3;
         dto.param2 = 5;
         Integer result =
-            jdbcManager
-                .call(Integer.class, "FUNC_DTO_PARAM", dto)
-                .getSingleResult();
+            jdbcManager.callBySql(
+                Integer.class,
+                "{? = call FUNC_DTO_PARAM(?, ?)}",
+                dto).getSingleResult();
         assertEquals(new Integer(3), dto.param1);
         assertEquals(new Integer(5), dto.param2);
         assertEquals(new Integer(8), result);
@@ -83,9 +85,10 @@ public class AutoFunctionCallTest {
     @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
     public void testParameter_resultSetTx() throws Exception {
         List<Employee> employees =
-            jdbcManager
-                .call(Employee.class, "FUNC_RESULTSET", 10)
-                .getResultList();
+            jdbcManager.callBySql(
+                Employee.class,
+                "{? = call FUNC_RESULTSET(?)}",
+                10).getResultList();
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
@@ -101,9 +104,10 @@ public class AutoFunctionCallTest {
     @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
     public void testParameter_resultSetUpdateTx() throws Exception {
         List<Employee> employees =
-            jdbcManager
-                .call(Employee.class, "FUNC_RESULTSET_UPDATE", 10)
-                .getResultList();
+            jdbcManager.callBySql(
+                Employee.class,
+                "{? = call FUNC_RESULTSET_UPDATE(?)}",
+                10).getResultList();
         assertNotNull(employees);
         assertEquals(4, employees.size());
         assertEquals("ADAMS", employees.get(0).employeeName);
