@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.util;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import org.seasar.extension.jdbc.IllegalBindArgSizeRuntimeException;
+
 /**
  * バインド変数用のユーティリティです。
  * 
@@ -64,6 +66,10 @@ public final class BindVariableUtil {
                     buf.append(sql.substring(pos2, pos6 + 1));
                     pos2 = pos6 + 1;
                 } else {
+                    if (args.length <= index) {
+                        throw new IllegalBindArgSizeRuntimeException(sql,
+                                args.length);
+                    }
                     buf.append(sql.substring(pos2, pos));
                     buf.append(getBindVariableText(args[index++]));
                     pos2 = pos + 1;

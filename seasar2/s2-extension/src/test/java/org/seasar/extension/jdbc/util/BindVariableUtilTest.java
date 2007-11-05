@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.util;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.jdbc.IllegalBindArgSizeRuntimeException;
+
 /**
  * @author higa
  * 
@@ -54,5 +56,17 @@ public class BindVariableUtilTest extends TestCase {
                 "update emp set ename = /* ? */, comm = null where empno = 'bar'/*?*/",
                 BindVariableUtil.getCompleteSql(sql,
                         new Object[] { null, "bar" }));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetCompleteSql_exception() throws Exception {
+        final String sql = "update emp set ename = ?, comm = ? where empno = ?";
+        try {
+            BindVariableUtil.getCompleteSql(sql, new Object[] { "foo", "bar" });
+            fail();
+        } catch (IllegalBindArgSizeRuntimeException e) {
+        }
     }
 }
