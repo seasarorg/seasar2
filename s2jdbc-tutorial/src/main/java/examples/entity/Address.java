@@ -30,26 +30,26 @@ import javax.persistence.Version;
 @Entity
 public class Address {
 
-	/**
-	 * 識別子です。
-	 */
-	@Id
-	@GeneratedValue
-	public Integer id;
+    /**
+     * 識別子です。
+     */
+    @Id
+    @GeneratedValue
+    public Integer id;
 
-	/**
-	 * 名前です。
-	 */
-	public String name;
+    /**
+     * 名前です。
+     */
+    public String name;
 
-	/**
-	 * 従業員です。
-	 */
-	@OneToOne(mappedBy = "address")
-	public Employee employee;
-	/**
-	 * バージョンです。
-	 */
-	@Version
-	public Integer version;
+    /**
+     * 従業員です。
+     */
+    @OneToOne(mappedBy = "address")
+    public Employee employee;
+    /**
+     * バージョンです。
+     */
+    @Version
+    public Integer version;
 }

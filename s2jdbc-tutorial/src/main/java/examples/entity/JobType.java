@@ -23,56 +23,56 @@ package examples.entity;
  */
 public enum JobType {
 
-	/**
-	 * クラークです。
-	 */
-	CLERK {
-		@Override
-		public JobStrategy createStrategy() {
-			return new Clerk();
-		}
-	},
-	/**
-	 * セールスマンです。
-	 */
-	SALESMAN {
-		@Override
-		public JobStrategy createStrategy() {
-			return new Salesman();
-		}
-	},
-	/**
-	 * マネージャです。
-	 */
-	MANAGER {
-		@Override
-		public JobStrategy createStrategy() {
-			return new Manager();
-		}
-	},
-	/**
-	 * アナリストです。
-	 */
-	ANALYST {
-		@Override
-		public JobStrategy createStrategy() {
-			return new Analyst();
-		}
-	},
-	/**
-	 * プレシデントです。
-	 */
-	PRESIDENT {
-		@Override
-		public JobStrategy createStrategy() {
-			return new President();
-		}
-	};
+    /**
+     * クラークです。
+     */
+    CLERK {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Clerk();
+        }
+    },
+    /**
+     * セールスマンです。
+     */
+    SALESMAN {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Salesman();
+        }
+    },
+    /**
+     * マネージャです。
+     */
+    MANAGER {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Manager();
+        }
+    },
+    /**
+     * アナリストです。
+     */
+    ANALYST {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Analyst();
+        }
+    },
+    /**
+     * プレシデントです。
+     */
+    PRESIDENT {
+        @Override
+        public JobStrategy createStrategy() {
+            return new President();
+        }
+    };
 
-	/**
-	 * 仕事に応じた振る舞いを定義するストラテジを作成します。
-	 * 
-	 * @return 仕事ストラテジ
-	 */
-	public abstract JobStrategy createStrategy();
+    /**
+     * 仕事に応じた振る舞いを定義するストラテジを作成します。
+     * 
+     * @return 仕事ストラテジ
+     */
+    public abstract JobStrategy createStrategy();
 }

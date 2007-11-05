@@ -15,14 +15,17 @@
  */
 package examples.entity;
 
+import java.util.List;
+
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author higa
  * 
  */
-public class GetSingleResultTest extends S2TestCase {
+public class SimpleWhereTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -33,12 +36,18 @@ public class GetSingleResultTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testGetSingleResult() throws Exception {
-        Employee result =
+    public void testSimpleWhere() throws Exception {
+        List<Employee> results =
             jdbcManager
                 .from(Employee.class)
-                .where("id = ?", 1)
-                .getSingleResult();
-        System.out.println(result.name);
+                .join("address")
+                .where(
+                    new SimpleWhere().starts("name", "A").ends(
+                        "address.name",
+                        "1"))
+                .getResultList();
+        for (Employee e : results) {
+            System.out.println(e.name + ", " + e.address.name);
+        }
     }
 }

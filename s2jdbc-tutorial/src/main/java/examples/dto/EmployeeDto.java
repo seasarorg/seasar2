@@ -23,8 +23,8 @@ import examples.entity.Employee;
  */
 public class EmployeeDto extends Employee {
 
-	/**
-	 * 部署名です。
-	 */
-	public String departmentName;
+    /**
+     * 部署名です。
+     */
+    public String departmentName;
 }

@@ -23,7 +23,7 @@ package examples.entity;
  */
 public class Clerk implements JobStrategy {
 
-	public int calculateBonus(int salary) {
-		return salary;
-	}
+    public int calculateBonus(int salary) {
+        return salary;
+    }
 }

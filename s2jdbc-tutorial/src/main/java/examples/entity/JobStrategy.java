@@ -23,12 +23,12 @@ package examples.entity;
  */
 public interface JobStrategy {
 
-	/**
-	 * ボーナスを計算します。
-	 * 
-	 * @param salary
-	 *            給料
-	 * @return ボーナス
-	 */
-	int calculateBonus(int salary);
+    /**
+     * ボーナスを計算します。
+     * 
+     * @param salary
+     *            給料
+     * @return ボーナス
+     */
+    int calculateBonus(int salary);
 }

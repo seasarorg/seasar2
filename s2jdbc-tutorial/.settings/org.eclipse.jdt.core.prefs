@@ -1,4 +1,4 @@
-#Sun Oct 28 18:05:01 JST 2007
+#Mon Nov 05 13:24:45 JST 2007
 eclipse.preferences.version=1
 org.eclipse.jdt.core.codeComplete.argumentPrefixes=
 org.eclipse.jdt.core.codeComplete.argumentSuffixes=
@@ -36,12 +36,12 @@ org.eclipse.jdt.core.formatter.alignment_for_arguments_in_enum_constant=16
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_explicit_constructor_call=52
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_method_invocation=52
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_qualified_allocation_expression=52
-org.eclipse.jdt.core.formatter.alignment_for_assignment=4
-org.eclipse.jdt.core.formatter.alignment_for_binary_expression=20
+org.eclipse.jdt.core.formatter.alignment_for_assignment=52
+org.eclipse.jdt.core.formatter.alignment_for_binary_expression=52
 org.eclipse.jdt.core.formatter.alignment_for_compact_if=16
-org.eclipse.jdt.core.formatter.alignment_for_conditional_expression=84
+org.eclipse.jdt.core.formatter.alignment_for_conditional_expression=52
 org.eclipse.jdt.core.formatter.alignment_for_enum_constants=0
-org.eclipse.jdt.core.formatter.alignment_for_expressions_in_array_initializer=20
+org.eclipse.jdt.core.formatter.alignment_for_expressions_in_array_initializer=52
 org.eclipse.jdt.core.formatter.alignment_for_multiple_fields=16
 org.eclipse.jdt.core.formatter.alignment_for_parameters_in_constructor_declaration=16
 org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration=16
@@ -280,7 +280,7 @@ org.eclipse.jdt.core.formatter.never_indent_line_comments_on_first_column=false
 org.eclipse.jdt.core.formatter.number_of_blank_lines_at_beginning_of_method_body=0
 org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve=1
 org.eclipse.jdt.core.formatter.put_empty_statement_on_new_line=true
-org.eclipse.jdt.core.formatter.tabulation.char=tab
+org.eclipse.jdt.core.formatter.tabulation.char=space
 org.eclipse.jdt.core.formatter.tabulation.size=4
 org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations=false
 org.eclipse.jdt.core.formatter.wrap_before_binary_operator=true

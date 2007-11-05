@@ -23,7 +23,7 @@ package examples.entity;
  */
 public class President implements JobStrategy {
 
-	public int calculateBonus(int salary) {
-		return salary * 5;
-	}
+    public int calculateBonus(int salary) {
+        return salary * 5;
+    }
 }

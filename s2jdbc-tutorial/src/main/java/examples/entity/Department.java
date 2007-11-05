@@ -32,26 +32,26 @@ import javax.persistence.Version;
 @Entity
 public class Department {
 
-	/**
-	 * 識別子です。
-	 */
-	@Id
-	@GeneratedValue
-	public Integer id;
+    /**
+     * 識別子です。
+     */
+    @Id
+    @GeneratedValue
+    public Integer id;
 
-	/**
-	 * 名前です。
-	 */
-	public String name;
+    /**
+     * 名前です。
+     */
+    public String name;
 
-	/**
-	 * 従業員のリストです。
-	 */
-	@OneToMany(mappedBy = "department")
-	public List<Employee> employeeList;
-	/**
-	 * バージョンです。
-	 */
-	@Version
-	public Integer version;
+    /**
+     * 従業員のリストです。
+     */
+    @OneToMany(mappedBy = "department")
+    public List<Employee> employeeList;
+    /**
+     * バージョンです。
+     */
+    @Version
+    public Integer version;
 }

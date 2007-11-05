@@ -31,52 +31,52 @@ import javax.persistence.Version;
 @Entity
 public class Employee {
 
-	/**
-	 * 識別子です。
-	 */
-	@Id
-	@GeneratedValue
-	public Integer id;
+    /**
+     * 識別子です。
+     */
+    @Id
+    @GeneratedValue
+    public Integer id;
 
-	/**
-	 * 名前です。
-	 */
-	public String name;
+    /**
+     * 名前です。
+     */
+    public String name;
 
-	/**
-	 * 仕事のタイプです。
-	 */
-	public JobType jobType;
+    /**
+     * 仕事のタイプです。
+     */
+    public JobType jobType;
 
-	/**
-	 * 給与です。
-	 */
-	public Integer salary;
+    /**
+     * 給与です。
+     */
+    public Integer salary;
 
-	/**
-	 * 部署の識別子です。
-	 */
-	public Integer departmentId;
+    /**
+     * 部署の識別子です。
+     */
+    public Integer departmentId;
 
-	/**
-	 * 部署です。
-	 */
-	@ManyToOne
-	public Department department;
+    /**
+     * 部署です。
+     */
+    @ManyToOne
+    public Department department;
 
-	/**
-	 * 住所の識別子です。
-	 */
-	public Integer addressId;
+    /**
+     * 住所の識別子です。
+     */
+    public Integer addressId;
 
-	/**
-	 * 住所です。
-	 */
-	@OneToOne
-	public Address address;
-	/**
-	 * バージョンです。
-	 */
-	@Version
-	public Integer version;
+    /**
+     * 住所です。
+     */
+    @OneToOne
+    public Address address;
+    /**
+     * バージョンです。
+     */
+    @Version
+    public Integer version;
 }

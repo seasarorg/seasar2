@@ -26,21 +26,20 @@ import org.seasar.extension.unit.S2TestCase;
  */
 public class GetResultListTest extends S2TestCase {
 
-	private JdbcManager jdbcManager;
+    private JdbcManager jdbcManager;
 
-	protected void setUp() throws Exception {
-		include("app.dicon");
-	}
+    protected void setUp() throws Exception {
+        include("app.dicon");
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public void testGetResultList() throws Exception {
-		List<Employee> results = jdbcManager
-			.from(Employee.class)
-			.getResultList();
-		for (Employee e : results) {
-			System.out.println(e.name);
-		}
-	}
+    /**
+     * @throws Exception
+     */
+    public void testGetResultList() throws Exception {
+        List<Employee> results =
+            jdbcManager.from(Employee.class).getResultList();
+        for (Employee e : results) {
+            System.out.println(e.name);
+        }
+    }
 }
