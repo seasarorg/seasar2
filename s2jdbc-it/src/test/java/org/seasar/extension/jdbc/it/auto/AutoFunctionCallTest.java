@@ -17,37 +17,29 @@ package org.seasar.extension.jdbc.it.auto;
 
 import java.util.List;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.dialect.Mssql2005Dialect;
-import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Employee;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
+
+import static junit.framework.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class AutoFunctionCallTest extends S2TestCase {
+@RunWith(Seasar2.class)
+@Prerequisite("#ENV not in ('hsqldb', 'h2', db2)")
+public class AutoFunctionCallTest {
 
     private JdbcManager jdbcManager;
-
-    private JdbcManagerImplementor jdbcManagerImplementor;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
      * @throws Exception
      */
     public void testParameter_noneTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         Integer result =
             jdbcManager
                 .call(Integer.class, "FUNC_NONE_PARAM")
@@ -60,9 +52,6 @@ public class AutoFunctionCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_simpleTypeTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         Integer result =
             jdbcManager
                 .call(Integer.class, "FUNC_SIMPLETYPE_PARAM", 1)
@@ -75,9 +64,6 @@ public class AutoFunctionCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_dtoTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2 = 5;
@@ -94,11 +80,8 @@ public class AutoFunctionCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
     public void testParameter_resultSetTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)
-            || jdbcManagerImplementor.getDialect() instanceof Mssql2005Dialect) {
-            return;
-        }
         List<Employee> employees =
             jdbcManager
                 .call(Employee.class, "FUNC_RESULTSET", 10)
@@ -115,11 +98,8 @@ public class AutoFunctionCallTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
     public void testParameter_resultSetUpdateTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)
-            || jdbcManagerImplementor.getDialect() instanceof Mssql2005Dialect) {
-            return;
-        }
         List<Employee> employees =
             jdbcManager
                 .call(Employee.class, "FUNC_RESULTSET_UPDATE", 10)

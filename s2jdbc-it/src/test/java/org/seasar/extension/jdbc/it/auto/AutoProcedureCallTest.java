@@ -17,40 +17,33 @@ package org.seasar.extension.jdbc.it.auto;
 
 import java.util.List;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
 import org.seasar.extension.jdbc.annotation.ResultSet;
-import org.seasar.extension.jdbc.it.S2JdbcItUtil;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
+
+import static junit.framework.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class AutoProcedureCallTest extends S2TestCase {
+@RunWith(Seasar2.class)
+@Prerequisite("#ENV not in ('hsqldb', 'h2')")
+public class AutoProcedureCallTest {
 
     private JdbcManager jdbcManager;
-
-    private JdbcManagerImplementor jdbcManagerImplementor;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
      * @throws Exception
      */
     public void testParameter_noneTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         jdbcManager.call("PROC_NONE_PARAM").execute();
     }
 
@@ -59,9 +52,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_simpleTypeTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         jdbcManager.call("PROC_SIMPLETYPE_PARAM", 1).execute();
     }
 
@@ -70,9 +60,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_dtoTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2 = 5;
@@ -87,9 +74,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_resultSetTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         ResultSetDto dto = new ResultSetDto();
         dto.employeeId = 10;
         jdbcManager.call("PROC_RESULTSET", dto).execute();
@@ -107,9 +91,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_resultSetOutTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         ResultSetOutDto dto = new ResultSetOutDto();
         dto.employeeId = 10;
         jdbcManager.call("PROC_RESULTSET_OUT", dto).execute();
@@ -128,9 +109,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_resultSetUpdateTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         ResultSetUpdateDto dto = new ResultSetUpdateDto();
         dto.employeeId = 10;
         jdbcManager.call("PROC_RESULTSET_UPDATE", dto).execute();
@@ -156,9 +134,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_resultSetsTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         ResultSetsDto dto = new ResultSetsDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
@@ -182,9 +157,6 @@ public class AutoProcedureCallTest extends S2TestCase {
      * @throws Exception
      */
     public void testParameter_resultSetsUpdatesOutTx() throws Exception {
-        if (!S2JdbcItUtil.supportsProcedure(jdbcManagerImplementor)) {
-            return;
-        }
         ResultSetsUpdatesOutDto dto = new ResultSetsUpdatesOutDto();
         dto.employeeId = 10;
         dto.departmentId = 2;
