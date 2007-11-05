@@ -31,6 +31,11 @@
 						<a href="#結合">結合</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#where句の簡易指定">where句の簡易指定合</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 
@@ -241,9 +246,8 @@ public class GetResultListTest extends S2TestCase {
         Run As -> JUnit Testを選びます。
         </p>
         <source><![CDATA[
-List<Employee> results = jdbcManager
-    .from(Employee.class)
-    .getResultList();
+List<Employee> results =
+    jdbcManager.from(Employee.class).getResultList();
 for (Employee e : results) {
     System.out.println(e.name);
 }
@@ -264,10 +268,11 @@ for (Employee e : results) {
         を見てみましょう。
         </p>
         <source><![CDATA[
-Employee result = jdbcManager
-    .from(Employee.class)
-    .where("id = ?", 1)
-    .getSingleResult();
+Employee result =
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", 1)
+        .getSingleResult();
 System.out.println(result.name);
 ]]></source>
         <p>
@@ -293,15 +298,61 @@ System.out.println(result.name);
         を見てみましょう。
         </p>
         <source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class).join(
-    "department").join("address").getResultList();
+List<Employee> results =
+    jdbcManager
+        .from(Employee.class)
+        .join("department")
+        .join("address")
+        .getResultList();
 for (Employee e : results) {
-    System.out.println(e.name + ", " + e.department.name + ", "
+    System.out.println(e.name
+        + ", "
+        + e.department.name
+        + ", "
         + e.address.name);
 }
 ]]></source>
         <p>
         詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="where句の簡易指定">
+        <p>
+        where句を文字列で組み立てる場合、
+        条件が指定されなかったらwhere句からはずしたり、
+        最初の条件にはandをつけないけど2番名の条件からはandをつけたりなど、
+        いろいろなことを考慮しながら文字列を組み立てる必要があります。
+        </p>
+        <p>
+        これらの面倒な処理を簡易に行えるようにしたのがSimpleWhereです。
+        </p>
+        <p>
+        src/test/java/examples/entity/SimpleWhereTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+List<Employee> results =
+    jdbcManager
+        .from(Employee.class)
+        .join("address")
+        .where(
+            new SimpleWhere().starts("name", "A").ends(
+                "address.name",
+                "1"))
+        .getResultList();
+for (Employee e : results) {
+    System.out.println(e.name + ", " + e.address.name);
+}
+]]></source>
+        <p>
+        starts()はlike '?%'に変換されます。
+        ends()はlike '%?'に変換されます。
+        それぞれの条件は、andで結合されます。
+        </p>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
         を参照してください。
         </p>
 		</section>

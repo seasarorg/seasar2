@@ -688,7 +688,7 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 					マップの組み立てを手動でやる必要は、基本的にありません。
 					なぜなら、SimpleWhereのほうが便利だからです。 マップを使う場合は、次のように
 					<code>
-						org.seasar.framework.beans.util.BeanUtil.createProperties()
+						org.seasar.framework.beans.util.TigerBeanUtil.createProperties()
 					</code>
 					と組み合わせます。
 					<code>createProperties()</code>
@@ -703,7 +703,7 @@ public BigDecimal where_salary_LE;
 public BigDecimal where_salary_GE;
 ...
 jdbcManager.from(Employee.class)
-    .where(BeanUtil.createProperties(this, "where_"))
+    .where(TigerBeanUtil.createProperties(this, "where_"))
     .getResultList();
 ]]></source>
 				<!--
