@@ -51,6 +51,11 @@
 						<a href="#挿入">挿入</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#更新">更新</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 
@@ -466,6 +471,37 @@ public void testInsertTx() throws Exception {
         </p>
         <p>
         詳しくは、<a href="s2jdbc_manager_auto.html#挿入">挿入</a>
+        を参照してください。
+        </p>
+		</section>
+		
+		<section name="更新">
+        <p>
+		エンティティを更新する場合は、
+		update()とexecute()を組み合わせます。
+        </p>
+        <p>
+        src/test/java/examples/entity/UpdateTest.java
+        を見てみましょう。
+        </p>
+        <source><![CDATA[
+Employee emp =
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", 1)
+        .getSingleResult();
+emp.name = "hoge";
+System.out.println(emp.version);
+jdbcManager.update(emp).execute();
+System.out.println(emp.version);
+]]></source>
+        <p>
+        versionプロパティには、@Versionが指定されているので、
+        Seasar2による楽観的排他制御が行なわれて、
+        更新に成功するとversionの値がインクリメントされます。
+        </p>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_auto.html#更新">更新</a>
         を参照してください。
         </p>
 		</section>
