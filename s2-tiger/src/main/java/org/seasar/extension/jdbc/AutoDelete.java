@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc;
 
+import javax.persistence.OptimisticLockException;
+
 /**
  * SQLを自動生成する削除です。
  * 
@@ -30,5 +32,12 @@ public interface AutoDelete<T> extends Update<AutoDelete<T>> {
      * @return このインスタンス自身
      */
     AutoDelete<T> ignoreVersion();
+
+    /**
+     * バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないようにします。
+     * 
+     * @return このインスタンス自身
+     */
+    AutoDelete<T> supplesOptimisticLockException();
 
 }

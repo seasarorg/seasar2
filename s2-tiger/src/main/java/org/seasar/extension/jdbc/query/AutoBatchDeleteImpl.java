@@ -61,6 +61,11 @@ public class AutoBatchDeleteImpl<T> extends
         return this;
     }
 
+    public AutoBatchDelete<T> supplesOptimisticLockException() {
+        supplesOptimisticLockException = true;
+        return this;
+    }
+
     @Override
     protected void prepare(final String methodName) {
         prepareCallerClassAndMethodName(methodName);

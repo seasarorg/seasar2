@@ -382,4 +382,40 @@ public class AutoBatchDeleteTest extends TestCase {
         assertEquals(1, result[2]);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock_suppressOptimisticLockException()
+            throws Exception {
+        List<Eee> entities = Arrays.asList(new Eee(1, "foo"),
+                new Eee(2, "bar"), new Eee(3, "baz"));
+        AutoBatchDeleteImpl<Eee> query = new AutoBatchDeleteImpl<Eee>(manager,
+                entities) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 0, 1 };
+                    }
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addBatchCalled;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        int[] result = query.supplesOptimisticLockException().execute();
+        assertEquals(3, result.length);
+        assertEquals(1, result[0]);
+        assertEquals(0, result[1]);
+        assertEquals(1, result[2]);
+    }
+
 }

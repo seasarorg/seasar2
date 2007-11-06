@@ -50,6 +50,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     /** バッチサイズ */
     protected int batchSize;
 
+    /** バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないなら<code>true</code> */
+    protected boolean supplesOptimisticLockException;
+
     /**
      * @param jdbcManager
      *            内部的なJDBCマネージャ
@@ -212,6 +215,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      *             行を更新または削除できなかった場合
      */
     protected void validateRows(final int[] rows) {
+        if (supplesOptimisticLockException) {
+            return;
+        }
         for (int i = 0; i < rows.length; ++i) {
             if (rows[i] == 0) {
                 throw new SOptimisticLockException(entities.get(i));

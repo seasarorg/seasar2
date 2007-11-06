@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc;
 
 import java.util.Map;
 
+import javax.persistence.OptimisticLockException;
+
 /**
  * SQLを自動生成する更新です。
  * 
@@ -80,5 +82,12 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      * @return このインスタンス自身
      */
     AutoUpdate<T> changedFrom(Map<String, ? extends Object> before);
+
+    /**
+     * バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないようにします。
+     * 
+     * @return このインスタンス自身
+     */
+    AutoUpdate<T> supplesOptimisticLockException();
 
 }

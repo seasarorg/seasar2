@@ -122,6 +122,11 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
         return this;
     }
 
+    public AutoUpdate<T> supplesOptimisticLockException() {
+        supplesOptimisticLockException = true;
+        return this;
+    }
+
     @Override
     protected void prepare(final String methodName) {
         prepareCallerClassAndMethodName(methodName);

@@ -688,4 +688,33 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(new Long(1), eee.version);
     }
 
+    /**
+     * @throws Exception
+     */
+    public void testOptimisticLock_suppressOptimisticLockException()
+            throws Exception {
+        Eee eee = new Eee();
+        eee.id = 100;
+        eee.name = "hoge";
+        eee.version = 1L;
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        return 0;
+                    }
+                };
+                return ps;
+            }
+
+        };
+        query.supplesOptimisticLockException();
+        assertEquals(0, query.execute());
+    }
+
 }

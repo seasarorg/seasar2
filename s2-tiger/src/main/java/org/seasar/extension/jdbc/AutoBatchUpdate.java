@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc;
 
+import javax.persistence.OptimisticLockException;
+
 /**
  * SQLを自動生成するバッチ更新です。
  * 
@@ -53,5 +55,12 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      * @return このインスタンス自身
      */
     AutoBatchUpdate<T> excludes(String... propertyNames);
+
+    /**
+     * バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないようにします。
+     * 
+     * @return このインスタンス自身
+     */
+    AutoBatchUpdate<T> supplesOptimisticLockException();
 
 }

@@ -45,6 +45,9 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
     /** エンティティメタデータ */
     protected final EntityMeta entityMeta;
 
+    /** バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないなら<code>true</code> */
+    protected boolean supplesOptimisticLockException;
+
     /**
      * @param jdbcManager
      *            内部的なJDBCマネージャ
@@ -180,7 +183,7 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
      *             行を更新または削除できなかった場合
      */
     protected void validateRows(final int rows) {
-        if (rows == 0) {
+        if (!supplesOptimisticLockException && rows == 0) {
             throw new SOptimisticLockException(entity);
         }
     }
