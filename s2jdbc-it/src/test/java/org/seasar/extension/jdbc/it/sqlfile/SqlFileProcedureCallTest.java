@@ -35,7 +35,7 @@ import static junit.framework.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-@Prerequisite("#ENV not in ('hsqldb', 'h2')")
+@Prerequisite("#ENV not in {'hsqldb', 'h2'}")
 public class SqlFileProcedureCallTest {
 
     private JdbcManager jdbcManager;

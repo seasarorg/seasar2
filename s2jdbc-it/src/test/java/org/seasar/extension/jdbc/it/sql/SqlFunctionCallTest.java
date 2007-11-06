@@ -30,7 +30,7 @@ import static junit.framework.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-@Prerequisite("#ENV not in ('hsqldb', 'h2', 'db2')")
+@Prerequisite("#ENV not in {'hsqldb', 'h2', 'db2'}")
 public class SqlFunctionCallTest {
 
     private JdbcManager jdbcManager;
@@ -82,7 +82,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
+    @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
     public void testParameter_resultSetTx() throws Exception {
         List<Employee> employees =
             jdbcManager.callBySql(
@@ -101,7 +101,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
+    @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
     public void testParameter_resultSetUpdateTx() throws Exception {
         List<Employee> employees =
             jdbcManager.callBySql(

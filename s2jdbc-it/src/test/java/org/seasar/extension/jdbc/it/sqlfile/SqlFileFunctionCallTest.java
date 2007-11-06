@@ -30,7 +30,7 @@ import static junit.framework.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-@Prerequisite("#ENV not in ('hsqldb', 'h2', 'db2')")
+@Prerequisite("#ENV not in {'hsqldb', 'h2', 'db2'}")
 public class SqlFileFunctionCallTest {
 
     private JdbcManager jdbcManager;
@@ -80,7 +80,7 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
-    @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
+    @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
     public void testParameter_resultSetTx() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_resultSet" + ".sql";
@@ -98,7 +98,7 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
-    @Prerequisite("#ENV not in ('mssql2005', 'mysql')")
+    @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
     public void testParameter_resultSetUpdateTx() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_resultSetUpdate"
