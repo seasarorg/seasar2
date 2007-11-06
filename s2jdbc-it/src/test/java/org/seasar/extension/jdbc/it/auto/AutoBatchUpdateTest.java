@@ -345,6 +345,33 @@ public class AutoBatchUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee3 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 2)
+                .getSingleResult();
+        jdbcManager.update(employee1).execute();
+        jdbcManager
+            .updateBatch(employee2, employee3)
+            .suppresOptimisticLockException()
+            .execute();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testColumnAnnotationTx() throws Exception {
         List<Department2> list = new ArrayList<Department2>();
         Department2 department = new Department2();

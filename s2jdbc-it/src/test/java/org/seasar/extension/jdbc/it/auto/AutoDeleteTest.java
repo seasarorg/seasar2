@@ -111,4 +111,28 @@ public class AutoDeleteTest extends S2TestCase {
         } catch (OptimisticLockException e) {
         }
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        jdbcManager.delete(employee1).execute();
+        int result =
+            jdbcManager
+                .delete(employee2)
+                .suppresOptimisticLockException()
+                .execute();
+        assertEquals(0, result);
+    }
 }

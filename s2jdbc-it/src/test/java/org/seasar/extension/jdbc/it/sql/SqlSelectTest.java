@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.seasar.extension.jdbc.JdbcManager;
@@ -199,6 +200,22 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testBean_getSingleResult_NoResultException() throws Exception {
+        String sql = "select * from Employee where employee_Id = 100";
+        try {
+            jdbcManager
+                .selectBySql(Employee.class, sql)
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testBean_getSingleResult_NonUniqueResultException()
             throws Exception {
         String sql = "select * from Employee where department_Id = 1";
@@ -206,6 +223,22 @@ public class SqlSelectTest extends S2TestCase {
             jdbcManager.selectBySql(Employee.class, sql).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testBean_getResultList_NoResultException() throws Exception {
+        String sql = "select * from Employee where employee_id = 100";
+        try {
+            jdbcManager
+                .selectBySql(Employee.class, sql)
+                .disallowNoResult()
+                .getResultList();
+            fail();
+        } catch (NoResultException e) {
         }
     }
 
@@ -369,6 +402,22 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testMap_getSingleResult_NoResultException() throws Exception {
+        String sql = "select * from Employee where employee_Id = 100";
+        try {
+            jdbcManager
+                .selectBySql(Map.class, sql)
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testMap_getSingleResult_NonUniqueResultException()
             throws Exception {
         String sql = "select * from Employee where department_Id = 1";
@@ -376,6 +425,22 @@ public class SqlSelectTest extends S2TestCase {
             jdbcManager.selectBySql(Map.class, sql).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getResultList_NoResultException() throws Exception {
+        String sql = "select * from Employee where employee_Id = 100";
+        try {
+            jdbcManager
+                .selectBySql(Map.class, sql)
+                .disallowNoResult()
+                .getResultList();
+            fail();
+        } catch (NoResultException e) {
         }
     }
 
@@ -568,6 +633,22 @@ public class SqlSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testObject_getSingleResult_NoResultException() throws Exception {
+        String sql = "select employee_id from Employee where employee_Id = 100";
+        try {
+            jdbcManager
+                .selectBySql(Integer.class, sql)
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testObject_getSingleResult_NonUniqueResultException()
             throws Exception {
         String sql = "select employee_id from Employee where department_Id = 1";
@@ -575,6 +656,22 @@ public class SqlSelectTest extends S2TestCase {
             jdbcManager.selectBySql(Integer.class, sql).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getResultList_NoResultException() throws Exception {
+        String sql = "select employee_id from Employee where employee_Id = 100";
+        try {
+            jdbcManager
+                .selectBySql(Integer.class, sql)
+                .disallowNoResult()
+                .getResultList();
+            fail();
+        } catch (NoResultException e) {
         }
     }
 }

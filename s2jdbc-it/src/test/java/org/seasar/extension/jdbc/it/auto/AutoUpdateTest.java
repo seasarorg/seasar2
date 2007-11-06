@@ -252,6 +252,30 @@ public class AutoUpdateTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        jdbcManager.update(employee1).execute();
+        int result =
+            jdbcManager
+                .update(employee2)
+                .suppresOptimisticLockException()
+                .execute();
+        assertEquals(0, result);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testColumnAnnotationTx() throws Exception {
         Department2 department = new Department2();
         department.departmentId = 1;

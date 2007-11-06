@@ -192,6 +192,33 @@ public class AutoBatchDeleteTest extends S2TestCase {
         jdbcManager.deleteBatch(employee2, employee3).ignoreVersion().execute();
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+        Employee employee1 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee2 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 1)
+                .getSingleResult();
+        Employee employee3 =
+            jdbcManager
+                .from(Employee.class)
+                .where("employeeId = ?", 2)
+                .getSingleResult();
+        jdbcManager.delete(employee1).execute();
+        jdbcManager
+            .deleteBatch(employee2, employee3)
+            .suppresOptimisticLockException()
+            .execute();
+    }
+
     private boolean containsSuccessNoInfo(int[] batchResult) {
         for (int i : batchResult) {
             if (i == Statement.SUCCESS_NO_INFO) {

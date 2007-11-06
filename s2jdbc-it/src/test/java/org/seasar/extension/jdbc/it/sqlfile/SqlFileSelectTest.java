@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.seasar.extension.jdbc.JdbcManager;
@@ -229,6 +230,24 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testBean_getSingleResult_NoResultException() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_NoResultException.sql";
+        try {
+            jdbcManager
+                .selectBySqlFile(Employee.class, path)
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testBean_getSingleResult_NonUniqueResultException()
             throws Exception {
         String path =
@@ -238,6 +257,24 @@ public class SqlFileSelectTest extends S2TestCase {
             jdbcManager.selectBySqlFile(Employee.class, path).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testBean_getResultList_NoResultException() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getResultList_NoResultException.sql";
+        try {
+            jdbcManager
+                .selectBySqlFile(Employee.class, path)
+                .disallowNoResult()
+                .getResultList();
+            fail();
+        } catch (NoResultException e) {
         }
     }
 
@@ -439,6 +476,24 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testMap_getSingleResult_NoResultException() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_NoResultException.sql";
+        try {
+            jdbcManager
+                .selectBySqlFile(Map.class, path)
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testMap_getSingleResult_NonUniqueResultException()
             throws Exception {
         String path =
@@ -448,6 +503,24 @@ public class SqlFileSelectTest extends S2TestCase {
             jdbcManager.selectBySqlFile(Map.class, path).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMap_getResultList_NoResultException() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getResultList_NoResultException.sql";
+        try {
+            jdbcManager
+                .selectBySqlFile(Map.class, path)
+                .disallowNoResult()
+                .getResultList();
+            fail();
+        } catch (NoResultException e) {
         }
     }
 
@@ -633,6 +706,24 @@ public class SqlFileSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
+    public void testObject_getSingleResult_NoResultException() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getSingleResult_NoResultException2.sql";
+        try {
+            jdbcManager
+                .selectBySqlFile(Integer.class, path)
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testObject_getSingleResult_NonUniqueResultException()
             throws Exception {
         String path =
@@ -642,6 +733,24 @@ public class SqlFileSelectTest extends S2TestCase {
             jdbcManager.selectBySqlFile(Integer.class, path).getSingleResult();
             fail();
         } catch (NonUniqueResultException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testObject_getResultList_NoResultException() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_getResultList_NoResultException2.sql";
+        try {
+            jdbcManager
+                .selectBySqlFile(Integer.class, path)
+                .disallowNoResult()
+                .getResultList();
+            fail();
+        } catch (NoResultException e) {
         }
     }
 

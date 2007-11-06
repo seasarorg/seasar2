@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.it.auto;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
 import org.seasar.extension.jdbc.JdbcManager;
@@ -656,6 +657,22 @@ public class AutoSelectTest extends S2TestCase {
             jdbcManager.from(Employee.class).where(
                 new SimpleWhere().eq("employeeId", 100)).getSingleResult();
         assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetSingleResult_NoResultException() throws Exception {
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .where(new SimpleWhere().eq("employeeId", 100))
+                .disallowNoResult()
+                .getSingleResult();
+            fail();
+        } catch (NoResultException e) {
+        }
     }
 
     /**
