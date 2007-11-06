@@ -38,6 +38,6 @@ public interface AutoDelete<T> extends Update<AutoDelete<T>> {
      * 
      * @return このインスタンス自身
      */
-    AutoDelete<T> supplesOptimisticLockException();
+    AutoDelete<T> suppresOptimisticLockException();
 
 }

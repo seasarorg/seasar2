@@ -57,8 +57,8 @@ public class AutoDeleteImpl<T> extends AbstractAutoUpdate<T, AutoDelete<T>>
         return this;
     }
 
-    public AutoDelete<T> supplesOptimisticLockException() {
-        supplesOptimisticLockException = true;
+    public AutoDelete<T> suppresOptimisticLockException() {
+        suppresOptimisticLockException = true;
         return this;
     }
 

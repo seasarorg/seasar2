@@ -713,7 +713,7 @@ public class AutoUpdateTest extends TestCase {
             }
 
         };
-        query.supplesOptimisticLockException();
+        query.suppresOptimisticLockException();
         assertEquals(0, query.execute());
     }
 

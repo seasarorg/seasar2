@@ -61,8 +61,8 @@ public class AutoBatchDeleteImpl<T> extends
         return this;
     }
 
-    public AutoBatchDelete<T> supplesOptimisticLockException() {
-        supplesOptimisticLockException = true;
+    public AutoBatchDelete<T> suppresOptimisticLockException() {
+        suppresOptimisticLockException = true;
         return this;
     }
 

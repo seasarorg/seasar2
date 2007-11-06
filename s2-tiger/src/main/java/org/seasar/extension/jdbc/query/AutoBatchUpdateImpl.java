@@ -92,8 +92,8 @@ public class AutoBatchUpdateImpl<T> extends
         return this;
     }
 
-    public AutoBatchUpdate<T> supplesOptimisticLockException() {
-        supplesOptimisticLockException = true;
+    public AutoBatchUpdate<T> suppresOptimisticLockException() {
+        suppresOptimisticLockException = true;
         return this;
     }
 

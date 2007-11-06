@@ -122,8 +122,8 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
         return this;
     }
 
-    public AutoUpdate<T> supplesOptimisticLockException() {
-        supplesOptimisticLockException = true;
+    public AutoUpdate<T> suppresOptimisticLockException() {
+        suppresOptimisticLockException = true;
         return this;
     }
 

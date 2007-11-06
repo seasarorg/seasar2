@@ -61,6 +61,6 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      * 
      * @return このインスタンス自身
      */
-    AutoBatchUpdate<T> supplesOptimisticLockException();
+    AutoBatchUpdate<T> suppresOptimisticLockException();
 
 }

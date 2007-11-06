@@ -88,6 +88,6 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      * 
      * @return このインスタンス自身
      */
-    AutoUpdate<T> supplesOptimisticLockException();
+    AutoUpdate<T> suppresOptimisticLockException();
 
 }

@@ -626,7 +626,7 @@ public class AutoBatchUpdateTest extends TestCase {
             }
 
         };
-        int[] result = query.supplesOptimisticLockException().execute();
+        int[] result = query.suppresOptimisticLockException().execute();
         assertEquals(3, result.length);
         assertEquals(1, result[0]);
         assertEquals(1, result[1]);

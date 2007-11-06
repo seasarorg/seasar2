@@ -38,6 +38,6 @@ public interface AutoBatchDelete<T> extends BatchUpdate<AutoBatchDelete<T>> {
      * 
      * @return このインスタンス自身
      */
-    AutoBatchDelete<T> supplesOptimisticLockException();
+    AutoBatchDelete<T> suppresOptimisticLockException();
 
 }
