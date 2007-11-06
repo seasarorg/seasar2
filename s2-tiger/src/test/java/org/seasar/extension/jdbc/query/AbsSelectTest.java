@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.DbmsDialect;
@@ -119,6 +121,16 @@ public class AbsSelectTest extends TestCase {
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         assertSame(query, query.offset(8));
         assertEquals(8, query.offset);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testDisallowNoResult() throws Exception {
+        MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
+        assertSame(query, query.disallowNoResult());
+        assertTrue(query.disallowNoResult);
     }
 
     /**
@@ -347,6 +359,73 @@ public class AbsSelectTest extends TestCase {
     /**
      * 
      */
+    @SuppressWarnings("unchecked")
+    public void testGetResultListInternal_noResult() {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
+
+            @Override
+            protected ResultSetHandler createResultListResultSetHandler() {
+                DbmsDialect dialect = jdbcManager.getDialect();
+                return new BeanListResultSetHandler(baseClass, dialect,
+                        "select * from aaa");
+            }
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("FOO2");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("AAA_BBB");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                return rs;
+            }
+
+        };
+        List<AaaDto> ret = query.getResultListInternal();
+        assertTrue(ret.isEmpty());
+    }
+
+    /**
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public void testGetResultListInternal_disallowNoResult() {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
+
+            @Override
+            protected ResultSetHandler createResultListResultSetHandler() {
+                DbmsDialect dialect = jdbcManager.getDialect();
+                return new BeanListResultSetHandler(baseClass, dialect,
+                        "select * from aaa");
+            }
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("FOO2");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("AAA_BBB");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                return rs;
+            }
+
+        };
+        try {
+            query.disallowNoResult().getResultListInternal();
+            fail();
+        } catch (NoResultException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
     public void testGetSingleResultInternal() {
         MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
 
@@ -379,6 +458,71 @@ public class AbsSelectTest extends TestCase {
         assertEquals("111", dto.foo);
         assertEquals("222", dto.aaaBbb);
         assertTrue(jdbcContext.idDestroyed());
+    }
+
+    /**
+     * 
+     */
+    public void testGetSingleResultInternal_noResult() {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
+
+            @Override
+            protected ResultSetHandler createSingleResultResultSetHandler() {
+                DbmsDialect dialect = jdbcManager.getDialect();
+                return new BeanResultSetHandler(baseClass, dialect,
+                        "select * from aaa");
+            }
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("FOO2");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("AAA_BBB");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                return rs;
+            }
+
+        };
+        AaaDto dto = query.getSingleResultInternal();
+        assertNull(dto);
+    }
+
+    /**
+     * 
+     */
+    public void testGetSingleResultInternal_disallowNoResult() {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
+
+            @Override
+            protected ResultSetHandler createSingleResultResultSetHandler() {
+                DbmsDialect dialect = jdbcManager.getDialect();
+                return new BeanResultSetHandler(baseClass, dialect,
+                        "select * from aaa");
+            }
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("FOO2");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("AAA_BBB");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                return rs;
+            }
+
+        };
+        try {
+            query.disallowNoResult().getSingleResultInternal();
+            fail();
+        } catch (NoResultException expected) {
+        }
     }
 
     /**

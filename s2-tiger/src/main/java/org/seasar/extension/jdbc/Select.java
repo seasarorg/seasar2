@@ -15,7 +15,10 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.sql.Statement;
 import java.util.List;
+
+import javax.persistence.NoResultException;
 
 import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
@@ -37,6 +40,7 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      * @param maxRows
      *            最大行数
      * @return このインスタンス自身
+     * @see Statement#setMaxRows(int)
      */
     S maxRows(int maxRows);
 
@@ -46,6 +50,7 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      * @param fetchSize
      *            フェッチ数
      * @return このインスタンス自身
+     * @see Statement#setFetchSize(int)
      */
     S fetchSize(int fetchSize);
 
@@ -68,6 +73,13 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
     S offset(int offset);
 
     /**
+     * 検索結果がなかった場合、{@link NoResultException}をスローするよう設定します。
+     * 
+     * @return このインスタンス自身
+     */
+    S disallowNoResult();
+
+    /**
      * 検索してベースオブジェクトのリストを返します。
      * 
      * @return
@@ -79,6 +91,8 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      * </p>
      * @throws OrderByNotFoundRuntimeException
      *             ページング処理で<code>order by</code>が見つからない場合
+     * @throws NoResultException
+     *             {@link #disallowNoResult()}が呼び出された場合で、検索結果がなかった場合
      */
     List<T> getResultList() throws OrderByNotFoundRuntimeException;
 
@@ -94,6 +108,8 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      * </p>
      * @throws SNonUniqueResultException
      *             検索結果がユニークでない場合。
+     * @throws NoResultException
+     *             {@link #disallowNoResult()}が呼び出された場合で、検索結果がなかった場合
      */
     T getSingleResult() throws SNonUniqueResultException;
 }

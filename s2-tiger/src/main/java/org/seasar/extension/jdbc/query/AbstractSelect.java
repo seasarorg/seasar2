@@ -19,10 +19,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
+import org.seasar.extension.jdbc.exception.SNoResultException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -67,6 +70,11 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     protected int limit;
 
     /**
+     * 検索結果がなかった場合に{@link NoResultException}をスローするなら<code>true</code>です。
+     */
+    protected boolean disallowNoResult;
+
+    /**
      * {@link AbstractSelect}を作成します。
      * 
      * @param jdbcManager
@@ -101,6 +109,12 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     @SuppressWarnings("unchecked")
     public S offset(int offset) {
         this.offset = offset;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S disallowNoResult() {
+        this.disallowNoResult = true;
         return (S) this;
     }
 
@@ -146,6 +160,9 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         try {
             ResultSet rs = createResultSet(jdbcContext);
             ret = (List<T>) handleResultSet(handler, rs);
+            if (disallowNoResult && ret.isEmpty()) {
+                throw new SNoResultException(executedSql);
+            }
         } finally {
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
@@ -167,6 +184,9 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         try {
             ResultSet rs = createResultSet(jdbcContext);
             ret = (T) handleResultSet(handler, rs);
+            if (disallowNoResult && ret == null) {
+                throw new SNoResultException(executedSql);
+            }
         } finally {
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
