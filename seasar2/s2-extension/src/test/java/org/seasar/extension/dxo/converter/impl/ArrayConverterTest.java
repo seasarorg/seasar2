@@ -54,6 +54,21 @@ public class ArrayConverterTest extends AbsConverterTest {
         intList.add(new Integer(1));
         intList.add(new Integer(2));
         assertEquals(intList, Arrays.asList(array3));
-    }
 
+        int[] sourceArray1 = new int[] { 1, 2, 3 };
+        array3 = (Integer[]) converter.convert(sourceArray1, Integer[].class,
+                createContext("testConvert", null));
+        assertEquals(3, array3.length);
+        assertEquals(new Integer(1), array3[0]);
+        assertEquals(new Integer(2), array3[1]);
+        assertEquals(new Integer(3), array3[2]);
+
+        String[] sourceArray2 = new String[] { "1", "2", "3" };
+        array3 = (Integer[]) converter.convert(sourceArray2, Integer[].class,
+                createContext("testConvert", null));
+        assertEquals(3, array3.length);
+        assertEquals(new Integer(1), array3[0]);
+        assertEquals(new Integer(2), array3[1]);
+        assertEquals(new Integer(3), array3[2]);
+    }
 }

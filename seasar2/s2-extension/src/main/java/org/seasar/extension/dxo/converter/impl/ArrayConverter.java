@@ -58,11 +58,11 @@ public class ArrayConverter extends AbstractConverter {
             return source;
         }
         if (source.getClass().isArray()) {
-            return toArray(destClass.getComponentType(), (Object[]) source,
+            return fromArrayToArray(destClass.getComponentType(), source,
                     context);
         }
         if (source instanceof Collection) {
-            return toArray(destClass.getComponentType(), (Collection) source,
+            return fromCollectionToArray(destClass.getComponentType(), (Collection) source,
                     context);
         }
         final Object[] result = (Object[]) Array.newInstance(destClass
@@ -82,9 +82,9 @@ public class ArrayConverter extends AbstractConverter {
      *            変換コンテキスト
      * @return 変換した結果の配列
      */
-    protected Object toArray(final Class componentType, final Object[] source,
-            final ConversionContext context) {
-        final int length = source.length;
+    protected Object fromArrayToArray(final Class componentType,
+            final Object source, final ConversionContext context) {
+        final int length = Array.getLength(source);
         final Object[] result = (Object[]) Array.newInstance(componentType,
                 length);
         if (length == 0) {
@@ -93,7 +93,7 @@ public class ArrayConverter extends AbstractConverter {
 
         final ConverterFactory converterFactory = context.getConverterFactory();
         for (int i = 0; i < length; i++) {
-            final Object sourceElement = source[i];
+            final Object sourceElement = Array.get(source, i);
             final Converter converter = converterFactory.getConverter(
                     sourceElement.getClass(), componentType);
             result[i] = converter
@@ -113,7 +113,7 @@ public class ArrayConverter extends AbstractConverter {
      *            変換コンテキスト
      * @return 変換した結果の配列
      */
-    protected Object toArray(final Class componentType,
+    protected Object fromCollectionToArray(final Class componentType,
             final Collection source, final ConversionContext context) {
         final int length = source.size();
         final Object[] result = (Object[]) Array.newInstance(componentType,
