@@ -20,11 +20,19 @@ import java.util.List;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
+import examples.dto.EmployeeDto;
+
 /**
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
+public class SqlGetResultListTest extends S2TestCase {
+
+    private static final String SELECT_EMPLOYEE_DTO =
+        "select e.*, d.name as department_name"
+            + " from employee e left outer join department d"
+            + " on e.department_id = d.id"
+            + " where d.id = ?";
 
     private JdbcManager jdbcManager;
 
@@ -35,14 +43,13 @@ public class GetResultListTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testGetResultList() throws Exception {
-        List<Employee> results =
+    public void testSqlGetResultList() throws Exception {
+        List<EmployeeDto> results =
             jdbcManager
-                .from(Employee.class)
-                .where("name like ?", "S%")
+                .selectBySql(EmployeeDto.class, SELECT_EMPLOYEE_DTO, 1)
                 .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
+        for (EmployeeDto e : results) {
+            System.out.println(e.name + " " + e.departmentName);
         }
     }
 }

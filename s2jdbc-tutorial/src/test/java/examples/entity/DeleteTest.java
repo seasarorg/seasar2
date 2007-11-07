@@ -15,8 +15,6 @@
  */
 package examples.entity;
 
-import java.util.List;
-
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -24,7 +22,7 @@ import org.seasar.extension.unit.S2TestCase;
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
+public class DeleteTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -35,14 +33,18 @@ public class GetResultListTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testGetResultList() throws Exception {
-        List<Employee> results =
+    public void testDeleteTx() throws Exception {
+        Employee emp =
             jdbcManager
                 .from(Employee.class)
-                .where("name like ?", "S%")
-                .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
-        }
+                .where("id = ?", 1)
+                .getSingleResult();
+        jdbcManager.delete(emp).execute();
+        emp =
+            jdbcManager
+                .from(Employee.class)
+                .where("id = ?", 1)
+                .getSingleResult();
+        System.out.println(emp);
     }
 }

@@ -20,11 +20,17 @@ import java.util.List;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
+import examples.dto.EmployeeDto;
+import examples.dto.SelectWithDepartmentDto;
+
 /**
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
+public class SqlFileTest extends S2TestCase {
+
+    private static final String SQL_FILE =
+        "examples/sql/employee/selectWithDepartment.sql";
 
     private JdbcManager jdbcManager;
 
@@ -35,14 +41,17 @@ public class GetResultListTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testGetResultList() throws Exception {
-        List<Employee> results =
+    public void testSqlFile() throws Exception {
+        SelectWithDepartmentDto dto = new SelectWithDepartmentDto();
+        dto.salaryMin = 1200;
+        dto.salaryMax = 1800;
+        List<EmployeeDto> results =
             jdbcManager
-                .from(Employee.class)
-                .where("name like ?", "S%")
+                .selectBySqlFile(EmployeeDto.class, SQL_FILE, dto)
                 .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
+        for (EmployeeDto e : results) {
+            System.out
+                .println(e.name + " " + e.salary + " " + e.departmentName);
         }
     }
 }

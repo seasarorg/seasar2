@@ -13,36 +13,21 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
-
-import java.util.List;
-
-import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.unit.S2TestCase;
+package examples.dto;
 
 /**
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
-
-    private JdbcManager jdbcManager;
-
-    protected void setUp() throws Exception {
-        include("app.dicon");
-    }
+public class SelectWithDepartmentDto {
 
     /**
-     * @throws Exception
+     * 給料の最小値です。
      */
-    public void testGetResultList() throws Exception {
-        List<Employee> results =
-            jdbcManager
-                .from(Employee.class)
-                .where("name like ?", "S%")
-                .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
-        }
-    }
+    public Integer salaryMin;
+
+    /**
+     * 給料の最大値です。
+     */
+    public Integer salaryMax;
 }

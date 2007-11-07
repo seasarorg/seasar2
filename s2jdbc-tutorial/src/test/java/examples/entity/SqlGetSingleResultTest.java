@@ -15,8 +15,6 @@
  */
 package examples.entity;
 
-import java.util.List;
-
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -24,7 +22,9 @@ import org.seasar.extension.unit.S2TestCase;
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
+public class SqlGetSingleResultTest extends S2TestCase {
+
+    private static final String SELECT_COUNT = "select count(*) from employee";
 
     private JdbcManager jdbcManager;
 
@@ -35,14 +35,11 @@ public class GetResultListTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testGetResultList() throws Exception {
-        List<Employee> results =
+    public void testSqlGetSingleResult() throws Exception {
+        Integer result =
             jdbcManager
-                .from(Employee.class)
-                .where("name like ?", "S%")
-                .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
-        }
+                .selectBySql(Integer.class, SELECT_COUNT)
+                .getSingleResult();
+        System.out.println(result);
     }
 }
