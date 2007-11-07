@@ -56,6 +56,26 @@
 						<a href="#更新">更新</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#削除">削除</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#SQLによる複数件検索">SQLによる複数件検索</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#SQLによる1件検索">SQLによる1件検索</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#SQLファイル">SQLファイル</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 
@@ -301,6 +321,13 @@ System.out.println(result.name);
         SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
         </p>
         <p>
+        where()の2番目以降の引数は、可変長引数になっています。
+        例えば、次のように複数指定できます。
+        </p>
+        <source><![CDATA[
+where("id = ? or name = ?", 1, "SCOTT")
+]]></source>
+        <p>
         詳しくは、<a href="s2jdbc_manager_auto.html#1件検索">1件検索</a>と
        <a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
         を参照してください。
@@ -315,7 +342,7 @@ System.out.println(result.name);
         </p>
         <p>
         src/test/java/examples/entity/JoinTest.java
-        を見てみましょう。
+         を見てみましょう。
         </p>
         <source><![CDATA[
 List<Employee> results =
@@ -333,26 +360,26 @@ for (Employee e : results) {
 }
 ]]></source>
         <p>
-        結合した関連エンティティのプロパティは、結合名.プロパティ名(例えばaddress.name)で指定します。
-        ネストした指定(aaa.bbb.ccc)も可能です。
-        ネストした指定をする場合は、必ずjoin()で指定しておく必要があります。
-        例えば、aaa.bbb.cccのプロパティを指定するには、join("aaa.bbb")を指定します。
+         結合した関連エンティティのプロパティは、結合名.プロパティ名(例えばaddress.name)で指定します。
+         ネストした指定(aaa.bbb.ccc)も可能です。
+         ネストした指定をする場合は、必ずjoin()で指定しておく必要があります。
+         例えば、aaa.bbb.cccのプロパティを指定するには、join("aaa.bbb")を指定します。
         </p>
         <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
-        を参照してください。
+         詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
+         を参照してください。
         </p>
 		</section>
 		
 		<section name="where句の簡易指定">
         <p>
         where句を文字列で組み立てる場合、
-        条件が指定されなかったらwhere句からはずしたり、
-        最初の条件にはandをつけないけど2番名の条件からはandをつけたりなど、
-        いろいろなことを考慮しながら文字列を組み立てる必要があります。
+         条件が指定されなかったらwhere句からはずしたり、
+         最初の条件にはandをつけないけど2番名の条件からはandをつけたりなど、
+         いろいろなことを考慮しながら文字列を組み立てる必要があります。
         </p>
         <p>
-        これらの面倒な処理を簡易に行えるようにしたのがSimpleWhereです。
+         これらの面倒な処理を簡易に行えるようにしたのがSimpleWhereです。
         </p>
         <p>
         src/test/java/examples/entity/SimpleWhereTest.java
@@ -375,13 +402,13 @@ for (Employee e : results) {
         <p>
         starts()の最初の引数はプロパティ名で、like '?%'に変換されます。
         ends()の最初の引数はプロパティ名で、like '%?'に変換されます。
-        それぞれの条件は、andで結合されます。
-        上記のサンプルでは、"A"や"1"のように直接リテラルを渡していますが、
-        変数を渡した場合、変数がnullの場合は、条件に含まれなくなります。
+         それぞれの条件は、andで結合されます。
+         上記のサンプルでは、"A"や"1"のように直接リテラルを渡していますが、
+         変数を渡した場合、変数がnullの場合は、条件に含まれなくなります。
         </p>
         <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
-        を参照してください。
+         詳しくは、<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
+         を参照してください。
         </p>
 		</section>
 		
@@ -393,7 +420,7 @@ for (Employee e : results) {
         </p>
         <p>
         src/test/java/examples/entity/OrderByTest.java
-        を見てみましょう。
+         を見てみましょう。
         </p>
         <source><![CDATA[
 List<Employee> results =
@@ -406,8 +433,8 @@ for (Employee e : results) {
 }
 ]]></source>
         <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
-        を参照してください。
+         詳しくは、<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
+         を参照してください。
         </p>
 		</section>
 		
@@ -422,7 +449,7 @@ for (Employee e : results) {
         </p>
         <p>
         src/test/java/examples/entity/PagingTest.java
-        を見てみましょう。
+         を見てみましょう。
         </p>
         <source><![CDATA[
 List<Employee> results =
@@ -437,19 +464,19 @@ for (Employee e : results) {
 }
 ]]></source>
         <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#ページング">ページング</a>
-        を参照してください。
+         詳しくは、<a href="s2jdbc_manager_auto.html#ページング">ページング</a>
+         を参照してください。
         </p>
 		</section>
 		
 		<section name="挿入">
         <p>
-		エンティティを挿入する場合は、
+		エンティティを挿入するには、
 		insert()とexecute()を組み合わせます。
         </p>
         <p>
         src/test/java/examples/entity/InsertTest.java
-        を見てみましょう。
+         を見てみましょう。
         </p>
         <source><![CDATA[
 public void testInsertTx() throws Exception {
@@ -462,27 +489,27 @@ public void testInsertTx() throws Exception {
 }
 ]]></source>
         <p>
-        テストメソッドがTxで終わっていると、テスト時実行前にトランザクションが開始され、
-        テスト終了後に自動的にロールバックされます。
-        そのため、何度でも同じテストを繰り返すことができます。
+         テストメソッドがTxで終わっていると、テスト時実行前にトランザクションが開始され、
+         テスト終了後に自動的にロールバックされます。
+         そのため、何度でも同じテストを繰り返すことができます。
         </p>
         <p>
         識別子は@GeneratedValueが指定されているので自動的に設定されます。
         </p>
         <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#挿入">挿入</a>
-        を参照してください。
+         詳しくは、<a href="s2jdbc_manager_auto.html#挿入">挿入</a>
+         を参照してください。
         </p>
 		</section>
 		
 		<section name="更新">
         <p>
-		エンティティを更新する場合は、
+		エンティティを更新するには、
 		update()とexecute()を組み合わせます。
         </p>
         <p>
         src/test/java/examples/entity/UpdateTest.java
-        を見てみましょう。
+         を見てみましょう。
         </p>
         <source><![CDATA[
 Employee emp =
@@ -498,10 +525,301 @@ System.out.println(emp.version);
         <p>
         versionプロパティには、@Versionが指定されているので、
         Seasar2による楽観的排他制御が行なわれて、
-        更新に成功するとversionの値がインクリメントされます。
+         更新に成功するとversionの値がインクリメントされます。
         </p>
         <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#更新">更新</a>
+         詳しくは、<a href="s2jdbc_manager_auto.html#更新">更新</a>
+         を参照してください。
+        </p>
+		</section>
+		
+		<section name="削除">
+        <p>
+		エンティティを削除するには、
+		delete()とexecute()を組み合わせます。
+        </p>
+        <p>
+        src/test/java/examples/entity/DeleteTest.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+Employee emp =
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", 1)
+        .getSingleResult();
+jdbcManager.delete(emp).execute();
+emp =
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", 1)
+        .getSingleResult();
+System.out.println(emp);
+]]></source>
+        <p>
+         詳しくは、<a href="s2jdbc_manager_auto.html#削除">削除</a>
+         を参照してください。
+        </p>
+		</section>
+		
+		<section name="SQLによる複数件取得">
+        <p>
+        SQLの自動生成は便利な機能ですが、
+        SQLを自分で書きたいこともあるでしょう。
+		SQLを使って複数件検索するには、
+		selectBySql()とgetResultList()を組み合わせます。
+        </p>
+        <p>
+        src/test/java/examples/entity/SqlGetResultListTest.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+private static final String SELECT_EMPLOYEE_DTO =
+    "select e.*, d.name as department_name"
+        + " from employee e left outer join department d"
+        + " on e.department_id = d.id"
+        + " where d.id = ?";
+...
+List<EmployeeDto> results =
+    jdbcManager
+        .selectBySql(EmployeeDto.class, SELECT_EMPLOYEE_DTO, 1)
+        .getResultList();
+for (EmployeeDto e : results) {
+    System.out.println(e.name + " " + e.departmentName);
+}
+]]></source>
+        <p>
+        selectBySql()の最初の引数は、結果を受け取るJavaBeansです。
+         結果セットのカラム名とJavaBeansのプロパティ名を
+         あわせておけば自動的にマッピングされます。
+        AAA_BBBのような'_'記法とaaaBbbのようなキャメル記法の
+         マッピングも自動的に行なわれます。
+        </p>
+        <p>
+        selectBySql()の3番目以降の引数は、可変長引数になっています。
+         例えば、次のように複数指定できます。
+        </p>
+        <source><![CDATA[
+selectBySql(EmployeeDto.class, "... id = ? or name = ?", 1, "SCOTT")
+]]></source>
+        <p>
+         詳しくは、<a href="s2jdbc_manager_sql.html#複数件検索">SQLによる複数件検索</a>
+         を参照してください。
+        </p>
+		</section>
+		
+		<section name="SQLによる1件取得">
+        <p>
+        SQLを使って1件検索するには、
+		selectBySql()とgetSingleResult()を組み合わせます。
+        </p>
+        <p>
+        src/test/java/examples/entity/SqlGetSingleResultTest.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+private static final String SELECT_COUNT = "select count(*) from employee";
+...
+Integer result =
+    jdbcManager
+        .selectBySql(Integer.class, SELECT_COUNT)
+        .getSingleResult();
+System.out.println(result);
+]]></source>
+        <p>
+        selectリストが1つだけの場合は、
+        selectBySql()の最初の引数に、
+        JavaBeansではなく、Integer.classやString.class
+         などのカラムの型に応じたクラスを指定します。
+        </p>
+        <p>
+         詳しくは、<a href="s2jdbc_manager_sql.html#1件検索">SQLによる1件検索</a>
+         を参照してください。
+        </p>
+		</section>
+		
+		<section name="SQLファイル">
+        <p>
+         複雑で長いSQL文はソースコードに直接記述するよりも、
+         ファイルに書いたほうがメンテナンスがしやすくなります。
+        </p>
+        <p>
+		SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
+		ルートパッケージ.sql.テーブル名
+		のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
+		employeeテーブルに関するSQLファイルは、
+		examples/sql/employeeディレクトリにおくと良いでしょう。
+		</p>
+		<p>
+		何のパラメータもない単純なSQLファイルは次のようになります。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+salary >= 1000
+and salary <= 2000
+]]></source>
+		<p>
+		1000の部分をsalaryMin
+		というパラメータで置き換えるには、
+		次のように置き換えたいリテラルの左にSQLコメントでパラメータ名を埋め込みます。
+		リテラルを文字列として直接置き換えるのではなく、
+		PreparedStatmentを使ったバインド変数に置き換えるので、
+		SQLインジェクション対策も問題ありません。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= 2000
+]]></source>
+		<p>
+		同様に2000の部分も
+		salaryMaxというパラメータで置き換えます。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+salary >= /*salaryMin*/1000
+and salary <= /*salaryMax*/2000
+]]></source>
+		<p>
+		検索条件の入力画面などによくあるパターンで、
+		何か条件が入力されていれば検索条件に追加し、
+		入力されていなければ条件には追加しないということを実装してみましょう。
+		このような場合は、IFコメントとENDコメントを組み合わせます。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+/*IF salaryMin != null*/
+salary >= /*salaryMin*/1000
+/*END*/
+/*IF salaryMax != null*/
+and salary <= /*salaryMax*/2000
+/*END*/
+]]></source>
+		<p>
+		IFコメントの内容がtrueなら、
+		IFコメントとENDコメントで囲んでいる内容が出力されます。
+		IFコメントの条件は、OGNLによって評価されます。
+		詳しくは、<a href="ognl.html">OGNLガイド</a>を参照してください。
+		</p>
+		<p>
+		上記のように記述すると、salaryMinがnullではなくて、
+		salaryMaxがnullのときには、
+		下記のように正しいSQLになります。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+salary >= ?
+]]></source>
+		<p>
+		しかしsalaryMinがnullでsalaryMaxがnullではないときは、
+		次のような不正(andがwhereの直後にある)なSQLになります。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+and salary <= ?
+]]></source>
+		<p>
+		また、salaryMinとsalaryMaxがnullの場合も、
+		次のような不正(whereだけがある)なSQLになります。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+]]></source>
+		<p>
+		この問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
+		</p>
+		<source><![CDATA[
+select * from employee
+/*BEGIN*/
+where
+/*IF salaryMin != null*/
+salary >= /*salaryMin*/1000
+/*END*/
+/*IF salaryMax != null*/
+and salary <= /*salaryMax*/2000
+/*END*/
+/*END*/
+]]></source>
+		<p>
+		このようにすると、salaryMinがnullでsalaryMaxがnullではないときは、
+		salaryMaxの条件は、BEGINコメントとENDコメントで囲まれた最初の条件なので、
+		andの部分が自動的に削除されて次のようになります。
+		</p>
+		<source><![CDATA[
+select * from employee
+where
+salary <= ?
+]]></source>
+		<p>
+		また、salaryMinとsalaryMaxがnullの場合は、
+		BEGINコメントとENDコメントで囲まれた部分に1つも条件に一致するものがないので、
+		BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
+		</p>
+		<source><![CDATA[
+select * from employee
+]]></source>
+        <p>
+        src/main/resources/examples/sql/employee/selectWithDepartment.sql
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+select e.*, d.name as department_name
+from employee e left outer join department d on e.department_id = d.id
+/*BEGIN*/
+where
+  /*IF salaryMin != null*/
+    e.salary >= /*salaryMin*/1000
+  /*END*/
+  /*IF salaryMax != null*/
+    and e.salary <= /*salaryMax*/2000
+  /*END*/
+/*END*/
+order by e.salary
+]]></source>
+        <p>
+        SQLファイルを使って複数件検索するには、
+		selectBySqlFile()とgetResultList()を組み合わせます。
+        </p>
+        <p>
+        src/test/java/examples/entity/SqlFileTest.javaと
+        src/main/java/examples/dto/SelectWithDepartmentDto.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+private static final String SQL_FILE =
+    "examples/sql/employee/selectWithDepartment.sql";
+...
+SelectWithDepartmentDto dto = new SelectWithDepartmentDto();
+dto.salaryMin = 1200;
+dto.salaryMax = 1800;
+List<EmployeeDto> results =
+    jdbcManager
+        .selectBySqlFile(EmployeeDto.class, SQL_FILE, dto)
+        .getResultList();
+for (EmployeeDto e : results) {
+    System.out
+        .println(e.name + " " + e.salary + " " + e.departmentName);
+}
+]]></source>
+        <source><![CDATA[
+package examples.dto;
+
+public class SelectWithDepartmentDto {
+
+    public Integer salaryMin;
+
+    public Integer salaryMax;
+}
+]]></source>
+        <p>
+        詳しくは、<a href="s2jdbc_manager_sqlfile.html">SQLファイル</a>
         を参照してください。
         </p>
 		</section>

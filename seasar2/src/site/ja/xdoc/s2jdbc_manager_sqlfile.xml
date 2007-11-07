@@ -94,7 +94,7 @@
 				SQLファイルとは、SQLをソースコードに記述するのではなく、 ファイルに記述したものです。
 				単純なSQLだとソースコードに直接記述したほうが、
 				めんどくさくなくて楽(わざわざファイルを作る必要がない)ですが、
-				複雑なSQLは、ファイルに記述したほうが、メンテナンス性が高いでしょう。
+				複雑なSQLは、ファイルに記述したほうが、メンテナンスがしやすくなります。
 			</p>
 			<p>
 				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
@@ -163,7 +163,7 @@ where
 name like /*name*/'S%'
 ]]></source>
 			<p>
-				検索条件の入力画面などで、何か条件が入力されていれば、
+				検索条件の入力画面などによくあるパターンで、何か条件が入力されていれば、
 				検索条件に追加し、入力されていなければ条件には追加しないということを実装してみましょう。
 				このような場合は、IFコメントとENDコメントを組み合わせます。
 			</p>
@@ -186,7 +186,17 @@ and salary <= /*salaryMax*/2000
 				を参照してください。
 			</p>
 			<p>
-				上記のように記述すると、salaryMinがnullでsalaryMaxがnullではないときは、
+				上記のように記述すると、salaryMinがnullではなくて、
+				salaryMaxがnullのときには、
+				下記のように正しいSQLになります。
+			</p>
+			<source><![CDATA[
+select * from employee
+where
+salary >= ?
+]]></source>
+			<p>
+				しかしsalaryMinがnullでsalaryMaxがnullではないときは、
 				次のような不正(andがwhereの直後にある)なSQLになります。
 			</p>
 			<source><![CDATA[
@@ -195,7 +205,7 @@ where
 and salary <= ?
 ]]></source>
 			<p>
-				また、salaryMinもsalaryMaxもnullの場合も、
+				また、salaryMinとsalaryMaxがnullの場合も、
 				次のような不正(whereだけがある)なSQLになります。
 			</p>
 			<source><![CDATA[
@@ -203,7 +213,7 @@ select * from employee
 where
 ]]></source>
 			<p>
-				こういう問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
+				この問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
 			</p>
 			<source><![CDATA[
 select * from employee
@@ -229,8 +239,8 @@ where
 salary <= ?
 ]]></source>
 			<p>
-				また、salaryMinもsalaryMaxもnullの場合は、
-				BEGINコメントとENDコメントで囲まれた部分で1つも条件に一致するものがないので、
+				また、salaryMinとsalaryMaxがnullの場合は、
+				BEGINコメントとENDコメントで囲まれた部分に1つも条件に一致するものがないので、
 				BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
 			</p>
 			<source><![CDATA[
