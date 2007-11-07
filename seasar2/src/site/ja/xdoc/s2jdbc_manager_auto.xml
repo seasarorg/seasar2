@@ -155,6 +155,13 @@
 						</li>
 						<li>
 							<p>
+								<a href="#更新行数をチェックしない">
+									更新行数をチェックしない
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#バッチ更新のサイズを指定する">
 									バッチ更新のサイズを指定する
 								</a>
@@ -181,6 +188,13 @@
 							<p>
 								<a href="#バージョンをチェックしないで削除する">
 									バージョンをチェックしないで削除する
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#削除行数をチェックしない">
+									削除行数をチェックしない
 								</a>
 							</p>
 						</li>
@@ -224,6 +238,20 @@
 List<Employee> results = jdbcManager.from(Employee.class).getResultList();
 ]]></source>
 				<p>検索するエンティティは、from()で指定します。</p>
+				<p>
+					デフォルトでは、結果がなかった場合は、 空の
+					<code>List</code>
+					が返されます。
+					<code>disallowNoResult()</code>
+					を呼び出すと、 結果がなかった場合は
+					<code>javax.persistence.NoResultException</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                                    .disallowNoResult()
+                                    .getResultList();
+]]></source>
 			</subsection>
 
 			<subsection name="1件検索">
@@ -238,6 +266,20 @@ Employee result = jdbcManager.from(Employee.class).getSingleResult();
 					</code>
 					が発生します。
 				</p>
+				<p>
+					デフォルトでは、結果がなかった場合は、
+					<code>null</code>
+					が返されます。
+					<code>disallowNoResult()</code>
+					を呼び出すと、 結果がなかった場合は
+					<code>javax.persistence.NoResultException</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+Employee result = jdbcManager.from(Employee.class)
+                             .disallowNoResult()
+                             .getSingleResult();
+]]></source>
 			</subsection>
 
 			<subsection name="結合">
@@ -512,35 +554,8 @@ jdbcManager.from(Employee.class)
 								valueがnullあるいはBoolean.FALSEの時は追加されません。
 							</td>
 						</tr>
-						<!--
-							<tr>
-							<td>or()</td>
-							<td>
-							これまでに追加された条件とこれから追加される条件をORで結合します。 次に
-							or() が呼び出されるまでの条件は AND で結合されます。
-							</td>
-							</tr>
-							<tr>
-							<td>ignoreWhitespace()</td>
-							<td>
-							上記のメソッドに渡されたパラメータ値がnullの場合に加え、
-							空文字列や空白だけの文字列の場合も条件に追加しないことを指定します。
-							このメソッドが呼び出された後に追加される条件にのみ適用されます。
-							</td>
-							</tr>
-						-->
 					</tbody>
 				</table>
-				<!--
-					<p>ORを使うには次のようにします。</p>
-					<source><![CDATA[
-					jdbcManager.from(Employee.class)
-					.where(new SimpleWhere()
-					.le("salary", salaryMin).or().ge("salary", salaryMax)
-					.or().
-					.getResultList();
-					]]></source>
-				-->
 				<p>Mapを使うと次のようになります。</p>
 				<source><![CDATA[
 public String departmentName;
@@ -809,6 +824,11 @@ int count = jdbcManager.insert(employee).execute();
 					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
 					を参照してください。
 				</p>
+				<p>
+					一意制約違反によりエンティティ挿入ができなかった場合は、
+					<code>javax.persistence.EntityExistsException</code>
+					が発生します。
+				</p>
 			</subsection>
 
 			<subsection name="バッチ挿入">
@@ -827,6 +847,11 @@ int[] countArray = jdbcManager.insertBatch(employees).execute();
 					挿入するときに、識別子を自動設定することができます。 詳しくは、
 					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
 					を参照してください。
+				</p>
+				<p>
+					一意制約違反によりエンティティを挿入ができなかった場合は、
+					<code>javax.persistence.EntityExistsException</code>
+					が発生します。
 				</p>
 			</subsection>
 
@@ -977,6 +1002,24 @@ int count = jdbcManager.updateBatch(employees).changedFrom(before).execute();
 ]]></source>
 			</subsection>
 
+			<subsection name="更新行数をチェックしない">
+				<p>
+					バージョンによる楽観的排他制御を行う場合、
+					更新できた行数が0だと
+					<code>javax.persistence.OptimisticLockException</code>
+					が発生します。
+					更新行数を正しく返さないJDBCドライバを使用する場合は、
+					<code>suppresOptimisticLockException()</code>
+					を呼び出すことで、更新できた行数のチェックを行わなくなります。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager
+    .updateBatch(employees)
+    .suppresOptimisticLockException()
+    .execute();
+]]></source>
+			</subsection>
+
 			<subsection name="バッチ更新のサイズを指定する">
 				<p>
 					バッチ更新のサイズを設定するには
@@ -1036,6 +1079,24 @@ int[] countArray = jdbcManager.deleteBatch(employees).execute();
 				</p>
 				<source><![CDATA[
 int count = jdbcManager.delete(employee).ignoreVersion().execute();
+]]></source>
+			</subsection>
+
+			<subsection name="削除行数をチェックしない">
+				<p>
+					バージョンによる楽観的排他制御を行う場合、
+					削除できた行数が0だと
+					<code>javax.persistence.OptimisticLockException</code>
+					が発生します。
+					削除行数を正しく返さないJDBCドライバを使用する場合は、
+					<code>suppresOptimisticLockException()</code>
+					を呼び出すことで、更新できた行数のチェックを行わなくなります。
+				</p>
+				<source><![CDATA[
+int[] countArray = jdbcManager
+    .deleteBatch(employees)
+    .suppresOptimisticLockException()
+    .execute();
 ]]></source>
 			</subsection>
 

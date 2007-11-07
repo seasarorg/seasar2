@@ -186,8 +186,7 @@ and salary <= /*salaryMax*/2000
 				を参照してください。
 			</p>
 			<p>
-				上記のように記述すると、salaryMinがnullではなくて、
-				salaryMaxがnullのときには、
+				上記のように記述すると、salaryMinがnullではなくて、 salaryMaxがnullのときには、
 				下記のように正しいSQLになります。
 			</p>
 			<source><![CDATA[
@@ -340,8 +339,9 @@ and salary >= /*salaryMax*/2000
 SelectAllParam param = new SelectAllParam();
 param.salaryMin = new BigDecimal(1200);
 param.salaryMax = new BigDecimal(1800);
-List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/sql/employee/selectAll.sql", param)
+List<EmployeeDto> results = jdbcManager
+    .selectBySqlFile(EmployeeDto.class,
+        "examples/sql/employee/selectAll.sql", param)
     .getResultList();
 ]]></source>
 				<p>
@@ -361,8 +361,9 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-List<RowMap> results = jdbcManager.selectBySqlFile(
-    RowMap.class, "examples/sql/employee/selectAll.sql")
+List<RowMap> results = jdbcManager
+    .selectBySqlFile(RowMap.class,
+        "examples/sql/employee/selectAll.sql")
     .getResultList();
 ]]></source>
 				<p>
@@ -378,6 +379,22 @@ List<RowMap> results = jdbcManager.selectBySqlFile(
 					</code>
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
+				<p>
+					デフォルトでは、結果がなかった場合は、 空の
+					<code>List</code>
+					が返されます。
+					<code>disallowNoResult()</code>
+					を呼び出すと、 結果がなかった場合は
+					<code>javax.persistence.NoResultException</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+List<RowMap> results = jdbcManager
+    .selectBySqlFile(RowMap.class,
+        "examples/sql/employee/selectAll.sql")
+    .disallowNoResult()
+    .getResultList();
+]]></source>
 			</subsection>
 
 			<subsection name="1件検索">
@@ -394,8 +411,9 @@ List<RowMap> results = jdbcManager.selectBySqlFile(
 				</p>
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
-EmployeeDto result = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/sql/employee/selectSingle.sql")
+EmployeeDto result = jdbcManager
+    .selectBySqlFile(EmployeeDto.class,
+        "examples/sql/employee/selectSingle.sql")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -404,8 +422,9 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 					の3番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-EmployeeDto result = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/sql/employee/selectSingle.sql", 10)
+EmployeeDto result = jdbcManager
+    .selectBySqlFile(EmployeeDto.class,
+        "examples/sql/employee/selectSingle.sql", 10)
     .getSingleResult();
 ]]></source>
 				<p>
@@ -431,8 +450,9 @@ EmployeeDto result = jdbcManager.selectBySqlFile(
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-RowMap result = jdbcManager.selectBySqlFile(
-    RowMap.class, "examples/sql/employee/selectSingle.sql")
+RowMap result = jdbcManager
+    .selectBySqlFile(RowMap.class,
+        "examples/sql/employee/selectSingle.sql")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -448,6 +468,22 @@ RowMap result = jdbcManager.selectBySqlFile(
 					</code>
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
+				<p>
+					デフォルトでは、結果がなかった場合は、
+					<code>null</code>
+					が返されます。
+					<code>disallowNoResult()</code>
+					を呼び出すと、 結果がなかった場合は
+					<code>javax.persistence.NoResultException</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+RowMap result = jdbcManager
+    .selectBySqlFile(RowMap.class,
+        "examples/sql/employee/selectSingle.sql")
+    .disallowNoResult()
+    .getSingleResult();
+]]></source>
 			</subsection>
 
 			<subsection name="ページング">
@@ -582,6 +618,11 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
     "examples/sql/employee/update.sql", paramList)
     .execute();
 ]]></source>
+				<p>
+					一意制約違反によりエンティティを挿入ができなかった場合は、
+					<code>javax.persistence.EntityExistsException</code>
+					が発生します。
+				</p>
 			</subsection>
 
 			<subsection name="バッチ更新のサイズを指定する">
@@ -598,6 +639,11 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
     .batchSize(50)
     .execute();
 ]]></source>
+				<p>
+					一意制約違反によりエンティティを挿入ができなかった場合は、
+					<code>javax.persistence.EntityExistsException</code>
+					が発生します。
+				</p>
 			</subsection>
 		</section>
 

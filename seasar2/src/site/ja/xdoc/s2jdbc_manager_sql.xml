@@ -86,8 +86,8 @@
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-List<EmployeeDto> results = jdbcManager.selectBySql(
-    EmployeeDto.class, "select ... where department_id = ?", 10)
+List<EmployeeDto> results = jdbcManager
+    .selectBySql(EmployeeDto.class, "select ... where department_id = ?", 10)
     .getResultList();
 ]]></source>
 				<p>
@@ -96,8 +96,8 @@ List<EmployeeDto> results = jdbcManager.selectBySql(
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-List<RowMap> results = jdbcManager.selectBySql(
-    RowMap.class, "select ...")
+List<RowMap> results = jdbcManager
+    .selectBySql(RowMap.class, "select ...")
     .getResultList();
 ]]></source>
 				<p>
@@ -113,6 +113,21 @@ List<RowMap> results = jdbcManager.selectBySql(
 					</code>
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
+				<p>
+					デフォルトでは、結果がなかった場合は、 空の
+					<code>List</code>
+					が返されます。
+					<code>disallowNoResult()</code>
+					を呼び出すと、 結果がなかった場合は
+					<code>javax.persistence.NoResultException</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+List<RowMap> results = jdbcManager
+    .selectBySql(RowMap.class, "select ...")
+    .disallowNoResult()
+    .getResultList();
+]]></source>
 			</subsection>
 
 			<subsection name="1件検索">
@@ -124,8 +139,8 @@ List<RowMap> results = jdbcManager.selectBySql(
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-Integer count = jdbcManager.selectBySql(
-    Integer.class, "select count(*) from emp")
+Integer count = jdbcManager
+    .selectBySql(Integer.class, "select count(*) from emp")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -134,8 +149,8 @@ Integer count = jdbcManager.selectBySql(
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-RowMap result = jdbcManager.selectBySql(
-    RowMap.class, "select ...")
+RowMap result = jdbcManager
+    .selectBySql(RowMap.class, "select ...")
     .getSingleResult();
 ]]></source>
 				<p>
@@ -151,6 +166,21 @@ RowMap result = jdbcManager.selectBySql(
 					</code>
 					のfromColumnNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
 				</p>
+				<p>
+					デフォルトでは、結果がなかった場合は、
+					<code>null</code>
+					が返されます。
+					<code>disallowNoResult()</code>
+					を呼び出すと、 結果がなかった場合は
+					<code>javax.persistence.NoResultException</code>
+					が発生します。
+				</p>
+				<source><![CDATA[
+RowMap result = jdbcManager
+    .selectBySql(RowMap.class, "select ...")
+    .disallowNoResult()
+    .getSingleResult();
+]]></source>
 			</subsection>
 
 			<subsection name="ページング">
@@ -197,6 +227,11 @@ int count = jdbcManager.updateBySql(
     .params(null, 1)
     .execute();
 ]]></source>
+				<p>
+					一意制約違反によりエンティティを挿入ができなかった場合は、
+					<code>javax.persistence.EntityExistsException</code>
+					が発生します。
+				</p>
 			</subsection>
 
 			<subsection name="バッチ挿入・更新・削除">
@@ -223,6 +258,11 @@ for (EmployeeDto dto : dtoList) {
 }
 int[] countArray = batchUpdate.execute();
 ]]></source>
+				<p>
+					一意制約違反によりエンティティを挿入ができなかった場合は、
+					<code>javax.persistence.EntityExistsException</code>
+					が発生します。
+				</p>
 			</subsection>
 
 			<subsection name="バッチ更新のサイズを指定する">
