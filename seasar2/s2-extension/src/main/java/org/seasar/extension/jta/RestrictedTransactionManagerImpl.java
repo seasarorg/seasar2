@@ -15,7 +15,11 @@
  */
 package org.seasar.extension.jta;
 
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
 import javax.transaction.InvalidTransactionException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -35,8 +39,7 @@ import javax.transaction.UserTransaction;
  * 
  * @author koichik
  */
-public class RestrictedTransactionManagerImpl extends
-        AbstractTransactionManagerImpl {
+public class RestrictedTransactionManagerImpl implements TransactionManager {
 
     /** ユーザトランザクション */
     protected UserTransaction userTransaction;
@@ -58,8 +61,9 @@ public class RestrictedTransactionManagerImpl extends
      * @param synchronizationRegistry
      *            トランザクションシンクロナイゼーションレジストリ
      */
-    public RestrictedTransactionManagerImpl(UserTransaction userTransaction,
-            TransactionSynchronizationRegistry synchronizationRegistry) {
+    public RestrictedTransactionManagerImpl(
+            final UserTransaction userTransaction,
+            final TransactionSynchronizationRegistry synchronizationRegistry) {
         this.userTransaction = userTransaction;
         this.synchronizationRegistry = synchronizationRegistry;
     }
@@ -85,8 +89,29 @@ public class RestrictedTransactionManagerImpl extends
         this.synchronizationRegistry = synchronizationRegistry;
     }
 
-    public void setTransactionTimeout(final int seconds) throws SystemException {
-        userTransaction.setTransactionTimeout(seconds);
+    public void begin() throws NotSupportedException, SystemException {
+        userTransaction.begin();
+    }
+
+    public void commit() throws HeuristicMixedException,
+            HeuristicRollbackException, IllegalStateException,
+            RollbackException, SecurityException, SystemException {
+        userTransaction.commit();
+    }
+
+    public int getStatus() throws SystemException {
+        return userTransaction.getStatus();
+    }
+
+    public Transaction getTransaction() throws SystemException {
+        RestrictedTransactionImpl tx = (RestrictedTransactionImpl) synchronizationRegistry
+                .getResource(this);
+        if (tx == null) {
+            tx = new RestrictedTransactionImpl(userTransaction,
+                    synchronizationRegistry);
+            synchronizationRegistry.putResource(this, tx);
+        }
+        return tx;
     }
 
     public void resume(final Transaction tx) throws IllegalStateException,
@@ -94,13 +119,21 @@ public class RestrictedTransactionManagerImpl extends
         throw new UnsupportedOperationException("resume");
     }
 
-    public Transaction suspend() throws SystemException {
-        throw new UnsupportedOperationException("suspend");
+    public void rollback() throws IllegalStateException, SecurityException,
+            SystemException {
+        userTransaction.rollback();
     }
 
-    protected ExtendedTransaction createTransaction() {
-        return new RestrictedTransactionImpl(userTransaction,
-                synchronizationRegistry);
+    public void setRollbackOnly() throws IllegalStateException, SystemException {
+        userTransaction.setRollbackOnly();
+    }
+
+    public void setTransactionTimeout(final int seconds) throws SystemException {
+        userTransaction.setTransactionTimeout(seconds);
+    }
+
+    public Transaction suspend() throws SystemException {
+        throw new UnsupportedOperationException("suspend");
     }
 
 }

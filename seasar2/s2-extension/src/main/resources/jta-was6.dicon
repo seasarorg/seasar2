@@ -33,4 +33,8 @@
 	<!-- WAS6 の UOWManager を利用する TransactionSynchronizationRegistry -->
 	<component name="TransactionSynchronizationRegistry"
 		class="org.seasar.extension.tx.adapter.WAS6TransactionSynchronizationRegistry"/>
+
+	<!-- UserTransction と TransactionSynchronizationRegistry を利用する制限付き TransactionManager -->
+	<component name="TransactionManager"
+		class="org.seasar.extension.jta.RestrictedTransactionManagerImpl"/>
 </components>

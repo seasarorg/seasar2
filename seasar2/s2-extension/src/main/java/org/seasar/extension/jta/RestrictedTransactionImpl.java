@@ -27,8 +27,6 @@ import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.UserTransaction;
 import javax.transaction.xa.XAResource;
 
-import org.seasar.framework.log.Logger;
-
 /**
  * 機能が限定された{@link Transaction}の実装クラスです。
  * <p>
@@ -42,10 +40,7 @@ import org.seasar.framework.log.Logger;
  * 
  * @author koichik
  */
-public class RestrictedTransactionImpl implements ExtendedTransaction {
-
-    private static Logger logger = Logger
-            .getLogger(RestrictedTransactionImpl.class);
+public class RestrictedTransactionImpl implements Transaction {
 
     /** ユーザトランザクション */
     protected UserTransaction userTransaction;
@@ -76,17 +71,6 @@ public class RestrictedTransactionImpl implements ExtendedTransaction {
      */
     public void begin() throws NotSupportedException, SystemException {
         userTransaction.begin();
-        if (logger.isDebugEnabled()) {
-            logger.log("DSSR0003", new Object[] { this });
-        }
-    }
-
-    public void resume() {
-        throw new UnsupportedOperationException("resume");
-    }
-
-    public void suspend() {
-        throw new UnsupportedOperationException("suspend");
     }
 
     public void commit() throws HeuristicMixedException,

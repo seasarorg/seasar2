@@ -88,28 +88,6 @@ public class RestrictedTransactionImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testResume() throws Exception {
-        try {
-            tx.resume();
-            fail();
-        } catch (UnsupportedOperationException expected) {
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testSuspend() throws Exception {
-        try {
-            tx.suspend();
-            fail();
-        } catch (UnsupportedOperationException expected) {
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testRegisterSynchronization() throws Exception {
         SynchronizationImpl sync = new SynchronizationImpl();
         tx.begin();
