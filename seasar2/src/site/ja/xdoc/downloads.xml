@@ -11,6 +11,8 @@
 				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
 				<dt><a href="/download/2007-10-23/S2Tiger-2.4.18-rc1.zip">S2Tiger 2.4.18-rc1</a></dt>
 				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
+				<dt><a href="/download/2007-10-23/S2JDBC-Tutorial-2.4.18-rc2.zip">S2JDBC Tutorial 2.4.18-rc2</a></dt>
+				<dd>S2JDBCのチュートリアル</dd>
 				</dl>
 			</subsection>
 			<subsection name="Seasar2.3系">
