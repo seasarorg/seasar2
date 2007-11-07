@@ -32,7 +32,8 @@
 			</p>
 			<p>DIのための設定は次のようになります。</p>
 			<source><![CDATA[
-<component name="sqlLogRegistry" class="org.seasar.extension.jdbc.SqlLogRegistry">
+<component name="sqlLogRegistry"
+  class="org.seasar.extension.jdbc.SqlLogRegistry">
   @org.seasar.extension.jdbc.SqlLogRegistryLocator@getInstance()
 </component>
 ]]></source>
