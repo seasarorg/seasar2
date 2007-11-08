@@ -88,6 +88,7 @@ font-size : 10pt;
 <li><a href="#prefixProperty">プレフィックス付きのプロパティ</a></li>
                 <li><a href="#formatDate">日付・時刻のフォーマット</a></li>
 <li><a href="#customConverter">独自のコンバータ</a></li>
+<li><a href="#shallowCopy">シャローコピー</a></li>
 </ul>
 </li>
 </ul>
@@ -1035,6 +1036,20 @@ public @interface PrefixDxoConverter {
   public void setName(String name) {
     this.name = name;
   }</pre>
+<h3><a name="shallowCopy" id="shallowCopy">シャローコピー</a></h3>
+<p>Seasar2.4.17以前は，変換元と変換先が同じクラスの場合は，変換元のインスタンスをそのまま変換先として使用していました (シャローコピー的) が，
+2.4.18からは，新しいインスタンスを作成するようになりました (ディープコピー的)．</p>
+<p>2.4.17以前とと同様の振る舞い (シャローコピー的) が必要な場合は，<code>dxo.dicon</code> でインクルードする 
+<code>dxo-builtin-converters.dicon</code> を，<code>dxo-builtin-converters-shallow.dicon</code> に差し替えて使用してください．</p>
+dicon の差し替えは，<code>s2container.dicon</code> の中で次のように指定します．</p>
+<pre>
+&lt;component class=&quot;org.seasar.framework.container.factory.SimplePathResolver&quot;&gt;
+  &lt;initMethod name=&quot;addRealPath&quot;&gt;
+    &lt;arg&gt;&quot;dxo-builtin-converters.dicon&quot;&lt;/arg&gt;
+    &lt;arg&gt;&quot;dxo-builtin-converters-shallow.dicon&quot;&lt;/arg&gt;
+  &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
