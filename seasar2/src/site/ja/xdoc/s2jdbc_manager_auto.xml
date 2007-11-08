@@ -1135,7 +1135,7 @@ jdbcManager.call("myproc").execute();
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.call("myproc}", "hoge").execute();
+jdbcManager.call("myproc", "hoge").execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -1305,7 +1305,7 @@ List<MyDto> result = jdbcManager.call(MyDto.class, "myfunc")
 					の3番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-String result = jdbcManager.call(String.class, "myfunc}", "hoge")
+String result = jdbcManager.call(String.class, "myfunc", "hoge")
                            .getSingleResult();
 ]]></source>
 				<p>
@@ -1379,7 +1379,7 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-String result = jdbcManager.call(String.class, "myproc}", dto)
+String result = jdbcManager.call(String.class, "myproc", dto)
                            .getSingleResult();
 System.out.println(result);
 System.out.println(dto.arg1);
