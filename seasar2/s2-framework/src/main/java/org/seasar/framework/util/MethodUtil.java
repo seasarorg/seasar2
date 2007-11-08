@@ -40,32 +40,32 @@ public final class MethodUtil {
     protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
 
     /**
-     * {@link #getElementTypeOfCollectionFromParameterMethod()}への定数参照です
+     * {@link #getElementTypeOfCollectionFromParameterType(Method, int)}への定数参照です
      */
     protected static final Method GET_ELEMENT_TYPE_OF_COLLECTION_FROM_PARAMETER_METHOD = getElementTypeFromParameterMethod("Collection");
 
     /**
-     * {@link #getElementTypeOfCollectionFromReturnMethod()}への定数参照です。
+     * {@link #getElementTypeOfCollectionFromReturnType(Method)}への定数参照です。
      */
     protected static final Method GET_ELEMENT_TYPE_OF_COLLECTION_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("Collection");
 
     /**
-     * {@link #getElementTypeOfListFromParameterMethod()}への定数参照です
+     * {@link #getElementTypeOfListFromParameterType(Method, int)}への定数参照です
      */
     protected static final Method GET_ELEMENT_TYPE_OF_LIST_FROM_PARAMETER_METHOD = getElementTypeFromParameterMethod("List");
 
     /**
-     * {@link #getElementTypeOfListFromReturnMethod()}への定数参照です。
+     * {@link #getElementTypeOfListFromReturnType(Method)}への定数参照です。
      */
     protected static final Method GET_ELEMENT_TYPE_OF_LIST_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("List");
 
     /**
-     * {@link #getElementTypeOfSetFromParameterMethod()}への定数参照です
+     * {@link #getElementTypeOfSetFromParameterType(Method, int)}への定数参照です
      */
     protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_PARAMETER_METHOD = getElementTypeFromParameterMethod("Set");
 
     /**
-     * {@link #getElementTypeOfSetFromReturnMethod()}への定数参照です。
+     * {@link #getElementTypeOfSetFromReturnType(Method)}への定数参照です。
      */
     protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("Set");
 

@@ -36,17 +36,17 @@ public final class FieldUtil {
     protected static final String REFLECTION_UTIL_CLASS_NAME = "org.seasar.framework.util.tiger.ReflectionUtil";
 
     /**
-     * {@link #getElementTypeOfCollectionFromParameterMethod()}への定数参照です
+     * {@link #getElementTypeOfCollectionFromFieldType(Field)}への定数参照です
      */
     protected static final Method GET_ELEMENT_TYPE_OF_COLLECTION_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("Collection");
 
     /**
-     * {@link #getElementTypeOfListFromParameterMethod()}への定数参照です
+     * {@link #getElementTypeOfListFromFieldType(Field)}への定数参照です
      */
     protected static final Method GET_ELEMENT_TYPE_OF_LIST_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("List");
 
     /**
-     * {@link #getElementTypeOfSetFromParameterMethod()}への定数参照です
+     * {@link #getElementTypeOfSetFromFieldType(Field)}への定数参照です
      */
     protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("Set");
 
