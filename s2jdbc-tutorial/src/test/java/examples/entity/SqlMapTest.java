@@ -18,13 +18,17 @@ package examples.entity;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.util.RowMap;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
+public class SqlMapTest extends S2TestCase {
+
+    private static final String LABEL_VALUE =
+        "select name as label, id as value from employee";
 
     private JdbcManager jdbcManager;
 
@@ -33,13 +37,14 @@ public class GetResultListTest extends S2TestCase {
     }
 
     /**
+     * 
      * @throws Exception
      */
-    public void testGetResultList() throws Exception {
-        List<Employee> results =
-            jdbcManager.from(Employee.class).getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
+    public void testSqlMap() throws Exception {
+        List<RowMap> results =
+            jdbcManager.selectBySql(RowMap.class, LABEL_VALUE).getResultList();
+        for (RowMap m : results) {
+            System.out.println(m);
         }
     }
 }

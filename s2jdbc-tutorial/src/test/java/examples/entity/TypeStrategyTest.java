@@ -24,7 +24,7 @@ import org.seasar.extension.unit.S2TestCase;
  * @author higa
  * 
  */
-public class GetResultListTest extends S2TestCase {
+public class TypeStrategyTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -35,11 +35,13 @@ public class GetResultListTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testGetResultList() throws Exception {
+    public void testTypeStrategy() throws Exception {
         List<Employee> results =
             jdbcManager.from(Employee.class).getResultList();
+        int totalBonus = 0;
         for (Employee e : results) {
-            System.out.println(e.name);
+            totalBonus += e.jobType.createStrategy().calculateBonus(e.salary);
         }
+        System.out.println("Total Bonus:" + totalBonus);
     }
 }
