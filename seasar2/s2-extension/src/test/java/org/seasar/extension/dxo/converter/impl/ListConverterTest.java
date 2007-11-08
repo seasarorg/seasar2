@@ -51,6 +51,13 @@ public class ListConverterTest extends AbsConverterTest {
         assertEquals(2, dest.size());
         assertEquals("a", dest.get(0));
         assertEquals("b", dest.get(1));
+
+        int[] array3 = { 1, 5 };
+        dest = (List) converter.convert(array3, null, createContext(
+                "testConvertFromArray", null));
+        assertEquals(2, dest.size());
+        assertEquals(new Integer(1), dest.get(0));
+        assertEquals(new Integer(5), dest.get(1));
     }
 
     /**

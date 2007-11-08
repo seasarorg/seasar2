@@ -62,12 +62,12 @@ public class ArrayConverter extends AbstractConverter {
                     context);
         }
         if (source instanceof Collection) {
-            return fromCollectionToArray(destClass.getComponentType(), (Collection) source,
-                    context);
+            return fromCollectionToArray(destClass.getComponentType(),
+                    (Collection) source, context);
         }
-        final Object[] result = (Object[]) Array.newInstance(destClass
-                .getComponentType(), 1);
-        result[0] = source;
+        final Object result = Array
+                .newInstance(destClass.getComponentType(), 1);
+        Array.set(result, 0, source);
         return result;
     }
 
@@ -85,8 +85,7 @@ public class ArrayConverter extends AbstractConverter {
     protected Object fromArrayToArray(final Class componentType,
             final Object source, final ConversionContext context) {
         final int length = Array.getLength(source);
-        final Object[] result = (Object[]) Array.newInstance(componentType,
-                length);
+        final Object result = Array.newInstance(componentType, length);
         if (length == 0) {
             return result;
         }
@@ -96,8 +95,8 @@ public class ArrayConverter extends AbstractConverter {
             final Object sourceElement = Array.get(source, i);
             final Converter converter = converterFactory.getConverter(
                     sourceElement.getClass(), componentType);
-            result[i] = converter
-                    .convert(sourceElement, componentType, context);
+            Array.set(result, i, converter.convert(sourceElement,
+                    componentType, context));
         }
         return result;
     }

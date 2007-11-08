@@ -63,6 +63,18 @@ public class ArrayConverterTest extends AbsConverterTest {
         assertEquals(new Integer(2), array3[1]);
         assertEquals(new Integer(3), array3[2]);
 
+        long[] array4 = (long[]) converter.convert(sourceArray1, long[].class,
+                createContext("testConvert", null));
+        assertEquals(3, array4.length);
+        assertEquals(1L, array4[0]);
+        assertEquals(2L, array4[1]);
+        assertEquals(3L, array4[2]);
+
+        array4 = (long[]) converter.convert(new Integer(1), long[].class,
+                createContext("testConvert", null));
+        assertEquals(1, array4.length);
+        assertEquals(1L, array4[0]);
+
         String[] sourceArray2 = new String[] { "1", "2", "3" };
         array3 = (Integer[]) converter.convert(sourceArray2, Integer[].class,
                 createContext("testConvert", null));

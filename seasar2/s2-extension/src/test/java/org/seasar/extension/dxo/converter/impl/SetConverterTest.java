@@ -55,6 +55,14 @@ public class SetConverterTest extends AbsConverterTest {
         it = dest.iterator();
         assertEquals("a", it.next());
         assertEquals("b", it.next());
+
+        int[] array3 = { 1, 5 };
+        dest = (Set) converter.convert(array3, null, createContext(
+                "testConvertFromArray", null));
+        assertEquals(2, dest.size());
+        it = dest.iterator();
+        assertEquals(new Integer(1), it.next());
+        assertEquals(new Integer(5), it.next());
     }
 
     /**

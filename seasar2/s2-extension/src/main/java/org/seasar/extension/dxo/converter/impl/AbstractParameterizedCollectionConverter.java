@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.dxo.converter.impl;
 
-import java.util.Arrays;
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -37,7 +37,10 @@ public abstract class AbstractParameterizedCollectionConverter extends
             final ConversionContext context) {
         final Collection destCollection = (Collection) dest;
         if (source.getClass().isArray()) {
-            destCollection.addAll(Arrays.asList((Object[]) source));
+            final int length = Array.getLength(source);
+            for (int i = 0; i < length; ++i) {
+                destCollection.add(Array.get(source, i));
+            }
         } else if (source instanceof Collection) {
             destCollection.addAll((Collection) source);
         } else {
@@ -53,8 +56,7 @@ public abstract class AbstractParameterizedCollectionConverter extends
         if (destElementClass == null) {
             convert(source, dest, context);
         } else if (source.getClass().isArray()) {
-            convertFromArray((Object[]) source, destCollection,
-                    destElementClass, context);
+            convertFromArray(source, destCollection, destElementClass, context);
         } else if (source instanceof Collection) {
             convertFromCollection((Collection) source, destCollection,
                     destElementClass, context);
@@ -102,9 +104,8 @@ public abstract class AbstractParameterizedCollectionConverter extends
      * @param context
      *            変換コンテキスト
      */
-    protected void convertFromArray(final Object[] source,
-            final Collection dest, final Class destElementClass,
-            final ConversionContext context) {
+    protected void convertFromArray(final Object source, final Collection dest,
+            final Class destElementClass, final ConversionContext context) {
         if (destElementClass == null) {
             convert(source, dest, context);
             return;
@@ -112,8 +113,9 @@ public abstract class AbstractParameterizedCollectionConverter extends
         final Class sourceElementClass = source.getClass().getComponentType();
         final Converter converter = context.getConverterFactory().getConverter(
                 sourceElementClass, destElementClass);
-        for (int i = 0; i < source.length; ++i) {
-            final Object sourceElement = source[i];
+        final int length = Array.getLength(source);
+        for (int i = 0; i < length; ++i) {
+            final Object sourceElement = Array.get(source, i);
             if (sourceElement == null) {
                 dest.add(null);
             } else if (shallowCopy
