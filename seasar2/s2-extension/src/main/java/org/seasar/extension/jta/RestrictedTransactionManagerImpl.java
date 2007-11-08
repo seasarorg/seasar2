@@ -20,6 +20,7 @@ import javax.transaction.HeuristicRollbackException;
 import javax.transaction.InvalidTransactionException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
@@ -104,6 +105,11 @@ public class RestrictedTransactionManagerImpl implements TransactionManager {
     }
 
     public Transaction getTransaction() throws SystemException {
+        final int status = getStatus();
+        if (status == Status.STATUS_NO_TRANSACTION
+                || status == Status.STATUS_UNKNOWN) {
+            return null;
+        }
         RestrictedTransactionImpl tx = (RestrictedTransactionImpl) synchronizationRegistry
                 .getResource(this);
         if (tx == null) {
