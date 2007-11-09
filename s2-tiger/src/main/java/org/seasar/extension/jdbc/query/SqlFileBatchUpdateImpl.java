@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
+import org.seasar.extension.jdbc.exception.SEntityExistsException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
@@ -92,7 +93,23 @@ public class SqlFileBatchUpdateImpl<T> extends
     }
 
     public int[] execute() {
-        prepare("executeBatch");
+        prepare("execute");
+        try {
+            return executeInternal();
+        } catch (final RuntimeException e) {
+            if (getJdbcManager().getDialect().isUniqueConstraintViolation(e)) {
+                throw new SEntityExistsException(executedSql, e);
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * データベースの更新を実行します。
+     * 
+     * @return 更新した行数
+     */
+    protected int[] executeInternal() {
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             PreparedStatement ps = null;

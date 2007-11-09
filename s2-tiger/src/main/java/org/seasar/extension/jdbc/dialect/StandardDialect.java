@@ -15,8 +15,12 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.DbmsDialect;
@@ -29,6 +33,7 @@ import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.QueryTokenizer;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * 標準的な方言をあつかうクラスです
@@ -37,6 +42,12 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class StandardDialect implements DbmsDialect {
+
+    /**
+     * {@link EntityExistsException}に該当するSQLステートです。
+     */
+    protected static final Set<String> entityExistsExceptionStateCode = CollectionsUtil
+            .newHashSet(Arrays.asList("23", "27", "44"));
 
     public String getName() {
         return null;
@@ -188,4 +199,39 @@ public class StandardDialect implements DbmsDialect {
         }
         return sb.toString();
     }
+
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final String state = getSQLState(t);
+        if (state != null && state.length() >= 2) {
+            return entityExistsExceptionStateCode.contains(state
+                    .substring(0, 2));
+        }
+        return false;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
+     * <p>
+     * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、SQLステートが設定されていない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException#getSQLState() SQLステート}
+     */
+    protected String getSQLState(Throwable t) {
+        String sqlState = null;
+        while (t != null) {
+            if (t instanceof SQLException) {
+                final String tempState = SQLException.class.cast(t)
+                        .getSQLState();
+                if (!StringUtil.isEmpty(tempState)) {
+                    sqlState = tempState;
+                }
+            }
+            t = t.getCause();
+        }
+        return sqlState;
+    }
+
 }

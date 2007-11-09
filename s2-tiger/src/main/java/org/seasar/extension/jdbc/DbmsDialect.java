@@ -183,4 +183,13 @@ public interface DbmsDialect {
      */
     int getDefaultBatchSize();
 
+    /**
+     * 一意制約違反を原因とする例外であれば<code>true</code>を返します。
+     * 
+     * @param t
+     *            例外
+     * @return 一意制約違反を原因とする例外であれば<code>true</code>
+     */
+    boolean isUniqueConstraintViolation(Throwable t);
+
 }

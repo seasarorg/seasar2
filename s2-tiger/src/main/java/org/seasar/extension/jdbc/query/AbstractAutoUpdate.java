@@ -22,6 +22,7 @@ import javax.persistence.OptimisticLockException;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.Update;
+import org.seasar.extension.jdbc.exception.SEntityExistsException;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -85,7 +86,14 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
 
     public int execute() {
         prepare("execute");
-        return executeInternal();
+        try {
+            return executeInternal();
+        } catch (final RuntimeException e) {
+            if (getJdbcManager().getDialect().isUniqueConstraintViolation(e)) {
+                throw new SEntityExistsException(entity, executedSql, e);
+            }
+            throw e;
+        }
     }
 
     /**

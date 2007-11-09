@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlFileUpdate;
+import org.seasar.extension.jdbc.exception.SEntityExistsException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
@@ -104,6 +105,22 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
 
     public int execute() {
         prepare("execute");
+        try {
+            return executeInternal();
+        } catch (final RuntimeException e) {
+            if (getJdbcManager().getDialect().isUniqueConstraintViolation(e)) {
+                throw new SEntityExistsException(executedSql, e);
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * データベースの更新を実行します。
+     * 
+     * @return 更新した行数
+     */
+    protected int executeInternal() {
         logSql();
         int ret = 0;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();

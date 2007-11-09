@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlUpdate;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
+import org.seasar.extension.jdbc.exception.SEntityExistsException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
@@ -72,6 +73,22 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
 
     public int execute() {
         prepare("execute");
+        try {
+            return executeInternal();
+        } catch (final RuntimeException e) {
+            if (getJdbcManager().getDialect().isUniqueConstraintViolation(e)) {
+                throw new SEntityExistsException(executedSql, e);
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * データベースの更新を実行します。
+     * 
+     * @return 更新した行数
+     */
+    protected int executeInternal() {
         if (params.length != paramList.size()) {
             logger.log("ESSR0709", new Object[] { callerClass.getName(),
                     callerMethodName });

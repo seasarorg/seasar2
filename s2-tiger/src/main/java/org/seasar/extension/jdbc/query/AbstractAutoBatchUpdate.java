@@ -23,6 +23,7 @@ import javax.persistence.OptimisticLockException;
 import org.seasar.extension.jdbc.BatchUpdate;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.exception.SEntityExistsException;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.exception.EmptyRuntimeException;
@@ -83,7 +84,14 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
 
     public int[] execute() {
         prepare("executeBatch");
-        return executeInternal();
+        try {
+            return executeInternal();
+        } catch (final RuntimeException e) {
+            if (getJdbcManager().getDialect().isUniqueConstraintViolation(e)) {
+                throw new SEntityExistsException(executedSql, e);
+            }
+            throw e;
+        }
     }
 
     /**

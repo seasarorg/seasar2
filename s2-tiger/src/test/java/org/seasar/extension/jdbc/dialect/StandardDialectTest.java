@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import junit.framework.TestCase;
 import org.seasar.extension.jdbc.FromClause;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
@@ -91,4 +93,44 @@ public class StandardDialectTest extends TestCase {
                 fromClause.toSql());
     }
 
+    /**
+     * 
+     */
+    public void testIsUniqueConstraintViolation() {
+        StandardDialect dialect = new StandardDialect();
+        assertTrue(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "270000")))))));
+        assertFalse(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "000000")))))));
+        assertFalse(dialect.isUniqueConstraintViolation(new Exception(
+                new RuntimeException())));
+    }
+
+    /**
+     * 
+     */
+    public void testGetSQLState() {
+        StandardDialect dialect = new StandardDialect();
+        assertEquals("10", dialect.getSQLState(new Exception(
+                new SQLRuntimeException(SQLException.class
+                        .cast(new SQLException("hoge", "XXX")
+                                .initCause(new SQLException("hoge", "10")))))));
+        assertEquals("20", dialect.getSQLState(new Exception(
+                new SQLRuntimeException(SQLException.class
+                        .cast(new SQLException("hoge", "XXX")
+                                .initCause(new SQLException("hoge", "20")
+                                        .initCause(new RuntimeException())))))));
+        assertNull(dialect.getSQLState(new Exception(new SQLRuntimeException(
+                SQLException.class.cast(new SQLException("hoge")
+                        .initCause(new SQLException("hoge")
+                                .initCause(new RuntimeException())))))));
+    }
 }
