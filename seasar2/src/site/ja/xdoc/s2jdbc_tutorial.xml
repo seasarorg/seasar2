@@ -68,12 +68,22 @@
 				</li>
 				<li>
 					<p>
+						<a href="#SQLによるマップで返す複数件検索">SQLによるマップで返す複数件検索</a>
+					</p>
+				</li>
+				<li>
+					<p>
 						<a href="#SQLによる1件検索">SQLによる1件検索</a>
 					</p>
 				</li>
 				<li>
 					<p>
 						<a href="#SQLファイル">SQLファイル</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#多態">多態</a>
 					</p>
 				</li>
 			</ul>
@@ -608,6 +618,35 @@ selectBySql(EmployeeDto.class, "... id = ? or name = ?", 1, "SCOTT")
         </p>
 		</section>
 		
+		<section name="SQLによるマップで返す複数件検索">
+        <p>
+        SQLを使って結果をマップで返すには、
+		selectBySql()の最初の引数をRowMap.classにします。
+		RowMapはMap&lt;String, Object&gt;なクラスで、
+		存在しないキーにアクセスすると 例外が発生します。
+		キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+		変換したものです。
+        </p>
+        <p>
+        src/test/java/examples/entity/SqlMapTest.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+private static final String LABEL_VALUE =
+    "select name as label, id as value from employee";
+...
+List<RowMap> results =
+    jdbcManager.selectBySql(RowMap.class, LABEL_VALUE).getResultList();
+for (RowMap m : results) {
+    System.out.println(m);
+}
+]]></source>
+        <p>
+         詳しくは、<a href="s2jdbc_manager_sql.html#複数件検索">SQLによる複数件検索</a>
+         を参照してください。
+        </p>
+		</section>
+		
 		<section name="SQLによる1件取得">
         <p>
         SQLを使って1件検索するには、
@@ -821,6 +860,153 @@ public class SelectWithDepartmentDto {
         <p>
         詳しくは、<a href="s2jdbc_manager_sqlfile.html">SQLファイル</a>
         を参照してください。
+        </p>
+		</section>
+		
+		<section name="多態">
+        <p>
+        S2JDBCは、エンティティの継承をサポートしていませんが、
+        列挙型とストラテジパターンを組み合わせて、
+        多態を実現できます。
+        </p>
+        <p>
+        従業員の仕事のタイプに応じた振る舞いを
+        JobStrategyとして定義します。
+        </p>
+        <p>
+        src/main/java/examples/entity/JobStrategy.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+package examples.entity;
+
+public interface JobStrategy {
+
+    int calculateBonus(int salary);
+}
+]]></source>
+        <p>
+        給料に応じたボーナスを計算するメソッドが定義されています。
+        </p>
+        <p>
+        仕事のタイプ別にJobStrategyを実装します。
+        </p>
+        <source><![CDATA[
+package examples.entity;
+
+public class Clerk implements JobStrategy {
+
+    public int calculateBonus(int salary) {
+        return salary;
+    }
+}
+]]></source>
+        <source><![CDATA[
+package examples.entity;
+
+public class Salesman implements JobStrategy {
+
+    public int calculateBonus(int salary) {
+        return salary * 2;
+    }
+}
+]]></source>
+        <source><![CDATA[
+package examples.entity;
+
+public class Manager implements JobStrategy {
+
+    public int calculateBonus(int salary) {
+        return salary * 3;
+    }
+}
+]]></source>
+        <source><![CDATA[
+package examples.entity;
+
+public class Analyst implements JobStrategy {
+
+    public int calculateBonus(int salary) {
+        return salary * 4;
+    }
+}
+]]></source>
+        <source><![CDATA[
+package examples.entity;
+
+public class President implements JobStrategy {
+
+    public int calculateBonus(int salary) {
+        return salary * 5;
+    }
+}
+]]></source>
+        <p>
+        JobTypeの列挙型でタイプに応じたストラテジを生成します。
+        列挙型に対応するカラムは文字列で定義しておけば、
+        列挙型と文字列の変換はSeasar2によって自動的に行なわれます。
+        </p>
+        <p>
+        src/main/java/examples/entity/JobType.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+package examples.entity;
+
+public enum JobType {
+
+    CLERK {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Clerk();
+        }
+    },
+    SALESMAN {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Salesman();
+        }
+    },
+    MANAGER {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Manager();
+        }
+    },
+    ANALYST {
+        @Override
+        public JobStrategy createStrategy() {
+            return new Analyst();
+        }
+    },
+    PRESIDENT {
+        @Override
+        public JobStrategy createStrategy() {
+            return new President();
+        }
+    };
+
+    public abstract JobStrategy createStrategy();
+}
+]]></source>
+        <p>
+        全従業員のボーナスの合計を求めるロジックは次のようになります。
+        </p>
+        <p>
+        src/test/java/examples/entity/TypeStrategyTest.java
+         を見てみましょう。
+        </p>
+        <source><![CDATA[
+List<Employee> results =
+    jdbcManager.from(Employee.class).getResultList();
+int totalBonus = 0;
+for (Employee e : results) {
+    totalBonus += e.jobType.createStrategy().calculateBonus(e.salary);
+}
+System.out.println("Total Bonus:" + totalBonus);
+]]></source>
+        <p>
+         このやり方は、継承より委譲という良いプログラミングスタイルに従っています。
         </p>
 		</section>
 	</body>
