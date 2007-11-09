@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.persistence.EntityExistsException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
@@ -196,6 +198,36 @@ public class SqlFileUpdateImplTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("update aaa set name = 'foo' where id = 1", sqlLog
                 .getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testExecute_entityExists() throws Exception {
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
+                "foo") {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int executeUpdate() throws SQLException {
+                        throw new SQLException("hoge", "23");
+                    }
+                };
+                return ps;
+            }
+
+        };
+        try {
+            query.execute();
+            fail();
+        } catch (EntityExistsException expected) {
+            expected.printStackTrace();
+        }
     }
 
     private static class MyDto {

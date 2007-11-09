@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.SqlLogRegistry;
@@ -34,6 +36,7 @@ import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
 
@@ -78,6 +81,20 @@ public class AbsAutoBatchUpdateTest extends TestCase {
         SqlLogRegistry regisry = SqlLogRegistryLocator.getInstance();
         regisry.clear();
         manager = null;
+    }
+
+    /**
+     * 
+     */
+    public void testEntityExistsException() {
+        List<Eee> entities = Arrays.asList(new Eee(), new Eee(), new Eee());
+        MyBatchUpdate<Eee> query = new MyBatchUpdate<Eee>(manager, entities);
+        try {
+            query.execute();
+            fail();
+        } catch (EntityExistsException expected) {
+            expected.printStackTrace();
+        }
     }
 
     /**
@@ -184,6 +201,11 @@ public class AbsAutoBatchUpdateTest extends TestCase {
         public MyBatchUpdate(JdbcManagerImplementor jdbcManager,
                 List<T> entities) {
             super(jdbcManager, entities);
+        }
+
+        @Override
+        protected int[] executeInternal() {
+            throw new SQLRuntimeException(new SQLException("hoge", "23"));
         }
 
         @Override

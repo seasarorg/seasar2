@@ -19,6 +19,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.persistence.EntityExistsException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
@@ -289,6 +291,42 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
                 .get(0).getCompleteSql());
         assertEquals("update aaa set name = 'bar' where id = 2", sqlLogRegistry
                 .get(1).getCompleteSql());
+    }
+
+    /**
+     * 
+     */
+    public void testExecuteBatch_entityExists() {
+        SqlFileBatchUpdateImpl<String> query = new SqlFileBatchUpdateImpl<String>(
+                manager, PATH_SIMPLE, asList("foo", "bar")) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        throw new SQLException("hoge", "23");
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
+        };
+        try {
+            query.execute();
+            fail();
+        } catch (EntityExistsException expected) {
+            expected.printStackTrace();
+        }
     }
 
     /**

@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.sql.SQLException;
+
+import javax.persistence.EntityExistsException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.SqlLogRegistry;
@@ -30,6 +34,7 @@ import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockDataSource;
 
 /**
@@ -75,11 +80,16 @@ public class AbsAutoUpdateTest extends TestCase {
     /**
      * 
      */
-    public void testCallerClass() {
+    public void testEntityExistsException() {
         Eee entity = new Eee();
         entity.version = new Long(1);
         MyUpdate<Eee> query = new MyUpdate<Eee>(manager, entity);
-        query.execute();
+        try {
+            query.execute();
+            fail();
+        } catch (EntityExistsException expected) {
+            expected.printStackTrace();
+        }
     }
 
     private static class MyUpdate<T> extends AbstractAutoUpdate<T, MyUpdate<T>> {
@@ -90,6 +100,11 @@ public class AbsAutoUpdateTest extends TestCase {
          */
         public MyUpdate(JdbcManagerImplementor jdbcManager, T entity) {
             super(jdbcManager, entity);
+        }
+
+        @Override
+        protected int executeInternal() {
+            throw new SQLRuntimeException(new SQLException("hoge", "23"));
         }
 
         @Override
