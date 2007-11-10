@@ -695,12 +695,17 @@ public class EmployeePage {
 <var>destPropertyName</var> : <var>sourcePropertyName</var>
 </pre>
 <p>という組をカンマ区切りで並べたものです．変換先のプロパティ名が前になるので注意してください．</p>
-<p>変換元のプロパティ名にはネストしたJavaBeansのプロパティ名をピリオド区切りで指定することもできます．</p>
+<p>変換元のプロパティ名には，ネストしたJavaBeansのプロパティ名をピリオド区切りで指定することもできます．</p>
 <pre>
 ename : name, dname : department.name
 </pre>
-<p>という変換ルールを指定した場合，変換先JavaBeansの<code>ename</code>プロパティには変換元JavaBeansの<code>name</code>プロパティの値が，変換先JavaBeansの<code>dname</code>プロパティには変換元JavaBeansの<code>department</code>プロパティに設定されているJavaBeansの<code>name</code>プロパティの値が設定されます．必要があれば「<a href="#convertType">型変換</a>」に従って変換が行われます．ただし，<code>department</code>が<code>null</code>だと<code>NullPointerException</code>が発生します．その対策については「<a href="#ognl">OGNL式の利用</a>」を参照してください．</p>
+<p>という変換ルールを指定した場合，変換先JavaBeansの<code>ename</code>プロパティには変換元JavaBeansの<code>name</code>プロパティの値が，変換先JavaBeansの<code>dname</code>プロパティには変換元JavaBeansの<code>department</code>プロパティに設定されているJavaBeansの<code>name</code>プロパティの値が設定されます．必要があれば「<a href="#convertType">型変換</a>」に従って変換が行われます．ただし，<code>department</code>が<code>null</code>だと変換先JavaBeansの<code>dname</code>プロパティには<code>null</code>が設定されます．</p>
 <p>JavaBeansからMapに変換する場合，変換ルールを指定すると指定したプロパティだけが変換先のマップに追加されることになるので注意してください．</p>
+<p>変換元プロパティ名の代わりに<code>null</code>を指定することもできます。
+<pre>
+ename : name, dname : null
+</pre>
+<p>という変換ルールを指定した場合，変換先JavaBeansの<code>dname</code>プロパティには<code>null</code>が設定されます．
 <h4>定数アノテーション</h4>
 <p>定数アノテーションでは，DXOインタフェースの文字列定数として次のように指定します．定数名はメソッド名の後ろに<code>"_CONVERSION_RULE"</code>をつけたものになります．</p>
 <pre>

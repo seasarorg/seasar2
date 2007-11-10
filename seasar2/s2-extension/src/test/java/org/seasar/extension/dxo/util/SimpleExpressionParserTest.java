@@ -17,14 +17,29 @@ package org.seasar.extension.dxo.util;
 
 import java.util.Iterator;
 
-import org.seasar.extension.dxo.util.SimpleExpression.ConversionRule;
-
 import junit.framework.TestCase;
+
+import org.seasar.extension.dxo.util.SimpleExpression.ConversionRule;
 
 /**
  * @author koichik
  */
 public class SimpleExpressionParserTest extends TestCase {
+
+    /**
+     * @throws Exception
+     */
+    public void test0() throws Exception {
+        SimpleExpression exp = SimpleExpressionParser.parse("a:null");
+        assertNotNull(exp);
+        assertEquals(1, exp.conversionRuleList.size());
+        Iterator pairs = exp.conversionRuleList.iterator();
+        ConversionRule pair = (ConversionRule) pairs.next();
+        assertEquals("a", pair.destProperty);
+        assertEquals(1, pair.sourcePropertyList.size());
+        Iterator values = pair.sourcePropertyList.iterator();
+        assertNull(values.next());
+    }
 
     /**
      * @throws Exception
@@ -62,7 +77,7 @@ public class SimpleExpressionParserTest extends TestCase {
      * @throws Exception
      */
     public void test3() throws Exception {
-        SimpleExpression exp = SimpleExpressionParser.parse("x:a,y:b,z:c");
+        SimpleExpression exp = SimpleExpressionParser.parse("x:a,y:null,z:c");
         assertNotNull(exp);
         assertEquals(3, exp.conversionRuleList.size());
         Iterator pairs = exp.conversionRuleList.iterator();
@@ -76,7 +91,7 @@ public class SimpleExpressionParserTest extends TestCase {
         assertEquals("y", pair.destProperty);
         assertEquals(1, pair.sourcePropertyList.size());
         values = pair.sourcePropertyList.iterator();
-        assertEquals("b", values.next());
+        assertNull(values.next());
 
         pair = (ConversionRule) pairs.next();
         assertEquals("z", pair.destProperty);
@@ -90,7 +105,7 @@ public class SimpleExpressionParserTest extends TestCase {
      */
     public void test4() throws Exception {
         SimpleExpression exp = SimpleExpressionParser
-                .parse("xxx:aaa,yyy:bbb.ccc,zzz:ccc.ddd.eee");
+                .parse("xxx:null,yyy:bbb.ccc,zzz:ccc.ddd.eee");
         assertNotNull(exp);
         assertEquals(3, exp.conversionRuleList.size());
         Iterator pairs = exp.conversionRuleList.iterator();
@@ -98,7 +113,7 @@ public class SimpleExpressionParserTest extends TestCase {
         assertEquals("xxx", pair.destProperty);
         assertEquals(1, pair.sourcePropertyList.size());
         Iterator values = pair.sourcePropertyList.iterator();
-        assertEquals("aaa", values.next());
+        assertNull(values.next());
 
         pair = (ConversionRule) pairs.next();
         assertEquals("yyy", pair.destProperty);

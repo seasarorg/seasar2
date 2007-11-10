@@ -46,10 +46,11 @@ public class SimpleExpressionTest extends TestCase {
         foo.bar = new Bar();
         foo.bar.baz = new Baz();
         SimpleExpression exp = SimpleExpressionParser
-                .parse("result : bar.baz.name");
+                .parse("result : bar.baz.name, dummy : null");
         Map map = exp.evaluate(foo);
-        assertEquals(1, map.size());
+        assertEquals(2, map.size());
         assertNull(map.get("result"));
+        assertNull(map.get("dummy"));
     }
 
     /**

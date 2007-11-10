@@ -91,13 +91,16 @@ public class SimpleExpressionParser {
      * 
      * <pre>
      * ConversionRule:
+     *     DestProperty : null
      *     DestProperty : SourcePropertyList
      * </pre>
      */
     protected void conversionRule() {
         destProperty();
         colon();
-        sourcePropertyList();
+        if (!nullLiteral()) {
+            sourcePropertyList();
+        }
     }
 
     /**
@@ -168,6 +171,22 @@ public class SimpleExpressionParser {
     protected void sourceProperty() {
         final String value = nextIdentifier();
         expression.addSourceProperty(value);
+    }
+
+    /**
+     * 次のトークンがリテラル<code>null</code>なら<code>true</code>を返します。
+     * 
+     * @return 次のトークンがリテラル<code>null</code>なら<code>true</code>
+     */
+    protected boolean nullLiteral() {
+        final int savedIndex = index;
+        final String value = nextIdentifier();
+        if ("null".equals(value)) {
+            expression.addSourceProperty(null);
+            return true;
+        }
+        index = savedIndex;
+        return false;
     }
 
     /**

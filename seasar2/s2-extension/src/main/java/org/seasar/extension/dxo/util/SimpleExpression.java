@@ -36,6 +36,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  *     ConversionRuleList , ConversionRule
  * 
  * ConversionRule:
+ *     DestProperty : null
  *     DestProperty : SourcePropertyList
  * 
  * SourcePropertyList:
@@ -143,14 +144,16 @@ public class SimpleExpression implements Expression {
         public void evaluate(Object source, final Map dest) {
             for (final Iterator it = sourcePropertyList.iterator(); it
                     .hasNext();) {
-                final String destProperty = (String) it.next();
-                if (source instanceof Map) {
-                    source = ((Map) source).get(destProperty);
+                final String sourceProperty = (String) it.next();
+                if (sourceProperty == null) {
+                    source = null;
+                } else if (source instanceof Map) {
+                    source = ((Map) source).get(sourceProperty);
                 } else {
                     final BeanDesc beanDesc = BeanDescFactory
                             .getBeanDesc(source.getClass());
                     final PropertyDesc propertyDesc = beanDesc
-                            .getPropertyDesc(destProperty);
+                            .getPropertyDesc(sourceProperty);
                     source = propertyDesc.getValue(source);
                 }
                 if (source == null) {
