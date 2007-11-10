@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<include path="j2ee.dicon"/>
+	<include path="std-customizer.dicon"/>
+
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl"/>
+	<component class="org.seasar.framework.container.autoregister.FileSystemComponentAutoRegister">
+		<property name="customizer">
+			txAttributeCustomizer
+		</property>
+		<initMethod name="addClassPattern">
+			<arg>"org.seasar.framework.container.customizer"</arg>
+			<arg>".*Comp[0-9]"</arg>
+		</initMethod>
+	</component>
+</components>

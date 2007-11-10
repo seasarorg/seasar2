@@ -1447,6 +1447,11 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 <tr><td>mandatoryTxCustomizer</td><td>j2ee.mandatoryTx</td><td>Mandatoryのトランザクション属性を有効にするためのカスタマイザ</td></tr>
 <tr><td>notSupportedTxCustomizer</td><td>j2ee.notSupportedTx</td><td>NotSupportedのトランザクション属性を有効にするためのカスタマイザ</td></tr>
 <tr><td>neverTxCustomizer</td><td>j2ee.neverTx</td><td>Neverのトランザクション属性を有効にするためのカスタマイザ</tr>
+<tr><td rowspan="5">txAttributeCustomizer</td><td>j2ee.requiredTx</td><td rowspan="5">EJB3の<code>@TransactionAttribute</code>アノテーションで指定されたトランザクション属性を有効にするためのカスタマイザ (S2-Tigerが必要です)</td></tr>
+<tr><td>j2ee.requiresNewTx</td></tr>
+<tr><td>j2ee.mandatoryTx</td></tr>
+<tr><td>j2ee.notSupportedTx</td></tr>
+<tr><td>j2ee.neverTx</td></tr>
 <tr><td>s2DxoCustomizer</td><td>dxo.interceptor</td><td>Dxoを利用するためのカスタマイザ</td></tr>
 <tr><td>s2DaoCustomizer</td><td>dao.interceptor</td><td>S2Daoを利用するためのカスタマイザ</td></tr>
 <tr><td>kuinaDaoCustomizer</td><td>kuinaDao.interceptor</td><td>Kuina-Daoを利用するためのカスタマイザ</td></tr>
@@ -1455,13 +1460,14 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 
 </p>
 <p>
-これらのコンポーネントの実体は<code>org.seasar.framework.container.customizer.AspectCustomizer</code>です。
+<code>txAttributeCustomizer</code>を除いて、これらのコンポーネントの実体は<code>org.seasar.framework.container.customizer.AspectCustomizer</code>です。
 <code>AspectCustomizer</code>はコンポーネント定義にアスペクト定義を登録するカスタマイザです。
 </p>
 <p>
 標準カスタマイザはインターセプタと関連づけられています。
 実行時、標準カスタマイザは関連付けられたインターセプタからアスペクト定義を作成しコンポーネント定義に登録します。
 </p>
+
 
 <h5><a name="CustomizerConfig">カスタマイザの設定</a></h5>
 <p>
@@ -1555,6 +1561,32 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 </pre>
 	<p>
 		この設定ではサービスのコンポーネントが実装するインタフェースのすべてのメソッドがトランザクション制御の対象になります。
+	</p>
+
+	<li><h5><code>@TransactionAttribute</code>アノテーションを使ったサービスのコンポーネントに適用する場合</h5></li>
+	<p>
+		EJB3の<code>@TransactionAttribute</code>アノテーションで指定されたトランザクション属性に対応するトランザクション制御を有効にするためのカスタマイザを設定します。
+		ここでは<code>txAttributeCustomizer</code>を使用します。
+	</p>
+<pre>
+  &lt;component name=&quot;serviceCustomizer&quot; 
+    class=&quot;org.seasar.framework.container.customizer.CustomizerChain&quot;&gt;
+    &lt;initMethod name=&quot;addCustomizer&quot;&gt;
+      &lt;arg&gt;<b>txAttributeCustomizer</b>&lt;/arg&gt;
+    &lt;/initMethod&gt;
+  &lt;/component&gt;
+</pre>
+	<p>
+		この設定では、サービスのコンポーネントが持つすべての<code>public</code>メソッドがトランザクション制御の対象になります。
+		ただし、<code>Object</code>クラスで定義されているメソッドは除きます。
+		EJB3と異なり、インタフェースに定義されたメソッドでなくてもトランザクション制御の対象となります
+		(インタフェースを実装している必要はありません)。
+		EJB3ではないので、<code>@Stateless</code>等のアノテーションを指定する必要もありません。
+	</p>
+	<p>
+		メソッドに<code>@TransactionAttribute</code>アノテーションが指定されていれば、その<code>value</code>属性の値で指定されたトランザクション属性が適用されます。
+		メソッドに<code>@TransactionAttribute</code>アノテーションが指定されていなければ、クラスに指定された<code>@TransactionAttribute</code>アノテーションが使われます。
+		クラスにも<code>@TransactionAttribute</code>アノテーションが指定されていなければ、デフォルトとしてrequiredTxが使われます。
 	</p>
 
 	<li><h5>ページのコンポーネントに適用する場合</h5></li>
