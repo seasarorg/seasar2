@@ -223,10 +223,14 @@ public class StandardDialect implements DbmsDialect {
         String sqlState = null;
         while (t != null) {
             if (t instanceof SQLException) {
-                final String tempState = SQLException.class.cast(t)
-                        .getSQLState();
+                final SQLException sqlException = SQLException.class.cast(t);
+                final String tempState = sqlException.getSQLState();
                 if (!StringUtil.isEmpty(tempState)) {
                     sqlState = tempState;
+                }
+                if (sqlException.getNextException() != null) {
+                    t = sqlException.getNextException();
+                    continue;
                 }
             }
             t = t.getCause();
