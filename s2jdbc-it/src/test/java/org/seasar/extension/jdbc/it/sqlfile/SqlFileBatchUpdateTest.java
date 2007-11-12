@@ -15,23 +15,24 @@
  */
 package org.seasar.extension.jdbc.it.sqlfile;
 
+import javax.persistence.EntityExistsException;
+
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Department;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
+
+import static junit.framework.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class SqlFileBatchUpdateTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class SqlFileBatchUpdateTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
@@ -122,6 +123,44 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
 
     /**
      * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV != 'hsqldb'")
+    public void testEntityExistsException_insertTx() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_EntityExistsException_insert.sql";
+        MyDto2 dto = new MyDto2();
+        dto.departmentId = 99;
+        dto.departmentNo = 10;
+        try {
+            jdbcManager.updateBatchBySqlFile(path, dto).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV != 'hsqldb'")
+    public void testEntityExistsException_updateTx() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_EntityExistsException_update.sql";
+        MyDto2 dto = new MyDto2();
+        dto.departmentId = 1;
+        dto.departmentNo = 20;
+        try {
+            jdbcManager.updateBatchBySqlFile(path, dto).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
+    /**
+     * 
      * @author taedium
      * 
      */
@@ -132,5 +171,19 @@ public class SqlFileBatchUpdateTest extends S2TestCase {
 
         /** */
         public String location;
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MyDto2 {
+
+        /** */
+        public int departmentId;
+
+        /** */
+        public int departmentNo;
     }
 }

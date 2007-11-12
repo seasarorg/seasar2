@@ -18,23 +18,24 @@ package org.seasar.extension.jdbc.it.sql;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
+
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Employee;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
+
+import static junit.framework.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class SqlBatchUpdateTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class SqlBatchUpdateTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
@@ -69,5 +70,39 @@ public class SqlBatchUpdateTest extends S2TestCase {
                     "select * from Employee where employee_id in (4,8,9,13)")
                 .getResultList();
         assertTrue(list.isEmpty());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV != 'hsqldb'")
+    public void testEntityExistsException_insertTx() throws Exception {
+        String sql =
+            "insert into Department (department_id, department_no) values(?, ?)";
+        try {
+            jdbcManager.updateBatchBySql(sql, int.class, int.class).params(
+                99,
+                10).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV != 'hsqldb'")
+    public void testEntityExistsException_updateTx() throws Exception {
+        String sql =
+            "update Department set department_no = ? where department_id = ?";
+        try {
+            jdbcManager.updateBatchBySql(sql, int.class, int.class).params(
+                20,
+                1).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
     }
 }

@@ -19,8 +19,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.OptimisticLockException;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -29,21 +31,19 @@ import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.where.SimpleWhere;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
+
+import static junit.framework.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class AutoBatchUpdateTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class AutoBatchUpdateTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
@@ -54,10 +54,12 @@ public class AutoBatchUpdateTest extends S2TestCase {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
+        department.departmentNo = 10;
         department.version = 1;
         list.add(department);
         Department department2 = new Department();
         department2.departmentId = 2;
+        department2.departmentNo = 20;
         department2.departmentName = "foo";
         department2.version = 1;
         list.add(department2);
@@ -71,7 +73,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
-        assertEquals(0, department.departmentNo);
+        assertEquals(10, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
         assertEquals(2, department.version);
@@ -80,7 +82,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 2)).getSingleResult();
         assertEquals(2, department.departmentId);
-        assertEquals(0, department.departmentNo);
+        assertEquals(20, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);
         assertEquals(2, department.version);
@@ -94,11 +96,13 @@ public class AutoBatchUpdateTest extends S2TestCase {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
+        department.departmentNo = 10;
         department.departmentName = "hoge";
         department.version = 100;
         list.add(department);
         Department department2 = new Department();
         department2.departmentId = 2;
+        department2.departmentNo = 20;
         department2.departmentName = "foo";
         department2.version = 200;
         list.add(department2);
@@ -113,7 +117,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
-        assertEquals(0, department.departmentNo);
+        assertEquals(10, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
         assertEquals(100, department.version);
@@ -122,7 +126,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 2)).getSingleResult();
         assertEquals(2, department.departmentId);
-        assertEquals(0, department.departmentNo);
+        assertEquals(20, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);
         assertEquals(200, department.version);
@@ -235,12 +239,14 @@ public class AutoBatchUpdateTest extends S2TestCase {
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 1;
         department.departmentId2 = 1;
+        department.departmentNo = 10;
         department.departmentName = "hoge";
         department.version = 1;
         list.add(department);
         CompKeyDepartment department2 = new CompKeyDepartment();
         department2.departmentId1 = 2;
         department2.departmentId2 = 2;
+        department2.departmentNo = 20;
         department2.departmentName = "foo";
         department2.version = 1;
         list.add(department2);
@@ -260,7 +266,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 .getSingleResult();
         assertEquals(1, department.departmentId1);
         assertEquals(1, department.departmentId2);
-        assertEquals(0, department.departmentNo);
+        assertEquals(10, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);
         assertEquals(2, department.version);
@@ -275,7 +281,7 @@ public class AutoBatchUpdateTest extends S2TestCase {
                 .getSingleResult();
         assertEquals(2, department.departmentId1);
         assertEquals(2, department.departmentId2);
-        assertEquals(0, department.departmentNo);
+        assertEquals(20, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);
         assertEquals(2, department.version);
@@ -376,10 +382,12 @@ public class AutoBatchUpdateTest extends S2TestCase {
         List<Department2> list = new ArrayList<Department2>();
         Department2 department = new Department2();
         department.departmentId = 1;
+        department.departmentNo = 10;
         department.departmentName = "hoge";
         list.add(department);
         Department2 department2 = new Department2();
         department2.departmentId = 2;
+        department2.departmentNo = 20;
         department2.departmentName = "foo";
         list.add(department2);
 
@@ -403,10 +411,12 @@ public class AutoBatchUpdateTest extends S2TestCase {
         List<Department3> list = new ArrayList<Department3>();
         Department3 department = new Department3();
         department.departmentId = 1;
+        department.departmentNo = 10;
         department.departmentName = "hoge";
         list.add(department);
         Department3 department2 = new Department3();
         department2.departmentId = 2;
+        department2.departmentNo = 20;
         department2.departmentName = "foo";
         list.add(department2);
 
@@ -430,10 +440,12 @@ public class AutoBatchUpdateTest extends S2TestCase {
         List<Department4> list = new ArrayList<Department4>();
         Department4 department = new Department4();
         department.departmentId = 1;
+        department.departmentNo = 10;
         department.departmentName = "hoge";
         list.add(department);
         Department4 department2 = new Department4();
         department2.departmentId = 2;
+        department2.departmentNo = 20;
         department2.departmentName = "foo";
         list.add(department2);
 
@@ -447,6 +459,25 @@ public class AutoBatchUpdateTest extends S2TestCase {
         departmentName =
             jdbcManager.selectBySql(String.class, sql, 2).getSingleResult();
         assertEquals("RESEARCH", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV != 'hsqldb'")
+    public void testEntityExistsExceptionTx() throws Exception {
+        Department department =
+            jdbcManager
+                .from(Department.class)
+                .where("departmentId = ?", 1)
+                .getSingleResult();
+        department.departmentNo = 20;
+        try {
+            jdbcManager.updateBatch(department).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
     }
 
     private boolean containsSuccessNoInfo(int[] batchResult) {

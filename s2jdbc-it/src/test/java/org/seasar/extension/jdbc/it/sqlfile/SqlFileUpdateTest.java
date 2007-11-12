@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.it.sqlfile;
 
+import javax.persistence.EntityExistsException;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.unit.S2TestCase;
@@ -102,6 +104,42 @@ public class SqlFileUpdateTest extends S2TestCase {
 
     /**
      * 
+     * @throws Exception
+     */
+    public void testEntityExistsException_insertTx() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_EntityExistsException_insert.sql";
+        MyDto2 dto = new MyDto2();
+        dto.departmentId = 99;
+        dto.departmentNo = 10;
+        try {
+            jdbcManager.updateBySqlFile(path, dto).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEntityExistsException_updateTx() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/")
+                + "_EntityExistsException_update.sql";
+        MyDto2 dto = new MyDto2();
+        dto.departmentId = 1;
+        dto.departmentNo = 20;
+        try {
+            jdbcManager.updateBySqlFile(path, dto).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
+    /**
+     * 
      * @author taedium
      * 
      */
@@ -112,5 +150,19 @@ public class SqlFileUpdateTest extends S2TestCase {
 
         /** */
         public String location;
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MyDto2 {
+
+        /** */
+        public int departmentId;
+
+        /** */
+        public int departmentNo;
     }
 }

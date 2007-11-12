@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.it.sql;
 
 import java.math.BigDecimal;
 
+import javax.persistence.EntityExistsException;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
@@ -57,4 +59,39 @@ public class SqlUpdateTest extends S2TestCase {
                 new BigDecimal(1000)).execute();
         assertEquals(5, actual);
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEntityExistsException_insertTx() throws Exception {
+        String sql =
+            "insert into Department (department_id, department_no) values(?, ?)";
+        try {
+            jdbcManager
+                .updateBySql(sql, int.class, int.class)
+                .params(99, 10)
+                .execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEntityExistsException_updateTx() throws Exception {
+        String sql =
+            "update Department set department_no = ? where department_id = ?";
+        try {
+            jdbcManager
+                .updateBySql(sql, int.class, int.class)
+                .params(20, 1)
+                .execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
+    }
+
 }

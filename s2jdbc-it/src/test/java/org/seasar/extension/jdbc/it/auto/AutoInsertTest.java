@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
+import javax.persistence.EntityExistsException;
+
 import junitx.framework.ArrayAssert;
 
 import org.seasar.extension.jdbc.JdbcManager;
@@ -418,5 +420,21 @@ public class AutoInsertTest extends S2TestCase {
                 new SimpleWhere().eq("id", 1)).getSingleResult();
         ArrayAssert.assertEquals(bytes, largeObject.blobValue);
         assertEquals(new String(chars), largeObject.clobValue);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEntityExistsExceptionTx() throws Exception {
+        Department department = new Department();
+        department.departmentId = 99;
+        department.departmentNo = 10;
+        department.departmentName = "hoge";
+        try {
+            jdbcManager.insert(department).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
     }
 }

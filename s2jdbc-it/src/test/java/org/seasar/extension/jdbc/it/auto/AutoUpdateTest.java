@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.it.auto;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityExistsException;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
@@ -330,5 +332,23 @@ public class AutoUpdateTest extends S2TestCase {
                     1)
                 .getSingleResult();
         assertEquals("ACCOUNTING", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEntityExistsExceptionTx() throws Exception {
+        Department department =
+            jdbcManager
+                .from(Department.class)
+                .where("departmentId = ?", 1)
+                .getSingleResult();
+        department.departmentNo = 20;
+        try {
+            jdbcManager.update(department).execute();
+            fail();
+        } catch (EntityExistsException e) {
+        }
     }
 }
