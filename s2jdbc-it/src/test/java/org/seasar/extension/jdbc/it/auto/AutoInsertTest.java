@@ -428,8 +428,8 @@ public class AutoInsertTest extends S2TestCase {
      */
     public void testEntityExistsExceptionTx() throws Exception {
         Department department = new Department();
-        department.departmentId = 99;
-        department.departmentNo = 10;
+        department.departmentId = 1;
+        department.departmentNo = 50;
         department.departmentName = "hoge";
         try {
             jdbcManager.insert(department).execute();

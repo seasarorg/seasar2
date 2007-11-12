@@ -82,8 +82,8 @@ public class SqlBatchUpdateTest {
             "insert into Department (department_id, department_no) values(?, ?)";
         try {
             jdbcManager.updateBatchBySql(sql, int.class, int.class).params(
-                99,
-                10).execute();
+                1,
+                50).execute();
             fail();
         } catch (EntityExistsException e) {
         }
@@ -96,11 +96,12 @@ public class SqlBatchUpdateTest {
     @Prerequisite("#ENV != 'hsqldb'")
     public void testEntityExistsException_updateTx() throws Exception {
         String sql =
-            "update Department set department_no = ? where department_id = ?";
+            "update Department set department_id = ? where department_id = ?";
         try {
-            jdbcManager.updateBatchBySql(sql, int.class, int.class).params(
-                20,
-                1).execute();
+            jdbcManager
+                .updateBatchBySql(sql, int.class, int.class)
+                .params(1, 2)
+                .execute();
             fail();
         } catch (EntityExistsException e) {
         }

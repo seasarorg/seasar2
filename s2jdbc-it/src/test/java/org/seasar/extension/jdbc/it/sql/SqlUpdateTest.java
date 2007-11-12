@@ -70,7 +70,7 @@ public class SqlUpdateTest extends S2TestCase {
         try {
             jdbcManager
                 .updateBySql(sql, int.class, int.class)
-                .params(99, 10)
+                .params(1, 50)
                 .execute();
             fail();
         } catch (EntityExistsException e) {
@@ -83,11 +83,11 @@ public class SqlUpdateTest extends S2TestCase {
      */
     public void testEntityExistsException_updateTx() throws Exception {
         String sql =
-            "update Department set department_no = ? where department_id = ?";
+            "update Department set department_id = ? where department_id = ?";
         try {
             jdbcManager
                 .updateBySql(sql, int.class, int.class)
-                .params(20, 1)
+                .params(1, 2)
                 .execute();
             fail();
         } catch (EntityExistsException e) {

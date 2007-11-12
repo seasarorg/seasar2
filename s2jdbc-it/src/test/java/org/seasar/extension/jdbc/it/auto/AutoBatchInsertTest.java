@@ -441,8 +441,8 @@ public class AutoBatchInsertTest {
     @Prerequisite("#ENV != 'hsqldb'")
     public void testEntityExistsExceptionTx() throws Exception {
         Department department = new Department();
-        department.departmentId = 99;
-        department.departmentNo = 10;
+        department.departmentId = 1;
+        department.departmentNo = 50;
         department.departmentName = "hoge";
         try {
             jdbcManager.insertBatch(department).execute();

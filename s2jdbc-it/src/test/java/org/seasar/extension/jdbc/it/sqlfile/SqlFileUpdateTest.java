@@ -111,8 +111,8 @@ public class SqlFileUpdateTest extends S2TestCase {
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_insert.sql";
         MyDto2 dto = new MyDto2();
-        dto.departmentId = 99;
-        dto.departmentNo = 10;
+        dto.departmentId = 1;
+        dto.departmentNo = 50;
         try {
             jdbcManager.updateBySqlFile(path, dto).execute();
             fail();
@@ -128,9 +128,9 @@ public class SqlFileUpdateTest extends S2TestCase {
         String path =
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_update.sql";
-        MyDto2 dto = new MyDto2();
+        MyDto3 dto = new MyDto3();
         dto.departmentId = 1;
-        dto.departmentNo = 20;
+        dto.departmentId2 = 2;
         try {
             jdbcManager.updateBySqlFile(path, dto).execute();
             fail();
@@ -164,5 +164,19 @@ public class SqlFileUpdateTest extends S2TestCase {
 
         /** */
         public int departmentNo;
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MyDto3 {
+
+        /** */
+        public int departmentId;
+
+        /** */
+        public int departmentId2;
     }
 }
