@@ -3,7 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
 	<include path="std-customizer-tiger.dicon"
-		condition="@org.seasar.framework.util.ResourceUtil@isExist('std-customizer-tiger.dicon')"/>
+		condition="@org.seasar.framework.util.ResourceUtil@isExist('std-customizer-tiger.dicon') and @org.seasar.framework.util.ResourceUtil@isExist('javax/ejb/TransactionAttributeType.class')"/>
 
 	<component name="traceCustomizer" class="org.seasar.framework.container.customizer.AspectCustomizer">
 		<property name="interceptorName">"aop.traceInterceptor"</property>
