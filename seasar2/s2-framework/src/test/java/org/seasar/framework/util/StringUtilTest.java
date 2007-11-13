@@ -245,4 +245,17 @@ public class StringUtilTest extends TestCase {
         assertEquals("AAA_BBB", StringUtil.decamelize("AaaBbb"));
         assertEquals("AAA_BBB_C", StringUtil.decamelize("aaaBbbC"));
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsNumver() throws Exception {
+        assertFalse(StringUtil.isNumber(null));
+        assertTrue(StringUtil.isNumber("0123456789"));
+        assertFalse(StringUtil.isNumber("aaaBBBccc"));
+        assertFalse(StringUtil.isNumber("０１２３４５６７８９"));
+        assertFalse(StringUtil.isNumber(""));
+        assertFalse(StringUtil.isNumber("01234abcdef"));
+        assertFalse(StringUtil.isNumber("abcdef01234"));
+    }
 }

@@ -45,7 +45,7 @@ public final class StringUtil {
      *            文字列
      * @return 空かどうか
      */
-    public static final boolean isEmpty(String text) {
+    public static final boolean isEmpty(final String text) {
         return text == null || text.length() == 0;
     }
 
@@ -60,8 +60,8 @@ public final class StringUtil {
      *            置き換えるテキスト
      * @return 結果
      */
-    public static final String replace(String text, String fromText,
-            String toText) {
+    public static final String replace(final String text,
+            final String fromText, final String toText) {
 
         if (text == null || fromText == null || toText == null) {
             return null;
@@ -95,7 +95,7 @@ public final class StringUtil {
      *            分割するためのデリミタ
      * @return 分割された文字列の配列
      */
-    public static String[] split(String str, String delim) {
+    public static String[] split(final String str, final String delim) {
         if (isEmpty(str)) {
             return EMPTY_STRINGS;
         }
@@ -188,7 +188,7 @@ public final class StringUtil {
      *            サフィックス
      * @return 結果の文字列
      */
-    public static final String trimSuffix(final String text, String suffix) {
+    public static final String trimSuffix(final String text, final String suffix) {
         if (text == null) {
             return null;
         }
@@ -210,7 +210,7 @@ public final class StringUtil {
      *            プレフィックス
      * @return 結果の文字列
      */
-    public static final String trimPrefix(final String text, String prefix) {
+    public static final String trimPrefix(final String text, final String prefix) {
         if (text == null) {
             return null;
         }
@@ -230,7 +230,7 @@ public final class StringUtil {
      *            名前
      * @return 結果の文字列
      */
-    public static String decapitalize(String name) {
+    public static String decapitalize(final String name) {
         if (isEmpty(name)) {
             return name;
         }
@@ -250,7 +250,7 @@ public final class StringUtil {
      *            名前
      * @return 結果の文字列
      */
-    public static String capitalize(String name) {
+    public static String capitalize(final String name) {
         if (isEmpty(name)) {
             return name;
         }
@@ -270,7 +270,7 @@ public final class StringUtil {
      * @see #startsWithIgnoreCase(String, String)
      * @deprecated
      */
-    public static boolean startsWith(String text, String fragment) {
+    public static boolean startsWith(final String text, final String fragment) {
         return startsWithIgnoreCase(text, fragment);
     }
 
@@ -281,7 +281,7 @@ public final class StringUtil {
      *            文字列
      * @return ブランクかどうか
      */
-    public static boolean isBlank(String str) {
+    public static boolean isBlank(final String str) {
         if (str == null || str.length() == 0) {
             return true;
         }
@@ -301,7 +301,7 @@ public final class StringUtil {
      * @return ブランクではないかどうか
      * @see #isBlank(String)
      */
-    public static boolean isNotBlank(String str) {
+    public static boolean isNotBlank(final String str) {
         return !isBlank(str);
     }
 
@@ -314,7 +314,7 @@ public final class StringUtil {
      *            char
      * @return charを含んでいるかどうか
      */
-    public static boolean contains(String str, char ch) {
+    public static boolean contains(final String str, final char ch) {
         if (isEmpty(str)) {
             return false;
         }
@@ -330,7 +330,7 @@ public final class StringUtil {
      *            比較する対象となる文字列
      * @return 文字列を含んでいるかどうか
      */
-    public static boolean contains(String s1, String s2) {
+    public static boolean contains(final String s1, final String s2) {
         if (isEmpty(s1)) {
             return false;
         }
@@ -346,7 +346,7 @@ public final class StringUtil {
      *            文字列2
      * @return 文字列同士が等しいかどうか
      */
-    public static boolean equals(String target1, String target2) {
+    public static boolean equals(final String target1, final String target2) {
         return (target1 == null) ? (target2 == null) : target1.equals(target2);
     }
 
@@ -359,7 +359,8 @@ public final class StringUtil {
      *            文字列2
      * @return ケースインセンシティブで文字列同士が等しいか
      */
-    public static boolean equalsIgnoreCase(String target1, String target2) {
+    public static boolean equalsIgnoreCase(final String target1,
+            final String target2) {
         return (target1 == null) ? (target2 == null) : target1
                 .equalsIgnoreCase(target2);
     }
@@ -373,7 +374,8 @@ public final class StringUtil {
      *            比較する文字列
      * @return ケースインセンシティブで特定の文字で終わっているのかどうか
      */
-    public static boolean endsWithIgnoreCase(String target1, String target2) {
+    public static boolean endsWithIgnoreCase(final String target1,
+            final String target2) {
         if (target1 == null || target2 == null) {
             return false;
         }
@@ -395,7 +397,8 @@ public final class StringUtil {
      *            比較する文字列
      * @return ケースインセンシティブで特定の文字ではじまっているのかどうか
      */
-    public static boolean startsWithIgnoreCase(String target1, String target2) {
+    public static boolean startsWithIgnoreCase(final String target1,
+            final String target2) {
         if (target1 == null || target2 == null) {
             return false;
         }
@@ -417,7 +420,8 @@ public final class StringUtil {
      *            セパレータ
      * @return 結果の文字列
      */
-    public static String substringFromLast(String str, String separator) {
+    public static String substringFromLast(final String str,
+            final String separator) {
         if (isEmpty(str) || isEmpty(separator)) {
             return str;
         }
@@ -437,7 +441,8 @@ public final class StringUtil {
      *            セパレータ
      * @return 結果の文字列
      */
-    public static String substringToLast(String str, String separator) {
+    public static String substringToLast(final String str,
+            final String separator) {
         if (isEmpty(str) || isEmpty(separator)) {
             return str;
         }
@@ -455,7 +460,7 @@ public final class StringUtil {
      *            バイトの配列
      * @return 16進数の文字列
      */
-    public static String toHex(byte[] bytes) {
+    public static String toHex(final byte[] bytes) {
         if (bytes == null) {
             return "";
         }
@@ -537,7 +542,7 @@ public final class StringUtil {
      *            テキスト
      * @return 結果の文字列
      */
-    public static String decamelize(String s) {
+    public static String decamelize(final String s) {
         if (s == null) {
             return null;
         }
@@ -560,5 +565,28 @@ public final class StringUtil {
         }
         buf.append(s.substring(pos, s.length()).toUpperCase());
         return buf.toString();
+    }
+
+    /**
+     * 文字列が数値のみで構成されているかどうかを返します。
+     * 
+     * @param s
+     *            文字列
+     * @return 数値のみで構成されている場合、<code>true</code>
+     */
+    public static boolean isNumber(final String s) {
+        if (s == null || s.length() == 0) {
+            return false;
+        }
+
+        int size = s.length();
+        for (int i = 0; i < size; i++) {
+            char chr = s.charAt(i);
+            if (chr < '0' || '9' < chr) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
