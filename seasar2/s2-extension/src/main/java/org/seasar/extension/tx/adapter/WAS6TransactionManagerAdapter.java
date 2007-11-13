@@ -94,7 +94,7 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
 
     public void setRollbackOnly() {
         try {
-            if (hasTransaction()) {
+            if (uowManager.getUOWStatus() == UOWSynchronizationRegistry.UOW_STATUS_ACTIVE) {
                 uowManager.setRollbackOnly();
             }
         } catch (final Exception e) {

@@ -88,7 +88,7 @@ public class JTAUserTransactionAdapter implements TransactionManagerAdapter,
 
     public void setRollbackOnly() {
         try {
-            if (hasTransaction()) {
+            if (userTransaction.getStatus() == STATUS_ACTIVE) {
                 userTransaction.setRollbackOnly();
             }
         } catch (final Exception e) {

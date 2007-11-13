@@ -780,4 +780,21 @@ public class JTAUserTransactionAdapterTest extends
         expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
     }
 
+    /**
+     * @throws Throwable
+     */
+    public void testSetRollbackOnly() throws Throwable {
+        target.setRollbackOnly();
+        target.setRollbackOnly();
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public void recordSetRollbackOnly() throws Throwable {
+        expect(ut.getStatus()).andReturn(STATUS_ACTIVE);
+        ut.setRollbackOnly();
+        expect(ut.getStatus()).andReturn(STATUS_MARKED_ROLLBACK);
+    }
+
 }

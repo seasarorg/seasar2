@@ -591,6 +591,23 @@ public class WAS6TransactionManagerAdapterTest extends
     }
 
     /**
+     * @throws Throwable
+     */
+    public void testSetRollbackOnly() throws Throwable {
+        target.setRollbackOnly();
+        target.setRollbackOnly();
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public void recordSetRollbackOnly() throws Throwable {
+        expect(uowManager.getUOWStatus()).andReturn(UOW_STATUS_ACTIVE);
+        uowManager.setRollbackOnly();
+        expect(uowManager.getUOWStatus()).andReturn(UOW_STATUS_ROLLBACKONLY);
+    }
+
+    /**
      * @author koichik
      */
     public static class InvokeAction implements IAnswer<Object> {
