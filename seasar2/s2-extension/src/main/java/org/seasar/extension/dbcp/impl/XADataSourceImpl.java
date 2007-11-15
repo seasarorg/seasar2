@@ -24,6 +24,7 @@ import java.util.Properties;
 import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.DriverManagerUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -35,6 +36,8 @@ import org.seasar.framework.util.StringUtil;
  */
 public class XADataSourceImpl implements XADataSource {
 
+    private Logger logger = Logger.getLogger(XADataSourceImpl.class);
+
     private String driverClassName;
 
     private String url;
@@ -44,6 +47,8 @@ public class XADataSourceImpl implements XADataSource {
     private String password;
 
     private Properties properties = new Properties();
+
+    private int loginTimeout;
 
     /**
      * {@link XADataSourceImpl}を作成します。
@@ -159,7 +164,17 @@ public class XADataSourceImpl implements XADataSource {
             info.putAll(properties);
             info.put("user", user);
             info.put("password", password);
-            con = DriverManager.getConnection(url, info);
+            int currentLoginTimeout = DriverManager.getLoginTimeout();
+            try {
+                DriverManager.setLoginTimeout(loginTimeout);
+                con = DriverManager.getConnection(url, info);
+            } finally {
+                try {
+                    DriverManager.setLoginTimeout(currentLoginTimeout);
+                } catch (Exception e) {
+                    logger.log("ESSR0017", new Object[] { e.toString() }, e);
+                }
+            }
         }
         return new XAConnectionImpl(con);
     }
@@ -172,9 +187,10 @@ public class XADataSourceImpl implements XADataSource {
     }
 
     public int getLoginTimeout() throws SQLException {
-        return 0;
+        return loginTimeout;
     }
 
     public void setLoginTimeout(final int loginTimeout) throws SQLException {
+        this.loginTimeout = loginTimeout;
     }
 }
