@@ -52,8 +52,18 @@ public class SybaseDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportsForUpdate() {
-        return false;
+    public String getForUpdateString() {
+        return "";
+    }
+
+    @Override
+    public boolean supportsLockHint() {
+        return true;
+    }
+
+    @Override
+    public String getLockHintString() {
+        return "with (xlock)";
     }
 
 }

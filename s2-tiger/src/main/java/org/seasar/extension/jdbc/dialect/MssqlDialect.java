@@ -71,4 +71,19 @@ public class MssqlDialect extends StandardDialect {
         return true;
     }
 
+    @Override
+    public String getForUpdateString() {
+        return "";
+    }
+
+    @Override
+    public boolean supportsLockHint() {
+        return true;
+    }
+
+    @Override
+    public String getLockHintString() {
+        return "with (xlock)";
+    }
+
 }

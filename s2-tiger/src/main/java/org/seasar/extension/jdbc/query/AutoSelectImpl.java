@@ -126,6 +126,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String forUpdate = "";
 
     /**
+     * from句にロックヒントが必要な場合は<code>true</code>。
+     */
+    protected boolean needLockHint = false;
+
+    /**
      * 値タイプのリストです。
      */
     protected List<ValueType> valueTypeList = new ArrayList<ValueType>(50);
@@ -225,7 +230,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         int[] idIndices = toIdIndexArray(idIndexList);
         entityMapperMap.put(null, new EntityMapperImpl(baseClass,
                 propertyMappers, idIndices));
-        fromClause.addSql(entityMeta.getTableMeta().getFullName(), tableAlias);
+        if (needLockHint) {
+            fromClause.addSql(entityMeta.getTableMeta().getFullName(),
+                    tableAlias, jdbcManager.getDialect().getLockHintString());
+        } else {
+            fromClause.addSql(entityMeta.getTableMeta().getFullName(),
+                    tableAlias);
+        }
     }
 
     /**
@@ -634,10 +645,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String toSql() {
         StringBuilder sb = new StringBuilder(selectClause.getLength()
                 + fromClause.getLength() + whereClause.getLength()
-                + orderByClause.getLength() + forUpdate.length());
+                + orderByClause.getLength());
         return sb.append(selectClause.toSql()).append(fromClause.toSql())
                 .append(whereClause.toSql()).append(orderByClause.toSql())
-                .append(forUpdate).toString();
+                .toString();
     }
 
     public AutoSelect<T> where(Map<String, ? extends Object> conditions) {
@@ -785,7 +796,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * SQLを準備します。
      */
     protected void prepareSql() {
-        executedSql = convertLimitSql(toSql());
+        executedSql = convertLimitSql(toSql()) + forUpdate;
     }
 
     @Override
@@ -872,6 +883,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                             entityMeta.getName(), dialect.getName() }));
         }
         forUpdate = dialect.getForUpdateString();
+        needLockHint = dialect.supportsLockHint();
         return this;
     }
 

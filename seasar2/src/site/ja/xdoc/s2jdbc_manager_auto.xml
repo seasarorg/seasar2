@@ -749,43 +749,60 @@ jdbcManager.from(Employee.class)
 				<p>SELECT時にロックを取得する場合は、</p>
 				<ul>
 					<li>
-						<code>forUpdate()</code>
+						<p>
+							<code>forUpdate()</code>
+						</p>
 					</li>
 					<li>
-						<code>forUpdate(String propertyName)</code>
+						<p>
+							<code>forUpdate(String propertyName)</code>
+						</p>
 					</li>
 					<li>
-						<code>forUpdateNowait()</code>
+						<p>
+							<code>forUpdateNowait()</code>
+						</p>
 					</li>
 					<li>
-						<code>
-							forUpdateNowait(String propertyName)
-						</code>
+						<p>
+							<code>
+								forUpdateNowait(String propertyName)
+							</code>
+						</p>
 					</li>
 					<li>
-						<code>forUpdateWait(int seconds)</code>
+						<p>
+							<code>forUpdateWait(int seconds)</code>
+						</p>
 					</li>
 					<li>
-						<code>
-							forUpdateWait(String propertyName, int
-							seconds)
-						</code>
+						<p>
+							<code>
+								forUpdateWait(String propertyName, int
+								seconds)
+							</code>
+						</p>
 					</li>
 				</ul>
-				<p>を使います。</p>
+				<p>
+					を使います。 全てのRDBMSでこれらの操作が利用できるわけではありません。
+					サポートされていないメソッドを呼び出すと
+					<code>UnsupportedOperationException</code>
+					がスローされます。
+				</p>
 				<p>
 					<code>forUpdate(String)</code>
-					および
+					・
 					<code>forUpdateNowait(String)</code>
-					および
+					・
 					<code>forUpdateWait(String, int)</code>
-					には、ロック対象となるプロパティ名を指定します。
+					の第1引数には、ロック対象となるプロパティ名を指定します。
 				</p>
 				<p>
 					<code>forUpdateWait(int)</code>
-					および
+					の第1引数および
 					<code>forUpdateWait(String, int)</code>
-					では、ロックを獲得できるまでの最大待機時間を秒単位で指定します。
+					の第2引数では、ロックを獲得できるまでの最大待機時間を秒単位で指定します。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)

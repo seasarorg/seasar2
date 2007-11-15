@@ -286,4 +286,18 @@ public interface DbmsDialect {
      */
     String getForUpdateWaitString(String columnName, int seconds);
 
+    /**
+     * SELECT文で排他制御のためのロックヒントをサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で排他制御のためのロックヒントをサポートしていれば<code>true</code>
+     */
+    boolean supportsLockHint();
+
+    /**
+     * SELECT文に付加するロックヒントを返します。
+     * 
+     * @return SELECT文に付加するロックヒント
+     */
+    String getLockHintString();
+
 }

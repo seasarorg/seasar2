@@ -286,4 +286,12 @@ public class StandardDialect implements DbmsDialect {
         return "";
     }
 
+    public boolean supportsLockHint() {
+        return false;
+    }
+
+    public String getLockHintString() {
+        return "";
+    }
+
 }

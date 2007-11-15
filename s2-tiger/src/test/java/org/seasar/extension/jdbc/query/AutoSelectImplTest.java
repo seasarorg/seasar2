@@ -38,6 +38,7 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.dialect.MssqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
@@ -1535,6 +1536,17 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testForUpdate_withLockHint() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdate();
+        assertTrue(query.needLockHint);
+        assertEquals("", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
     public void testForUpdate_notSupported() {
         manager.setDialect(new HsqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
@@ -1675,7 +1687,20 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc for update",
-                query.toSql());
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithLockHint_sql() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").orderBy("bbb.id desc").forUpdate();
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ with (xlock) left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc",
+                query.executedSql);
     }
 
     @Entity
