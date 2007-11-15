@@ -21,6 +21,7 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
@@ -29,23 +30,23 @@ import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.SimpleWhere;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class AutoSelectTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class AutoSelectTest {
 
     private JdbcManager jdbcManager;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
+    private JdbcManagerImplementor implementor;
 
     /**
      * 
@@ -561,18 +562,6 @@ public class AutoSelectTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testJoin_nest() throws Exception {
-        List<Department> list =
-            jdbcManager.from(Department.class).join("employees").join(
-                "employees.address").where(
-                new SimpleWhere().eq("employees.addressId", 3)).getResultList();
-        assertEquals(1, list.size());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
     public void testJoin_nest_condition() throws Exception {
         List<Department> list =
             jdbcManager
@@ -603,6 +592,18 @@ public class AutoSelectTest extends S2TestCase {
                         2000))
                 .getResultList();
         assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_nest() throws Exception {
+        List<Department> list =
+            jdbcManager.from(Department.class).join("employees").join(
+                "employees.address").where(
+                new SimpleWhere().eq("employees.addressId", 3)).getResultList();
+        assertEquals(1, list.size());
     }
 
     /**
@@ -710,4 +711,447 @@ public class AutoSelectTest extends S2TestCase {
         assertNull(department.departmentName);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdate() throws Exception {
+        if (!implementor.getDialect().supportsForUpdate()) {
+            return;
+        }
+        jdbcManager.from(Employee.class).forUpdate().getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdate_leftOuterJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdate()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department")
+            .forUpdate()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdate_innerJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdate()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department", JoinType.INNER)
+            .forUpdate()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdate_paging() throws Exception {
+        if (!implementor.getDialect().supportsForUpdate()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .offset(5)
+            .limit(3)
+            .forUpdate()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdate_UnsupportedOperationException() throws Exception {
+        if (implementor.getDialect().supportsForUpdate()) {
+            return;
+        }
+        try {
+            jdbcManager.from(Employee.class).forUpdate();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWithColumn() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .forUpdate("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWithColumn_leftOuterJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+            return;
+        }
+        jdbcManager.from(Employee.class).join("department").forUpdate(
+            "employeeName").getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWithColumn_innerJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department", JoinType.INNER)
+            .forUpdate("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWithColumn_paging() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .offset(5)
+            .limit(3)
+            .forUpdate("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWithColumn_UnsupportedOperationException()
+            throws Exception {
+        if (implementor.getDialect().supportsForUpdateWithColumn()) {
+            return;
+        }
+        try {
+            jdbcManager.from(Employee.class).forUpdate("employeeName");
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowait() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowait()) {
+            return;
+        }
+        jdbcManager.from(Employee.class).forUpdateNowait().getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowait_leftOuterJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department")
+            .forUpdateNowait()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowait_innerJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department", JoinType.INNER)
+            .forUpdateNowait()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowait_paging() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .offset(5)
+            .limit(3)
+            .forUpdateNowait()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowait_UnsupportedOperationException()
+            throws Exception {
+        if (implementor.getDialect().supportsForUpdateNowait()) {
+            return;
+        }
+        try {
+            jdbcManager.from(Employee.class).forUpdateNowait();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowaitWithColumn() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .forUpdateNowait("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowaitWithColumn_leftOuterJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+            return;
+        }
+        jdbcManager.from(Employee.class).join("department").forUpdateNowait(
+            "employeeName").getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowaitWithColumn_innerJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department", JoinType.INNER)
+            .forUpdateNowait("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowaitWithColumn_paging() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .offset(5)
+            .limit(3)
+            .forUpdateNowait("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowaitWithColumn_UnsupportedOperationException()
+            throws Exception {
+        if (implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+            return;
+        }
+        try {
+            jdbcManager.from(Employee.class).forUpdateNowait("employeeName");
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWait() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWait()) {
+            return;
+        }
+        jdbcManager.from(Employee.class).forUpdateWait(1).getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWait_leftOuterJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department")
+            .forUpdateWait(1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWait_innerJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department", JoinType.INNER)
+            .forUpdateWait(1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWait_paging() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .offset(5)
+            .limit(3)
+            .forUpdateWait(1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWait_UnsupportedOperationException()
+            throws Exception {
+        if (implementor.getDialect().supportsForUpdateWait()) {
+            return;
+        }
+        try {
+            jdbcManager.from(Employee.class).forUpdateWait(1);
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWaitWithColumn() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .forUpdateWait("employeeName", 1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWaitWithColumn_leftOuterJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+            return;
+        }
+        jdbcManager.from(Employee.class).join("department").forUpdateWait(
+            "employeeName",
+            1).getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWaitWithColumn_innerJoin() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .join("department", JoinType.INNER)
+            .forUpdateWait("employeeName", 1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWaitWithColumn_paging() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .offset(5)
+            .limit(3)
+            .forUpdateWait("employeeName", 1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWaitWithColumn_UnsupportedOperationException()
+            throws Exception {
+        if (implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+            return;
+        }
+        try {
+            jdbcManager.from(Employee.class).forUpdateWait("employeeName", 1);
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
 }
