@@ -238,4 +238,52 @@ public class StandardDialect implements DbmsDialect {
         return sqlState;
     }
 
+    public boolean supportsForUpdate() {
+        return true;
+    }
+
+    public boolean supportsForUpdateWithColumn() {
+        return false;
+    }
+
+    public boolean supportsForUpdateNowait() {
+        return false;
+    }
+
+    public boolean supportsForUpdateNowaitWithColumn() {
+        return false;
+    }
+
+    public boolean supportsForUpdateWait() {
+        return false;
+    }
+
+    public boolean supportsForUpdateWaitWithColumn() {
+        return false;
+    }
+
+    public String getForUpdateString() {
+        return " for update";
+    }
+
+    public String getForUpdateString(final String columnName) {
+        return "";
+    }
+
+    public String getForUpdateNowaitString() {
+        return "";
+    }
+
+    public String getForUpdateNowaitString(final String columnName) {
+        return "";
+    }
+
+    public String getForUpdateWaitString(int seconds) {
+        return "";
+    }
+
+    public String getForUpdateWaitString(final String columnName, int seconds) {
+        return "";
+    }
+
 }

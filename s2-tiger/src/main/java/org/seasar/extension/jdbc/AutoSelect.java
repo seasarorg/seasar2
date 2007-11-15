@@ -192,4 +192,68 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      */
     AutoSelect<T> orderBy(String orderBy);
 
+    /**
+     * FOR UPDATEを追加します。
+     * 
+     * @return このインスタンス自身
+     * @throws UnsupportedOperationException
+     *             DBMSがこの操作をサポートしていない場合
+     */
+    AutoSelect<T> forUpdate();
+
+    /**
+     * FOR UPDATEを追加します。
+     * 
+     * @param property
+     *            ロック対象のプロパティ名
+     * @return このインスタンス自身
+     * @throws UnsupportedOperationException
+     *             DBMSがこの操作をサポートしていない場合
+     */
+    AutoSelect<T> forUpdate(String property);
+
+    /**
+     * FOR UPDATE NOWAITを追加します。
+     * 
+     * @return このインスタンス自身
+     * @throws UnsupportedOperationException
+     *             DBMSがこの操作をサポートしていない場合
+     */
+    AutoSelect<T> forUpdateNowait();
+
+    /**
+     * FOR UPDATE NOWAITを追加します。
+     * 
+     * @param property
+     *            ロック対象のプロパティ名
+     * @return このインスタンス自身
+     * @throws UnsupportedOperationException
+     *             DBMSがこの操作をサポートしていない場合
+     */
+    AutoSelect<T> forUpdateNowait(String property);
+
+    /**
+     * FOR UPDATE WAITを追加します。
+     * 
+     * @param seconds
+     *            ロックを獲得できるまでの最大待機時間(秒単位)
+     * @return このインスタンス自身
+     * @throws UnsupportedOperationException
+     *             DBMSがこの操作をサポートしていない場合
+     */
+    AutoSelect<T> forUpdateWait(int seconds);
+
+    /**
+     * FOR UPDATE WAITを追加します。
+     * 
+     * @param property
+     *            ロック対象のプロパティ名
+     * @param seconds
+     *            ロックを獲得できるまでの最大待機時間(秒単位)
+     * @return このインスタンス自身
+     * @throws UnsupportedOperationException
+     *             DBMSがこの操作をサポートしていない場合
+     */
+    AutoSelect<T> forUpdateWait(String property, int seconds);
+
 }

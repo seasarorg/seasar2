@@ -97,4 +97,9 @@ public class Db2Dialect extends StandardDialect {
         return "values nextval for " + sequenceName;
     }
 
+    @Override
+    public String getForUpdateString() {
+        return " for read only with rs";
+    }
+
 }

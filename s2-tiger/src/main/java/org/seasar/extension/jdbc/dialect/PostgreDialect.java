@@ -101,4 +101,14 @@ public class PostgreDialect extends StandardDialect {
         return "select nextval('" + sequenceName + "')";
     }
 
+    @Override
+    public boolean supportsForUpdateWithColumn() {
+        return true;
+    }
+
+    @Override
+    public String getForUpdateString(final String columnName) {
+        return " for update of " + columnName;
+    }
+
 }

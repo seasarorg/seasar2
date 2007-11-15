@@ -37,6 +37,8 @@ import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.dialect.HsqlDialect;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
@@ -1518,6 +1520,161 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID where (T2_.ID = ?)",
+                query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdate() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdate();
+        assertEquals(" for update", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdate_notSupported() {
+        manager.setDialect(new HsqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdate();
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithColumn() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdate("name");
+        assertEquals(" for update of NAME", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithColumn_notSupported() {
+        manager.setDialect(new HsqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdate("name");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateNowait() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdateNowait();
+        assertEquals(" for update nowait", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateNowait_notSupported() {
+        manager.setDialect(new HsqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdateNowait();
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateNowaitWithColumn() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdateNowait("name");
+        assertEquals(" for update of NAME nowait", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateNowaitWithColumn_notSupported() {
+        manager.setDialect(new HsqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdateNowait("name");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWait() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdateWait(10);
+        assertEquals(" for update wait 10", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWait_notSupported() {
+        manager.setDialect(new HsqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdateWait(10);
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWaitWithColumn() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdateWait("name", 10);
+        assertEquals(" for update of NAME wait 10", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWaitWithColumn_notSupported() {
+        manager.setDialect(new HsqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdateWait("name", 10);
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdate_sql() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").orderBy("bbb.id desc").forUpdate();
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc for update",
                 query.toSql());
     }
 

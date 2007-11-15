@@ -38,6 +38,11 @@
 						</li>
 						<li>
 							<p>
+								<a href="#排他制御">排他制御</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#ページング">ページング</a>
 							</p>
 						</li>
@@ -155,9 +160,7 @@
 						</li>
 						<li>
 							<p>
-								<a href="#更新行数をチェックしない">
-									更新行数をチェックしない
-								</a>
+								<a href="#更新行数をチェックしない">更新行数をチェックしない</a>
 							</p>
 						</li>
 						<li>
@@ -193,9 +196,7 @@
 						</li>
 						<li>
 							<p>
-								<a href="#削除行数をチェックしない">
-									削除行数をチェックしない
-								</a>
+								<a href="#削除行数をチェックしない">削除行数をチェックしない</a>
 							</p>
 						</li>
 						<li>
@@ -323,7 +324,7 @@ List<Department> results = jdbcManager.from(Department.class)
 				<p>
 					検索条件を指定する場合は、where()を使います。
 					where()に書くことのできる条件は、SQLと同じです。
-					SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
 					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
 				</p>
 				<source><![CDATA[
@@ -733,13 +734,62 @@ jdbcManager.from(Employee.class)
 					を使います。
 					<code>orderBy()</code>
 					に書くことのできる条件は、SQLと同じです。
-					SQLとの違いは、カラム名の変わりにプロパティ名を書くことです。
+					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
 					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
     .join("department")
     .orderBy("name, department.name")
+    .getResultList();
+]]></source>
+			</subsection>
+
+			<subsection name="排他制御">
+				<p>SELECT時にロックを取得する場合は、</p>
+				<ul>
+					<li>
+						<code>forUpdate()</code>
+					</li>
+					<li>
+						<code>forUpdate(String propertyName)</code>
+					</li>
+					<li>
+						<code>forUpdateNowait()</code>
+					</li>
+					<li>
+						<code>
+							forUpdateNowait(String propertyName)
+						</code>
+					</li>
+					<li>
+						<code>forUpdateWait(int seconds)</code>
+					</li>
+					<li>
+						<code>
+							forUpdateWait(String propertyName, int
+							seconds)
+						</code>
+					</li>
+				</ul>
+				<p>を使います。</p>
+				<p>
+					<code>forUpdate(String)</code>
+					および
+					<code>forUpdateNowait(String)</code>
+					および
+					<code>forUpdateWait(String, int)</code>
+					には、ロック対象となるプロパティ名を指定します。
+				</p>
+				<p>
+					<code>forUpdateWait(int)</code>
+					および
+					<code>forUpdateWait(String, int)</code>
+					では、ロックを獲得できるまでの最大待機時間を秒単位で指定します。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .forUpdate()
     .getResultList();
 ]]></source>
 			</subsection>
@@ -1004,11 +1054,11 @@ int count = jdbcManager.updateBatch(employees).changedFrom(before).execute();
 
 			<subsection name="更新行数をチェックしない">
 				<p>
-					バージョンによる楽観的排他制御を行う場合、
-					更新できた行数が0だと
-					<code>javax.persistence.OptimisticLockException</code>
-					が発生します。
-					更新行数を正しく返さないJDBCドライバを使用する場合は、
+					バージョンによる楽観的排他制御を行う場合、 更新できた行数が0だと
+					<code>
+						javax.persistence.OptimisticLockException
+					</code>
+					が発生します。 更新行数を正しく返さないJDBCドライバを使用する場合は、
 					<code>suppresOptimisticLockException()</code>
 					を呼び出すことで、更新できた行数のチェックを行わなくなります。
 				</p>
@@ -1084,11 +1134,11 @@ int count = jdbcManager.delete(employee).ignoreVersion().execute();
 
 			<subsection name="削除行数をチェックしない">
 				<p>
-					バージョンによる楽観的排他制御を行う場合、
-					削除できた行数が0だと
-					<code>javax.persistence.OptimisticLockException</code>
-					が発生します。
-					削除行数を正しく返さないJDBCドライバを使用する場合は、
+					バージョンによる楽観的排他制御を行う場合、 削除できた行数が0だと
+					<code>
+						javax.persistence.OptimisticLockException
+					</code>
+					が発生します。 削除行数を正しく返さないJDBCドライバを使用する場合は、
 					<code>suppresOptimisticLockException()</code>
 					を呼び出すことで、更新できた行数のチェックを行わなくなります。
 				</p>

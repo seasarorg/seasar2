@@ -84,4 +84,9 @@ public class HsqlDialect extends StandardDialect {
                 + " FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE table_name = 'SYSTEM_TABLES'";
     }
 
+    @Override
+    public boolean supportsForUpdate() {
+        return false;
+    }
+
 }

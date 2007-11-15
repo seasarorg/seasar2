@@ -160,4 +160,54 @@ public class OracleDialect extends StandardDialect {
         return "select " + sequenceName + ".nextval from dual";
     }
 
+    @Override
+    public boolean supportsForUpdateWithColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsForUpdateNowait() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsForUpdateNowaitWithColumn() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsForUpdateWait() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsForUpdateWaitWithColumn() {
+        return true;
+    }
+
+    @Override
+    public String getForUpdateString(final String columnName) {
+        return " for update of " + columnName;
+    }
+
+    @Override
+    public String getForUpdateNowaitString() {
+        return " for update nowait";
+    }
+
+    @Override
+    public String getForUpdateNowaitString(final String columnName) {
+        return " for update of " + columnName + " nowait";
+    }
+
+    @Override
+    public String getForUpdateWaitString(int seconds) {
+        return " for update wait " + seconds;
+    }
+
+    @Override
+    public String getForUpdateWaitString(String columnName, int seconds) {
+        return " for update of " + columnName + " wait " + seconds;
+    }
+
 }

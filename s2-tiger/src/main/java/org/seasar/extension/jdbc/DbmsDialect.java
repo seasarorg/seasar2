@@ -192,4 +192,98 @@ public interface DbmsDialect {
      */
     boolean isUniqueConstraintViolation(Throwable t);
 
+    /**
+     * SELECT文で<code>FOR UPDATE</code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で<code>FOR UPDATE</code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsForUpdate();
+
+    /**
+     * SELECT文で<code>FOR UPDATE OF <var>column</var></code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で<code>FOR UPDATE OF <var>column</var></code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsForUpdateWithColumn();
+
+    /**
+     * SELECT文で<code>FOR UPDATE NOWAIT</code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で<code>FOR UPDATE NOWAIT</code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsForUpdateNowait();
+
+    /**
+     * SELECT文で<code>FOR UPDATE OF <var>column</var> NOWAIT</code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で<code>FOR UPDATE OF <var>column</var> NOWAIT</code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsForUpdateNowaitWithColumn();
+
+    /**
+     * SELECT文で<code>FOR UPDATE WAIT <var>sec</var></code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で<code>FOR UPDATE WAIT <var>sec</var></code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsForUpdateWait();
+
+    /**
+     * SELECT文で<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return SELECT文で<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsForUpdateWaitWithColumn();
+
+    /**
+     * SELECT文に付加する<code>FOR UPDATE</code>相当のSQLを返します。
+     * 
+     * @return SELECT文に付加する<code>FOR UPDATE</code>相当のSQL
+     */
+    String getForUpdateString();
+
+    /**
+     * SELECT文に付加する<code>FOR UPDATE OF <var>column</var></code>相当のSQLを返します。
+     * 
+     * @param columnName
+     *            ロック対象のカラム名
+     * @return SELECT文に付加する<code>FOR UPDATE OF <var>column</var></code>相当のSQL
+     */
+    String getForUpdateString(String columnName);
+
+    /**
+     * SELECT文に付加する<code>FOR UPDATE NOWAIT</code>相当のSQLを返します。
+     * 
+     * @return SELECT文に付加する<code>FOR UPDATE NOWAIT</code>相当のSQL
+     */
+    String getForUpdateNowaitString();
+
+    /**
+     * SELECT文に付加する<code>FOR UPDATE OF <var>column</var> NOWAIT</code>相当のSQLを返します。
+     * 
+     * @param columnName
+     *            ロック対象のカラム名
+     * @return SELECT文に付加する<code>FOR UPDATE OF <var>column</var> NOWAIT</code>相当のSQL
+     */
+    String getForUpdateNowaitString(String columnName);
+
+    /**
+     * SELECT文に付加する<code>FOR UPDATE WAIT <var>sec</var></code>相当のSQLを返します。
+     * 
+     * @param seconds
+     *            ロックを獲得できるまでの最大待機時間(秒単位)
+     * @return SELECT文に付加する<code>FOR UPDATE WAIT <var>sec</var></code>相当のSQL
+     */
+    String getForUpdateWaitString(int seconds);
+
+    /**
+     * SELECT文に付加する<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>相当のSQLを返します。
+     * 
+     * @param columnName
+     *            ロック対象のカラム名
+     * @param seconds
+     *            ロックを獲得できるまでの最大待機時間(秒単位)
+     * @return SELECT文に付加する<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>相当のSQL
+     */
+    String getForUpdateWaitString(String columnName, int seconds);
+
 }

@@ -66,4 +66,19 @@ public class InterbaseDialect extends StandardDialect {
         return "select RDB$GENERATOR_NAME from RDB$GENERATORS";
     }
 
+    @Override
+    public boolean supportsForUpdateWithColumn() {
+        return true;
+    }
+
+    @Override
+    public String getForUpdateString() {
+        return " with lock";
+    }
+
+    @Override
+    public String getForUpdateString(final String columnName) {
+        return " for update of " + columnName + " with lock";
+    }
+
 }

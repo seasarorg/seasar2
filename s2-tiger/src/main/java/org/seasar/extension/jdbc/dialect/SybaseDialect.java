@@ -51,4 +51,9 @@ public class SybaseDialect extends StandardDialect {
         return "select @@identity";
     }
 
+    @Override
+    public boolean supportsForUpdate() {
+        return false;
+    }
+
 }
