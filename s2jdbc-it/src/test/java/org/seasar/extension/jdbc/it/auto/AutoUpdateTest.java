@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.persistence.EntityExistsException;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
@@ -29,21 +30,18 @@ import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.where.SimpleWhere;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class AutoUpdateTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class AutoUpdateTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 

@@ -24,15 +24,19 @@ import java.util.TreeMap;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Employee;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class SqlSelectTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class SqlSelectTest {
 
     private static String sql = "select * from Employee order by employee_no";
 
@@ -40,12 +44,6 @@ public class SqlSelectTest extends S2TestCase {
         "select employee_id, employee_no from Employee order by employee_no";
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
@@ -454,11 +452,10 @@ public class SqlSelectTest extends S2TestCase {
         Map<?, ?> employee =
             jdbcManager.selectBySql(LinkedHashMap.class, sql).getSingleResult();
         Iterator<?> it = employee.keySet().iterator();
-        assertEquals("version", (String) it.next());
+        assertEquals("version", it.next());
         assertNotNull(employee.get("version"));
-        assertEquals("employeeName", (String) it.next());
+        assertEquals("employeeName", it.next());
         assertNotNull(employee.get("employeeName"));
-        assertEquals("employeeId", (String) it.next());
         assertNotNull(employee.get("employeeId"));
     }
 
@@ -472,11 +469,11 @@ public class SqlSelectTest extends S2TestCase {
         Map<?, ?> employee =
             jdbcManager.selectBySql(TreeMap.class, sql).getSingleResult();
         Iterator<?> it = employee.keySet().iterator();
-        assertEquals("employeeId", (String) it.next());
+        assertEquals("employeeId", it.next());
         assertNotNull(employee.get("employeeId"));
-        assertEquals("employeeName", (String) it.next());
+        assertEquals("employeeName", it.next());
         assertNotNull(employee.get("employeeName"));
-        assertEquals("version", (String) it.next());
+        assertEquals("version", it.next());
         assertNotNull(employee.get("version"));
     }
 

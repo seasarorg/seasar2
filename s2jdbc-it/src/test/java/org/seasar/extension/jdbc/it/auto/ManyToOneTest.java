@@ -17,24 +17,22 @@ package org.seasar.extension.jdbc.it.auto;
 
 import java.util.List;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.Employee;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class ManyToOneTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class ManyToOneTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 

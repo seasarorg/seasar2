@@ -19,6 +19,7 @@ import javax.persistence.EntityExistsException;
 
 import junitx.framework.ArrayAssert;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
 import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
@@ -43,23 +44,20 @@ import org.seasar.extension.jdbc.it.entity.TableStrategy3;
 import org.seasar.extension.jdbc.it.entity.TableStrategy4;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.SimpleWhere;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class AutoInsertTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class AutoInsertTest {
 
     private JdbcManager jdbcManager;
 
     private JdbcManagerImplementor jdbcManagerImplementor;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 

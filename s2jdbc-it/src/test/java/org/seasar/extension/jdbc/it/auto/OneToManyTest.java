@@ -20,21 +20,16 @@ import java.util.List;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.Department;
-import org.seasar.extension.unit.S2TestCase;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class OneToManyTest extends S2TestCase {
+public class OneToManyTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 

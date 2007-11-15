@@ -17,23 +17,21 @@ package org.seasar.extension.jdbc.it.sqlfile;
 
 import javax.persistence.EntityExistsException;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Department;
-import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class SqlFileUpdateTest extends S2TestCase {
+@RunWith(Seasar2.class)
+public class SqlFileUpdateTest {
 
     private JdbcManager jdbcManager;
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("jdbc.dicon");
-    }
 
     /**
      * 
