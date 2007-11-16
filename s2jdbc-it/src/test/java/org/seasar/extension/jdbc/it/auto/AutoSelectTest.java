@@ -756,7 +756,23 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdate_paging() throws Exception {
+    public void testForUpdate_pagingLimmit() throws Exception {
+        if (!implementor.getDialect().supportsForUpdate()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .limit(3)
+            .forUpdate()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdate_pagingOffsetLimmit() throws Exception {
         if (!implementor.getDialect().supportsForUpdate()) {
             return;
         }
@@ -829,7 +845,23 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWithColumn_paging() throws Exception {
+    public void testForUpdateWithColumn_pagingLimit() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .limit(3)
+            .forUpdate("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWithColumn_pagingOffsetLimit() throws Exception {
         if (!implementor.getDialect().supportsForUpdateWithColumn()) {
             return;
         }
@@ -903,7 +935,23 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateNowait_paging() throws Exception {
+    public void testForUpdateNowait_pagingLimit() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowait()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .limit(3)
+            .forUpdateNowait()
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowait_pagingOffsetLimit() throws Exception {
         if (!implementor.getDialect().supportsForUpdateNowait()) {
             return;
         }
@@ -977,7 +1025,24 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateNowaitWithColumn_paging() throws Exception {
+    public void testForUpdateNowaitWithColumn_pagingLimit() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .limit(3)
+            .forUpdateNowait("employeeName")
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateNowaitWithColumn_pagingOffsetLimit()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
             return;
         }
@@ -1051,7 +1116,7 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWait_paging() throws Exception {
+    public void testForUpdateWait_pagingOffsetLimit() throws Exception {
         if (!implementor.getDialect().supportsForUpdateWait()) {
             return;
         }
@@ -1126,7 +1191,24 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWaitWithColumn_paging() throws Exception {
+    public void testForUpdateWaitWithColumn_pagingLimit() throws Exception {
+        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+            return;
+        }
+        jdbcManager
+            .from(Employee.class)
+            .orderBy("employeeName")
+            .limit(3)
+            .forUpdateWait("employeeName", 1)
+            .getResultList();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testForUpdateWaitWithColumn_pagingOffsetLimit()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
             return;
         }
