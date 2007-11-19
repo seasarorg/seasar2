@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.util;
+package org.seasar.framework.beans.util;
 
 import java.util.HashMap;
 
@@ -21,7 +21,7 @@ import java.util.HashMap;
  * @author higa
  * 
  */
-public class RowMap extends HashMap<String, Object> {
+public class BeanMap extends HashMap<String, Object> {
 
     private static final long serialVersionUID = 1;
 

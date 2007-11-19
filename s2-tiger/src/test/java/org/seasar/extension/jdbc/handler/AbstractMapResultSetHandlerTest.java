@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.types.ValueTypes;
-import org.seasar.extension.jdbc.util.RowMap;
+import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
@@ -44,7 +44,7 @@ public class AbstractMapResultSetHandlerTest extends TestCase {
      */
     public void testMapClass() {
         MyHandler handler = new MyHandler(Map.class);
-        assertEquals(RowMap.class, handler.mapClass);
+        assertEquals(BeanMap.class, handler.mapClass);
     }
 
     /**

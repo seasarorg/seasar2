@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.impl.PropertyTypeImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
-import org.seasar.extension.jdbc.util.RowMap;
+import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ModifierUtil;
@@ -44,7 +44,7 @@ public abstract class AbstractMapResultSetHandler implements ResultSetHandler {
      * デフォルトのマップの実装クラスです。
      */
     @SuppressWarnings("unchecked")
-    protected static final Class<? extends Map> DEFAULT_MAP_CLASS = RowMap.class;
+    protected static final Class<? extends Map> DEFAULT_MAP_CLASS = BeanMap.class;
 
     /**
      * マップクラスです。
