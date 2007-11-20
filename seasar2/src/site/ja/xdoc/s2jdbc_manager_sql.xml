@@ -96,12 +96,12 @@ List<EmployeeDto> results = jdbcManager
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-List<RowMap> results = jdbcManager
-    .selectBySql(RowMap.class, "select ...")
+List<BeanMap> results = jdbcManager
+    .selectBySql(BeanMap.class, "select ...")
     .getResultList();
 ]]></source>
 				<p>
-					RowMapはMap&lt;String, Object&gt;なクラスで、
+					BeanMapはMap&lt;String, Object&gt;なクラスで、
 					存在しないキーにアクセスすると 例外が発生します。
 					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
 					変換したものです。
@@ -123,8 +123,8 @@ List<RowMap> results = jdbcManager
 					が発生します。
 				</p>
 				<source><![CDATA[
-List<RowMap> results = jdbcManager
-    .selectBySql(RowMap.class, "select ...")
+List<BeanMap> results = jdbcManager
+    .selectBySql(BeanMap.class, "select ...")
     .disallowNoResult()
     .getResultList();
 ]]></source>
@@ -149,12 +149,12 @@ Integer count = jdbcManager
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-RowMap result = jdbcManager
-    .selectBySql(RowMap.class, "select ...")
+BeanMap result = jdbcManager
+    .selectBySql(BeanMap.class, "select ...")
     .getSingleResult();
 ]]></source>
 				<p>
-					RowMapはMap&lt;String, Object&gt;なクラスで、
+					BeanMapはMap&lt;String, Object&gt;なクラスで、
 					存在しないキーにアクセスすると 例外が発生します。
 					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
 					変換したものです。
@@ -176,8 +176,8 @@ RowMap result = jdbcManager
 					が発生します。
 				</p>
 				<source><![CDATA[
-RowMap result = jdbcManager
-    .selectBySql(RowMap.class, "select ...")
+BeanMap result = jdbcManager
+    .selectBySql(BeanMap.class, "select ...")
     .disallowNoResult()
     .getSingleResult();
 ]]></source>

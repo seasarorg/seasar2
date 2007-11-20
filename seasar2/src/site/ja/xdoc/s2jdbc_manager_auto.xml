@@ -704,11 +704,22 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 					マップの組み立てを手動でやる必要は、基本的にありません。
 					なぜなら、SimpleWhereのほうが便利だからです。 マップを使う場合は、次のように
 					<code>
-						org.seasar.framework.beans.util.TigerBeanUtil.createProperties()
+						org.seasar.framework.beans.util.Beans
 					</code>
-					と組み合わせます。
-					<code>createProperties()</code>
-					の第二引数には、プロパティ名のプレフィックスを指定します。
+					を使います。
+				</p>
+				<p>
+					<code>createAndCopy(Class&lt;T&gt; destClass, Object src)</code>
+					の第一引数には、BeanMap.classを指定します。
+					BeanMapはMap&lt;String, Object&gt;なクラスで、
+					存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+					変換したものです。
+					第二引数にはコピー元になるオブジェクトを指定します。
+				</p>
+				<p>
+					<code>prefix(String prefix)</code>
+					の引数には、プロパティ名のプレフィックスを指定します。
 					プレフィックスを指定した場合、プレフィックスを持つプロパティだけが対象になります。
 					プロパティ名がマップのキーに変換されるときに、 プレフィックスは削除され、'$'は'.'に変換されます。
 				</p>
@@ -719,7 +730,7 @@ public BigDecimal where_salary_LE;
 public BigDecimal where_salary_GE;
 ...
 jdbcManager.from(Employee.class)
-    .where(TigerBeanUtil.createProperties(this, "where_"))
+    .where(Beans.createAndCopy(BeanMap.class, this).prefix("where_").execute())
     .getResultList();
 ]]></source>
 				<!--
