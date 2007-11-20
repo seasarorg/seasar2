@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright 2004-2007 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.creator;
 
+import org.seasar.framework.container.ComponentCreator;
 import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.container.assembler.AutoBindingDefFactory;
 import org.seasar.framework.container.deployer.InstanceDefFactory;
@@ -62,7 +63,8 @@ public class DtoCreator extends ComponentCreatorImpl {
     /**
      * 指定された{@link NamingConvention 命名規約}に従った{@link DtoCreator}を作成します。
      * 
-     * @param namingConvention 命名規約
+     * @param namingConvention
+     *            命名規約
      */
     public DtoCreator(NamingConvention namingConvention) {
         super(namingConvention);
@@ -83,7 +85,8 @@ public class DtoCreator extends ComponentCreatorImpl {
     /**
      * {@link ComponentCustomizer}を設定します。
      * 
-     * @param customizer コンポーネントカスタマイザ
+     * @param customizer
+     *            コンポーネントカスタマイザ
      */
     public void setDtoCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);

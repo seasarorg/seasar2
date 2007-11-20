@@ -114,6 +114,11 @@ public final class ValueTypes {
     public final static ValueType TIMESTAMP = new TimestampType();
 
     /**
+     * Calendar用の値タイプです。
+     */
+    public final static ValueType CALENDAR = new CalendarType();
+
+    /**
      * Binary用の値タイプです。
      */
     public final static ValueType BINARY = new BinaryType();
@@ -181,7 +186,7 @@ public final class ValueTypes {
         registerValueType(java.sql.Time.class, TIME);
         registerValueType(java.util.Date.class, TIMESTAMP);
         registerValueType(Timestamp.class, TIMESTAMP);
-        registerValueType(Calendar.class, TIMESTAMP);
+        registerValueType(Calendar.class, CALENDAR);
         registerValueType(BYTE_ARRAY_CLASS, BINARY);
         registerValueType(InputStream.class, BINARY_STREAM);
         registerValueType(boolean.class, BOOLEAN);
