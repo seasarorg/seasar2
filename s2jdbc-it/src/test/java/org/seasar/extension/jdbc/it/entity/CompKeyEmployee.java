@@ -24,6 +24,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 /**
@@ -61,6 +63,7 @@ public class CompKeyEmployee {
     public CompKeyEmployee manager;
 
     /** */
+    @Temporal(TemporalType.DATE)
     public Date hiredate;
 
     /** */
