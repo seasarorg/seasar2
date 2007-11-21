@@ -233,7 +233,7 @@ public class SimpleDataAccessor implements DataAccessor {
             if (!table.hasMetaData()) {
                 table.setupMetaData(getDatabaseMetaData());
             }
-            for (int j = 0; i < table.getColumnSize(); j++) {
+            for (int j = 0; j < table.getColumnSize(); j++) {
                 DataColumn column = table.getColumn(j);
                 if (column.isPrimaryKey()) {
                     newDataSet.addTable(reload(table));

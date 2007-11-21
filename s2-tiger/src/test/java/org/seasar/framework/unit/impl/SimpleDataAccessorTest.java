@@ -132,7 +132,9 @@ public class SimpleDataAccessorTest extends S2TigerTestCase {
         DataRow row = table.addRow();
         row.setValue("empno", new Integer(7788));
         row.setValue("ename", "hoge");
-        dataSet.addTable("dept");
+        table = dataSet.addTable("dept");
+        table.addColumn("loc");
+        table.addColumn("dname");
         DataSet ret = accessor.reloadOrReadDb(dataSet);
         DataTable table1 = ret.getTable("emp");
         System.out.println(table1);
