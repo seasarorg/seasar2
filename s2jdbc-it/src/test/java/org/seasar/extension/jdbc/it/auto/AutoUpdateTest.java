@@ -15,6 +15,11 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +34,7 @@ import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.Tense;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 
@@ -348,5 +354,39 @@ public class AutoUpdateTest {
             fail();
         } catch (EntityExistsException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporal() throws Exception {
+        Tense tense = new Tense();
+        tense.id = 1;
+        Date date =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse("2007-11-22 01:02:03");
+        tense.dateDate = date;
+        tense.dateTime = date;
+        tense.dateTimestamp = date;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        tense.calDate = calendar;
+        tense.calTime = calendar;
+        tense.calTimestamp = calendar;
+        tense.sqlDate = new java.sql.Date(date.getTime());
+        tense.sqlTime = new Time(date.getTime());
+        tense.sqlTimestamp = new Timestamp(date.getTime());
+        jdbcManager.update(tense).execute();
+        tense =
+            jdbcManager.from(Tense.class).where("id = ?", 1).getSingleResult();
+        assertEquals(tense.dateDate.getTime(), tense.calDate.getTimeInMillis());
+        assertEquals(tense.dateDate.getTime(), tense.sqlDate.getTime());
+        assertEquals(tense.dateTime.getTime(), tense.calTime.getTimeInMillis());
+        assertEquals(tense.dateTime.getTime(), tense.sqlTime.getTime());
+        assertEquals(tense.dateTimestamp.getTime(), tense.calTimestamp
+            .getTimeInMillis());
+        assertEquals(tense.dateTimestamp.getTime(), tense.sqlTimestamp
+            .getTime());
     }
 }

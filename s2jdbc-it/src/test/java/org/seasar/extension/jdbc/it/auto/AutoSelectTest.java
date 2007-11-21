@@ -16,6 +16,11 @@
 package org.seasar.extension.jdbc.it.auto;
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -31,6 +36,7 @@ import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.Tense;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.SimpleWhere;
@@ -38,6 +44,7 @@ import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
 import static org.seasar.extension.jdbc.SelectForUpdateType.*;
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author taedium
@@ -1673,5 +1680,181 @@ public class AutoSelectTest {
             fail();
         } catch (UnsupportedOperationException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalType() throws Exception {
+        Tense tense =
+            jdbcManager.from(Tense.class).where("id = ?", 1).getSingleResult();
+        assertEquals(tense.dateDate.getTime(), tense.calDate.getTimeInMillis());
+        assertEquals(tense.dateDate.getTime(), tense.sqlDate.getTime());
+        assertEquals(tense.dateTime.getTime(), tense.calTime.getTimeInMillis());
+        assertEquals(tense.dateTime.getTime(), tense.sqlTime.getTime());
+        assertEquals(tense.dateTimestamp.getTime(), tense.calTimestamp
+            .getTimeInMillis());
+        assertEquals(tense.dateTimestamp.getTime(), tense.sqlTimestamp
+            .getTime());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalTypeDate_criteria() throws Exception {
+        Date date =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse("2005-02-14 12:11:10");
+        Tense tense =
+            jdbcManager
+                .from(Tense.class)
+                .where("dateDate = ?", date(date))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager
+                .from(Tense.class)
+                .where("dateTime = ?", time(date))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager.from(Tense.class).where(
+                "dateTimestamp = ?",
+                timestamp(date)).getSingleResult();
+        assertNotNull(tense);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalTypeCalendar_criteria() throws Exception {
+        Date date =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse("2005-02-14 12:11:10");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Tense tense =
+            jdbcManager
+                .from(Tense.class)
+                .where("calDate = ?", date(calendar))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager
+                .from(Tense.class)
+                .where("calTime = ?", time(calendar))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager.from(Tense.class).where(
+                "calTimestamp = ?",
+                timestamp(calendar)).getSingleResult();
+        assertNotNull(tense);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalTypeSql_criteria() throws Exception {
+        long time =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(
+                "2005-02-14 12:11:10").getTime();
+        Tense tense =
+            jdbcManager.from(Tense.class).where(
+                "sqlDate = ?",
+                new java.sql.Date(time)).getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager
+                .from(Tense.class)
+                .where("sqlTime = ?", new Time(time))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager.from(Tense.class).where(
+                "sqlTimestamp = ?",
+                new Timestamp(time)).getSingleResult();
+        assertNotNull(tense);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalTypeDate_simpleWhere() throws Exception {
+        Date date =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse("2005-02-14 12:11:10");
+        Tense tense =
+            jdbcManager.from(Tense.class).where(
+                new SimpleWhere().eq("dateDate", date)).getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager.from(Tense.class).where(
+                new SimpleWhere().eq("dateTime", date)).getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager.from(Tense.class).where(
+                new SimpleWhere().eq("dateTimestamp", date)).getSingleResult();
+        assertNotNull(tense);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalTypeCalendar_simpleWhere() throws Exception {
+        Date date =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse("2005-02-14 12:11:10");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        Tense tense =
+            jdbcManager.from(Tense.class).where(
+                new SimpleWhere().eq("calDate", calendar)).getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager.from(Tense.class).where(
+                new SimpleWhere().eq("calTime", calendar)).getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager
+                .from(Tense.class)
+                .where(new SimpleWhere().eq("calTimestamp", calendar))
+                .getSingleResult();
+        assertNotNull(tense);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalTypeSql_simpleWhere() throws Exception {
+        long time =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(
+                "2005-02-14 12:11:10").getTime();
+        Tense tense =
+            jdbcManager
+                .from(Tense.class)
+                .where(new SimpleWhere().eq("sqlDate", new java.sql.Date(time)))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager
+                .from(Tense.class)
+                .where(new SimpleWhere().eq("sqlTime", new Time(time)))
+                .getSingleResult();
+        assertNotNull(tense);
+        tense =
+            jdbcManager
+                .from(Tense.class)
+                .where(
+                    new SimpleWhere().eq("sqlTimestamp", new Timestamp(time)))
+                .getSingleResult();
+        assertNotNull(tense);
     }
 }
