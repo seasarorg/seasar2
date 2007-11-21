@@ -1125,7 +1125,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         }
         final PropertyMeta propertyMeta = entityMeta
                 .getPropertyMeta(propertyName);
-        final String columnAlias = propertyMeta.getColumnMeta().getName();
+        final ColumnMeta columnMeta = propertyMeta.getColumnMeta();
+        if (columnMeta == null) {
+            throw new PropertyNotFoundRuntimeException(entityName,
+                    baseName == null ? propertyName : baseName + "."
+                            + propertyName);
+        }
+        final String columnAlias = columnMeta.getName();
         return Pair.pair(tableAlias, columnAlias);
     }
 

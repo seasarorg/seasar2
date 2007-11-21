@@ -1748,6 +1748,22 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testForUpdateWithProperty_invalidRelationship() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.join("bbb");
+            query.forUpdate("bbb");
+            query.prepare(null);
+            fail();
+        } catch (PropertyNotFoundRuntimeException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
     public void testForUpdateWithProperty_invalidRelationshipProperty() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
