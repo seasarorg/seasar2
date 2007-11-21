@@ -197,7 +197,7 @@ public class SimpleDataAccessor implements DataAccessor {
     }
 
     public void readXlsReplaceDb(String path) {
-        readXlsAllReplaceDb(path, true);
+        readXlsReplaceDb(path, true);
     }
 
     public void readXlsReplaceDb(String path, boolean trimString) {
