@@ -53,6 +53,8 @@ Beansクラスを使うには、S2-Tigerが必要です。
 <ul>
 <li><a href="#copy">プロパティのコピー</a></li>
 <li><a href="#createAndCopy">オブジェクトの生成とプロパティのコピー</a></li>
+<li><a href="#includes">特定のプロパティだけを対象にする</a></li>
+<li><a href="#excludes">特定のプロパティだけを対象外にする</a></li>
 </ul>
 </p>
 
@@ -81,76 +83,31 @@ SrcBean src = new SrcBean();
 DestBean dest = Beans.createAndCopy(DestBean.class, src).execute();
 </pre>
 
-<h3>dbsession.dicon</h3>
-<p>s2-xxx.zipのresources/dbsession.diconをクラスパスに通します。
-dbsession.diconのDbSessionStateManagerImplのdataSourceプロパティを適切に設定します。
-dbsession.diconは、app.diconでincludeします。
-</p>
+<h2><a name="includes">特定のプロパティだけを対象にする</a></h2>
 <p>
-セッション情報の値はバイトストリームとしてバッチ更新によりデータベースに書き込まれますが、
-RDBMSによってはバイトストリームを含む行のバッチ更新に制限があります。
-その場合、DbSessionStateManagerImplのbatchUpdateDisabledプロパティにtrueを設定し、
-バッチ更新を利用しないようにしてください。
-現在、バイトストリームを含む行のバッチ更新に制限があると判明しているRDBMSには
-以下のものがあります。
-</p>
-<ul>
-<li>Oracle Database 9i (ただし、9iのバージョンによってはこの対応が不要なものもあるかもしれません)</li>
-</ul>
-<h3>テーブル定義</h3>
-<p>
-定義したデータソースにテーブル定義を追加します。
-テーブル定義は使用するRDBMSごとに若干異なります
-</p>
-<p>
-HSQLDBを使用する場合次のように定義します。
+特定のプロパティだけを対象にするには、
+<code>includes(String... propertyNames)を使います。
 </p>
 <pre>
-CREATE MEMORY TABLE S2SESSION(
-  SESSION_ID VARCHAR NOT NULL,
-  NAME VARCHAR(255) NOT NULL,
-  VALUE VARBINARY(10485760),
-  LAST_ACCESS TIMESTAMP,
-  PRIMARY KEY(SESSION_ID,NAME))
+SrcBean src = new SrcBean();
+DestBean dest = new DestBean();
+...
+Beans.copy(src, dest).includes("foo", "bar").execute();
 </pre>
-<p>
-Oracle Database 10g、DB2を使用する場合次のように定義します。
-</p>
-<pre>
-CREATE MEMORY TABLE S2SESSION(
-  SESSION_ID VARCHAR(255) NOT NULL,
-  NAME VARCHAR(255) NOT NULL,
-  VALUE BLOB,
-  LAST_ACCESS TIMESTAMP,
-  PRIMARY KEY(SESSION_ID,NAME))
-</pre>
-<p>
-Oracle Database 9iを使用する場合次のように定義します (ただし、9iのバージョンによっては10gと同じ定義で動作するかもしれません)。
-</p>
-<pre>
-CREATE MEMORY TABLE S2SESSION(
-  SESSION_ID VARCHAR(255) NOT NULL,
-  NAME VARCHAR(255) NOT NULL,
-  VALUE LONG RAW,
-  LAST_ACCESS TIMESTAMP,
-  PRIMARY KEY(SESSION_ID,NAME))
-</pre>
-<h3>Servlet Filter</h3>
-<p>
-web.xmlに次のようにfilterの設定を追加します。
-DbSessionFilterはfilterの中で最初に記述してください。
-</p>
-<pre>
-&lt;filter&gt;
-    &lt;filter-name&gt;dbSessionFilter&lt;/filter-name&gt;
-    &lt;filter-class&gt;org.seasar.extension.dbsession.DbSessionFilter&lt;/filter-class&gt;
-&lt;/filter&gt;
 
-&lt;filter-mapping&gt;
-    &lt;filter-name&gt;dbSessionFilter&lt;/filter-name&gt;
-    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
-&lt;/filter-mapping&gt;
+<h2><a name="excludes">特定のプロパティだけを対象外にする</a></h2>
+<p>
+特定のプロパティだけを対象外にするには、
+<code>excludes(String... propertyNames)を使います。
+includes()と同時に指定することはできません。
+</p>
+<pre>
+SrcBean src = new SrcBean();
+DestBean dest = new DestBean();
+...
+Beans.copy(src, dest).excludes("foo", "bar").execute();
 </pre>
+
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
