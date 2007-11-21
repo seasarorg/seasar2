@@ -19,8 +19,10 @@ import java.util.List;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.util.tiger.Pair;
 
 /**
  * Oracle用の方言をあつかうクラスです。
@@ -161,53 +163,34 @@ public class OracleDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportsForUpdateWithColumn() {
+    public boolean supportsForUpdate(final SelectForUpdateType type,
+            boolean withTarget) {
         return true;
     }
 
     @Override
-    public boolean supportsForUpdateNowait() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsForUpdateNowaitWithColumn() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsForUpdateWait() {
-        return true;
-    }
-
-    @Override
-    public boolean supportsForUpdateWaitWithColumn() {
-        return true;
-    }
-
-    @Override
-    public String getForUpdateString(final String columnName) {
-        return " for update of " + columnName;
-    }
-
-    @Override
-    public String getForUpdateNowaitString() {
-        return " for update nowait";
-    }
-
-    @Override
-    public String getForUpdateNowaitString(final String columnName) {
-        return " for update of " + columnName + " nowait";
-    }
-
-    @Override
-    public String getForUpdateWaitString(int seconds) {
-        return " for update wait " + seconds;
-    }
-
-    @Override
-    public String getForUpdateWaitString(String columnName, int seconds) {
-        return " for update of " + columnName + " wait " + seconds;
+    public String getForUpdateString(final SelectForUpdateType type,
+            final int waitSeconds, final Pair<String, String>... aliases) {
+        final StringBuilder buf = new StringBuilder(100).append(" for update");
+        if (aliases.length > 0) {
+            buf.append(" of ");
+            for (final Pair<String, String> alias : aliases) {
+                buf.append(alias.getFirst()).append('.').append(
+                        alias.getSecond()).append(", ");
+            }
+            buf.setLength(buf.length() - 2);
+        }
+        switch (type) {
+        case NORMAL:
+            break;
+        case NOWAIT:
+            buf.append(" nowait");
+            break;
+        case WAIT:
+            buf.append(" wait ").append(waitSeconds);
+            break;
+        }
+        return new String(buf);
     }
 
 }

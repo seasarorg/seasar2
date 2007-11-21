@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.dialect;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.SelectForUpdateType;
+import org.seasar.framework.util.tiger.Pair;
+
 /**
  * DB2用の方言をあつかうクラスです。
  * 
@@ -98,8 +101,14 @@ public class Db2Dialect extends StandardDialect {
     }
 
     @Override
-    public String getForUpdateString() {
+    public String getForUpdateString(final SelectForUpdateType type,
+            final int waitSeconds, final Pair<String, String>... aliases) {
         return " for read only with rs";
+    }
+
+    @Override
+    public boolean supportsOuterJoinForUpdate() {
+        return false;
     }
 
 }

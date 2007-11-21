@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.ColumnMeta;
@@ -37,6 +38,7 @@ import org.seasar.extension.jdbc.PropertyMapper;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SelectClause;
+import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.Where;
 import org.seasar.extension.jdbc.WhereClause;
@@ -58,6 +60,8 @@ import org.seasar.extension.jdbc.util.QueryTokenizer;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.message.MessageFormatter;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
+import org.seasar.framework.util.tiger.Pair;
 
 /**
  * {@link AutoSelect}の実装クラスです。
@@ -121,14 +125,25 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String orderBy = "";
 
     /**
-     * for update句です。
+     * SELECT ～ FOR UPDATEのSQL文字列です。
      */
     protected String forUpdate = "";
 
     /**
-     * from句にロックヒントが必要な場合は<code>true</code>。
+     * SELECT ～ FOR UPDATEのタイプです。
      */
-    protected boolean needLockHint = false;
+    protected SelectForUpdateType forUpdateType;
+
+    /**
+     * SELECT ～ FOR UPDATEでロック対象となるエンティティからプロパティへのマップです。
+     */
+    protected Map<String, String> forUpdateTargets = CollectionsUtil
+            .newLinkedHashMap();
+
+    /**
+     * SELECT ～ FOR UPDATEでの待機時間 (秒単位) です。
+     */
+    protected int forUpdateWaitSeconds = 0;
 
     /**
      * 値タイプのリストです。
@@ -212,6 +227,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         prepareConditions();
         prepareCriteria();
         prepareOrderBy();
+        prepareForUpdate();
         prepareSql();
     }
 
@@ -230,12 +246,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         int[] idIndices = toIdIndexArray(idIndexList);
         entityMapperMap.put(null, new EntityMapperImpl(baseClass,
                 propertyMappers, idIndices));
-        if (needLockHint) {
-            fromClause.addSql(entityMeta.getTableMeta().getFullName(),
-                    tableAlias, jdbcManager.getDialect().getLockHintString());
-        } else {
+        final String lockHint = getLockHint(null);
+        if (StringUtil.isEmpty(lockHint)) {
             fromClause.addSql(entityMeta.getTableMeta().getFullName(),
                     tableAlias);
+        } else {
+            fromClause.addSql(entityMeta.getTableMeta().getFullName(),
+                    tableAlias, lockHint);
         }
     }
 
@@ -439,10 +456,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             entityMapperMap.put(joinMeta.getName(), remapper);
             baseEntityMapper.addRelationshipEntityMapper(remapper);
         }
+        final String lockHint = getLockHint(joinMeta.getName());
         jdbcManager.getDialect().setupJoin(fromClause, whereClause,
                 joinMeta.getJoinType(),
                 inverseEntityMeta.getTableMeta().getFullName(), tableAlias,
-                fkTableAlias, pkTableAlias, joinColumnMetaList);
+                fkTableAlias, pkTableAlias, joinColumnMetaList, lockHint);
     }
 
     /**
@@ -875,117 +893,197 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
 
     public AutoSelect<T> forUpdate() {
         final DbmsDialect dialect = getJdbcManager().getDialect();
-        if (!dialect.supportsForUpdate()) {
+        if (!dialect.supportsForUpdate(SelectForUpdateType.NORMAL, false)) {
             final EntityMeta entityMeta = getJdbcManager()
                     .getEntityMetaFactory().getEntityMeta(baseClass);
             throw new UnsupportedOperationException(MessageFormatter
                     .getMessage("ESSR0746", new Object[] {
                             entityMeta.getName(), dialect.getName() }));
         }
-        forUpdate = dialect.getForUpdateString();
-        needLockHint = dialect.supportsLockHint();
+
+        forUpdateType = SelectForUpdateType.NORMAL;
         return this;
     }
 
-    public AutoSelect<T> forUpdate(final String property) {
-        if (property == null) {
-            throw new NullPointerException("property");
+    public AutoSelect<T> forUpdate(final String... propertyNames) {
+        if (propertyNames == null) {
+            throw new NullPointerException("properties");
         }
-        if (property.length() == 0) {
-            throw new EmptyRuntimeException("property");
+        if (propertyNames.length == 0) {
+            throw new EmptyRuntimeException("properties");
         }
 
-        final EntityMeta entityMeta = getJdbcManager().getEntityMetaFactory()
-                .getEntityMeta(baseClass);
         final DbmsDialect dialect = getJdbcManager().getDialect();
-        if (!dialect.supportsForUpdateWithColumn()) {
-            throw new UnsupportedOperationException(
-                    MessageFormatter
-                            .getMessage("ESSR0747", new Object[] {
-                                    entityMeta.getName(), property,
-                                    dialect.getName() }));
+        if (!dialect.supportsForUpdate(SelectForUpdateType.NORMAL, true)) {
+            final EntityMeta entityMeta = getJdbcManager()
+                    .getEntityMetaFactory().getEntityMeta(baseClass);
+            throw new UnsupportedOperationException(MessageFormatter
+                    .getMessage("ESSR0747", new Object[] {
+                            entityMeta.getName(), dialect.getName() }));
         }
 
-        final PropertyMeta pm = entityMeta.getPropertyMeta(property);
-        final String columnName = pm.getColumnMeta().getName();
-        forUpdate = dialect.getForUpdateString(columnName);
+        forUpdateType = SelectForUpdateType.NORMAL;
+        setupForUpdateTargets(propertyNames);
         return this;
     }
 
     public AutoSelect<T> forUpdateNowait() {
         final DbmsDialect dialect = getJdbcManager().getDialect();
-        if (!dialect.supportsForUpdateNowait()) {
+        if (!dialect.supportsForUpdate(SelectForUpdateType.NOWAIT, false)) {
             final EntityMeta entityMeta = getJdbcManager()
                     .getEntityMetaFactory().getEntityMeta(baseClass);
             throw new UnsupportedOperationException(MessageFormatter
                     .getMessage("ESSR0748", new Object[] {
                             entityMeta.getName(), dialect.getName() }));
         }
-        forUpdate = dialect.getForUpdateNowaitString();
+
+        forUpdateType = SelectForUpdateType.NOWAIT;
         return this;
     }
 
-    public AutoSelect<T> forUpdateNowait(final String property) {
-        if (property == null) {
-            throw new NullPointerException("property");
+    public AutoSelect<T> forUpdateNowait(final String... propertyNames) {
+        if (propertyNames == null) {
+            throw new NullPointerException("properties");
         }
-        if (property.length() == 0) {
-            throw new EmptyRuntimeException("property");
+        if (propertyNames.length == 0) {
+            throw new EmptyRuntimeException("properties");
         }
 
-        final EntityMeta entityMeta = getJdbcManager().getEntityMetaFactory()
-                .getEntityMeta(baseClass);
         final DbmsDialect dialect = getJdbcManager().getDialect();
-        if (!dialect.supportsForUpdateNowaitWithColumn()) {
-            throw new UnsupportedOperationException(
-                    MessageFormatter
-                            .getMessage("ESSR0749", new Object[] {
-                                    entityMeta.getName(), property,
-                                    dialect.getName() }));
+        if (!dialect.supportsForUpdate(SelectForUpdateType.NOWAIT, true)) {
+            final EntityMeta entityMeta = getJdbcManager()
+                    .getEntityMetaFactory().getEntityMeta(baseClass);
+            throw new UnsupportedOperationException(MessageFormatter
+                    .getMessage("ESSR0749", new Object[] {
+                            entityMeta.getName(), dialect.getName() }));
         }
 
-        final PropertyMeta pm = entityMeta.getPropertyMeta(property);
-        final String columnName = pm.getColumnMeta().getName();
-        forUpdate = dialect.getForUpdateNowaitString(columnName);
+        forUpdateType = SelectForUpdateType.NOWAIT;
+        setupForUpdateTargets(propertyNames);
         return this;
     }
 
     public AutoSelect<T> forUpdateWait(final int seconds) {
         final DbmsDialect dialect = getJdbcManager().getDialect();
-        if (!dialect.supportsForUpdateWait()) {
+        if (!dialect.supportsForUpdate(SelectForUpdateType.WAIT, false)) {
             final EntityMeta entityMeta = getJdbcManager()
                     .getEntityMetaFactory().getEntityMeta(baseClass);
             throw new UnsupportedOperationException(MessageFormatter
                     .getMessage("ESSR0750", new Object[] {
                             entityMeta.getName(), dialect.getName() }));
         }
-        forUpdate = dialect.getForUpdateWaitString(seconds);
+
+        forUpdateType = SelectForUpdateType.WAIT;
+        forUpdateWaitSeconds = seconds;
         return this;
     }
 
-    public AutoSelect<T> forUpdateWait(final String property, final int seconds) {
-        if (property == null) {
-            throw new NullPointerException("property");
+    public AutoSelect<T> forUpdateWait(final int seconds,
+            final String... propertyNames) {
+        if (propertyNames == null) {
+            throw new NullPointerException("properties");
         }
-        if (property.length() == 0) {
-            throw new EmptyRuntimeException("property");
+        if (propertyNames.length == 0) {
+            throw new EmptyRuntimeException("properties");
         }
 
-        final EntityMeta entityMeta = getJdbcManager().getEntityMetaFactory()
-                .getEntityMeta(baseClass);
         final DbmsDialect dialect = getJdbcManager().getDialect();
-        if (!dialect.supportsForUpdateWaitWithColumn()) {
-            throw new UnsupportedOperationException(
-                    MessageFormatter
-                            .getMessage("ESSR0751", new Object[] {
-                                    entityMeta.getName(), property,
-                                    dialect.getName() }));
+        if (!dialect.supportsForUpdate(SelectForUpdateType.WAIT, true)) {
+            final EntityMeta entityMeta = getJdbcManager()
+                    .getEntityMetaFactory().getEntityMeta(baseClass);
+            throw new UnsupportedOperationException(MessageFormatter
+                    .getMessage("ESSR0751", new Object[] {
+                            entityMeta.getName(), dialect.getName() }));
         }
 
-        final PropertyMeta pm = entityMeta.getPropertyMeta(property);
-        final String columnName = pm.getColumnMeta().getName();
-        forUpdate = dialect.getForUpdateWaitString(columnName, seconds);
+        forUpdateType = SelectForUpdateType.WAIT;
+        forUpdateWaitSeconds = seconds;
+        setupForUpdateTargets(propertyNames);
         return this;
+    }
+
+    /**
+     * FOR UPDATE句を準備します。
+     */
+    @SuppressWarnings("unchecked")
+    protected void prepareForUpdate() {
+        if (forUpdateType == null) {
+            forUpdate = "";
+            return;
+        }
+        final DbmsDialect dialect = getJdbcManager().getDialect();
+        for (JoinMeta joinMeta : joinMetaList) {
+            if (joinMeta.getJoinType() == JoinType.LEFT_OUTER) {
+                if (!dialect.supportsOuterJoinForUpdate()) {
+                    final EntityMeta entityMeta = getJdbcManager()
+                            .getEntityMetaFactory().getEntityMeta(baseClass);
+                    throw new UnsupportedOperationException(MessageFormatter
+                            .getMessage("ESSR0752", new Object[] {
+                                    entityMeta.getName(), dialect.getName() }));
+                }
+                break;
+            }
+        }
+        final int length = forUpdateTargets.size();
+        final Pair<String, String>[] aliases = new Pair[length];
+        int i = 0;
+        for (final Entry<String, String> entry : forUpdateTargets.entrySet()) {
+            aliases[i++] = toAliasPair(entry.getKey(), entry.getValue());
+        }
+        forUpdate = dialect.getForUpdateString(forUpdateType,
+                forUpdateWaitSeconds, aliases);
+    }
+
+    /**
+     * ロックヒントを返します。
+     * 
+     * @param baseName
+     *            ベース名
+     * @return ロックヒント
+     */
+    protected String getLockHint(final String baseName) {
+        if (forUpdateType == null) {
+            return "";
+        }
+        if (!forUpdateTargets.isEmpty()
+                && !forUpdateTargets.containsKey(baseName)) {
+            return "";
+        }
+        return jdbcManager.getDialect().getLockHintString(forUpdateType,
+                forUpdateWaitSeconds);
+    }
+
+    /**
+     * SELECT ～ FOR UPDATEの対象となるプロパティを準備します
+     * 
+     * @param propertyNames
+     *            SELECT ～ FOR UPDATEの対象となるプロパティ名の並び
+     */
+    protected void setupForUpdateTargets(final String[] propertyNames) {
+        for (final String propertyName : propertyNames) {
+            final String[] names = splitBaseAndProperty(propertyName);
+            forUpdateTargets.put(names[0], names[1]);
+        }
+    }
+
+    /**
+     * SELECT ～ FOR UPDATEの対象となるテーブルエイリアスとカラムエイリアスのペアを返します。
+     * 
+     * @param baseName
+     *            ベース名
+     * @param propertyName
+     *            プロパティ名
+     * @return SELECT ～ FOR UPDATEの対象となるテーブルエイリアスとカラムエイリアスのペア
+     */
+    @SuppressWarnings("unchecked")
+    protected Pair<String, String> toAliasPair(final String baseName,
+            final String propertyName) {
+        final String tableAlias = getTableAlias(baseName);
+        final EntityMeta entityMeta = entityMetaMap.get(baseName);
+        final PropertyMeta propertyMeta = entityMeta
+                .getPropertyMeta(propertyName);
+        final String columnAlias = propertyMeta.getColumnMeta().getName();
+        return Pair.pair(tableAlias, columnAlias);
     }
 
 }

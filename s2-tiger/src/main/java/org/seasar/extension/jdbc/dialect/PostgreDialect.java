@@ -19,8 +19,10 @@ import java.util.List;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.util.tiger.Pair;
 
 /**
  * PostgreSQL用の方言をあつかうクラスです。
@@ -102,13 +104,28 @@ public class PostgreDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportsForUpdateWithColumn() {
-        return true;
+    public boolean supportsForUpdate(final SelectForUpdateType type,
+            boolean withTarget) {
+        return type == SelectForUpdateType.NORMAL;
     }
 
     @Override
-    public String getForUpdateString(final String columnName) {
-        return " for update of " + columnName;
+    public String getForUpdateString(final SelectForUpdateType type,
+            final int waitSeconds, final Pair<String, String>... aliases) {
+        final StringBuilder buf = new StringBuilder(100).append(" for update");
+        if (aliases.length > 0) {
+            buf.append(" of ");
+            for (final Pair<String, String> alias : aliases) {
+                buf.append(alias.getFirst()).append(", ");
+            }
+            buf.setLength(buf.length() - 2);
+        }
+        return new String(buf);
+    }
+
+    @Override
+    public boolean supportsOuterJoinForUpdate() {
+        return false;
     }
 
 }

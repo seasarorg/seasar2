@@ -94,7 +94,7 @@ public class FromClause {
      */
     public void addSql(String tableName, String tableAlias, String lockHint) {
         sql.append(" from ").append(tableName).append(" ").append(tableAlias)
-                .append(" ").append(lockHint);
+                .append(lockHint);
     }
 
     /**
@@ -112,10 +112,12 @@ public class FromClause {
      *            主キーを持つテーブルの別名
      * @param joinColumnMetaList
      *            結合カラムメタデータのリスト
+     * @param lockHint
+     *            ロックヒント
      */
     public void addSql(JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
-            List<JoinColumnMeta> joinColumnMetaList) {
+            List<JoinColumnMeta> joinColumnMetaList, String lockHint) {
         switch (joinType) {
         case INNER:
             sql.append(" inner join ");
@@ -124,7 +126,8 @@ public class FromClause {
             sql.append(" left outer join ");
             break;
         }
-        sql.append(tableName).append(" ").append(tableAlias).append(" on");
+        sql.append(tableName).append(" ").append(tableAlias).append(lockHint)
+                .append(" on");
         for (int i = 0; i < joinColumnMetaList.size(); i++) {
             if (i == 0) {
                 sql.append(" ");

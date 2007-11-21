@@ -1530,7 +1530,24 @@ public class AutoSelectImplTest extends TestCase {
     public void testForUpdate() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.forUpdate();
+        query.prepare(null);
         assertEquals(" for update", query.forUpdate);
+        assertEquals(" from AAA T1_", query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdate_join() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").join("bbb.ccc");
+        query.forUpdate();
+        query.prepare(null);
+        assertEquals(" for update", query.forUpdate);
+        assertEquals(" from AAA T1_"
+                + " left outer join BBB T2_ on T1_.BBB_ID = T2_.ID"
+                + " left outer join CCC T3_ on T2_.CCC_ID = T3_.ID",
+                query.fromClause.toSql());
     }
 
     /**
@@ -1540,8 +1557,27 @@ public class AutoSelectImplTest extends TestCase {
         manager.setDialect(new MssqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.forUpdate();
-        assertTrue(query.needLockHint);
+        query.prepare(null);
         assertEquals("", query.forUpdate);
+        assertEquals(" from AAA T1_ with (updlock, rowlock)", query.fromClause
+                .toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdate_withLockHint_join() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").join("bbb.ccc");
+        query.forUpdate();
+        query.prepare(null);
+        assertEquals("", query.forUpdate);
+        assertEquals(
+                " from AAA T1_ with (updlock, rowlock)"
+                        + " left outer join BBB T2_ with (updlock, rowlock) on T1_.BBB_ID = T2_.ID"
+                        + " left outer join CCC T3_ with (updlock, rowlock) on T2_.CCC_ID = T3_.ID",
+                query.fromClause.toSql());
     }
 
     /**
@@ -1561,17 +1597,108 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testForUpdateWithColumn() {
-        manager.setDialect(new OracleDialect());
+    public void testForUpdate_join_notSupported() {
+        manager.setDialect(new PostgreDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.forUpdate("name");
-        assertEquals(" for update of NAME", query.forUpdate);
+        try {
+            query.join("bbb").forUpdate();
+            query.prepare(null);
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
     }
 
     /**
      * 
      */
-    public void testForUpdateWithColumn_notSupported() {
+    public void testForUpdateWithProperty_columnAlias() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdate("name");
+        query.prepare(null);
+        assertEquals(" for update of T1_.NAME", query.forUpdate);
+        assertEquals(" from AAA T1_", query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_columnAlias_join() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").join("bbb.ccc");
+        query.forUpdate("name", "bbb.ccc.name");
+        query.prepare(null);
+        assertEquals(" for update of T1_.NAME, T3_.NAME", query.forUpdate);
+        assertEquals(" from AAA T1_"
+                + " left outer join BBB T2_ on T1_.BBB_ID = T2_.ID"
+                + " left outer join CCC T3_ on T2_.CCC_ID = T3_.ID",
+                query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_tableAlias() {
+        manager.setDialect(new PostgreDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdate("name");
+        query.prepare(null);
+        assertEquals(" for update of T1_", query.forUpdate);
+        assertEquals(" from AAA T1_", query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_tableAlias_join() {
+        manager.setDialect(new PostgreDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb", JoinType.INNER).join("bbb.ccc", JoinType.INNER);
+        query.forUpdate("name", "bbb.ccc.name");
+        query.prepare(null);
+        assertEquals(" for update of T1_, T3_", query.forUpdate);
+        assertEquals(" from AAA T1_"
+                + " inner join BBB T2_ on T1_.BBB_ID = T2_.ID"
+                + " inner join CCC T3_ on T2_.CCC_ID = T3_.ID",
+                query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_lockHint() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdate("name");
+        query.prepare(null);
+        assertEquals("", query.forUpdate);
+        assertEquals(" from AAA T1_ with (updlock, rowlock)", query.fromClause
+                .toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_lockHint_join() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb").join("bbb.ccc");
+        query.forUpdate("name", "bbb.ccc.name");
+        query.prepare(null);
+        assertEquals("", query.forUpdate);
+        assertEquals(
+                " from AAA T1_ with (updlock, rowlock)"
+                        + " left outer join BBB T2_ on T1_.BBB_ID = T2_.ID"
+                        + " left outer join CCC T3_ with (updlock, rowlock) on T2_.CCC_ID = T3_.ID",
+                query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_notSupported() {
         manager.setDialect(new HsqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
@@ -1585,11 +1712,41 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testForUpdateWithProperty_join_notSupported() {
+        manager.setDialect(new PostgreDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.join("bbb").join("bbb.ccc");
+            query.forUpdate("name", "bbb.ccc.name");
+            query.prepare(null);
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
     public void testForUpdateNowait() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.forUpdateNowait();
+        query.prepare(null);
         assertEquals(" for update nowait", query.forUpdate);
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateNowait_lockHint() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdateNowait();
+        query.prepare(null);
+        assertEquals("", query.forUpdate);
+        assertEquals(" from AAA T1_ with (updlock, rowlock, nowait)",
+                query.fromClause.toSql());
     }
 
     /**
@@ -1609,17 +1766,31 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testForUpdateNowaitWithColumn() {
+    public void testForUpdateNowaitWithProperty() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.forUpdateNowait("name");
-        assertEquals(" for update of NAME nowait", query.forUpdate);
+        query.prepare(null);
+        assertEquals(" for update of T1_.NAME nowait", query.forUpdate);
     }
 
     /**
      * 
      */
-    public void testForUpdateNowaitWithColumn_notSupported() {
+    public void testForUpdateNowaitWithProperty_lockHint() {
+        manager.setDialect(new MssqlDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.forUpdateNowait("name");
+        query.prepare(null);
+        assertEquals("", query.forUpdate);
+        assertEquals(" from AAA T1_ with (updlock, rowlock, nowait)",
+                query.fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateNowaitWithProperty_notSupported() {
         manager.setDialect(new HsqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
@@ -1637,6 +1808,7 @@ public class AutoSelectImplTest extends TestCase {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.forUpdateWait(10);
+        query.prepare(null);
         assertEquals(" for update wait 10", query.forUpdate);
     }
 
@@ -1657,21 +1829,22 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testForUpdateWaitWithColumn() {
+    public void testForUpdateWaitWithProperty() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.forUpdateWait("name", 10);
-        assertEquals(" for update of NAME wait 10", query.forUpdate);
+        query.forUpdateWait(10, "name");
+        query.prepare(null);
+        assertEquals(" for update of T1_.NAME wait 10", query.forUpdate);
     }
 
     /**
      * 
      */
-    public void testForUpdateWaitWithColumn_notSupported() {
+    public void testForUpdateWaitWithProperty_notSupported() {
         manager.setDialect(new HsqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
-            query.forUpdateWait("name", 10);
+            query.forUpdateWait(10, "name");
             fail();
         } catch (UnsupportedOperationException expected) {
             expected.printStackTrace();
@@ -1681,26 +1854,31 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testForUpdate_sql() {
+    public void testForUpdateSql() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb").orderBy("bbb.id desc").forUpdate();
         query.prepare("getResultList");
         assertEquals(
-                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc for update",
+                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID "
+                        + "from AAA T1_ "
+                        + "left outer join BBB T2_ on T1_.BBB_ID = T2_.ID "
+                        + "order by T2_.ID desc " + "for update",
                 query.executedSql);
     }
 
     /**
      * 
      */
-    public void testForUpdateWithLockHint_sql() {
+    public void testForUpdateSql_lockHint() {
         manager.setDialect(new MssqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb").orderBy("bbb.id desc").forUpdate();
         query.prepare("getResultList");
         assertEquals(
-                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ with (xlock) left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc",
-                query.executedSql);
+                "select T1_.ID, T1_.NAME, T1_.BBB_ID, T2_.ID, T2_.NAME, T2_.CCC_ID "
+                        + "from AAA T1_ with (updlock, rowlock) "
+                        + "left outer join BBB T2_ with (updlock, rowlock) on T1_.BBB_ID = T2_.ID "
+                        + "order by T2_.ID desc", query.executedSql);
     }
 
     @Entity

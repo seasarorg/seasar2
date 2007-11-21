@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.dialect;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.SelectForUpdateType;
+import org.seasar.framework.util.tiger.Pair;
+
 /**
  * MS SQLServer用の方言をあつかうクラスです。
  * 
@@ -72,7 +75,14 @@ public class MssqlDialect extends StandardDialect {
     }
 
     @Override
-    public String getForUpdateString() {
+    public boolean supportsForUpdate(final SelectForUpdateType type,
+            boolean withTarget) {
+        return type != SelectForUpdateType.WAIT;
+    }
+
+    @Override
+    public String getForUpdateString(final SelectForUpdateType type,
+            final int waitSeconds, final Pair<String, String>... aliases) {
         return "";
     }
 
@@ -82,8 +92,15 @@ public class MssqlDialect extends StandardDialect {
     }
 
     @Override
-    public String getLockHintString() {
-        return "with (xlock)";
+    public String getLockHintString(final SelectForUpdateType type,
+            final int waitSeconds) {
+        final StringBuilder buf = new StringBuilder(100)
+                .append(" with (updlock, rowlock");
+        if (type == SelectForUpdateType.NOWAIT) {
+            buf.append(", nowait");
+        }
+        buf.append(")");
+        return new String(buf);
     }
 
 }

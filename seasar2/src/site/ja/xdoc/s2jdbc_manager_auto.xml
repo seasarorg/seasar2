@@ -267,6 +267,11 @@ Employee result = jdbcManager.from(Employee.class).getSingleResult();
 					</code>
 					が発生します。
 				</p>
+				<source><![CDATA[
+Employee result = jdbcManager.from(Employee.class)
+                             .where("id = ?", id)
+                             .getSingleResult();
+]]></source>
 				<p>
 					デフォルトでは、結果がなかった場合は、
 					<code>null</code>
@@ -278,6 +283,7 @@ Employee result = jdbcManager.from(Employee.class).getSingleResult();
 				</p>
 				<source><![CDATA[
 Employee result = jdbcManager.from(Employee.class)
+                             .where("id = ?", id)
                              .disallowNoResult()
                              .getSingleResult();
 ]]></source>
@@ -703,19 +709,18 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 				<p>
 					マップの組み立てを手動でやる必要は、基本的にありません。
 					なぜなら、SimpleWhereのほうが便利だからです。 マップを使う場合は、次のように
-					<code>
-						org.seasar.framework.beans.util.Beans
-					</code>
+					<code>org.seasar.framework.beans.util.Beans</code>
 					を使います。
 				</p>
 				<p>
-					<code>createAndCopy(Class&lt;T&gt; destClass, Object src)</code>
-					の第一引数には、BeanMap.classを指定します。
-					BeanMapはMap&lt;String, Object&gt;なクラスで、
-					存在しないキーにアクセスすると 例外が発生します。
+					<code>
+						createAndCopy(Class&lt;T&gt; destClass, Object
+						src)
+					</code>
+					の第一引数には、BeanMap.classを指定します。 BeanMapはMap&lt;String,
+					Object&gt;なクラスで、 存在しないキーにアクセスすると 例外が発生します。
 					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-					変換したものです。
-					第二引数にはコピー元になるオブジェクトを指定します。
+					変換したものです。 第二引数にはコピー元になるオブジェクトを指定します。
 				</p>
 				<p>
 					<code>prefix(String prefix)</code>
@@ -766,7 +771,9 @@ jdbcManager.from(Employee.class)
 					</li>
 					<li>
 						<p>
-							<code>forUpdate(String propertyName)</code>
+							<code>
+								forUpdate(String... propertyNames)
+							</code>
 						</p>
 					</li>
 					<li>
@@ -777,7 +784,7 @@ jdbcManager.from(Employee.class)
 					<li>
 						<p>
 							<code>
-								forUpdateNowait(String propertyName)
+								forUpdateNowait(String... propertyNames)
 							</code>
 						</p>
 					</li>
@@ -789,8 +796,8 @@ jdbcManager.from(Employee.class)
 					<li>
 						<p>
 							<code>
-								forUpdateWait(String propertyName, int
-								seconds)
+								forUpdateWait(int seconds, String...
+								propertyNames)
 							</code>
 						</p>
 					</li>
@@ -802,22 +809,39 @@ jdbcManager.from(Employee.class)
 					がスローされます。
 				</p>
 				<p>
-					<code>forUpdate(String)</code>
+					<code>forUpdate(String...)</code>
 					・
-					<code>forUpdateNowait(String)</code>
-					・
-					<code>forUpdateWait(String, int)</code>
-					の第1引数には、ロック対象となるプロパティ名を指定します。
+					<code>forUpdateNowait(String...)</code>
+					の第1引数および
+					<code>forUpdateWait(int, String...)</code>
+					の第2引数には、ロック対象となるプロパティ名を指定します。
 				</p>
 				<p>
 					<code>forUpdateWait(int)</code>
-					の第1引数および
-					<code>forUpdateWait(String, int)</code>
-					の第2引数では、ロックを獲得できるまでの最大待機時間を秒単位で指定します。
+					・
+					<code>forUpdateWait(int, String...)</code>
+					の第1引数では、ロックを獲得できるまでの最大待機時間を秒単位で指定します。
+				</p>
+				<p>
+					以下の例では、EmployeeとDepartmentを結合していて、
+					ロック対象のプロパティが明示されていないので、両テーブルのロックが取得されます。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
+    .join("department")
+    .where("department.name = ?", deptName)
     .forUpdate()
+    .getResultList();
+]]></source>
+				<p>
+					以下の例でもEmployeeとDepartmentを結合していますが、
+					指定されたプロパティを持つEmployeeのロックのみが取得されます。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .join("department")
+    .where("department.name = ?", deptName)
+    .forUpdate("id")
     .getResultList();
 ]]></source>
 			</subsection>

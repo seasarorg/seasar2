@@ -204,13 +204,13 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     /**
      * FOR UPDATEを追加します。
      * 
-     * @param property
-     *            ロック対象のプロパティ名
+     * @param propertyNames
+     *            ロック対象のプロパティ名の並び
      * @return このインスタンス自身
      * @throws UnsupportedOperationException
      *             DBMSがこの操作をサポートしていない場合
      */
-    AutoSelect<T> forUpdate(String property);
+    AutoSelect<T> forUpdate(String... propertyNames);
 
     /**
      * FOR UPDATE NOWAITを追加します。
@@ -224,13 +224,13 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     /**
      * FOR UPDATE NOWAITを追加します。
      * 
-     * @param property
-     *            ロック対象のプロパティ名
+     * @param propertyNames
+     *            ロック対象のプロパティ名の並び
      * @return このインスタンス自身
      * @throws UnsupportedOperationException
      *             DBMSがこの操作をサポートしていない場合
      */
-    AutoSelect<T> forUpdateNowait(String property);
+    AutoSelect<T> forUpdateNowait(String... propertyNames);
 
     /**
      * FOR UPDATE WAITを追加します。
@@ -246,14 +246,14 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     /**
      * FOR UPDATE WAITを追加します。
      * 
-     * @param property
-     *            ロック対象のプロパティ名
      * @param seconds
      *            ロックを獲得できるまでの最大待機時間(秒単位)
+     * @param propertyNames
+     *            ロック対象のプロパティ名の並び
      * @return このインスタンス自身
      * @throws UnsupportedOperationException
      *             DBMSがこの操作をサポートしていない場合
      */
-    AutoSelect<T> forUpdateWait(String property, int seconds);
+    AutoSelect<T> forUpdateWait(int seconds, String... propertyNames);
 
 }

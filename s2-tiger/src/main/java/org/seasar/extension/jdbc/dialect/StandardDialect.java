@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.FromClause;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
@@ -34,6 +35,7 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.QueryTokenizer;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
+import org.seasar.framework.util.tiger.Pair;
 
 /**
  * 標準的な方言をあつかうクラスです
@@ -84,9 +86,9 @@ public class StandardDialect implements DbmsDialect {
     public void setupJoin(FromClause fromClause, WhereClause whereClause,
             JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
-            List<JoinColumnMeta> joinColumnMetaList) {
+            List<JoinColumnMeta> joinColumnMetaList, String lockHint) {
         fromClause.addSql(joinType, tableName, tableAlias, fkTableAlias,
-                pkTableAlias, joinColumnMetaList);
+                pkTableAlias, joinColumnMetaList, lockHint);
 
     }
 
@@ -238,60 +240,27 @@ public class StandardDialect implements DbmsDialect {
         return sqlState;
     }
 
-    public boolean supportsForUpdate() {
-        return true;
+    public boolean supportsForUpdate(final SelectForUpdateType type,
+            boolean withTarget) {
+        return type == SelectForUpdateType.NORMAL && !withTarget;
     }
 
-    public boolean supportsForUpdateWithColumn() {
-        return false;
-    }
-
-    public boolean supportsForUpdateNowait() {
-        return false;
-    }
-
-    public boolean supportsForUpdateNowaitWithColumn() {
-        return false;
-    }
-
-    public boolean supportsForUpdateWait() {
-        return false;
-    }
-
-    public boolean supportsForUpdateWaitWithColumn() {
-        return false;
-    }
-
-    public String getForUpdateString() {
+    public String getForUpdateString(final SelectForUpdateType type,
+            final int waitSeconds, final Pair<String, String>... aliases) {
         return " for update";
-    }
-
-    public String getForUpdateString(final String columnName) {
-        return "";
-    }
-
-    public String getForUpdateNowaitString() {
-        return "";
-    }
-
-    public String getForUpdateNowaitString(final String columnName) {
-        return "";
-    }
-
-    public String getForUpdateWaitString(int seconds) {
-        return "";
-    }
-
-    public String getForUpdateWaitString(final String columnName, int seconds) {
-        return "";
     }
 
     public boolean supportsLockHint() {
         return false;
     }
 
-    public String getLockHintString() {
+    public String getLockHintString(final SelectForUpdateType type,
+            final int waitSeconds) {
         return "";
+    }
+
+    public boolean supportsOuterJoinForUpdate() {
+        return true;
     }
 
 }

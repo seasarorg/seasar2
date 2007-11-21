@@ -24,6 +24,7 @@ import javax.persistence.NonUniqueResultException;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
 import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -716,7 +717,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdate() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            false)) {
             return;
         }
         jdbcManager.from(Employee.class).forUpdate().getResultList();
@@ -727,7 +730,10 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdate_leftOuterJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            false)
+            || implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
         jdbcManager
@@ -742,7 +748,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdate_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            false)) {
             return;
         }
         jdbcManager
@@ -757,7 +765,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdate_pagingLimmit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            false)) {
             return;
         }
         jdbcManager
@@ -773,7 +783,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdate_pagingOffsetLimmit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            false)) {
             return;
         }
         jdbcManager
@@ -790,7 +802,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdate_UnsupportedOperationException() throws Exception {
-        if (implementor.getDialect().supportsForUpdate()) {
+        if (implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            false)) {
             return;
         }
         try {
@@ -805,7 +819,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWithColumn() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            true)) {
             return;
         }
         jdbcManager
@@ -819,7 +835,10 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWithColumn_leftOuterJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            true)
+            || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
         jdbcManager.from(Employee.class).join("department").forUpdate(
@@ -831,7 +850,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWithColumn_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            true)) {
             return;
         }
         jdbcManager
@@ -846,7 +867,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWithColumn_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            true)) {
             return;
         }
         jdbcManager
@@ -862,7 +885,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWithColumn_pagingOffsetLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            true)) {
             return;
         }
         jdbcManager
@@ -880,7 +905,9 @@ public class AutoSelectTest {
      */
     public void testForUpdateWithColumn_UnsupportedOperationException()
             throws Exception {
-        if (implementor.getDialect().supportsForUpdateWithColumn()) {
+        if (implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NORMAL,
+            true)) {
             return;
         }
         try {
@@ -895,7 +922,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowait() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            false)) {
             return;
         }
         jdbcManager.from(Employee.class).forUpdateNowait().getResultList();
@@ -906,7 +935,10 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowait_leftOuterJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            false)
+            || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
         jdbcManager
@@ -921,7 +953,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowait_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            false)) {
             return;
         }
         jdbcManager
@@ -936,7 +970,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowait_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            false)) {
             return;
         }
         jdbcManager
@@ -952,7 +988,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowait_pagingOffsetLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            false)) {
             return;
         }
         jdbcManager
@@ -970,7 +1008,9 @@ public class AutoSelectTest {
      */
     public void testForUpdateNowait_UnsupportedOperationException()
             throws Exception {
-        if (implementor.getDialect().supportsForUpdateNowait()) {
+        if (implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            false)) {
             return;
         }
         try {
@@ -985,7 +1025,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowaitWithColumn() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            true)) {
             return;
         }
         jdbcManager
@@ -999,7 +1041,10 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowaitWithColumn_leftOuterJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            true)
+            || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
         jdbcManager.from(Employee.class).join("department").forUpdateNowait(
@@ -1011,7 +1056,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowaitWithColumn_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            true)) {
             return;
         }
         jdbcManager
@@ -1026,7 +1073,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateNowaitWithColumn_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            true)) {
             return;
         }
         jdbcManager
@@ -1043,7 +1092,9 @@ public class AutoSelectTest {
      */
     public void testForUpdateNowaitWithColumn_pagingOffsetLimit()
             throws Exception {
-        if (!implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            true)) {
             return;
         }
         jdbcManager
@@ -1061,7 +1112,9 @@ public class AutoSelectTest {
      */
     public void testForUpdateNowaitWithColumn_UnsupportedOperationException()
             throws Exception {
-        if (implementor.getDialect().supportsForUpdateNowaitWithColumn()) {
+        if (implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.NOWAIT,
+            true)) {
             return;
         }
         try {
@@ -1076,7 +1129,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWait() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            false)) {
             return;
         }
         jdbcManager.from(Employee.class).forUpdateWait(1).getResultList();
@@ -1087,7 +1142,10 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWait_leftOuterJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            false)
+            || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
         jdbcManager
@@ -1102,7 +1160,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWait_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            false)) {
             return;
         }
         jdbcManager
@@ -1117,7 +1177,9 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWait_pagingOffsetLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWait()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            false)) {
             return;
         }
         jdbcManager
@@ -1135,7 +1197,9 @@ public class AutoSelectTest {
      */
     public void testForUpdateWait_UnsupportedOperationException()
             throws Exception {
-        if (implementor.getDialect().supportsForUpdateWait()) {
+        if (implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            false)) {
             return;
         }
         try {
@@ -1150,12 +1214,14 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWaitWithColumn() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            true)) {
             return;
         }
         jdbcManager
             .from(Employee.class)
-            .forUpdateWait("employeeName", 1)
+            .forUpdateWait(1, "employeeName")
             .getResultList();
     }
 
@@ -1164,12 +1230,14 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWaitWithColumn_leftOuterJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            true)) {
             return;
         }
         jdbcManager.from(Employee.class).join("department").forUpdateWait(
-            "employeeName",
-            1).getResultList();
+            1,
+            "employeeName").getResultList();
     }
 
     /**
@@ -1177,13 +1245,15 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWaitWithColumn_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            true)) {
             return;
         }
         jdbcManager
             .from(Employee.class)
             .join("department", JoinType.INNER)
-            .forUpdateWait("employeeName", 1)
+            .forUpdateWait(1, "employeeName")
             .getResultList();
     }
 
@@ -1192,14 +1262,16 @@ public class AutoSelectTest {
      * @throws Exception
      */
     public void testForUpdateWaitWithColumn_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            true)) {
             return;
         }
         jdbcManager
             .from(Employee.class)
             .orderBy("employeeName")
             .limit(3)
-            .forUpdateWait("employeeName", 1)
+            .forUpdateWait(1, "employeeName")
             .getResultList();
     }
 
@@ -1209,7 +1281,9 @@ public class AutoSelectTest {
      */
     public void testForUpdateWaitWithColumn_pagingOffsetLimit()
             throws Exception {
-        if (!implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+        if (!implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            true)) {
             return;
         }
         jdbcManager
@@ -1217,7 +1291,7 @@ public class AutoSelectTest {
             .orderBy("employeeName")
             .offset(5)
             .limit(3)
-            .forUpdateWait("employeeName", 1)
+            .forUpdateWait(1, "employeeName")
             .getResultList();
     }
 
@@ -1227,11 +1301,13 @@ public class AutoSelectTest {
      */
     public void testForUpdateWaitWithColumn_UnsupportedOperationException()
             throws Exception {
-        if (implementor.getDialect().supportsForUpdateWaitWithColumn()) {
+        if (implementor.getDialect().supportsForUpdate(
+            SelectForUpdateType.WAIT,
+            true)) {
             return;
         }
         try {
-            jdbcManager.from(Employee.class).forUpdateWait("employeeName", 1);
+            jdbcManager.from(Employee.class).forUpdateWait(1, "employeeName");
             fail();
         } catch (UnsupportedOperationException e) {
         }

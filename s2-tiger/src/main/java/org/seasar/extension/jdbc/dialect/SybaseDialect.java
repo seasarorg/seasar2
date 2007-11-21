@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.dialect;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.SelectForUpdateType;
+import org.seasar.framework.util.tiger.Pair;
+
 /**
  * Sybase用の方言をあつかうクラスです。
  * 
@@ -52,7 +55,14 @@ public class SybaseDialect extends StandardDialect {
     }
 
     @Override
-    public String getForUpdateString() {
+    public boolean supportsForUpdate(final SelectForUpdateType type,
+            boolean withTarget) {
+        return type == SelectForUpdateType.NORMAL;
+    }
+
+    @Override
+    public String getForUpdateString(final SelectForUpdateType type,
+            final int waitSeconds, final Pair<String, String>... aliases) {
         return "";
     }
 
@@ -62,8 +72,9 @@ public class SybaseDialect extends StandardDialect {
     }
 
     @Override
-    public String getLockHintString() {
-        return "with (xlock)";
+    public String getLockHintString(final SelectForUpdateType type,
+            final int waitSeconds) {
+        return " holdlock";
     }
 
 }

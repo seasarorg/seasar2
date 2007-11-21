@@ -21,6 +21,8 @@ import java.util.List;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
+import org.seasar.framework.util.tiger.Pair;
+
 /**
  * データベースごとの方言をあつかうインターフェースです。
  * 
@@ -112,12 +114,13 @@ public interface DbmsDialect {
      *            主キーを持つテーブルの別名
      * @param joinColumnMetaList
      *            結合カラムメタデータのリスト
-     * 
+     * @param lockHint
+     *            ロックヒント
      */
     void setupJoin(FromClause fromClause, WhereClause whereClause,
             JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
-            List<JoinColumnMeta> joinColumnMetaList);
+            List<JoinColumnMeta> joinColumnMetaList, String lockHint);
 
     /**
      * {@link GeneratedValue#strategy()}に{@link GenerationType#AUTO}が指定された場合の、
@@ -195,96 +198,27 @@ public interface DbmsDialect {
     /**
      * SELECT文で<code>FOR UPDATE</code>をサポートしていれば<code>true</code>を返します。
      * 
+     * @param type
+     *            SELECT ～ FOR UPDATEのタイプ
+     * @param withTarget
+     *            ロック対象を指定する場合は<code>true</code>
      * @return SELECT文で<code>FOR UPDATE</code>をサポートしていれば<code>true</code>
      */
-    boolean supportsForUpdate();
-
-    /**
-     * SELECT文で<code>FOR UPDATE OF <var>column</var></code>をサポートしていれば<code>true</code>を返します。
-     * 
-     * @return SELECT文で<code>FOR UPDATE OF <var>column</var></code>をサポートしていれば<code>true</code>
-     */
-    boolean supportsForUpdateWithColumn();
-
-    /**
-     * SELECT文で<code>FOR UPDATE NOWAIT</code>をサポートしていれば<code>true</code>を返します。
-     * 
-     * @return SELECT文で<code>FOR UPDATE NOWAIT</code>をサポートしていれば<code>true</code>
-     */
-    boolean supportsForUpdateNowait();
-
-    /**
-     * SELECT文で<code>FOR UPDATE OF <var>column</var> NOWAIT</code>をサポートしていれば<code>true</code>を返します。
-     * 
-     * @return SELECT文で<code>FOR UPDATE OF <var>column</var> NOWAIT</code>をサポートしていれば<code>true</code>
-     */
-    boolean supportsForUpdateNowaitWithColumn();
-
-    /**
-     * SELECT文で<code>FOR UPDATE WAIT <var>sec</var></code>をサポートしていれば<code>true</code>を返します。
-     * 
-     * @return SELECT文で<code>FOR UPDATE WAIT <var>sec</var></code>をサポートしていれば<code>true</code>
-     */
-    boolean supportsForUpdateWait();
-
-    /**
-     * SELECT文で<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>をサポートしていれば<code>true</code>を返します。
-     * 
-     * @return SELECT文で<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>をサポートしていれば<code>true</code>
-     */
-    boolean supportsForUpdateWaitWithColumn();
-
-    /**
-     * SELECT文に付加する<code>FOR UPDATE</code>相当のSQLを返します。
-     * 
-     * @return SELECT文に付加する<code>FOR UPDATE</code>相当のSQL
-     */
-    String getForUpdateString();
-
-    /**
-     * SELECT文に付加する<code>FOR UPDATE OF <var>column</var></code>相当のSQLを返します。
-     * 
-     * @param columnName
-     *            ロック対象のカラム名
-     * @return SELECT文に付加する<code>FOR UPDATE OF <var>column</var></code>相当のSQL
-     */
-    String getForUpdateString(String columnName);
+    boolean supportsForUpdate(SelectForUpdateType type, boolean withTarget);
 
     /**
      * SELECT文に付加する<code>FOR UPDATE NOWAIT</code>相当のSQLを返します。
      * 
-     * @return SELECT文に付加する<code>FOR UPDATE NOWAIT</code>相当のSQL
+     * @param type
+     *            SELECT ～ FOR UPDATEのタイプ
+     * @param waitSeconds
+     *            <code>type</code>に{@link SelectForUpdateType#WAIT}が指定された場合の待機時間(秒単位)
+     * @param aliases
+     *            ロック対象となるカラムのエイリアス。対象が指定されなかった場合は空の配列
+     * @return SELECT文に付加する<code>FOR UPDATE</code>句のSQL
      */
-    String getForUpdateNowaitString();
-
-    /**
-     * SELECT文に付加する<code>FOR UPDATE OF <var>column</var> NOWAIT</code>相当のSQLを返します。
-     * 
-     * @param columnName
-     *            ロック対象のカラム名
-     * @return SELECT文に付加する<code>FOR UPDATE OF <var>column</var> NOWAIT</code>相当のSQL
-     */
-    String getForUpdateNowaitString(String columnName);
-
-    /**
-     * SELECT文に付加する<code>FOR UPDATE WAIT <var>sec</var></code>相当のSQLを返します。
-     * 
-     * @param seconds
-     *            ロックを獲得できるまでの最大待機時間(秒単位)
-     * @return SELECT文に付加する<code>FOR UPDATE WAIT <var>sec</var></code>相当のSQL
-     */
-    String getForUpdateWaitString(int seconds);
-
-    /**
-     * SELECT文に付加する<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>相当のSQLを返します。
-     * 
-     * @param columnName
-     *            ロック対象のカラム名
-     * @param seconds
-     *            ロックを獲得できるまでの最大待機時間(秒単位)
-     * @return SELECT文に付加する<code>FOR UPDATE OF <var>column</var> WAIT <var>sec</var></code>相当のSQL
-     */
-    String getForUpdateWaitString(String columnName, int seconds);
+    String getForUpdateString(SelectForUpdateType type, int waitSeconds,
+            Pair<String, String>... aliases);
 
     /**
      * SELECT文で排他制御のためのロックヒントをサポートしていれば<code>true</code>を返します。
@@ -296,8 +230,19 @@ public interface DbmsDialect {
     /**
      * SELECT文に付加するロックヒントを返します。
      * 
+     * @param type
+     *            SELECT ～ FOR UPDATEのタイプ
+     * @param waitSeconds
+     *            <code>type</code>に{@link SelectForUpdateType#WAIT}が指定された場合の待機時間(秒単位)
      * @return SELECT文に付加するロックヒント
      */
-    String getLockHintString();
+    String getLockHintString(SelectForUpdateType type, int waitSeconds);
+
+    /**
+     * 外部結合した場合に<code>FOR UPDATE</code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return 外部結合した場合に<code>FOR UPDATE</code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsOuterJoinForUpdate();
 
 }

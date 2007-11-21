@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.dialect;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.SelectForUpdateType;
+
 /**
  * HSQLDB用の方言をあつかうクラスです。
  * 
@@ -85,7 +87,8 @@ public class HsqlDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportsForUpdate() {
+    public boolean supportsForUpdate(final SelectForUpdateType type,
+            boolean withTarget) {
         return false;
     }
 

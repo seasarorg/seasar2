@@ -87,9 +87,9 @@ public class StandardDialectTest extends TestCase {
         List<JoinColumnMeta> joinColumnMetaList = new ArrayList<JoinColumnMeta>();
         joinColumnMetaList.add(new JoinColumnMeta("BBB_ID", "BBB_ID"));
         dialect.setupJoin(fromClause, null, JoinType.LEFT_OUTER, "BBB", "_T2",
-                "_T1", "_T2", joinColumnMetaList);
+                "_T1", "_T2", joinColumnMetaList, " with (updlock, rowlock)");
         assertEquals(
-                " from AAA _T1 left outer join BBB _T2 on _T1.BBB_ID = _T2.BBB_ID",
+                " from AAA _T1 left outer join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID",
                 fromClause.toSql());
     }
 
