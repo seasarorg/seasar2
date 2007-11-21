@@ -17,9 +17,12 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -170,6 +173,23 @@ public class AutoProcedureCallImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testPrepareParameter_temporalType() throws Exception {
+        MyDto4 dto = new MyDto4();
+        Date date = new Date();
+        dto.timestamp = date;
+        AutoProcedureCallImpl query = new AutoProcedureCallImpl(manager,
+                "hoge", dto);
+        query.prepare("execute");
+        assertEquals("{call hoge(?)}", query.executedSql);
+        assertEquals(1, query.getParamSize());
+        assertEquals(date, query.getParam(0).value);
+        assertEquals(ParamType.IN, query.getParam(0).paramType);
+        assertEquals(ValueTypes.DATE_TIMESTAMP, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCall() throws Exception {
         MyDto dto = new MyDto();
         dto.arg2 = "aaa";
@@ -239,4 +259,11 @@ public class AutoProcedureCallImplTest extends TestCase {
 
     }
 
+    private static final class MyDto4 {
+
+        /** */
+        @Temporal(TemporalType.TIMESTAMP)
+        public Date timestamp;
+
+    }
 }

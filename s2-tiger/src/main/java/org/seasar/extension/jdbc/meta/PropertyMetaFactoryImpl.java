@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.meta;
 
 import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -30,6 +31,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -49,6 +51,7 @@ import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
+import org.seasar.extension.jdbc.exception.TemporalTypeNotSpecifiedRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeException;
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
@@ -103,6 +106,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             doColumnMeta(propertyMeta, field, entityMeta);
             if (propertyMeta.getColumnMeta() != null) {
                 doId(propertyMeta, field, entityMeta);
+                doTemporal(propertyMeta, field, entityMeta);
                 doVersion(propertyMeta, field, entityMeta);
                 doLob(propertyMeta, field, entityMeta);
             } else {
@@ -291,6 +295,30 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
         propertyMeta.setTableIdGenerator(new TableIdGenerator(entityMeta,
                 propertyMeta, tableGenerator));
         return true;
+    }
+
+    /**
+     * 時制の種別を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doTemporal(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta) {
+        if (propertyMeta.getPropertyClass() != java.util.Date.class
+                && propertyMeta.getPropertyClass() != Calendar.class) {
+            return;
+        }
+        Temporal temporal = field.getAnnotation(Temporal.class);
+        if (temporal == null) {
+            throw new TemporalTypeNotSpecifiedRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName());
+        }
+        propertyMeta.setTemporalType(temporal.value());
     }
 
     /**

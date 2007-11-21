@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ModuleCall;
@@ -38,6 +40,7 @@ import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.query.AbstractModuleCall.ParamDesc.ParameterType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;
@@ -115,7 +118,8 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
             return;
         }
         final Class<?> paramClass = parameter.getClass();
-        if (ValueTypes.isSimpleType(paramClass)) {
+        if (ValueTypes.isSimpleType(paramClass)
+                || TemporalParameter.class.isAssignableFrom(paramClass)) {
             addParam(parameter, paramClass);
             return;
         }
@@ -489,7 +493,11 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
             paramDesc.name = field.getName();
             paramDesc.paramClass = field.getType();
             final boolean lob = field.getAnnotation(Lob.class) != null;
-            paramDesc.valueType = getValueType(paramDesc.paramClass, lob);
+            final Temporal temporal = field.getAnnotation(Temporal.class);
+            final TemporalType temporalType = temporal != null ? temporal
+                    .value() : null;
+            paramDesc.valueType = getValueType(paramDesc.paramClass, lob,
+                    temporalType);
             if (field
                     .getAnnotation(org.seasar.extension.jdbc.annotation.ResultSet.class) != null) {
                 paramDesc.paramType = ParameterType.RESULT_SET;

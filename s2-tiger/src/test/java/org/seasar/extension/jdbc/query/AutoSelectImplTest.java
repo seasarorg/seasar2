@@ -867,6 +867,7 @@ public class AutoSelectImplTest extends TestCase {
     public void testWhere_where() throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         assertSame(query, query.where(new SimpleWhere().eq("id", 1)));
+        query.prepare("getResultList");
         assertEquals("id = ?", query.criteria);
         assertEquals(1, query.getParamSize());
         assertEquals(1, query.getParam(0).value);
@@ -1477,17 +1478,6 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");
         assertNotNull(query.executedSql);
-    }
-
-    /**
-     * 
-     */
-    public void testConvertCriteria() {
-        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
-        query.prepare("getResultList");
-        assertEquals("T1_.ID=? or T2_.ID=?", query
-                .convertCriteria("id=? or bbb.id=?"));
     }
 
     /**

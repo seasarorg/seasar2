@@ -37,6 +37,10 @@ public class SimpleWhereTest extends TestCase {
         assertEquals(2, params.length);
         assertEquals(1, params[0]);
         assertEquals("hoge", params[1]);
+        String[] names = w.getPropertyNames();
+        assertEquals(2, params.length);
+        assertEquals("id", names[0]);
+        assertEquals("name", names[1]);
     }
 
     /**

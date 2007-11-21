@@ -15,7 +15,11 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.TemporalType;
 
 /**
  * ストアドファンクションの呼び出しのベースとなるインターフェースです。
@@ -35,6 +39,18 @@ public interface FunctionCall<T, S extends FunctionCall<T, S>> extends
      * @return このインスタンス自身
      */
     S lob();
+
+    /**
+     * ストアドファンクションの戻り値またはその要素の{@link TemporalType}を指定します。
+     * <p>
+     * このメソッドの呼び出しは、戻り値またはその要素が{@link Date}もしくは{@link Calendar}の場合に有効です。
+     * </p>
+     * 
+     * @param temporalType
+     *            時制の種別
+     * @return このインスタンス自身
+     */
+    S temporal(TemporalType temporalType);
 
     /**
      * ストアドファンクションを呼び出し、その戻り値を返します。

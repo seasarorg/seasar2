@@ -89,4 +89,8 @@ public abstract class AbstractEntityCondition<CONDITION extends AbstractEntityCo
         return where.getParams();
     }
 
+    public String[] getPropertyNames() {
+        return where.getPropertyNames();
+    }
+
 }

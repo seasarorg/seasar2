@@ -13,34 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc;
+package org.seasar.extension.jdbc.exception;
+
+import junit.framework.TestCase;
 
 /**
- * where句を組み立てるインターフェースです。
- * 
- * @author higa
+ * @author taedium
  * 
  */
-public interface Where {
+public class TemporalTypeNotSpecifiedRuntimeExceptionTest extends TestCase {
 
     /**
-     * クライテリアを返します。
-     * 
-     * @return クライテリア
+     * @throws Exception
      */
-    String getCriteria();
+    public void testAll() throws Exception {
+        TemporalTypeNotSpecifiedRuntimeException e = new TemporalTypeNotSpecifiedRuntimeException(
+                "hoge", "foo");
+        System.out.println(e);
+        assertEquals("hoge", e.getEntityName());
+        assertEquals("foo", e.getPropertyName());
+    }
 
-    /**
-     * パラメータの配列を返します。
-     * 
-     * @return パラメータの配列
-     */
-    Object[] getParams();
-
-    /**
-     * プロパティの名前の配列を返します。
-     * 
-     * @return プロパティの名前の配列
-     */
-    String[] getPropertyNames();
 }

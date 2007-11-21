@@ -70,6 +70,7 @@ public class ComplexWhere extends AbstractWhere<ComplexWhere> implements Where {
         }
         criteriaSb.append(factorCriteria).append(")");
         paramList.addAll(Arrays.asList(factor.getParams()));
+        propertyNameList.addAll(Arrays.asList(factor.getPropertyNames()));
         return this;
     }
 

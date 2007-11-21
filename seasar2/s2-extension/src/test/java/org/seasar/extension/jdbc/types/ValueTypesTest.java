@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.types;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
@@ -34,17 +33,10 @@ public class ValueTypesTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testGetValueType_timestamp() throws Exception {
-        assertEquals(ValueTypes.TIMESTAMP, ValueTypes.getValueType(Date.class));
-
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testGetValueType_calendar() throws Exception {
-        assertEquals(ValueTypes.CALENDAR, ValueTypes
+    public void testGetValueType() throws Exception {
+        assertEquals(ValueTypes.TIMESTAMP, ValueTypes
                 .getValueType(GregorianCalendar.class));
+
     }
 
     /**

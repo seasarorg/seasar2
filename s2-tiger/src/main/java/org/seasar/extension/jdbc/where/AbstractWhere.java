@@ -38,6 +38,9 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     /** バインド変数のリスト */
     protected List<Object> paramList = new ArrayList<Object>();
 
+    /** バインド変数に対応するプロパティ名のリスト */
+    protected List<String> propertyNameList = new ArrayList<String>();
+
     /**
      * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、
      * 条件に加えない場合は<code>true</code>
@@ -66,7 +69,10 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
             criteriaSb.append(" and ");
         }
         criteriaSb.append(conditionType.getCondition(propertyName, value));
-        conditionType.addValue(paramList, value);
+        int size = conditionType.addValue(paramList, value);
+        for (int i = 0; i < size; i++) {
+            propertyNameList.add(propertyName);
+        }
     }
 
     /**
@@ -351,4 +357,7 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
         return paramList.toArray();
     }
 
+    public String[] getPropertyNames() {
+        return propertyNameList.toArray(new String[propertyNameList.size()]);
+    }
 }

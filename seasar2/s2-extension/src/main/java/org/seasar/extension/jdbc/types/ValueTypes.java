@@ -114,9 +114,35 @@ public final class ValueTypes {
     public final static ValueType TIMESTAMP = new TimestampType();
 
     /**
-     * Calendar用の値タイプです。
+     * {@link #SQLDATE}を利用する{@link Date}用の値タイプです。
      */
-    public final static ValueType CALENDAR = new CalendarType();
+    public final static ValueType DATE_SQLDATE = new DateType(SQLDATE);
+
+    /**
+     * {@link #TIME}を利用する{@link Date}用の値タイプです。
+     */
+    public final static ValueType DATE_TIME = new DateType(TIME);
+
+    /**
+     * {@link #TIMESTAMP}を利用する{@link Date}用の値タイプです。
+     */
+    public final static ValueType DATE_TIMESTAMP = new DateType(TIMESTAMP);
+
+    /**
+     * {@link #SQLDATE}を利用する{@link Calendar}用の値タイプです。
+     */
+    public final static ValueType CALENDAR_SQLDATE = new CalendarType(SQLDATE);
+
+    /**
+     * {@link #TIME}を利用する{@link Calendar}用の値タイプです。
+     */
+    public final static ValueType CALENDAR_TIME = new CalendarType(TIME);
+
+    /**
+     * {@link #TIMESTAMP}を利用する{@link Calendar}用の値タイプです。
+     */
+    public final static ValueType CALENDAR_TIMESTAMP = new CalendarType(
+            TIMESTAMP);
 
     /**
      * Binary用の値タイプです。
@@ -186,7 +212,7 @@ public final class ValueTypes {
         registerValueType(java.sql.Time.class, TIME);
         registerValueType(java.util.Date.class, TIMESTAMP);
         registerValueType(Timestamp.class, TIMESTAMP);
-        registerValueType(Calendar.class, CALENDAR);
+        registerValueType(Calendar.class, TIMESTAMP);
         registerValueType(BYTE_ARRAY_CLASS, BINARY);
         registerValueType(InputStream.class, BINARY_STREAM);
         registerValueType(boolean.class, BOOLEAN);

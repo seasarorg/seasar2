@@ -39,6 +39,7 @@ public class ComplexWhereTest extends TestCase {
         w.eq("a", 1).eq("b", 2).or().eq("c", 3).eq("d", 4);
         assertEquals("(a = ? and b = ?) or (c = ? and d = ?)", w.getCriteria());
         assertEquals(4, w.getParams().length);
+        assertEquals(4, w.getPropertyNames().length);
     }
 
     /**
@@ -52,6 +53,7 @@ public class ComplexWhereTest extends TestCase {
                 "(a = ? and b = ?) or (c = ? and d = ?) or (e = ? and f = ?)",
                 w.getCriteria());
         assertEquals(6, w.getParams().length);
+        assertEquals(6, w.getPropertyNames().length);
     }
 
     /**
@@ -62,6 +64,7 @@ public class ComplexWhereTest extends TestCase {
         w.eq("a", 1).eq("b", 2).or().eq("c", 3).eq("d", 4).or();
         assertEquals("(a = ? and b = ?) or (c = ? and d = ?)", w.getCriteria());
         assertEquals(4, w.getParams().length);
+        assertEquals(4, w.getPropertyNames().length);
     }
 
     /**
@@ -72,6 +75,7 @@ public class ComplexWhereTest extends TestCase {
         w.eq("a", null).eq("b", null).or().eq("c", 3).eq("d", 4);
         assertEquals("c = ? and d = ?", w.getCriteria());
         assertEquals(2, w.getParams().length);
+        assertEquals(2, w.getPropertyNames().length);
     }
 
     /**
@@ -86,6 +90,7 @@ public class ComplexWhereTest extends TestCase {
                 "a = ? and b = ? and ((c = ?) or (d = ?)) and e = ? and f = ?",
                 w.getCriteria());
         assertEquals(6, w.getParams().length);
+        assertEquals(6, w.getPropertyNames().length);
     }
 
 }

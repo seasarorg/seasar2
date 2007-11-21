@@ -16,6 +16,9 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.SQLException;
+import java.util.Date;
+
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -226,9 +229,12 @@ public class AbsQueryTest extends TestCase {
      */
     public void testGetValueType() throws Exception {
         MyQuery query = new MyQuery(manager);
-        assertEquals(ValueTypes.CLOB, query.getValueType(String.class, true));
+        assertEquals(ValueTypes.CLOB, query.getValueType(String.class, true,
+                null));
         assertEquals(ValueTypes.INTEGER, query.getValueType(Integer.class,
-                false));
+                false, null));
+        assertEquals(ValueTypes.DATE_TIME, query.getValueType(Date.class,
+                false, TemporalType.TIME));
     }
 
     private static class MyQuery extends AbstractQuery<MyQuery> {

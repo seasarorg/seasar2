@@ -19,18 +19,16 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 
 import org.seasar.extension.jdbc.ValueType;
-import org.seasar.framework.util.CalendarConversionUtil;
+import org.seasar.framework.util.DateConversionUtil;
 
 /**
- * {@link Calendar} 用の {@link ValueType}です。
+ * {@link java.util.Date} 用の {@link ValueType}です。
  * 
  * @author taedium
- * 
  */
-public class CalendarType implements ValueType {
+public class DateType implements ValueType {
 
     private ValueType valueType;
 
@@ -40,7 +38,7 @@ public class CalendarType implements ValueType {
      * @param valueType
      *            委譲先の{@link ValueType}
      */
-    public CalendarType(ValueType valueType) {
+    public DateType(ValueType valueType) {
         this.valueType = valueType;
     }
 
@@ -57,23 +55,21 @@ public class CalendarType implements ValueType {
     }
 
     public Object getValue(CallableStatement cs, int index) throws SQLException {
-        return CalendarConversionUtil.toCalendar(valueType.getValue(cs, index));
+        return DateConversionUtil.toDate(valueType.getValue(cs, index));
     }
 
     public Object getValue(CallableStatement cs, String parameterName)
             throws SQLException {
-        return CalendarConversionUtil.toCalendar(valueType.getValue(cs,
-                parameterName));
+        return DateConversionUtil.toDate(valueType.getValue(cs, parameterName));
     }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
-        return CalendarConversionUtil.toCalendar(valueType.getValue(resultSet,
-                index));
+        return DateConversionUtil.toDate(valueType.getValue(resultSet, index));
     }
 
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
-        return CalendarConversionUtil.toCalendar(valueType.getValue(resultSet,
+        return DateConversionUtil.toDate(valueType.getValue(resultSet,
                 columnName));
     }
 

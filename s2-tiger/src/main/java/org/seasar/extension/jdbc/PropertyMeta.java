@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
@@ -77,6 +78,11 @@ public class PropertyMeta {
      * {@link GenerationType#TABLE}で識別子を自動生成するIDジェネレータです。
      */
     protected IdGenerator tableIdGenerator;
+
+    /**
+     * 時制の種別です。
+     */
+    protected TemporalType temporalType;
 
     /**
      * バージョン用かどうかです。
@@ -289,6 +295,25 @@ public class PropertyMeta {
      */
     public void setTableIdGenerator(IdGenerator idGenerator) {
         tableIdGenerator = idGenerator;
+    }
+
+    /**
+     * 時制の種別を返します。
+     * 
+     * @return 時制の種別
+     */
+    public TemporalType getTemporalType() {
+        return temporalType;
+    }
+
+    /**
+     * 時制の種別を設定します。
+     * 
+     * @param temporalType
+     *            The temporalType to set.
+     */
+    public void setTemporalType(TemporalType temporalType) {
+        this.temporalType = temporalType;
     }
 
     /**

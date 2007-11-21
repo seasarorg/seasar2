@@ -171,6 +171,16 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String criteria;
 
     /**
+     * クライテリア内のパラメータの配列です。
+     */
+    protected Object[] criteriaParams = new Object[] {};
+
+    /**
+     * クライテリア内のパラメータに対応するプロパティ名の配列です。
+     */
+    protected String[] criteriaPropertyNames = new String[] {};
+
+    /**
      * {@link AutoSelectImpl}を作成します。
      * 
      * @param jdbcManager
@@ -228,6 +238,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         prepareCriteria();
         prepareOrderBy();
         prepareForUpdate();
+        prepareParams();
         prepareSql();
     }
 
@@ -276,7 +287,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 continue;
             }
             selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
-            valueTypeList.add(getValueType(pm.getPropertyClass(), pm.isLob()));
+            valueTypeList.add(getValueType(pm.getPropertyClass(), pm.isLob(),
+                    pm.getTemporalType()));
             propertyMapperList.add(new PropertyMapperImpl(pm.getField(),
                     selectListIndex));
             if (pm.isId()) {
@@ -696,7 +708,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         if (StringUtil.isEmpty(criteria)) {
             return this;
         }
-        return where(criteria, where.getParams());
+        this.criteria = criteria;
+        this.criteriaParams = where.getParams();
+        this.criteriaPropertyNames = where.getPropertyNames();
+        return this;
     }
 
     /**
@@ -808,6 +823,24 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         whereClause.addAndSql("(");
         whereClause.addSql(convertCriteria(criteria));
         whereClause.addSql(convertCriteria(")"));
+    }
+
+    /**
+     * パラメータを準備します。
+     */
+    protected void prepareParams() {
+        for (int i = 0; i < criteriaParams.length; i++) {
+            Object value = criteriaParams[i];
+            String name = criteriaPropertyNames[i];
+            String[] names = splitBaseAndProperty(name);
+            EntityMeta entityMeta = getEntityMeta(names[0]);
+            if (entityMeta != null && entityMeta.hasPropertyMeta(names[1])) {
+                PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
+                ValueType valueType = getValueType(pm.getPropertyClass(), pm
+                        .isLob(), pm.getTemporalType());
+                addParam(value, value.getClass(), valueType);
+            }
+        }
     }
 
     /**

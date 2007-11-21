@@ -20,6 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.persistence.TemporalType;
+
 import org.seasar.extension.jdbc.FunctionCall;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ParamType;
@@ -49,6 +51,9 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
     /** 戻り値が<code>List</code>なら<code>true</code> */
     protected boolean resultList;
 
+    /** 戻り値の時制の種別 */
+    protected TemporalType temporalType;
+
     /**
      * インスタンスを構築します。
      * 
@@ -66,6 +71,12 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
     @SuppressWarnings("unchecked")
     public S lob() {
         resultLob = true;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S temporal(TemporalType temporalType) {
+        this.temporalType = temporalType;
         return (S) this;
     }
 
@@ -132,7 +143,7 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
      */
     protected void prepareReturnParameter() {
         final ValueType valueType = getValueType(resultList ? List.class
-                : resultClass, resultLob);
+                : resultClass, resultLob, temporalType);
         final Param p = addParam(null, resultClass, valueType);
         p.paramType = ParamType.OUT;
     }

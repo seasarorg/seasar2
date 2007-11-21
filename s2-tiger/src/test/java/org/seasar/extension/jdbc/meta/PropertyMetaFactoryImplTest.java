@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.meta;
 
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -29,6 +30,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -72,6 +75,20 @@ public class PropertyMetaFactoryImplTest extends TestCase {
 
     @SuppressWarnings("unused")
     private transient String hoge;
+
+    @SuppressWarnings("unused")
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
+    @SuppressWarnings("unused")
+    private Date illegalDate;
+
+    @SuppressWarnings("unused")
+    @Temporal(TemporalType.TIME)
+    private Date calendar;
+
+    @SuppressWarnings("unused")
+    private Date illegalCalendar;
 
     @SuppressWarnings("unused")
     @Version
@@ -280,6 +297,54 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertEquals(Integer.class, propertyMeta.getPropertyClass());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalDate() throws Exception {
+        Field field = getClass().getDeclaredField("date");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertEquals(TemporalType.DATE, propertyMeta.getTemporalType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalDate_noannotation() throws Exception {
+        Field field = getClass().getDeclaredField("illegalDate");
+        try {
+            factory.createPropertyMeta(field, entityMeta);
+            fail();
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalCalendar() throws Exception {
+        Field field = getClass().getDeclaredField("calendar");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertEquals(TemporalType.TIME, propertyMeta.getTemporalType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testTemporalCalendar_noannotation() throws Exception {
+        Field field = getClass().getDeclaredField("illegalCalendar");
+        try {
+            factory.createPropertyMeta(field, entityMeta);
+            fail();
+        } catch (Exception e) {
+        }
     }
 
     /**

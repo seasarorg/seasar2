@@ -169,7 +169,9 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            クライテリア
      * @param params
      *            パラメータの配列
-     * 
+     *            <p>
+     *            {@link Date}型や{@link Calendar}型のパラメータは{@link Parameter}に定義されたメソッドを使うことで時制を明示できます。
+     *            </p>
      * @return このインスタンス自身
      */
     AutoSelect<T> where(String criteria, Object... params);

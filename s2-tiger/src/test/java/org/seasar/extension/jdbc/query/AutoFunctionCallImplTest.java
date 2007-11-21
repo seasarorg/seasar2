@@ -17,9 +17,12 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -75,6 +78,21 @@ public class AutoFunctionCallImplTest extends TestCase {
         assertNull(query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);
         assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareReturnParameter_simpleType_temporalType()
+            throws Exception {
+        AutoFunctionCallImpl<Calendar> query = (AutoFunctionCallImpl<Calendar>) new AutoFunctionCallImpl<Calendar>(
+                manager, Calendar.class, "hoge").temporal(TemporalType.TIME);
+        query.prepare("getSingleResult");
+        assertEquals("{? = call hoge()}", query.executedSql);
+        assertEquals(1, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(Calendar.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CALENDAR_TIME, query.getParam(0).valueType);
     }
 
     /**
@@ -211,6 +229,29 @@ public class AutoFunctionCallImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testPrepareParameter_temporalType() throws Exception {
+        MyDto4 dto = new MyDto4();
+        Calendar calendar = Calendar.getInstance();
+        dto.time = calendar;
+        AutoFunctionCallImpl<Integer> query = new AutoFunctionCallImpl<Integer>(
+                manager, Integer.class, "hoge", dto);
+        query.prepare("getSingleResult");
+        assertEquals("{? = call hoge(?)}", query.executedSql);
+        assertEquals(2, query.getParamSize());
+        assertEquals(null, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
+        assertEquals(ParamType.OUT, query.getParam(0).paramType);
+        assertNull(query.getParam(0).field);
+
+        assertEquals(calendar, query.getParam(1).value);
+        assertEquals(ParamType.IN, query.getParam(1).paramType);
+        assertEquals(ValueTypes.CALENDAR_TIME, query.getParam(1).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCall() throws Exception {
         MyDto dto = new MyDto();
         dto.arg1 = "aaa";
@@ -271,6 +312,14 @@ public class AutoFunctionCallImplTest extends TestCase {
         /** */
         @Lob
         public String largeName;
+
+    }
+
+    private static final class MyDto4 {
+
+        /** */
+        @Temporal(TemporalType.TIME)
+        public Calendar time;
 
     }
 

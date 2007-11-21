@@ -19,7 +19,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.ParamType;
 import org.seasar.extension.jdbc.PropertyMeta;
@@ -32,6 +36,7 @@ import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
@@ -284,7 +289,8 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
             throw new NullPointerException("propertyMeta");
         }
         Class<?> propertyClass = propertyMeta.getPropertyClass();
-        ValueType valueType = getValueType(propertyClass, propertyMeta.isLob());
+        ValueType valueType = getValueType(propertyClass, propertyMeta.isLob(),
+                propertyMeta.getTemporalType());
         return addParam(value, propertyClass, valueType);
     }
 
@@ -298,11 +304,21 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      * @return パラメータ
      */
     protected Param addParam(Object value, Class<?> paramClass) {
-        Param param = new Param(value, paramClass);
         if (paramClass == null) {
             throw new NullPointerException("paramClass");
         }
-        param.valueType = jdbcManager.getDialect().getValueType(paramClass);
+        Param param = new Param();
+        if (value != null && value instanceof TemporalParameter) {
+            TemporalParameter parameter = (TemporalParameter) value;
+            param.value = parameter.getValue();
+            param.paramClass = parameter.getTemporalClass();
+            param.valueType = getValueType(param.paramClass, false, parameter
+                    .getTemporalType());
+        } else {
+            param.value = value;
+            param.paramClass = paramClass;
+            param.valueType = getValueType(param.paramClass, false, null);
+        }
         paramList.add(param);
         return param;
     }
@@ -333,11 +349,29 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      *            パラメータのクラス
      * @param lob
      *            <code>LOB</code>かどうか
+     * @param temporalType
+     *            時制の種別
      * @return 値タイプ
      */
-    protected ValueType getValueType(Class<?> paramClass, boolean lob) {
+    protected ValueType getValueType(Class<?> paramClass, boolean lob,
+            TemporalType temporalType) {
         if (lob && paramClass == String.class) {
             return ValueTypes.CLOB;
+        }
+        if (temporalType != null
+                && (Date.class == paramClass || Calendar.class
+                        .isAssignableFrom(paramClass))) {
+            boolean date = Date.class == paramClass;
+            switch (temporalType) {
+            case DATE:
+                return date ? ValueTypes.DATE_SQLDATE
+                        : ValueTypes.CALENDAR_SQLDATE;
+            case TIME:
+                return date ? ValueTypes.DATE_TIME : ValueTypes.CALENDAR_TIME;
+            case TIMESTAMP:
+                return date ? ValueTypes.DATE_TIMESTAMP
+                        : ValueTypes.CALENDAR_TIMESTAMP;
+            }
         }
         return jdbcManager.getDialect().getValueType(paramClass);
     }
