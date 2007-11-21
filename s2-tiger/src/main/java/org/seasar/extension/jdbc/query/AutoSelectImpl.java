@@ -45,6 +45,7 @@ import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
+import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
@@ -1044,6 +1045,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             forUpdate = "";
             return;
         }
+        if (limit > 0 || offset > 0) {
+            throw new UnsupportedOperationException(MessageFormatter
+                    .getMessage("ESSR0754", null));
+        }
         final DbmsDialect dialect = getJdbcManager().getDialect();
         for (JoinMeta joinMeta : joinMetaList) {
             if (joinMeta.getJoinType() == JoinType.LEFT_OUTER) {
@@ -1113,6 +1118,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             final String propertyName) {
         final String tableAlias = getTableAlias(baseName);
         final EntityMeta entityMeta = entityMetaMap.get(baseName);
+        if (entityMeta == null) {
+            throw new PropertyNotFoundRuntimeException(entityName,
+                    baseName == null ? propertyName : baseName + "."
+                            + propertyName);
+        }
         final PropertyMeta propertyMeta = entityMeta
                 .getPropertyMeta(propertyName);
         final String columnAlias = propertyMeta.getColumnMeta().getName();

@@ -1602,6 +1602,21 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testForUpdate_withPaging() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdate();
+            query.offset(10).limit(10);
+            query.prepare(null);
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
     public void testForUpdateWithProperty_columnAlias() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
@@ -1711,6 +1726,37 @@ public class AutoSelectImplTest extends TestCase {
             query.prepare(null);
             fail();
         } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_invalidProperty() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.forUpdate("hogehoge");
+            query.prepare(null);
+            fail();
+        } catch (PropertyNotFoundRuntimeException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdateWithProperty_invalidRelationshipProperty() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.join("bbb");
+            query.forUpdate("ccc.hogehoge");
+            query.prepare(null);
+            fail();
+        } catch (PropertyNotFoundRuntimeException expected) {
             expected.printStackTrace();
         }
     }
