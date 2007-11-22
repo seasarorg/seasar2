@@ -26,10 +26,10 @@ import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
 import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -766,33 +766,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdate_pagingLimmit() throws Exception {
+    public void testForUpdate_paging_UnsupportedOperationException()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, false)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdate()
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdate_pagingOffsetLimmit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NORMAL, false)) {
-            return;
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdate()
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdate()
-            .getResultList();
     }
 
     /**
@@ -884,33 +873,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWithTarget_pagingLimit() throws Exception {
+    public void testForUpdateWithTarget_paging_UnsupportedOperationException()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdate("employeeName")
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateWithTarget_pagingOffsetLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
-            return;
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdate("employeeName")
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdate("employeeName")
-            .getResultList();
     }
 
     /**
@@ -976,33 +954,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWithTargets_pagingLimit() throws Exception {
+    public void testForUpdateWithTargets_paging_UnsupportedOperationException()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdate("employeeName", "salary")
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateWithTargets_pagingOffsetLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
-            return;
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdate("employeeName", "salary")
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdate("employeeName", "salary")
-            .getResultList();
     }
 
     /**
@@ -1027,46 +994,62 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    @Ignore
     public void testForUpdateWithTargets_illegalPropertyName() throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).forUpdate("illegal").getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .forUpdate("illegal")
+                .getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
      * 
      * @throws Exception
      */
-    @Ignore
     public void testForUpdateWithTargets_illegalPropertyName2()
             throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdate("illegal.location")
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .join("department", JoinType.INNER)
+                .forUpdate("illegal.location")
+                .getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     /**
      * 
      * @throws Exception
      */
-    @Ignore
     public void testForUpdateWithTargets_illegalPropertyName3()
             throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdate("department")
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .join("department", JoinType.INNER)
+                .forUpdate("department")
+                .getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -1115,33 +1098,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateNowait_pagingLimit() throws Exception {
+    public void testForUpdateNowait_paging_UnsupportedOperationException()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NOWAIT, false)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdateNowait()
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateNowait_pagingOffsetLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NOWAIT, false)) {
-            return;
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdateNowait()
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdateNowait()
-            .getResultList();
     }
 
     /**
@@ -1234,35 +1206,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateNowaitWithTarget_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NOWAIT, true)) {
-            return;
-        }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .join("department")
-            .forUpdateNowait("department.location")
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateNowaitWithTarget_pagingOffsetLimit()
+    public void testForUpdateNowaitWithTarget_paging_UnsupportedOperationException()
             throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NOWAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdateNowait("employeeName")
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdateNowait("employeeName")
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     /**
@@ -1327,34 +1286,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateNowaitWithTargets_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NOWAIT, true)) {
-            return;
-        }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdateNowait("employeeName", "salary")
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
     public void testForUpdateNowaitWithTargets_pagingOffsetLimit()
             throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NOWAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdateNowait("employeeName", "salary")
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdateNowait("employeeName", "salary")
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     /**
@@ -1421,33 +1368,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWait_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
-            return;
-        }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdateWait(1)
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateWait_pagingOffsetLimit() throws Exception {
+    public void testForUpdateWait_paging_UnsupportedOperationException()
+            throws Exception {
         if (!implementor.getDialect().supportsForUpdate(WAIT, false)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdateWait(1)
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdateWait(1)
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     /**
@@ -1540,34 +1476,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWaitWithTarget_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
-            return;
-        }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdateWait(1, "employeeName")
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateWaitWithTarget_pagingOffsetLimit()
+    public void testForUpdateWaitWithTarget_paging_UnsupportedOperationException()
             throws Exception {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdateWait(1, "employeeName")
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdateWait(1, "employeeName")
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     /**
@@ -1633,34 +1557,22 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
-    public void testForUpdateWaitWithTargets_pagingLimit() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
-            return;
-        }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .limit(3)
-            .forUpdateWait(1, "employeeName", "salary")
-            .getResultList();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testForUpdateWaitWithTargets_pagingOffsetLimit()
+    public void testForUpdateWaitWithTargets_paging_UnsupportedOperationException()
             throws Exception {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .orderBy("employeeName")
-            .offset(5)
-            .limit(3)
-            .forUpdateWait(1, "employeeName", "salary")
-            .getResultList();
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .orderBy("employeeName")
+                .offset(5)
+                .limit(3)
+                .forUpdateWait(1, "employeeName", "salary")
+                .getResultList();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
     }
 
     /**
@@ -1857,4 +1769,5 @@ public class AutoSelectTest {
                 .getSingleResult();
         assertNotNull(tense);
     }
+
 }

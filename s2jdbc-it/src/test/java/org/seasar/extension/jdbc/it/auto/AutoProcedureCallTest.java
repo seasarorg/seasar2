@@ -15,7 +15,13 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -28,6 +34,8 @@ import org.seasar.framework.unit.Seasar2;
 import org.seasar.framework.unit.annotation.Prerequisite;
 
 import static junit.framework.Assert.*;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author taedium
@@ -59,6 +67,15 @@ public class AutoProcedureCallTest {
      * 
      * @throws Exception
      */
+    public void testParameter_simpleType_TimeTx() throws Exception {
+        Date date = new Date();
+        jdbcManager.call("PROC_SIMPLETYPE_TIME_PARAM", time(date)).execute();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testParameter_dtoTx() throws Exception {
         MyDto dto = new MyDto();
         dto.param1 = 3;
@@ -67,6 +84,21 @@ public class AutoProcedureCallTest {
         assertEquals(new Integer(3), dto.param1);
         assertEquals(new Integer(8), dto.param2);
         assertEquals(new Integer(3), dto.param3);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_dto_TimeTx() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        MyDto2 dto = new MyDto2();
+        dto.param1 = date;
+        dto.param2 = date;
+        jdbcManager.call("PROC_DTO_TIME_PARAM", dto).execute();
+        assertEquals(date.getTime(), dto.param1.getTime());
+        assertEquals(date.getTime(), dto.param2.getTime());
+        assertEquals(date.getTime(), dto.param3.getTimeInMillis());
     }
 
     /**
@@ -205,6 +237,28 @@ public class AutoProcedureCallTest {
         /** */
         @Out
         public Integer param3;
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MyDto2 {
+
+        /** */
+        @Temporal(TemporalType.TIME)
+        public Date param1;
+
+        /** */
+        @InOut
+        @Temporal(TemporalType.TIME)
+        public Date param2;
+
+        /** */
+        @Out
+        @Temporal(TemporalType.TIME)
+        public Calendar param3;
     }
 
     /**
