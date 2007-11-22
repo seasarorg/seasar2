@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -775,42 +774,6 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 whereClause, valueList);
         for (int i = 0; i < size; i++) {
             valueClassList.add(propertyMeta.getPropertyClass());
-        }
-    }
-
-    /**
-     * 条件を追加します。
-     * 
-     * @param condition
-     *            条件
-     * @param value
-     *            パラメータの値
-     * @param paramClass
-     *            パラメータのクラス
-     */
-    protected void addCondition(String condition, Object value,
-            Class<?> paramClass) {
-        whereClause.addAndSql(condition);
-        addParam(value, paramClass);
-    }
-
-    /**
-     * in、not in用の条件を追加します。
-     * 
-     * @param condition
-     *            条件
-     * @param values
-     *            パラメータの値の配列
-     * @param paramClass
-     *            パラメータのクラス
-     * @param size
-     *            配列のサイズ
-     */
-    protected void addInCondition(String condition, Object values,
-            Class<?> paramClass, int size) {
-        whereClause.addAndSql(condition);
-        for (int i = 0; i < size; i++) {
-            addParam(Array.get(values, i), paramClass);
         }
     }
 

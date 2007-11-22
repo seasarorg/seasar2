@@ -885,39 +885,6 @@ public class AutoSelectImplTest extends TestCase {
     }
 
     /**
-     * @throws Exception
-     * 
-     */
-    public void testAddCondition() throws Exception {
-        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.prepare("getResultList");
-        query.addCondition("id = ?", 1, Integer.class);
-        assertEquals(" where id = ?", query.whereClause.toSql());
-        assertEquals(1, query.paramList.size());
-        assertEquals(1, query.paramList.get(0).value);
-        assertEquals(Integer.class, query.paramList.get(0).paramClass);
-    }
-
-    /**
-     * 
-     */
-    public void testAddInCondition() {
-        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.prepare("getResultList");
-        int[] vars = new int[] { 1, 2 };
-        query.addInCondition("T1_.AAA_ID in (?, ?)", vars, int.class, 2);
-        assertEquals(" where T1_.AAA_ID in (?, ?)", query.whereClause.toSql());
-        Object[] variables = query.getParamValues();
-        assertEquals(2, variables.length);
-        assertEquals(1, variables[0]);
-        assertEquals(2, variables[1]);
-        Class<?>[] variableClasses = query.getParamClasses();
-        assertEquals(2, variableClasses.length);
-        assertEquals(int.class, variableClasses[0]);
-        assertEquals(int.class, variableClasses[1]);
-    }
-
-    /**
      * 
      */
     public void testPrepareCondition_EQ() {
