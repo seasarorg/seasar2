@@ -18,8 +18,8 @@ package examples.entity;
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.util.RowMap;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.beans.util.BeanMap;
 
 /**
  * @author higa
@@ -41,9 +41,9 @@ public class SqlMapTest extends S2TestCase {
      * @throws Exception
      */
     public void testSqlMap() throws Exception {
-        List<RowMap> results =
-            jdbcManager.selectBySql(RowMap.class, LABEL_VALUE).getResultList();
-        for (RowMap m : results) {
+        List<BeanMap> results =
+            jdbcManager.selectBySql(BeanMap.class, LABEL_VALUE).getResultList();
+        for (BeanMap m : results) {
             System.out.println(m);
         }
     }

@@ -1,4 +1,7 @@
 <project name="s2jdbc-tutorial" default="dist" basedir=".">
+	<!--
+	<property name="ver" value="2.4.18-rc3-SNAPSHOT"/>
+	-->
 	<target name="copy">
 		<copy todir="lib" file="../seasar2/s2-framework/target/s2-framework-${ver}.jar"/>
 		<copy todir="lib" file="../seasar2/s2-extension/target/s2-extension-${ver}.jar"/>
