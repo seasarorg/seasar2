@@ -55,6 +55,9 @@ Beansクラスを使うには、S2-Tigerが必要です。
 <li><a href="#createAndCopy">オブジェクトの生成とプロパティのコピー</a></li>
 <li><a href="#includes">特定のプロパティだけを対象にする</a></li>
 <li><a href="#excludes">特定のプロパティだけを対象外にする</a></li>
+<li><a href="#prefix">特定のプレフィックスのついたプロパティだけを対象にする</a></li>
+<li><a href="#beanDelimiter_mapDelimiter">beanDelimiterとmapDelimiter</a></li>
+<li><a href="#BeanMap">BeanMap</a></li>
 </ul>
 </p>
 
@@ -86,7 +89,7 @@ DestBean dest = Beans.createAndCopy(DestBean.class, src).execute();
 <h2><a name="includes">特定のプロパティだけを対象にする</a></h2>
 <p>
 特定のプロパティだけを対象にするには、
-<code>includes(String... propertyNames)を使います。
+<code>includes(String... propertyNames)</code>を使います。
 </p>
 <pre>
 SrcBean src = new SrcBean();
@@ -98,7 +101,7 @@ Beans.copy(src, dest).includes("foo", "bar").execute();
 <h2><a name="excludes">特定のプロパティだけを対象外にする</a></h2>
 <p>
 特定のプロパティだけを対象外にするには、
-<code>excludes(String... propertyNames)を使います。
+<code>excludes(String... propertyNames)</code>を使います。
 includes()と同時に指定することはできません。
 </p>
 <pre>
@@ -107,6 +110,35 @@ DestBean dest = new DestBean();
 ...
 Beans.copy(src, dest).excludes("foo", "bar").execute();
 </pre>
+
+<h2><a name="prefix">特定のプレフィックスのついたプロパティだけを対象にする</a></h2>
+<p>
+特定のプレフィックスのついたプロパティだけを対象にするには、
+<code>prefix(String prefix)</code>を使います。
+コピー先のプロパティ名からプレフィックスは取り除かれます。
+</p>
+<pre>
+public where_aaa;
+...
+<a href="#BeanMap">BeanMap</a> map = Beans.createAndCopy(<a href="#BeanMap">BeanMap.class</a>, this).prefix("where_").execute();
+System.out.println(map.get("aaa"));
+</pre>
+
+<h2><a name="beanDelimiter_mapDelimiter">beanDelimiterとmapDelimiter</a></h2>
+<p>
+department$nameのような'$'をデリミタにしたプロパティ名を持つJavaBeansをMapにコピーすると、
+department.nameのような'.'をデリミタにしたプロパティ名に変換されます。
+これは、<a href="s2jdbc_manager_auto.html#検索条件">S2JDBCのwhere()</a>
+で使うために用意されている機能です。
+'$'と'.'は、それぞれ<code>beanDelimiter(char beanDelimiter)</code>と
+<code>mapDelimiter(char mapDelimiter)</code>を使って変更することができます。
+</p>
+
+<h2><a name="BeanMap">BeanMap</a></h2>
+<p>
+BeanMapは、HashMap&lt;String, Object&gt;なクラスで、
+存在しないプロパティにアクセスすると例外を投げるようになっています。
+</p>
 
 <!-- document end -->
 <!-- don't edit start --></td>

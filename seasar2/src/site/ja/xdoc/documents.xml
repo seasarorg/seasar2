@@ -15,6 +15,7 @@
 					<li><p><a href="jdbc.html">JDBCの設定</a></p></li>
 					<li><p><a href="garble.html">文字化け対策</a></p></li>
 					<li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
+					<li><p><a href="beans.html">JavaBeans用ユーティリティ</a></p></li>
 					<li><p><a href="S2Unit.html">S2Unit</a></p></li>
 					<li><p><a href="ognl.html">OGNLガイド</a></p></li>
 					<li><p><a href="S2Logger.html">Logger</a></p></li>
