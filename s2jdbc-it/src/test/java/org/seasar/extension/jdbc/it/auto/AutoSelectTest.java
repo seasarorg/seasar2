@@ -29,6 +29,7 @@ import javax.persistence.NonUniqueResultException;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
 import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
@@ -1025,7 +1026,7 @@ public class AutoSelectTest {
                 .forUpdate("illegal.location")
                 .getResultList();
             fail();
-        } catch (PropertyNotFoundRuntimeException e) {
+        } catch (BaseJoinNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
         }
 
