@@ -43,8 +43,10 @@ import org.seasar.extension.jdbc.Where;
 import org.seasar.extension.jdbc.WhereClause;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.IllegalIdPropertySizeRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.VersionPropertyNotExistsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
@@ -57,6 +59,7 @@ import org.seasar.extension.jdbc.mapper.OneToManyEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.OneToOneEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.PropertyMapperImpl;
 import org.seasar.extension.jdbc.util.QueryTokenizer;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.message.MessageFormatter;
 import org.seasar.framework.util.StringUtil;
@@ -181,6 +184,26 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String[] criteriaPropertyNames = new String[] {};
 
     /**
+     * IDプロパティのメタデータのリストです。
+     */
+    protected List<PropertyMeta> idPropertyMetaList;
+
+    /**
+     * IDプロパティの値の配列です。
+     */
+    protected Object[] idProperties;
+
+    /**
+     * バージョンプロパティのメタデータです。
+     */
+    protected PropertyMeta versionPropertyMeta;
+
+    /**
+     * バージョンプロパティの値です。
+     */
+    protected Object versionProperty;
+
+    /**
      * {@link AutoSelectImpl}を作成します。
      * 
      * @param jdbcManager
@@ -234,6 +257,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         prepareCallerClassAndMethodName(methodName);
         prepareTarget();
         prepareJoins();
+        prepareIdVersion();
         prepareConditions();
         prepareCriteria();
         prepareOrderBy();
@@ -680,11 +704,6 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 .toString();
     }
 
-    public AutoSelect<T> where(Map<String, ? extends Object> conditions) {
-        this.conditions = conditions;
-        return this;
-    }
-
     public AutoSelect<T> where(String criteria, Object... params) {
         if (criteria == null) {
             throw new NullPointerException("criteria");
@@ -710,6 +729,44 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         this.criteria = criteria;
         this.criteriaParams = where.getParams();
         this.criteriaPropertyNames = where.getPropertyNames();
+        return this;
+    }
+
+    public AutoSelect<T> where(Map<String, ? extends Object> conditions) {
+        if (conditions == null) {
+            throw new NullPointerException("conditions");
+        }
+        this.conditions = conditions;
+        return this;
+    }
+
+    public AutoSelect<T> id(final Object... idProperties) {
+        if (idProperties == null) {
+            throw new NullPointerException("idProperties");
+        }
+        final EntityMeta entityMeta = jdbcManager.getEntityMetaFactory()
+                .getEntityMeta(baseClass);
+        idPropertyMetaList = entityMeta.getIdPropertyMetaList();
+        if (idPropertyMetaList.size() != idProperties.length) {
+            throw new IllegalIdPropertySizeRuntimeException(entityMeta
+                    .getName(), idPropertyMetaList.size(), idProperties.length);
+        }
+        this.idProperties = idProperties;
+        return this;
+    }
+
+    public AutoSelect<T> version(final Object versionProperty) {
+        if (versionProperty == null) {
+            throw new NullPointerException("versionProperty");
+        }
+        final EntityMeta entityMeta = jdbcManager.getEntityMetaFactory()
+                .getEntityMeta(baseClass);
+        if (!entityMeta.hasVersionPropertyMeta()) {
+            throw new VersionPropertyNotExistsRuntimeException(entityMeta
+                    .getName());
+        }
+        versionPropertyMeta = entityMeta.getVersionPropertyMeta();
+        this.versionProperty = versionProperty;
         return this;
     }
 
@@ -780,34 +837,78 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         }
         whereClause.addAndSql("(");
         whereClause.addSql(convertCriteria(criteria));
-        whereClause.addSql(convertCriteria(")"));
+        whereClause.addSql(")");
+    }
+
+    /**
+     * IDプロパティ及びバージョンを準備します。
+     */
+    protected void prepareIdVersion() {
+        if (idProperties == null) {
+            if (versionProperty != null) {
+                logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                        callerMethodName });
+                throw new UnsupportedOperationException(MessageFormatter
+                        .getMessage("ESSR0758", null));
+            }
+            return;
+        }
+        final SimpleWhere where = new SimpleWhere();
+        for (int i = 0; i < idProperties.length; ++i) {
+            where.eq(idPropertyMetaList.get(i).getName(), idProperties[i]);
+        }
+        if (versionProperty != null) {
+            where.eq(versionPropertyMeta.getName(), versionProperty);
+        }
+        whereClause.addSql(convertCriteria(where.getCriteria()));
     }
 
     /**
      * パラメータを準備します。
      */
     protected void prepareParams() {
-        for (int i = 0; i < criteriaParams.length; i++) {
-            Object value = criteriaParams[i];
-            String name = criteriaPropertyNames[i];
-            String[] names = splitBaseAndProperty(name);
-            EntityMeta entityMeta = getEntityMeta(names[0]);
-            if (entityMeta == null) {
-                logger.log("ESSR0709", new Object[] { callerClass.getName(),
-                        callerMethodName });
-                logger.log("ESSR0716", new Object[] { name });
-                throw new BaseJoinNotFoundRuntimeException(entityName, name,
-                        names[0]);
+        if (idProperties != null) {
+            for (int i = 0; i < idProperties.length; ++i) {
+                prepareParams(idPropertyMetaList.get(i).getName(),
+                        idProperties[i]);
             }
-            if (!entityMeta.hasPropertyMeta(names[1])) {
-                logger.log("ESSR0709", new Object[] { callerClass.getName(),
-                        callerMethodName });
-                throw new PropertyNotFoundRuntimeException(entityName, name);
+            if (versionProperty != null) {
+                prepareParams(versionPropertyMeta.getName(), versionProperty);
             }
-            PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
-            ValueType valueType = jdbcManager.getDialect().getValueType(pm);
-            addParam(value, value.getClass(), valueType);
         }
+        for (int i = 0; i < criteriaParams.length; i++) {
+            final String name = criteriaPropertyNames[i];
+            final Object value = criteriaParams[i];
+            prepareParams(name, value);
+        }
+    }
+
+    /**
+     * パラメータを準備します。
+     * 
+     * @param name
+     *            パラメータ名
+     * @param value
+     *            パラメータ値
+     */
+    protected void prepareParams(final String name, final Object value) {
+        final String[] names = splitBaseAndProperty(name);
+        final EntityMeta entityMeta = getEntityMeta(names[0]);
+        if (entityMeta == null) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            logger.log("ESSR0716", new Object[] { name });
+            throw new BaseJoinNotFoundRuntimeException(entityName, name,
+                    names[0]);
+        }
+        if (!entityMeta.hasPropertyMeta(names[1])) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            throw new PropertyNotFoundRuntimeException(entityName, name);
+        }
+        final PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
+        final ValueType valueType = jdbcManager.getDialect().getValueType(pm);
+        addParam(value, value.getClass(), valueType);
     }
 
     /**

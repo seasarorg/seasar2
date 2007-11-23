@@ -101,6 +101,24 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     AutoSelect<T> join(String name, JoinType joinType, boolean fetch);
 
     /**
+     * where句の条件にIdプロパティ(主キー)を指定します。
+     * 
+     * @param idProperties
+     *            主キーの値の並び
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> id(Object... idProperties);
+
+    /**
+     * where句の条件にバージョンプロパティを指定します。
+     * 
+     * @param versionProperty
+     *            バージョン
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> version(Object versionProperty);
+
+    /**
      * where句の条件を指定します。
      * 
      * @param conditions

@@ -327,9 +327,32 @@ List<Department> results = jdbcManager.from(Department.class)
 			</subsection>
 
 			<subsection name="検索条件">
+				<h4>IDとバージョンによる指定</h4>
+				<p>
+					IDプロパティ (主キー) を指定して検索対象を指定する場合は、
+					<code>id(Object...)</code>
+					を使います。 引数はエンティティに定義されたIDプロパティと同じ数・同じ並びで指定します。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Department.class)
+    .id(100)
+    .getSingleResult();
+]]></source>
+				<p>
+					IDと同時にバージョンを指定することもできます。 バージョンプロパティを指定する場合は、
+					<code>version(Object)</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Department.class)
+    .id(100).version(10)
+    .getSingleResult();
+]]></source>
+				<p>IDを指定しないでバージョンだけを指定することはできません。</p>
+
 				<h4>SQL文字列による指定</h4>
 				<p>
-					検索条件を指定する場合は、where()を使います。
+					より複雑な検索条件を指定する場合は、where()を使います。
 					where()に書くことのできる条件は、SQLと同じです。
 					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
 					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
@@ -921,9 +944,7 @@ jdbcManager.from(Employee.class)
     .forUpdate("id")
     .getResultList();
 ]]></source>
-				<p>
-					排他制御とページングを組み合わせることはできません。
-				</p>
+				<p>排他制御とページングを組み合わせることはできません。</p>
 			</subsection>
 
 			<subsection name="ページング">
@@ -946,9 +967,7 @@ jdbcManager.from(Employee.class)
     .offset(10)
     .getResultList();
 ]]></source>
-				<p>
-					排他制御とページングを組み合わせることはできません。
-				</p>
+				<p>排他制御とページングを組み合わせることはできません。</p>
 			</subsection>
 
 			<subsection name="最大行数">

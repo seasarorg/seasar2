@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +48,14 @@ import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Bbb;
 import org.seasar.extension.jdbc.entity.Ccc;
 import org.seasar.extension.jdbc.entity.Ddd;
+import org.seasar.extension.jdbc.entity.Eee;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.IllegalIdPropertySizeRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.NonEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.VersionPropertyNotExistsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
@@ -66,6 +70,7 @@ import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -841,6 +846,124 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         ResultSetHandler handler = query.createSingleResultResultSetHandler();
         assertEquals(BeanAutoResultSetHandler.class, handler.getClass());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareId() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.id(1);
+        query.prepare("getSingleResult");
+        assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
+        Object[] variables = query.getParamValues();
+        assertEquals(1, variables.length);
+        assertEquals(new Integer(1), variables[0]);
+        Class<?>[] variableClasses = query.getParamClasses();
+        assertEquals(1, variableClasses.length);
+        assertEquals(Integer.class, variableClasses[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareId_invalidLength() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.id(1, 2);
+            fail();
+        } catch (IllegalIdPropertySizeRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testIdSql() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.id(1);
+        query.prepare("getResultList");
+        assertEquals("select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO "
+                + "from AAA T1_ " + "where T1_.ID = ?", query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareVersion() {
+        AutoSelectImpl<Eee> query = new AutoSelectImpl<Eee>(manager, Eee.class);
+        query.id(1);
+        query.version(2);
+        query.prepare("getSingleResult");
+        assertEquals(" where T1_.ID = ? and T1_.VERSION = ?", query.whereClause
+                .toSql());
+        Object[] variables = query.getParamValues();
+        assertEquals(2, variables.length);
+        assertEquals(new Integer(1), variables[0]);
+        assertEquals(new Integer(2), variables[1]);
+        Class<?>[] variableClasses = query.getParamClasses();
+        assertEquals(2, variableClasses.length);
+        assertEquals(Integer.class, variableClasses[0]);
+        assertEquals(Integer.class, variableClasses[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareVersion_noVersionProperty() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.id(1);
+        try {
+            query.version(2);
+            fail();
+        } catch (VersionPropertyNotExistsRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareVersion_withoutIdProperty() {
+        AutoSelectImpl<Eee> query = new AutoSelectImpl<Eee>(manager, Eee.class);
+        query.version(2);
+        try {
+            query.prepare("getSingleResult");
+            fail();
+        } catch (UnsupportedOperationException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testIdVersionSql() {
+        AutoSelectImpl<Eee> query = new AutoSelectImpl<Eee>(manager, Eee.class);
+        query.id(1);
+        query.version(2);
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.LONG_TEXT, T1_.FFF_ID, T1_.VERSION, T1_.LAST_UPDATED "
+                        + "from EEE T1_ "
+                        + "where T1_.ID = ? and T1_.VERSION = ?",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testIdVersionSql_withCondition() {
+        AutoSelectImpl<Eee> query = new AutoSelectImpl<Eee>(manager, Eee.class);
+        query.id(1).version(2).where("lastUpdated = ?",
+                Parameter.date(new Date()));
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.LONG_TEXT, T1_.FFF_ID, T1_.VERSION, T1_.LAST_UPDATED "
+                        + "from EEE T1_ "
+                        + "where T1_.ID = ? and T1_.VERSION = ? and (T1_.LAST_UPDATED = ?)",
+                query.executedSql);
     }
 
     /**
