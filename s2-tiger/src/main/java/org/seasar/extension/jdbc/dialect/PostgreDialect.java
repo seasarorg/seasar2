@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -64,10 +65,35 @@ public class PostgreDialect extends StandardDialect {
 
     @Override
     public ValueType getValueType(Class<?> clazz) {
+        ValueType valueType = getValueTypeInternal(clazz);
+        if (valueType != null) {
+            return valueType;
+        }
+        return super.getValueType(clazz);
+    }
+
+    @Override
+    public ValueType getValueType(PropertyMeta propertyMeta) {
+        ValueType valueType = getValueTypeInternal(propertyMeta
+                .getPropertyClass());
+        if (valueType != null) {
+            return valueType;
+        }
+        return super.getValueType(propertyMeta);
+    }
+
+    /**
+     * 値タイプを返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return 値タイプ
+     */
+    protected ValueType getValueTypeInternal(Class<?> clazz) {
         if (List.class.isAssignableFrom(clazz)) {
             return ValueTypes.POSTGRE_RESULT_SET;
         }
-        return ValueTypes.getValueType(clazz);
+        return null;
     }
 
     @Override

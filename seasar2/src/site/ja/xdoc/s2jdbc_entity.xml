@@ -31,6 +31,11 @@
 					<ul>
 						<li>
 							<p>
+								<a href="#永続プロパティの型">永続プロパティの型</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#カラム定義">カラム定義</a>
 							</p>
 						</li>
@@ -46,12 +51,17 @@
 						</li>
 						<li>
 							<p>
-								<a href="#永続化対象外定義">永続化対象外定義</a>
+								<a href="#時制定義">時制定義</a>
 							</p>
 						</li>
 						<li>
 							<p>
 								<a href="#ラージオブジェクト定義">ラージオブジェクト定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#永続化対象外定義">永続化対象外定義</a>
 							</p>
 						</li>
 					</ul>
@@ -165,6 +175,154 @@ public class Employee {
 		</section>
 
 		<section name="プロパティ定義">
+			<subsection name="永続プロパティの型">
+				<p>
+					<a href="#関連定義">関連</a>
+					および
+					<a href="#永続化対象外定義">永続化対象外</a>
+					を除いたプロパティとして利用可能な型は次のとおりです。
+				</p>
+				<dl>
+					<dt>プリミティブ型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>boolean</p>
+							</li>
+							<li>
+								<p>char</p>
+							</li>
+							<li>
+								<p>byte</p>
+							</li>
+							<li>
+								<p>short</p>
+							</li>
+							<li>
+								<p>int</p>
+							</li>
+							<li>
+								<p>long</p>
+							</li>
+							<li>
+								<p>float</p>
+							</li>
+							<li>
+								<p>double</p>
+							</li>
+						</ul>
+					</dd>
+					<dt>ラッパー型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>Boolean</p>
+							</li>
+							<li>
+								<p>Character</p>
+							</li>
+							<li>
+								<p>Byte</p>
+							</li>
+							<li>
+								<p>Short</p>
+							</li>
+							<li>
+								<p>Integer</p>
+							</li>
+							<li>
+								<p>Long</p>
+							</li>
+							<li>
+								<p>Float</p>
+							</li>
+							<li>
+								<p>Double</p>
+							</li>
+						</ul>
+					</dd>
+					<dt>文字列型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>java.lang.String</p>
+							</li>
+						</ul>
+						<p>
+							※
+							<a href="#ラージオブジェクト定義">ラージオブジェクト</a>
+							にすることができます。
+						</p>
+					</dd>
+					<dt>数値型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>java.math.BigDecimal</p>
+							</li>
+							<li>
+								<p>java.math.BigInteger</p>
+							</li>
+						</ul>
+					</dd>
+					<dt>日付・時刻型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>java.util.Date</p>
+							</li>
+							<li>
+								<p>java.util.Calendar</p>
+							</li>
+							<li>
+								<p>java.sql.Date</p>
+							</li>
+							<li>
+								<p>java.sql.Time</p>
+							</li>
+							<li>
+								<p>java.sql.Timestamp</p>
+							</li>
+						</ul>
+						<p>
+							※
+							<code>java.util.Date</code>
+							および
+							<code>java.util.Calendar</code>
+							型のプロパティには
+							<a href="#時制定義">時制</a>
+							の指定が必須です．
+						</p>
+					</dd>
+					<dt>バイト列型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>byte[]</p>
+							</li>
+						</ul>
+						<p>
+							※
+							<a href="#ラージオブジェクト定義">ラージオブジェクト</a>
+							にすることができます。
+						</p>
+					</dd>
+					<dt>シリアライズ可能型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>java.io.Serializable</p>
+							</li>
+						</ul>
+						<p>
+							※
+							<a href="#ラージオブジェクト定義">ラージオブジェクト</a>
+							にすることができます。
+						</p>
+					</dd>
+				</dl>
+			</subsection>
+
 			<subsection name="カラム定義">
 				<p>
 					カラム情報を指定するには、
@@ -390,6 +548,82 @@ public Long version = 0L;
 				</p>
 			</subsection>
 
+			<subsection name="時制定義">
+				<p>
+					<code>java.util.Date</code>
+					および
+					<code>java.util.Calendar</code>
+					型のプロパティには時制を指定します。 時制を指定するには、
+					<code>@Temporal</code>
+					を使います。
+					<code>@Temporal</code>
+					で指定可能な値は次のとおりです。
+				</p>
+				<dl>
+					<dt>
+						<code>TemporalType.DATE</code>
+					</dt>
+					<dd>
+						SQL標準の
+						<code>DATE</code>
+						型 (日付のみ) として扱うことを指定します。
+					</dd>
+					<dt>
+						<code>TemporalType.TIME</code>
+					</dt>
+					<dd>
+						SQL標準の
+						<code>TIME</code>
+						型 (時刻のみ) として扱うことを指定します。
+					</dd>
+					<dt>
+						<code>TemporalType.TIMESTAMP</code>
+					</dt>
+					<dd>
+						SQL標準の
+						<code>TIMESTAMP</code>
+						型 (日付と時刻) として扱うことを指定します。
+					</dd>
+				</dl>
+				<source><![CDATA[
+@Temporal(TemporalType.DATE)
+public Date date;
+]]></source>
+			</subsection>
+
+			<subsection name="ラージオブジェクト定義">
+				<p>
+					<code>byte[]</code>
+					・
+					<code>Serializable</code>
+					・
+					<code>String</code>
+					型のプロパティはラージオブジェクトにすることができます。 ラージオブジェクトであることを指定するには、
+					<code>@Lob</code>
+					を使います。
+				</p>
+				<p>
+					<code>@Lob</code>
+					が指定されたプロパティが
+					<code>byte[]</code>
+					・
+					<code>Serializable</code>
+					型ならBLOB、
+					<code>String</code>
+					型ならCLOBとなります。
+				</p>
+				<source><![CDATA[
+@Lob
+public String largeName;
+
+@Lob
+public byte[] largeArray;
+
+@Lob
+public LargeDto largeDto;
+]]></source>
+			</subsection>
+
 			<subsection name="永続化対象外定義">
 				<p>
 					永続化対象外であることを指定するには、
@@ -406,23 +640,6 @@ public MyDto myDto;
 
 //こちらはお勧めしない
 public transient MyDto myDto2;
-]]></source>
-			</subsection>
-
-			<subsection name="ラージオブジェクト定義">
-				<p>
-					ラージオブジェクトであることを指定するには、
-					<code>@Lob</code>
-					を使います。
-					プロパティの型がbyte[]の場合、自動的にBLOBと判定できるので指定する必要はありませんが、
-					プロパティの型がStringの場合、カラムの型が通常の文字列なのか、
-					CLOBなのか判断できないので、CLOBの場合は、
-					<code>@Lob</code>
-					を指定します。
-				</p>
-				<source><![CDATA[
-@Lob
-public String largeName;
 ]]></source>
 			</subsection>
 		</section>

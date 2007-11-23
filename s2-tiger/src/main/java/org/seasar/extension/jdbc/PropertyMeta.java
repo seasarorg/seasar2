@@ -55,6 +55,11 @@ public class PropertyMeta {
     protected ColumnMeta columnMeta;
 
     /**
+     * 値タイプです。
+     */
+    protected ValueType valueType;
+
+    /**
      * 識別子かどうかです。
      */
     protected boolean id;
@@ -188,6 +193,25 @@ public class PropertyMeta {
      */
     public void setColumnMeta(ColumnMeta columnMeta) {
         this.columnMeta = columnMeta;
+    }
+
+    /**
+     * 値タイプを返します。
+     * 
+     * @return 値タイプ
+     */
+    public ValueType getValueType() {
+        return valueType;
+    }
+
+    /**
+     * 値タイプを設定します。
+     * 
+     * @param valueType
+     *            値タイプ
+     */
+    public void setValueType(ValueType valueType) {
+        this.valueType = valueType;
     }
 
     /**

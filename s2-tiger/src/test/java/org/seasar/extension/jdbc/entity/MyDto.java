@@ -13,24 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.exception;
+package org.seasar.extension.jdbc.entity;
 
-import junit.framework.TestCase;
+import java.io.Serializable;
 
 /**
- * @author higa
- * 
+ * @author koichik
  */
-public class NonRelationshipRuntimeExceptionTest extends TestCase {
+public class MyDto implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * 
      */
-    public void testAll() {
-        UnsupportedRelationshipRuntimeException ex = new UnsupportedRelationshipRuntimeException(
-                "hoge", "aaa");
-        System.out.println(ex.getMessage());
-        assertEquals("hoge", ex.getEntityName());
-        assertEquals("aaa", ex.getPropertyName());
-    }
+    public String name;
+
 }

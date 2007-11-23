@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.parameter;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -94,4 +95,38 @@ public class Parameter {
     public static TemporalParameter timestamp(Calendar value) {
         return new TemporalParameter(value, TemporalType.TIMESTAMP);
     }
+
+    /**
+     * ラージオブジェクト用のパラメータを作成します。
+     * 
+     * @param value
+     *            値
+     * @return LOBパラメータ
+     */
+    public static LobParameter lob(byte[] value) {
+        return new LobParameter(value);
+    }
+
+    /**
+     * ラージオブジェクト用のパラメータを作成します。
+     * 
+     * @param value
+     *            値
+     * @return LOBパラメータ
+     */
+    public static LobParameter lob(Serializable value) {
+        return new LobParameter(value);
+    }
+
+    /**
+     * ラージオブジェクト用のパラメータを作成します。
+     * 
+     * @param value
+     *            値
+     * @return LOBパラメータ
+     */
+    public static LobParameter lob(String value) {
+        return new LobParameter(value);
+    }
+
 }

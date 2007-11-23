@@ -15,9 +15,15 @@
  */
 package org.seasar.extension.jdbc.meta;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +32,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -41,17 +48,19 @@ import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.PropertyMetaFactory;
 import org.seasar.extension.jdbc.RelationshipType;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
 import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
-import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.TemporalTypeNotSpecifiedRuntimeException;
+import org.seasar.extension.jdbc.exception.UnsupportedPropertyTypeRuntimeException;
+import org.seasar.extension.jdbc.exception.UnsupportedRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeException;
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
@@ -63,6 +72,7 @@ import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ModifierUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
@@ -88,6 +98,35 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             .getAnnotation(TableGenerator.class);
 
     /**
+     * フィールドの型に対応する値タイプのマップです。
+     */
+    protected static final Map<Class<?>, ValueType> valueTypes = CollectionsUtil
+            .newHashMap();
+    static {
+        valueTypes.put(boolean.class, ValueTypes.BOOLEAN);
+        valueTypes.put(Boolean.class, ValueTypes.BOOLEAN);
+        valueTypes.put(char.class, ValueTypes.CHARACTER);
+        valueTypes.put(Character.class, ValueTypes.CHARACTER);
+        valueTypes.put(byte.class, ValueTypes.BYTE);
+        valueTypes.put(Byte.class, ValueTypes.BYTE);
+        valueTypes.put(short.class, ValueTypes.SHORT);
+        valueTypes.put(Short.class, ValueTypes.SHORT);
+        valueTypes.put(int.class, ValueTypes.INTEGER);
+        valueTypes.put(Integer.class, ValueTypes.INTEGER);
+        valueTypes.put(long.class, ValueTypes.LONG);
+        valueTypes.put(Long.class, ValueTypes.LONG);
+        valueTypes.put(float.class, ValueTypes.FLOAT);
+        valueTypes.put(Float.class, ValueTypes.FLOAT);
+        valueTypes.put(double.class, ValueTypes.DOUBLE);
+        valueTypes.put(Double.class, ValueTypes.DOUBLE);
+        valueTypes.put(BigDecimal.class, ValueTypes.BIGDECIMAL);
+        valueTypes.put(BigInteger.class, ValueTypes.BIGINTEGER);
+        valueTypes.put(java.sql.Date.class, ValueTypes.SQLDATE);
+        valueTypes.put(java.sql.Time.class, ValueTypes.TIME);
+        valueTypes.put(Timestamp.class, ValueTypes.TIMESTAMP);
+    }
+
+    /**
      * カラムメタデータファクトリです。
      */
     protected ColumnMetaFactory columnMetaFactory;
@@ -103,14 +142,17 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
         doName(propertyMeta, field, entityMeta);
         doTransient(propertyMeta, field, entityMeta);
         if (!propertyMeta.isTransient()) {
-            doColumnMeta(propertyMeta, field, entityMeta);
-            if (propertyMeta.getColumnMeta() != null) {
+            Object relationshipAnnotation = getRelationshipAnnotation(field);
+            if (relationshipAnnotation == null) {
+                doColumnMeta(propertyMeta, field, entityMeta);
                 doId(propertyMeta, field, entityMeta);
                 doTemporal(propertyMeta, field, entityMeta);
                 doVersion(propertyMeta, field, entityMeta);
                 doLob(propertyMeta, field, entityMeta);
+                doValueType(propertyMeta, entityMeta);
             } else {
-                doRelationship(propertyMeta, field, entityMeta);
+                doRelationship(propertyMeta, field, entityMeta,
+                        relationshipAnnotation);
             }
         }
         doCustomize(propertyMeta, field, entityMeta);
@@ -162,10 +204,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      */
     protected void doColumnMeta(PropertyMeta propertyMeta, Field field,
             EntityMeta entityMeta) {
-        if (ValueTypes.isSimpleType(propertyMeta.getPropertyClass())) {
-            propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(
-                    field, entityMeta, propertyMeta));
-        }
+        propertyMeta.setColumnMeta(columnMetaFactory.createColumnMeta(field,
+                entityMeta, propertyMeta));
     }
 
     /**
@@ -380,6 +420,109 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     }
 
     /**
+     * {@link ValueType}を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doValueType(final PropertyMeta propertyMeta,
+            final EntityMeta entityMeta) {
+        final Class<?> propertyClass = propertyMeta.getPropertyClass();
+        final ValueType valueType = valueTypes.get(propertyClass);
+        if (valueType != null) {
+            propertyMeta.setValueType(valueType);
+            return;
+        }
+
+        if (propertyClass == String.class) {
+            if (propertyMeta.isLob()) {
+                propertyMeta.setValueType(ValueTypes.CLOB);
+            } else {
+                propertyMeta.setValueType(ValueTypes.STRING);
+            }
+            return;
+        }
+
+        if (propertyClass == byte[].class) {
+            if (propertyMeta.isLob()) {
+                propertyMeta.setValueType(ValueTypes.BLOB);
+            } else {
+                propertyMeta.setValueType(ValueTypes.BYTE_ARRAY);
+            }
+            return;
+        }
+
+        if (propertyClass == Date.class) {
+            switch (propertyMeta.getTemporalType()) {
+            case DATE:
+                propertyMeta.setValueType(ValueTypes.DATE_SQLDATE);
+                return;
+            case TIME:
+                propertyMeta.setValueType(ValueTypes.DATE_TIME);
+                return;
+            case TIMESTAMP:
+                propertyMeta.setValueType(ValueTypes.DATE_TIMESTAMP);
+                return;
+            }
+        }
+
+        if (propertyClass == Calendar.class) {
+            switch (propertyMeta.getTemporalType()) {
+            case DATE:
+                propertyMeta.setValueType(ValueTypes.CALENDAR_SQLDATE);
+                return;
+            case TIME:
+                propertyMeta.setValueType(ValueTypes.CALENDAR_TIME);
+                return;
+            case TIMESTAMP:
+                propertyMeta.setValueType(ValueTypes.CALENDAR_TIMESTAMP);
+                return;
+            }
+        }
+
+        if (Serializable.class.isAssignableFrom(propertyClass)) {
+            if (propertyMeta.isLob()) {
+                propertyMeta.setValueType(ValueTypes.SERIALIZABLE_BLOB);
+            } else {
+                propertyMeta.setValueType(ValueTypes.SERIALIZABLE_BYTE_ARRAY);
+            }
+            return;
+        }
+
+        throw new UnsupportedPropertyTypeRuntimeException(entityMeta.getName(),
+                propertyMeta.getName(), propertyMeta.getPropertyClass());
+    }
+
+    /**
+     * フィールドに関連のアノテーションが指定されていればそれを返します。
+     * 
+     * @param field
+     *            フィールド
+     * @return 関連のアノテーションまたは<code>null</code>
+     */
+    protected Object getRelationshipAnnotation(final Field field) {
+        final OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+        if (oneToOne != null) {
+            return oneToOne;
+        }
+        final OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+        if (oneToMany != null) {
+            return oneToMany;
+        }
+        final ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
+        if (manyToOne != null) {
+            return manyToOne;
+        }
+        final ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
+        if (manyToMany != null) {
+            return manyToMany;
+        }
+        return null;
+    }
+
+    /**
      * 関連を処理します。
      * 
      * @param propertyMeta
@@ -388,26 +531,24 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            フィールド
      * @param entityMeta
      *            エンティティメタデータ
+     * @param annotation
+     *            関連のアノテーション
      */
     protected void doRelationship(PropertyMeta propertyMeta, Field field,
-            EntityMeta entityMeta) {
+            EntityMeta entityMeta, Object annotation) {
         doJoinColumn(propertyMeta, field, entityMeta);
-        OneToOne oneToOne = field.getAnnotation(OneToOne.class);
-        if (oneToOne != null) {
-            doOneToOne(propertyMeta, field, entityMeta, oneToOne);
+        if (OneToOne.class.isInstance(annotation)) {
+            doOneToOne(propertyMeta, field, entityMeta, OneToOne.class
+                    .cast(annotation));
+        } else if (OneToMany.class.isInstance(annotation)) {
+            doOneToMany(propertyMeta, field, entityMeta, OneToMany.class
+                    .cast(annotation));
+        } else if (ManyToOne.class.isInstance(annotation)) {
+            doManyToOne(propertyMeta, field, entityMeta, ManyToOne.class
+                    .cast(annotation));
         } else {
-            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-            if (oneToMany != null) {
-                doOneToMany(propertyMeta, field, entityMeta, oneToMany);
-            } else {
-                ManyToOne manyToOne = field.getAnnotation(ManyToOne.class);
-                if (manyToOne != null) {
-                    doManyToOne(propertyMeta, field, entityMeta, manyToOne);
-                } else {
-                    throw new NonRelationshipRuntimeException(entityMeta
-                            .getName(), propertyMeta.getName());
-                }
-            }
+            throw new UnsupportedRelationshipRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName());
         }
     }
 

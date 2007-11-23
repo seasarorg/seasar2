@@ -27,9 +27,11 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.entity.MyDto;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
@@ -117,6 +119,63 @@ public class AbsQueryTest extends TestCase {
         assertEquals(1, param.value);
         assertEquals(Integer.class, param.paramClass);
         assertEquals(ValueTypes.INTEGER, param.valueType);
+    }
+
+    /**
+     * 
+     */
+    public void testAddParam_temporal() {
+        MyQuery query = new MyQuery(manager);
+        Param param = query.addParam(Parameter.date(new Date(1)));
+        assertEquals(new Date(1), param.value);
+        assertEquals(Date.class, param.paramClass);
+        assertEquals(ValueTypes.DATE_SQLDATE, param.valueType);
+    }
+
+    /**
+     * 
+     */
+    public void testAddParam_clob() {
+        MyQuery query = new MyQuery(manager);
+        Param param = query.addParam(Parameter.lob("aaa"));
+        assertEquals("aaa", param.value);
+        assertEquals(String.class, param.paramClass);
+        assertEquals(ValueTypes.CLOB, param.valueType);
+    }
+
+    /**
+     * 
+     */
+    public void testAddParam_blob() {
+        MyQuery query = new MyQuery(manager);
+        Param param = query.addParam(Parameter.lob(new byte[10]));
+        assertEquals(10, ((byte[]) param.value).length);
+        assertEquals(byte[].class, param.paramClass);
+        assertEquals(ValueTypes.BLOB, param.valueType);
+    }
+
+    /**
+     * 
+     */
+    public void testAddParam_blob_serializable() {
+        MyQuery query = new MyQuery(manager);
+        MyDto myDto = new MyDto();
+        Param param = query.addParam(Parameter.lob(myDto));
+        assertEquals(myDto, param.value);
+        assertEquals(MyDto.class, param.paramClass);
+        assertEquals(ValueTypes.SERIALIZABLE_BLOB, param.valueType);
+    }
+
+    /**
+     * 
+     */
+    public void testAddParam_serializable() {
+        MyQuery query = new MyQuery(manager);
+        MyDto myDto = new MyDto();
+        Param param = query.addParam(myDto);
+        assertEquals(myDto, param.value);
+        assertEquals(MyDto.class, param.paramClass);
+        assertEquals(ValueTypes.SERIALIZABLE_BYTE_ARRAY, param.valueType);
     }
 
     /**
@@ -235,6 +294,8 @@ public class AbsQueryTest extends TestCase {
                 false, null));
         assertEquals(ValueTypes.DATE_TIME, query.getValueType(Date.class,
                 false, TemporalType.TIME));
+        assertEquals(ValueTypes.SERIALIZABLE_BYTE_ARRAY, query.getValueType(
+                MyDto.class, false, null));
     }
 
     private static class MyQuery extends AbstractQuery<MyQuery> {

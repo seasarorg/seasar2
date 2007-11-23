@@ -24,6 +24,8 @@ import junit.framework.TestCase;
 import org.seasar.extension.jdbc.FromClause;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
@@ -33,6 +35,9 @@ import org.seasar.framework.exception.SQLRuntimeException;
 public class StandardDialectTest extends TestCase {
 
     private StandardDialect dialect = new StandardDialect();
+
+    /** */
+    public String stringField;
 
     /**
      * @throws Exception
@@ -133,4 +138,15 @@ public class StandardDialectTest extends TestCase {
                         .initCause(new SQLException("hoge")
                                 .initCause(new RuntimeException())))))));
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetValueType_propertyMeta() throws Exception {
+        PropertyMeta pm = new PropertyMeta();
+        pm.setField(getClass().getField("stringField"));
+        pm.setValueType(ValueTypes.CLOB);
+        assertEquals(ValueTypes.CLOB, dialect.getValueType(pm));
+    }
+
 }

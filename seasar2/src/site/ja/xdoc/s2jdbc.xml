@@ -150,6 +150,11 @@
 							<ul>
 								<li>
 									<p>
+										<a href="s2jdbc_entity.html#永続プロパティの型">永続プロパティの型</a>
+									</p>
+								</li>
+								<li>
+									<p>
 										<a
 											href="s2jdbc_entity.html#カラム定義">
 											カラム定義
@@ -174,10 +179,7 @@
 								</li>
 								<li>
 									<p>
-										<a
-											href="s2jdbc_entity.html#永続化対象外定義">
-											永続化対象外定義
-										</a>
+										<a href="s2jdbc_entity.html#時制定義">時制定義</a>
 									</p>
 								</li>
 								<li>
@@ -185,6 +187,14 @@
 										<a
 											href="s2jdbc_entity.html#ラージオブジェクト定義">
 											ラージオブジェクト定義
+										</a>
+									</p>
+								</li>
+								<li>
+									<p>
+										<a
+											href="s2jdbc_entity.html#永続化対象外定義">
+											永続化対象外定義
 										</a>
 									</p>
 								</li>

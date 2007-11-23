@@ -327,6 +327,7 @@ List<Department> results = jdbcManager.from(Department.class)
 			</subsection>
 
 			<subsection name="検索条件">
+				<h4>SQL文字列による指定</h4>
 				<p>
 					検索条件を指定する場合は、where()を使います。
 					where()に書くことのできる条件は、SQLと同じです。
@@ -340,6 +341,78 @@ jdbcManager.from(Department.class)
     .where("employeeList.salary between ? and ? and employeeList.address.street like ?", ...)
     .getResultList();
 ]]></source>
+				<p>
+					<code>java.util.Date</code>
+					・
+					<code>java.util.Calendar</code>
+					型のパラメータを指定する場合は、時制を指定することができます。 時制の指定は
+					<code>
+						org.seasar.extension.jdbc.parameter.Parameter
+					</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>date(Date)</code>
+						または
+						<code>date(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のDATE型 (日付のみ) として扱います。</dd>
+					<dt>
+						<code>date(Date)</code>
+						または
+						<code>date(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIME型 (時刻のみ) として扱います。</dd>
+					<dt>
+						<code>date(Date)</code>
+						または
+						<code>date(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIMESTAMP型 (日付と時刻) として扱います。</dd>
+				</dl>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+jdbcManager.from(Employee.class)
+    .where("heredate = ?", date(heredate))
+    .getResultList();
+]]></source>
+				<p>
+					<code>byte[]</code>
+					・
+					<code>String</code>
+					型のパラメータを指定する場合は、ラージオブジェクトであることを指定することができます。
+					ラージオブジェクトの指定は
+					<code>
+						org.seasar.extension.jdbc.parameter.Parameter
+					</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>lob(String)</code>
+					</dt>
+					<dd>パラメータをCLOBとして扱います。</dd>
+					<dt>
+						<code>lob(byte[])</code>
+						または
+						<code>lob(Serializable)</code>
+					</dt>
+					<dd>パラメータをBLOBとして扱います。</dd>
+				</dl>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+jdbcManager.from(Employee.class)
+    .where("largeName = ?", lob(largeName))
+    .getResultList();
+]]></source>
+
+				<h4>
+					<code>SimpleWhere</code>
+					による指定
+				</h4>
 				<p>
 					検索条件の入力画面などでは、ユーザの入力があった部分をandでつないで、
 					条件を組み立てるということが良く行われます。 このようなケースを簡単に処理するために、
@@ -563,6 +636,10 @@ jdbcManager.from(Employee.class)
 						</tr>
 					</tbody>
 				</table>
+				<h4>
+					<code>SimpleWhere</code>
+					による指定
+				</h4>
 				<p>Mapを使うと次のようになります。</p>
 				<source><![CDATA[
 public String departmentName;
@@ -844,6 +921,9 @@ jdbcManager.from(Employee.class)
     .forUpdate("id")
     .getResultList();
 ]]></source>
+				<p>
+					排他制御とページングを組み合わせることはできません。
+				</p>
 			</subsection>
 
 			<subsection name="ページング">
@@ -866,6 +946,9 @@ jdbcManager.from(Employee.class)
     .offset(10)
     .getResultList();
 ]]></source>
+				<p>
+					排他制御とページングを組み合わせることはできません。
+				</p>
 			</subsection>
 
 			<subsection name="最大行数">

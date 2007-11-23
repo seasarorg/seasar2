@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToOne;
 
 /**
@@ -26,25 +27,32 @@ import javax.persistence.OneToOne;
 @Entity
 public class Aaa {
 
-	/**
-	 * 
-	 */
-	@Id
-	public Integer id;
+    /**
+     * 
+     */
+    @Id
+    public Integer id;
 
-	/**
-	 * 
-	 */
-	public String name;
+    /**
+     * 
+     */
+    public String name;
 
-	/**
-	 * 
-	 */
-	public Integer bbbId;
+    /**
+     * 
+     */
+    public Integer bbbId;
 
-	/**
-	 * 
-	 */
-	@OneToOne
-	public Bbb bbb;
+    /**
+     * 
+     */
+    @OneToOne
+    public Bbb bbb;
+
+    /**
+     * 
+     */
+    @Lob
+    public MyDto dto;
+
 }

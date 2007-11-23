@@ -15,46 +15,29 @@
  */
 package org.seasar.extension.jdbc.parameter;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.persistence.TemporalType;
+import java.io.Serializable;
 
 /**
- * {@link Date}と{@link Calendar}の値と{@link TemporalType}の組み合わせをラップするクラスです。
+ * <code>byte[]</code>や{@link Serializable}、<code>String</code>の値がラージオブジェクトであることを示すクラスです。
  * 
- * @author taedium
- * 
+ * @author koichik
  */
-public class TemporalParameter {
+public class LobParameter {
 
     /** 値 */
     protected Object value;
-
-    /** 時制のクラス */
-    protected Class<?> temporalClass;
-
-    /** 時制の種別 */
-    protected TemporalType temporalType;
 
     /**
      * インスタンスを作成します。
      * 
      * @param value
      *            値
-     * @param temporalType
-     *            時制の種別
      */
-    public TemporalParameter(Object value, TemporalType temporalType) {
+    public LobParameter(final Object value) {
         if (value == null) {
             throw new NullPointerException("value");
         }
-        if (temporalType == null) {
-            throw new NullPointerException("temporalType");
-        }
         this.value = value;
-        this.temporalClass = value.getClass();
-        this.temporalType = temporalType;
     }
 
     /**
@@ -66,21 +49,4 @@ public class TemporalParameter {
         return value;
     }
 
-    /**
-     * 時制のクラスを返します。
-     * 
-     * @return 時制のクラス
-     */
-    public Class<?> getTemporalClass() {
-        return temporalClass;
-    }
-
-    /**
-     * 時制の種別を返します。
-     * 
-     * @return 時制の種別
-     */
-    public TemporalType getTemporalType() {
-        return temporalType;
-    }
 }

@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.FromClause;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.WhereClause;
@@ -81,6 +82,10 @@ public class StandardDialect implements DbmsDialect {
 
     public ValueType getValueType(Class<?> clazz) {
         return ValueTypes.getValueType(clazz);
+    }
+
+    public ValueType getValueType(PropertyMeta propertyMeta) {
+        return propertyMeta.getValueType();
     }
 
     public void setupJoin(FromClause fromClause, WhereClause whereClause,

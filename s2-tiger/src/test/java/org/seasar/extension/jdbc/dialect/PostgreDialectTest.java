@@ -5,6 +5,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.types.ValueTypes;
 
 /**
@@ -14,6 +15,12 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 public class PostgreDialectTest extends TestCase {
 
     private PostgreDialect dialect = new PostgreDialect();
+
+    /** */
+    public List<?> listField;
+
+    /** */
+    public ArrayList<?> arrayListField;
 
     /**
      * @throws Exception
@@ -53,6 +60,18 @@ public class PostgreDialectTest extends TestCase {
                 .getValueType(List.class));
         assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect
                 .getValueType(ArrayList.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetValueType_propertyMeta() throws Exception {
+        PropertyMeta pm = new PropertyMeta();
+        pm.setField(getClass().getField("listField"));
+        assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("arrayListField"));
+        assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(pm));
     }
 
     /**

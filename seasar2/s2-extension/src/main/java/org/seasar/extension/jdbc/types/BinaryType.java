@@ -15,14 +15,9 @@
  */
 package org.seasar.extension.jdbc.types;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.sql.Blob;
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
 
@@ -30,15 +25,13 @@ import org.seasar.extension.jdbc.ValueType;
  * Binary用の {@link ValueType}です。
  * 
  * @author higa
- * 
  */
-public class BinaryType extends AbstractValueType {
+public class BinaryType extends AbstractBinaryType {
 
     /**
      * インスタンスを構築します。
      */
     public BinaryType() {
-        super(Types.BINARY);
     }
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
@@ -72,45 +65,6 @@ public class BinaryType extends AbstractValueType {
             return toByteArray(cs.getBlob(parameterName));
         } catch (SQLException e) {
             return cs.getBytes(parameterName);
-        }
-    }
-
-    private byte[] toByteArray(Blob blob) throws SQLException {
-        if (blob == null) {
-            return null;
-        }
-        long l = blob.length();
-        if (Integer.MAX_VALUE < l) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        return blob.getBytes(1, (int) l);
-    }
-
-    public void bindValue(PreparedStatement ps, int index, Object value)
-            throws SQLException {
-
-        if (value == null) {
-            setNull(ps, index);
-        } else if (value instanceof byte[]) {
-            byte[] ba = (byte[]) value;
-            InputStream in = new ByteArrayInputStream(ba);
-            ps.setBinaryStream(index, in, ba.length);
-        } else {
-            ps.setObject(index, value);
-        }
-    }
-
-    public void bindValue(CallableStatement cs, String parameterName,
-            Object value) throws SQLException {
-
-        if (value == null) {
-            setNull(cs, parameterName);
-        } else if (value instanceof byte[]) {
-            byte[] ba = (byte[]) value;
-            InputStream in = new ByteArrayInputStream(ba);
-            cs.setBinaryStream(parameterName, in, ba.length);
-        } else {
-            cs.setObject(parameterName, value);
         }
     }
 

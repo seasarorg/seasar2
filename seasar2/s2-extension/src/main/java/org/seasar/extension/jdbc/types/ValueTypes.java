@@ -69,6 +69,11 @@ public final class ValueTypes {
     public final static ValueType CHARACTER = new CharacterType();
 
     /**
+     * Byte用の値タイプです。
+     */
+    public final static ValueType BYTE = new ByteType();
+
+    /**
      * Short用の値タイプです。
      */
     public final static ValueType SHORT = new ShortType();
@@ -97,6 +102,11 @@ public final class ValueTypes {
      * BigDecimal用の値タイプです。
      */
     public final static ValueType BIGDECIMAL = new BigDecimalType();
+
+    /**
+     * BigInteger用の値タイプです。
+     */
+    public final static ValueType BIGINTEGER = new BigIntegerType();
 
     /**
      * Time用の値タイプです。
@@ -153,6 +163,26 @@ public final class ValueTypes {
      * BinaryStream用の値タイプです。
      */
     public final static ValueType BINARY_STREAM = new BinaryStreamType();
+
+    /**
+     * BLOB用の値タイプです。
+     */
+    public final static ValueType BLOB = new BlobType();
+
+    /**
+     * バイト配列用の値タイプです。
+     */
+    public final static ValueType BYTE_ARRAY = new ByteArrayType();
+
+    /**
+     * オブジェクトをシリアライズしたBLOB用の値タイプです。
+     */
+    public final static ValueType SERIALIZABLE_BLOB = new SerializableBlobType();
+
+    /**
+     * オブジェクトをシリアライズしたバイト配列用の値タイプです。
+     */
+    public final static ValueType SERIALIZABLE_BYTE_ARRAY = new SerializableByteArrayType();
 
     /**
      * Boolean用の値タイプです。

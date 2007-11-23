@@ -18,12 +18,11 @@ package org.seasar.extension.jdbc.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * 単純な型以外のプロパティが関連ではない場合の例外です。
+ * サポートしていないプロパティ型の場合の例外です。
  * 
- * @author higa
- * 
+ * @author koichik
  */
-public class NonRelationshipRuntimeException extends SRuntimeException {
+public class UnsupportedPropertyTypeRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,19 +30,25 @@ public class NonRelationshipRuntimeException extends SRuntimeException {
 
     private String propertyName;
 
+    private Class<?> propertyClass;
+
     /**
-     * {@link NonRelationshipRuntimeException}を作成します。
+     * {@link UnsupportedPropertyTypeRuntimeException}を作成します。
      * 
      * @param entityName
      *            エンティティ名
      * @param propertyName
      *            プロパティ名
+     * @param propertyClass
+     *            プロパティの型
      */
-    public NonRelationshipRuntimeException(String entityName,
-            String propertyName) {
-        super("ESSR0703", new Object[] { entityName, propertyName });
+    public UnsupportedPropertyTypeRuntimeException(String entityName,
+            String propertyName, Class<?> propertyClass) {
+        super("ESSR0755", new Object[] { entityName, propertyName,
+                propertyClass });
         this.entityName = entityName;
         this.propertyName = propertyName;
+        this.propertyClass = propertyClass;
     }
 
     /**
@@ -62,6 +67,15 @@ public class NonRelationshipRuntimeException extends SRuntimeException {
      */
     public String getPropertyName() {
         return propertyName;
+    }
+
+    /**
+     * プロパティの型を返します。
+     * 
+     * @return プロパティの型
+     */
+    public Class<?> getPropertyClass() {
+        return propertyClass;
     }
 
 }

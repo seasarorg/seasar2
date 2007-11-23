@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +37,7 @@ import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.LobParameter;
 import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
@@ -288,10 +290,9 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
         if (propertyMeta == null) {
             throw new NullPointerException("propertyMeta");
         }
-        Class<?> propertyClass = propertyMeta.getPropertyClass();
-        ValueType valueType = getValueType(propertyClass, propertyMeta.isLob(),
-                propertyMeta.getTemporalType());
-        return addParam(value, propertyClass, valueType);
+        ValueType valueType = jdbcManager.getDialect().getValueType(
+                propertyMeta);
+        return addParam(value, propertyMeta.getPropertyClass(), valueType);
     }
 
     /**
@@ -308,12 +309,17 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
             throw new NullPointerException("paramClass");
         }
         Param param = new Param();
-        if (value != null && value instanceof TemporalParameter) {
-            TemporalParameter parameter = (TemporalParameter) value;
+        if (value instanceof TemporalParameter) {
+            TemporalParameter parameter = TemporalParameter.class.cast(value);
             param.value = parameter.getValue();
             param.paramClass = parameter.getTemporalClass();
             param.valueType = getValueType(param.paramClass, false, parameter
                     .getTemporalType());
+        } else if (value instanceof LobParameter) {
+            LobParameter parameter = LobParameter.class.cast(value);
+            param.value = parameter.getValue();
+            param.paramClass = param.value.getClass();
+            param.valueType = getValueType(param.paramClass, true, null);
         } else {
             param.value = value;
             param.paramClass = paramClass;
@@ -355,8 +361,14 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      */
     protected ValueType getValueType(Class<?> paramClass, boolean lob,
             TemporalType temporalType) {
-        if (lob && paramClass == String.class) {
-            return ValueTypes.CLOB;
+        if (lob) {
+            if (paramClass == String.class) {
+                return ValueTypes.CLOB;
+            } else if (paramClass == byte[].class) {
+                return ValueTypes.BLOB;
+            } else if (Serializable.class.isAssignableFrom(paramClass)) {
+                return ValueTypes.SERIALIZABLE_BLOB;
+            }
         }
         if (temporalType != null
                 && (Date.class == paramClass || Calendar.class
@@ -373,7 +385,12 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
                         : ValueTypes.CALENDAR_TIMESTAMP;
             }
         }
-        return jdbcManager.getDialect().getValueType(paramClass);
+        ValueType valueType = jdbcManager.getDialect().getValueType(paramClass);
+        if (valueType == ValueTypes.OBJECT
+                && Serializable.class.isAssignableFrom(paramClass)) {
+            return ValueTypes.SERIALIZABLE_BYTE_ARRAY;
+        }
+        return valueType;
     }
 
     /**

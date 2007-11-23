@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.meta;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -53,15 +54,16 @@ import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnName
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
-import org.seasar.extension.jdbc.exception.NonRelationshipRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.UnsupportedPropertyTypeRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeException;
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
 /**
@@ -267,6 +269,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertNull(propertyMeta.getColumnMeta());
+        assertNull(propertyMeta.getValueType());
     }
 
     /**
@@ -277,6 +280,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertSame(field, propertyMeta.getField());
+        assertSame(ValueTypes.INTEGER, propertyMeta.getValueType());
     }
 
     /**
@@ -287,6 +291,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertEquals("id", propertyMeta.getName());
+        assertSame(ValueTypes.INTEGER, propertyMeta.getValueType());
     }
 
     /**
@@ -297,6 +302,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertEquals(Integer.class, propertyMeta.getPropertyClass());
+        assertSame(ValueTypes.INTEGER, propertyMeta.getValueType());
     }
 
     /**
@@ -308,6 +314,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertEquals(TemporalType.DATE, propertyMeta.getTemporalType());
+        assertSame(ValueTypes.DATE_SQLDATE, propertyMeta.getValueType());
     }
 
     /**
@@ -332,6 +339,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertEquals(TemporalType.TIME, propertyMeta.getTemporalType());
+        assertSame(ValueTypes.DATE_TIME, propertyMeta.getValueType());
     }
 
     /**
@@ -355,6 +363,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertTrue(propertyMeta.isVersion());
+        assertSame(ValueTypes.INTEGER, propertyMeta.getValueType());
     }
 
     /**
@@ -388,6 +397,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertTrue(propertyMeta.isLob());
+        assertSame(ValueTypes.CLOB, propertyMeta.getValueType());
     }
 
     /**
@@ -444,6 +454,20 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertEquals(0, propertyMeta.getJoinColumnMetaList().size());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSerializable() throws Exception {
+        entityMeta.setName("MyAaa");
+        entityMeta.setEntityClass(MyAaa.class);
+        Field field = MyAaa.class.getDeclaredField("myInt");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertSame(ValueTypes.SERIALIZABLE_BYTE_ARRAY, propertyMeta
+                .getValueType());
+
     }
 
     /**
@@ -728,28 +752,18 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testRelationship_dto() throws Exception {
+    public void testInvalidProperty() throws Exception {
         entityMeta.setEntityClass(BadAaa2.class);
         entityMeta.setName("BadAaa2");
         Field field = BadAaa2.class.getDeclaredField("myDto5");
         try {
             factory.createPropertyMeta(field, entityMeta);
             fail();
-        } catch (NonRelationshipRuntimeException e) {
+        } catch (UnsupportedPropertyTypeRuntimeException e) {
             System.out.println(e);
             assertEquals("BadAaa2", e.getEntityName());
             assertEquals("myDto5", e.getPropertyName());
         }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testUserDefined() throws Exception {
-        entityMeta.setName("MyAaa");
-        entityMeta.setEntityClass(MyAaa.class);
-        Field field = MyAaa.class.getDeclaredField("myInt");
-        assertNotNull(factory.createPropertyMeta(field, entityMeta));
     }
 
     @Entity
@@ -982,7 +996,9 @@ public class PropertyMetaFactoryImplTest extends TestCase {
 
     }
 
-    private static class MyInt {
+    private static class MyInt implements Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         private int value;
 

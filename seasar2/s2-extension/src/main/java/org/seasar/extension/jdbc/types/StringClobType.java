@@ -60,7 +60,7 @@ public class StringClobType extends AbstractValueType {
         return convertToString(cs.getClob(parameterName));
     }
 
-    private String convertToString(Reader reader) throws SQLException {
+    private String convertToString(Reader reader) {
         if (reader == null) {
             return null;
         }

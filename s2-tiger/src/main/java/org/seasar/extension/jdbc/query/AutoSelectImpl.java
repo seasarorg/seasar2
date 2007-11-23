@@ -287,8 +287,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 continue;
             }
             selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
-            valueTypeList.add(getValueType(pm.getPropertyClass(), pm.isLob(),
-                    pm.getTemporalType()));
+            valueTypeList.add(jdbcManager.getDialect().getValueType(pm));
             propertyMapperList.add(new PropertyMapperImpl(pm.getField(),
                     selectListIndex));
             if (pm.isId()) {
@@ -722,14 +721,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         if (conditions == null || conditions.size() == 0) {
             return;
         }
-        List<Object> valueList = new ArrayList<Object>();
-        List<Class<?>> valueClassList = new ArrayList<Class<?>>();
         for (Map.Entry<String, ? extends Object> e : conditions.entrySet()) {
-            prepareCondition(e.getKey(), e.getValue(), valueList,
-                    valueClassList);
-        }
-        for (int i = 0; i < valueList.size(); i++) {
-            addParam(valueList.get(i), valueClassList.get(i));
+            prepareCondition(e.getKey(), e.getValue());
         }
     }
 
@@ -745,8 +738,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * @param valueClassList
      *            値のクラスのリスト
      */
-    protected void prepareCondition(String name, Object value,
-            List<Object> valueList, List<Class<?>> valueClassList) {
+    protected void prepareCondition(String name, Object value) {
         ConditionType conditionType = ConditionType.getConditionType(name);
         String pname = conditionType.removeSuffix(name);
         String[] names = splitBaseAndProperty(pname);
@@ -770,10 +762,12 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                     propertyMeta.getName());
         }
         String columnName = columnMeta.getName();
+        List<Object> valueList = CollectionsUtil.newArrayList();
         int size = conditionType.addCondition(tableAlias, columnName, value,
                 whereClause, valueList);
         for (int i = 0; i < size; i++) {
-            valueClassList.add(propertyMeta.getPropertyClass());
+            addParam(valueList.get(i), propertyMeta.getPropertyClass(),
+                    jdbcManager.getDialect().getValueType(propertyMeta));
         }
     }
 
@@ -798,12 +792,21 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             String name = criteriaPropertyNames[i];
             String[] names = splitBaseAndProperty(name);
             EntityMeta entityMeta = getEntityMeta(names[0]);
-            if (entityMeta != null && entityMeta.hasPropertyMeta(names[1])) {
-                PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
-                ValueType valueType = getValueType(pm.getPropertyClass(), pm
-                        .isLob(), pm.getTemporalType());
-                addParam(value, value.getClass(), valueType);
+            if (entityMeta == null) {
+                logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                        callerMethodName });
+                logger.log("ESSR0716", new Object[] { name });
+                throw new BaseJoinNotFoundRuntimeException(entityName, name,
+                        names[0]);
             }
+            if (!entityMeta.hasPropertyMeta(names[1])) {
+                logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                        callerMethodName });
+                throw new PropertyNotFoundRuntimeException(entityName, name);
+            }
+            PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
+            ValueType valueType = jdbcManager.getDialect().getValueType(pm);
+            addParam(value, value.getClass(), valueType);
         }
     }
 
@@ -907,6 +910,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             throw new NullPointerException("properties");
         }
         if (propertyNames.length == 0) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
             throw new EmptyRuntimeException("properties");
         }
 
@@ -1016,6 +1021,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         for (JoinMeta joinMeta : joinMetaList) {
             if (joinMeta.getJoinType() == JoinType.LEFT_OUTER) {
                 if (!dialect.supportsOuterJoinForUpdate()) {
+                    logger.log("ESSR0709", new Object[] {
+                            callerClass.getName(), callerMethodName });
                     final EntityMeta entityMeta = getJdbcManager()
                             .getEntityMetaFactory().getEntityMeta(baseClass);
                     throw new UnsupportedOperationException(MessageFormatter
@@ -1082,14 +1089,18 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         final String tableAlias = getTableAlias(baseName);
         final EntityMeta entityMeta = entityMetaMap.get(baseName);
         if (entityMeta == null) {
-            throw new PropertyNotFoundRuntimeException(entityName,
-                    baseName == null ? propertyName : baseName + "."
-                            + propertyName);
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
+            logger.log("ESSR0716", new Object[] { baseName });
+            throw new BaseJoinNotFoundRuntimeException(entityName, baseName
+                    + "." + propertyName, baseName);
         }
         final PropertyMeta propertyMeta = entityMeta
                 .getPropertyMeta(propertyName);
         final ColumnMeta columnMeta = propertyMeta.getColumnMeta();
         if (columnMeta == null) {
+            logger.log("ESSR0709", new Object[] { callerClass.getName(),
+                    callerMethodName });
             throw new PropertyNotFoundRuntimeException(entityName,
                     baseName == null ? propertyName : baseName + "."
                             + propertyName);

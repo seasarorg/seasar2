@@ -96,6 +96,15 @@ public interface DbmsDialect {
     ValueType getValueType(Class<?> clazz);
 
     /**
+     * 値タイプを返します。
+     * 
+     * @param propertyMeta
+     *            プロパティのメタデータ
+     * @return 値タイプ
+     */
+    ValueType getValueType(PropertyMeta propertyMeta);
+
+    /**
      * 結合用のSQLを組み立てます。
      * 
      * @param fromClause
