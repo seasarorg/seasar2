@@ -21,7 +21,9 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -30,9 +32,11 @@ import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.IllegalIdPropertySizeRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
 import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
+import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
@@ -572,6 +576,87 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
+    public void testWhere_map_illegalPropertyName() throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("illegal", 1);
+        try {
+            jdbcManager.from(Employee.class).where(m).getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_map_illegalPropertyName2() throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("department.illegal", 1);
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .join("department")
+                .where(m)
+                .getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_map_illegalPropertyName3() throws Exception {
+        Map<String, Object> m = new HashMap<String, Object>();
+        m.put("illegal.illegal2", 1);
+        try {
+            jdbcManager
+                .from(Employee.class)
+                .join("department")
+                .where(m)
+                .getResultList();
+            fail();
+        } catch (BaseJoinNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_simpleWhere_illegalPropertyName2() throws Exception {
+        try {
+            jdbcManager.from(Employee.class).join("department").where(
+                new SimpleWhere().eq("department.illegal", 1)).getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_simpleWhere_illegalPropertyName3() throws Exception {
+        try {
+            jdbcManager.from(Employee.class).join("department").where(
+                new SimpleWhere().eq("illegal.illegal2", 1)).getResultList();
+            fail();
+        } catch (BaseJoinNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testJoin_nest_condition() throws Exception {
         List<Department> list =
             jdbcManager
@@ -635,6 +720,33 @@ public class AutoSelectTest {
                             .starts("STREET")))
                 .getResultList();
         assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_illegalPropertyName() throws Exception {
+        try {
+            jdbcManager.from(Department.class).join("illegal").getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_illegalPropertyName2() throws Exception {
+        try {
+            jdbcManager.from(Department.class).join("employees").join(
+                "employees.illegal").getResultList();
+            fail();
+        } catch (PropertyNotFoundRuntimeException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -1602,13 +1714,13 @@ public class AutoSelectTest {
     public void testTemporalType() throws Exception {
         Tense tense =
             jdbcManager.from(Tense.class).where("id = ?", 1).getSingleResult();
-        assertEquals(tense.dateDate.getTime(), tense.calDate.getTimeInMillis());
-        assertEquals(tense.dateDate.getTime(), tense.sqlDate.getTime());
-        assertEquals(tense.dateTime.getTime(), tense.calTime.getTimeInMillis());
-        assertEquals(tense.dateTime.getTime(), tense.sqlTime.getTime());
-        assertEquals(tense.dateTimestamp.getTime(), tense.calTimestamp
+        assertEquals(tense.sqlDate.getTime(), tense.calDate.getTimeInMillis());
+        assertEquals(tense.sqlDate.getTime(), tense.dateDate.getTime());
+        assertEquals(tense.sqlTime.getTime(), tense.calTime.getTimeInMillis());
+        assertEquals(tense.sqlTime.getTime(), tense.dateTime.getTime());
+        assertEquals(tense.sqlTimestamp.getTime(), tense.calTimestamp
             .getTimeInMillis());
-        assertEquals(tense.dateTimestamp.getTime(), tense.sqlTimestamp
+        assertEquals(tense.sqlTimestamp.getTime(), tense.dateTimestamp
             .getTime());
     }
 
@@ -1771,4 +1883,67 @@ public class AutoSelectTest {
         assertNotNull(tense);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId() throws Exception {
+        Employee employee =
+            jdbcManager.from(Employee.class).id(10).getSingleResult();
+        assertNotNull(employee);
+        assertEquals("TURNER", employee.employeeName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_IllegalSize() throws Exception {
+        try {
+            jdbcManager.from(Employee.class).id(10, 11).getSingleResult();
+        } catch (IllegalIdPropertySizeRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testId_composite() throws Exception {
+        CompKeyEmployee employee =
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .id(10, 10)
+                .getSingleResult();
+        assertNotNull(employee);
+        assertEquals("TURNER", employee.employeeName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testVersion() throws Exception {
+        Employee employee =
+            jdbcManager
+                .from(Employee.class)
+                .id(10)
+                .version(1)
+                .getSingleResult();
+        assertNotNull(employee);
+        assertEquals("TURNER", employee.employeeName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testVersion_UnsupportedOperationException() throws Exception {
+        try {
+            jdbcManager.from(Employee.class).version(1).getSingleResult();
+            fail();
+        } catch (UnsupportedOperationException e) {
+        }
+    }
 }
