@@ -1,0 +1,1 @@
+select * from Tense where cal_time = /*calTime*/'2000-01-01'

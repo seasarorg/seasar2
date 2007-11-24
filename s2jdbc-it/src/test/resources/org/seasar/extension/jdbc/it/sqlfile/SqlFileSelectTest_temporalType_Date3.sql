@@ -1,0 +1,1 @@
+select * from Tense where date_timestamp = /*dateTimestamp*/'2000-01-01'

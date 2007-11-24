@@ -1,0 +1,1 @@
+{call PROC_SIMPLETYPE_TIME_PARAM(?)}

@@ -360,33 +360,39 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testTemporal() throws Exception {
+    public void testTemporalType() throws Exception {
         Tense tense = new Tense();
         tense.id = 1;
-        Date date =
-            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                .parse("2007-11-22 01:02:03");
-        tense.dateDate = date;
-        tense.dateTime = date;
-        tense.dateTimestamp = date;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        tense.calDate = calendar;
-        tense.calTime = calendar;
-        tense.calTimestamp = calendar;
-        tense.sqlDate = new java.sql.Date(date.getTime());
-        tense.sqlTime = new Time(date.getTime());
-        tense.sqlTimestamp = new Timestamp(date.getTime());
+        long date =
+            new SimpleDateFormat("yyyy-MM-dd").parse("2005-03-14").getTime();
+        long time =
+            new SimpleDateFormat("HH:mm:ss").parse("13:11:10").getTime();
+        long timestamp =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(
+                "2005-03-14 13:11:10").getTime();
+        tense.dateDate = new Date(date);
+        tense.dateTime = new Date(time);
+        tense.dateTimestamp = new Date(timestamp);
+        tense.calDate = Calendar.getInstance();
+        tense.calDate.setTimeInMillis(date);
+        tense.calTime = Calendar.getInstance();
+        tense.calTime.setTimeInMillis(time);
+        tense.calTimestamp = Calendar.getInstance();
+        tense.calTimestamp.setTimeInMillis(timestamp);
+        tense.sqlDate = new java.sql.Date(date);
+        tense.sqlTime = new Time(time);
+        tense.sqlTimestamp = new Timestamp(timestamp);
         jdbcManager.update(tense).execute();
-        tense =
-            jdbcManager.from(Tense.class).where("id = ?", 1).getSingleResult();
-        assertEquals(tense.dateDate.getTime(), tense.calDate.getTimeInMillis());
-        assertEquals(tense.dateDate.getTime(), tense.sqlDate.getTime());
-        assertEquals(tense.dateTime.getTime(), tense.calTime.getTimeInMillis());
-        assertEquals(tense.dateTime.getTime(), tense.sqlTime.getTime());
-        assertEquals(tense.dateTimestamp.getTime(), tense.calTimestamp
-            .getTimeInMillis());
-        assertEquals(tense.dateTimestamp.getTime(), tense.sqlTimestamp
-            .getTime());
+        tense = jdbcManager.from(Tense.class).id(1).getSingleResult();
+
+        assertEquals(date, tense.calDate.getTimeInMillis());
+        assertEquals(date, tense.dateDate.getTime());
+        assertEquals(date, tense.sqlDate.getTime());
+        assertEquals(time, tense.calTime.getTimeInMillis());
+        assertEquals(time, tense.dateTime.getTime());
+        assertEquals(time, tense.sqlTime.getTime());
+        assertEquals(timestamp, tense.calTimestamp.getTimeInMillis());
+        assertEquals(timestamp, tense.dateTimestamp.getTime());
+        assertEquals(timestamp, tense.sqlTimestamp.getTime());
     }
 }

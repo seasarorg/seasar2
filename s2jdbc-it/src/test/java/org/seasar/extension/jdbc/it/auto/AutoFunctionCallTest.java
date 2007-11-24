@@ -70,18 +70,18 @@ public class AutoFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType_TimeTx() throws Exception {
+    public void testParameter_simpleType_timeTx() throws Exception {
         Date inparam =
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 .parse("2007-08-08 12:11:10");
-        Date actual =
+        Date result =
             jdbcManager.call(
                 Date.class,
                 "FUNC_SIMPLETYPE_TIME_PARAM",
                 time(inparam)).temporal(TemporalType.TIME).getSingleResult();
-        Date expected = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
-        System.out.println(actual);
-        assertEquals(expected.getTime(), actual.getTime());
+        long expected =
+            new SimpleDateFormat("HH:mm:ss").parse("12:11:10").getTime();
+        assertEquals(expected, result.getTime());
     }
 
     /**
@@ -105,7 +105,7 @@ public class AutoFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dto_TimeTx() throws Exception {
+    public void testParameter_dto_timeTx() throws Exception {
         Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
         MyDto2 dto = new MyDto2();
         dto.param1 = date;

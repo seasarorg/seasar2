@@ -15,7 +15,12 @@
  */
 package org.seasar.extension.jdbc.it.sqlfile;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -24,6 +29,8 @@ import org.seasar.framework.unit.Seasar2;
 import org.seasar.framework.unit.annotation.Prerequisite;
 
 import static junit.framework.Assert.*;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author taedium
@@ -62,6 +69,27 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
+    public void testParameter_simpleType_timeTx() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/") + "_simpleType_time"
+                + ".sql";
+        Date inparam =
+            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .parse("2007-08-08 12:11:10");
+        Date result =
+            jdbcManager
+                .callBySqlFile(Date.class, path, time(inparam))
+                .temporal(TemporalType.TIME)
+                .getSingleResult();
+        long expected =
+            new SimpleDateFormat("HH:mm:ss").parse("12:11:10").getTime();
+        assertEquals(expected, result.getTime());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testParameter_dtoTx() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
         MyDto dto = new MyDto();
@@ -74,6 +102,23 @@ public class SqlFileFunctionCallTest {
         assertEquals(new Integer(3), dto.param1);
         assertEquals(new Integer(5), dto.param2);
         assertEquals(new Integer(8), result);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_dtoTx_time() throws Exception {
+        String path =
+            getClass().getName().replace(".", "/") + "_dto_time" + ".sql";
+        Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        MyDto2 dto = new MyDto2();
+        dto.param1 = date;
+        dto.param2 = 5;
+        Date result =
+            jdbcManager.callBySqlFile(Date.class, path, dto).temporal(
+                TemporalType.TIME).getSingleResult();
+        assertEquals(date.getTime(), result.getTime());
     }
 
     /**
@@ -135,4 +180,18 @@ public class SqlFileFunctionCallTest {
         public Integer param2;
     }
 
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MyDto2 {
+
+        /** */
+        @Temporal(TemporalType.TIME)
+        public Date param1;
+
+        /** */
+        public Integer param2;
+    }
 }

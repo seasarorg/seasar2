@@ -67,7 +67,7 @@ public class AutoProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType_TimeTx() throws Exception {
+    public void testParameter_simpleType_timeTx() throws Exception {
         Date date = new Date();
         jdbcManager.call("PROC_SIMPLETYPE_TIME_PARAM", time(date)).execute();
     }
@@ -90,7 +90,7 @@ public class AutoProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dto_TimeTx() throws Exception {
+    public void testParameter_dto_timeTx() throws Exception {
         Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
         MyDto2 dto = new MyDto2();
         dto.param1 = date;
