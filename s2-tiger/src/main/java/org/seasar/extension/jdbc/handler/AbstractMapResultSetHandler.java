@@ -109,8 +109,8 @@ public abstract class AbstractMapResultSetHandler implements ResultSetHandler {
             String columnName = rsmd.getColumnLabel(i + 1);
             String propertyName = persistenceConvention
                     .fromColumnNameToPropertyName(columnName);
-            ValueType valueType = dialect.getValueType(ValueTypes.getType(rsmd
-                    .getColumnType(i + 1)));
+            Class<?> clazz = ValueTypes.getType(rsmd.getColumnType(i + 1));
+            ValueType valueType = dialect.getValueType(clazz, false, null);
             propertyTypes[i] = new PropertyTypeImpl(propertyName, valueType,
                     columnName);
         }
@@ -143,4 +143,5 @@ public abstract class AbstractMapResultSetHandler implements ResultSetHandler {
         }
         return row;
     }
+
 }

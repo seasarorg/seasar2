@@ -17,9 +17,13 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -39,6 +43,8 @@ import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockCallableStatement;
 import org.seasar.framework.mock.sql.MockDataSource;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author koichik
@@ -128,6 +134,43 @@ public class SqlFunctionCallImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testPrepareParameter_simpleType_clob() throws Exception {
+        SqlFunctionCallImpl<String> query = new SqlFunctionCallImpl<String>(
+                manager, String.class, "{? = call hoge(?)}", lob("hoge"));
+        query.prepareReturnParameter();
+        query.prepareParameter();
+        assertEquals(2, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+
+        assertEquals("hoge", query.getParam(1).value);
+        assertEquals(String.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(1).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareParameter_simpleType_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlFunctionCallImpl<String> query = new SqlFunctionCallImpl<String>(
+                manager, String.class, "{? = call hoge(?)}", time(date));
+        query.prepareReturnParameter();
+        query.prepareParameter();
+        assertEquals(2, query.getParamSize());
+        assertNull(query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+
+        assertEquals(date, query.getParam(1).value);
+        assertEquals(Date.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(1).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testPrepareParameter_dto() throws Exception {
         MyDto dto = new MyDto();
         dto.arg1 = "aaa";
@@ -189,7 +232,7 @@ public class SqlFunctionCallImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testPrepareParameter_clob() throws Exception {
+    public void testPrepareParameter_dto_clob() throws Exception {
         MyDto3 dto = new MyDto3();
         dto.largeName = "aaa";
         SqlFunctionCallImpl<Integer> query = new SqlFunctionCallImpl<Integer>(
@@ -206,6 +249,29 @@ public class SqlFunctionCallImplTest extends TestCase {
         assertEquals("aaa", query.getParam(1).value);
         assertEquals(ParamType.IN, query.getParam(1).paramType);
         assertEquals(ValueTypes.CLOB, query.getParam(1).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareParameter_dto_date() throws Exception {
+        MyDto4 dto = new MyDto4();
+        dto.date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlFunctionCallImpl<Integer> query = new SqlFunctionCallImpl<Integer>(
+                manager, Integer.class, "{? = call hoge(?)}", dto);
+        query.prepareReturnParameter();
+        query.prepareParameter();
+        assertEquals(2, query.getParamSize());
+        assertEquals(null, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
+        assertEquals(ParamType.OUT, query.getParam(0).paramType);
+        assertNull(query.getParam(0).field);
+
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(1).value);
+        assertEquals(ParamType.IN, query.getParam(1).paramType);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(1).valueType);
     }
 
     /**
@@ -273,4 +339,11 @@ public class SqlFunctionCallImplTest extends TestCase {
 
     }
 
+    private static final class MyDto4 {
+
+        /** */
+        @Temporal(TemporalType.TIME)
+        public Date date;
+
+    }
 }

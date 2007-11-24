@@ -17,9 +17,14 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -28,6 +33,9 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.parameter.LobParameter;
+import org.seasar.extension.jdbc.parameter.TemporalParameter;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
@@ -35,6 +43,7 @@ import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
 
 import static java.util.Arrays.*;
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author taedium
@@ -198,6 +207,72 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
     /**
      * 
      */
+    public void testExecuteBatch_simpleType_clob() {
+        SqlFileBatchUpdateImpl<LobParameter> query = new SqlFileBatchUpdateImpl<LobParameter>(
+                manager, PATH_SIMPLE, asList(lob("hoge"), lob("foo"))) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(1, getParamSize());
+                assertEquals(ValueTypes.CLOB, getParam(0).valueType);
+                super.resetParams();
+            }
+
+        };
+        query.execute();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testExecuteBatch_simpleType_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:dd").parse("12:11:10");
+        SqlFileBatchUpdateImpl<TemporalParameter> query = new SqlFileBatchUpdateImpl<TemporalParameter>(
+                manager, PATH_SIMPLE, asList(time(date), time(date))) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(1, getParamSize());
+                assertEquals(ValueTypes.DATE_TIME, getParam(0).valueType);
+                super.resetParams();
+            }
+
+        };
+        query.execute();
+    }
+
+    /**
+     * 
+     */
     public void testExecuteBatch_simpleType_bindNull() {
         SqlFileBatchUpdateImpl<String> query = new SqlFileBatchUpdateImpl<String>(
                 manager, PATH_SIMPLE, asList("foo", "bar")) {
@@ -291,6 +366,86 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
                 .get(0).getCompleteSql());
         assertEquals("update aaa set name = 'bar' where id = 2", sqlLogRegistry
                 .get(1).getCompleteSql());
+    }
+
+    /**
+     * 
+     */
+    public void testExecuteBatch_dto_clob() {
+        MyDto2 dto = new MyDto2();
+        dto.id = 1;
+        dto.name = "foo";
+        MyDto2 dto2 = new MyDto2();
+        dto2.id = 2;
+        dto2.name = "bar";
+        SqlFileBatchUpdateImpl<MyDto2> query = new SqlFileBatchUpdateImpl<MyDto2>(
+                manager, PATH_DTO, asList(dto, dto2)) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(2, getParamSize());
+                assertEquals(ValueTypes.CLOB, getParam(0).valueType);
+                assertEquals(ValueTypes.INTEGER, getParam(1).valueType);
+                super.resetParams();
+            }
+
+        };
+        query.execute();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testExecuteBatch_dto_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:dd").parse("12:11:10");
+        MyDto3 dto = new MyDto3();
+        dto.id = 1;
+        dto.name = date;
+        MyDto3 dto2 = new MyDto3();
+        dto2.id = 2;
+        dto2.name = date;
+        SqlFileBatchUpdateImpl<MyDto3> query = new SqlFileBatchUpdateImpl<MyDto3>(
+                manager, PATH_DTO, asList(dto, dto2)) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(2, getParamSize());
+                assertEquals(ValueTypes.DATE_TIME, getParam(0).valueType);
+                assertEquals(ValueTypes.INTEGER, getParam(1).valueType);
+                super.resetParams();
+            }
+
+        };
+        query.execute();
     }
 
     /**
@@ -453,6 +608,36 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
          * 
          */
         public String name;
+
+    }
+
+    private static class MyDto2 {
+
+        /**
+         * 
+         */
+        public Integer id;
+
+        /**
+         * 
+         */
+        @Lob
+        public String name;
+
+    }
+
+    private static class MyDto3 {
+
+        /**
+         * 
+         */
+        public Integer id;
+
+        /**
+         * 
+         */
+        @Temporal(TemporalType.TIME)
+        public Date name;
 
     }
 }

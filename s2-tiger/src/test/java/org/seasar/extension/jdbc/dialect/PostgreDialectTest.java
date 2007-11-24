@@ -56,10 +56,10 @@ public class PostgreDialectTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType() throws Exception {
-        assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect
-                .getValueType(List.class));
-        assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect
-                .getValueType(ArrayList.class));
+        assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(
+                List.class, false, null));
+        assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(
+                ArrayList.class, false, null));
     }
 
     /**

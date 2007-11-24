@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.ResultSet;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -30,6 +31,7 @@ import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
@@ -37,6 +39,8 @@ import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
 import org.seasar.framework.util.ArrayMap;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author higa
@@ -614,5 +618,19 @@ public class SqlSelectImplTest extends TestCase {
         query.prepare("getResultList");
         query.prepareSql();
         assertNotNull(query.executedSql);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParams_valueType() throws Exception {
+        SqlSelectImpl<Aaa> query = new SqlSelectImpl<Aaa>(manager, Aaa.class,
+                "select * from aaa where bbb = ? and ccc = ? and ddd = ?",
+                "hoge", lob("foo"), time(new Date()));
+        assertEquals(3, query.getParamSize());
+        assertEquals(ValueTypes.STRING, query.getParam(0).valueType);
+        assertEquals(ValueTypes.CLOB, query.getParam(1).valueType);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(2).valueType);
     }
 }

@@ -16,10 +16,15 @@
 package org.seasar.extension.jdbc.parameter;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.seasar.framework.beans.PropertyDesc;
 
 /**
  * 値をラップし特別な意味を持たせるクラスです。
@@ -129,4 +134,40 @@ public class Parameter {
         return new LobParameter(value);
     }
 
+    /**
+     * プロパティ記述に従い必要ならば値をラップします。
+     * 
+     * @param propertyDesc
+     *            プロパティ記述
+     * @param value
+     *            値
+     * @return
+     */
+    public static Object wrapIfNecessary(PropertyDesc propertyDesc, Object value) {
+        Field field = propertyDesc.getField();
+        if (field == null) {
+            return value;
+        }
+        Class<?> clazz = propertyDesc.getPropertyType();
+        if (field.isAnnotationPresent(Lob.class)) {
+            if (String.class == clazz) {
+                return new LobParameter(String.class.cast(value));
+            } else if (byte[].class == clazz) {
+                return new LobParameter(byte[].class.cast(value));
+            } else if (Serializable.class.isAssignableFrom(clazz)) {
+                return new LobParameter(Serializable.class.cast(value));
+            }
+        }
+        Temporal temporal = field.getAnnotation(Temporal.class);
+        if (temporal != null) {
+            if (Date.class == clazz) {
+                return new TemporalParameter(Date.class.cast(value), temporal
+                        .value());
+            } else if (Calendar.class == clazz) {
+                return new TemporalParameter(Calendar.class.cast(value),
+                        temporal.value());
+            }
+        }
+        return value;
+    }
 }

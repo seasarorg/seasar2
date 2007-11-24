@@ -16,9 +16,12 @@
 package org.seasar.extension.jdbc;
 
 import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
@@ -78,6 +81,28 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      * @return このインスタンス自身
      */
     S disallowNoResult();
+
+    /**
+     * 戻り値またはその要素がLOBであることを指定します。
+     * <p>
+     * このメソッドの呼び出しは、戻り値またはその要素が{@link String}型の場合に有効です。
+     * </p>
+     * 
+     * @return このインスタンス自身
+     */
+    S lob();
+
+    /**
+     * 戻り値またはその要素の{@link TemporalType}を指定します。
+     * <p>
+     * このメソッドの呼び出しは、戻り値またはその要素が{@link Date}もしくは{@link Calendar}型の場合に有効です。
+     * </p>
+     * 
+     * @param temporalType
+     *            時制の種別
+     * @return このインスタンス自身
+     */
+    S temporal(TemporalType temporalType);
 
     /**
      * 検索してベースオブジェクトのリストを返します。

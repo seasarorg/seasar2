@@ -27,17 +27,44 @@ public class LobParameter {
     /** 値 */
     protected Object value;
 
+    /** ラージオブジェクトのクラス */
+    protected Class<?> lobClass;
+
     /**
      * インスタンスを作成します。
      * 
      * @param value
      *            値
      */
-    public LobParameter(final Object value) {
-        if (value == null) {
-            throw new NullPointerException("value");
-        }
+    public LobParameter(final byte[] value) {
         this.value = value;
+        this.lobClass = byte[].class;
+    }
+
+    /**
+     * インスタンスを作成します。
+     * 
+     * @param value
+     *            値
+     */
+    public LobParameter(final Serializable value) {
+        this.value = value;
+        if (value != null) {
+            this.lobClass = value.getClass();
+        } else {
+            this.lobClass = Serializable.class;
+        }
+    }
+
+    /**
+     * インスタンスを作成します。
+     * 
+     * @param value
+     *            値
+     */
+    public LobParameter(final String value) {
+        this.value = value;
+        this.lobClass = String.class;
     }
 
     /**
@@ -47,6 +74,15 @@ public class LobParameter {
      */
     public Object getValue() {
         return value;
+    }
+
+    /**
+     * ラージオブジェクトのクラスを返します。
+     * 
+     * @return ラージオブジェクトのクラス
+     */
+    public Class<?> getLobClass() {
+        return lobClass;
     }
 
 }

@@ -15,7 +15,10 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.io.Serializable;
 import java.util.Map;
+
+import org.seasar.extension.jdbc.parameter.Parameter;
 
 /**
  * SQLを自動生成する検索です。
@@ -188,9 +191,13 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @param params
      *            パラメータの配列
      *            <p>
-     *            {@link Date}型や{@link Calendar}型のパラメータは{@link Parameter}に定義されたメソッドを使うことで時制を明示できます。
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return このインスタンス自身
+     * @see Parameter
      */
     AutoSelect<T> where(String criteria, Object... params);
 

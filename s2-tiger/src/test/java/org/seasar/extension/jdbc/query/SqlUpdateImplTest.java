@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.EntityExistsException;
 
@@ -30,10 +32,13 @@ import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author higa
@@ -106,6 +111,54 @@ public class SqlUpdateImplTest extends TestCase {
         assertEquals(2, query.params.length);
         assertEquals("hoge", query.params[0]);
         assertEquals(1, query.params[1]);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParams_lob() throws Exception {
+        String sql = "update aaa set bbb = ? where ccc = ? and ddd = ?";
+        SqlUpdateImpl query = new SqlUpdateImpl(manager, sql, String.class,
+                String.class, byte[].class) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                return new MockPreparedStatement(null, null);
+            }
+
+        };
+        query.params(lob((String) null), lob("hoge"), lob(new byte[] {}))
+                .execute();
+        assertEquals(3, query.getParamSize());
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+        assertEquals(ValueTypes.CLOB, query.getParam(1).valueType);
+        assertEquals(ValueTypes.BLOB, query.getParam(2).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParams_temporalType() throws Exception {
+        String sql = "update aaa set bbb = ? where ccc = ? and ddd = ?";
+        SqlUpdateImpl query = new SqlUpdateImpl(manager, sql, Calendar.class,
+                Date.class, Date.class) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                return new MockPreparedStatement(null, null);
+            }
+
+        };
+        query.params(time((Calendar) null), date(new Date()), time(new Date()))
+                .execute();
+        assertEquals(3, query.getParamSize());
+        assertEquals(ValueTypes.CALENDAR_TIME, query.getParam(0).valueType);
+        assertEquals(ValueTypes.DATE_SQLDATE, query.getParam(1).valueType);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(2).valueType);
     }
 
     /**
@@ -208,4 +261,5 @@ public class SqlUpdateImplTest extends TestCase {
             assertEquals(2, e.getParamClassSize());
         }
     }
+
 }

@@ -40,6 +40,7 @@ import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.LobParameter;
 import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.query.AbstractModuleCall.ParamDesc.ParameterType;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -119,7 +120,8 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
         }
         final Class<?> paramClass = parameter.getClass();
         if (ValueTypes.isSimpleType(paramClass)
-                || TemporalParameter.class.isAssignableFrom(paramClass)) {
+                || TemporalParameter.class == paramClass
+                || LobParameter.class == paramClass) {
             addParam(parameter, paramClass);
             return;
         }

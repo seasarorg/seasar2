@@ -16,7 +16,13 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -28,6 +34,7 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.extension.sql.cache.NodeCache;
@@ -37,6 +44,8 @@ import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
 import org.seasar.framework.util.ArrayMap;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author higa
@@ -183,6 +192,43 @@ public class SqlFileSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareParameter_simpleType_clob() {
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, lob("hoge"));
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPrepareParameter_simpleType_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, time(date));
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareParameter_dto() {
         MyDto dto = new MyDto();
         dto.id = 1;
@@ -200,6 +246,46 @@ public class SqlFileSelectImplTest extends TestCase {
         assertEquals(Integer.class, query.getParam(0).paramClass);
         assertEquals(10, query.limit);
         assertEquals(5, query.offset);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_dto_clob() {
+        MyDto2 dto = new MyDto2();
+        dto.largeName = "hoge";
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPrepareParameter_dto_date() throws Exception {
+        MyDto3 dto = new MyDto3();
+        dto.date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
     }
 
     /**
@@ -326,4 +412,23 @@ public class SqlFileSelectImplTest extends TestCase {
          */
         public int offset;
     }
+
+    private static class MyDto2 {
+
+        /**
+         * 
+         */
+        @Lob
+        public String largeName;
+    }
+
+    private static class MyDto3 {
+
+        /**
+         * 
+         */
+        @Temporal(TemporalType.TIME)
+        public Date date;
+    }
+
 }

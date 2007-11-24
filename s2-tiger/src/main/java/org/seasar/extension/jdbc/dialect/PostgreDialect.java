@@ -64,15 +64,6 @@ public class PostgreDialect extends StandardDialect {
     }
 
     @Override
-    public ValueType getValueType(Class<?> clazz) {
-        ValueType valueType = getValueTypeInternal(clazz);
-        if (valueType != null) {
-            return valueType;
-        }
-        return super.getValueType(clazz);
-    }
-
-    @Override
     public ValueType getValueType(PropertyMeta propertyMeta) {
         ValueType valueType = getValueTypeInternal(propertyMeta
                 .getPropertyClass());
@@ -82,13 +73,7 @@ public class PostgreDialect extends StandardDialect {
         return super.getValueType(propertyMeta);
     }
 
-    /**
-     * 値タイプを返します。
-     * 
-     * @param clazz
-     *            クラス
-     * @return 値タイプ
-     */
+    @Override
     protected ValueType getValueTypeInternal(Class<?> clazz) {
         if (List.class.isAssignableFrom(clazz)) {
             return ValueTypes.POSTGRE_RESULT_SET;

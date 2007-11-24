@@ -40,6 +40,11 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
     protected int batchSize;
 
     /**
+     * パラメータのクラスの配列です。
+     */
+    protected Class<?>[] paramClasses;
+
+    /**
      * パラメータの配列のリストです。
      */
     protected List<Object[]> paramsList = new ArrayList<Object[]>();
@@ -64,9 +69,7 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
         if (paramClasses == null) {
             throw new NullPointerException("paramClasses");
         }
-        for (Class<?> c : paramClasses) {
-            addParam(null, c);
-        }
+        this.paramClasses = paramClasses;
     }
 
     public SqlBatchUpdate batchSize(final int batchSize) {
@@ -107,19 +110,19 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
             int pos = 0;
             for (int i = 0; i < size; ++i) {
                 final Object[] params = paramsList.get(i);
-                if (params.length != paramList.size()) {
+                if (params.length != paramClasses.length) {
                     logger.log("ESSR0709", new Object[] {
                             callerClass.getName(), callerMethodName });
                     throw new IllegalParamSizeRuntimeException(params.length,
-                            paramList.size());
+                            paramClasses.length);
                 }
                 for (int j = 0; j < params.length; j++) {
-                    final Param param = getParam(j);
-                    param.value = params[j];
+                    addParam(params[j], paramClasses[j]);
                 }
                 logSql();
                 prepareInParams(ps);
                 PreparedStatementUtil.addBatch(ps);
+                resetParams();
                 if (i == size - 1
                         || (batchSize > 0 && (i + 1) % batchSize == 0)) {
                     final int[] rows = PreparedStatementUtil.executeBatch(ps);

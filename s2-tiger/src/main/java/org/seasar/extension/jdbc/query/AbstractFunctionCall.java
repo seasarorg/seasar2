@@ -52,7 +52,7 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
     protected boolean resultList;
 
     /** 戻り値の時制の種別 */
-    protected TemporalType temporalType;
+    protected TemporalType resultTemporalType;
 
     /**
      * インスタンスを構築します。
@@ -76,7 +76,7 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
 
     @SuppressWarnings("unchecked")
     public S temporal(TemporalType temporalType) {
-        this.temporalType = temporalType;
+        this.resultTemporalType = temporalType;
         return (S) this;
     }
 
@@ -143,7 +143,7 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
      */
     protected void prepareReturnParameter() {
         final ValueType valueType = getValueType(resultList ? List.class
-                : resultClass, resultLob, temporalType);
+                : resultClass, resultLob, resultTemporalType);
         final Param p = addParam(null, resultClass, valueType);
         p.paramType = ParamType.OUT;
     }

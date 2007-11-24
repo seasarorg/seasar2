@@ -22,6 +22,9 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.PropertyType;
@@ -108,8 +111,7 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
                 }
                 propertyDesc = beanDesc.getPropertyDesc(propertyName);
             }
-            ValueType valueType = dialect.getValueType(propertyDesc
-                    .getPropertyType());
+            ValueType valueType = getValueType(propertyDesc);
             propertyTypes[i] = new PropertyTypeImpl(propertyDesc, valueType,
                     columnName);
         }
@@ -168,5 +170,25 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
             pd.setValue(row, value);
         }
         return row;
+    }
+
+    /**
+     * 値タイプを返します。
+     * 
+     * @param propertyDesc
+     *            プロパティ記述
+     * @return 値タイプ
+     */
+    protected ValueType getValueType(PropertyDesc propertyDesc) {
+        Field field = propertyDesc.getField();
+        if (field == null) {
+            return dialect.getValueType(propertyDesc.getPropertyType(), false,
+                    null);
+        }
+        boolean lob = field.isAnnotationPresent(Lob.class);
+        Temporal temporal = field.getAnnotation(Temporal.class);
+        TemporalType temporalType = temporal != null ? temporal.value() : null;
+        return dialect.getValueType(propertyDesc.getPropertyType(), lob,
+                temporalType);
     }
 }

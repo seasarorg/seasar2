@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.framework.util.tiger.Pair;
 
@@ -89,20 +90,25 @@ public interface DbmsDialect {
     /**
      * 値タイプを返します。
      * 
-     * @param clazz
-     *            クラス
-     * @return 値タイプ
-     */
-    ValueType getValueType(Class<?> clazz);
-
-    /**
-     * 値タイプを返します。
-     * 
      * @param propertyMeta
      *            プロパティのメタデータ
      * @return 値タイプ
      */
     ValueType getValueType(PropertyMeta propertyMeta);
+
+    /**
+     * 値タイプを返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @param lob
+     *            <code>LOB</code>かどうか
+     * @param temporalType
+     *            時制の種別
+     * @return 値タイプ
+     */
+    ValueType getValueType(Class<?> clazz, boolean lob,
+            TemporalType temporalType);
 
     /**
      * 結合用のSQLを組み立てます。

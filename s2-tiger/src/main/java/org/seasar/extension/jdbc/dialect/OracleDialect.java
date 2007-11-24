@@ -115,15 +115,6 @@ public class OracleDialect extends StandardDialect {
     }
 
     @Override
-    public ValueType getValueType(Class<?> clazz) {
-        ValueType valueType = getValueTypeInternal(clazz);
-        if (valueType != null) {
-            return valueType;
-        }
-        return super.getValueType(clazz);
-    }
-
-    @Override
     public ValueType getValueType(PropertyMeta propertyMeta) {
         ValueType valueType = getValueTypeInternal(propertyMeta
                 .getPropertyClass());
@@ -133,13 +124,7 @@ public class OracleDialect extends StandardDialect {
         return super.getValueType(propertyMeta);
     }
 
-    /**
-     * 値タイプを返します。
-     * 
-     * @param clazz
-     *            クラス
-     * @return 値タイプ
-     */
+    @Override
     protected ValueType getValueTypeInternal(Class<?> clazz) {
         if (clazz == String.class && supportsWaveDashToFullwidthTilde()) {
             return ValueTypes.WAVE_DASH_STRING;

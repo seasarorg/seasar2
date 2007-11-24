@@ -17,9 +17,13 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -39,6 +43,8 @@ import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockCallableStatement;
 import org.seasar.framework.mock.sql.MockDataSource;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author higa
@@ -74,6 +80,33 @@ public class SqlProcedureCallImplTest extends TestCase {
         assertEquals(1, query.getParam(0).value);
         assertEquals(Integer.class, query.getParam(0).paramClass);
         assertEquals(ValueTypes.INTEGER, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareParameter_simpleType_clob() throws Exception {
+        SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
+                "{call hoge(?)}", lob("hoge"));
+        query.prepareParameter();
+        assertEquals(1, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareParameter_simpleType_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
+                "{call hoge(?)}", time(date));
+        query.prepareParameter();
+        assertEquals(1, query.getParamSize());
+        assertEquals(date, query.getParam(0).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
     }
 
     /**
@@ -141,7 +174,7 @@ public class SqlProcedureCallImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testPrepareParameter_clob() throws Exception {
+    public void testPrepareParameter_dto_clob() throws Exception {
         MyDto3 dto = new MyDto3();
         dto.largeName = "aaa";
         SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
@@ -151,6 +184,22 @@ public class SqlProcedureCallImplTest extends TestCase {
         assertEquals("aaa", query.getParam(0).value);
         assertEquals(ParamType.IN, query.getParam(0).paramType);
         assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPrepareParameter_dto_date() throws Exception {
+        MyDto4 dto = new MyDto4();
+        dto.date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlProcedureCallImpl query = new SqlProcedureCallImpl(manager,
+                "{call hoge(?)}", dto);
+        query.prepareParameter();
+        assertEquals(1, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(ParamType.IN, query.getParam(0).paramType);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
     }
 
     /**
@@ -222,4 +271,11 @@ public class SqlProcedureCallImplTest extends TestCase {
         public String largeName;
     }
 
+    private static final class MyDto4 {
+
+        /** */
+        @Temporal(TemporalType.TIME)
+        public Date date;
+
+    }
 }

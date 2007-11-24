@@ -37,6 +37,11 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
     private static final Object[] EMPTY_PARAMS = new Object[0];
 
     /**
+     * パラメータのクラスの配列です。
+     */
+    protected Class<?>[] paramClasses;
+
+    /**
      * パラメータの配列です。
      */
     protected Object[] params = EMPTY_PARAMS;
@@ -61,9 +66,8 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
         if (paramClasses == null) {
             throw new NullPointerException("paramClasses");
         }
-        for (Class<?> c : paramClasses) {
-            addParam(null, c);
-        }
+        this.paramClasses = paramClasses;
+
     }
 
     public SqlUpdate params(Object... params) {
@@ -89,15 +93,14 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
      * @return 更新した行数
      */
     protected int executeInternal() {
-        if (params.length != paramList.size()) {
+        if (params.length != paramClasses.length) {
             logger.log("ESSR0709", new Object[] { callerClass.getName(),
                     callerMethodName });
-            throw new IllegalParamSizeRuntimeException(params.length, paramList
-                    .size());
+            throw new IllegalParamSizeRuntimeException(params.length,
+                    paramClasses.length);
         }
         for (int j = 0; j < params.length; j++) {
-            Param param = getParam(j);
-            param.value = params[j];
+            addParam(params[j], paramClasses[j]);
         }
         logSql();
         int ret = 0;

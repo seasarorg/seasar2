@@ -15,13 +15,17 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.FromClause;
@@ -80,12 +84,63 @@ public class StandardDialect implements DbmsDialect {
         return sql;
     }
 
-    public ValueType getValueType(Class<?> clazz) {
-        return ValueTypes.getValueType(clazz);
-    }
-
     public ValueType getValueType(PropertyMeta propertyMeta) {
         return propertyMeta.getValueType();
+    }
+
+    public ValueType getValueType(Class<?> clazz, boolean lob,
+            TemporalType temporalType) {
+        if (lob) {
+            if (clazz == String.class) {
+                return ValueTypes.CLOB;
+            } else if (clazz == byte[].class) {
+                return ValueTypes.BLOB;
+            } else if (Serializable.class.isAssignableFrom(clazz)) {
+                return ValueTypes.SERIALIZABLE_BLOB;
+            }
+        }
+        if (temporalType != null) {
+            if (Date.class == clazz) {
+                switch (temporalType) {
+                case DATE:
+                    return ValueTypes.DATE_SQLDATE;
+                case TIME:
+                    return ValueTypes.DATE_TIME;
+                case TIMESTAMP:
+                    return ValueTypes.DATE_TIMESTAMP;
+                }
+            }
+            if (Calendar.class == clazz) {
+                switch (temporalType) {
+                case DATE:
+                    return ValueTypes.CALENDAR_SQLDATE;
+                case TIME:
+                    return ValueTypes.CALENDAR_TIME;
+                case TIMESTAMP:
+                    return ValueTypes.CALENDAR_TIMESTAMP;
+                }
+            }
+        }
+        ValueType valueType = getValueTypeInternal(clazz);
+        if (valueType == null) {
+            valueType = ValueTypes.getValueType(clazz);
+        }
+        if (valueType == ValueTypes.OBJECT
+                && Serializable.class.isAssignableFrom(clazz)) {
+            return ValueTypes.SERIALIZABLE_BYTE_ARRAY;
+        }
+        return valueType;
+    }
+
+    /**
+     * 値タイプを返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return 値タイプ
+     */
+    protected ValueType getValueTypeInternal(Class<?> clazz) {
+        return null;
     }
 
     public void setupJoin(FromClause fromClause, WhereClause whereClause,

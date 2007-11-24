@@ -66,7 +66,8 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
         PersistenceConvention persistenceConvention = jdbcManager
                 .getPersistenceConvention();
         boolean simple = ValueTypes.isSimpleType(baseClass);
-        ValueType valueType = simple ? dialect.getValueType(baseClass) : null;
+        ValueType valueType = simple ? getValueType(baseClass, resultLob,
+                resultTemporalType) : null;
         if (limit > 0 && !dialect.supportsLimit()) {
             if (simple) {
                 return new ObjectListSupportLimitResultSetHandler(valueType,
@@ -100,7 +101,8 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
         PersistenceConvention persistenceConvention = jdbcManager
                 .getPersistenceConvention();
         if (ValueTypes.isSimpleType(baseClass)) {
-            ValueType valueType = dialect.getValueType(baseClass);
+            ValueType valueType = getValueType(baseClass, resultLob,
+                    resultTemporalType);
             return new ObjectResultSetHandler(valueType, executedSql);
         }
         if (Map.class.isAssignableFrom(baseClass)) {

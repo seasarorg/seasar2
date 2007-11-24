@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.io.Serializable;
+
+import org.seasar.extension.jdbc.parameter.Parameter;
+
 /**
  * SQLを直接指定する更新(insert, update, delete)です。
  * 
@@ -28,7 +32,14 @@ public interface SqlUpdate extends Update<SqlUpdate> {
      * 
      * @param params
      *            パラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @return このインスタンス自身
+     * @see Parameter
      */
     SqlUpdate params(Object... params);
 }

@@ -22,6 +22,9 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
 import org.seasar.extension.jdbc.exception.SEntityExistsException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.LobParameter;
+import org.seasar.extension.jdbc.parameter.Parameter;
+import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
@@ -200,7 +203,9 @@ public class SqlFileBatchUpdateImpl<T> extends
         sqlContext = new SqlContextImpl();
         if (parameter != null) {
             Class<?> clazz = parameter.getClass();
-            if (ValueTypes.isSimpleType(clazz)) {
+            if (ValueTypes.isSimpleType(clazz)
+                    || TemporalParameter.class == clazz
+                    || LobParameter.class == clazz) {
                 sqlContext.addArg("$1", parameter, clazz);
             } else {
                 BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
@@ -209,7 +214,8 @@ public class SqlFileBatchUpdateImpl<T> extends
                     if (!pd.isReadable()) {
                         continue;
                     }
-                    Object value = pd.getValue(parameter);
+                    Object value = Parameter.wrapIfNecessary(pd, pd
+                            .getValue(parameter));
                     sqlContext.addArg(pd.getPropertyName(), value, pd
                             .getPropertyType());
                 }
@@ -230,4 +236,5 @@ public class SqlFileBatchUpdateImpl<T> extends
     protected void prepareSql() {
         executedSql = sqlContext.getSql();
     }
+
 }

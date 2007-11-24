@@ -21,7 +21,7 @@ import java.util.Date;
 import javax.persistence.TemporalType;
 
 /**
- * {@link Date}と{@link Calendar}の値と{@link TemporalType}の組み合わせをラップするクラスです。
+ * {@link Date}または{@link Calendar}型の値と{@link TemporalType}の組み合わせをラップするクラスです。
  * 
  * @author taedium
  * 
@@ -45,15 +45,31 @@ public class TemporalParameter {
      * @param temporalType
      *            時制の種別
      */
-    public TemporalParameter(Object value, TemporalType temporalType) {
-        if (value == null) {
-            throw new NullPointerException("value");
-        }
+    public TemporalParameter(Date value, TemporalType temporalType) {
         if (temporalType == null) {
             throw new NullPointerException("temporalType");
         }
         this.value = value;
-        this.temporalClass = value.getClass();
+        this.temporalClass = Date.class;
+        this.temporalType = temporalType;
+    }
+
+    /**
+     * インスタンスを作成します。
+     * 
+     * @param value
+     *            値
+     * @param clazz
+     *            時制のクラス
+     * @param temporalType
+     *            時制の種別
+     */
+    public TemporalParameter(Calendar value, TemporalType temporalType) {
+        if (temporalType == null) {
+            throw new NullPointerException("temporalType");
+        }
+        this.value = value;
+        this.temporalClass = Calendar.class;
         this.temporalType = temporalType;
     }
 
@@ -83,4 +99,5 @@ public class TemporalParameter {
     public TemporalType getTemporalType() {
         return temporalType;
     }
+
 }

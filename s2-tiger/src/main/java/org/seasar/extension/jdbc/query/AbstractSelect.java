@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import javax.persistence.NoResultException;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcContext;
@@ -75,6 +76,16 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     protected boolean disallowNoResult;
 
     /**
+     * 戻り値型がLOBなら<code>true</code>です。
+     */
+    protected boolean resultLob;
+
+    /**
+     * 戻り値の時制の種別です。
+     */
+    protected TemporalType resultTemporalType;
+
+    /**
      * {@link AbstractSelect}を作成します。
      * 
      * @param jdbcManager
@@ -115,6 +126,18 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     @SuppressWarnings("unchecked")
     public S disallowNoResult() {
         this.disallowNoResult = true;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S lob() {
+        resultLob = true;
+        return (S) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public S temporal(TemporalType temporalType) {
+        this.resultTemporalType = temporalType;
         return (S) this;
     }
 

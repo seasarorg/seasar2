@@ -17,8 +17,12 @@ package org.seasar.extension.jdbc.handler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -26,6 +30,10 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
+import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
@@ -173,6 +181,21 @@ public class AbstractBeanResultSetHandlerTest extends TestCase {
         assertEquals("222", dto.aaaBbb);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetValueType() throws Exception {
+        MyHandler handler = new MyHandler(Aaa6Dto.class, new StandardDialect());
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Aaa6Dto.class);
+        PropertyDesc propertyDesc = beanDesc.getPropertyDesc("aaa");
+        assertEquals(ValueTypes.STRING, handler.getValueType(propertyDesc));
+        propertyDesc = beanDesc.getPropertyDesc("bbb");
+        assertEquals(ValueTypes.CLOB, handler.getValueType(propertyDesc));
+        propertyDesc = beanDesc.getPropertyDesc("ccc");
+        assertEquals(ValueTypes.DATE_TIME, handler.getValueType(propertyDesc));
+    }
+
     private static class MyHandler extends AbstractBeanResultSetHandler {
 
         /**
@@ -236,5 +259,25 @@ public class AbstractBeanResultSetHandlerTest extends TestCase {
          * 
          */
         public String foo2;
+    }
+
+    private static class Aaa6Dto {
+
+        /**
+         * 
+         */
+        public String aaa;
+
+        /**
+         * 
+         */
+        @Lob
+        public String bbb;
+
+        /**
+         * 
+         */
+        @Temporal(TemporalType.TIME)
+        public Date ccc;
     }
 }

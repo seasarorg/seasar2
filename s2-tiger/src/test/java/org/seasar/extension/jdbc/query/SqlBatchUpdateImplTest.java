@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.persistence.EntityExistsException;
 
@@ -30,10 +32,13 @@ import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author higa
@@ -114,6 +119,78 @@ public class SqlBatchUpdateImplTest extends TestCase {
         params = query.paramsList.get(1);
         assertEquals("hoge2", params[0]);
         assertEquals(2, params[1]);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParams_lob() throws Exception {
+        SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager,
+                "update aaa set bbb = ? where ccc = ? and ddd = ?",
+                String.class, String.class, byte[].class) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                return new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+
+                        return new int[] { 1 };
+                    }
+                };
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(3, getParamSize());
+                assertEquals(ValueTypes.CLOB, getParam(0).valueType);
+                assertEquals(ValueTypes.CLOB, getParam(1).valueType);
+                assertEquals(ValueTypes.BLOB, getParam(2).valueType);
+                super.resetParams();
+            }
+        };
+        query.params(lob((String) null), lob("foo"), lob(new byte[] {}))
+                .params(lob((String) null), lob("foo2"), lob(new byte[] {}))
+                .execute();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParams_valueType() throws Exception {
+        SqlBatchUpdateImpl query = new SqlBatchUpdateImpl(manager,
+                "update aaa set bbb = ? where ccc = ? and ddd = ?",
+                String.class, String.class, Date.class) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                return new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+
+                        return new int[] { 1 };
+                    }
+                };
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(3, getParamSize());
+                assertEquals(ValueTypes.CALENDAR_TIME, getParam(0).valueType);
+                assertEquals(ValueTypes.DATE_SQLDATE, getParam(1).valueType);
+                assertEquals(ValueTypes.DATE_TIME, getParam(2).valueType);
+                super.resetParams();
+            }
+        };
+        query.params(time((Calendar) null), date(new Date()), time(new Date()))
+                .params(time((Calendar) null), date(new Date()),
+                        time(new Date())).execute();
     }
 
     /**

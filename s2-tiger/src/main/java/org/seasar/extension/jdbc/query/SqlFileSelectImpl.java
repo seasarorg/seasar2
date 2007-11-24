@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.query;
 
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.parameter.LobParameter;
+import org.seasar.extension.jdbc.parameter.Parameter;
+import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlContext;
@@ -136,7 +139,9 @@ public class SqlFileSelectImpl<T> extends
         sqlContext = new SqlContextImpl();
         if (parameter != null) {
             Class<?> clazz = parameter.getClass();
-            if (ValueTypes.isSimpleType(clazz)) {
+            if (ValueTypes.isSimpleType(clazz)
+                    || TemporalParameter.class == clazz
+                    || LobParameter.class == clazz) {
                 sqlContext.addArg("$1", parameter, clazz);
             } else {
                 BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
@@ -151,6 +156,7 @@ public class SqlFileSelectImpl<T> extends
                     } else if (pd.getPropertyName().equals("offset")) {
                         offset = IntegerConversionUtil.toPrimitiveInt(value);
                     } else {
+                        value = Parameter.wrapIfNecessary(pd, value);
                         sqlContext.addArg(pd.getPropertyName(), value, pd
                                 .getPropertyType());
                     }
@@ -172,4 +178,5 @@ public class SqlFileSelectImpl<T> extends
     protected void prepareSql() {
         executedSql = convertLimitSql(sqlContext.getSql());
     }
+
 }

@@ -17,8 +17,13 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -28,12 +33,15 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.extension.sql.cache.NodeCache;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author taedium
@@ -140,6 +148,43 @@ public class SqlFileUpdateImplTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareParameter_simpleType_clob() {
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
+                lob("hoge"));
+        query.prepareCallerClassAndMethodName("execute");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPrepareParameter_simpleType_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
+                time(date));
+        query.prepareCallerClassAndMethodName("execute");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = 1", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareParameter_simpleType_bindNull() {
         SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_SIMPLE,
                 null);
@@ -170,6 +215,52 @@ public class SqlFileUpdateImplTest extends TestCase {
         assertEquals(1, query.getParam(1).value);
         assertEquals(String.class, query.getParam(0).paramClass);
         assertEquals(Integer.class, query.getParam(1).paramClass);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_dto_clob() {
+        MyDto2 dto = new MyDto2();
+        dto.id = 1;
+        dto.name = "hoge";
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(2, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(1, query.getParam(1).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+        assertEquals(Integer.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(1).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPrepareParameter_dto_date() throws Exception {
+        MyDto3 dto = new MyDto3();
+        dto.id = 1;
+        dto.name = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(2, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(1, query.getParam(1).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
+        assertEquals(Integer.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(1).valueType);
     }
 
     /**
@@ -244,4 +335,33 @@ public class SqlFileUpdateImplTest extends TestCase {
 
     }
 
+    private static class MyDto2 {
+
+        /**
+         * 
+         */
+        public Integer id;
+
+        /**
+         * 
+         */
+        @Lob
+        public String name;
+
+    }
+
+    private static class MyDto3 {
+
+        /**
+         * 
+         */
+        public Integer id;
+
+        /**
+         * 
+         */
+        @Temporal(TemporalType.TIME)
+        public Date name;
+
+    }
 }

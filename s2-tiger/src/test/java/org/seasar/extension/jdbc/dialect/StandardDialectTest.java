@@ -17,7 +17,11 @@ package org.seasar.extension.jdbc.dialect;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -25,6 +29,7 @@ import org.seasar.extension.jdbc.FromClause;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.entity.MyDto;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;
 
@@ -137,6 +142,51 @@ public class StandardDialectTest extends TestCase {
                 SQLException.class.cast(new SQLException("hoge")
                         .initCause(new SQLException("hoge")
                                 .initCause(new RuntimeException())))))));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetValueType() throws Exception {
+        assertEquals(ValueTypes.STRING, dialect.getValueType(String.class,
+                false, null));
+        assertEquals(ValueTypes.INTEGER, dialect.getValueType(Integer.class,
+                false, null));
+        assertEquals(ValueTypes.TIMESTAMP, dialect.getValueType(Date.class,
+                false, null));
+        assertEquals(ValueTypes.TIMESTAMP, dialect.getValueType(Calendar.class,
+                false, null));
+        assertEquals(ValueTypes.SERIALIZABLE_BYTE_ARRAY, dialect.getValueType(
+                MyDto.class, false, null));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetValueType_lob() throws Exception {
+        assertEquals(ValueTypes.CLOB, dialect.getValueType(String.class, true,
+                null));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetValueType_temporalType() throws Exception {
+        assertEquals(ValueTypes.DATE_SQLDATE, dialect.getValueType(Date.class,
+                false, TemporalType.DATE));
+        assertEquals(ValueTypes.DATE_TIME, dialect.getValueType(Date.class,
+                false, TemporalType.TIME));
+        assertEquals(ValueTypes.DATE_TIMESTAMP, dialect.getValueType(
+                Date.class, false, TemporalType.TIMESTAMP));
+        assertEquals(ValueTypes.CALENDAR_SQLDATE, dialect.getValueType(
+                Calendar.class, false, TemporalType.DATE));
+        assertEquals(ValueTypes.CALENDAR_TIME, dialect.getValueType(
+                Calendar.class, false, TemporalType.TIME));
+        assertEquals(ValueTypes.CALENDAR_TIMESTAMP, dialect.getValueType(
+                Calendar.class, false, TemporalType.TIMESTAMP));
     }
 
     /**

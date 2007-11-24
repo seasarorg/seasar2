@@ -15,13 +15,10 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.TemporalType;
@@ -39,7 +36,6 @@ import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.parameter.LobParameter;
 import org.seasar.extension.jdbc.parameter.TemporalParameter;
-import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
@@ -318,7 +314,7 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
         } else if (value instanceof LobParameter) {
             LobParameter parameter = LobParameter.class.cast(value);
             param.value = parameter.getValue();
-            param.paramClass = param.value.getClass();
+            param.paramClass = parameter.getLobClass();
             param.valueType = getValueType(param.paramClass, true, null);
         } else {
             param.value = value;
@@ -361,36 +357,8 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      */
     protected ValueType getValueType(Class<?> paramClass, boolean lob,
             TemporalType temporalType) {
-        if (lob) {
-            if (paramClass == String.class) {
-                return ValueTypes.CLOB;
-            } else if (paramClass == byte[].class) {
-                return ValueTypes.BLOB;
-            } else if (Serializable.class.isAssignableFrom(paramClass)) {
-                return ValueTypes.SERIALIZABLE_BLOB;
-            }
-        }
-        if (temporalType != null
-                && (Date.class == paramClass || Calendar.class
-                        .isAssignableFrom(paramClass))) {
-            boolean date = Date.class == paramClass;
-            switch (temporalType) {
-            case DATE:
-                return date ? ValueTypes.DATE_SQLDATE
-                        : ValueTypes.CALENDAR_SQLDATE;
-            case TIME:
-                return date ? ValueTypes.DATE_TIME : ValueTypes.CALENDAR_TIME;
-            case TIMESTAMP:
-                return date ? ValueTypes.DATE_TIMESTAMP
-                        : ValueTypes.CALENDAR_TIMESTAMP;
-            }
-        }
-        ValueType valueType = jdbcManager.getDialect().getValueType(paramClass);
-        if (valueType == ValueTypes.OBJECT
-                && Serializable.class.isAssignableFrom(paramClass)) {
-            return ValueTypes.SERIALIZABLE_BYTE_ARRAY;
-        }
-        return valueType;
+        return jdbcManager.getDialect().getValueType(paramClass, lob,
+                temporalType);
     }
 
     /**

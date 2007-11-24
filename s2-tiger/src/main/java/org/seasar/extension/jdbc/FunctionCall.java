@@ -35,6 +35,9 @@ public interface FunctionCall<T, S extends FunctionCall<T, S>> extends
 
     /**
      * ストアドファンクションの戻り値またはその要素がLOBであることを指定します。
+     * <p>
+     * このメソッドの呼び出しは、戻り値またはその要素が{@link String}型の場合に有効です。
+     * </p>
      * 
      * @return このインスタンス自身
      */
@@ -43,7 +46,7 @@ public interface FunctionCall<T, S extends FunctionCall<T, S>> extends
     /**
      * ストアドファンクションの戻り値またはその要素の{@link TemporalType}を指定します。
      * <p>
-     * このメソッドの呼び出しは、戻り値またはその要素が{@link Date}もしくは{@link Calendar}の場合に有効です。
+     * このメソッドの呼び出しは、戻り値またはその要素が{@link Date}もしくは{@link Calendar}型の場合に有効です。
      * </p>
      * 
      * @param temporalType

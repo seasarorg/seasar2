@@ -15,10 +15,12 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.seasar.extension.jdbc.annotation.InOut;
 import org.seasar.extension.jdbc.annotation.Out;
+import org.seasar.extension.jdbc.parameter.Parameter;
 
 /**
  * <code>JDBC</code>による<code>SQL</code>の実行を管理するインターフェースです。
@@ -50,6 +52,12 @@ public interface JdbcManager {
      *            SQL
      * @param params
      *            パラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @return SQL検索
      * @see SqlSelect
      */
@@ -88,8 +96,15 @@ public interface JdbcManager {
      *            プロパティ名をSQLファイルのバインド変数名とあわせます。
      *            JavaBeansはpublicフィールドで定義することもできます。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @return SQLファイル検索
      * @see SqlFileSelect
+     * @see Parameter
      */
     <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path,
             Object parameter);
@@ -206,8 +221,15 @@ public interface JdbcManager {
      *            それ以外の場合は、JavaBeansを作って、 プロパティ名をSQLファイルのバインド変数名とあわせます。
      *            JavaBeansはpublicフィールドで定義することもできます。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @return SQLファイル更新
      * @see SqlFileUpdate
+     * @see
      */
     SqlFileUpdate updateBySqlFile(String path, Object parameter);
 
@@ -322,7 +344,14 @@ public interface JdbcManager {
      *            <p>
      *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @return 自動プロシージャ呼び出し
+     * @see Parameter
      */
     AutoProcedureCall call(String procedureName, Object parameter);
 
@@ -359,6 +388,12 @@ public interface JdbcManager {
      *            </p>
      *            <p>
      *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLプロシージャ呼び出し
      */
@@ -402,7 +437,14 @@ public interface JdbcManager {
      *            <p>
      *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @return SQLファイルプロシージャ呼び出し
+     * @see Parameter
      */
     SqlFileProcedureCall callBySqlFile(String path, Object parameter);
 
@@ -446,9 +488,16 @@ public interface JdbcManager {
      *            <p>
      *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @param <T>
      *            ファンクションの戻り値の型。ファンクションの戻り値が結果セットの場合はリストの要素のクラス
      * @return 自動ファンクション呼び出し
+     * @see Parameter
      */
     <T> AutoFunctionCall<T> call(Class<T> resultClass, String functionName,
             Object parameter);
@@ -493,9 +542,16 @@ public interface JdbcManager {
      *            <p>
      *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @param <T>
      *            ファンクションの戻り値の型。ファンクションの戻り値が結果セットの場合はリストの要素のクラス
      * @return SQLファンクション呼び出し
+     * @see Parameter
      */
     <T> SqlFunctionCall<T> callBySql(Class<T> resultClass, String sql,
             Object parameter);
@@ -540,9 +596,16 @@ public interface JdbcManager {
      *            <p>
      *            JavaBeansの場合、継承もとのクラスのフィールドは認識しません。
      *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
      * @param <T>
      *            ファンクションの戻り値の型。ファンクションの戻り値が結果セットの場合はリストの要素のクラス
      * @return SQLファイルファンクション呼び出し
+     * @see Parameter
      */
     <T> SqlFileFunctionCall<T> callBySqlFile(Class<T> resultClass, String path,
             Object parameter);

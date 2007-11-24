@@ -62,14 +62,14 @@ public class OracleDialectTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType() throws Exception {
-        assertEquals(ValueTypes.WAVE_DASH_STRING, dialect
-                .getValueType(String.class));
-        assertEquals(ValueTypes.BOOLEAN_INTEGER, dialect
-                .getValueType(boolean.class));
-        assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect
-                .getValueType(List.class));
-        assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect
-                .getValueType(ArrayList.class));
+        assertEquals(ValueTypes.WAVE_DASH_STRING, dialect.getValueType(
+                String.class, false, null));
+        assertEquals(ValueTypes.BOOLEAN_INTEGER, dialect.getValueType(
+                boolean.class, false, null));
+        assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect.getValueType(
+                List.class, false, null));
+        assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect.getValueType(
+                ArrayList.class, false, null));
     }
 
     /**
