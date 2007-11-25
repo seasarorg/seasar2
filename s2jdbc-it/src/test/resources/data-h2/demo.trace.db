@@ -474,3 +474,17 @@ DROP PROCEDURE TWO_RESULTS [42001-60]
 	at org.h2.server.web.WebThread.process(WebThread.java:375)
 	at org.h2.server.web.WebThread.processRequest(WebThread.java:131)
 	at org.h2.server.web.WebThread.run(WebThread.java:158)
+11-25 21:21:56 jdbc[0]: SQLException
+org.h2.jdbc.JdbcSQLException: Table L not found [42S02-55]
+	at org.h2.message.Message.getSQLException(Message.java:65)
+	at org.h2.message.Message.getSQLException(Message.java:47)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:54)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:83)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:64)
+	at org.h2.command.Command.executeUpdate(Command.java:121)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:155)
+	at org.h2.server.web.WebThread.getResult(WebThread.java:1211)
+	at org.h2.server.web.WebThread.query(WebThread.java:881)
+	at org.h2.server.web.WebThread.process(WebThread.java:344)
+	at org.h2.server.web.WebThread.processRequest(WebThread.java:117)
+	at org.h2.server.web.WebThread.run(WebThread.java:144)

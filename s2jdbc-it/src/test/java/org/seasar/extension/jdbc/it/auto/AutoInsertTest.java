@@ -408,16 +408,23 @@ public class AutoInsertTest {
         for (int i = 0; i < chars.length; i++) {
             chars[i] = 'c';
         }
-        LargeObject largeObject = new LargeObject();
-        largeObject.id = 1;
-        largeObject.blobValue = bytes;
-        largeObject.clobValue = new String(chars);
-        jdbcManager.insert(largeObject).execute();
-        largeObject =
-            jdbcManager.from(LargeObject.class).where(
-                new SimpleWhere().eq("id", 1)).getSingleResult();
-        ArrayAssert.assertEquals(bytes, largeObject.blobValue);
-        assertEquals(new String(chars), largeObject.clobValue);
+        LargeObject.MyDto dto = new LargeObject.MyDto("bar");
+        LargeObject lob = new LargeObject();
+        lob.id = 1;
+        lob.name = "hoge";
+        lob.largeName = new String(chars);
+        lob.bytes = new byte[] { 'f', 'o', 'o' };
+        lob.largeBytes = bytes;
+        lob.dto = dto;
+        lob.largeDto = dto;
+        jdbcManager.insert(lob).execute();
+        lob = jdbcManager.from(LargeObject.class).id(1).getSingleResult();
+        assertEquals("hoge", lob.name);
+        assertEquals(new String(chars), lob.largeName);
+        ArrayAssert.assertEquals(new byte[] { 'f', 'o', 'o' }, lob.bytes);
+        ArrayAssert.assertEquals(bytes, lob.largeBytes);
+        assertEquals(dto, lob.dto);
+        assertEquals(dto, lob.largeDto);
     }
 
     /**

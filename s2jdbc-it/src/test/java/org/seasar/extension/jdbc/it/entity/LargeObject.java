@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.it.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -31,9 +33,60 @@ public class LargeObject {
     public Integer id;
 
     /** */
-    public byte[] blobValue;
+    public String name;
 
     /** */
     @Lob
-    public String clobValue;
+    public String largeName;
+
+    /** */
+    public byte[] bytes;
+
+    /** */
+    @Lob
+    public byte[] largeBytes;
+
+    /** */
+    public MyDto dto;
+
+    /** */
+    @Lob
+    public MyDto largeDto;
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MyDto implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private String value;
+
+        /**
+         * 
+         * @param value
+         */
+        public MyDto(String value) {
+            if (value == null) {
+                throw new NullPointerException("value");
+            }
+            this.value = value;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            if (!(other instanceof MyDto))
+                return false;
+            MyDto castOther = (MyDto) other;
+            return this.value.equals(castOther.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return value.hashCode();
+        }
+
+    }
 }
