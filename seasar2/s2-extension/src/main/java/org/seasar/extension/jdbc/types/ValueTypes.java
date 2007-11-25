@@ -124,35 +124,34 @@ public final class ValueTypes {
     public final static ValueType TIMESTAMP = new TimestampType();
 
     /**
-     * {@link #SQLDATE}を利用する{@link Date}用の値タイプです。
+     * java.sql.Dateと互換性をもつjava.util.Date用の値タイプです。
      */
-    public final static ValueType DATE_SQLDATE = new DateType(SQLDATE);
+    public final static ValueType DATE_SQLDATE = new DateSqlDateType();
 
     /**
-     * {@link #TIME}を利用する{@link Date}用の値タイプです。
+     * Timeと互換性をもつjava.util.Date用の値タイプです。
      */
-    public final static ValueType DATE_TIME = new DateType(TIME);
+    public final static ValueType DATE_TIME = new DateTimeType();
 
     /**
-     * {@link #TIMESTAMP}を利用する{@link Date}用の値タイプです。
+     * Timestampと互換性をもつjava.util.Date用の値タイプです。
      */
-    public final static ValueType DATE_TIMESTAMP = new DateType(TIMESTAMP);
+    public final static ValueType DATE_TIMESTAMP = new DateTimestampType();
 
     /**
-     * {@link #SQLDATE}を利用する{@link Calendar}用の値タイプです。
+     * java.sql.Dateと互換性をもつCalendar用の値タイプです。
      */
-    public final static ValueType CALENDAR_SQLDATE = new CalendarType(SQLDATE);
+    public final static ValueType CALENDAR_SQLDATE = new CalendarSqlDateType();
 
     /**
-     * {@link #TIME}を利用する{@link Calendar}用の値タイプです。
+     * Timeと互換性をもつCalendar用の値タイプです。
      */
-    public final static ValueType CALENDAR_TIME = new CalendarType(TIME);
+    public final static ValueType CALENDAR_TIME = new CalendarTimeType();
 
     /**
-     * {@link #TIMESTAMP}を利用する{@link Calendar}用の値タイプです。
+     * Timestampと互換性をもつCalendar用の値タイプです。
      */
-    public final static ValueType CALENDAR_TIMESTAMP = new CalendarType(
-            TIMESTAMP);
+    public final static ValueType CALENDAR_TIMESTAMP = new CalendarTimestampType();
 
     /**
      * Binary用の値タイプです。

@@ -19,6 +19,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
@@ -62,7 +63,7 @@ public class TimestampType extends AbstractValueType {
         if (value == null) {
             setNull(ps, index);
         } else {
-            ps.setTimestamp(index, TimestampConversionUtil.toTimestamp(value));
+            ps.setTimestamp(index, toTimestamp(value));
         }
     }
 
@@ -71,9 +72,19 @@ public class TimestampType extends AbstractValueType {
         if (value == null) {
             setNull(cs, parameterName);
         } else {
-            cs.setTimestamp(parameterName, TimestampConversionUtil
-                    .toTimestamp(value));
+            cs.setTimestamp(parameterName, toTimestamp(value));
         }
+    }
+
+    /**
+     * {@link Timestamp}に変換します。
+     * 
+     * @param value
+     *            値
+     * @return {@link Timestamp}
+     */
+    protected Timestamp toTimestamp(Object value) {
+        return TimestampConversionUtil.toTimestamp(value);
     }
 
 }

@@ -16,75 +16,48 @@
 package org.seasar.extension.jdbc.types;
 
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Types;
+import java.util.Calendar;
 
 import org.seasar.extension.jdbc.ValueType;
-import org.seasar.framework.util.TimeConversionUtil;
+import org.seasar.framework.util.CalendarConversionUtil;
 
 /**
- * Time用の {@link ValueType}です。
+ * {@link java.sql.Date}と互換性をもつ{@link Calendar}用の{@link ValueType}です。
  * 
- * @author higa
+ * @author taedium
  * 
  */
-public class TimeType extends AbstractValueType {
-
-    /**
-     * インスタンスを構築します。
-     */
-    public TimeType() {
-        super(Types.TIME);
-    }
+public class CalendarSqlDateType extends SqlDateType {
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
-        return resultSet.getTime(index);
+        return toCalendar(super.getValue(resultSet, index));
     }
 
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
-        return resultSet.getTime(columnName);
+        return toCalendar(super.getValue(resultSet, columnName));
     }
 
     public Object getValue(CallableStatement cs, int index) throws SQLException {
-        return cs.getTime(index);
+        return toCalendar(super.getValue(cs, index));
     }
 
     public Object getValue(CallableStatement cs, String parameterName)
             throws SQLException {
-        return cs.getTime(parameterName);
-    }
-
-    public void bindValue(PreparedStatement ps, int index, Object value)
-            throws SQLException {
-        if (value == null) {
-            setNull(ps, index);
-        } else {
-            ps.setTime(index, toTime(value));
-        }
-    }
-
-    public void bindValue(CallableStatement cs, String parameterName,
-            Object value) throws SQLException {
-        if (value == null) {
-            setNull(cs, parameterName);
-        } else {
-            cs.setTime(parameterName, toTime(value));
-        }
+        return toCalendar(super.getValue(cs, parameterName));
     }
 
     /**
-     * {@link Time}に変換します
+     * {@link Calendar}に変換します。
      * 
      * @param value
      *            値
-     * @return {@link Time}
+     * @return {@link Calendar}
      */
-    protected Time toTime(Object value) {
-        return TimeConversionUtil.toTime(value);
+    protected Calendar toCalendar(Object value) {
+        return CalendarConversionUtil.toCalendar(value);
     }
 
 }

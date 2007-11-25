@@ -62,7 +62,7 @@ public class SqlDateType extends AbstractValueType {
         if (value == null) {
             setNull(ps, index);
         } else {
-            ps.setDate(index, SqlDateConversionUtil.toDate(value));
+            ps.setDate(index, toSqlDate(value));
         }
     }
 
@@ -71,8 +71,19 @@ public class SqlDateType extends AbstractValueType {
         if (value == null) {
             setNull(cs, parameterName);
         } else {
-            cs.setDate(parameterName, SqlDateConversionUtil.toDate(value));
+            cs.setDate(parameterName, toSqlDate(value));
         }
+    }
+
+    /**
+     * {@link java.sql.Date}
+     * 
+     * @param value
+     *            値
+     * @return {@link java.sql.Date}
+     */
+    protected java.sql.Date toSqlDate(Object value) {
+        return SqlDateConversionUtil.toDate(value);
     }
 
 }

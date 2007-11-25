@@ -16,75 +16,63 @@
 package org.seasar.extension.jdbc.types;
 
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.sql.Types;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.seasar.extension.jdbc.ValueType;
-import org.seasar.framework.util.TimeConversionUtil;
+import org.seasar.framework.util.DateConversionUtil;
 
 /**
- * Time用の {@link ValueType}です。
+ * {@link Time}と互換性をもつ{@link Date}用の{@link ValueType}です。
  * 
- * @author higa
+ * @author taedium
  * 
  */
-public class TimeType extends AbstractValueType {
-
-    /**
-     * インスタンスを構築します。
-     */
-    public TimeType() {
-        super(Types.TIME);
-    }
+public class DateTimeType extends TimeType {
 
     public Object getValue(ResultSet resultSet, int index) throws SQLException {
-        return resultSet.getTime(index);
+        return toDate(super.getValue(resultSet, index));
     }
 
     public Object getValue(ResultSet resultSet, String columnName)
             throws SQLException {
-        return resultSet.getTime(columnName);
+        return toDate(super.getValue(resultSet, columnName));
     }
 
     public Object getValue(CallableStatement cs, int index) throws SQLException {
-        return cs.getTime(index);
+        return toDate(super.getValue(cs, index));
     }
 
     public Object getValue(CallableStatement cs, String parameterName)
             throws SQLException {
-        return cs.getTime(parameterName);
-    }
-
-    public void bindValue(PreparedStatement ps, int index, Object value)
-            throws SQLException {
-        if (value == null) {
-            setNull(ps, index);
-        } else {
-            ps.setTime(index, toTime(value));
-        }
-    }
-
-    public void bindValue(CallableStatement cs, String parameterName,
-            Object value) throws SQLException {
-        if (value == null) {
-            setNull(cs, parameterName);
-        } else {
-            cs.setTime(parameterName, toTime(value));
-        }
+        return toDate(super.getValue(cs, parameterName));
     }
 
     /**
-     * {@link Time}に変換します
+     * {@link Date}に変換します。
      * 
      * @param value
      *            値
-     * @return {@link Time}
+     * @return {@link Date}
      */
-    protected Time toTime(Object value) {
-        return TimeConversionUtil.toTime(value);
+    protected Date toDate(Object value) {
+        return DateConversionUtil.toDate(value);
     }
 
+    protected Time toTime(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (!Date.class.isInstance(value)) {
+            throw new IllegalArgumentException("value");
+        }
+        Date date = (Date) value;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(1970, Calendar.JANUARY, 1);
+        return new Time(calendar.getTimeInMillis());
+    }
 }
