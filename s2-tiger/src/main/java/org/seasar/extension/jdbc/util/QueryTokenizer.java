@@ -184,7 +184,7 @@ public class QueryTokenizer {
      */
     protected boolean isOrdinary(char c) {
         return c == '=' || c == '?' || c == '<' || c == '>' || c == '('
-                || c == ')' || c == '!' || c == '*' || c == '-';
+                || c == ')' || c == '!' || c == '*' || c == '-' || c == ',';
     }
 
     /**

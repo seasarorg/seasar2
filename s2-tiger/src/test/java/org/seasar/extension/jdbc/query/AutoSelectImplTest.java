@@ -1582,9 +1582,10 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareOrderBy() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").orderBy("bbb.id desc");
+        query.join("bbb").orderBy("name, bbb.id desc");
         query.prepare("getResultList");
-        assertEquals(" order by T2_.ID desc", query.orderByClause.toSql());
+        assertEquals(" order by T1_.NAME, T2_.ID desc", query.orderByClause
+                .toSql());
     }
 
     /**

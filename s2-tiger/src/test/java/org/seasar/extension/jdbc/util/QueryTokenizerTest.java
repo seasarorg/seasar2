@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.util;
 
-import org.seasar.extension.jdbc.util.QueryTokenizer;
-
 import junit.framework.TestCase;
 
 /**
@@ -94,10 +92,25 @@ public class QueryTokenizerTest extends TestCase {
     /**
      * 
      */
-    public void test_word() {
+    public void testNextToken_word() {
         QueryTokenizer tokenizer = new QueryTokenizer("aaa");
         assertEquals(QueryTokenizer.TT_WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
         assertEquals(QueryTokenizer.TT_EOF, tokenizer.nextToken());
     }
+
+    /**
+     * 
+     */
+    public void testNextToken_comma() {
+        QueryTokenizer tokenizer = new QueryTokenizer("aaa, bbb");
+        assertEquals(QueryTokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(QueryTokenizer.TT_OTHER, tokenizer.nextToken());
+        assertEquals(", ", tokenizer.getToken());
+        assertEquals(QueryTokenizer.TT_WORD, tokenizer.nextToken());
+        assertEquals("bbb", tokenizer.getToken());
+        assertEquals(QueryTokenizer.TT_EOF, tokenizer.nextToken());
+    }
+
 }
