@@ -23,16 +23,33 @@ import org.seasar.framework.convention.NamingConvention;
 /**
  * Actionクラス用の {@link ComponentCreator}です。
  * <P>
- * 決められた命名規約に従って、クラスからActionクラスのコンポーネント定義を作成します。
- * 作成されるコンポーネント定義の各種属性は以下になります。
+ * 決められた命名規約に従って、クラスからActionクラスのコンポーネント定義を作成します。 作成されるコンポーネント定義の各種属性は以下になります。
  * 
  * <table>
- * <tr><th>サフィックス</th> <th>{@link NamingConvention#getActionSuffix() Action(デフォルト)}</th></tr>
- * <tr> <td>インスタンス定義</td>       <td>request</td> </tr>
- * <tr> <td>自動バインディング</td>     <td>auto</td>    </tr>
- * <tr> <td>外部バインディング</td>     <td>無効</td>    </tr>
- * <tr> <td>インターフェース</td>       <td>対象外</td>  </tr>
- * <tr> <td>抽象クラス</td>            <td>対象外</td>   </tr>
+ * <tr>
+ * <th>サフィックス</th>
+ * <td>{@link NamingConvention#getActionSuffix() Action(デフォルト)}</td>
+ * </tr>
+ * <tr>
+ * <th>インスタンス定義</th>
+ * <td>request</td>
+ * </tr>
+ * <tr>
+ * <th>自動バインディング</th>
+ * <td>auto</td>
+ * </tr>
+ * <tr>
+ * <th>外部バインディング</th>
+ * <td>無効</td>
+ * </tr>
+ * <tr>
+ * <th>インターフェース</th>
+ * <td>対象外</td>
+ * </tr>
+ * <tr>
+ * <th>抽象クラス</th>
+ * <td>対象外</td>
+ * </tr>
  * </table>
  * </p>
  * 
@@ -45,7 +62,8 @@ public class ActionCreator extends ComponentCreatorImpl {
     /**
      * 指定された{@link NamingConvention 命名規約}に従った{@link ActionCreator}を作成します。
      * 
-     * @param namingConvention 命名規約
+     * @param namingConvention
+     *            命名規約
      */
     public ActionCreator(NamingConvention namingConvention) {
         super(namingConvention);
@@ -65,7 +83,8 @@ public class ActionCreator extends ComponentCreatorImpl {
     /**
      * {@link ComponentCustomizer}を設定します。
      * 
-     * @param customizer コンポーネントカスタマイザ
+     * @param customizer
+     *            コンポーネントカスタマイザ
      */
     public void setActionCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
