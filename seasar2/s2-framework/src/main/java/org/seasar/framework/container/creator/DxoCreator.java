@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright 2004-2007 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,17 +20,49 @@ import org.seasar.framework.container.ComponentCustomizer;
 import org.seasar.framework.convention.NamingConvention;
 
 /**
- * Dxo用の {@link ComponentCreator}です。
+ * Dxoクラス用の {@link ComponentCreator}です。
+ * <p>
+ * 決められた命名規約に従って、クラスからDxoクラスのコンポーネント定義を作成します。 作成されるコンポーネント定義の各種属性は以下になります。
+ * 
+ * <table>
+ * <tr>
+ * <th>サフィックス</th>
+ * <td>{@link NamingConvention#getDxoSuffix() Dxo(デフォルト)}</td>
+ * </tr>
+ * <tr>
+ * <th>インスタンス定義</th>
+ * <td>singleton</td>
+ * </tr>
+ * <tr>
+ * <th>自動バインディング</th>
+ * <td>auto</td>
+ * </tr>
+ * <tr>
+ * <th>外部バインディング</th>
+ * <td>無効</td>
+ * </tr>
+ * <tr>
+ * <th>インターフェース</th>
+ * <td>有効</td>
+ * </tr>
+ * <tr>
+ * <th>抽象クラス</th>
+ * <td>有効</td>
+ * </tr>
+ * </table>
+ * </p>
  * 
  * @author higa
+ * @author yatsu
  * 
  */
 public class DxoCreator extends ComponentCreatorImpl {
 
     /**
-     * {@link DxoCreator}を作成します。
+     * 指定された{@link NamingConvention 命名規約}に従った{@link DxoCreator}を作成します。
      * 
      * @param namingConvention
+     *            命名規約
      */
     public DxoCreator(NamingConvention namingConvention) {
         super(namingConvention);
@@ -40,18 +72,19 @@ public class DxoCreator extends ComponentCreatorImpl {
     }
 
     /**
-     * Dxo用の {@link ComponentCustomizer}を返します。
+     * {@link ComponentCustomizer}を返します。
      * 
-     * @return
+     * @return コンポーネントカスタマイザ
      */
     public ComponentCustomizer getDxoCustomizer() {
         return getCustomizer();
     }
 
     /**
-     * Dxo用の {@link ComponentCustomizer}を設定します。
+     * {@link ComponentCustomizer}を設定します。
      * 
      * @param customizer
+     *            コンポーネントカスタマイザ
      */
     public void setDxoCustomizer(ComponentCustomizer customizer) {
         setCustomizer(customizer);
