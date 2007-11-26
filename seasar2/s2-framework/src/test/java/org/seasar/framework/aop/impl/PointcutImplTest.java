@@ -66,6 +66,16 @@ public class PointcutImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testGetMethodNames4() throws Exception {
+        PointcutImpl pointcut = new PointcutImpl(Hello3.class);
+        String[] methodNames = pointcut.getMethodNames();
+        assertEquals(1, methodNames.length);
+        assertEquals("greeting", methodNames[0]);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testRegex() throws Exception {
         PointcutImpl pointcut = new PointcutImpl(new String[] { "greeting.*" });
         assertTrue("1", pointcut.isApplied(ClassUtil.getMethod(
@@ -189,6 +199,27 @@ public class PointcutImplTest extends TestCase {
          */
         public String without() {
             return "Without";
+        }
+    }
+
+    /**
+     * @author higa
+     * 
+     */
+    public static class Hello3 {
+
+        /**
+         * @return
+         */
+        public String greeting() {
+            return "Hello";
+        }
+
+        /**
+         * @return
+         */
+        public final String greeting2() {
+            return "Hello";
         }
     }
 }

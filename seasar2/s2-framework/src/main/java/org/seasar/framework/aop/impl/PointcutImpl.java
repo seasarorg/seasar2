@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.ModifierUtil;
 
 /**
  * {@link Pointcut}の実装クラスです。
@@ -120,6 +121,9 @@ public final class PointcutImpl implements Pointcut, Serializable {
                 addInterfaceMethodNames(methodNameSet, interfaces[i]);
             }
         }
+        if (methodNameSet.isEmpty()) {
+            addClassMethodNames(methodNameSet, targetClass);
+        }
         return (String[]) methodNameSet
                 .toArray(new String[methodNameSet.size()]);
 
@@ -134,6 +138,23 @@ public final class PointcutImpl implements Pointcut, Serializable {
         Class[] interfaces = interfaceClass.getInterfaces();
         for (int i = 0; i < interfaces.length; ++i) {
             addInterfaceMethodNames(methodNameSet, interfaces[i]);
+        }
+    }
+
+    private static void addClassMethodNames(Set methodNameSet, Class clazz) {
+        Method[] methods = clazz.getMethods();
+        for (int i = 0; i < methods.length; ++i) {
+            Method method = methods[i];
+            if (method.isSynthetic() || method.isBridge()) {
+                continue;
+            }
+            if (ModifierUtil.isFinal(method)) {
+                continue;
+            }
+            if (method.getDeclaringClass() == Object.class) {
+                continue;
+            }
+            methodNameSet.add(methods[i].getName());
         }
     }
 }

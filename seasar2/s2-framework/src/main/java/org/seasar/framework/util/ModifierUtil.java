@@ -130,6 +130,17 @@ public class ModifierUtil {
     }
 
     /**
+     * <code>final</code>かどうか返します。
+     * 
+     * @param method
+     *            メソッド
+     * @return <code>final</code>かどうか
+     */
+    public static boolean isFinal(Method method) {
+        return isFinal(method.getModifiers());
+    }
+
+    /**
      * <code>transient</code>かどうか返します。
      * 
      * @param field
