@@ -164,24 +164,28 @@ public final class ValueTypes {
     public final static ValueType BINARY_STREAM = new BinaryStreamType();
 
     /**
-     * BLOB用の値タイプです。
-     */
-    public final static ValueType BLOB = new BlobType();
-
-    /**
      * バイト配列用の値タイプです。
      */
-    public final static ValueType BYTE_ARRAY = new ByteArrayType();
+    public final static ValueType BYTE_ARRAY = new BytesType(
+            BytesType.BYTES_TRAIT);
 
     /**
-     * オブジェクトをシリアライズしたBLOB用の値タイプです。
+     * BLOB用の値タイプです。
      */
-    public final static ValueType SERIALIZABLE_BLOB = new SerializableBlobType();
+    public final static ValueType BLOB = new BytesType(
+            BytesType.BLOB_BYTES_TRAIT);
 
     /**
      * オブジェクトをシリアライズしたバイト配列用の値タイプです。
      */
-    public final static ValueType SERIALIZABLE_BYTE_ARRAY = new SerializableByteArrayType();
+    public final static ValueType SERIALIZABLE_BYTE_ARRAY = new SerializableType(
+            BytesType.STREAM_TRAIT);
+
+    /**
+     * オブジェクトをシリアライズしたBLOB用の値タイプです。
+     */
+    public final static ValueType SERIALIZABLE_BLOB = new SerializableType(
+            BytesType.BLOB_STREAM_TRAIT);
 
     /**
      * Boolean用の値タイプです。

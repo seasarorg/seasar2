@@ -98,7 +98,10 @@ public class StandardDialect implements DbmsDialect {
             } else if (Serializable.class.isAssignableFrom(clazz)) {
                 return ValueTypes.SERIALIZABLE_BLOB;
             }
+        } else if (clazz == byte[].class) {
+            return ValueTypes.BYTE_ARRAY;
         }
+
         if (temporalType != null) {
             if (Date.class == clazz) {
                 switch (temporalType) {
@@ -121,6 +124,7 @@ public class StandardDialect implements DbmsDialect {
                 }
             }
         }
+
         ValueType valueType = getValueTypeInternal(clazz);
         if (valueType == null) {
             valueType = ValueTypes.getValueType(clazz);
@@ -139,7 +143,8 @@ public class StandardDialect implements DbmsDialect {
      *            クラス
      * @return 値タイプ
      */
-    protected ValueType getValueTypeInternal(Class<?> clazz) {
+    protected ValueType getValueTypeInternal(@SuppressWarnings("unused")
+    Class<?> clazz) {
         return null;
     }
 

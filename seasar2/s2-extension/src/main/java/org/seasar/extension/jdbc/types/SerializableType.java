@@ -17,76 +17,61 @@ package org.seasar.extension.jdbc.types;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.exception.SSQLException;
 
 /**
- * Binary用の抽象 {@link ValueType}です。
+ * オブジェクトをシリアライズしたバイト配列用の {@link ValueType}です。
  * 
  * @author higa
  */
-public abstract class AbstractBinaryType extends AbstractValueType {
+public class SerializableType extends BytesType {
 
     /**
      * インスタンスを構築します。
+     * 
+     * @param trait
+     *            トレイト
      */
-    public AbstractBinaryType() {
-        super(Types.BINARY);
+    public SerializableType(Trait trait) {
+        super(trait);
+    }
+
+    public Object getValue(final ResultSet resultSet, final int index)
+            throws SQLException {
+        return deserialize(super.getValue(resultSet, index));
+    }
+
+    public Object getValue(final ResultSet resultSet, final String columnName)
+            throws SQLException {
+        return deserialize(super.getValue(resultSet, columnName));
+    }
+
+    public Object getValue(final CallableStatement cs, final int index)
+            throws SQLException {
+        return deserialize(super.getValue(cs, index));
+    }
+
+    public Object getValue(final CallableStatement cs,
+            final String parameterName) throws SQLException {
+        return deserialize(super.getValue(cs, parameterName));
     }
 
     public void bindValue(final PreparedStatement ps, final int index,
             final Object value) throws SQLException {
-        if (value == null) {
-            setNull(ps, index);
-        } else if (value instanceof byte[]) {
-            final byte[] ba = (byte[]) value;
-            final InputStream in = new ByteArrayInputStream(ba);
-            ps.setBinaryStream(index, in, ba.length);
-        } else {
-            ps.setObject(index, value);
-        }
+        super.bindValue(ps, index, serialize(value));
     }
 
     public void bindValue(final CallableStatement cs,
             final String parameterName, final Object value) throws SQLException {
-        if (value == null) {
-            setNull(cs, parameterName);
-        } else if (value instanceof byte[]) {
-            final byte[] ba = (byte[]) value;
-            final InputStream in = new ByteArrayInputStream(ba);
-            cs.setBinaryStream(parameterName, in, ba.length);
-        } else {
-            cs.setObject(parameterName, value);
-        }
-    }
-
-    /**
-     * {@link Blob}をバイト配列に変換します。
-     * 
-     * @param blob
-     *            BLOB
-     * @return バイト配列
-     * @throws SQLException
-     *             SQL例外が発生した場合
-     */
-    protected byte[] toByteArray(final Blob blob) throws SQLException {
-        if (blob == null) {
-            return null;
-        }
-        final long l = blob.length();
-        if (Integer.MAX_VALUE < l) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        return blob.getBytes(1, (int) l);
+        super.bindValue(cs, parameterName, serialize(value));
     }
 
     /**
