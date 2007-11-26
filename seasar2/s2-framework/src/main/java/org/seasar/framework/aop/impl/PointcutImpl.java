@@ -145,7 +145,8 @@ public final class PointcutImpl implements Pointcut, Serializable {
         Method[] methods = clazz.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
-            if (method.isSynthetic() || method.isBridge()) {
+            if (ModifierUtil.isSynthetic(method)
+                    || ModifierUtil.isBridge(method)) {
                 continue;
             }
             if (ModifierUtil.isFinal(method)) {
