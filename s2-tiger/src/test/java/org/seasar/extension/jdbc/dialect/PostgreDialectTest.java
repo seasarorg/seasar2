@@ -1,5 +1,6 @@
 package org.seasar.extension.jdbc.dialect;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,12 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 public class PostgreDialectTest extends TestCase {
 
     private PostgreDialect dialect = new PostgreDialect();
+
+    /** */
+    public byte[] bytesField;
+
+    /** */
+    public Serializable serializableField;
 
     /** */
     public List<?> listField;
@@ -56,6 +63,10 @@ public class PostgreDialectTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType() throws Exception {
+        assertEquals(PostgreDialect.BLOB_TYPE, dialect.getValueType(
+                byte[].class, true, null));
+        assertEquals(PostgreDialect.SERIALIZABLE_BLOB_TYPE, dialect
+                .getValueType(Serializable.class, true, null));
         assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(
                 List.class, false, null));
         assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(
@@ -67,9 +78,21 @@ public class PostgreDialectTest extends TestCase {
      */
     public void testGetValueType_propertyMeta() throws Exception {
         PropertyMeta pm = new PropertyMeta();
+        pm.setField(getClass().getField("bytesField"));
+        pm.setLob(true);
+        assertEquals(PostgreDialect.BLOB_TYPE, dialect.getValueType(pm));
+
+        pm = new PropertyMeta();
+        pm.setField(getClass().getField("serializableField"));
+        pm.setLob(true);
+        assertEquals(PostgreDialect.SERIALIZABLE_BLOB_TYPE, dialect
+                .getValueType(pm));
+
+        pm = new PropertyMeta();
         pm.setField(getClass().getField("listField"));
         assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(pm));
 
+        pm = new PropertyMeta();
         pm.setField(getClass().getField("arrayListField"));
         assertEquals(ValueTypes.POSTGRE_RESULT_SET, dialect.getValueType(pm));
     }

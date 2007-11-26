@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.types;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -37,17 +36,14 @@ import org.seasar.framework.util.InputStreamUtil;
  */
 public class BytesType extends AbstractValueType {
 
-    /** バイト配列を扱うトレイト */
+    /** バイト配列を<code>getBytes()/setBytes()</code>で扱うトレイト */
     public static final Trait BYTES_TRAIT = new BytesTrait();
 
-    /** ストリームを扱うトレイト */
+    /** バイト配列を<code>getBinaryStream()/setBinaryStream()</code>で扱うトレイト */
     public static final Trait STREAM_TRAIT = new StreamTrait();
 
-    /** BLOBをバイト配列で扱うトレイト */
-    public static final Trait BLOB_BYTES_TRAIT = new BlobBytesTrait();
-
-    /** BLOBをストリームで扱うトレイト */
-    public static final Trait BLOB_STREAM_TRAIT = new BlobStreamTrait();
+    /** バイト配列を<code>getBlob()/setBytes()</code>で扱うトレイト */
+    public static final Trait BLOB_TRAIT = new BlobTrait();
 
     /**
      * バイト配列を操作するためのトレイトです。
@@ -108,7 +104,7 @@ public class BytesType extends AbstractValueType {
     }
 
     /**
-     * {@link Blob}からバイト配列を取得して返します。
+     * {@link InputStream}からバイト配列を取得して返します。
      * 
      * @param is
      *            入力ストリーム
@@ -116,7 +112,7 @@ public class BytesType extends AbstractValueType {
      * @throws SQLException
      *             SQL例外が発生した場合
      */
-    protected static byte[] toBytes(final InputStream is) throws SQLException {
+    public static byte[] toBytes(final InputStream is) throws SQLException {
         try {
             final byte[] bytes = new byte[is.available()];
             is.read(bytes);
@@ -137,7 +133,7 @@ public class BytesType extends AbstractValueType {
      * @throws ArrayIndexOutOfBoundsException
      *             BLOBのデータ長が<code>int</code>型の最大長を越えている場合
      */
-    protected static byte[] toBytes(final Blob blob) throws SQLException {
+    public static byte[] toBytes(final Blob blob) throws SQLException {
         if (blob == null) {
             return null;
         }
@@ -146,38 +142,6 @@ public class BytesType extends AbstractValueType {
             throw new ArrayIndexOutOfBoundsException();
         }
         return blob.getBytes(0L, (int) length);
-    }
-
-    /**
-     * {@link Blob}からバイト配列を取得して返します。
-     * 
-     * @param blob
-     *            BLOB
-     * @return バイト配列
-     * @throws SQLException
-     *             SQL例外が発生した場合
-     * @throws ArrayIndexOutOfBoundsException
-     *             BLOBのデータ長が<code>int</code>型の最大長を越えている場合
-     */
-    protected static byte[] toBytesUsingStream(final Blob blob)
-            throws SQLException {
-        if (blob == null) {
-            return null;
-        }
-        final long length = blob.length();
-        if (length > Integer.MAX_VALUE) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        final byte[] bytes = new byte[(int) length];
-        final InputStream is = blob.getBinaryStream();
-        try {
-            is.read(bytes);
-            return bytes;
-        } catch (final IOException e) {
-            throw new SSQLException("ESSR0040", new Object[] { e.getMessage() });
-        } finally {
-            InputStreamUtil.close(is);
-        }
     }
 
     /**
@@ -277,7 +241,7 @@ public class BytesType extends AbstractValueType {
     }
 
     /**
-     * バイト配列で扱うトレイトです。
+     * バイト配列を<code>getBytes()/setBytes()</code>で扱うトレイトです。
      * 
      * @author koichik
      */
@@ -320,7 +284,7 @@ public class BytesType extends AbstractValueType {
     }
 
     /**
-     * バイトストリームで扱うトレイトです。
+     * バイト配列を<code>getBinaryStream()/setBinaryStream()</code>で扱うトレイトです。
      * 
      * @author koichik
      */
@@ -375,11 +339,11 @@ public class BytesType extends AbstractValueType {
     }
 
     /**
-     * {@link Blob}をバイト配列で扱うトレイトです。
+     * バイト配列を<code>getBlob()/setBytes()</code>で扱うトレイトです。
      * 
      * @author koichik
      */
-    public static class BlobBytesTrait implements Trait {
+    public static class BlobTrait implements Trait {
 
         public int getSqlType() {
             return Types.BLOB;
@@ -387,7 +351,7 @@ public class BytesType extends AbstractValueType {
 
         public void set(final PreparedStatement ps, final int parameterIndex,
                 final byte[] bytes) throws SQLException {
-            ps.setBlob(parameterIndex, new BlobImpl(bytes));
+            ps.setBytes(parameterIndex, bytes);
         }
 
         public void set(final CallableStatement cs, final String parameterName,
@@ -413,118 +377,6 @@ public class BytesType extends AbstractValueType {
         public byte[] get(final CallableStatement cs, final String columnName)
                 throws SQLException {
             return toBytes(cs.getBlob(columnName));
-        }
-
-    }
-
-    /**
-     * {@link Blob}をバイトストリームで扱うトレイトです。
-     * 
-     * @author koichik
-     */
-    public static class BlobStreamTrait implements Trait {
-
-        public int getSqlType() {
-            return Types.BLOB;
-        }
-
-        public void set(final PreparedStatement ps, final int parameterIndex,
-                final byte[] bytes) throws SQLException {
-            ps.setBlob(parameterIndex, new BlobImpl(bytes));
-        }
-
-        public void set(final CallableStatement cs, final String parameterName,
-                final byte[] bytes) throws SQLException {
-            cs.setBinaryStream(parameterName, new ByteArrayInputStream(bytes),
-                    bytes.length);
-        }
-
-        public byte[] get(final ResultSet rs, final int columnIndex)
-                throws SQLException {
-            return toBytesUsingStream(rs.getBlob(columnIndex));
-        }
-
-        public byte[] get(final ResultSet rs, final String columnName)
-                throws SQLException {
-            return toBytesUsingStream(rs.getBlob(columnName));
-        }
-
-        public byte[] get(final CallableStatement cs, final int columnIndex)
-                throws SQLException {
-            return toBytesUsingStream(cs.getBlob(columnIndex));
-        }
-
-        public byte[] get(final CallableStatement cs, final String columnName)
-                throws SQLException {
-            return toBytesUsingStream(cs.getBlob(columnName));
-        }
-
-    }
-
-    /**
-     * {@link Blob}の簡易実装クラスです。
-     * 
-     * @author koichik
-     */
-    public static class BlobImpl implements Blob {
-
-        /** バイト列 */
-        protected byte[] bytes;
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param bytes
-         *            バイト列
-         */
-        public BlobImpl(final byte[] bytes) {
-            this.bytes = bytes;
-        }
-
-        public InputStream getBinaryStream() throws SQLException {
-            return new ByteArrayInputStream(bytes);
-        }
-
-        public byte[] getBytes(final long pos, final int length)
-                throws SQLException {
-            if (length == bytes.length) {
-                return bytes;
-            }
-            final byte[] result = new byte[length];
-            System.arraycopy(bytes, 0, result, 0, length);
-            return result;
-        }
-
-        public long length() throws SQLException {
-            return bytes.length;
-        }
-
-        public long position(final Blob pattern, final long start)
-                throws SQLException {
-            throw new UnsupportedOperationException("position");
-        }
-
-        public long position(final byte[] pattern, final long start)
-                throws SQLException {
-            throw new UnsupportedOperationException("position");
-        }
-
-        public OutputStream setBinaryStream(final long pos) throws SQLException {
-            throw new UnsupportedOperationException("position");
-        }
-
-        public int setBytes(final long pos, final byte[] bytes,
-                final int offset, final int len) throws SQLException {
-            throw new UnsupportedOperationException("position");
-        }
-
-        public int setBytes(final long pos, final byte[] bytes)
-                throws SQLException {
-            throw new UnsupportedOperationException("position");
-        }
-
-        public void truncate(final long len) throws SQLException {
-            throw new UnsupportedOperationException("position");
         }
 
     }

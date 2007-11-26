@@ -172,8 +172,7 @@ public final class ValueTypes {
     /**
      * BLOB用の値タイプです。
      */
-    public final static ValueType BLOB = new BytesType(
-            BytesType.BLOB_BYTES_TRAIT);
+    public final static ValueType BLOB = new BytesType(BytesType.BLOB_TRAIT);
 
     /**
      * オブジェクトをシリアライズしたバイト配列用の値タイプです。
@@ -185,7 +184,7 @@ public final class ValueTypes {
      * オブジェクトをシリアライズしたBLOB用の値タイプです。
      */
     public final static ValueType SERIALIZABLE_BLOB = new SerializableType(
-            BytesType.BLOB_STREAM_TRAIT);
+            BytesType.BLOB_TRAIT);
 
     /**
      * Boolean用の値タイプです。

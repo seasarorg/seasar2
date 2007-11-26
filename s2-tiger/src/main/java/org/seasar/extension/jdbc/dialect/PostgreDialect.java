@@ -15,14 +15,28 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.List;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.types.BytesType;
+import org.seasar.extension.jdbc.types.SerializableType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.extension.jdbc.types.BytesType.Trait;
 import org.seasar.framework.util.tiger.Pair;
 
 /**
@@ -32,6 +46,24 @@ import org.seasar.framework.util.tiger.Pair;
  * 
  */
 public class PostgreDialect extends StandardDialect {
+
+    /**
+     * BLOB用の値タイプです。
+     */
+    protected final static ValueType BLOB_TYPE = new BytesType(
+            new PostgreTrait());
+
+    /**
+     * オブジェクトをシリアライズしたバイト配列用の値タイプです。
+     */
+    protected final static ValueType SERIALIZABLE_BYTE_ARRAY = new SerializableType(
+            new PostgreTrait());
+
+    /**
+     * オブジェクトをシリアライズしたBLOB用の値タイプです。
+     */
+    public final static ValueType SERIALIZABLE_BLOB_TYPE = new SerializableType(
+            BytesType.BLOB_TRAIT);
 
     @Override
     public String getName() {
@@ -65,12 +97,32 @@ public class PostgreDialect extends StandardDialect {
 
     @Override
     public ValueType getValueType(PropertyMeta propertyMeta) {
-        ValueType valueType = getValueTypeInternal(propertyMeta
-                .getPropertyClass());
+        final Class<?> clazz = propertyMeta.getPropertyClass();
+        if (propertyMeta.isLob()) {
+            if (clazz == byte[].class) {
+                return BLOB_TYPE;
+            } else if (Serializable.class.isAssignableFrom(clazz)) {
+                return SERIALIZABLE_BLOB_TYPE;
+            }
+        }
+        final ValueType valueType = getValueTypeInternal(clazz);
         if (valueType != null) {
             return valueType;
         }
         return super.getValueType(propertyMeta);
+    }
+
+    @Override
+    public ValueType getValueType(Class<?> clazz, boolean lob,
+            TemporalType temporalType) {
+        if (lob) {
+            if (clazz == byte[].class) {
+                return BLOB_TYPE;
+            } else if (Serializable.class.isAssignableFrom(clazz)) {
+                return SERIALIZABLE_BLOB_TYPE;
+            }
+        }
+        return super.getValueType(clazz, lob, temporalType);
     }
 
     @Override
@@ -137,6 +189,117 @@ public class PostgreDialect extends StandardDialect {
     @Override
     public boolean supportsOuterJoinForUpdate() {
         return false;
+    }
+
+    /**
+     * {@link Blob}を扱うトレイトです。
+     * 
+     * @author koichik
+     */
+    public static class PostgreTrait implements Trait {
+
+        public int getSqlType() {
+            return Types.BLOB;
+        }
+
+        public void set(final PreparedStatement ps, final int parameterIndex,
+                final byte[] bytes) throws SQLException {
+            ps.setBlob(parameterIndex, new BlobImpl(bytes));
+        }
+
+        public void set(final CallableStatement cs, final String parameterName,
+                final byte[] bytes) throws SQLException {
+            cs.setBytes(parameterName, bytes);
+        }
+
+        public byte[] get(final ResultSet rs, final int columnIndex)
+                throws SQLException {
+            return BytesType.toBytes(rs.getBlob(columnIndex));
+        }
+
+        public byte[] get(final ResultSet rs, final String columnName)
+                throws SQLException {
+            return BytesType.toBytes(rs.getBlob(columnName));
+        }
+
+        public byte[] get(final CallableStatement cs, final int columnIndex)
+                throws SQLException {
+            return BytesType.toBytes(cs.getBlob(columnIndex));
+        }
+
+        public byte[] get(final CallableStatement cs, final String columnName)
+                throws SQLException {
+            return BytesType.toBytes(cs.getBlob(columnName));
+        }
+
+    }
+
+    /**
+     * {@link Blob}の簡易実装クラスです。
+     * 
+     * @author koichik
+     */
+    public static class BlobImpl implements Blob {
+
+        /** バイト列 */
+        protected byte[] bytes;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param bytes
+         *            バイト列
+         */
+        public BlobImpl(final byte[] bytes) {
+            this.bytes = bytes;
+        }
+
+        public InputStream getBinaryStream() throws SQLException {
+            return new ByteArrayInputStream(bytes);
+        }
+
+        public byte[] getBytes(final long pos, final int length)
+                throws SQLException {
+            if (length == bytes.length) {
+                return bytes;
+            }
+            final byte[] result = new byte[length];
+            System.arraycopy(bytes, 0, result, 0, length);
+            return result;
+        }
+
+        public long length() throws SQLException {
+            return bytes.length;
+        }
+
+        public long position(final Blob pattern, final long start)
+                throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public long position(final byte[] pattern, final long start)
+                throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public OutputStream setBinaryStream(final long pos) throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public int setBytes(final long pos, final byte[] bytes,
+                final int offset, final int len) throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public int setBytes(final long pos, final byte[] bytes)
+                throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public void truncate(final long len) throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
     }
 
 }
