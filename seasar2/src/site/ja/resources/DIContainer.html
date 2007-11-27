@@ -1102,7 +1102,10 @@ Map paramValues;
 </tr>
 <tr>
 <td><code>pointcut</code></td>
-<td>インターセプタを適用するメソッドをカンマ区切りで指定します。pointcutを指定しない場合は、コンポーネントが実装しているインターフェースのすべてのメソッドが対象になります。メソッド名には正規表現(JDK1.4のregex)も使えます。</td>
+<td>インターセプタを適用するメソッドをカンマ区切りで指定します。
+pointcutを指定しない場合は、コンポーネントが実装しているインターフェースのすべてのメソッドが対象になります。
+インターフェースを実装していない場合、Object.classに属していないpublicでfinalではないメソッドが対象になります。
+メソッド名には正規表現(JDK1.4のregex)も使えます。</td>
 </tr>
 </table>
 <br />
@@ -1740,23 +1743,13 @@ singleton以外のスコープにしたい場合は、
 <h4><a name="pointcut">pointcut属性(任意)</a></h4>
 <p>カンマ区切りで対象となるメソッド名を指定することができます。
 pointcutを指定しない場合は、コンポーネントが実装しているインターフェースのすべてのメソッドが対象になります。
-<b>publicなメソッドがすべて対象になるわけではないので注意してください。</b>
+インターフェースを実装していない場合、Object.classに属していないpublicでfinalではないメソッドが対象になります。
 メソッド名には正規表現(JDK1.4のregex)も使えます。</p>
 <h4>設定例</h4>
 <p>pointcut属性を指定してjava.util.DateのgetTime()メソッドとhashCode()メソッドを対象とする場合以下のようになります。</p>
 <pre>
 &lt;component class="java.util.Date"&gt;
     &lt;aspect pointcut="getTime,hashCode"&gt;
-        &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
-    &lt;/aspect&gt;
-&lt;/component&gt;
-</pre>
-<p>
-正規表現を使ってjava.util.Dateのpublicなメソッドすべてを対象としたい場合は、以下のように設定します。
-</p>
-<pre>
-&lt;component class="java.util.Date"&gt;
-    &lt;aspect pointcut=".*"&gt;
         &lt;component class="org.seasar.framework.aop.interceptors.TraceInterceptor"/&gt;
     &lt;/aspect&gt;
 &lt;/component&gt;
@@ -1885,7 +1878,9 @@ aspectタグと異なり､複数定義することはできないので､ 複�
 <a href="aop.html#InterceptorChain">InterceptorChain</a>を使ってください。
 ポイントカットを指定したいときは､pointcut属性を指定します。
 クラスに対するアノテーションの場合､pointcutを指定しないときは､
-そのクラスが実装しているすべてのインターフェースのメソッドが対象になります。</p>
+そのクラスが実装しているすべてのインターフェースのメソッドが対象になります。
+インターフェースを実装していない場合、Object.classに属していないpublicでfinalではないメソッドが対象になります。
+</p>
 <p>Tigerアノテーションは以下のようになります。</p>
 <pre>
 @Aspect("aop.traceInterceptor")
