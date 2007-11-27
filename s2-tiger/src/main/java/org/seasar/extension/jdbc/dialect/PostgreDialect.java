@@ -54,16 +54,10 @@ public class PostgreDialect extends StandardDialect {
             new PostgreTrait());
 
     /**
-     * オブジェクトをシリアライズしたバイト配列用の値タイプです。
-     */
-    protected final static ValueType SERIALIZABLE_BYTE_ARRAY = new SerializableType(
-            new PostgreTrait());
-
-    /**
      * オブジェクトをシリアライズしたBLOB用の値タイプです。
      */
     public final static ValueType SERIALIZABLE_BLOB_TYPE = new SerializableType(
-            BytesType.BLOB_TRAIT);
+            new PostgreTrait());
 
     @Override
     public String getName() {

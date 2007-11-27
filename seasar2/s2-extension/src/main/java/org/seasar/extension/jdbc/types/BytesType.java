@@ -141,7 +141,7 @@ public class BytesType extends AbstractValueType {
         if (length > Integer.MAX_VALUE) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        return blob.getBytes(0L, (int) length);
+        return blob.getBytes(1L, (int) length);
     }
 
     /**

@@ -178,7 +178,7 @@ public final class ValueTypes {
      * オブジェクトをシリアライズしたバイト配列用の値タイプです。
      */
     public final static ValueType SERIALIZABLE_BYTE_ARRAY = new SerializableType(
-            BytesType.STREAM_TRAIT);
+            BytesType.BYTES_TRAIT);
 
     /**
      * オブジェクトをシリアライズしたBLOB用の値タイプです。
