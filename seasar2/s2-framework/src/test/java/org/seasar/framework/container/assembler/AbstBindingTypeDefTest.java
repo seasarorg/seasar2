@@ -31,7 +31,7 @@ import org.seasar.framework.container.impl.S2ContainerImpl;
 
 /**
  * @author higa
- *
+ * 
  */
 public class AbstBindingTypeDefTest extends TestCase {
 
@@ -73,6 +73,18 @@ public class AbstBindingTypeDefTest extends TestCase {
         container.register(new Hoge3());
         Hoge2 hoge2 = (Hoge2) container.getComponent(Hoge2.class);
         assertNotNull("1", hoge2.aaa);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testBindAutoForProperty() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Hoge5.class);
+        container.register(cd);
+        container.register(new ArrayList());
+        Hoge5 hoge = (Hoge5) container.getComponent(Hoge5.class);
+        assertNotNull(hoge.list);
     }
 
     /**
@@ -190,7 +202,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class ComponentDefAware {
         private ComponentDef componentDef;
@@ -211,7 +223,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge {
         private List aaa;
@@ -225,32 +237,42 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge2 {
         private IHoge aaa;
     }
 
     /**
-     *
+     * 
      */
     public static interface IHoge {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge3 implements IHoge {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge4 extends Hoge3 {
     }
 
     /**
-     *
+     * 
+     */
+    public static class Hoge5 {
+        /**
+         * 
+         */
+        public ArrayList list;
+    }
+
+    /**
+     * 
      */
     public static class Foo {
 
@@ -272,7 +294,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Foo2 {
 
@@ -294,7 +316,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Foo3 {
 
@@ -316,7 +338,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Foo4 {
 
@@ -325,7 +347,7 @@ public class AbstBindingTypeDefTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class MapArrayHolder {
         Map[] maps;
