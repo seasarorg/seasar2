@@ -339,7 +339,7 @@ public class BytesType extends AbstractValueType {
     }
 
     /**
-     * バイト配列を<code>getBlob()/setBytes()</code>で扱うトレイトです。
+     * バイト配列を<code>getBlob()/setBinaryStream()</code>で扱うトレイトです。
      * 
      * @author koichik
      */
@@ -351,12 +351,14 @@ public class BytesType extends AbstractValueType {
 
         public void set(final PreparedStatement ps, final int parameterIndex,
                 final byte[] bytes) throws SQLException {
-            ps.setBytes(parameterIndex, bytes);
+            ps.setBinaryStream(parameterIndex, new ByteArrayInputStream(bytes),
+                    bytes.length);
         }
 
         public void set(final CallableStatement cs, final String parameterName,
                 final byte[] bytes) throws SQLException {
-            cs.setBytes(parameterName, bytes);
+            cs.setBinaryStream(parameterName, new ByteArrayInputStream(bytes),
+                    bytes.length);
         }
 
         public byte[] get(final ResultSet rs, final int columnIndex)
