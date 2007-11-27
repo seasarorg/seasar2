@@ -178,48 +178,4 @@ public class ModifierUtil {
         int m = field.getModifiers();
         return !isStatic(m) && !isFinal(m);
     }
-
-    /**
-     * 合成メソッドかどうかを返します。
-     * 
-     * @param method
-     *            メソッド
-     * @return 合成メソッドかどうか
-     */
-    public static boolean isSynthetic(Method method) {
-        return isSynthetic(method.getModifiers());
-    }
-
-    /**
-     * 合成メソッドかどうかを返します。
-     * 
-     * @param modifier
-     *            モディファイヤ
-     * @return 合成メソッドかどうか
-     */
-    public static boolean isSynthetic(int modifier) {
-        return (modifier & SYNTHETIC) != 0;
-    }
-
-    /**
-     * ブリッジメソッドかどうかを返します。
-     * 
-     * @param method
-     *            メソッド
-     * @return ブリッジメソッドかどうか
-     */
-    public static boolean isBridge(Method method) {
-        return isBridge(method.getModifiers());
-    }
-
-    /**
-     * ブリッジメソッドかどうかを返します。
-     * 
-     * @param modifier
-     *            モディファイヤ
-     * @return ブリッジメソッドかどうか
-     */
-    public static boolean isBridge(int modifier) {
-        return (modifier & BRIDGE) != 0;
-    }
 }

@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 
 import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.ModifierUtil;
 
 /**
@@ -145,8 +146,8 @@ public final class PointcutImpl implements Pointcut, Serializable {
         Method[] methods = clazz.getMethods();
         for (int i = 0; i < methods.length; ++i) {
             Method method = methods[i];
-            if (ModifierUtil.isSynthetic(method)
-                    || ModifierUtil.isBridge(method)) {
+            if (MethodUtil.isSyntheticMethod(method)
+                    || MethodUtil.isBridgeMethod(method)) {
                 continue;
             }
             if (ModifierUtil.isFinal(method)) {

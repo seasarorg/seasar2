@@ -525,7 +525,8 @@ public final class BeanDescImpl implements BeanDesc {
             String methodName = m.getName();
             if (methodName.startsWith("get")) {
                 if (m.getParameterTypes().length != 0
-                        || methodName.equals("getClass")) {
+                        || methodName.equals("getClass")
+                        || m.getReturnType() == void.class) {
                     continue;
                 }
                 String propertyName = decapitalizePropertyName(methodName
@@ -542,7 +543,8 @@ public final class BeanDescImpl implements BeanDesc {
                 setupReadMethod(m, propertyName);
             } else if (methodName.startsWith("set")) {
                 if (m.getParameterTypes().length != 1
-                        || methodName.equals("setClass")) {
+                        || methodName.equals("setClass")
+                        || m.getReturnType() != void.class) {
                     continue;
                 }
                 String propertyName = decapitalizePropertyName(methodName

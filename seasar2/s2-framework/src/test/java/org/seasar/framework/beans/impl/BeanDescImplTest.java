@@ -59,6 +59,9 @@ public class BeanDescImplTest extends TestCase {
         propDesc = beanDesc.getPropertyDesc("fff");
         assertEquals("fff", propDesc.getPropertyName());
         assertEquals(Boolean.class, propDesc.getPropertyType());
+
+        assertFalse(beanDesc.hasPropertyDesc("hhh"));
+        assertFalse(beanDesc.hasPropertyDesc("iii"));
     }
 
     /**
@@ -293,6 +296,20 @@ public class BeanDescImplTest extends TestCase {
          */
         public Boolean isFff() {
             return null;
+        }
+
+        /**
+         * @param hhh
+         * @return
+         */
+        public MyBean setHhh(String hhh) {
+            return this;
+        }
+
+        /**
+         * 
+         */
+        public void getIii() {
         }
 
         /**
