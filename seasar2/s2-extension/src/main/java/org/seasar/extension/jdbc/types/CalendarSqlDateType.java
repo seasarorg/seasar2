@@ -60,4 +60,16 @@ public class CalendarSqlDateType extends SqlDateType {
         return CalendarConversionUtil.toCalendar(value);
     }
 
+    protected java.sql.Date toSqlDate(Object value) {
+        Calendar calendar = CalendarConversionUtil.localize((Calendar) value);
+        Calendar base = Calendar.getInstance();
+        base.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        base.set(Calendar.MONTH, calendar.get(Calendar.MONTH));
+        base.set(Calendar.DATE, calendar.get(Calendar.DATE));
+        base.set(Calendar.HOUR_OF_DAY, 0);
+        base.set(Calendar.MINUTE, 0);
+        base.set(Calendar.SECOND, 0);
+        base.set(Calendar.MILLISECOND, 0);
+        return new java.sql.Date(base.getTimeInMillis());
+    }
 }

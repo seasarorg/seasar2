@@ -63,16 +63,11 @@ public class DateTimeType extends TimeType {
     }
 
     protected Time toTime(Object value) {
-        if (value == null) {
-            return null;
-        }
-        if (!Date.class.isInstance(value)) {
-            throw new IllegalArgumentException("value");
-        }
-        Date date = (Date) value;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(1970, Calendar.JANUARY, 1);
-        return new Time(calendar.getTimeInMillis());
+        Calendar base = Calendar.getInstance();
+        base.setTime((Date) value);
+        base.set(Calendar.YEAR, 1970);
+        base.set(Calendar.MONTH, Calendar.JANUARY);
+        base.set(Calendar.DATE, 1);
+        return new Time(base.getTimeInMillis());
     }
 }

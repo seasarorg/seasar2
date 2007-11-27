@@ -62,18 +62,15 @@ public class CalendarTimeType extends TimeType {
     }
 
     protected Time toTime(Object value) {
-        if (value == null) {
-            return null;
-        }
-        if (!Calendar.class.isInstance(value)) {
-            throw new IllegalArgumentException("value");
-        }
-        Calendar cal = (Calendar) value;
-        int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
-        int second = cal.get(Calendar.SECOND);
-        Calendar newCal = Calendar.getInstance();
-        newCal.set(1970, Calendar.JANUARY, 1, hourOfDay, minute, second);
-        return new Time(newCal.getTimeInMillis());
+        Calendar calendar = CalendarConversionUtil.localize((Calendar) value);
+        Calendar base = Calendar.getInstance();
+        base.set(Calendar.YEAR, 1970);
+        base.set(Calendar.MONTH, Calendar.JANUARY);
+        base.set(Calendar.DATE, 1);
+        base.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY));
+        base.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE));
+        base.set(Calendar.SECOND, calendar.get(Calendar.SECOND));
+        base.set(Calendar.MILLISECOND, calendar.get(Calendar.MILLISECOND));
+        return new Time(base.getTimeInMillis());
     }
 }

@@ -16,6 +16,8 @@
 package org.seasar.framework.util;
 
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * {@link Calendar}用の変換ユーティリティです。
@@ -56,5 +58,21 @@ public final class CalendarConversionUtil {
             return cal;
         }
         return null;
+    }
+
+    /**
+     * ローカルの{@link TimeZone}と{@link Locale}をもつ{@link Calendar}に変換します。
+     * 
+     * @param calendar
+     *            {@link Calendar}
+     * @return
+     */
+    public static Calendar localize(Calendar calendar) {
+        if (calendar == null) {
+            throw new NullPointerException("calendar");
+        }
+        Calendar localCalendar = Calendar.getInstance();
+        localCalendar.setTimeInMillis(calendar.getTimeInMillis());
+        return localCalendar;
     }
 }

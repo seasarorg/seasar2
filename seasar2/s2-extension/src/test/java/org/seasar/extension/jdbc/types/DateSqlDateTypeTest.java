@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
-import java.sql.Time;
+import java.sql.Date;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
@@ -24,13 +24,13 @@ import junit.framework.TestCase;
  * @author taedium
  * 
  */
-public class DateTimeTypeTest extends TestCase {
+public class DateSqlDateTypeTest extends TestCase {
 
     /**
      * 
      * @throws Exception
      */
-    public void testToTime() throws Exception {
+    public void testToSqlDate() throws Exception {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2007);
         calendar.set(Calendar.MONTH, Calendar.NOVEMBER);
@@ -39,15 +39,15 @@ public class DateTimeTypeTest extends TestCase {
         calendar.set(Calendar.MINUTE, 34);
         calendar.set(Calendar.SECOND, 56);
         calendar.set(Calendar.MILLISECOND, 789);
-        Time time = new DateTimeType().toTime(calendar.getTime());
+        Date date = new DateSqlDateType().toSqlDate(calendar.getTime());
         calendar.clear();
-        calendar.setTime(time);
-        assertEquals(1970, calendar.get(Calendar.YEAR));
-        assertEquals(Calendar.JANUARY, calendar.get(Calendar.MONTH));
-        assertEquals(1, calendar.get(Calendar.DATE));
-        assertEquals(12, calendar.get(Calendar.HOUR_OF_DAY));
-        assertEquals(34, calendar.get(Calendar.MINUTE));
-        assertEquals(56, calendar.get(Calendar.SECOND));
-        assertEquals(789, calendar.get(Calendar.MILLISECOND));
+        calendar.setTime(date);
+        assertEquals(2007, calendar.get(Calendar.YEAR));
+        assertEquals(Calendar.NOVEMBER, calendar.get(Calendar.MONTH));
+        assertEquals(25, calendar.get(Calendar.DATE));
+        assertEquals(0, calendar.get(Calendar.HOUR_OF_DAY));
+        assertEquals(0, calendar.get(Calendar.MINUTE));
+        assertEquals(0, calendar.get(Calendar.SECOND));
+        assertEquals(0, calendar.get(Calendar.MILLISECOND));
     }
 }

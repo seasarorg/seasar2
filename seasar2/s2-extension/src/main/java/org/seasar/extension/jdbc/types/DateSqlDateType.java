@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.types;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.seasar.extension.jdbc.ValueType;
@@ -59,4 +60,15 @@ public class DateSqlDateType extends SqlDateType {
     protected Date toDate(Object value) {
         return DateConversionUtil.toDate(value);
     }
+
+    protected java.sql.Date toSqlDate(Object value) {
+        Calendar base = Calendar.getInstance();
+        base.setTime((Date) value);
+        base.set(Calendar.HOUR_OF_DAY, 0);
+        base.set(Calendar.MINUTE, 0);
+        base.set(Calendar.SECOND, 0);
+        base.set(Calendar.MILLISECOND, 0);
+        return new java.sql.Date(base.getTimeInMillis());
+    }
+
 }

@@ -17,14 +17,25 @@ package org.seasar.framework.util;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class CalendarConversionUtilTest extends TestCase {
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+    }
+
+    protected void tearDown() throws Exception {
+        TimeZone.setDefault(null);
+        super.tearDown();
+    }
 
     /**
      * @throws Exception
@@ -33,5 +44,15 @@ public class CalendarConversionUtilTest extends TestCase {
         Date date = new Date();
         Calendar cal = CalendarConversionUtil.toCalendar(date);
         assertEquals(date, cal.getTime());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testLocalize() throws Exception {
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("JST"));
+        Calendar local = CalendarConversionUtil.localize(calendar);
+        assertEquals(TimeZone.getDefault(), local.getTimeZone());
     }
 }
