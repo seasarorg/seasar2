@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SSQLException;
 
 /**
@@ -122,4 +123,13 @@ public class SerializableType extends BytesType {
         }
     }
 
+    public String toText(Object value) {
+        byte[] bytes = null;
+        try {
+            bytes = serialize(value);
+        } catch (Exception e) {
+            return BindVariableUtil.toText(e);
+        }
+        return super.toText(bytes);
+    }
 }

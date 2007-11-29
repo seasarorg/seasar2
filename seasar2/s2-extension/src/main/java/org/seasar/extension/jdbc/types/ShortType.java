@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.ShortConversionUtil;
 
 /**
@@ -74,6 +75,14 @@ public class ShortType extends AbstractValueType {
             cs.setShort(parameterName, ShortConversionUtil
                     .toPrimitiveShort(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        Short var = ShortConversionUtil.toShort(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

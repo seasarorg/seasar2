@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 
 /**
  * Binary用の {@link ValueType}です。
@@ -114,4 +115,13 @@ public class BinaryType extends AbstractValueType {
         }
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        } else if (value instanceof byte[]) {
+            return BindVariableUtil.toText((byte[]) value);
+        } else {
+            return BindVariableUtil.toText(value);
+        }
+    }
 }

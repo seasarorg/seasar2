@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.util.BindVariableUtil;
+
 /**
  * EnumをJDBCで扱うためのクラスです。
  * 
@@ -97,6 +99,13 @@ public class EnumType extends AbstractValueType {
         } else {
             cs.setString(parameterName, (Enum.class.cast(value)).name());
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        return BindVariableUtil.toText((Enum.class.cast(value)).name());
     }
 
 }

@@ -15,10 +15,16 @@
  */
 package org.seasar.extension.jdbc.util;
 
+import java.io.InputStream;
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.seasar.extension.jdbc.IllegalBindArgSizeRuntimeException;
+import org.seasar.extension.jdbc.ValueType;
+import org.seasar.framework.util.SStringBuilder;
 
 /**
  * バインド変数用のユーティリティです。
@@ -27,6 +33,8 @@ import org.seasar.extension.jdbc.IllegalBindArgSizeRuntimeException;
  * 
  */
 public final class BindVariableUtil {
+
+    private static final String NULL = "null";
 
     private BindVariableUtil() {
     }
@@ -41,6 +49,25 @@ public final class BindVariableUtil {
      * @return バインド変数をSQLの中にリテラルで埋め込んだ完全なSQL
      */
     public static String getCompleteSql(String sql, Object[] args) {
+        if (args == null || args.length == 0) {
+            return sql;
+        }
+        return getCompleteSql(sql, args, new ValueType[args.length]);
+    }
+
+    /**
+     * バインド変数をSQLの中にリテラルで埋め込んだ完全なSQLを返します。
+     * 
+     * @param sql
+     *            SQL
+     * @param args
+     *            引数
+     * @param valueTypes
+     *            値タイプの配列
+     * @return バインド変数をSQLの中にリテラルで埋め込んだ完全なSQL
+     */
+    public static String getCompleteSql(String sql, Object[] args,
+            ValueType[] valueTypes) {
         if (args == null || args.length == 0) {
             return sql;
         }
@@ -71,8 +98,10 @@ public final class BindVariableUtil {
                                 args.length);
                     }
                     buf.append(sql.substring(pos2, pos));
-                    buf.append(getBindVariableText(args[index++]));
+                    buf.append(getBindVariableText(args[index],
+                            valueTypes[index]));
                     pos2 = pos + 1;
+                    index++;
                 }
             } else {
                 buf.append(sql.substring(pos2));
@@ -90,22 +119,287 @@ public final class BindVariableUtil {
      * @return バインド変数の文字列表現
      */
     public static String getBindVariableText(Object bindVariable) {
-        if (bindVariable instanceof String) {
-            return "'" + bindVariable + "'";
-        } else if (bindVariable instanceof Number) {
-            return bindVariable.toString();
-        } else if (bindVariable instanceof Timestamp) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
-            return "'" + sdf.format((java.util.Date) bindVariable) + "'";
-        } else if (bindVariable instanceof java.util.Date) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return "'" + sdf.format((java.util.Date) bindVariable) + "'";
-        } else if (bindVariable instanceof Boolean) {
-            return bindVariable.toString();
-        } else if (bindVariable == null) {
-            return "null";
-        } else {
-            return "'" + bindVariable.toString() + "'";
+        return toText(bindVariable);
+    }
+
+    /**
+     * バインド変数を文字列として返します。
+     * 
+     * @param bindVariable
+     *            バインド変数
+     * @param valueType
+     *            値タイプ
+     * @return バインド変数の文字列表現
+     */
+    public static String getBindVariableText(Object bindVariable,
+            ValueType valueType) {
+        if (valueType != null) {
+            return valueType.toText(bindVariable);
         }
+        return toText(bindVariable);
+    }
+
+    /**
+     * <code>null</code>の文字列表現を返します。
+     * 
+     * @return
+     */
+    public static String nullText() {
+        return NULL;
+    }
+
+    /**
+     * {@link Number}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(Number value) {
+        if (value == null) {
+            return NULL;
+        }
+        return value.toString();
+    }
+
+    /**
+     * {@link Boolean}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(Boolean value) {
+        if (value == null) {
+            return NULL;
+        }
+        return quote(value.toString());
+    }
+
+    /**
+     * {@link String}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(String value) {
+        if (value == null) {
+            return NULL;
+        }
+        return quote(value);
+    }
+
+    /**
+     * {@link Date}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(Date value) {
+        if (value == null) {
+            return NULL;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(value);
+        SStringBuilder buf = new SStringBuilder();
+        addDate(buf, calendar);
+        return quote(buf.toString());
+    }
+
+    /**
+     * {@link Time}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(Time value) {
+        if (value == null) {
+            return NULL;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(value);
+        SStringBuilder buf = new SStringBuilder();
+        addTime(buf, calendar);
+        addTimeDecimalPart(buf, calendar.get(Calendar.MILLISECOND));
+        return quote(buf.toString());
+    }
+
+    /**
+     * {@link Timestamp}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(Timestamp value) {
+        if (value == null) {
+            return NULL;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(value);
+        SStringBuilder buf = new SStringBuilder(30);
+        addDate(buf, calendar);
+        addTime(buf, calendar);
+        addTimeDecimalPart(buf, value.getNanos());
+        return quote(buf.toString());
+    }
+
+    /**
+     * <code>byte[]</code>の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(byte[] value) {
+        if (value == null) {
+            return NULL;
+        }
+        return quote("byte[](length=" + Integer.toString(value.length) + ")");
+    }
+
+    /**
+     * {@link InputStream}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @param length
+     *            ストリーム内のバイトの長さ
+     * @return 文字列表現
+     */
+    public static String toText(InputStream value, int length) {
+        if (value == null) {
+            return NULL;
+        }
+        return quote(value.toString() + "(length=" + length + ")");
+    }
+
+    /**
+     * {@link Object}の文字列表現を返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列表現
+     */
+    public static String toText(Object value) {
+        if (value instanceof String) {
+            return quote(value.toString());
+        } else if (value instanceof Number) {
+            return value.toString();
+        } else if (value instanceof Timestamp) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
+            return quote(sdf.format((java.util.Date) value));
+        } else if (value instanceof java.util.Date) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            return quote(sdf.format((java.util.Date) value));
+        } else if (value instanceof Boolean) {
+            return value.toString();
+        } else if (value == null) {
+            return NULL;
+        } else {
+            return quote(value.toString());
+        }
+    }
+
+    /**
+     * {@link Exception}の文字列表現を返します。
+     * 
+     * @param exception
+     *            例外
+     * @return 文字列表現
+     */
+    public static String toText(Exception exception) {
+        if (exception == null) {
+            return NULL;
+        }
+        return quote(exception.toString());
+    }
+
+    /**
+     * 文字列バッファに<code>yyyy-mm-dd</code>のフォーマットで日付を設定します。
+     * 
+     * @param buf
+     *            文字列バッファ
+     * @param calendar
+     *            カレンダ
+     */
+    protected static void addDate(SStringBuilder buf, Calendar calendar) {
+        int year = calendar.get(Calendar.YEAR);
+        buf.append(year);
+        buf.append('-');
+        int month = calendar.get(Calendar.MONTH) + 1;
+        if (month < 10) {
+            buf.append('0');
+        }
+        buf.append(month);
+        buf.append('-');
+        int date = calendar.get(Calendar.DATE);
+        if (date < 10) {
+            buf.append('0');
+        }
+        buf.append(date);
+    }
+
+    /**
+     * 文字列バッファに<code>hh:mm:ss</code>のフォーマットで値を設定します。
+     * 
+     * @param buf
+     *            文字列バッファ
+     * @param calendar
+     *            カレンダ
+     */
+    protected static void addTime(SStringBuilder buf, Calendar calendar) {
+        if (buf.length() > 0) {
+            buf.append(' ');
+        }
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (hour < 10) {
+            buf.append('0');
+        }
+        buf.append(hour);
+        buf.append(':');
+        int minute = calendar.get(Calendar.MINUTE);
+        if (minute < 10) {
+            buf.append('0');
+        }
+        buf.append(minute);
+        buf.append(':');
+        int second = calendar.get(Calendar.SECOND);
+        if (second < 10) {
+            buf.append('0');
+        }
+        buf.append(second);
+    }
+
+    /**
+     * 文字列バッファに時間の小数点以下の値を設定します。
+     * 
+     * @param buf
+     *            文字列バッファ
+     * @param decimalPart
+     *            小数点以下の値
+     */
+    protected static void addTimeDecimalPart(SStringBuilder buf, int decimalPart) {
+        if (decimalPart == 0) {
+            return;
+        }
+        if (buf.length() > 0) {
+            buf.append('.');
+        }
+        buf.append(decimalPart);
+    }
+
+    /**
+     * 文字列をシングルクォートで囲みます。
+     * 
+     * @param text
+     *            文字列
+     * @return
+     */
+    protected static String quote(String text) {
+        return "'" + text + "'";
     }
 }

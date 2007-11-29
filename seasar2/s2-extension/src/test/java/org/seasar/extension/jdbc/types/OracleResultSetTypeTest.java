@@ -69,4 +69,12 @@ public class OracleResultSetTypeTest extends TestCase {
         OracleResultSetType rsType = new OracleResultSetType();
         assertEquals(OracleResultSetType.CURSOR, rsType.getSqlType());
     }
+
+    /**
+     * 
+     */
+    public void testToText() {
+        OracleResultSetType rsType = new OracleResultSetType();
+        assertEquals("null", rsType.toText(null));
+    }
 }

@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 
 /**
  * オラクルの結果セット用の {@link ValueType}です。
@@ -68,6 +69,10 @@ public class OracleResultSetType extends AbstractValueType {
     public void bindValue(CallableStatement cs, String parameterName,
             Object value) throws SQLException {
         throw new SQLException("not supported");
+    }
+
+    public String toText(Object value) {
+        return BindVariableUtil.nullText();
     }
 
 }

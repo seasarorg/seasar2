@@ -538,5 +538,9 @@ public final class ValueTypes {
                 String parameterName) throws SQLException {
             throw new SQLException("not supported");
         }
+
+        public String toText(Object value) {
+            throw new UnsupportedOperationException("toText");
+        }
     }
 }

@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.BooleanConversionUtil;
 
 /**
@@ -64,8 +65,7 @@ public class BooleanIntegerType extends AbstractValueType {
         if (value == null) {
             setNull(ps, index);
         } else {
-            ps.setInt(index,
-                    BooleanConversionUtil.toPrimitiveBoolean(value) ? 1 : 0);
+            ps.setInt(index, toInt(value));
         }
     }
 
@@ -74,9 +74,27 @@ public class BooleanIntegerType extends AbstractValueType {
         if (value == null) {
             setNull(cs, parameterName);
         } else {
-            cs.setInt(parameterName, BooleanConversionUtil
-                    .toPrimitiveBoolean(value) ? 1 : 0);
+            cs.setInt(parameterName, toInt(value));
         }
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        } else {
+            int var = toInt(value);
+            return BindVariableUtil.toText(new Integer(var));
+        }
+    }
+
+    /**
+     * <code>int</code>に変換します。
+     * 
+     * @param value
+     *            値
+     * @return <code>int</code>
+     */
+    protected int toInt(Object value) {
+        return BooleanConversionUtil.toPrimitiveBoolean(value) ? 1 : 0;
+    }
 }

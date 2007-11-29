@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
@@ -87,4 +88,10 @@ public class TimestampType extends AbstractValueType {
         return TimestampConversionUtil.toTimestamp(value);
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        return BindVariableUtil.toText(toTimestamp(value));
+    }
 }

@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.exception.SSQLException;
 import org.seasar.framework.util.InputStreamUtil;
 
@@ -101,6 +102,16 @@ public class BytesType extends AbstractValueType {
     public Object getValue(final CallableStatement cs,
             final String parameterName) throws SQLException {
         return trait.get(cs, parameterName);
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        } else if (value instanceof byte[]) {
+            return BindVariableUtil.toText((byte[]) value);
+        } else {
+            return BindVariableUtil.toText(value);
+        }
     }
 
     /**

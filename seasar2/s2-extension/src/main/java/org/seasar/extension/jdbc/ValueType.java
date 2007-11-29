@@ -136,4 +136,13 @@ public interface ValueType {
      */
     void registerOutParameter(CallableStatement cs, String parameterName)
             throws SQLException;
+
+    /**
+     * 変数の値を文字列表現に変換します。
+     * 
+     * @param value
+     *            値
+     * @return 値の文字列表現
+     */
+    String toText(Object value);
 }

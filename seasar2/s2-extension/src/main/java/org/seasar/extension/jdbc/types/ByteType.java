@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.ByteConversionUtil;
 
 /**
@@ -78,4 +79,11 @@ public class ByteType extends AbstractValueType {
         }
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        Byte var = ByteConversionUtil.toByte(value);
+        return BindVariableUtil.toText(var);
+    }
 }

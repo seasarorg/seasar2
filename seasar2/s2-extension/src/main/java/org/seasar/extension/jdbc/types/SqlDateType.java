@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.SqlDateConversionUtil;
 
 /**
@@ -86,4 +87,10 @@ public class SqlDateType extends AbstractValueType {
         return SqlDateConversionUtil.toDate(value);
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        return BindVariableUtil.toText(toSqlDate(value));
+    }
 }

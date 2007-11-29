@@ -89,6 +89,14 @@ public class UserDefineTypeTest extends TestCase {
         assertEquals(statement.value, 2);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToText() throws Exception {
+        assertEquals("2", valueType.toText(Authority.valueOf(2)));
+    }
+
     private static class MockResultSet extends ResultSetWrapper {
         MockResultSet() {
             super(null);

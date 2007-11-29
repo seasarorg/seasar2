@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.BigDecimalConversionUtil;
 import org.seasar.framework.util.BigIntegerConversionUtil;
 
@@ -80,6 +82,14 @@ public class BigIntegerType extends AbstractValueType {
             cs.setBigDecimal(parameterName, BigDecimalConversionUtil
                     .toBigDecimal(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        BigDecimal var = BigDecimalConversionUtil.toBigDecimal(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

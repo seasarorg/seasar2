@@ -120,16 +120,21 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
 
     public void logSql(String sql, Object... vars) {
         String completeSql = null;
+        ValueType[] valueTypes = null;
         if (logger.isDebugEnabled()) {
             vars = getParamValues();
-            completeSql = BindVariableUtil.getCompleteSql(sql, vars);
+            valueTypes = getParamValueTypes();
+            completeSql = BindVariableUtil
+                    .getCompleteSql(sql, vars, valueTypes);
             logger.debug(completeSql);
         }
         SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
         if (sqlLogRegistry != null) {
             if (completeSql == null) {
                 vars = getParamValues();
-                completeSql = BindVariableUtil.getCompleteSql(sql, vars);
+                valueTypes = getParamValueTypes();
+                completeSql = BindVariableUtil.getCompleteSql(sql, vars,
+                        valueTypes);
             }
             SqlLog sqlLog = new SqlLogImpl(sql, completeSql, vars,
                     getParamClasses());
@@ -208,6 +213,19 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
         Class<?>[] ret = new Class<?>[paramList.size()];
         for (int i = 0; i < paramList.size(); i++) {
             ret[i] = paramList.get(i).paramClass;
+        }
+        return ret;
+    }
+
+    /**
+     * パラメータの値型の配列を返します。
+     * 
+     * @return パラメータの値型の配列
+     */
+    public ValueType[] getParamValueTypes() {
+        ValueType[] ret = new ValueType[paramList.size()];
+        for (int i = 0; i < paramList.size(); i++) {
+            ret[i] = paramList.get(i).valueType;
         }
         return ret;
     }

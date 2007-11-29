@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 
 /**
  * Object用の {@link ValueType}です。
@@ -72,6 +73,13 @@ public class ObjectType extends AbstractValueType {
         } else {
             cs.setObject(parameterName, value);
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        return BindVariableUtil.toText(value);
     }
 
 }

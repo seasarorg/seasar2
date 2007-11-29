@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.IntegerConversionUtil;
 
 /**
@@ -74,6 +75,14 @@ public class IntegerType extends AbstractValueType {
             cs.setInt(parameterName, IntegerConversionUtil
                     .toPrimitiveInt(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        Integer var = IntegerConversionUtil.toInteger(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

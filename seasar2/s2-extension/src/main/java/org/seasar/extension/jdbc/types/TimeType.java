@@ -23,6 +23,7 @@ import java.sql.Time;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.TimeConversionUtil;
 
 /**
@@ -85,6 +86,13 @@ public class TimeType extends AbstractValueType {
      */
     protected Time toTime(Object value) {
         return TimeConversionUtil.toTime(value);
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        return BindVariableUtil.toText(toTime(value));
     }
 
 }

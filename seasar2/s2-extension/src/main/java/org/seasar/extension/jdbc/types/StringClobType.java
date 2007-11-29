@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.ReaderUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
@@ -93,6 +94,14 @@ public class StringClobType extends AbstractValueType {
             cs.setCharacterStream(parameterName, new StringReader(s), s
                     .length());
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        String var = StringConversionUtil.toString(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

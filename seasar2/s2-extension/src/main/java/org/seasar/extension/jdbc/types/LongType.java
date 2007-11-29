@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.LongConversionUtil;
 
 /**
@@ -75,6 +76,14 @@ public class LongType extends AbstractValueType {
                     .setLong(parameterName, LongConversionUtil
                             .toPrimitiveLong(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        Long var = LongConversionUtil.toLong(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

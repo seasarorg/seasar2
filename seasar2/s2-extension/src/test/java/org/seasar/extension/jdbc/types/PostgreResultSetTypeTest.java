@@ -54,4 +54,12 @@ public class PostgreResultSetTypeTest extends TestCase {
         PostgreResultSetType rsType = new PostgreResultSetType();
         assertEquals(Types.OTHER, rsType.getSqlType());
     }
+
+    /**
+     * 
+     */
+    public void testToText() {
+        OracleResultSetType rsType = new OracleResultSetType();
+        assertEquals("null", rsType.toText(null));
+    }
 }

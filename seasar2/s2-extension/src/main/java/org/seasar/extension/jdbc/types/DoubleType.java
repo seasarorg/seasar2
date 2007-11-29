@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.DoubleConversionUtil;
 
 /**
@@ -74,6 +75,14 @@ public class DoubleType extends AbstractValueType {
             cs.setDouble(parameterName, DoubleConversionUtil
                     .toPrimitiveDouble(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        Double var = DoubleConversionUtil.toDouble(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

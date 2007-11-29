@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.FloatConversionUtil;
 
 /**
@@ -74,6 +75,14 @@ public class FloatType extends AbstractValueType {
             cs.setFloat(parameterName, FloatConversionUtil
                     .toPrimitiveFloat(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        Float var = FloatConversionUtil.toFloat(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

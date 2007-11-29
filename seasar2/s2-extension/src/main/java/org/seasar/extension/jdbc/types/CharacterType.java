@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
@@ -87,6 +88,14 @@ public class CharacterType extends AbstractValueType {
         } else {
             cs.setString(parameterName, StringConversionUtil.toString(value));
         }
+    }
+
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        }
+        String var = StringConversionUtil.toString(value);
+        return BindVariableUtil.toText(var);
     }
 
 }

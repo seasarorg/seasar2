@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.BooleanConversionUtil;
 
 /**
@@ -77,7 +78,14 @@ public class BooleanType extends AbstractValueType {
             cs.setBoolean(parameterName, BooleanConversionUtil
                     .toPrimitiveBoolean(value));
         }
-
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        } else {
+            Boolean var = BooleanConversionUtil.toBoolean(value);
+            return BindVariableUtil.toText(var);
+        }
+    }
 }

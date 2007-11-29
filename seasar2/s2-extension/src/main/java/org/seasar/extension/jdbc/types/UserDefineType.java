@@ -109,4 +109,8 @@ public class UserDefineType implements ValueType {
         }
         return MethodUtil.invoke(valueMethod, value, null);
     }
+
+    public String toText(Object value) {
+        return baseValueType.toText(fromJavaToDb(value));
+    }
 }

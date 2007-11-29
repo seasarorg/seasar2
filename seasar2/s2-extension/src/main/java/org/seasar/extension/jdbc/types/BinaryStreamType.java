@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.util.BindVariableUtil;
 import org.seasar.framework.util.InputStreamUtil;
 
 /**
@@ -94,7 +95,17 @@ public class BinaryStreamType extends AbstractValueType {
         } else {
             cs.setObject(parameterName, value);
         }
-
     }
 
+    public String toText(Object value) {
+        if (value == null) {
+            return BindVariableUtil.nullText();
+        } else if (value instanceof InputStream) {
+            InputStream is = (InputStream) value;
+            return BindVariableUtil.toText(is, InputStreamUtil
+                    .available(is));
+        } else {
+            return BindVariableUtil.toText(value);
+        }
+    }
 }
