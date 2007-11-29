@@ -120,24 +120,20 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
 
     public void logSql(String sql, Object... vars) {
         String completeSql = null;
-        ValueType[] valueTypes = null;
         if (logger.isDebugEnabled()) {
-            vars = getParamValues();
-            valueTypes = getParamValueTypes();
-            completeSql = BindVariableUtil
-                    .getCompleteSql(sql, vars, valueTypes);
+            completeSql = BindVariableUtil.getCompleteSql(sql, vars);
             logger.debug(completeSql);
         }
         SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
         if (sqlLogRegistry != null) {
             if (completeSql == null) {
-                vars = getParamValues();
-                valueTypes = getParamValueTypes();
-                completeSql = BindVariableUtil.getCompleteSql(sql, vars,
-                        valueTypes);
+                completeSql = BindVariableUtil.getCompleteSql(sql, vars);
             }
-            SqlLog sqlLog = new SqlLogImpl(sql, completeSql, vars,
-                    getParamClasses());
+            Class<?>[] classes = new Class[vars.length];
+            for (int i = 0; i < vars.length; ++i) {
+                classes[i] = vars[i].getClass();
+            }
+            SqlLog sqlLog = new SqlLogImpl(sql, completeSql, vars, classes);
             sqlLogRegistry.add(sqlLog);
         }
     }
@@ -154,7 +150,28 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      * SQLをログに出力します。
      */
     protected void logSql() {
-        logSql(executedSql, getParamValues());
+        String completeSql = null;
+        Object[] vars = null;
+        ValueType[] valueTypes = null;
+        if (logger.isDebugEnabled()) {
+            vars = getParamValues();
+            valueTypes = getParamValueTypes();
+            completeSql = BindVariableUtil.getCompleteSql(executedSql, vars,
+                    valueTypes);
+            logger.debug(completeSql);
+        }
+        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+        if (sqlLogRegistry != null) {
+            if (completeSql == null) {
+                vars = getParamValues();
+                valueTypes = getParamValueTypes();
+                completeSql = BindVariableUtil.getCompleteSql(executedSql,
+                        vars, valueTypes);
+            }
+            SqlLog sqlLog = new SqlLogImpl(executedSql, completeSql, vars,
+                    getParamClasses());
+            sqlLogRegistry.add(sqlLog);
+        }
     }
 
     /**

@@ -164,7 +164,7 @@ public interface DbmsDialect {
      * 
      * @return 生成された識別子の値を{@link Statement#getGeneratedKeys()}で取得できる場合は<code>true</code>
      */
-    boolean supportGetGeneratedKeys();
+    boolean supportsGetGeneratedKeys();
 
     /**
      * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、

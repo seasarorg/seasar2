@@ -169,7 +169,7 @@ public class StandardDialect implements DbmsDialect {
         return false;
     }
 
-    public boolean supportGetGeneratedKeys() {
+    public boolean supportsGetGeneratedKeys() {
         return false;
     }
 

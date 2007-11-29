@@ -138,7 +138,7 @@ public class PostgreDialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportGetGeneratedKeys() {
+    public boolean supportsGetGeneratedKeys() {
         return false;
     }
 

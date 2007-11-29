@@ -55,7 +55,7 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
     }
 
     public boolean useGetGeneratedKeys(final JdbcManagerImplementor jdbcManager) {
-        return jdbcManager.getDialect().supportGetGeneratedKeys();
+        return jdbcManager.getDialect().supportsGetGeneratedKeys();
     }
 
     public boolean isInsertInto(final JdbcManagerImplementor jdbcManager) {
@@ -71,7 +71,7 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
             final Object entity, final Statement statement,
             final SqlLogger sqlLogger) {
         final long id;
-        if (jdbcManager.getDialect().supportGetGeneratedKeys()) {
+        if (jdbcManager.getDialect().supportsGetGeneratedKeys()) {
             id = getGeneratedId(statement);
         } else {
             id = getGeneratedId(jdbcManager, sqlLogger);

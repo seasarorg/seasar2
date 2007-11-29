@@ -67,7 +67,7 @@ public class H2Dialect extends StandardDialect {
     }
 
     @Override
-    public boolean supportGetGeneratedKeys() {
+    public boolean supportsGetGeneratedKeys() {
         return true;
     }
 

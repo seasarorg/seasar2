@@ -90,6 +90,25 @@ public class AbsQueryTest extends TestCase {
     /**
      * 
      */
+    public void testLogSql_withArgs() {
+        String sql = "select * from aaa where id = ?";
+        String completeSql = "select * from aaa where id = 1";
+        MyQuery query = new MyQuery(manager);
+        query.prepareCallerClassAndMethodName("testLogSql_withArgs");
+        query.logSql(sql, 1);
+        SqlLogRegistry registry = SqlLogRegistryLocator.getInstance();
+        SqlLog log = registry.getLast();
+        assertEquals(sql, log.getRawSql());
+        assertEquals(completeSql, log.getCompleteSql());
+        assertEquals(1, log.getBindArgs().length);
+        assertEquals(new Integer(1), log.getBindArgs()[0]);
+        assertEquals(1, log.getBindArgTypes().length);
+        assertEquals(Integer.class, log.getBindArgTypes()[0]);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareCallerClassAndMethodName() {
         MyQuery query = new MyQuery(manager);
         query.prepareCallerClassAndMethodName("hoge");
