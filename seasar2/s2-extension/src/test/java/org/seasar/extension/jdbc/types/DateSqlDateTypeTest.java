@@ -15,8 +15,9 @@
  */
 package org.seasar.extension.jdbc.types;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -25,6 +26,8 @@ import junit.framework.TestCase;
  * 
  */
 public class DateSqlDateTypeTest extends TestCase {
+
+    private DateSqlDateType ddType = new DateSqlDateType();
 
     /**
      * 
@@ -39,7 +42,8 @@ public class DateSqlDateTypeTest extends TestCase {
         calendar.set(Calendar.MINUTE, 34);
         calendar.set(Calendar.SECOND, 56);
         calendar.set(Calendar.MILLISECOND, 789);
-        Date date = new DateSqlDateType().toSqlDate(calendar.getTime());
+        java.sql.Date date = new DateSqlDateType()
+                .toSqlDate(calendar.getTime());
         calendar.clear();
         calendar.setTime(date);
         assertEquals(2007, calendar.get(Calendar.YEAR));
@@ -49,5 +53,16 @@ public class DateSqlDateTypeTest extends TestCase {
         assertEquals(0, calendar.get(Calendar.MINUTE));
         assertEquals(0, calendar.get(Calendar.SECOND));
         assertEquals(0, calendar.get(Calendar.MILLISECOND));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToText() throws Exception {
+        Timestamp timestamp = Timestamp
+                .valueOf("2007-11-29 13:14:15.123456789");
+        Date value = new Date(timestamp.getTime());
+        assertEquals("'2007-11-29'", ddType.toText(value));
     }
 }

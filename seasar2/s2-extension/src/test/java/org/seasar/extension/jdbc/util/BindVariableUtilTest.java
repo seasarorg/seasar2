@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -121,9 +119,9 @@ public class BindVariableUtilTest extends TestCase {
      * @throws Exception
      */
     public void testToText_SqlDate() throws Exception {
-        long milli = Timestamp.valueOf("2007-11-29 13:14:15.123456789")
+        long time = Timestamp.valueOf("2007-11-29 13:14:15.123456789")
                 .getTime();
-        java.sql.Date value = new java.sql.Date(milli);
+        java.sql.Date value = new java.sql.Date(time);
         String text = BindVariableUtil.toText(value);
         assertEquals("'2007-11-29'", text);
     }
@@ -173,16 +171,7 @@ public class BindVariableUtilTest extends TestCase {
     public void testToText_ByteArray() throws Exception {
         byte[] value = new byte[] { 1, 2, 3 };
         String text = BindVariableUtil.toText(value);
-        assertEquals("'byte[](length=3)'", text);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToText_InputStream() throws Exception {
-        InputStream value = new ByteArrayInputStream(new byte[] { 1, 2, 3 });
-        String text = BindVariableUtil.toText(value, 3);
-        assertEquals("'" + value.toString() + "(length=3)'", text);
+        assertEquals("'" + value + "(byteLength=3)'", text);
     }
 
     /**
@@ -192,16 +181,6 @@ public class BindVariableUtilTest extends TestCase {
         Object value = new Object();
         String text = BindVariableUtil.toText(value);
         assertEquals("'" + value.toString() + "'", text);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToText_Exception() throws Exception {
-        IllegalArgumentException value = new IllegalArgumentException("hoge");
-        String text = BindVariableUtil.toText(value);
-        assertEquals("'" + value.toString() + "'", text);
-
     }
 
     /**

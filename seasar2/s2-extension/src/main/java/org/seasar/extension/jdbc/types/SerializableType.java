@@ -124,12 +124,9 @@ public class SerializableType extends BytesType {
     }
 
     public String toText(Object value) {
-        byte[] bytes = null;
-        try {
-            bytes = serialize(value);
-        } catch (Exception e) {
-            return BindVariableUtil.toText(e);
+        if (value == null) {
+            return BindVariableUtil.nullText();
         }
-        return super.toText(bytes);
+        return BindVariableUtil.toText(value);
     }
 }

@@ -109,9 +109,8 @@ public class BytesType extends AbstractValueType {
             return BindVariableUtil.nullText();
         } else if (value instanceof byte[]) {
             return BindVariableUtil.toText((byte[]) value);
-        } else {
-            return BindVariableUtil.toText(value);
         }
+        return BindVariableUtil.toText(value);
     }
 
     /**

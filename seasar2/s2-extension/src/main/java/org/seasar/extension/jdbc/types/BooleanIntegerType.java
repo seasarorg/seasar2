@@ -81,10 +81,9 @@ public class BooleanIntegerType extends AbstractValueType {
     public String toText(Object value) {
         if (value == null) {
             return BindVariableUtil.nullText();
-        } else {
-            int var = toInt(value);
-            return BindVariableUtil.toText(new Integer(var));
         }
+        int var = toInt(value);
+        return BindVariableUtil.toText(new Integer(var));
     }
 
     /**

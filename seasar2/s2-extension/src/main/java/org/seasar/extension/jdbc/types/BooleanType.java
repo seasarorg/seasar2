@@ -83,9 +83,8 @@ public class BooleanType extends AbstractValueType {
     public String toText(Object value) {
         if (value == null) {
             return BindVariableUtil.nullText();
-        } else {
-            Boolean var = BooleanConversionUtil.toBoolean(value);
-            return BindVariableUtil.toText(var);
         }
+        Boolean var = BooleanConversionUtil.toBoolean(value);
+        return BindVariableUtil.toText(var);
     }
 }

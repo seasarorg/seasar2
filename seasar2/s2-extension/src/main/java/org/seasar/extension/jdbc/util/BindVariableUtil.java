@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.util;
 
-import java.io.InputStream;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -119,7 +118,23 @@ public final class BindVariableUtil {
      * @return バインド変数の文字列表現
      */
     public static String getBindVariableText(Object bindVariable) {
-        return toText(bindVariable);
+        if (bindVariable instanceof String) {
+            return quote(bindVariable.toString());
+        } else if (bindVariable instanceof Number) {
+            return bindVariable.toString();
+        } else if (bindVariable instanceof Timestamp) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
+            return quote(sdf.format((java.util.Date) bindVariable));
+        } else if (bindVariable instanceof java.util.Date) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            return quote(sdf.format((java.util.Date) bindVariable));
+        } else if (bindVariable instanceof Boolean) {
+            return bindVariable.toString();
+        } else if (bindVariable == null) {
+            return NULL;
+        } else {
+            return quote(bindVariable.toString());
+        }
     }
 
     /**
@@ -136,7 +151,7 @@ public final class BindVariableUtil {
         if (valueType != null) {
             return valueType.toText(bindVariable);
         }
-        return toText(bindVariable);
+        return getBindVariableText(bindVariable);
     }
 
     /**
@@ -258,23 +273,8 @@ public final class BindVariableUtil {
         if (value == null) {
             return NULL;
         }
-        return quote("byte[](length=" + Integer.toString(value.length) + ")");
-    }
-
-    /**
-     * {@link InputStream}の文字列表現を返します。
-     * 
-     * @param value
-     *            値
-     * @param length
-     *            ストリーム内のバイトの長さ
-     * @return 文字列表現
-     */
-    public static String toText(InputStream value, int length) {
-        if (value == null) {
-            return NULL;
-        }
-        return quote(value.toString() + "(length=" + length + ")");
+        return quote(value.toString() + "(byteLength="
+                + Integer.toString(value.length) + ")");
     }
 
     /**
@@ -285,37 +285,10 @@ public final class BindVariableUtil {
      * @return 文字列表現
      */
     public static String toText(Object value) {
-        if (value instanceof String) {
-            return quote(value.toString());
-        } else if (value instanceof Number) {
-            return value.toString();
-        } else if (value instanceof Timestamp) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH.mm.ss");
-            return quote(sdf.format((java.util.Date) value));
-        } else if (value instanceof java.util.Date) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return quote(sdf.format((java.util.Date) value));
-        } else if (value instanceof Boolean) {
-            return value.toString();
-        } else if (value == null) {
-            return NULL;
-        } else {
-            return quote(value.toString());
-        }
-    }
-
-    /**
-     * {@link Exception}の文字列表現を返します。
-     * 
-     * @param exception
-     *            例外
-     * @return 文字列表現
-     */
-    public static String toText(Exception exception) {
-        if (exception == null) {
+        if (value == null) {
             return NULL;
         }
-        return quote(exception.toString());
+        return quote(value.toString());
     }
 
     /**

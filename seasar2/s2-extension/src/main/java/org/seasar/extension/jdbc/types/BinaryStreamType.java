@@ -100,12 +100,7 @@ public class BinaryStreamType extends AbstractValueType {
     public String toText(Object value) {
         if (value == null) {
             return BindVariableUtil.nullText();
-        } else if (value instanceof InputStream) {
-            InputStream is = (InputStream) value;
-            return BindVariableUtil.toText(is, InputStreamUtil
-                    .available(is));
-        } else {
-            return BindVariableUtil.toText(value);
         }
+        return BindVariableUtil.toText(value);
     }
 }

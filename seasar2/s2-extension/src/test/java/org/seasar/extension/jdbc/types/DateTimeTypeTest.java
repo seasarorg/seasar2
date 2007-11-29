@@ -16,7 +16,9 @@
 package org.seasar.extension.jdbc.types;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
@@ -25,6 +27,8 @@ import junit.framework.TestCase;
  * 
  */
 public class DateTimeTypeTest extends TestCase {
+
+    private DateTimeType dtType = new DateTimeType();
 
     /**
      * 
@@ -49,5 +53,16 @@ public class DateTimeTypeTest extends TestCase {
         assertEquals(34, calendar.get(Calendar.MINUTE));
         assertEquals(56, calendar.get(Calendar.SECOND));
         assertEquals(789, calendar.get(Calendar.MILLISECOND));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToText() throws Exception {
+        Timestamp timestamp = Timestamp
+                .valueOf("2007-11-29 13:14:15.123456789");
+        Date value = new Date(timestamp.getTime());
+        assertEquals("'13:14:15.123'", dtType.toText(value));
     }
 }

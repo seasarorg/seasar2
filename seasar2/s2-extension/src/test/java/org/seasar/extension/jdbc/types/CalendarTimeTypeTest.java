@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.types;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -26,6 +27,8 @@ import junit.framework.TestCase;
  * 
  */
 public class CalendarTimeTypeTest extends TestCase {
+
+    private CalendarTimeType ctType = new CalendarTimeType();
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -50,7 +53,7 @@ public class CalendarTimeTypeTest extends TestCase {
         calendar.set(Calendar.MINUTE, 34);
         calendar.set(Calendar.SECOND, 56);
         calendar.set(Calendar.MILLISECOND, 789);
-        Time time = new CalendarTimeType().toTime(calendar);
+        Time time = ctType.toTime(calendar);
         calendar.clear();
         calendar.setTime(time);
         assertEquals(1970, calendar.get(Calendar.YEAR));
@@ -75,7 +78,7 @@ public class CalendarTimeTypeTest extends TestCase {
         calendar.set(Calendar.MINUTE, 34);
         calendar.set(Calendar.SECOND, 56);
         calendar.set(Calendar.MILLISECOND, 789);
-        Time time = new CalendarTimeType().toTime(calendar);
+        Time time = ctType.toTime(calendar);
         calendar = Calendar.getInstance();
         calendar.setTime(time);
         assertEquals(1970, calendar.get(Calendar.YEAR));
@@ -85,5 +88,17 @@ public class CalendarTimeTypeTest extends TestCase {
         assertEquals(34, calendar.get(Calendar.MINUTE));
         assertEquals(56, calendar.get(Calendar.SECOND));
         assertEquals(789, calendar.get(Calendar.MILLISECOND));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToText() throws Exception {
+        Timestamp timestamp = Timestamp
+                .valueOf("2007-11-29 13:14:15.123456789");
+        Calendar value = Calendar.getInstance();
+        value.setTime(timestamp);
+        assertEquals("'13:14:15.123'", ctType.toText(value));
     }
 }
