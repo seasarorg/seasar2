@@ -44,7 +44,7 @@ public class CompKeyOneToOneTest {
         List<CompKeyEmployee> list =
             jdbcManager
                 .from(CompKeyEmployee.class)
-                .join("address")
+                .leftOuterJoin("address")
                 .getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
@@ -60,7 +60,7 @@ public class CompKeyOneToOneTest {
         List<CompKeyEmployee> list =
             jdbcManager
                 .from(CompKeyEmployee.class)
-                .join("address", false)
+                .leftOuterJoin("address", false)
                 .getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
@@ -107,7 +107,7 @@ public class CompKeyOneToOneTest {
         List<CompKeyAddress> list =
             jdbcManager
                 .from(CompKeyAddress.class)
-                .join("employee")
+                .leftOuterJoin("employee")
                 .getResultList();
         assertEquals(14, list.size());
         for (CompKeyAddress e : list) {
@@ -123,7 +123,7 @@ public class CompKeyOneToOneTest {
         List<CompKeyAddress> list =
             jdbcManager
                 .from(CompKeyAddress.class)
-                .join("employee", false)
+                .leftOuterJoin("employee", false)
                 .getResultList();
         assertEquals(14, list.size());
         for (CompKeyAddress e : list) {

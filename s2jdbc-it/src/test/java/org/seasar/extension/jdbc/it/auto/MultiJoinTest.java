@@ -41,7 +41,7 @@ public class MultiJoinTest {
      */
     public void testJoin_nest() throws Exception {
         List<Department> list =
-            jdbcManager.from(Department.class).join("employees").join(
+            jdbcManager.from(Department.class).leftOuterJoin("employees").leftOuterJoin(
                 "employees.address").getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -57,8 +57,8 @@ public class MultiJoinTest {
             jdbcManager
                 .from(Employee.class)
                 .join("manager", JoinType.INNER)
-                .join("department")
-                .join("address")
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
                 .getResultList();
         assertEquals(13, list.size());
         assertNotNull(list.get(0).department);

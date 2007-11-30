@@ -41,7 +41,7 @@ public class CompKeyMultiJoinTest {
      */
     public void testJoin_nest() throws Exception {
         List<CompKeyDepartment> list =
-            jdbcManager.from(CompKeyDepartment.class).join("employees").join(
+            jdbcManager.from(CompKeyDepartment.class).leftOuterJoin("employees").leftOuterJoin(
                 "employees.address").getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -57,8 +57,8 @@ public class CompKeyMultiJoinTest {
             jdbcManager
                 .from(CompKeyEmployee.class)
                 .join("manager", JoinType.INNER)
-                .join("department")
-                .join("address")
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
                 .getResultList();
         assertEquals(13, list.size());
         assertNotNull(list.get(0).department);

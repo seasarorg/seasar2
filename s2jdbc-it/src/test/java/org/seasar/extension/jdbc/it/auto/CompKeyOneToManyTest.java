@@ -42,7 +42,7 @@ public class CompKeyOneToManyTest {
         List<CompKeyDepartment> list =
             jdbcManager
                 .from(CompKeyDepartment.class)
-                .join("employees")
+                .leftOuterJoin("employees")
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -59,7 +59,7 @@ public class CompKeyOneToManyTest {
         List<CompKeyDepartment> list =
             jdbcManager
                 .from(CompKeyDepartment.class)
-                .join("employees", false)
+                .leftOuterJoin("employees", false)
                 .getResultList();
         assertEquals(4, list.size());
         assertNull(list.get(0).employees);

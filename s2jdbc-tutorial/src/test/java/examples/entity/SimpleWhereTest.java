@@ -40,7 +40,7 @@ public class SimpleWhereTest extends S2TestCase {
         List<Employee> results =
             jdbcManager
                 .from(Employee.class)
-                .join("address")
+                .leftOuterJoin("address")
                 .where(
                     new SimpleWhere().starts("name", "A").ends(
                         "address.name",

@@ -31,25 +31,59 @@ import org.seasar.extension.jdbc.parameter.Parameter;
 public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
+     * 内部結合するプロパティを指定します。
      * <p>
-     * 結合するプロパティを指定します。
-     * </p>
-     * <p>
-     * デフォルトの結合タイプは左外部結合で、 指定したエンティティはフェッチされます。
+     * 指定したエンティティはフェッチされます。
      * </p>
      * 
      * @param name
-     *            結合するプロパティ名
+     *            内部結合する関連のプロパティ名
      * @return このインスタンス自身
      * @see JoinMeta
      * @see #join(String, JoinType)
      */
-    AutoSelect<T> join(String name);
+    AutoSelect<T> innerJoin(String name);
 
     /**
+     * 内部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> innerJoin(String name, boolean fetch);
+
+    /**
+     * 左外部結合するプロパティを指定します。
      * <p>
-     * 結合するプロパティを指定します。
+     * 指定したエンティティはフェッチされます。
      * </p>
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #join(String, JoinType)
+     */
+    AutoSelect<T> leftOuterJoin(String name);
+
+    /**
+     * 左外部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> leftOuterJoin(String name, boolean fetch);
+
+    /**
+     * 結合するプロパティを指定します。
      * <p>
      * 指定したエンティティはフェッチされます。
      * </p>
@@ -64,26 +98,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     AutoSelect<T> join(String name, JoinType joinType);
 
     /**
-     * <p>
      * 結合するプロパティを指定します。
-     * </p>
-     * <p>
-     * デフォルトの結合タイプは左外部結合です。
-     * </p>
-     * 
-     * @param name
-     *            結合するプロパティ名
-     * @param fetch
-     *            関連するエンティティをフェッチするかどうか。
-     * @return このインスタンス自身
-     * @see #join(String, JoinType, boolean)
-     */
-    AutoSelect<T> join(String name, boolean fetch);
-
-    /**
-     * <p>
-     * 結合するプロパティを指定します。
-     * </p>
      * 
      * @param name
      *            <p>

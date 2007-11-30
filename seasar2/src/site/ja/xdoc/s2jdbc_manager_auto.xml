@@ -290,25 +290,43 @@ Employee result = jdbcManager.from(Employee.class)
 			</subsection>
 
 			<subsection name="結合">
-				<p>
-					他のエンティティを結合する場合は、join()を使います。
-					引数は、結合したいエンティティのプロパティ名です。
-				</p>
-				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class).join("department").getResultList();
-]]></source>
-				<p>
-					デフォルトは、左外部結合で、結合で指定したエンティティは、検索結果に含まれます。
-					次のように内部結合にすることもできます。
-				</p>
+				<p>他のエンティティを結合する場合は、次のメソッドを使用します。</p>
+				<ul>
+					<li>
+						<p>
+							<code>innerJoin(String)</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>innerJoin(String, boolean)</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>leftOuterJoin(String)</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>leftOuterJoin(String, boolean)</code>
+						</p>
+					</li>
+				</ul>
+				<p>第1引数は、結合したいエンティティのプロパティ名です。</p>
 				<source><![CDATA[
 List<Employee> results = jdbcManager.from(Employee.class)
-                                    .join("department", JoinType.INNER).getResultList();
+                                    .innerJoin("department").getResultList();
 ]]></source>
-				<p>検索条件には含めたいけど、検索結果には含めたくない場合、 3番名の引数をfalseにします。</p>
+				<p>次のように外部結合にすることもできます。</p>
 				<source><![CDATA[
 List<Employee> results = jdbcManager.from(Employee.class)
-                                    .join("department", JoinType.INNER, false)
+                                    .leftOuterJoin("department").getResultList();
+]]></source>
+				<p>検索条件には含めたいけど、検索結果には含めたくない場合、 2番名の引数をfalseにします。</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                                    .innerJoin("department", false)
                                     .where("department.name = 'RESEARCH'")
                                     .getResultList();
 ]]></source>
@@ -319,8 +337,8 @@ List<Employee> results = jdbcManager.from(Employee.class)
 				</p>
 				<source><![CDATA[
 List<Department> results = jdbcManager.from(Department.class)
-                                    .join("employee")
-                                    .join("employee.address")
+                                    .leftOuterJoin("employee")
+                                    .leftOuterJoin("employee.address")
                                     .getResultList();
 ]]></source>
 				<p>結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、 いくつでもネストすることが可能です。</p>
@@ -355,12 +373,13 @@ jdbcManager.from(Department.class)
 					より複雑な検索条件を指定する場合は、where()を使います。
 					where()に書くことのできる条件は、SQLと同じです。
 					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
-					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
+					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
+					プロパティ名になります。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Department.class)
-    .join("employeeList")
-    .join("employeeList.address")
+    .leftOuterJoin("employeeList")
+    .leftOuterJoin("employeeList.address")
     .where("employeeList.salary between ? and ? and employeeList.address.street like ?", ...)
     .getResultList();
 ]]></source>
@@ -851,11 +870,12 @@ jdbcManager.from(Employee.class)
 					<code>orderBy()</code>
 					に書くことのできる条件は、SQLと同じです。
 					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
-					関連先のプロパティを指定する場合は、join()で指定した名前. プロパティ名になります。
+					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
+					プロパティ名になります。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
-    .join("department")
+    .leftOuterJoin("department")
     .orderBy("name, department.name")
     .getResultList();
 ]]></source>
@@ -928,7 +948,7 @@ jdbcManager.from(Employee.class)
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
-    .join("department")
+    .leftOuterJoin("department")
     .where("department.name = ?", deptName)
     .forUpdate()
     .getResultList();
@@ -939,7 +959,7 @@ jdbcManager.from(Employee.class)
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
-    .join("department")
+    .leftOuterJoin("department")
     .where("department.name = ?", deptName)
     .forUpdate("id")
     .getResultList();

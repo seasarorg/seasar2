@@ -347,7 +347,7 @@ where("id = ? or name = ?", 1, "SCOTT")
 		<section name="結合">
         <p>
         他のエンティティと結合するには、
-        join()の引数に<b>関連のプロパティ名</b>を指定します。
+        innerJoin()またはleftOuterJoin()の引数に<b>関連のプロパティ名</b>を指定します。
         エンティティ名ではないので注意してください。
         </p>
         <p>
@@ -358,8 +358,8 @@ where("id = ? or name = ?", 1, "SCOTT")
 List<Employee> results =
     jdbcManager
         .from(Employee.class)
-        .join("department")
-        .join("address")
+        .leftOuterJoin("department")
+        .leftOuterJoin("address")
         .getResultList();
 for (Employee e : results) {
     System.out.println(e.name
@@ -372,8 +372,8 @@ for (Employee e : results) {
         <p>
          結合した関連エンティティのプロパティは、結合名.プロパティ名(例えばaddress.name)で指定します。
          ネストした指定(aaa.bbb.ccc)も可能です。
-         ネストした指定をする場合は、必ずjoin()で指定しておく必要があります。
-         例えば、aaa.bbb.cccのプロパティを指定するには、join("aaa.bbb")を指定します。
+         ネストした指定をする場合は、必ずinnerJoin()/leftOuterJoin()で指定しておく必要があります。
+         例えば、aaa.bbb.cccのプロパティを指定するには、leftOuterJoin("aaa.bbb")を指定します。
         </p>
         <p>
          詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
@@ -399,7 +399,7 @@ for (Employee e : results) {
 List<Employee> results =
     jdbcManager
         .from(Employee.class)
-        .join("address")
+        .leftOuterJoin("address")
         .where(
             new SimpleWhere().starts("name", "A").ends(
                 "address.name",

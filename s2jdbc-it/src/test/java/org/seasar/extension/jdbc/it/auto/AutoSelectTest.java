@@ -597,7 +597,7 @@ public class AutoSelectTest {
         try {
             jdbcManager
                 .from(Employee.class)
-                .join("department")
+                .leftOuterJoin("department")
                 .where(m)
                 .getResultList();
             fail();
@@ -616,7 +616,7 @@ public class AutoSelectTest {
         try {
             jdbcManager
                 .from(Employee.class)
-                .join("department")
+                .leftOuterJoin("department")
                 .where(m)
                 .getResultList();
             fail();
@@ -631,7 +631,7 @@ public class AutoSelectTest {
      */
     public void testWhere_simpleWhere_illegalPropertyName2() throws Exception {
         try {
-            jdbcManager.from(Employee.class).join("department").where(
+            jdbcManager.from(Employee.class).leftOuterJoin("department").where(
                 new SimpleWhere().eq("department.illegal", 1)).getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
@@ -645,7 +645,7 @@ public class AutoSelectTest {
      */
     public void testWhere_simpleWhere_illegalPropertyName3() throws Exception {
         try {
-            jdbcManager.from(Employee.class).join("department").where(
+            jdbcManager.from(Employee.class).leftOuterJoin("department").where(
                 new SimpleWhere().eq("illegal.illegal2", 1)).getResultList();
             fail();
         } catch (BaseJoinNotFoundRuntimeException e) {
@@ -661,8 +661,8 @@ public class AutoSelectTest {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
-                .join("employees")
-                .join("employees.address")
+                .leftOuterJoin("employees")
+                .leftOuterJoin("employees.address")
                 .where(new DepartmentCondition().employees().addressId.eq(3))
                 .getResultList();
         assertEquals(1, list.size());
@@ -677,8 +677,8 @@ public class AutoSelectTest {
             jdbcManager
                 .from(Employee.class)
                 .join("manager", JoinType.INNER)
-                .join("department")
-                .join("address")
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
                 .where(
                     new SimpleWhere().eq(
                         "department.departmentName",
@@ -695,7 +695,7 @@ public class AutoSelectTest {
      */
     public void testJoin_nest() throws Exception {
         List<Department> list =
-            jdbcManager.from(Department.class).join("employees").join(
+            jdbcManager.from(Department.class).leftOuterJoin("employees").leftOuterJoin(
                 "employees.address").where(
                 new SimpleWhere().eq("employees.addressId", 3)).getResultList();
         assertEquals(1, list.size());
@@ -710,8 +710,8 @@ public class AutoSelectTest {
             jdbcManager
                 .from(Employee.class)
                 .join("manager", JoinType.INNER)
-                .join("department")
-                .join("address")
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
                 .where(
                     new EmployeeCondition().salary
                         .ge(new BigDecimal("2000"))
@@ -728,7 +728,7 @@ public class AutoSelectTest {
      */
     public void testJoin_illegalPropertyName() throws Exception {
         try {
-            jdbcManager.from(Department.class).join("illegal").getResultList();
+            jdbcManager.from(Department.class).leftOuterJoin("illegal").getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -741,7 +741,7 @@ public class AutoSelectTest {
      */
     public void testJoin_illegalPropertyName2() throws Exception {
         try {
-            jdbcManager.from(Department.class).join("employees").join(
+            jdbcManager.from(Department.class).leftOuterJoin("employees").leftOuterJoin(
                 "employees.illegal").getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
@@ -766,7 +766,7 @@ public class AutoSelectTest {
      */
     public void testGetSingleResult_oneToMany() throws Exception {
         Department department =
-            jdbcManager.from(Department.class).join("employees").where(
+            jdbcManager.from(Department.class).leftOuterJoin("employees").where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertNotNull(department);
     }
@@ -855,7 +855,7 @@ public class AutoSelectTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department")
+            .leftOuterJoin("department")
             .forUpdate()
             .getResultList();
     }
@@ -935,7 +935,7 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdate(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdate(
             "employeeName").getResultList();
     }
 
@@ -948,7 +948,7 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdate(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdate(
             "department.location").getResultList();
     }
 
@@ -1043,7 +1043,7 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdate(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdate(
             "employeeName",
             "department.location").getResultList();
     }
@@ -1187,7 +1187,7 @@ public class AutoSelectTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department")
+            .leftOuterJoin("department")
             .forUpdateNowait()
             .getResultList();
     }
@@ -1268,7 +1268,7 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdateNowait(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateNowait(
             "employeeName").getResultList();
     }
 
@@ -1281,7 +1281,7 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdateNowait(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateNowait(
             "department.location").getResultList();
     }
 
@@ -1375,7 +1375,7 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdateNowait(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateNowait(
             "employeeName",
             "department.location").getResultList();
     }
@@ -1457,7 +1457,7 @@ public class AutoSelectTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department")
+            .leftOuterJoin("department")
             .forUpdateWait(1)
             .getResultList();
     }
@@ -1537,7 +1537,7 @@ public class AutoSelectTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdateWait(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateWait(
             1,
             "employeeName").getResultList();
     }
@@ -1550,7 +1550,7 @@ public class AutoSelectTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdateWait(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateWait(
             1,
             "department.location").getResultList();
     }
@@ -1645,7 +1645,7 @@ public class AutoSelectTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).join("department").forUpdateWait(
+        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateWait(
             1,
             "employeeName",
             "department.location").getResultList();

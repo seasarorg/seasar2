@@ -35,6 +35,15 @@ public class SerializableTypeTest extends TestCase {
         assertEquals("'" + aaa + "'", type.toText(aaa));
     }
 
+    public void testSerializaAndDeserialize() throws Exception {
+        SerializableType type = new SerializableType(BytesType.BYTES_TRAIT);
+        Aaa aaa = new Aaa();
+        aaa.text = "HOGE";
+        byte[] bytes = type.serialize(aaa);
+        aaa = (Aaa) type.deserialize(bytes);
+        assertEquals("HOGE", aaa.text);
+    }
+
     /**
      * 
      * @author taedium
@@ -43,6 +52,9 @@ public class SerializableTypeTest extends TestCase {
     public static class Aaa implements Serializable {
 
         private static final long serialVersionUID = 1L;
+
+        /** */
+        public String text;
 
     }
 

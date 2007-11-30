@@ -92,8 +92,11 @@ public class SerializableType extends BytesType {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
             final ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(o);
-            oos.close();
-            return baos.toByteArray();
+            try {
+                return baos.toByteArray();
+            } finally {
+                oos.close();
+            }
         } catch (final Exception e) {
             throw new SSQLException("ESSR0017", new Object[] { e }, e);
         }
@@ -116,8 +119,11 @@ public class SerializableType extends BytesType {
             final ByteArrayInputStream bais = new ByteArrayInputStream(
                     (byte[]) bytes);
             final ObjectInputStream ois = new ObjectInputStream(bais);
-            ois.close();
-            return ois.readObject();
+            try {
+                return ois.readObject();
+            } finally {
+                ois.close();
+            }
         } catch (final Exception e) {
             throw new SSQLException("ESSR0017", new Object[] { e }, e);
         }

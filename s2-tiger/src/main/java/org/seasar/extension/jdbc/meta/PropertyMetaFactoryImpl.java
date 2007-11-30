@@ -65,6 +65,7 @@ import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeExcept
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
+import org.seasar.extension.jdbc.types.EnumType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
@@ -427,6 +428,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      * @param entityMeta
      *            エンティティメタデータ
      */
+    @SuppressWarnings("unchecked")
     protected void doValueType(final PropertyMeta propertyMeta,
             final EntityMeta entityMeta) {
         final Class<?> propertyClass = propertyMeta.getPropertyClass();
@@ -480,6 +482,12 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                 propertyMeta.setValueType(ValueTypes.CALENDAR_TIMESTAMP);
                 return;
             }
+        }
+
+        if (propertyClass.isEnum()) {
+            propertyMeta.setValueType(new EnumType(
+                    (Class<? extends Enum>) propertyClass));
+            return;
         }
 
         if (Serializable.class.isAssignableFrom(propertyClass)) {

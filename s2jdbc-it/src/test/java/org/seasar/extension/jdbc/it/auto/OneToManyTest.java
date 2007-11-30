@@ -39,7 +39,7 @@ public class OneToManyTest {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
-                .join("employees")
+                .leftOuterJoin("employees")
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -56,7 +56,7 @@ public class OneToManyTest {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
-                .join("employees", false)
+                .leftOuterJoin("employees", false)
                 .getResultList();
         assertEquals(4, list.size());
         assertNull(list.get(0).employees);

@@ -39,8 +39,8 @@ public class JoinTest extends S2TestCase {
         List<Employee> results =
             jdbcManager
                 .from(Employee.class)
-                .join("department")
-                .join("address")
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
                 .getResultList();
         for (Employee e : results) {
             System.out.println(e.name

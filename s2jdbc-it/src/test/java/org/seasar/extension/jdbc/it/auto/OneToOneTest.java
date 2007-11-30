@@ -41,7 +41,7 @@ public class OneToOneTest {
      */
     public void testLeftOuterJoin_fetch_fromOwnerToInverse() throws Exception {
         List<Employee> list =
-            jdbcManager.from(Employee.class).join("address").getResultList();
+            jdbcManager.from(Employee.class).leftOuterJoin("address").getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNotNull(e.address);
@@ -56,7 +56,7 @@ public class OneToOneTest {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("address", false)
+                .leftOuterJoin("address", false)
                 .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
@@ -102,7 +102,7 @@ public class OneToOneTest {
      */
     public void testLeftOuterJoin_fetch_fromInverseToOwner() throws Exception {
         List<Address> list =
-            jdbcManager.from(Address.class).join("employee").getResultList();
+            jdbcManager.from(Address.class).leftOuterJoin("employee").getResultList();
         assertEquals(14, list.size());
         for (Address e : list) {
             assertNotNull(e.employee);
@@ -117,7 +117,7 @@ public class OneToOneTest {
         List<Address> list =
             jdbcManager
                 .from(Address.class)
-                .join("employee", false)
+                .leftOuterJoin("employee", false)
                 .getResultList();
         assertEquals(14, list.size());
         for (Address e : list) {

@@ -186,14 +186,53 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testJoin() {
+    public void testInnerJoin() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.innerJoin("bbb");
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+    }
+
+    /**
+     * 
+     */
+    public void testInnerJoin_fetch() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.innerJoin("bbb", false);
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+    }
+
+    /**
+     * 
+     */
+    public void testLeftOuterJoin() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb");
         assertEquals(1, query.getJoinMetaSize());
         JoinMeta joinMeta = query.getJoinMeta(0);
         assertEquals("bbb", joinMeta.getName());
         assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
         assertTrue(joinMeta.isFetch());
+    }
+
+    /**
+     * 
+     */
+    public void testLeftOuterJoin_fetch() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb", false);
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
     }
 
     /**
@@ -207,19 +246,6 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals("bbb", joinMeta.getName());
         assertEquals(JoinType.INNER, joinMeta.getJoinType());
         assertTrue(joinMeta.isFetch());
-    }
-
-    /**
-     * 
-     */
-    public void testJoin_fetch() {
-        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb", false);
-        assertEquals(1, query.getJoinMetaSize());
-        JoinMeta joinMeta = query.getJoinMeta(0);
-        assertEquals("bbb", joinMeta.getName());
-        assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
-        assertFalse(joinMeta.isFetch());
     }
 
     /**
@@ -1057,7 +1083,7 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id", 1);
-        query.join("bbb").where(w);
+        query.leftOuterJoin("bbb").where(w);
         query.prepare("getResultList");
         assertEquals(" where T2_.ID = ?", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
@@ -1091,7 +1117,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_NE_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_NE", 1);
         query.where(w);
@@ -1128,7 +1154,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_LT_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_LT", 1);
         query.where(w);
@@ -1165,7 +1191,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_LE_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_LE", 1);
         query.where(w);
@@ -1202,7 +1228,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_GT_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_GT", 1);
         query.where(w);
@@ -1239,7 +1265,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_GE_NEST() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_GE", 1);
         query.where(w);
@@ -1278,7 +1304,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_IN_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_IN", new Object[] { 1, 2 });
         query.where(w);
@@ -1319,7 +1345,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_NOT_IN_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.id_NOT_IN", new Object[] { 1, 2 });
         query.where(w);
@@ -1358,7 +1384,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_LIKE_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.name_LIKE", "aaa");
         query.where(w);
@@ -1395,7 +1421,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_STARTS_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.name_STARTS", "aaa");
         query.where(w);
@@ -1432,7 +1458,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_ENDS_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.name_ENDS", "aaa");
         query.where(w);
@@ -1469,7 +1495,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_CONTAINS_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.name_CONTAINS", "aaa");
         query.where(w);
@@ -1504,7 +1530,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_IS_NULL_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.name_IS_NULL", true);
         query.where(w);
@@ -1537,7 +1563,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCondition_IS_NOT_NULL_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb");
+        query.leftOuterJoin("bbb");
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("bbb.name_IS_NOT_NULL", true);
         query.where(w);
@@ -1582,7 +1608,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareOrderBy() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").orderBy("name, bbb.id desc");
+        query.leftOuterJoin("bbb").orderBy("name, bbb.id desc");
         query.prepare("getResultList");
         assertEquals(" order by T1_.NAME, T2_.ID desc", query.orderByClause
                 .toSql());
@@ -1593,7 +1619,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareOrderBy_sql() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").orderBy("bbb.id desc");
+        query.leftOuterJoin("bbb").orderBy("bbb.id desc");
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID order by T2_.ID desc",
@@ -1605,7 +1631,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testPrepareCriteria() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").where("bbb.id = ?", 1);
+        query.leftOuterJoin("bbb").where("bbb.id = ?", 1);
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID where (T2_.ID = ?)",
@@ -1628,7 +1654,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testForUpdate_join() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").join("bbb.ccc");
+        query.leftOuterJoin("bbb").leftOuterJoin("bbb.ccc");
         query.forUpdate();
         query.prepare(null);
         assertEquals(" for update", query.forUpdate);
@@ -1657,7 +1683,7 @@ public class AutoSelectImplTest extends TestCase {
     public void testForUpdate_withLockHint_join() {
         manager.setDialect(new MssqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").join("bbb.ccc");
+        query.leftOuterJoin("bbb").leftOuterJoin("bbb.ccc");
         query.forUpdate();
         query.prepare(null);
         assertEquals("", query.forUpdate);
@@ -1689,7 +1715,7 @@ public class AutoSelectImplTest extends TestCase {
         manager.setDialect(new PostgreDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
-            query.join("bbb").forUpdate();
+            query.leftOuterJoin("bbb").forUpdate();
             query.prepare(null);
             fail();
         } catch (UnsupportedOperationException expected) {
@@ -1730,7 +1756,7 @@ public class AutoSelectImplTest extends TestCase {
     public void testForUpdateWithProperty_columnAlias_join() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").join("bbb.ccc");
+        query.leftOuterJoin("bbb").leftOuterJoin("bbb.ccc");
         query.forUpdate("name", "bbb.ccc.name");
         query.prepare(null);
         assertEquals(" for update of T1_.NAME, T3_.NAME", query.forUpdate);
@@ -1787,7 +1813,7 @@ public class AutoSelectImplTest extends TestCase {
     public void testForUpdateWithProperty_lockHint_join() {
         manager.setDialect(new MssqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").join("bbb.ccc");
+        query.leftOuterJoin("bbb").leftOuterJoin("bbb.ccc");
         query.forUpdate("name", "bbb.ccc.name");
         query.prepare(null);
         assertEquals("", query.forUpdate);
@@ -1819,7 +1845,7 @@ public class AutoSelectImplTest extends TestCase {
         manager.setDialect(new PostgreDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
-            query.join("bbb").join("bbb.ccc");
+            query.leftOuterJoin("bbb").leftOuterJoin("bbb.ccc");
             query.forUpdate("name", "bbb.ccc.name");
             query.prepare(null);
             fail();
@@ -1850,7 +1876,7 @@ public class AutoSelectImplTest extends TestCase {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
-            query.join("bbb");
+            query.leftOuterJoin("bbb");
             query.forUpdate("bbb");
             query.prepare(null);
             fail();
@@ -1866,7 +1892,7 @@ public class AutoSelectImplTest extends TestCase {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {
-            query.join("bbb");
+            query.leftOuterJoin("bbb");
             query.forUpdate("ccc.hogehoge");
             query.prepare(null);
             fail();
@@ -2006,7 +2032,7 @@ public class AutoSelectImplTest extends TestCase {
      */
     public void testForUpdateSql() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").orderBy("bbb.id desc").forUpdate();
+        query.leftOuterJoin("bbb").orderBy("bbb.id desc").forUpdate();
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO, T2_.ID, T2_.NAME, T2_.CCC_ID "
@@ -2022,7 +2048,7 @@ public class AutoSelectImplTest extends TestCase {
     public void testForUpdateSql_lockHint() {
         manager.setDialect(new MssqlDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
-        query.join("bbb").orderBy("bbb.id desc").forUpdate();
+        query.leftOuterJoin("bbb").orderBy("bbb.id desc").forUpdate();
         query.prepare("getResultList");
         assertEquals(
                 "select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO, T2_.ID, T2_.NAME, T2_.CCC_ID "

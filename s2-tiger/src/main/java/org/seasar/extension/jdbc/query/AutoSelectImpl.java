@@ -215,16 +215,24 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         super(jdbcManager, baseClass);
     }
 
-    public AutoSelect<T> join(String name) {
+    public AutoSelect<T> innerJoin(String name) {
+        return join(name, JoinType.INNER);
+    }
+
+    public AutoSelect<T> innerJoin(String name, boolean fetch) {
+        return join(name, JoinType.INNER, fetch);
+    }
+
+    public AutoSelect<T> leftOuterJoin(String name) {
         return join(name, JoinType.LEFT_OUTER);
+    }
+
+    public AutoSelect<T> leftOuterJoin(String name, boolean fetch) {
+        return join(name, JoinType.LEFT_OUTER, fetch);
     }
 
     public AutoSelect<T> join(String name, JoinType joinType) {
         return join(name, joinType, true);
-    }
-
-    public AutoSelect<T> join(String name, boolean fetch) {
-        return join(name, JoinType.LEFT_OUTER, fetch);
     }
 
     public AutoSelect<T> join(String name, JoinType joinType, boolean fetch) {

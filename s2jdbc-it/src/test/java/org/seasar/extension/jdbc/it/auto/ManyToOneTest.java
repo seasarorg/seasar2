@@ -40,7 +40,7 @@ public class ManyToOneTest {
      */
     public void testLeftOuterJoin_fetch() throws Exception {
         List<Employee> list =
-            jdbcManager.from(Employee.class).join("department").getResultList();
+            jdbcManager.from(Employee.class).leftOuterJoin("department").getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNotNull(e);
@@ -56,7 +56,7 @@ public class ManyToOneTest {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("department", false)
+                .leftOuterJoin("department", false)
                 .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
