@@ -31,47 +31,58 @@
 						<li><p>seasar2/src/site/ja/xdoc/downloads.xml</p></li>
 					</ul>
 				</dd>
+				<dt>S2JDBC Tutorial の修正・コミット</dt>
+				<dd>
+					<ul>
+						<li><p>s2jdbc-tutorial/.classpath</p></li>
+					</ul>
+					以下のディレクトリから古い (SNAPSHOT) の Jar を削除
+					<ul>
+						<li><p>s2jdbc-tutorial/lib</p></li>
+						<li><p>s2jdbc-tutorial/lib/sources</p></li>
+					</ul>
+				</dd>
 			</dl>
 		</section>
 
 		<section name="リリース手順">
 			<dl>
-				<dt>Seasar2のビルド</dt>
+				<dt>Seasar2のビルド (J2SE1.4)</dt>
 				<dd>
 <source>
 <kbd>cd seasar2</kbd>
 <kbd>mvn clean install</kbd>
 </source>
 				</dd>
-				<dt>S2-Tigerのビルド</dt>
+				<dt>S2-Tigerのビルド (Java5)</dt>
 				<dd>
 <source>
 <kbd>cd s2-tiger</kbd>
 <kbd>mvn clean install</kbd>
 </source>
 				</dd>
-				<dt>Seasar2のデプロイ</dt>
+				<dt>Seasar2のデプロイ (J2SE1.4)</dt>
 				<dd>
 <source>
 <kbd>cd seasar2</kbd>
 <kbd>mvn deploy -Dmaven.test.skip=true</kbd>
 </source>
 				</dd>
-				<dt>S2-Tigerのデプロイ</dt>
+				<dt>S2-Tigerのデプロイ (Java5)</dt>
 				<dd>
 <source>
 <kbd>cd s2-tiger</kbd>
 <kbd>mvn deploy -Dmaven.test.skip=true</kbd>
 </source>
 				</dd>
-				<dt>Seasar2のサイトデプロイ</dt>
+				<dt>Seasar2のサイトデプロイ (J2SE1.4)</dt>
 				<dd>
 <source>
 <kbd>cd seasar2</kbd>
 <kbd>mvn site-deploy</kbd>
 </source>
 				</dd>
-				<dt>S2-Tigerのサイトデプロイ</dt>
+				<dt>S2-Tigerのサイトデプロイ (Java5)</dt>
 				<dd>
 <source>
 <kbd>cd s2-tiger</kbd>
