@@ -35,6 +35,9 @@ public class SerializableTypeTest extends TestCase {
         assertEquals("'" + aaa + "'", type.toText(aaa));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testSerializaAndDeserialize() throws Exception {
         SerializableType type = new SerializableType(BytesType.BYTES_TRAIT);
         Aaa aaa = new Aaa();
