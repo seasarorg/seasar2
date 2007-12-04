@@ -52,6 +52,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.seasar.container</groupId>
+      <artifactId>s2-extension</artifactId>
+      <version>${version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-annotation_1.0_spec</artifactId>
       <version>1.0</version>

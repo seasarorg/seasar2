@@ -499,6 +499,13 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             return;
         }
 
+        final ValueType userDefinedValueType = ValueTypes
+                .createUserDefineValueType(propertyClass);
+        if (userDefinedValueType != null) {
+            propertyMeta.setValueType(userDefinedValueType);
+            return;
+        }
+
         throw new UnsupportedPropertyTypeRuntimeException(entityMeta.getName(),
                 propertyMeta.getName(), propertyMeta.getPropertyClass());
     }

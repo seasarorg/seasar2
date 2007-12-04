@@ -63,7 +63,9 @@ import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeExcept
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
+import org.seasar.extension.jdbc.types.Authority;
 import org.seasar.extension.jdbc.types.EnumType;
+import org.seasar.extension.jdbc.types.UserDefineType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
@@ -399,6 +401,17 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 entityMeta);
         assertTrue(propertyMeta.isLob());
         assertSame(ValueTypes.CLOB, propertyMeta.getValueType());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testUserDefinedType() throws Exception {
+        Field field = MyAaa.class.getDeclaredField("authority");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertEquals(UserDefineType.class, propertyMeta.getValueType()
+                .getClass());
     }
 
     /**
@@ -821,6 +834,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
          */
         @Lob
         public String largeName;
+
+        /**
+         * 
+         */
+        public Authority authority;
     }
 
     @Entity

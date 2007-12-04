@@ -19,6 +19,24 @@
   <name>Seasar2 Extension</name>
   <url>http://s2container.seasar.org/</url>
 
+  <!-- Build Settings -->
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>test-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <!-- Dependency Settings -->
   <dependencies>
     <dependency>

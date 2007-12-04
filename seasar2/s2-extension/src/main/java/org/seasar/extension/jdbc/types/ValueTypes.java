@@ -381,7 +381,17 @@ public final class ValueTypes {
         return null;
     }
 
-    private static ValueType createUserDefineValueType(Class clazz) {
+    /**
+     * ユーザ定義型用の{@link ValueType}を作成して返します。
+     * <p>
+     * <code>clazz</code>がユーザ定義型でなければ<code>null</code>を返します。
+     * </p>
+     * 
+     * @param clazz
+     *            ユーザ定義型
+     * @return ユーザ定義型用の{@link ValueType}
+     */
+    public static ValueType createUserDefineValueType(Class clazz) {
         List valueOfMethods = new ArrayList();
         Method valueMethod = null;
         Method[] methods = clazz.getMethods();
