@@ -31,9 +31,9 @@ public class PortletExternalContextComponentDefRegister implements
 
     public void registerComponentDefs(S2Container container) {
         S2ContainerImpl impl = (S2ContainerImpl) container;
-        impl.register(new PortletRequestComponentDef());
-        impl.register(new PortletResponseComponentDef());
-        impl.register(new PortletSessionComponentDef());
-        impl.register(new PortletContextComponentDef());
+        impl.register0(new PortletRequestComponentDef());
+        impl.register0(new PortletResponseComponentDef());
+        impl.register0(new PortletSessionComponentDef());
+        impl.register0(new PortletContextComponentDef());
     }
 }

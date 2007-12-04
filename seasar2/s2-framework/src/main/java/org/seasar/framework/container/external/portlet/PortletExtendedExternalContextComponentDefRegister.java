@@ -60,10 +60,10 @@ public class PortletExtendedExternalContextComponentDefRegister implements
         impl.register0(new RequestParameterValuesMapComponentDef());
 
         // for Portlet
-        impl.register(new PortletRequestComponentDef());
-        impl.register(new PortletResponseComponentDef());
-        impl.register(new PortletSessionComponentDef());
-        impl.register(new PortletContextComponentDef());
+        impl.register0(new PortletRequestComponentDef());
+        impl.register0(new PortletResponseComponentDef());
+        impl.register0(new PortletSessionComponentDef());
+        impl.register0(new PortletContextComponentDef());
 
     }
 }

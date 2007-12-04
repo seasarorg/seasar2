@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.container.impl;
 
+import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
 import org.seasar.framework.container.ArgDef;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.AutoBindingDef;
@@ -28,6 +29,8 @@ import org.seasar.framework.container.MetaDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.TooManyRegistrationRuntimeException;
+import org.seasar.framework.container.assembler.AutoBindingDefFactory;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 
 /**
  * {@link ComponentDef}のシンプルな実装です。
@@ -36,6 +39,8 @@ import org.seasar.framework.container.TooManyRegistrationRuntimeException;
  * 
  */
 public class SimpleComponentDef implements ComponentDef {
+
+    private static final MetaDef[] EMPTY_META_DEFS = new MetaDef[0];
 
     private Object component;
 
@@ -114,277 +119,48 @@ public class SimpleComponentDef implements ComponentDef {
         this.componentName = componentName;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getComponent()
-     */
     public Object getComponent() throws TooManyRegistrationRuntimeException {
         return component;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#injectDependency(java.lang.Object)
-     */
     public void injectDependency(Object outerComponent) {
         throw new UnsupportedOperationException("injectDependency");
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getContainer()
-     */
     public S2Container getContainer() {
         return container;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#setContainer(org.seasar.framework.container.S2Container)
-     */
     public void setContainer(S2Container container) {
         this.container = container;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getComponentClass()
-     */
     public Class getComponentClass() {
         return componentClass;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getComponentName()
-     */
-    public String getComponentName() {
-        return componentName;
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#setComponentName(java.lang.String)
-     */
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getConcreteClass()
-     */
     public Class getConcreteClass() {
         return componentClass;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#addConstructorArgDef(org.seasar.framework.container.ConstructorArgDef)
-     */
-    public void addArgDef(ArgDef constructorArgDef) {
-        throw new UnsupportedOperationException("addArgDef");
+    public String getComponentName() {
+        return componentName;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#addPropertyDef(org.seasar.framework.container.PropertyDef)
-     */
-    public void addPropertyDef(PropertyDef propertyDef) {
-        throw new UnsupportedOperationException("addPropertyDef");
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
     }
 
-    /*
-     * @see org.seasar.framework.container.InitMethodDefAware#addInitMethodDef(org.seasar.framework.container.InitMethodDef)
-     */
-    public void addInitMethodDef(InitMethodDef methodDef) {
-        throw new UnsupportedOperationException("addInitMethodDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.DestroyMethodDefAware#addDestroyMethodDef(org.seasar.framework.container.DestroyMethodDef)
-     */
-    public void addDestroyMethodDef(DestroyMethodDef methodDef) {
-        throw new UnsupportedOperationException("addDestroyMethodDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#addAspectDef(org.seasar.framework.container.AspectDef)
-     */
-    public void addAspectDef(AspectDef aspectDef) {
-        throw new UnsupportedOperationException("addAspectDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#addAspectDef(int,org.seasar.framework.container.AspectDef)
-     */
-    public void addAspectDef(int index, AspectDef aspectDef) {
-        throw new UnsupportedOperationException("addAspectDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#addInterTypeDef(org.seasar.framework.container.InterTypeDef)
-     */
-    public void addInterTypeDef(InterTypeDef interTypeDef) {
-        throw new UnsupportedOperationException("addInterTypeDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ArgDefAware#getArgDefSize()
-     */
-    public int getArgDefSize() {
-        throw new UnsupportedOperationException("getArgDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.PropertyDefAware#getPropertyDefSize()
-     */
-    public int getPropertyDefSize() {
-        throw new UnsupportedOperationException("getPropertyDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.InitMethodDefAware#getInitMethodDefSize()
-     */
-    public int getInitMethodDefSize() {
-        throw new UnsupportedOperationException("getInitMethodDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.DestroyMethodDefAware#getDestroyMethodDefSize()
-     */
-    public int getDestroyMethodDefSize() {
-        throw new UnsupportedOperationException("getDestroyMethodDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.AspectDefAware#getAspectDefSize()
-     */
-    public int getAspectDefSize() {
-        throw new UnsupportedOperationException("getAspectDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDefSize()
-     */
-    public int getInterTypeDefSize() {
-        throw new UnsupportedOperationException("getInterTypeDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ArgDefAware#getArgDef(int)
-     */
-    public ArgDef getArgDef(int index) {
-        throw new UnsupportedOperationException("getArgDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.PropertyDefAware#getPropertyDef(int)
-     */
-    public PropertyDef getPropertyDef(int index) {
-        throw new UnsupportedOperationException("getPropertyDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.PropertyDefAware#getPropertyDef(java.lang.String)
-     */
-    public PropertyDef getPropertyDef(String propertyName) {
-        throw new UnsupportedOperationException("getPropertyDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.PropertyDefAware#hasPropertyDef(java.lang.String)
-     */
-    public boolean hasPropertyDef(String propertyName) {
-        throw new UnsupportedOperationException("hasPropertyDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.InitMethodDefAware#getInitMethodDef(int)
-     */
-    public InitMethodDef getInitMethodDef(int index) {
-        throw new UnsupportedOperationException("getInitMethodDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.DestroyMethodDefAware#getDestroyMethodDef(int)
-     */
-    public DestroyMethodDef getDestroyMethodDef(int index) {
-        throw new UnsupportedOperationException("getDestroyMethodDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.AspectDefAware#getAspectDef(int)
-     */
-    public AspectDef getAspectDef(int index) {
-        throw new UnsupportedOperationException("getAspectDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.InterTypeDefAware#getInterTypeDef(int)
-     */
-    public InterTypeDef getInterTypeDef(int index) {
-        throw new UnsupportedOperationException("getInterTypeDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.MetaDefAware#addMetaDef(org.seasar.framework.container.MetaDef)
-     */
-    public void addMetaDef(MetaDef metaDef) {
-        throw new UnsupportedOperationException("addMetaDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(int)
-     */
-    public MetaDef getMetaDef(int index) {
-        throw new UnsupportedOperationException("getMetaDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDef(java.lang.String)
-     */
-    public MetaDef getMetaDef(String name) {
-        throw new UnsupportedOperationException("getMetaDef");
-    }
-
-    /*
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDefs(java.lang.String)
-     */
-    public MetaDef[] getMetaDefs(String name) {
-        throw new UnsupportedOperationException("getMetaDefs");
-    }
-
-    /*
-     * @see org.seasar.framework.container.MetaDefAware#getMetaDefSize()
-     */
-    public int getMetaDefSize() {
-        throw new UnsupportedOperationException("getMetaDefSize");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getExpression()
-     */
-    public Expression getExpression() {
-        throw new UnsupportedOperationException("getExpression");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#setExpression(java.lang.String)
-     */
-    public void setExpression(Expression expression) {
-        throw new UnsupportedOperationException("setExpression");
-    }
-
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getInstanceDef()
-     */
     public InstanceDef getInstanceDef() {
-        throw new UnsupportedOperationException("getInstanceDef");
+        return InstanceDefFactory.SINGLETON;
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#setInstanceDef(org.seasar.framework.container.InstanceDef)
-     */
     public void setInstanceDef(InstanceDef instanceDef) {
         throw new UnsupportedOperationException("setInstanceDef");
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#getAutoBindingDef()
-     */
     public AutoBindingDef getAutoBindingDef() {
-        throw new UnsupportedOperationException("getAutoBindingDef");
+        return AutoBindingDefFactory.NONE;
     }
 
     public void setAutoBindingDef(AutoBindingDef autoBindingDef) {
@@ -399,15 +175,122 @@ public class SimpleComponentDef implements ComponentDef {
         throw new UnsupportedOperationException("setExternalBinding");
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#init()
-     */
+    public Expression getExpression() {
+        return null;
+    }
+
+    public void setExpression(Expression expression) {
+        throw new UnsupportedOperationException("setExpression");
+    }
+
+    public void addArgDef(ArgDef constructorArgDef) {
+        throw new UnsupportedOperationException("addArgDef");
+    }
+
+    public int getArgDefSize() {
+        return 0;
+    }
+
+    public ArgDef getArgDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public void addPropertyDef(PropertyDef propertyDef) {
+        throw new UnsupportedOperationException("addPropertyDef");
+    }
+
+    public int getPropertyDefSize() {
+        return 0;
+    }
+
+    public PropertyDef getPropertyDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public boolean hasPropertyDef(String propertyName) {
+        return false;
+    }
+
+    public PropertyDef getPropertyDef(String propertyName) {
+        throw new PropertyNotFoundRuntimeException(componentClass, propertyName);
+    }
+
+    public void addInitMethodDef(InitMethodDef methodDef) {
+        throw new UnsupportedOperationException("addInitMethodDef");
+    }
+
+    public int getInitMethodDefSize() {
+        return 0;
+    }
+
+    public InitMethodDef getInitMethodDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public void addDestroyMethodDef(DestroyMethodDef methodDef) {
+        throw new UnsupportedOperationException("addDestroyMethodDef");
+    }
+
+    public int getDestroyMethodDefSize() {
+        return 0;
+    }
+
+    public DestroyMethodDef getDestroyMethodDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public void addAspectDef(AspectDef aspectDef) {
+        throw new UnsupportedOperationException("addAspectDef");
+    }
+
+    public void addAspectDef(int index, AspectDef aspectDef) {
+        throw new UnsupportedOperationException("addAspectDef");
+    }
+
+    public int getAspectDefSize() {
+        return 0;
+    }
+
+    public AspectDef getAspectDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public void addInterTypeDef(InterTypeDef interTypeDef) {
+        throw new UnsupportedOperationException("addInterTypeDef");
+    }
+
+    public int getInterTypeDefSize() {
+        return 0;
+    }
+
+    public InterTypeDef getInterTypeDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public void addMetaDef(MetaDef metaDef) {
+        throw new UnsupportedOperationException("addMetaDef");
+    }
+
+    public int getMetaDefSize() {
+        return 0;
+    }
+
+    public MetaDef getMetaDef(int index) {
+        throw new ArrayIndexOutOfBoundsException(0);
+    }
+
+    public MetaDef getMetaDef(String name) {
+        return null;
+    }
+
+    public MetaDef[] getMetaDefs(String name) {
+        return EMPTY_META_DEFS;
+    }
+
     public void init() {
     }
 
-    /*
-     * @see org.seasar.framework.container.ComponentDef#destroy()
-     */
     public void destroy() {
     }
+
 }
