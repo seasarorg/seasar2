@@ -93,7 +93,7 @@ public class AbstBindingTypeDefTest extends TestCase {
         container.register(cd);
         container.register(new ArrayList());
         Hoge5 hoge5 = (Hoge5) container.getComponent(Hoge5.class);
-        assertNotNull(hoge5.list);
+        assertNull(hoge5.list);
         assertNull(hoge5.other);
     }
 
@@ -107,7 +107,7 @@ public class AbstBindingTypeDefTest extends TestCase {
         container.register(cd);
         container.register(new ArrayList());
         Hoge5 hoge = (Hoge5) container.getComponent(Hoge5.class);
-        assertNotNull(hoge.list);
+        assertNull(hoge.list);
         assertNull(hoge.other);
     }
 
