@@ -21,11 +21,12 @@ import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.container.ContainerConstants;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.TooManyRegistrationComponentDef;
 import org.seasar.framework.container.util.BindingUtil;
 import org.seasar.framework.util.FieldUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * バインディングタイプ定義の抽象クラスです。
@@ -144,8 +145,10 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Class propType = field.getType();
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
-            if (!(cd instanceof TooManyRegistrationComponentDef)
-                    && componentDef != cd) {
+            if (cd.getComponentName() != null
+                    && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
+                            .endsWithIgnoreCase(cd.getComponentName(),
+                                    ContainerConstants.PACKAGE_SEP + propName))) {
                 Object value = getValue(componentDef, propType, component,
                         propName);
                 setValue(componentDef, field, component, value);
@@ -153,15 +156,10 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             }
         }
         if (container.hasComponentDef(propName)) {
-            ComponentDef cd = container.getComponentDef(propName);
-            if (!(cd instanceof TooManyRegistrationComponentDef)
-                    && componentDef != cd) {
-                Object value = getValue(componentDef, propName, component,
-                        propName);
-                if (propType.isInstance(value)) {
-                    setValue(componentDef, field, component, value);
-                    return true;
-                }
+            Object value = getValue(componentDef, propName, component, propName);
+            if (propType.isInstance(value)) {
+                setValue(componentDef, field, component, value);
+                return true;
             }
         }
         if (BindingUtil.isAutoBindable(propType)) {
@@ -203,8 +201,10 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Class propType = propertyDesc.getPropertyType();
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
-            if (!(cd instanceof TooManyRegistrationComponentDef)
-                    && componentDef != cd) {
+            if (cd.getComponentName() != null
+                    && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
+                            .endsWithIgnoreCase(cd.getComponentName(),
+                                    ContainerConstants.PACKAGE_SEP + propName))) {
                 Object value = getValue(componentDef, propType, component,
                         propName);
                 setValue(componentDef, propertyDesc, component, value);
@@ -212,15 +212,10 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             }
         }
         if (container.hasComponentDef(propName)) {
-            ComponentDef cd = container.getComponentDef(propName);
-            if (!(cd instanceof TooManyRegistrationComponentDef)
-                    && componentDef != cd) {
-                Object value = getValue(componentDef, propName, component,
-                        propName);
-                if (propType.isInstance(value)) {
-                    setValue(componentDef, propertyDesc, component, value);
-                    return true;
-                }
+            Object value = getValue(componentDef, propName, component, propName);
+            if (propType.isInstance(value)) {
+                setValue(componentDef, propertyDesc, component, value);
+                return true;
             }
         }
         if (BindingUtil.isAutoBindable(propType)) {
