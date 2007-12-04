@@ -261,7 +261,10 @@ public final class BeanDescImpl implements BeanDesc {
 
     public Method getMethodNoException(final String methodName,
             final Class[] paramTypes) {
-        final Method[] methods = getMethods(methodName);
+        final Method[] methods = (Method[]) methodsCache.get(methodName);
+        if (methods == null) {
+            return null;
+        }
         for (int i = 0; i < methods.length; ++i) {
             if (Arrays.equals(paramTypes, methods[i].getParameterTypes())) {
                 return methods[i];

@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalDiiguRuntimeException;
+import org.seasar.framework.beans.MethodNotFoundRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 
 /**
@@ -163,8 +164,35 @@ public class BeanDescImplTest extends TestCase {
      */
     public void testHasMethod() throws Exception {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
-        assertEquals(true, beanDesc.hasMethod("getAaa"));
-        assertEquals(false, beanDesc.hasMethod("getaaa"));
+        assertTrue(beanDesc.hasMethod("getAaa"));
+        assertFalse(beanDesc.hasMethod("getaaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetMethod() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        Method method = beanDesc.getMethod("getAaa", new Class[0]);
+        assertNotNull(method);
+        assertEquals("getAaa", method.getName());
+        try {
+            beanDesc.getMethod("getaaa", null);
+            fail();
+        } catch (MethodNotFoundRuntimeException expected) {
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetMethodNoException() throws Exception {
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        Method method = beanDesc.getMethodNoException("getAaa", new Class[0]);
+        assertNotNull(method);
+        assertEquals("getAaa", method.getName());
+        method = beanDesc.getMethodNoException("getaaa", new Class[0]);
+        assertNull(method);
     }
 
     /**
