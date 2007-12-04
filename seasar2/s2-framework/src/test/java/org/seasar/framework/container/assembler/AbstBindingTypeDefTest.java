@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.deployer.InstanceDefFactory;
 import org.seasar.framework.container.impl.ComponentDefImpl;
 import org.seasar.framework.container.impl.PropertyDefImpl;
 import org.seasar.framework.container.impl.S2ContainerImpl;
@@ -78,13 +79,36 @@ public class AbstBindingTypeDefTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testBindAutoForField3() throws Exception {
+        S2Container container = new S2ContainerImpl();
+        ComponentDefImpl cd = new ComponentDefImpl(Hoge5.class);
+        cd.setAutoBindingDef(AutoBindingDefFactory.SEMIAUTO);
+        cd.setInstanceDef(InstanceDefFactory.PROTOTYPE);
+        PropertyDef propDef = new PropertyDefImpl("other");
+        propDef.setAccessTypeDef(AccessTypeDefFactory.FIELD);
+        cd.addPropertyDef(propDef);
+        propDef = new PropertyDefImpl("list");
+        propDef.setAccessTypeDef(AccessTypeDefFactory.FIELD);
+        cd.addPropertyDef(propDef);
+        container.register(cd);
+        container.register(new ArrayList());
+        Hoge5 hoge5 = (Hoge5) container.getComponent(Hoge5.class);
+        assertNotNull(hoge5.list);
+        assertNull(hoge5.other);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testBindAutoForProperty() throws Exception {
         S2Container container = new S2ContainerImpl();
         ComponentDefImpl cd = new ComponentDefImpl(Hoge5.class);
+        cd.setInstanceDef(InstanceDefFactory.PROTOTYPE);
         container.register(cd);
         container.register(new ArrayList());
         Hoge5 hoge = (Hoge5) container.getComponent(Hoge5.class);
         assertNotNull(hoge.list);
+        assertNull(hoge.other);
     }
 
     /**
@@ -269,6 +293,11 @@ public class AbstBindingTypeDefTest extends TestCase {
          * 
          */
         public ArrayList list;
+
+        /**
+         * 
+         */
+        public Hoge5 other;
     }
 
     /**

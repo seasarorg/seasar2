@@ -144,7 +144,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Class propType = field.getType();
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
-            if (!(cd instanceof TooManyRegistrationComponentDef)) {
+            if (!(cd instanceof TooManyRegistrationComponentDef)
+                    && componentDef != cd) {
                 Object value = getValue(componentDef, propType, component,
                         propName);
                 setValue(componentDef, field, component, value);
@@ -153,7 +154,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
         if (container.hasComponentDef(propName)) {
             ComponentDef cd = container.getComponentDef(propName);
-            if (!(cd instanceof TooManyRegistrationComponentDef)) {
+            if (!(cd instanceof TooManyRegistrationComponentDef)
+                    && componentDef != cd) {
                 Object value = getValue(componentDef, propName, component,
                         propName);
                 if (propType.isInstance(value)) {
@@ -201,7 +203,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Class propType = propertyDesc.getPropertyType();
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
-            if (!(cd instanceof TooManyRegistrationComponentDef)) {
+            if (!(cd instanceof TooManyRegistrationComponentDef)
+                    && componentDef != cd) {
                 Object value = getValue(componentDef, propType, component,
                         propName);
                 setValue(componentDef, propertyDesc, component, value);
@@ -210,7 +213,8 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         }
         if (container.hasComponentDef(propName)) {
             ComponentDef cd = container.getComponentDef(propName);
-            if (!(cd instanceof TooManyRegistrationComponentDef)) {
+            if (!(cd instanceof TooManyRegistrationComponentDef)
+                    && componentDef != cd) {
                 Object value = getValue(componentDef, propName, component,
                         propName);
                 if (propType.isInstance(value)) {
