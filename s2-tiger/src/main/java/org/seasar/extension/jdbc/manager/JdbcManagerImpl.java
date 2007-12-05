@@ -281,7 +281,8 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor,
     }
 
     public void afterCompletion(int status) {
-        JdbcContext ctx = getTxBoundJdbcContext();
+        final JdbcContext ctx = JdbcContext.class.cast(syncRegistry
+                .getResource(this));
         if (ctx == null) {
             throw new NullPointerException("jdbcContext");
         }
