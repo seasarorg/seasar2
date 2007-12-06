@@ -36,11 +36,15 @@ import org.seasar.extension.jdbc.exception.IllegalIdPropertySizeRuntimeException
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
 import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
+import org.seasar.extension.jdbc.it.entity.Authority;
+import org.seasar.extension.jdbc.it.entity.AuthorityType;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.Job;
+import org.seasar.extension.jdbc.it.entity.JobType;
 import org.seasar.extension.jdbc.it.entity.Tense;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.ComplexWhere;
@@ -595,11 +599,8 @@ public class AutoSelectTest {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("department.illegal", 1);
         try {
-            jdbcManager
-                .from(Employee.class)
-                .leftOuterJoin("department")
-                .where(m)
-                .getResultList();
+            jdbcManager.from(Employee.class).leftOuterJoin("department").where(
+                m).getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -614,11 +615,8 @@ public class AutoSelectTest {
         Map<String, Object> m = new HashMap<String, Object>();
         m.put("illegal.illegal2", 1);
         try {
-            jdbcManager
-                .from(Employee.class)
-                .leftOuterJoin("department")
-                .where(m)
-                .getResultList();
+            jdbcManager.from(Employee.class).leftOuterJoin("department").where(
+                m).getResultList();
             fail();
         } catch (BaseJoinNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -695,9 +693,12 @@ public class AutoSelectTest {
      */
     public void testJoin_nest() throws Exception {
         List<Department> list =
-            jdbcManager.from(Department.class).leftOuterJoin("employees").leftOuterJoin(
-                "employees.address").where(
-                new SimpleWhere().eq("employees.addressId", 3)).getResultList();
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .leftOuterJoin("employees.address")
+                .where(new SimpleWhere().eq("employees.addressId", 3))
+                .getResultList();
         assertEquals(1, list.size());
     }
 
@@ -728,7 +729,10 @@ public class AutoSelectTest {
      */
     public void testJoin_illegalPropertyName() throws Exception {
         try {
-            jdbcManager.from(Department.class).leftOuterJoin("illegal").getResultList();
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("illegal")
+                .getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -741,8 +745,11 @@ public class AutoSelectTest {
      */
     public void testJoin_illegalPropertyName2() throws Exception {
         try {
-            jdbcManager.from(Department.class).leftOuterJoin("employees").leftOuterJoin(
-                "employees.illegal").getResultList();
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .leftOuterJoin("employees.illegal")
+                .getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -766,8 +773,11 @@ public class AutoSelectTest {
      */
     public void testGetSingleResult_oneToMany() throws Exception {
         Department department =
-            jdbcManager.from(Department.class).leftOuterJoin("employees").where(
-                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .where(new SimpleWhere().eq("departmentId", 1))
+                .getSingleResult();
         assertNotNull(department);
     }
 
@@ -1268,8 +1278,11 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateNowait(
-            "employeeName").getResultList();
+        jdbcManager
+            .from(Employee.class)
+            .leftOuterJoin("department")
+            .forUpdateNowait("employeeName")
+            .getResultList();
     }
 
     /**
@@ -1281,8 +1294,11 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateNowait(
-            "department.location").getResultList();
+        jdbcManager
+            .from(Employee.class)
+            .leftOuterJoin("department")
+            .forUpdateNowait("department.location")
+            .getResultList();
     }
 
     /**
@@ -1375,9 +1391,11 @@ public class AutoSelectTest {
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
             return;
         }
-        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateNowait(
-            "employeeName",
-            "department.location").getResultList();
+        jdbcManager
+            .from(Employee.class)
+            .leftOuterJoin("department")
+            .forUpdateNowait("employeeName", "department.location")
+            .getResultList();
     }
 
     /**
@@ -1537,9 +1555,11 @@ public class AutoSelectTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateWait(
-            1,
-            "employeeName").getResultList();
+        jdbcManager
+            .from(Employee.class)
+            .leftOuterJoin("department")
+            .forUpdateWait(1, "employeeName")
+            .getResultList();
     }
 
     /**
@@ -1550,9 +1570,11 @@ public class AutoSelectTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateWait(
-            1,
-            "department.location").getResultList();
+        jdbcManager
+            .from(Employee.class)
+            .leftOuterJoin("department")
+            .forUpdateWait(1, "department.location")
+            .getResultList();
     }
 
     /**
@@ -1645,10 +1667,11 @@ public class AutoSelectTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager.from(Employee.class).leftOuterJoin("department").forUpdateWait(
-            1,
-            "employeeName",
-            "department.location").getResultList();
+        jdbcManager
+            .from(Employee.class)
+            .leftOuterJoin("department")
+            .forUpdateWait(1, "employeeName", "department.location")
+            .getResultList();
     }
 
     /**
@@ -1946,4 +1969,77 @@ public class AutoSelectTest {
         } catch (UnsupportedOperationException e) {
         }
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEnumType() throws Exception {
+        Job job = jdbcManager.from(Job.class).id(3).getSingleResult();
+        assertEquals(JobType.PRESIDENT, job.jobType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEnumType_criteria() throws Exception {
+        Job job =
+            jdbcManager
+                .from(Job.class)
+                .where("jobType = ?", JobType.MANAGER)
+                .getSingleResult();
+        assertEquals(2, job.id);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEnumType_simpleWhere() throws Exception {
+        Job job =
+            jdbcManager
+                .from(Job.class)
+                .where(new SimpleWhere().eq("jobType", JobType.MANAGER))
+                .getSingleResult();
+        assertEquals(2, job.id);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testUserDefineValueType() throws Exception {
+        Authority authority =
+            jdbcManager.from(Authority.class).id(3).getSingleResult();
+        assertEquals(30, authority.authorityType.value());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testUserDefineValueType_criteria() throws Exception {
+        Authority authority =
+            jdbcManager.from(Authority.class).where(
+                "authorityType = ?",
+                AuthorityType.valueOf(20)).getSingleResult();
+        assertEquals(2, authority.id);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testUserDefineValueType_simpleWhere() throws Exception {
+        Authority authority =
+            jdbcManager
+                .from(Authority.class)
+                .where(
+                    new SimpleWhere().eq("authorityType", AuthorityType
+                        .valueOf(20)))
+                .getSingleResult();
+        assertEquals(2, authority.id);
+    }
+
 }

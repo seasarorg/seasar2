@@ -26,6 +26,8 @@ import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.IdPropertyNotAssignedRuntimeException;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.it.entity.Authority;
+import org.seasar.extension.jdbc.it.entity.AuthorityType;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -34,6 +36,8 @@ import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Department5;
 import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
+import org.seasar.extension.jdbc.it.entity.Job;
+import org.seasar.extension.jdbc.it.entity.JobType;
 import org.seasar.extension.jdbc.it.entity.LargeObject;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
@@ -441,5 +445,31 @@ public class AutoInsertTest {
             fail();
         } catch (EntityExistsException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testEnumTypeTx() throws Exception {
+        Job job = new Job();
+        job.id = 10;
+        job.jobType = JobType.CLERK;
+        jdbcManager.insert(job).execute();
+        job = jdbcManager.from(Job.class).id(10).getSingleResult();
+        assertEquals(JobType.CLERK, job.jobType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testUserDefineValueType() throws Exception {
+        Authority authority = new Authority();
+        authority.id = 10;
+        authority.authorityType = AuthorityType.valueOf(100);
+        jdbcManager.insert(authority).execute();
+        jdbcManager.from(Authority.class).id(10).getSingleResult();
+        assertEquals(100, authority.authorityType.value());
     }
 }
