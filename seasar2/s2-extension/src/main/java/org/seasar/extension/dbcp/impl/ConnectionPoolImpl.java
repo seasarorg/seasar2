@@ -45,7 +45,7 @@ import org.seasar.framework.util.TransactionUtil;
  * @author higa
  * 
  */
-public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
+public class ConnectionPoolImpl implements ConnectionPool {
 
     /**
      * readonly用のBindingアノテーションです。
@@ -265,7 +265,8 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         }
         if (tx != null) {
             TransactionUtil.enlistResource(tx, con.getXAResource());
-            TransactionUtil.registerSynchronization(tx, this);
+            TransactionUtil.registerSynchronization(tx,
+                    new SynchronizationImpl(tx));
             setConnectionTxActivePool(tx, con);
         } else {
             setConnectionActivePool(con);
@@ -350,20 +351,7 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
         }
     }
 
-    public final void beforeCompletion() {
-    }
-
-    public void afterCompletion(int status) {
-        switch (status) {
-        case Status.STATUS_COMMITTED:
-        case Status.STATUS_ROLLEDBACK:
-            checkInTx();
-            break;
-        }
-    }
-
-    private synchronized void checkInTx() {
-        Transaction tx = getTransaction();
+    private synchronized void checkInTx(Transaction tx) {
         if (tx == null) {
             return;
         }
@@ -443,4 +431,39 @@ public class ConnectionPoolImpl implements ConnectionPool, Synchronization {
             connectionWrapper_ = null;
         }
     }
+
+    /**
+     * {@link Synchronization}の実装です。
+     * 
+     * @author koichik
+     */
+    public class SynchronizationImpl implements Synchronization {
+
+        /** トランザクション */
+        protected final Transaction tx;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param tx
+         *            トランザクション
+         */
+        public SynchronizationImpl(final Transaction tx) {
+            this.tx = tx;
+        }
+
+        public final void beforeCompletion() {
+        }
+
+        public void afterCompletion(final int status) {
+            switch (status) {
+            case Status.STATUS_COMMITTED:
+            case Status.STATUS_ROLLEDBACK:
+                checkInTx(tx);
+                break;
+            }
+        }
+
+    }
+
 }

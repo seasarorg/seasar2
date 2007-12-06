@@ -214,8 +214,9 @@ public final class TransactionImpl implements ExtendedTransaction {
                     }
                 }
             }
+            final boolean rolledBack = status != Status.STATUS_COMMITTED;
             afterCompletion();
-            if (status != Status.STATUS_COMMITTED) {
+            if (rolledBack) {
                 throw new SRollbackException("ESSR0303",
                         new Object[] { toString() });
             }
@@ -343,15 +344,17 @@ public final class TransactionImpl implements ExtendedTransaction {
     }
 
     private void afterCompletion() {
+        final int status = this.status;
+        this.status = Status.STATUS_NO_TRANSACTION;
         for (int i = 0; i < getInterposedSynchronizationSize(); ++i) {
-            afterCompletion(getInterposedSynchronization(i));
+            afterCompletion(status, getInterposedSynchronization(i));
         }
         for (int i = 0; i < getSynchronizationSize(); ++i) {
-            afterCompletion(getSynchronization(i));
+            afterCompletion(status, getSynchronization(i));
         }
     }
 
-    private void afterCompletion(Synchronization sync) {
+    private void afterCompletion(final int status, final Synchronization sync) {
         try {
             sync.afterCompletion(status);
         } catch (Throwable t) {

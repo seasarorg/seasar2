@@ -18,6 +18,7 @@ package org.seasar.extension.jta;
 import javax.transaction.RollbackException;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
+import javax.transaction.Transaction;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
@@ -25,6 +26,7 @@ import javax.transaction.xa.Xid;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jta.xa.DefaultXAResource;
+import org.seasar.framework.util.TransactionUtil;
 
 /**
  * @author higa
@@ -106,7 +108,7 @@ public class TransactionImplTest extends TestCase {
      */
     public void testOnePhaseCommit() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
-        Sync sync = new Sync();
+        Sync sync = new Sync(tx_);
         tx_.begin();
         tx_.enlistResource(xaRes);
         tx_.registerSynchronization(sync);
@@ -292,7 +294,7 @@ public class TransactionImplTest extends TestCase {
      */
     public void testRollback() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
-        Sync sync = new Sync();
+        Sync sync = new Sync(tx_);
         tx_.begin();
         tx_.enlistResource(xaRes);
         tx_.registerSynchronization(sync);
@@ -387,7 +389,7 @@ public class TransactionImplTest extends TestCase {
      */
     public void testBeforeCompletion() throws Exception {
         tx_.begin();
-        Sync sync = new Sync();
+        Sync sync = new Sync(tx_);
         tx_.registerSynchronization(sync);
         tx_.registerSynchronization(new ExceptionSync());
         try {
@@ -408,11 +410,19 @@ public class TransactionImplTest extends TestCase {
 
         private int completedStatus_ = Status.STATUS_UNKNOWN;
 
+        private Transaction tx_;
+
+        public Sync(Transaction tx) {
+            tx_ = tx;
+        }
+
         public void beforeCompletion() {
             beforeCompleted_ = true;
         }
 
         public void afterCompletion(int status) {
+            assertEquals(Status.STATUS_NO_TRANSACTION, TransactionUtil
+                    .getStatus(tx_));
             afterCompleted_ = true;
             completedStatus_ = status;
         }
