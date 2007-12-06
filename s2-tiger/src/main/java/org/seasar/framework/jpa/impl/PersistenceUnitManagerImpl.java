@@ -27,7 +27,6 @@ import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.jpa.EntityManagerProvider;
-import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.jpa.PersistenceUnitManagerLocater;
 import org.seasar.framework.jpa.PersistenceUnitProvider;
@@ -177,13 +176,6 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
             return emf;
         }
         throw new PersistenceUnitNodFoundException(concreteUnitName);
-    }
-
-    public PersistenceUnitContext getPersistenceUnitContext(
-            final EntityManagerFactory emf) {
-        synchronized (contextMap) {
-            return contextMap.getPersistenceUnitContext(emf);
-        }
     }
 
     public String getAbstractPersistenceUnitName(final Class<?> entityClass) {
@@ -342,10 +334,6 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
         protected final Map<String, EntityManagerFactory> entityManagerFactories = CollectionsUtil
                 .newHashMap();
 
-        /** {@link EntityManagerFactory}と永続ユニットコンテキストのマップ */
-        protected final Map<EntityManagerFactory, PersistenceUnitContext> persistenceUnitContexts = CollectionsUtil
-                .newHashMap();
-
         /**
          * ユニット名に関連づけられた永続ユニットプロバイダを返します。
          * 
@@ -385,19 +373,6 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
                 final EntityManagerFactory emf) {
             persistenceUnitProviders.put(unitName, persistenceUnitProvider);
             entityManagerFactories.put(unitName, emf);
-            persistenceUnitContexts.put(emf, new PersistenceUnitContextImpl());
-        }
-
-        /**
-         * {@link EntityManagerFactory}に関連づけられた永続ユニットコンテキストを返します。
-         * 
-         * @param emf
-         *            {@link EntityManagerFactory}
-         * @return {@link EntityManagerFactory}に関連づけられた永続ユニットコンテキスト
-         */
-        public PersistenceUnitContext getPersistenceUnitContext(
-                final EntityManagerFactory emf) {
-            return persistenceUnitContexts.get(emf);
         }
 
         /**
@@ -409,7 +384,6 @@ public class PersistenceUnitManagerImpl implements PersistenceUnitManager {
                 emf.close();
             }
             entityManagerFactories.clear();
-            persistenceUnitContexts.clear();
         }
 
     }

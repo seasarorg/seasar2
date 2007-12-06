@@ -22,18 +22,15 @@ import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.TransactionRequiredException;
+import javax.transaction.Status;
 import javax.transaction.Synchronization;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
+import javax.transaction.TransactionSynchronizationRegistry;
 
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
-import org.seasar.framework.jpa.PersistenceUnitContext;
 import org.seasar.framework.jpa.PersistenceUnitManager;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.TransactionManagerUtil;
-import org.seasar.framework.util.TransactionUtil;
 
 /**
  * コンテナ管理{@link javax.persistence.EntityManager}の実装です。
@@ -54,9 +51,9 @@ public class TxScopedEntityManagerProxy implements EntityManager {
     private static final Logger logger = Logger
             .getLogger(TxScopedEntityManagerProxy.class);
 
-    /** トランザクションマネージャ */
+    /** トランザクションシンクロナイゼーションレジストリ */
     @Binding(bindingType = BindingType.MUST)
-    protected TransactionManager tm;
+    protected TransactionSynchronizationRegistry tsr;
 
     /** 永続マネージャファクトリ */
     @Binding(bindingType = BindingType.MUST)
@@ -78,7 +75,7 @@ public class TxScopedEntityManagerProxy implements EntityManager {
      * @return トランザクションが活動中の場合<code>true</code>、そうでない場合<code>false</code>
      */
     protected boolean isTxActive() {
-        return TransactionManagerUtil.isActive(tm);
+        return tsr.getTransactionStatus() != Status.STATUS_NO_TRANSACTION;
     }
 
     /**
@@ -115,13 +112,10 @@ public class TxScopedEntityManagerProxy implements EntityManager {
      * @return トランザクションに関連付けられたエンティティマネージャ
      */
     protected EntityManager getTxBoundEntityManager() {
-        final PersistenceUnitContext context = pum
-                .getPersistenceUnitContext(emf);
-        if (context == null) {
+        if (!isTxActive()) {
             return null;
         }
-        final Transaction tx = TransactionManagerUtil.getTransaction(tm);
-        return context.getEntityManager(tx);
+        return EntityManager.class.cast(tsr.getResource(this));
     }
 
     /**
@@ -131,27 +125,20 @@ public class TxScopedEntityManagerProxy implements EntityManager {
      */
     protected EntityManager createEntityManager() {
         final EntityManager em = emf.createEntityManager();
-        final Transaction tx = TransactionManagerUtil.getTransaction(tm);
-        TransactionUtil.registerSynchronization(tx, new Synchronization() {
-
-            public void afterCompletion(final int status) {
-                final PersistenceUnitContext context = pum
-                        .getPersistenceUnitContext(emf);
-                context.unregisterEntityManager(tx);
-                try {
-                    em.close();
-                } catch (final Throwable t) {
-                    logger.log("", new Object[] {}, t);
-                }
-            }
+        tsr.putResource(this, em);
+        tsr.registerInterposedSynchronization(new Synchronization() {
 
             public void beforeCompletion() {
             }
-        });
 
-        final PersistenceUnitContext context = pum
-                .getPersistenceUnitContext(emf);
-        context.registerEntityManager(tx, em);
+            public void afterCompletion(final int status) {
+                try {
+                    em.close();
+                } catch (final Throwable t) {
+                    logger.log("ESSR0017", new Object[] { t }, t);
+                }
+            }
+        });
         return em;
     }
 

@@ -78,15 +78,6 @@ public interface PersistenceUnitManager {
             String concreteUnitName, PersistenceUnitProvider provider);
 
     /**
-     * 指定の{@link EntityManagerFactory}に関連づけられた永続ユニットコンテキストを返します。
-     * 
-     * @param emf
-     *            {@link EntityManagerFactory}
-     * @return 指定の{@link EntityManagerFactory}に関連づけられた永続ユニットコンテキスト
-     */
-    PersistenceUnitContext getPersistenceUnitContext(EntityManagerFactory emf);
-
-    /**
      * 指定のエンティティクラスを扱う<strong>抽象</strong>永続ユニット名を返します。
      * <dl>
      * <dt>SMART deployモードの場合</dt>
