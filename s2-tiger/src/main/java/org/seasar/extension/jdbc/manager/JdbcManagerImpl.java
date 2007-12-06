@@ -76,8 +76,7 @@ import org.seasar.framework.convention.PersistenceConvention;
  * 
  * 
  */
-public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor,
-        Synchronization {
+public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
 
     /**
      * トランザクション同期レジストリです。
@@ -277,18 +276,6 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor,
                 queryTimeout);
     }
 
-    public void beforeCompletion() {
-    }
-
-    public void afterCompletion(int status) {
-        final JdbcContext ctx = JdbcContext.class.cast(syncRegistry
-                .getResource(this));
-        if (ctx == null) {
-            throw new NullPointerException("jdbcContext");
-        }
-        ctx.destroy();
-    }
-
     /**
      * JDBCコンテキストを返します。
      * 
@@ -333,7 +320,8 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor,
      */
     protected void setTxBoundJdbcContext(final JdbcContext ctx) {
         syncRegistry.putResource(this, ctx);
-        syncRegistry.registerInterposedSynchronization(this);
+        syncRegistry.registerInterposedSynchronization(new SynchronizationImpl(
+                ctx));
     }
 
     /**
@@ -516,5 +504,34 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor,
     public void setPersistenceConvention(
             PersistenceConvention persistenceConvention) {
         this.persistenceConvention = persistenceConvention;
+    }
+
+    /**
+     * {@link Synchronization}の実装です。
+     * 
+     * @author koichik
+     */
+    public class SynchronizationImpl implements Synchronization {
+
+        /** JDBCコンテキスト */
+        protected final JdbcContext context;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param context
+         *            JDBCコンテキスト
+         */
+        public SynchronizationImpl(final JdbcContext context) {
+            this.context = context;
+        }
+
+        public final void beforeCompletion() {
+        }
+
+        public void afterCompletion(final int status) {
+            context.destroy();
+        }
+
     }
 }

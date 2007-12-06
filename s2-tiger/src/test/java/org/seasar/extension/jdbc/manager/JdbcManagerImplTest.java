@@ -11,6 +11,7 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.manager.JdbcManagerImpl.SynchronizationImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -440,7 +441,9 @@ public class JdbcManagerImplTest extends TestCase {
         TransactionImpl tx = (TransactionImpl) transactionManager
                 .getTransaction();
         assertEquals(1, tx.getInterposedSynchronizations().size());
-        assertSame(manager, tx.getInterposedSynchronizations().get(0));
+        SynchronizationImpl sync = SynchronizationImpl.class.cast(tx
+                .getInterposedSynchronizations().get(0));
+        assertSame(manager.getJdbcContext(), sync.context);
     }
 
     /**
