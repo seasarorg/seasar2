@@ -57,7 +57,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecuteTx() throws Exception {
+    public void testExecute() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 98;
@@ -98,7 +98,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecute_includesTx() throws Exception {
+    public void testExecute_includes() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 98;
@@ -148,7 +148,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecute_excludesTx() throws Exception {
+    public void testExecute_excludes() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 98;
@@ -197,7 +197,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testCompKeyTx() throws Exception {
+    public void testCompKey() throws Exception {
         List<CompKeyDepartment> list = new ArrayList<CompKeyDepartment>();
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 98;
@@ -246,7 +246,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_autoTx() throws Exception {
+    public void testId_auto() throws Exception {
         for (int i = 0; i < 110; i++) {
             AutoStrategy entity1 = new AutoStrategy();
             AutoStrategy entity2 = new AutoStrategy();
@@ -260,7 +260,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_identityTx() throws Exception {
+    public void testId_identity() throws Exception {
         try {
             for (int i = 0; i < 110; i++) {
                 IdentityStrategy entity1 = new IdentityStrategy();
@@ -283,7 +283,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_sequenceTx() throws Exception {
+    public void testId_sequence() throws Exception {
         try {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy entity1 = new SequenceStrategy();
@@ -306,7 +306,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_sequence_explicitGeneratorTx() throws Exception {
+    public void testId_sequence_explicitGenerator() throws Exception {
         try {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy2 entity1 = new SequenceStrategy2();
@@ -329,7 +329,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_tableTx() throws Exception {
+    public void testId_table() throws Exception {
         for (int i = 0; i < 110; i++) {
             TableStrategy entity1 = new TableStrategy();
             TableStrategy entity2 = new TableStrategy();
@@ -343,7 +343,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_table_explicitGeneratorTx() throws Exception {
+    public void testId_table_explicitGenerator() throws Exception {
         for (int i = 0; i < 110; i++) {
             TableStrategy2 entity1 = new TableStrategy2();
             TableStrategy2 entity2 = new TableStrategy2();
@@ -357,7 +357,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testColumnAnnotationTx() throws Exception {
+    public void testColumnAnnotation() throws Exception {
         Department2 department = new Department2();
         department.departmentId = 98;
         department.departmentNo = 98;
@@ -384,7 +384,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testTransientAnnotationTx() throws Exception {
+    public void testTransientAnnotation() throws Exception {
         Department3 department = new Department3();
         department.departmentId = 98;
         department.departmentNo = 98;
@@ -411,7 +411,7 @@ public class AutoBatchInsertTest {
      * 
      * @throws Exception
      */
-    public void testTransientModifierTx() throws Exception {
+    public void testTransientModifier() throws Exception {
         Department4 department = new Department4();
         department.departmentId = 98;
         department.departmentNo = 98;
@@ -439,7 +439,7 @@ public class AutoBatchInsertTest {
      * @throws Exception
      */
     @Prerequisite("#ENV != 'hsqldb'")
-    public void testEntityExistsExceptionTx() throws Exception {
+    public void testEntityExistsException() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 50;

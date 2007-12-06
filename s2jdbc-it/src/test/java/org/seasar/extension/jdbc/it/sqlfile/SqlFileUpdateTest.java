@@ -44,7 +44,7 @@ public class SqlFileUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParameter_noneTx() throws Exception {
+    public void testParameter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         int result = jdbcManager.updateBySqlFile(path, null).execute();
         assertEquals(1, result);
@@ -65,7 +65,7 @@ public class SqlFileUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParamter_simpleTypeTx() throws Exception {
+    public void testParamter_simpleType() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType.sql";
         int result = jdbcManager.updateBySqlFile(path, 2).execute();
@@ -87,7 +87,7 @@ public class SqlFileUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParamter_dtoTx() throws Exception {
+    public void testParamter_dto() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto.sql";
         MyDto myDto = new MyDto();
         myDto.departmentId = 2;
@@ -111,7 +111,7 @@ public class SqlFileUpdateTest {
      * 
      * @throws Exception
      */
-    public void testEntityExistsException_insertTx() throws Exception {
+    public void testEntityExistsException_insert() throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_insert.sql";
@@ -129,7 +129,7 @@ public class SqlFileUpdateTest {
      * 
      * @throws Exception
      */
-    public void testEntityExistsException_updateTx() throws Exception {
+    public void testEntityExistsException_update() throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_update.sql";

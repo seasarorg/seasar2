@@ -45,7 +45,7 @@ public class SqlFileBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParamter_noneTx() throws Exception {
+    public void testParamter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no.sql";
         int[] result =
             jdbcManager.updateBatchBySqlFile(path, null, null).execute();
@@ -56,7 +56,7 @@ public class SqlFileBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParamter_simpleTypeTx() throws Exception {
+    public void testParamter_simpleType() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType.sql";
         int[] result = jdbcManager.updateBatchBySqlFile(path, 2, 3).execute();
@@ -91,7 +91,7 @@ public class SqlFileBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParamter_dtoTx() throws Exception {
+    public void testParamter_dto() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto.sql";
         MyDto dto = new MyDto();
         dto.departmentId = 2;
@@ -133,7 +133,7 @@ public class SqlFileBatchUpdateTest {
      * @throws Exception
      */
     @Prerequisite("#ENV != 'hsqldb'")
-    public void testEntityExistsException_insertTx() throws Exception {
+    public void testEntityExistsException_insert() throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_insert.sql";
@@ -152,7 +152,7 @@ public class SqlFileBatchUpdateTest {
      * @throws Exception
      */
     @Prerequisite("#ENV != 'hsqldb'")
-    public void testEntityExistsException_updateTx() throws Exception {
+    public void testEntityExistsException_update() throws Exception {
         String path =
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_update.sql";

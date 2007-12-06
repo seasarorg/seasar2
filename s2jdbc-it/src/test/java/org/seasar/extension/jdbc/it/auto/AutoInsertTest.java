@@ -67,7 +67,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecuteTx() throws Exception {
+    public void testExecute() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentName = "hoge";
@@ -88,7 +88,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecute_excludesNullTx() throws Exception {
+    public void testExecute_excludesNull() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentName = "hoge";
@@ -109,7 +109,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecute_includesTx() throws Exception {
+    public void testExecute_includes() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentNo = 99;
@@ -138,7 +138,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testExecute_excludesTx() throws Exception {
+    public void testExecute_excludes() throws Exception {
         Department department = new Department();
         department.departmentId = 99;
         department.departmentNo = 99;
@@ -165,7 +165,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testCompKeyTx() throws Exception {
+    public void testCompKey() throws Exception {
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 99;
         department.departmentId2 = 99;
@@ -202,7 +202,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_autoTx() throws Exception {
+    public void testId_auto() throws Exception {
         for (int i = 0; i < 110; i++) {
             AutoStrategy entity = new AutoStrategy();
             jdbcManager.insert(entity).execute();
@@ -214,7 +214,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_identityTx() throws Exception {
+    public void testId_identity() throws Exception {
         try {
             for (int i = 0; i < 110; i++) {
                 IdentityStrategy entity = new IdentityStrategy();
@@ -235,7 +235,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_sequenceTx() throws Exception {
+    public void testId_sequence() throws Exception {
         try {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy entity = new SequenceStrategy();
@@ -256,7 +256,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_sequence_explicitGeneratorTx() throws Exception {
+    public void testId_sequence_explicitGenerator() throws Exception {
         try {
             for (int i = 0; i < 110; i++) {
                 SequenceStrategy2 entity = new SequenceStrategy2();
@@ -277,7 +277,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_sequence_IdGeneratorNotFoundRuntimeExceptionTx()
+    public void testId_sequence_IdGeneratorNotFoundRuntimeException()
             throws Exception {
         try {
             jdbcManager.insert(new SequenceStrategy3()).execute();
@@ -290,7 +290,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_tableTx() throws Exception {
+    public void testId_table() throws Exception {
         for (int i = 0; i < 110; i++) {
             TableStrategy entity = new TableStrategy();
             jdbcManager.insert(entity).execute();
@@ -302,7 +302,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_table_explicitGeneratorTx() throws Exception {
+    public void testId_table_explicitGenerator() throws Exception {
         for (int i = 0; i < 110; i++) {
             TableStrategy2 entity = new TableStrategy2();
             jdbcManager.insert(entity).execute();
@@ -314,7 +314,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_table_IdGenerationFailedRuntimeExceptionTx()
+    public void testId_table_IdGenerationFailedRuntimeException()
             throws Exception {
         try {
             jdbcManager.insert(new TableStrategy3()).execute();
@@ -327,7 +327,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testId_table_IdGeneratorNotFoundRuntimeExceptionTx()
+    public void testId_table_IdGeneratorNotFoundRuntimeException()
             throws Exception {
         try {
             jdbcManager.insert(new TableStrategy4()).execute();
@@ -340,7 +340,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testColumnAnnotationTx() throws Exception {
+    public void testColumnAnnotation() throws Exception {
         Department2 department = new Department2();
         department.departmentId = 99;
         department.departmentNo = 99;
@@ -361,7 +361,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testTransientAnnotationTx() throws Exception {
+    public void testTransientAnnotation() throws Exception {
         Department3 department = new Department3();
         department.departmentId = 99;
         department.departmentNo = 99;
@@ -382,7 +382,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testTransientModifierTx() throws Exception {
+    public void testTransientModifier() throws Exception {
         Department4 department = new Department4();
         department.departmentId = 99;
         department.departmentNo = 99;
@@ -403,7 +403,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testLargeObjectTx() throws Exception {
+    public void testLargeObject() throws Exception {
         byte[] bytes = new byte[10000];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) 'b';
@@ -435,7 +435,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testEntityExistsExceptionTx() throws Exception {
+    public void testEntityExistsException() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 50;
@@ -451,7 +451,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testEnumTypeTx() throws Exception {
+    public void testEnumType() throws Exception {
         Job job = new Job();
         job.id = 10;
         job.jobType = JobType.CLERK;

@@ -49,7 +49,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecuteTx() throws Exception {
+    public void testExecute() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -92,7 +92,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_includesVersionTx() throws Exception {
+    public void testExecute_includesVersion() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -136,7 +136,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_includesTx() throws Exception {
+    public void testExecute_includes() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -185,7 +185,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_excludesTx() throws Exception {
+    public void testExecute_excludes() throws Exception {
         List<Department> list = new ArrayList<Department>();
         Department department = new Department();
         department.departmentId = 1;
@@ -234,7 +234,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testCompKeyTx() throws Exception {
+    public void testCompKey() throws Exception {
         List<CompKeyDepartment> list = new ArrayList<CompKeyDepartment>();
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 1;
@@ -291,7 +291,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testOptimisticLockExceptionTx() throws Exception {
+    public void testOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -323,8 +323,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testOptimisticLockException_includesVersionTx()
-            throws Exception {
+    public void testOptimisticLockException_includesVersion() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -351,7 +350,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+    public void testSuppresOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -378,7 +377,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testColumnAnnotationTx() throws Exception {
+    public void testColumnAnnotation() throws Exception {
         List<Department2> list = new ArrayList<Department2>();
         Department2 department = new Department2();
         department.departmentId = 1;
@@ -407,7 +406,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testTransientAnnotationTx() throws Exception {
+    public void testTransientAnnotation() throws Exception {
         List<Department3> list = new ArrayList<Department3>();
         Department3 department = new Department3();
         department.departmentId = 1;
@@ -436,7 +435,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testTransientModifierTx() throws Exception {
+    public void testTransientModifier() throws Exception {
         List<Department4> list = new ArrayList<Department4>();
         Department4 department = new Department4();
         department.departmentId = 1;
@@ -466,7 +465,7 @@ public class AutoBatchUpdateTest {
      * @throws Exception
      */
     @Prerequisite("#ENV != 'hsqldb'")
-    public void testEntityExistsExceptionTx() throws Exception {
+    public void testEntityExistsException() throws Exception {
         Department department =
             jdbcManager
                 .from(Department.class)

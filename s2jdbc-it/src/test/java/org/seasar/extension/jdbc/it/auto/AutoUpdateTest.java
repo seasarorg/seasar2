@@ -53,7 +53,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecuteTx() throws Exception {
+    public void testExecute() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -75,7 +75,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_includesVersionTx() throws Exception {
+    public void testExecute_includesVersion() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -97,7 +97,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_excludesNullTx() throws Exception {
+    public void testExecute_excludesNull() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -119,7 +119,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_includesTx() throws Exception {
+    public void testExecute_includes() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 99;
@@ -146,7 +146,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_excludesTx() throws Exception {
+    public void testExecute_excludes() throws Exception {
         Department department = new Department();
         department.departmentId = 1;
         department.departmentNo = 99;
@@ -173,7 +173,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testExecute_changeFromTx() throws Exception {
+    public void testExecute_changeFrom() throws Exception {
         Department before =
             jdbcManager.from(Department.class).where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
@@ -203,7 +203,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testCompKeyTx() throws Exception {
+    public void testCompKey() throws Exception {
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 1;
         department.departmentId2 = 1;
@@ -235,7 +235,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testOptimisticLockExceptionTx() throws Exception {
+    public void testOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -258,7 +258,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+    public void testSuppresOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -282,7 +282,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testColumnAnnotationTx() throws Exception {
+    public void testColumnAnnotation() throws Exception {
         Department2 department = new Department2();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -302,7 +302,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testTransientAnnotationTx() throws Exception {
+    public void testTransientAnnotation() throws Exception {
         Department3 department = new Department3();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -322,7 +322,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testTransientModifierTx() throws Exception {
+    public void testTransientModifier() throws Exception {
         Department4 department = new Department4();
         department.departmentId = 1;
         department.departmentName = "hoge";
@@ -342,7 +342,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testEntityExistsExceptionTx() throws Exception {
+    public void testEntityExistsException() throws Exception {
         Department department =
             jdbcManager
                 .from(Department.class)

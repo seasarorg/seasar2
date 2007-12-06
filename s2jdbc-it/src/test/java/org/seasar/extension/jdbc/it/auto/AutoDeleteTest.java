@@ -39,7 +39,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testExecuteTx() throws Exception {
+    public void testExecute() throws Exception {
         Employee employee = new Employee();
         employee.employeeId = 1;
         employee.version = 1;
@@ -55,7 +55,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testExecute_ignoreVersionTx() throws Exception {
+    public void testExecute_ignoreVersion() throws Exception {
         Employee employee = new Employee();
         employee.employeeId = 1;
         employee.version = 99;
@@ -71,7 +71,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testCompKeyTx() throws Exception {
+    public void testCompKey() throws Exception {
         CompKeyEmployee employee = new CompKeyEmployee();
         employee.employeeId1 = 1;
         employee.employeeId2 = 1;
@@ -91,7 +91,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testOptimisticLockExceptionTx() throws Exception {
+    public void testOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -114,7 +114,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+    public void testSuppresOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)

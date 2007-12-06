@@ -46,7 +46,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_noneTx() throws Exception {
+    public void testParameter_none() throws Exception {
         Integer result =
             jdbcManager
                 .callBySql(Integer.class, "{? = call FUNC_NONE_PARAM()}")
@@ -58,7 +58,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleTypeTx() throws Exception {
+    public void testParameter_simpleType() throws Exception {
         Integer result =
             jdbcManager.callBySql(
                 Integer.class,
@@ -71,7 +71,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType_timeTx() throws Exception {
+    public void testParameter_simpleType_time() throws Exception {
         Date inparam =
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 .parse("2007-08-08 12:11:10");
@@ -89,7 +89,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dtoTx() throws Exception {
+    public void testParameter_dto() throws Exception {
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2 = 5;
@@ -107,7 +107,7 @@ public class SqlFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dto_timeTx() throws Exception {
+    public void testParameter_dto_time() throws Exception {
         Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
         MyDto2 dto = new MyDto2();
         dto.param1 = date;
@@ -125,7 +125,7 @@ public class SqlFunctionCallTest {
      * @throws Exception
      */
     @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
-    public void testParameter_resultSetTx() throws Exception {
+    public void testParameter_resultSet() throws Exception {
         List<Employee> employees =
             jdbcManager.callBySql(
                 Employee.class,
@@ -144,7 +144,7 @@ public class SqlFunctionCallTest {
      * @throws Exception
      */
     @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
-    public void testParameter_resultSetUpdateTx() throws Exception {
+    public void testParameter_resultSetUpdate() throws Exception {
         List<Employee> employees =
             jdbcManager.callBySql(
                 Employee.class,

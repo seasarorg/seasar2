@@ -46,7 +46,7 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_noneTx() throws Exception {
+    public void testParameter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_no" + ".sql";
         Integer result =
             jdbcManager.callBySqlFile(Integer.class, path).getSingleResult();
@@ -57,7 +57,7 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleTypeTx() throws Exception {
+    public void testParameter_simpleType() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType" + ".sql";
         Integer result =
@@ -69,7 +69,7 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType_timeTx() throws Exception {
+    public void testParameter_simpleType_time() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType_time"
                 + ".sql";
@@ -90,7 +90,7 @@ public class SqlFileFunctionCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dtoTx() throws Exception {
+    public void testParameter_dto() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
         MyDto dto = new MyDto();
         dto.param1 = 3;
@@ -126,7 +126,7 @@ public class SqlFileFunctionCallTest {
      * @throws Exception
      */
     @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
-    public void testParameter_resultSetTx() throws Exception {
+    public void testParameter_resultSet() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_resultSet" + ".sql";
         List<Employee> employees =
@@ -144,7 +144,7 @@ public class SqlFileFunctionCallTest {
      * @throws Exception
      */
     @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
-    public void testParameter_resultSetUpdateTx() throws Exception {
+    public void testParameter_resultSetUpdate() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_resultSetUpdate"
                 + ".sql";

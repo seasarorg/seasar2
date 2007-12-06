@@ -54,7 +54,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_noneTx() throws Exception {
+    public void testParameter_none() throws Exception {
         jdbcManager.callBySql("{call PROC_NONE_PARAM()}").execute();
     }
 
@@ -62,7 +62,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleTypeTx() throws Exception {
+    public void testParameter_simpleType() throws Exception {
         jdbcManager.callBySql("{call PROC_SIMPLETYPE_PARAM(?)}", 1).execute();
     }
 
@@ -70,7 +70,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType_timeTx() throws Exception {
+    public void testParameter_simpleType_time() throws Exception {
         jdbcManager.callBySql(
             "{call PROC_SIMPLETYPE_TIME_PARAM(?)}",
             time(new Date())).execute();
@@ -80,7 +80,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dtoTx() throws Exception {
+    public void testParameter_dto() throws Exception {
         MyDto dto = new MyDto();
         dto.param1 = 3;
         dto.param2 = 5;
@@ -94,7 +94,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dto_timeTx() throws Exception {
+    public void testParameter_dto_time() throws Exception {
         Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
         MyDto2 dto = new MyDto2();
         dto.param1 = date;
@@ -111,7 +111,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetTx() throws Exception {
+    public void testParameter_resultSet() throws Exception {
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             query = "{call PROC_RESULTSET(?, ?)}";
@@ -134,7 +134,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetOutTx() throws Exception {
+    public void testParameter_resultSetOut() throws Exception {
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             query = "{call PROC_RESULTSET_OUT(?, ?, ?)}";
@@ -158,7 +158,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetUpdateTx() throws Exception {
+    public void testParameter_resultSetUpdate() throws Exception {
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             query = "{call PROC_RESULTSET_UPDATE(?, ?)}";
@@ -189,7 +189,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetsTx() throws Exception {
+    public void testParameter_resultSets() throws Exception {
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             query = "{call PROC_RESULTSETS(?, ?, ?, ?)}";
@@ -218,7 +218,7 @@ public class SqlProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetsUpdatesOutTx() throws Exception {
+    public void testParameter_resultSetsUpdatesOut() throws Exception {
         String query = null;
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             query = "{call PROC_RESULTSETS_UPDATES_OUT(?, ?, ?, ?, ?)}";

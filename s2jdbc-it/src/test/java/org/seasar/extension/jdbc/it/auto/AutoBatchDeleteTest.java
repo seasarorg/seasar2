@@ -43,7 +43,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testExecuteTx() throws Exception {
+    public void testExecute() throws Exception {
         List<Employee> list = new ArrayList<Employee>();
         Employee employee = new Employee();
         employee.employeeId = 1;
@@ -72,7 +72,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testExecute_ignoreVersionTx() throws Exception {
+    public void testExecute_ignoreVersion() throws Exception {
         List<Employee> list = new ArrayList<Employee>();
         Employee employee = new Employee();
         employee.employeeId = 1;
@@ -101,7 +101,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testCompKeyTx() throws Exception {
+    public void testCompKey() throws Exception {
         List<CompKeyEmployee> list = new ArrayList<CompKeyEmployee>();
         CompKeyEmployee employee = new CompKeyEmployee();
         employee.employeeId1 = 1;
@@ -138,7 +138,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testOptimisticLockExceptionTx() throws Exception {
+    public void testOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -170,7 +170,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testOptimisticLockException_ignoreVersionTx() throws Exception {
+    public void testOptimisticLockException_ignoreVersion() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)
@@ -194,7 +194,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testSuppresOptimisticLockExceptionTx() throws Exception {
+    public void testSuppresOptimisticLockException() throws Exception {
         Employee employee1 =
             jdbcManager
                 .from(Employee.class)

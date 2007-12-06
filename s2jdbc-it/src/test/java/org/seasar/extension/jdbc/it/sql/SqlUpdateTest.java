@@ -45,7 +45,7 @@ public class SqlUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParameter_noneTx() throws Exception {
+    public void testParameter_none() throws Exception {
         String sql = "delete from Employee";
         int actual = jdbcManager.updateBySql(sql).execute();
         assertEquals(14, actual);
@@ -55,7 +55,7 @@ public class SqlUpdateTest {
      * 
      * @throws Exception
      */
-    public void testParameterTx() throws Exception {
+    public void testParameter() throws Exception {
         String sql =
             "delete from Employee where department_Id = ? and salary > ?";
         int actual =
@@ -69,7 +69,7 @@ public class SqlUpdateTest {
      * 
      * @throws Exception
      */
-    public void testEntityExistsException_insertTx() throws Exception {
+    public void testEntityExistsException_insert() throws Exception {
         String sql =
             "insert into Department (department_id, department_no) values(?, ?)";
         try {
@@ -86,7 +86,7 @@ public class SqlUpdateTest {
      * 
      * @throws Exception
      */
-    public void testEntityExistsException_updateTx() throws Exception {
+    public void testEntityExistsException_update() throws Exception {
         String sql =
             "update Department set department_id = ? where department_id = ?";
         try {

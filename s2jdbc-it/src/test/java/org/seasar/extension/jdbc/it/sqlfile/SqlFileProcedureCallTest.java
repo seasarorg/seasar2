@@ -54,7 +54,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_noneTx() throws Exception {
+    public void testParameter_none() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_none" + ".sql";
         jdbcManager.callBySqlFile(path).execute();
     }
@@ -63,7 +63,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleTypeTx() throws Exception {
+    public void testParameter_simpleType() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType" + ".sql";
         jdbcManager.callBySqlFile(path, 1).execute();
@@ -73,7 +73,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_simpleType_timeTx() throws Exception {
+    public void testParameter_simpleType_time() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_simpleType_time"
                 + ".sql";
@@ -84,7 +84,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dtoTx() throws Exception {
+    public void testParameter_dto() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_dto" + ".sql";
         MyDto dto = new MyDto();
         dto.param1 = 3;
@@ -99,7 +99,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_dto_timeTx() throws Exception {
+    public void testParameter_dto_time() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_dto_time" + ".sql";
         Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
@@ -116,7 +116,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetTx() throws Exception {
+    public void testParameter_resultSet() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_resultSet";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
@@ -139,7 +139,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetOutTx() throws Exception {
+    public void testParameter_resultSetOut() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_resultSetOut";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
@@ -163,7 +163,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetUpdateTx() throws Exception {
+    public void testParameter_resultSetUpdate() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_resultSetUpdate";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
@@ -195,7 +195,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetsTx() throws Exception {
+    public void testParameter_resultSets() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_resultSets";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
             path += ".sql";
@@ -224,7 +224,7 @@ public class SqlFileProcedureCallTest {
      * 
      * @throws Exception
      */
-    public void testParameter_resultSetsUpdatesOutTx() throws Exception {
+    public void testParameter_resultSetsUpdatesOut() throws Exception {
         String path =
             getClass().getName().replace(".", "/") + "_resultSetsUpdatesOut";
         if (jdbcManagerImplementor.getDialect().needsParameterForResultSet()) {
