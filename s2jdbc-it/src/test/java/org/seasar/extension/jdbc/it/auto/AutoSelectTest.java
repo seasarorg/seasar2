@@ -50,6 +50,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
 
 import static org.junit.Assert.*;
 import static org.seasar.extension.jdbc.SelectForUpdateType.*;
@@ -858,6 +859,7 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
+    @Prerequisite("#ENV != 'standard'")
     public void testForUpdate_leftOuterJoin() throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, false)
             || !implementor.getDialect().supportsOuterJoinForUpdate()) {
@@ -874,6 +876,7 @@ public class AutoSelectTest {
      * 
      * @throws Exception
      */
+    @Prerequisite("#ENV != 'standard'")
     public void testForUpdate_innerJoin() throws Exception {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, false)) {
             return;

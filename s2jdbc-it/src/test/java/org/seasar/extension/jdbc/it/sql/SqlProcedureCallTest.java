@@ -43,7 +43,7 @@ import static org.seasar.extension.jdbc.parameter.Parameter.*;
  * 
  */
 @RunWith(Seasar2.class)
-@Prerequisite("#ENV not in {'hsqldb','h2'}")
+@Prerequisite("#ENV not in {'hsqldb','h2', 'standard'}")
 public class SqlProcedureCallTest {
 
     private JdbcManager jdbcManager;
