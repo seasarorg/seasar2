@@ -26,7 +26,7 @@ import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ResourceUtilTest extends TestCase {
 
@@ -73,7 +73,7 @@ public class ResourceUtilTest extends TestCase {
      * @throws Exception
      */
     public void testGetBuildDir() throws Exception {
-        File file = ResourceUtil.getBuildDir(getClass());
+        File file = ResourceUtil.getBuildDir(ResourceUtil.class);
         System.out.println(file);
         File file2 = ResourceUtil.getBuildDir("org/seasar/framework/util/");
         assertEquals(file, file2);
