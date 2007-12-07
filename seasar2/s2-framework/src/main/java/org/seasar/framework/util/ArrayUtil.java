@@ -51,6 +51,23 @@ public class ArrayUtil {
     }
 
     /**
+     * intの配列にintを追加します。
+     * 
+     * @param array
+     * @param value
+     * @return オブジェクトが追加された結果の配列
+     */
+    public static int[] add(int[] array, int value) {
+        if (array == null) {
+            throw new EmptyRuntimeException("array");
+        }
+        int[] newArray = (int[]) Array.newInstance(int.class, array.length + 1);
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = value;
+        return newArray;
+    }
+
+    /**
      * 配列に配列を追加します。
      * 
      * @param a
