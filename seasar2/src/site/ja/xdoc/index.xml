@@ -55,6 +55,10 @@ List<Employee> results = jdbcManager.from(Employee.class)
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2007/12/07</dt>
+				<dd>
+					<div>Seasar2 2.4.18-rc4 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+				</dd>
 				<dt>2007/11/30</dt>
 				<dd>
 					<div>Seasar2 2.4.18-rc3 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
