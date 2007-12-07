@@ -22,7 +22,7 @@ import junitx.framework.ArrayAssert;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ArrayUtilTest extends TestCase {
 
@@ -48,6 +48,17 @@ public class ArrayUtilTest extends TestCase {
         assertEquals("2", "1", a[0]);
         assertEquals("3", "2", a[1]);
         assertEquals("4", "3", a[2]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testAdd_int() throws Exception {
+        int[] array = new int[] { 1 };
+        int[] newArray = (int[]) ArrayUtil.add(array, 2);
+        assertEquals(2, newArray.length);
+        assertEquals(1, newArray[0]);
+        assertEquals(2, newArray[1]);
     }
 
     /**

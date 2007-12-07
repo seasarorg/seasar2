@@ -28,6 +28,9 @@ import org.seasar.framework.container.ognl.OgnlExpression;
  */
 public class SimpleComponentDefTest extends TestCase {
 
+    /**
+     * 
+     */
     public void testBasics() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals("Hoge", cd.getComponent());
@@ -62,6 +65,9 @@ public class SimpleComponentDefTest extends TestCase {
         cd.destroy();
     }
 
+    /**
+     * 
+     */
     public void testArgDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getArgDefSize());
@@ -77,6 +83,9 @@ public class SimpleComponentDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testPropertyDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getPropertyDefSize());
@@ -98,6 +107,9 @@ public class SimpleComponentDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testInitMethodDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getInitMethodDefSize());
@@ -113,6 +125,9 @@ public class SimpleComponentDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testDestroyMethodDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getDestroyMethodDefSize());
@@ -128,6 +143,9 @@ public class SimpleComponentDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testAspectDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getAspectDefSize());
@@ -143,6 +161,9 @@ public class SimpleComponentDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testInterTypeDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getInterTypeDefSize());
@@ -158,6 +179,9 @@ public class SimpleComponentDefTest extends TestCase {
         }
     }
 
+    /**
+     * 
+     */
     public void testMetaDef() {
         SimpleComponentDef cd = new SimpleComponentDef("Hoge", "hoge");
         assertEquals(0, cd.getMetaDefSize());

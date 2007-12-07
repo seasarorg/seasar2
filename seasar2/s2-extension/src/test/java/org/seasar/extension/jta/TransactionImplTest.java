@@ -412,6 +412,9 @@ public class TransactionImplTest extends TestCase {
 
         private Transaction tx_;
 
+        /**
+         * @param tx
+         */
         public Sync(Transaction tx) {
             tx_ = tx;
         }
