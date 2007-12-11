@@ -59,7 +59,7 @@
 <li>JDK5.0</li>
 <li>Eclipse3.2</li>
 <li>Tomcat5.5</li>
-<li>Tomcat Plugin3.2</li>
+<li>Tomcat Launcher3.2.1</li>
 <li><b>Dolteng</b></li>
 <li>DbLauncher</li>
 <li>日本語でプロパティファイルを入力するためのプラグイン (任意)</li>
@@ -87,25 +87,18 @@ eclipse.exe -vm "C:\Program Files\Java\jdk1.5.0_07\bin\javaw.exe"
 <p>のように1.5系のjavaw.exeを指定する必要があります。</p>
 <p>Tomcat5.5.xを<a href="http://tomcat.apache.org/download-55.cgi">このリンク</a>から指示に従ってインストールします。
 既にインストール済みの場合はその必要はありません。</p>
-<p>Tomcat Plugin3.2.1を<a href="http://www.eclipsetotale.com/tomcatPlugin.html">このリンク</a>から指示に従ってインストールします。
-既にインストール済みの場合はその必要はありません。
-インストールが終わったら、Eclipseを起動してTomcat Pluginの設定を行います。
-メニューの[Window] -&gt; [Preferences…] -&gt; [Tomcat]を選択してください。
-Tomcatバージョンにバージョン5.xを選択し、Tomcatホームにインストールしたディレクトリを指定します。
-コンテキスト宣言モードにコンテキストファイルを選び、[OK]をクリックします。</p>
-<p>これで、Tomcat Pluginの設定は完了しました。
-早速、Tomcatを起動してみましょう。メニューから[Tomcat] -&gt; [Tomcat起動]を選択して、Tomcatを起動します。
-エラーなしに無事に起動したのを確認して、一旦、Tomcatを停止させましょう。
-メニューから[Tomcat] -&gt; [Tomcat停止]を選択します。</p>
-<p>DoltengとDbLauncherは、Seasarプロジェクトで開発されているEclipse用のPluginです。
-Eclipseのメニューから[Help] -&gt; [Software Updates] -&gt; [Find and Install…]を選択し、
-Install/Updateのダイアログを表示させます。
-[Search for new features to install]のラジオボタンをチェックして[Next]ボタンをクリックします。
-[New Remote site]ボタンをクリックして[Name]を[Seasar Plugin3.2]、
-[URL]に[http://eclipse.seasar.org/updates/3.2/]を入力して[OK]をクリックします。
-[Finish]ボタンをクリックするとインストールする候補として、
-DoltengとDbLauncherが出てくるのでそのままインストールしましょう。
+<p>DoltengとDbLauncherは、Seasarプロジェクトで開発されているEclipse用のPluginです。 Tomcat LauncherはSysdeo社が開発しているPluginですが、Seasarプロジェクトの更新サイトからインストールすることが出来ます。Eclipseのメニューから[Help]
+-&gt; [Software Updates] -&gt; [Find and Install…]を選択し、 Install/Updateのダイアログを表示させます。
+[Search for new features to install]のラジオボタンをチェックして[Next]ボタンをクリックします。 [New
+Remote site]ボタンをクリックして[Name]を[Seasar Plugin3.2]、 [URL]に[http://eclipse.seasar.org/updates/3.2/]を入力して[OK]をクリックします。
+[Finish]ボタンをクリックするとインストールする候補として、 DoltengとDbLauncher、Tomcat Launcherが出てくるので、これらをチェックしてインストールしましょう。
 既にインストール済みの場合はその必要はありません。</p>
+<p>インストールが終わったら、Tomcat Launcherの設定を行います。 メニューの[Window] -&gt; [Preferences…]
+-&gt; [Tomcat]を選択してください。 Tomcatバージョンにバージョン5.xを選択し、Tomcatホームにインストールしたディレクトリを指定します。
+コンテキスト宣言モードにコンテキストファイルを選び、[OK]をクリックします。</p>
+<p>これで、Tomcat Launcherの設定は完了しました。 早速、Tomcatを起動してみましょう。メニューから[Tomcat] -&gt;
+[Tomcat起動]を選択して、Tomcatを起動します。 エラーなしに無事に起動したのを確認して、一旦、Tomcatを停止させましょう。 メニューから[Tomcat]
+-&gt; [Tomcat停止]を選択します。</p>
 <p>日本語でプロパティファイルを入力するためのプラグインとしてプロパティエディタを
 <a href="http://propedit.sourceforge.jp/">このリンク</a>から指示に従ってインストールします (必須ではありません)。
 既にインストール済みの場合は、その必要はありません。</p>
