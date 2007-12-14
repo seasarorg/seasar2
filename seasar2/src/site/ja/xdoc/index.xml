@@ -55,41 +55,116 @@ List<Employee> results = jdbcManager.from(Employee.class)
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2007/12/14</dt>
+				<dd>
+					<div>
+						Seasar2 2.4.18 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#vb02c531">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#u07e55d3">移行ガイド</a>)
+					</div>
+					<div>
+						Seasar2 2.3.23 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#df8bb0a5">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#u4756b2a">移行ガイド</a>)
+					</div>
+				</dd>
 				<dt>2007/12/07</dt>
 				<dd>
-					<div>Seasar2 2.4.18-rc4 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.18-rc4 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#iccead9a">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#ke02bbb9">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/11/30</dt>
 				<dd>
-					<div>Seasar2 2.4.18-rc3 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.18-rc3 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#vdbf597a">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#k8b15c3f">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/11/08</dt>
 				<dd>
-					<div>Seasar2 2.4.18-rc2 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.18-rc2 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#y78fda1e">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#qf1d3cbe">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/10/23</dt>
 				<dd>
-					<div>Seasar2 2.4.18-rc1 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
-					<div>Seasar2 2.3.23-rc1 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.18-rc1 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#nf7506e6">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#cd037995">移行ガイド</a>)
+					</div>
+					<div>
+						Seasar2 2.3.23-rc1 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#o51d7fd4">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#w054887a">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/08/13</dt>
 				<dd>
-					<div>Seasar2 2.4.17 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
-					<div>Seasar2 2.3.22 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.17 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#s36fb3cd">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#h33fa7c6">移行ガイド</a>)
+					</div>
+					<div>
+						Seasar2 2.3.22 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#pdfcf036">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#j817fde3">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/07/30</dt>
 				<dd>
-					<div>Seasar2 2.4.16 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.16 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#x31b6224">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#f3de58a2">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/07/11</dt>
 				<dd>
-					<div>Seasar2 2.4.15 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
-					<div>Seasar2 2.3.21 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.15 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#b3169f72">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#b1c17e2f">移行ガイド</a>)
+					</div>
+					<div>
+						Seasar2 2.3.21 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#y897af31">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#f8169486">移行ガイド</a>)
+					</div>
 				</dd>
 				<dt>2007/06/29</dt>
 				<dd>
-					<div>Seasar2 2.4.14 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
-					<div>Seasar2 2.3.20 をリリースしました． (<a href="downloads.html">ダウンロード</a>)</div>
+					<div>
+						Seasar2 2.4.14 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#d640b552">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#nd0d558b">移行ガイド</a>)
+					</div>
+					<div>
+						Seasar2 2.3.20 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#r9d09f29">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#ec2247ad">移行ガイド</a>)
+					</div>
 				</dd>
 			</dl>
 		</section>
