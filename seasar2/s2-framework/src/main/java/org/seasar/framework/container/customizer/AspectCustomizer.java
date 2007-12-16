@@ -32,31 +32,30 @@ import org.seasar.framework.container.impl.SimpleComponentDef;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に
- * {@link org.seasar.framework.container.AspectDef アスペクト定義}を
- * 登録するコンポーネントカスタマイザです。
+ * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に{@link org.seasar.framework.container.AspectDef アスペクト定義}を登録するコンポーネントカスタマイザです。
  * <p>
- * カスタマイザには、ポイントカットとインターセプタを設定します。 インターセプタはコンポーネント名で指定し、複数のインターセプタ名を設定することができます。
- * インターセプタ名が複数設定された場合は、設定された順にアスペクト定義をコンポーネント定義に登録します。
- * 最初に設定された名前を持つインターセプタが、後に設定された名前を持つインターセプタよりも先に呼び出されることになります。
+ * このカスタマイザには、 ポイントカットとインターセプタを設定します。 インターセプタはコンポーネント名で指定し、
+ * 複数のインターセプタ名を設定することができます。 インターセプタ名が複数設定された場合は、 設定された順にアスペクト定義をコンポーネント定義に登録します。
+ * 最初に設定された名前を持つインターセプタが、 後に設定された名前を持つインターセプタよりも先に呼び出されることになります。
  * </p>
  * <p>
  * コンポーネントに適用するインターセプタのインスタンス属性が<code>singleton</code>以外の場合は、
  * {@link #setUseLookupAdapter(boolean) useLookupAdapter}プロパティを<code>true</code>に設定します。
- * これにより、コンポーネントのメソッドが呼び出される度に、コンテナからインターセプタのインスタンスをルックアップするようになります。
+ * これにより、 コンポーネントのメソッドが呼び出される度に、 コンテナからインターセプタのインスタンスをルックアップするようになります。
  * </p>
  * 
  * @author higa
+ * @author jundu
  */
 public class AspectCustomizer extends AbstractCustomizer {
 
-    /** <coce>interceptorName</code>プロパティのバインディング定義です。 */
+    /** <code>interceptorName</code>プロパティのバインディング定義です。 */
     public static final String interceptorName_BINDING = "bindingType=may";
 
-    /** <coce>pointcut</code>プロパティのバインディング定義です。 */
+    /** <code>pointcut</code>プロパティのバインディング定義です。 */
     public static final String pointcut_BINDING = "bindingType=may";
 
-    /** <coce>useLookupAdapter</code>プロパティのバインディング定義です。 */
+    /** <code>useLookupAdapter</code>プロパティのバインディング定義です。 */
     public static final String useLookupAdapter_BINDING = "bindingType=may";
 
     private final List interceptorNames = new ArrayList();
@@ -68,7 +67,7 @@ public class AspectCustomizer extends AbstractCustomizer {
     /**
      * コンポーネント定義に登録するインターセプタのコンポーネント名を設定します。
      * <p>
-     * すでに設定されているインターセプタ名は破棄されます。
+     * すでに設定されているインターセプタ名は全て破棄されます。
      * </p>
      * 
      * @param interceptorName
@@ -113,8 +112,8 @@ public class AspectCustomizer extends AbstractCustomizer {
     /**
      * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
      * <p>
-     * 設定されたインターセプタ名を持つアスペクト定義をコンポーネント定義に登録します。
-     * インターセプタ名が複数設定された場合は、設定された順にアスペクト定義をコンポーネント定義に登録します。
+     * 設定されたインターセプタ名を持つアスペクト定義をコンポーネント定義に登録します。 インターセプタ名が複数設定されている場合は、
+     * 設定された順にアスペクト定義をコンポーネント定義に登録します。
      * </p>
      * 
      * @param componentDef
@@ -140,9 +139,9 @@ public class AspectCustomizer extends AbstractCustomizer {
     /**
      * ポイントカットを作成して返します。
      * <p>
-     * <code>pointcut</code>プロパティが指定されている場合は、その文字列からポイントカットを作成します。
-     * <code>targetInterface</code>プロパティが指定されている場合は、そのインターフェースからポイントカットを作成します。
-     * それ以外の場合は<code>null</code>を返します。
+     * <code>pointcut</code>プロパティが指定されている場合は、 その文字列からポイントカットを作成します。
+     * <code>targetInterface</code>プロパティが指定されている場合は、
+     * そのインターフェースからポイントカットを作成します。 それ以外の場合は<code>null</code>を返します。
      * </p>
      * 
      * @return ポイントカット
@@ -159,6 +158,10 @@ public class AspectCustomizer extends AbstractCustomizer {
 
     /**
      * インスタンス属性が<code>singleton</code>以外のインターセプタを呼び出すためのアダプタとなるインターセプタです。
+     * <p>
+     * このインターセプタは呼び出されると、 構築時に指定されたインターセプタを{@link org.seasar.framework.container.S2Container}から取得して処理を引き渡します。
+     * そのため、 元々呼び出したいインターセプタのインスタンス属性が<code>singleton</code>以外でも期待した結果を得ることが出来るようになります。
+     * </p>
      * 
      * @author koichik
      */
@@ -172,7 +175,7 @@ public class AspectCustomizer extends AbstractCustomizer {
         protected String[] interceptorNames;
 
         /**
-         * インスタンスを構築します。
+         * LookupAdaptorInterceptorのインスタンスを構築します。
          * 
          * @param interceptorNames
          *            インターセプタ名の配列
