@@ -115,7 +115,7 @@ public class TxScopedEntityManagerProxy implements EntityManager {
         if (!isTxActive()) {
             return null;
         }
-        return EntityManager.class.cast(tsr.getResource(this));
+        return EntityManager.class.cast(tsr.getResource(emf));
     }
 
     /**
@@ -125,7 +125,7 @@ public class TxScopedEntityManagerProxy implements EntityManager {
      */
     protected EntityManager createEntityManager() {
         final EntityManager em = emf.createEntityManager();
-        tsr.putResource(this, em);
+        tsr.putResource(emf, em);
         tsr.registerInterposedSynchronization(new Synchronization() {
 
             public void beforeCompletion() {
