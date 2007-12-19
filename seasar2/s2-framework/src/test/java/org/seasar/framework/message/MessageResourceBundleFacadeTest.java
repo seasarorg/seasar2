@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
@@ -63,14 +64,21 @@ public class MessageResourceBundleFacadeTest extends TestCase {
      * @throws Exception
      */
     public void testIsModified() throws Exception {
-        URL url = ResourceUtil.getResource(PATH);
-        File file = ResourceUtil.getFile(url);
-        MessageResourceBundleFacade facade = new MessageResourceBundleFacade(
-                url);
-        assertFalse(facade.isModified());
-        Thread.sleep(500);
-        file.setLastModified(new Date().getTime());
-        assertTrue(facade.isModified());
+        HotdeployUtil.setHotdeploy(true);
+        try {
+            URL url = ResourceUtil.getResource(PATH);
+            File file = ResourceUtil.getFile(url);
+            MessageResourceBundleFacade facade = new MessageResourceBundleFacade(
+                    url);
+
+            assertFalse(facade.isModified());
+            Thread.sleep(500);
+            file.setLastModified(new Date().getTime());
+            assertTrue(facade.isModified());
+        } finally {
+            HotdeployUtil.clearHotdeploy();
+        }
+
     }
 
     /**

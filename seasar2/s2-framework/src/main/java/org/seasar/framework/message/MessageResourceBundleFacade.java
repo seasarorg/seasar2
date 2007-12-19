@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import org.seasar.framework.container.hotdeploy.HotdeployUtil;
 import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.FileInputStreamUtil;
 import org.seasar.framework.util.InputStreamUtil;
@@ -107,7 +108,7 @@ public class MessageResourceBundleFacade {
     protected void setup(URL url) {
         AssertionUtil.assertNotNull("url", url);
         file = ResourceUtil.getFile(url);
-        if (file != null) {
+        if (file != null && HotdeployUtil.isHotdeploy()) {
             lastModified = file.lastModified();
             bundle = createBundle(file);
         } else {
