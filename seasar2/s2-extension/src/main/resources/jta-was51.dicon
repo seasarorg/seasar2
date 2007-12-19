@@ -27,7 +27,7 @@
 	<!-- TransactionManager from TransactionManagerFactory -->
 	<component name="TransactionManager"
 			class="javax.transaction.TransactionManager">
-		@com.ibm.ws.Transction.TransactionManagerFactory@getTransactionManager()
+		@com.ibm.ws.Transaction.TransactionManagerFactory@getTransactionManager()
 	</component>
 
 	<!-- TransactionManager を利用する TransactionSynchronizationRegistry -->
