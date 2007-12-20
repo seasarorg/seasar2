@@ -324,6 +324,35 @@ public class ConnectionPoolImplTest extends S2TestCase {
                 .getTransactionIsolation());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testValidationQuery() throws Exception {
+        ((ConnectionPoolImpl) pool_).setValidationQuery("select * from dual");
+        ((ConnectionPoolImpl) pool_).setValidationInterval(100);
+        ((ConnectionPoolImpl) pool_).setTimeout(600 * 1000);
+        ((ConnectionPoolImpl) pool_).setMaxPoolSize(2);
+        ConnectionWrapper con1 = pool_.checkOut();
+        pool_.checkIn(con1);
+        Thread.sleep(200);
+        ConnectionWrapper con2 = pool_.checkOut();
+        assertSame(con1, con2);
+        pool_.checkIn(con2);
+        ((ConnectionPoolImpl) pool_)
+                .setValidationQuery("select * from hogehoge");
+        con2 = pool_.checkOut();
+        assertSame(con1, con2);
+        ConnectionWrapper con3 = pool_.checkOut();
+        pool_.checkIn(con3);
+        pool_.checkIn(con2);
+        Thread.sleep(200);
+        con2 = pool_.checkOut();
+        assertNotNull(con2);
+        assertNotSame(con1, con2);
+        pool_.checkIn(con2);
+    }
+
     protected void setUp() throws Exception {
         include(PATH);
     }

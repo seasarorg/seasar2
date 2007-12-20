@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.dbcp.impl;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ import org.seasar.extension.timer.TimeoutTask;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.SLinkedList;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TransactionManagerUtil;
 import org.seasar.framework.util.TransactionUtil;
 
@@ -77,6 +79,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
     private boolean readOnly = false;
 
     private int transactionIsolationLevel = DEFAULT_TRANSACTION_ISOLATION_LEVEL;
+
+    private String validationQuery;
+
+    private long validationInterval;
 
     private Set activePool = new HashSet();
 
@@ -225,6 +231,50 @@ public class ConnectionPoolImpl implements ConnectionPool {
         this.transactionIsolationLevel = transactionIsolationLevel;
     }
 
+    /**
+     * コネクションの死活を確認する検証用クエリを返します。
+     * 
+     * @return 検証用クエリ
+     */
+    public String getValidationQuery() {
+        return validationQuery;
+    }
+
+    /**
+     * コネクションの死活を確認する検証用クエリを設定します。
+     * <p>
+     * <code>null</code>または空文字を指定した場合、検証は行われません。
+     * </p>
+     * 
+     * @param validationQuery
+     *            検証用クエリ
+     */
+    public void setValidationQuery(String validationQuery) {
+        this.validationQuery = validationQuery;
+    }
+
+    /**
+     * コネクションの死活を検証する間隔（ミリ秒）を返します。
+     * 
+     * @return 検証する間隔（ミリ秒）
+     */
+    public long getValidationInterval() {
+        return validationInterval;
+    }
+
+    /**
+     * コネクションの死活を検証する間隔（ミリ秒）を設定します。
+     * <p>
+     * <code>0</code>以下の値を指定した場合、検証は行われません。
+     * </p>
+     * 
+     * @param validationInterval
+     *            検証する間隔（ミリ秒）
+     */
+    public void setValidationInterval(long validationInterval) {
+        this.validationInterval = validationInterval;
+    }
+
     public int getActivePoolSize() {
         return activePool.size();
     }
@@ -239,7 +289,8 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     public synchronized ConnectionWrapper checkOut() throws SQLException {
         Transaction tx = getTransaction();
-        if (tx == null && !isAllowLocalTx()) {
+        boolean localTx = tx == null;
+        if (localTx && !isAllowLocalTx()) {
             throw new SIllegalStateException("ESSR0311", null);
         }
 
@@ -257,19 +308,17 @@ public class ConnectionPoolImpl implements ConnectionPool {
             } catch (InterruptedException ignore) {
             }
         }
-        con = checkOutFreePool();
+        con = checkOutFreePool(localTx);
         if (con == null) {
-            con = createConnection(tx);
-        } else {
-            con.init(tx == null);
+            con = createConnection(localTx);
         }
-        if (tx != null) {
+        if (localTx) {
+            setConnectionActivePool(con);
+        } else {
             TransactionUtil.enlistResource(tx, con.getXAResource());
             TransactionUtil.registerSynchronization(tx,
                     new SynchronizationImpl(tx));
             setConnectionTxActivePool(tx, con);
-        } else {
-            setConnectionActivePool(con);
         }
         con.setReadOnly(readOnly);
         if (transactionIsolationLevel != DEFAULT_TRANSACTION_ISOLATION_LEVEL) {
@@ -289,20 +338,60 @@ public class ConnectionPoolImpl implements ConnectionPool {
         return (ConnectionWrapper) txActivePool.get(tx);
     }
 
-    private ConnectionWrapper checkOutFreePool() {
+    private ConnectionWrapper checkOutFreePool(final boolean localTx) {
         if (freePool.isEmpty()) {
             return null;
         }
         FreeItem item = (FreeItem) freePool.removeLast();
         ConnectionWrapper con = item.getConnection();
+        con.init(localTx);
         item.destroy();
-        return con;
+        if (StringUtil.isEmpty(validationQuery)) {
+            return con;
+        }
+        if (validateConnection(con, item.getPooledTime())) {
+            return con;
+        }
+        return null;
     }
 
-    private ConnectionWrapper createConnection(Transaction tx)
+    private boolean validateConnection(final ConnectionWrapper con,
+            final long pooledTime) {
+        final long currentTime = System.currentTimeMillis();
+        if (currentTime - pooledTime < validationInterval) {
+            return true;
+        }
+        try {
+            final PreparedStatement ps = con.prepareStatement(validationQuery);
+            try {
+                ps.executeQuery();
+            } finally {
+                ps.close();
+            }
+        } catch (final Exception e) {
+            try {
+                con.close();
+            } catch (final Exception ignore) {
+            }
+            for (SLinkedList.Entry entry = freePool.getFirstEntry(); entry != null; entry = entry
+                    .getNext()) {
+                final FreeItem item = (FreeItem) entry.getElement();
+                try {
+                    item.getConnection().closeReally();
+                } catch (final Exception ignore) {
+                }
+            }
+            freePool.clear();
+            logger.log("ESSR0096", null, e);
+            return false;
+        }
+        return true;
+    }
+
+    private ConnectionWrapper createConnection(boolean localTx)
             throws SQLException {
         ConnectionWrapper con = new ConnectionWrapperImpl(xaDataSource
-                .getXAConnection(), this, tx == null);
+                .getXAConnection(), this, localTx);
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0006", null);
         }
@@ -389,10 +478,13 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
         private TimeoutTask timeoutTask_;
 
+        private long pooledTime;
+
         FreeItem(ConnectionWrapper connectionWrapper) {
             connectionWrapper_ = connectionWrapper;
             timeoutTask_ = TimeoutManager.getInstance().addTimeoutTarget(this,
                     timeout, false);
+            pooledTime = System.currentTimeMillis();
         }
 
         /**
@@ -402,6 +494,15 @@ public class ConnectionPoolImpl implements ConnectionPool {
          */
         public ConnectionWrapper getConnection() {
             return connectionWrapper_;
+        }
+
+        /**
+         * プールされた時刻（ミリ秒）を返します。
+         * 
+         * @return プールされた時刻（ミリ秒）
+         */
+        public long getPooledTime() {
+            return pooledTime;
         }
 
         public void expired() {
