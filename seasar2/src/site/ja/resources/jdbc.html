@@ -141,6 +141,20 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 デフォルトは<code>true</code>です。</td>
 <td><code>true</code></td>
 </tr>
+<tr>
+<td><code>validationQuery</code></td>
+<td>コネクションの死活を検証する際に使用するクエリを設定します。
+<code>null</code>もしくは空文字を指定した場合、検証は行われません。<br />
+デフォルトは<code>null</code>です。</td>
+<td><code>"select * from dual"</code></td>
+</tr>
+<tr>
+<td><code>validationInterval</code></td>
+<td>プールから取得されるコネクションがここに指定した間隔（ミリ秒）よりも長い間プールされていた場合、コネクションの死活を検証します。
+0以下の値を指定した場合、検証は行われません。<br />
+デフォルトは0です。</td>
+<td><code>10000</code></td>
+</tr>
 </table>
 <p>コンポーネントの設定は以下のようになります。環境に合わせて書き換えてください。</p>
 <h4>jdbc.dicon</h4>
@@ -179,7 +193,9 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
         &lt;property name="timeout"&gt;600&lt;/property&gt;
         &lt;property name="maxPoolSize"&gt;10&lt;/property&gt;
         &lt;property name="allowLocalTx"&gt;true&lt;/property&gt;
-        &lt;destroyMethod name="close"/&gt;&gt;
+        &lt;property name="validationQuery"&gt;"select * from dual"&lt;/property&gt;
+        &lt;property name="validationInterval"&gt;10000&lt;/property&gt;
+        &lt;destroyMethod name="close"/&gt;
     &lt;/component&gt;
     &lt;component name="dataSource"
        class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
