@@ -61,7 +61,7 @@ List<Employee> results = jdbcManager.from(Employee.class)
 						Seasar2 2.4.19 をリリースしました．
 						(<a href="downloads.html">ダウンロード</a>)
 						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#ncef94c1">Change Log</a>)
-						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#i964fcaf">移行ガイド</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#y00d8cf8">移行ガイド</a>)
 					</div>
 				</dd>
 				<dt>2007/12/14</dt>
