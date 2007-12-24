@@ -137,6 +137,28 @@ public class PropertyDescImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testSetIntegerValueToString() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("str");
+        propDesc.setValue(myBean, new Integer(1));
+        assertEquals("1", myBean.str);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSetNullToString() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("str");
+        propDesc.setValue(myBean, null);
+        assertNull(myBean.str);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testConvertWithStringConstructor() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
@@ -168,6 +190,11 @@ public class PropertyDescImplTest extends TestCase {
         private URL url_;
 
         private Calendar cal;
+
+        /**
+         * 
+         */
+        public String str;
 
         /**
          * @return

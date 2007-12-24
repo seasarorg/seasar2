@@ -281,6 +281,9 @@ public final class PropertyDescImpl implements PropertyDesc {
             return convertDate(arg);
         } else if (Boolean.class.isAssignableFrom(propertyType)) {
             return BooleanConversionUtil.toBoolean(arg);
+        } else if (arg != null && arg.getClass() != String.class
+                && String.class == propertyType) {
+            return arg.toString();
         } else if (arg instanceof String && !String.class.equals(propertyType)) {
             return convertWithString(arg);
         } else if (java.util.Calendar.class.isAssignableFrom(propertyType)) {
