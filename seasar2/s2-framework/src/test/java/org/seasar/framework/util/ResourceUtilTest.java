@@ -73,9 +73,9 @@ public class ResourceUtilTest extends TestCase {
      * @throws Exception
      */
     public void testGetBuildDir() throws Exception {
-        File file = ResourceUtil.getBuildDir(ResourceUtil.class);
+        File file = ResourceUtil.getBuildDir(getClass());
         System.out.println(file);
-        File file2 = ResourceUtil.getBuildDir("org/seasar/framework/util/");
+        File file2 = ResourceUtil.getBuildDir("org/seasar/framework/util/xxx");
         assertEquals(file, file2);
         File junitJar = ResourceUtil.getBuildDir(TestCase.class);
         assertTrue(junitJar.exists());
