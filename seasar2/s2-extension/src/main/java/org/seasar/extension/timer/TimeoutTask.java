@@ -43,7 +43,7 @@ public class TimeoutTask {
 
     TimeoutTask(TimeoutTarget timeoutTarget, int timeout, boolean permanent) {
         timeoutTarget_ = timeoutTarget;
-        timeoutMillis_ = timeout * 1000;
+        timeoutMillis_ = timeout * 1000L;
         permanent_ = permanent;
         startTime_ = System.currentTimeMillis();
     }
