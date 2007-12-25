@@ -99,10 +99,12 @@ public class JdbcContextImpl implements JdbcContext {
         } catch (SQLException e) {
             logger.log(e);
         }
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            logger.log(e);
+        if (!transactional) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                logger.log(e);
+            }
         }
         connection = null;
     }
