@@ -53,7 +53,7 @@ public class ConnectionWrapperImplTest extends S2TestCase {
     public void testCloseReallyWithTransaction() throws Exception {
         MockXAConnection xaCon = new MockXAConnection();
         ConnectionWrapperImpl wrapper = new ConnectionWrapperImpl(xaCon,
-                dummyPool_, true);
+                dummyPool_, null);
         MockConnection con = (MockConnection) wrapper.getPhysicalConnection();
         wrapper.setAutoCommit(false);
         wrapper.closeReally();
@@ -102,7 +102,7 @@ public class ConnectionWrapperImplTest extends S2TestCase {
             tx.enlistResource(xares);
             tx.commit();
             con_.close();
-            con_.init(true);
+            con_.init(null);
         } finally {
             con_.closeReally();
         }
@@ -121,7 +121,7 @@ public class ConnectionWrapperImplTest extends S2TestCase {
             tx.commit();
             con_.cleanup();
             assertTrue("1", con_.isClosed());
-            con_.init(true);
+            con_.init(null);
         } finally {
             con_.closeReally();
         }
@@ -135,7 +135,7 @@ public class ConnectionWrapperImplTest extends S2TestCase {
         try {
             tm.begin();
             Transaction tx = tm.getTransaction();
-            con_.init(false);
+            con_.init(tx);
             XAResource xares = con_.getXAConnection().getXAResource();
             tx.enlistResource(xares);
             try {
@@ -167,7 +167,7 @@ public class ConnectionWrapperImplTest extends S2TestCase {
             tx.commit();
             con_.cleanup();
             assertTrue("7", con_.isClosed());
-            con_.init(true);
+            con_.init(null);
         } finally {
             con_.closeReally();
         }

@@ -18,6 +18,7 @@ package org.seasar.extension.dbcp.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.transaction.Synchronization;
 import javax.transaction.TransactionManager;
 
 import org.seasar.extension.dbcp.ConnectionPool;
@@ -89,6 +90,33 @@ public class ConnectionPoolImplTest extends S2TestCase {
         con.close();
         assertEquals("3", 0, pool_.getActivePoolSize());
         assertEquals("4", 1, pool_.getFreePoolSize());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testCloseLogicalConnection_afterCompletion() throws Exception {
+        tm_.begin();
+        final Connection con = pool_.checkOut();
+        tm_.getTransaction().registerSynchronization(new Synchronization() {
+            public void beforeCompletion() {
+            }
+
+            public void afterCompletion(int status) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    fail();
+                }
+            }
+        });
+        assertEquals(1, pool_.getTxActivePoolSize());
+        assertEquals(0, pool_.getFreePoolSize());
+        tm_.commit();
+        assertFalse(con.isClosed());
+        assertEquals(0, pool_.getTxActivePoolSize());
+        assertEquals(1, pool_.getFreePoolSize());
     }
 
     /**

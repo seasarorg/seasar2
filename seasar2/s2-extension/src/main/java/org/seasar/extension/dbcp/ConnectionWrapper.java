@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.XAConnection;
+import javax.transaction.Transaction;
 import javax.transaction.xa.XAResource;
 
 /**
@@ -45,10 +46,10 @@ public interface ConnectionWrapper extends Connection {
     /**
      * 初期化します。
      * 
-     * @param localTx
-     *            トランザクション中かどうか
+     * @param tx
+     *            トランザクション
      */
-    void init(boolean localTx);
+    void init(Transaction tx);
 
     /**
      * クリーンアップします。

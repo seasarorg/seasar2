@@ -289,8 +289,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     public synchronized ConnectionWrapper checkOut() throws SQLException {
         Transaction tx = getTransaction();
-        boolean localTx = tx == null;
-        if (localTx && !isAllowLocalTx()) {
+        if (tx == null && !isAllowLocalTx()) {
             throw new SIllegalStateException("ESSR0311", null);
         }
 
@@ -308,11 +307,11 @@ public class ConnectionPoolImpl implements ConnectionPool {
             } catch (InterruptedException ignore) {
             }
         }
-        con = checkOutFreePool(localTx);
+        con = checkOutFreePool(tx);
         if (con == null) {
-            con = createConnection(localTx);
+            con = createConnection(tx);
         }
-        if (localTx) {
+        if (tx == null) {
             setConnectionActivePool(con);
         } else {
             TransactionUtil.enlistResource(tx, con.getXAResource());
@@ -338,13 +337,13 @@ public class ConnectionPoolImpl implements ConnectionPool {
         return (ConnectionWrapper) txActivePool.get(tx);
     }
 
-    private ConnectionWrapper checkOutFreePool(final boolean localTx) {
+    private ConnectionWrapper checkOutFreePool(final Transaction tx) {
         if (freePool.isEmpty()) {
             return null;
         }
         FreeItem item = (FreeItem) freePool.removeLast();
         ConnectionWrapper con = item.getConnection();
-        con.init(localTx);
+        con.init(tx);
         item.destroy();
         if (StringUtil.isEmpty(validationQuery)) {
             return con;
@@ -388,10 +387,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
         return true;
     }
 
-    private ConnectionWrapper createConnection(boolean localTx)
+    private ConnectionWrapper createConnection(Transaction tx)
             throws SQLException {
         ConnectionWrapper con = new ConnectionWrapperImpl(xaDataSource
-                .getXAConnection(), this, localTx);
+                .getXAConnection(), this, tx);
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0006", null);
         }
@@ -419,13 +418,6 @@ public class ConnectionPoolImpl implements ConnectionPool {
     }
 
     public synchronized void checkIn(ConnectionWrapper connection) {
-        final Transaction tx = getTransaction();
-        if (logger.isDebugEnabled()) {
-            logger.log("DSSR0002", new Object[] { tx });
-        }
-        if (tx != null && txActivePool.get(tx) == connection) {
-            return;
-        }
         activePool.remove(connection);
         connection.cleanup();
         checkInFreePool(connection);
@@ -440,8 +432,11 @@ public class ConnectionPoolImpl implements ConnectionPool {
         }
     }
 
-    private synchronized void checkInTx(Transaction tx) {
+    public synchronized void checkInTx(Transaction tx) {
         if (tx == null) {
+            return;
+        }
+        if (getTransaction() != null) {
             return;
         }
         ConnectionWrapper con = (ConnectionWrapper) txActivePool.remove(tx);

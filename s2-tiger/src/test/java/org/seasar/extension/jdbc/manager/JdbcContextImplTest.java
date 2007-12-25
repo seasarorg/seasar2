@@ -18,8 +18,6 @@ public class JdbcContextImplTest extends TestCase {
 
     private JdbcContextImpl ctx = new JdbcContextImpl(con, false);
 
-    private JdbcContextImpl txCtx = new JdbcContextImpl(con, true);
-
     @Override
     protected void setUp() throws Exception {
     }
@@ -28,7 +26,6 @@ public class JdbcContextImplTest extends TestCase {
     protected void tearDown() throws Exception {
         con = null;
         ctx = null;
-        txCtx = null;
     }
 
     /**
@@ -104,21 +101,4 @@ public class JdbcContextImplTest extends TestCase {
         assertTrue(con.isClosed());
     }
 
-    /**
-     * @throws Exception
-     * 
-     */
-    public void testDestroy_transactional() throws Exception {
-        txCtx.getStatement();
-        txCtx.getPreparedStatement("aaa");
-        txCtx.getCursorPreparedStatement("bbb");
-        txCtx.getCallableStatement("ccc");
-        txCtx.destroy();
-        assertTrue(txCtx.isStatementNull());
-        assertTrue(txCtx.isPreparedStatementCacheEmpty());
-        assertTrue(txCtx.isCursorPreparedStatementCacheEmpty());
-        assertTrue(txCtx.isCallableStatementCacheEmpty());
-        assertTrue(txCtx.isConnectionNull());
-        assertFalse(con.isClosed());
-    }
 }

@@ -26,6 +26,7 @@ import java.sql.Statement;
 import java.util.Map;
 
 import javax.sql.XAConnection;
+import javax.transaction.Transaction;
 import javax.transaction.xa.XAResource;
 
 import org.seasar.extension.dbcp.ConnectionPool;
@@ -55,7 +56,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
 
     private boolean closed_ = false;
 
-    private boolean localTx_;
+    private Transaction tx_;
 
     /**
      * {@link ConnectionWrapperImpl}を作成します。
@@ -64,13 +65,13 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
      *            XAコネクション
      * @param connectionPool
      *            コネクションプール
-     * @param localTx
-     *            トランザクション中かどうか
+     * @param tx
+     *            トランザクション
      * @throws SQLException
      *             SQL例外が発生した場合
      */
     public ConnectionWrapperImpl(final XAConnection xaConnection,
-            final ConnectionPool connectionPool, final boolean localTx)
+            final ConnectionPool connectionPool, final Transaction tx)
             throws SQLException {
 
         xaConnection_ = xaConnection;
@@ -78,7 +79,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         xaResource_ = new XAResourceWrapperImpl(xaConnection.getXAResource(),
                 this);
         connectionPool_ = connectionPool;
-        localTx_ = localTx;
+        tx_ = tx;
     }
 
     public Connection getPhysicalConnection() {
@@ -93,9 +94,9 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         return xaConnection_;
     }
 
-    public void init(final boolean localTx) {
+    public void init(final Transaction tx) {
         closed_ = false;
-        localTx_ = localTx;
+        tx_ = tx;
     }
 
     public void cleanup() {
@@ -142,7 +143,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
     }
 
     private void assertLocalTx() throws SQLException {
-        if (!localTx_) {
+        if (tx_ != null) {
             throw new SSQLException("ESSR0366", null);
         }
     }
@@ -251,7 +252,14 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         if (closed_) {
             return;
         }
-        connectionPool_.checkIn(this);
+        if (logger_.isDebugEnabled()) {
+            logger_.log("DSSR0002", new Object[] { tx_ });
+        }
+        if (tx_ == null) {
+            connectionPool_.checkIn(this);
+        } else {
+            connectionPool_.checkInTx(tx_);
+        }
     }
 
     public void setTransactionIsolation(final int level) throws SQLException {

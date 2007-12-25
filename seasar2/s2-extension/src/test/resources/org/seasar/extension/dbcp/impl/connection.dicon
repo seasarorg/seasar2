@@ -43,7 +43,6 @@
 		autoBinding="constructor">
 		<arg>xads.XAConnection</arg>
 		<arg>dummyPool</arg>
-		<arg>true</arg>
-		<destroyMethod name="closeReally"/>
+		<arg>null</arg>
 	</component>
 </components>

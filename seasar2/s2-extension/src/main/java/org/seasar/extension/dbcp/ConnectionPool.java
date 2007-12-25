@@ -17,6 +17,8 @@ package org.seasar.extension.dbcp;
 
 import java.sql.SQLException;
 
+import javax.transaction.Transaction;
+
 /**
  * コネクションプーリングのためのインターフェースです。
  * 
@@ -41,6 +43,14 @@ public interface ConnectionPool {
      *            コネクション
      */
     void checkIn(ConnectionWrapper connectionWrapper);
+
+    /**
+     * トランザクションに関連付けられたコネクションを戻します。
+     * 
+     * @param tx
+     *            トランザクション
+     */
+    void checkInTx(Transaction tx);
 
     /**
      * コネクションを解放します。

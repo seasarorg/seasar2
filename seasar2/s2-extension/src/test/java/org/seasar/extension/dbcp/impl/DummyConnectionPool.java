@@ -17,12 +17,14 @@ package org.seasar.extension.dbcp.impl;
 
 import java.sql.SQLException;
 
+import javax.transaction.Transaction;
+
 import org.seasar.extension.dbcp.ConnectionPool;
 import org.seasar.extension.dbcp.ConnectionWrapper;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DummyConnectionPool implements ConnectionPool {
 
@@ -43,6 +45,10 @@ public class DummyConnectionPool implements ConnectionPool {
     public void checkIn(ConnectionWrapper connectionWrapper) {
         checkIned_ = true;
         connectionWrapper.cleanup();
+    }
+
+    public void checkInTx(Transaction tx) {
+        checkIned_ = true;
     }
 
     /**
