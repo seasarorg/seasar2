@@ -17,9 +17,11 @@ package org.seasar.extension.jdbc.it.auto;
 
 import java.util.List;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
+@RunWith(Seasar2.class)
 public class OneToManyTest {
 
     private JdbcManager jdbcManager;
