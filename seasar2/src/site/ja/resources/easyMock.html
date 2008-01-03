@@ -205,7 +205,7 @@ public class HogeTest {
 <h3>JUnit3とJUnit4共通</h3>
 <p>&quot;record&quot;メソッド内ではEasyMockの機能を使用してモックの振る舞いを記録します．</p>
 <pre>    public void recordXxx() throws Exception {
-        expecte(foo.someMethod(100)).andReturn(200);
+        expect(foo.someMethod(100)).andReturn(200);
     }</pre>
 <code>expect</code>メソッドは<code>org.easymock.EasyMock</code>のstaticメソッドです。この例ではstatic import機能を利用して呼び出しています.
 <h2><a name="replay">モックとのインタラクションを再現する</a></h2>
