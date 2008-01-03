@@ -177,6 +177,7 @@ Strictモードのモックは指定されていないメソッドが呼び出�
 }</pre>
 <h2><a name="record">モックの振る舞いを記録する</a></h2>
 <p>モックの振る舞いを記録するには，&quot;record&quot;メソッドを使用します．</p>
+<h3>JUnit3</h3>
 <p>&quot;record&quot;メソッドはテストメソッドの接頭辞&quot;test&quot;を&quot;record&quot;にした名前を持つ<code>public</code>なインスタンスメソッドです．</p>
 <pre>public class HogeTest extends S2TigerTestCase {
     public void recordXxx() throws Exception {
@@ -187,11 +188,26 @@ Strictモードのモックは指定されていないメソッドが呼び出�
         ・・・
     }
 }</pre>
-<p><code>textXxx()</code>メソッドの実行前に，対応する<code>recordXxx()</code>メソッドが実行されます．テストメソッドが<code>test()</code>の場合は対応する&quot;record&quot;メソッドは実行されません．</p>
+<p><code>testXxx()</code>メソッドの実行前に，対応する<code>recordXxx()</code>メソッドが実行されます．テストメソッドが<code>test()</code>の場合は対応する&quot;record&quot;メソッドは実行されません．</p>
+<h3>JUnit4</h3>
+<p>&quot;record&quot;メソッドはテストメソッドに接頭辞&quot;record&quot;をつけた名前を持つ<code>public</code>なインスタンスメソッドです．</p>
+<pre>@RunWith(Seasar.class)
+public class HogeTest {
+    public void recordXxx() throws Exception {
+        ・・・
+    }
+
+    public void xxx() throws Exception {
+        ・・・
+    }
+}</pre>
+<p><code>xxx()</code>メソッドの実行前に，対応する<code>recordXxx()</code>メソッドが実行されます．</p>
+<h3>JUnit3とJUnit4共通</h3>
 <p>&quot;record&quot;メソッド内ではEasyMockの機能を使用してモックの振る舞いを記録します．</p>
 <pre>    public void recordXxx() throws Exception {
-        expected(foo.someMethod(100)).andReturn(200);
+        expecte(foo.someMethod(100)).andReturn(200);
     }</pre>
+<code>expect</code>メソッドは<code>org.easymock.EasyMock</code>のstaticメソッドです。この例ではstatic import機能を利用して呼び出しています.
 <h2><a name="replay">モックとのインタラクションを再現する</a></h2>
 <p>モックとのインタラクションを再現するには通常のテストメソッドを使用します．</p>
 <p>作成済みのモックは，テストメソッドの実行前に&quot;replay&quot;モードに設定されます．</p>
