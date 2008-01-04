@@ -49,6 +49,7 @@ public class OneToManyTest {
         assertNotNull(list.get(1).employees);
         assertNotNull(list.get(2).employees);
         assertNotNull(list.get(3).employees);
+        assertTrue(list.get(3).employees.isEmpty());
     }
 
     /**
