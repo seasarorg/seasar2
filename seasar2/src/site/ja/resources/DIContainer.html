@@ -1293,6 +1293,16 @@ utのときにはWARM deploy、ctのときはHOT deploy、それ以外はCOOL de
 </dl>
 <p>examples.aaaを<a name="rootPackage">ルートパッケージ</a>と呼びます。
 ルートパッケージの配下に役割に応じてパッケージを配置します。</p>
+<p>
+ルートパッケージは、convention.diconで指定します。
+</p>
+<pre>
+&lt;component class="org.seasar.framework.convention.impl.NamingConventionImpl"&gt;
+    &lt;initMethod name="addRootPackageName"&gt;
+        &lt;arg&gt;"examples.aaa"&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
 <p>examples.aaa.web.xxx、examples.aaa.web.yyyを<a name="subApplicationPackage"><b>サブアプリケーションパッケージ</b></a>と呼びます。
 xxx、yyyがサブアプリケーション名になります。
 サブアプリケーションはユースケースと置き換えても良いでしょう。
