@@ -21,18 +21,8 @@
 				<b>HOT</b>に認識することができます。
 			</p>
 			<p>
-				Seasar2の生産性の高さは、<a href="http://capsctrl.que.jp/kdmsnr/wiki/bliki/?FluentInterface">流れるようなインターフェース</a>を持つ
-				<a href="s2jdbc_abstract.html">S2JDBC</a>を見ていただくと実感できるのではないかと思います。
-			</p>
-			<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class)
-                             .join("department")
-                             .where("id in (? , ?)", 11, 22)
-                             .orderBy("name")
-                             .getResultList();
-]]></source>
-			<p>
-				流れるようにコーディングして、ほとんどのSQLを自動生成することができます。
+				Seasar2の生産性の高さは、Webフレームワークと組み合わせることで、
+				具体的に実感できます。まずは、<a href="http://teeda.seasar.org/ja">Teeda</a>をお試しください。
 			</p>
 		</section>
 		<section name="メーリングリスト">
