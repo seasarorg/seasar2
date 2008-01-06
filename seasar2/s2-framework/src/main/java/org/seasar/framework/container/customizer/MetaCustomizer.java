@@ -17,14 +17,15 @@ package org.seasar.framework.container.customizer;
 
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.MetaDef;
+import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.impl.MetaDefImpl;
 
 /**
- * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に
- * {@link org.seasar.framework.container.MetaDef メタデータ定義}を 登録するコンポーネントカスタマイザです。
+ * {@link org.seasar.framework.container.ComponentDef コンポーネント定義}に{@link org.seasar.framework.container.MetaDef メタデータ定義}を登録するコンポーネントカスタマイザです。
  * <p>
- * コンポーネント定義に登録するメタデータ定義は、カスタマイザ自身のコンポーネント定義に <code>autoRegister</code>という名前で定義されたメタデータ定義に設定されたメタデータ定義となります。
- * diconファイルでは次のように記述します。
+ * コンポーネント定義に登録するメタデータ定義は、 カスタマイザ自身のコンポーネント定義に定義した<code>autoRegister</code>という名前のメタデータ定義の中に定義します。
+ * <code>autoRegister</code>というメタデータ定義は、 登録対象のメタデータ定義を保持します。 実際に適用したい定義自身も、
+ * メタデータ定義として定義します。 diconファイルでは、 次のように記述します。
  * </p>
  * 
  * <pre>
@@ -36,24 +37,25 @@ import org.seasar.framework.container.impl.MetaDefImpl;
  * </pre>
  * 
  * </p>
- * この例では、<code>remoting</code>という名前を持つメタデータ定義がコンポーネント定義に 設定されます。
- * <code>autoRegister</code>という名前で定義されたメタデータ定義には、複数のメタデータ定義を
- * 設定することができます。その場合、すべてのメタデータ定義がそのままの順番でコンポーネント定義に 設定されます。
+ * この例では、 <code>remoting</code>という名前を持つメタデータ定義がカスタマイズ対象のコンポーネント定義に設定されます。
+ * 登録対象のメタデータ定義を保持する<code>autoRegister</code>という名前のメタデータ定義には、
+ * 複数のメタデータ定義を設定することができます。 その場合、 すべてのメタデータ定義がそのままの順番でカスタマイズ対象のコンポーネント定義に設定されます。
  * </p>
  * 
  * @author koichik
+ * @author jundu
  */
 public class MetaCustomizer extends AbstractCustomizer {
 
     /**
-     * {@link ComponentDef}です。
+     * このコンポーネント自身の{@link ComponentDef コンポーネント定義}です。
      */
     protected ComponentDef componentDef;
 
     /**
-     * コンポーネント定義を設定します。
+     * {@link ComponentDef コンポーネント定義}を設定します。
      * <p>
-     * このメソッドは、このコンポーネント自身のコンポーネント定義を引数として、S2コンテナから呼び出されることを意図しています。
+     * このメソッドは、 このコンポーネント自身のコンポーネント定義を引数として、 {@link S2Container S2コンテナ}から呼び出されることを意図しています。
      * </p>
      * 
      * @param componentDef
@@ -64,10 +66,9 @@ public class MetaCustomizer extends AbstractCustomizer {
     }
 
     /**
-     * カスタマイズ対象のコンポーネント定義をカスタマイズをします。
+     * カスタマイズ対象の{@link ComponentDef コンポーネント定義}をカスタマイズします。
      * <p>
-     * このカスタマイザ自身のコンポーネント定義に<code>autoRegister</code>という名前で定義されたメタデータ定義に設定されたメタデータ定義を
-     * コンポーネント定義に登録します。
+     * {@link org.seasar.framework.container.MetaDef メタデータ定義}をコンポーネント定義に登録します。
      * </p>
      * 
      * @param componentDef
@@ -86,9 +87,13 @@ public class MetaCustomizer extends AbstractCustomizer {
     }
 
     /**
-     * このカスタマイザ自身のコンポーネント定義に<code>autoRegister</code>という名前で定義されたメタデータ定義を返します。
+     * 登録対象の{@link org.seasar.framework.container.MetaDef メタデータ定義}を保持するメタデータ定義を返します。
+     * <p>
+     * このカスタマイザ自身の{@link ComponentDef コンポーネント定義}に<code>autoRegister</code>という名前で定義された、
+     * 登録対象のメタデータ定義を保持するメタデータ定義を返します。
+     * </p>
      * 
-     * @return このカスタマイザ自身のコンポーネント定義に<code>autoRegister</code>という名前で定義されたメタデータ定義
+     * @return 登録対象のメタデータ定義を保持するメタデータ定義
      */
     protected MetaDef getMetaDef() {
         return componentDef.getMetaDef("autoRegister");
