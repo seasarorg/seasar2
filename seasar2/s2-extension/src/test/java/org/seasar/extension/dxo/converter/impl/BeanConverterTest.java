@@ -200,6 +200,23 @@ public class BeanConverterTest extends AbsConverterTest {
     /**
      * @throws Exception
      */
+    public void testArray() throws Exception {
+        Foo foo = new Foo();
+        foo.array = new Object[] { "1", "2" };
+        converter.setShallowCopy(true);
+        Bar bar = (Bar) converter.convert(foo, Bar.class, createContext(
+                "testArray", null));
+        assertNotNull(bar);
+        Integer[] array = bar.array;
+        assertNotNull(array);
+        assertEquals(2, array.length);
+        assertEquals(new Integer(1), array[0]);
+        assertEquals(new Integer(2), array[1]);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testGetConverter() throws Exception {
         Converter fooConverter = converter.getConverter(String.class,
                 Hoge.class, "foo", Date.class, createContext(
@@ -233,7 +250,7 @@ public class BeanConverterTest extends AbsConverterTest {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge {
         /**
@@ -281,7 +298,7 @@ public class BeanConverterTest extends AbsConverterTest {
     }
 
     /**
-     *
+     * 
      */
     public static class HogeHoge {
         /**
@@ -302,6 +319,20 @@ public class BeanConverterTest extends AbsConverterTest {
         public void setHoge(Hoge hoge) {
             this.hoge = hoge;
         }
+    }
+
+    public static class Foo {
+        /**
+         * 
+         */
+        public Object[] array;
+    }
+
+    public static class Bar {
+        /**
+         * 
+         */
+        public Integer[] array;
     }
 
 }

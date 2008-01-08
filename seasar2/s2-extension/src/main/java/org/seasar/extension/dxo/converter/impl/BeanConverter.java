@@ -154,7 +154,7 @@ public class BeanConverter extends AbstractConverter {
         }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();
         if (shallowCopy
-                && sourcePropertyClass.isAssignableFrom(destPropertyClass)) {
+                && destPropertyClass.isAssignableFrom(sourcePropertyClass)) {
             destPropertyDesc.setValue(dest, sourcePropertyValue);
             return;
         }
