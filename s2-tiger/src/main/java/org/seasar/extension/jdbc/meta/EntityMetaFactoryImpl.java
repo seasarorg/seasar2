@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.PropertyMetaFactory;
 import org.seasar.extension.jdbc.RelationshipType;
 import org.seasar.extension.jdbc.TableMeta;
 import org.seasar.extension.jdbc.TableMetaFactory;
+import org.seasar.extension.jdbc.exception.FieldDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnAutoConfigurationRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.ManyToOneFKNotFoundRuntimeException;
@@ -211,9 +212,6 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
     protected void doPropertyMeta(EntityMeta entityMeta, Class<?> entityClass) {
         Field[] fields = getFields(entityClass);
         for (Field f : fields) {
-            if (!ModifierUtil.isInstanceField(f)) {
-                continue;
-            }
             f.setAccessible(true);
             entityMeta.addPropertyMeta(propertyMetaFactory.createPropertyMeta(
                     f, entityMeta));
@@ -230,6 +228,9 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
     protected Field[] getFields(Class<?> entityClass) {
         ArrayMap fields = new ArrayMap();
         for (Field f : entityClass.getDeclaredFields()) {
+            if (!ModifierUtil.isInstanceField(f)) {
+                continue;
+            }
             fields.put(f.getName(), f);
         }
 
@@ -240,9 +241,14 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
             }
             if (clazz.isAnnotationPresent(MappedSuperclass.class)) {
                 for (Field f : clazz.getDeclaredFields()) {
+                    if (!ModifierUtil.isInstanceField(f)) {
+                        continue;
+                    }
                     String name = f.getName();
                     if (!fields.containsKey(name)) {
                         fields.put(name, f);
+                    } else {
+                        throw new FieldDuplicatedRuntimeException(f);
                     }
                 }
             }

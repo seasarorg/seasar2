@@ -30,8 +30,11 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.entity.Ggg;
 import org.seasar.extension.jdbc.entity.Hhh;
 import org.seasar.extension.jdbc.entity.Jjj;
+import org.seasar.extension.jdbc.entity.Kkk;
+import org.seasar.extension.jdbc.exception.FieldDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnAutoConfigurationRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.ManyToOneFKNotFoundRuntimeException;
@@ -170,6 +173,19 @@ public class EntityMetaFactoryImplTest extends TestCase {
         } catch (UnsupportedInheritanceRuntimeException e) {
             System.out.println(e);
             assertEquals(Jjj.class, e.getEntityClass());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCreateEntityMeta_fieldDuplicated() throws Exception {
+        try {
+            factory.createEntityMeta(Kkk.class);
+            fail();
+        } catch (FieldDuplicatedRuntimeException e) {
+            System.out.println(e);
+            assertEquals(Ggg.class.getField("id"), e.getField());
         }
     }
 
