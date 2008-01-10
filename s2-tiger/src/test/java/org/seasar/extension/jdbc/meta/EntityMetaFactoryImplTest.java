@@ -15,10 +15,13 @@
  */
 package org.seasar.extension.jdbc.meta;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import junit.framework.TestCase;
@@ -27,12 +30,17 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.entity.Hhh;
+import org.seasar.extension.jdbc.entity.Jjj;
 import org.seasar.extension.jdbc.exception.JoinColumnAutoConfigurationRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.ManyToOneFKNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
+import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.NonEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToOneFKNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.ReferencedColumnNameNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.UnsupportedInheritanceRuntimeException;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.util.DisposableUtil;
 
@@ -138,6 +146,106 @@ public class EntityMetaFactoryImplTest extends TestCase {
         } catch (NonEntityRuntimeException e) {
             System.out.println(e);
             assertEquals(getClass(), e.getTargetClass());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCreateEntityMeta_inheritMappedSuperclass() throws Exception {
+        EntityMeta entityMeta = factory.createEntityMeta(Hhh.class);
+        assertEquals(3, entityMeta.getPropertyMetaSize());
+        assertEquals("name", entityMeta.getPropertyMeta(0).getName());
+        assertEquals("id", entityMeta.getPropertyMeta(1).getName());
+        assertEquals("iiis", entityMeta.getPropertyMeta(2).getName());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCreateEntityMeta_inheritEntity() throws Exception {
+        try {
+            factory.createEntityMeta(Jjj.class);
+            fail();
+        } catch (UnsupportedInheritanceRuntimeException e) {
+            System.out.println(e);
+            assertEquals(Jjj.class, e.getEntityClass());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCheckMappedBy_oneToOne_mappedByPropertyNotFound()
+            throws Exception {
+        try {
+            factory.getEntityMeta(OneToOnePropertyNotFound.class);
+            fail();
+        } catch (MappedByPropertyNotFoundRuntimeException e) {
+            System.out.println(e);
+            assertEquals("EntityMetaFactoryImplTest$OneToOnePropertyNotFound",
+                    e.getEntityName());
+            assertEquals("bar", e.getPropertyName());
+            assertEquals("xxx", e.getMappedBy());
+            assertEquals(BadCcc.class, e.getInverseRelationshipClass());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCheckMappedBy_oneToOne_mappedByNotIdentical()
+            throws Exception {
+        try {
+            factory.getEntityMeta(OneToOneNotIdentical.class);
+            fail();
+        } catch (MappedByNotIdenticalRuntimeException e) {
+            System.out.println(e);
+            assertEquals("EntityMetaFactoryImplTest$OneToOneNotIdentical", e
+                    .getEntityName());
+            assertEquals("badAaa", e.getPropertyName());
+            assertEquals("badCcc", e.getMappedBy());
+            assertEquals(BadAaa.class, e.getInverseRelationshipClass());
+            assertEquals("badCcc", e.getInversePropertyName());
+            assertEquals(BadCcc.class, e.getInversePropertyClass());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCheckMappedBy_oneToMany_mappedByPropertyNotFound()
+            throws Exception {
+        try {
+            factory.getEntityMeta(OneToManyPropertyNotFound.class);
+            fail();
+        } catch (MappedByPropertyNotFoundRuntimeException e) {
+            System.out.println(e);
+            assertEquals("EntityMetaFactoryImplTest$OneToManyPropertyNotFound",
+                    e.getEntityName());
+            assertEquals("bar", e.getPropertyName());
+            assertEquals("xxx", e.getMappedBy());
+            assertEquals(BadCcc.class, e.getInverseRelationshipClass());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCheckMappedBy_oneToMany_mappedByNotIdentical()
+            throws Exception {
+        try {
+            factory.getEntityMeta(OneToManyNotIdentical.class);
+            fail();
+        } catch (MappedByNotIdenticalRuntimeException e) {
+            System.out.println(e);
+            assertEquals("EntityMetaFactoryImplTest$OneToManyNotIdentical", e
+                    .getEntityName());
+            assertEquals("badBbb", e.getPropertyName());
+            assertEquals("badCcc", e.getMappedBy());
+            assertEquals(BadBbb.class, e.getInverseRelationshipClass());
+            assertEquals("badCcc", e.getInversePropertyName());
+            assertEquals(BadCcc.class, e.getInversePropertyClass());
         }
     }
 
@@ -315,5 +423,116 @@ public class EntityMetaFactoryImplTest extends TestCase {
          */
         @Id
         public Integer id2;
+    }
+
+    @Entity
+    private static class OneToOnePropertyNotFound {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
+
+        /**
+         * 
+         */
+        public Integer aaaId;
+
+        /**
+         * 
+         */
+        @OneToOne(mappedBy = "xxx")
+        public BadCcc bar;
+    }
+
+    @Entity
+    private static class OneToOneNotIdentical {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
+
+        /**
+         * 
+         */
+        @OneToOne(mappedBy = "badCcc")
+        public BadAaa badAaa;
+    }
+
+    @Entity
+    private static class OneToManyPropertyNotFound {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
+
+        /**
+         * 
+         */
+        @OneToMany(mappedBy = "xxx")
+        public List<BadCcc> bar;
+    }
+
+    @Entity
+    private static class OneToManyNotIdentical {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
+
+        /**
+         * 
+         */
+        @OneToMany(mappedBy = "badCcc")
+        public List<BadBbb> badBbb;
+    }
+
+    @Entity
+    private static class BadAaa {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
+
+        /**
+         * 
+         */
+        @OneToOne
+        public BadCcc badCcc;
+    }
+
+    @Entity
+    private static class BadBbb {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
+
+        /**
+         * 
+         */
+        @ManyToOne
+        public BadCcc badCcc;
+    }
+
+    @Entity
+    private static class BadCcc {
+
+        /**
+         * 
+         */
+        @Id
+        public Integer id;
     }
 }

@@ -53,8 +53,6 @@ import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeExcep
 import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
-import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
-import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
@@ -633,7 +631,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                         .getName(), propertyMeta.getName());
             }
             propertyMeta.setMappedBy(mappedBy);
-            checkMappedBy(propertyMeta, field, entityMeta);
         }
     }
 
@@ -674,7 +671,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                         .getName(), propertyMeta.getName());
             }
             propertyMeta.setMappedBy(mappedBy);
-            checkMappedBy(propertyMeta, field, entityMeta);
         } else {
             throw new MappedByMandatoryRuntimeException(entityMeta.getName(),
                     propertyMeta.getName());
@@ -703,38 +699,6 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                     .getName(), propertyMeta.getName(), relationshipClass);
         }
         propertyMeta.setRelationshipClass(relationshipClass);
-    }
-
-    /**
-     * mappedByで指定されたプロパティが存在するかチェックします。
-     * 
-     * @param propertyMeta
-     *            プロパティメタデータ
-     * @param field
-     *            フィールド
-     * @param entityMeta
-     *            エンティティメタデータ
-     */
-    protected void checkMappedBy(PropertyMeta propertyMeta,
-            @SuppressWarnings("unused")
-            Field field, EntityMeta entityMeta) {
-        String fName = persistenceConvention
-                .fromPropertyNameToFieldName(propertyMeta.getMappedBy());
-        try {
-            Field f = propertyMeta.getRelationshipClass().getDeclaredField(
-                    fName);
-            if (entityMeta.getEntityClass() != f.getType()) {
-                throw new MappedByNotIdenticalRuntimeException(entityMeta
-                        .getName(), propertyMeta.getName(), propertyMeta
-                        .getMappedBy(), entityMeta.getEntityClass(),
-                        propertyMeta.getRelationshipClass(), propertyMeta
-                                .getMappedBy(), f.getType());
-            }
-        } catch (NoSuchFieldException e) {
-            throw new MappedByPropertyNotFoundRuntimeException(entityMeta
-                    .getName(), propertyMeta.getName(), propertyMeta
-                    .getMappedBy(), propertyMeta.getRelationshipClass());
-        }
     }
 
     /**

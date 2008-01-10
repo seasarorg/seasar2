@@ -52,8 +52,6 @@ import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeExcep
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
-import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
-import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
 import org.seasar.extension.jdbc.exception.RelationshipNotEntityRuntimeException;
@@ -546,46 +544,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testOneToOne_mappedByPropertyNotFound() throws Exception {
-        entityMeta.setEntityClass(BadAaa2.class);
-        entityMeta.setName("BadAaa2");
-        Field field = BadAaa2.class.getDeclaredField("aaa");
-        try {
-            factory.createPropertyMeta(field, entityMeta);
-            fail();
-        } catch (MappedByPropertyNotFoundRuntimeException e) {
-            System.out.println(e);
-            assertEquals("BadAaa2", e.getEntityName());
-            assertEquals("aaa", e.getPropertyName());
-            assertEquals("xxx", e.getMappedBy());
-            assertEquals(MyAaa.class, e.getInverseRelationshipClass());
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testOneToOne_mappedByNotIdentical() throws Exception {
-        entityMeta.setEntityClass(BadBbb.class);
-        entityMeta.setName("BadBbb");
-        Field field = BadBbb.class.getDeclaredField("badAaa");
-        try {
-            factory.createPropertyMeta(field, entityMeta);
-            fail();
-        } catch (MappedByNotIdenticalRuntimeException e) {
-            System.out.println(e);
-            assertEquals("BadBbb", e.getEntityName());
-            assertEquals("badAaa", e.getPropertyName());
-            assertEquals("badCcc", e.getMappedBy());
-            assertEquals(BadAaa.class, e.getInverseRelationshipClass());
-            assertEquals("badCcc", e.getInversePropertyName());
-            assertEquals(BadCcc.class, e.getInversePropertyClass());
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testOneToOne_bothMappedByAndJoinColumn() throws Exception {
         entityMeta.setEntityClass(BadAaa2.class);
         entityMeta.setName("BadAaa2");
@@ -664,46 +622,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
             System.out.println(e);
             assertEquals("BadAaa2", e.getEntityName());
             assertEquals("myDto3", e.getPropertyName());
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testOneToMany_mappedByPropertyNotFound() throws Exception {
-        entityMeta.setEntityClass(BadAaa2.class);
-        entityMeta.setName("BadAaa2");
-        Field field = BadAaa2.class.getDeclaredField("aaa4");
-        try {
-            factory.createPropertyMeta(field, entityMeta);
-            fail();
-        } catch (MappedByPropertyNotFoundRuntimeException e) {
-            System.out.println(e);
-            assertEquals("BadAaa2", e.getEntityName());
-            assertEquals("aaa4", e.getPropertyName());
-            assertEquals("xxx", e.getMappedBy());
-            assertEquals(MyAaa.class, e.getInverseRelationshipClass());
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testOneToMany_mappedByNotIdentical() throws Exception {
-        entityMeta.setEntityClass(BadAaa2.class);
-        entityMeta.setName("BadAaa2");
-        Field field = BadAaa2.class.getDeclaredField("aaa5");
-        try {
-            factory.createPropertyMeta(field, entityMeta);
-            fail();
-        } catch (MappedByNotIdenticalRuntimeException e) {
-            System.out.println(e);
-            assertEquals("BadAaa2", e.getEntityName());
-            assertEquals("aaa5", e.getPropertyName());
-            assertEquals("bbb", e.getMappedBy());
-            assertEquals(MyAaa.class, e.getInverseRelationshipClass());
-            assertEquals("bbb", e.getInversePropertyName());
-            assertEquals(MyBbb.class, e.getInversePropertyClass());
         }
     }
 
@@ -886,27 +804,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     }
 
     @Entity
-    private static class BadAaa {
-
-        /**
-         * 
-         */
-        @Id
-        public Integer aaaId;
-
-        /**
-         * 
-         */
-        public Integer cccId;
-
-        /**
-         * 
-         */
-        @JoinColumn(name = "CCC_ID", referencedColumnName = "CCC_ID")
-        public BadCcc badCcc;
-    }
-
-    @Entity
     private static class BadAaa2 {
 
         /**
@@ -994,32 +891,6 @@ public class PropertyMetaFactoryImplTest extends TestCase {
          */
         @OneToMany
         public List<MyAaa> aaa8;
-    }
-
-    @Entity
-    private static class BadBbb {
-
-        /**
-         * 
-         */
-        @Id
-        public Integer bbbId;
-
-        /**
-         * 
-         */
-
-        @OneToOne(mappedBy = "badCcc")
-        public BadAaa badAaa;
-    }
-
-    @Entity
-    private static class BadCcc {
-
-        /**
-         * 
-         */
-        public Integer cccId;
     }
 
     private static class MyDto {

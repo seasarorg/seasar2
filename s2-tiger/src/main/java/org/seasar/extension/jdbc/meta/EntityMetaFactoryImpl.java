@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
@@ -32,13 +33,17 @@ import org.seasar.extension.jdbc.TableMetaFactory;
 import org.seasar.extension.jdbc.exception.JoinColumnAutoConfigurationRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.ManyToOneFKNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.MappedByNotIdenticalRuntimeException;
+import org.seasar.extension.jdbc.exception.MappedByPropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.NonEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToOneFKNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.ReferencedColumnNameNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.UnsupportedInheritanceRuntimeException;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
@@ -204,7 +209,7 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
      *            エンティティクラス
      */
     protected void doPropertyMeta(EntityMeta entityMeta, Class<?> entityClass) {
-        Field[] fields = entityClass.getDeclaredFields();
+        Field[] fields = getFields(entityClass);
         for (Field f : fields) {
             if (!ModifierUtil.isInstanceField(f)) {
                 continue;
@@ -213,6 +218,36 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
             entityMeta.addPropertyMeta(propertyMetaFactory.createPropertyMeta(
                     f, entityMeta));
         }
+    }
+
+    /**
+     * フィールドの配列を返します。
+     * 
+     * @param entityClass
+     *            エンティティクラス
+     * @return フィールドの配列
+     */
+    protected Field[] getFields(Class<?> entityClass) {
+        ArrayMap fields = new ArrayMap();
+        for (Field f : entityClass.getDeclaredFields()) {
+            fields.put(f.getName(), f);
+        }
+
+        for (Class<?> clazz = entityClass.getSuperclass(); clazz != Object.class; clazz = clazz
+                .getSuperclass()) {
+            if (clazz.isAnnotationPresent(Entity.class)) {
+                throw new UnsupportedInheritanceRuntimeException(entityClass);
+            }
+            if (clazz.isAnnotationPresent(MappedSuperclass.class)) {
+                for (Field f : clazz.getDeclaredFields()) {
+                    String name = f.getName();
+                    if (!fields.containsKey(name)) {
+                        fields.put(name, f);
+                    }
+                }
+            }
+        }
+        return (Field[]) fields.toArray(new Field[fields.size()]);
     }
 
     /**
@@ -240,6 +275,9 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
             if (!propertyMeta.isRelationship()) {
                 continue;
             }
+            if (propertyMeta.getMappedBy() != null) {
+                checkMappedBy(propertyMeta, entityMeta);
+            }
             if (propertyMeta.getRelationshipType() == RelationshipType.MANY_TO_ONE
                     || propertyMeta.getRelationshipType() == RelationshipType.ONE_TO_ONE
                     && propertyMeta.getMappedBy() == null) {
@@ -247,6 +285,36 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
             }
         }
         entityMeta.setRelationshipResolved(true);
+    }
+
+    /**
+     * mappedByで指定されたプロパティが存在するかチェックします。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void checkMappedBy(PropertyMeta propertyMeta,
+            EntityMeta entityMeta) {
+        String mappedBy = propertyMeta.getMappedBy();
+        Class<?> relationshipClass = propertyMeta.getRelationshipClass();
+        EntityMeta relationshipEntityMeta = getEntityMetaInternal(relationshipClass);
+        if (relationshipEntityMeta.hasPropertyMeta(mappedBy)) {
+            Field f = relationshipEntityMeta.getPropertyMeta(mappedBy)
+                    .getField();
+            if (entityMeta.getEntityClass() != f.getType()) {
+                throw new MappedByNotIdenticalRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName(), propertyMeta
+                        .getMappedBy(), entityMeta.getEntityClass(),
+                        propertyMeta.getRelationshipClass(), propertyMeta
+                                .getMappedBy(), f.getType());
+            }
+        } else {
+            throw new MappedByPropertyNotFoundRuntimeException(entityMeta
+                    .getName(), propertyMeta.getName(), propertyMeta
+                    .getMappedBy(), propertyMeta.getRelationshipClass());
+        }
     }
 
     /**
