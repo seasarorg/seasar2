@@ -28,9 +28,13 @@ import org.seasar.extension.jdbc.ResultSetHandler;
  * Beanのリストを返す {@link ResultSetHandler}です。
  * 
  * @author higa
- * 
  */
 public class BeanListResultSetHandler extends AbstractBeanResultSetHandler {
+
+    /**
+     * リミットです。
+     */
+    protected int limit;
 
     /**
      * {@link BeanListResultSetHandler}を作成します。
@@ -44,16 +48,35 @@ public class BeanListResultSetHandler extends AbstractBeanResultSetHandler {
      */
     public BeanListResultSetHandler(Class<?> beanClass, DbmsDialect dialect,
             String sql) {
+        this(beanClass, dialect, sql, 0);
+    }
+
+    /**
+     * {@link BeanListResultSetHandler}を作成します。
+     * 
+     * @param beanClass
+     *            Beanクラス
+     * @param dialect
+     *            データベースの方言
+     * @param sql
+     *            SQL
+     * @param limit
+     *            リミット
+     */
+    public BeanListResultSetHandler(Class<?> beanClass, DbmsDialect dialect,
+            String sql, int limit) {
         super(beanClass, dialect, sql);
+        this.limit = limit;
     }
 
     public Object handle(ResultSet rs) throws SQLException {
         PropertyType[] propertyTypes = createPropertyTypes(rs.getMetaData());
         List<Object> list = new ArrayList<Object>(100);
-        while (rs.next()) {
+        for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
             Object row = createRow(rs, propertyTypes);
             list.add(row);
         }
         return list;
     }
+
 }

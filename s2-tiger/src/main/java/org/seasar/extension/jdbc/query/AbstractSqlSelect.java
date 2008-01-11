@@ -18,17 +18,18 @@ package org.seasar.extension.jdbc.query;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.DbmsDialect;
+import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.handler.BeanIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
+import org.seasar.extension.jdbc.handler.MapIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.MapListResultSetHandler;
-import org.seasar.extension.jdbc.handler.MapListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.MapResultSetHandler;
+import org.seasar.extension.jdbc.handler.ObjectIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -68,30 +69,16 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
         boolean simple = ValueTypes.isSimpleType(baseClass);
         ValueType valueType = simple ? getValueType(baseClass, resultLob,
                 resultTemporalType) : null;
-        if (limit > 0 && !dialect.supportsLimit()) {
-            if (simple) {
-                return new ObjectListSupportLimitResultSetHandler(valueType,
-                        limit);
-            }
-            if (Map.class.isAssignableFrom(baseClass)) {
-                return new MapListSupportLimitResultSetHandler(
-                        (Class<? extends Map>) baseClass, dialect,
-                        persistenceConvention, executedSql, limit);
-            }
-            return new BeanListSupportLimitResultSetHandler(baseClass, dialect,
-                    executedSql, limit);
-
-        }
         if (simple) {
-            return new ObjectListResultSetHandler(valueType);
+            return new ObjectListResultSetHandler(valueType, limit);
         }
         if (Map.class.isAssignableFrom(baseClass)) {
             return new MapListResultSetHandler(
                     (Class<? extends Map>) baseClass, dialect,
-                    persistenceConvention, executedSql);
+                    persistenceConvention, executedSql, limit);
         }
-        return new BeanListResultSetHandler(baseClass, dialect, executedSql);
-
+        return new BeanListResultSetHandler(baseClass, dialect, executedSql,
+                limit);
     }
 
     @SuppressWarnings("unchecked")
@@ -111,4 +98,28 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
         }
         return new BeanResultSetHandler(baseClass, dialect, executedSql);
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected ResultSetHandler createIterateResultSetHandler(
+            final IterationCallback<T, ?> callback) {
+        final DbmsDialect dialect = jdbcManager.getDialect();
+        final PersistenceConvention persistenceConvention = jdbcManager
+                .getPersistenceConvention();
+        final boolean simple = ValueTypes.isSimpleType(baseClass);
+        final ValueType valueType = simple ? getValueType(baseClass, resultLob,
+                resultTemporalType) : null;
+        if (simple) {
+            return new ObjectIterationResultSetHandler(valueType, limit,
+                    callback);
+        }
+        if (Map.class.isAssignableFrom(baseClass)) {
+            return new MapIterationResultSetHandler(
+                    (Class<? extends Map>) baseClass, dialect,
+                    persistenceConvention, executedSql, limit, callback);
+        }
+        return new BeanIterationResultSetHandler(baseClass, dialect,
+                executedSql, limit, callback);
+    }
+
 }

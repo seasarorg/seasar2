@@ -84,6 +84,10 @@ public class MappingContextTest extends TestCase {
 
     private static class MyEntityMapper implements EntityMapper {
 
+        public Object getKey(Object[] values) {
+            return null;
+        }
+
         public Object map(Object[] values, MappingContext mappingContext) {
             return null;
         }

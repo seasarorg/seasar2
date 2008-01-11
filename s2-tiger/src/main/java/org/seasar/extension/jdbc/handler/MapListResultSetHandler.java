@@ -30,9 +30,13 @@ import org.seasar.framework.convention.PersistenceConvention;
  * マップのリストを返す {@link ResultSetHandler} の実装クラスです。
  * 
  * @author higa
- * 
  */
 public class MapListResultSetHandler extends AbstractMapResultSetHandler {
+
+    /**
+     * リミットです。
+     */
+    protected int limit;
 
     /**
      * {@link MapListResultSetHandler}を作成します。
@@ -50,16 +54,39 @@ public class MapListResultSetHandler extends AbstractMapResultSetHandler {
     public MapListResultSetHandler(Class<? extends Map> mapClass,
             DbmsDialect dialect, PersistenceConvention peristenceConvention,
             String sql) {
+        this(mapClass, dialect, peristenceConvention, sql, 0);
+    }
+
+    /**
+     * {@link MapListResultSetHandler}を作成します。
+     * 
+     * @param mapClass
+     *            マップクラス
+     * @param dialect
+     *            データベースの方言
+     * @param peristenceConvention
+     *            永続化層の規約
+     * @param sql
+     *            SQL
+     * @param limit
+     *            リミット
+     */
+    @SuppressWarnings("unchecked")
+    public MapListResultSetHandler(Class<? extends Map> mapClass,
+            DbmsDialect dialect, PersistenceConvention peristenceConvention,
+            String sql, int limit) {
         super(mapClass, dialect, peristenceConvention, sql);
+        this.limit = limit;
     }
 
     public Object handle(ResultSet rs) throws SQLException {
         PropertyType[] propertyTypes = createPropertyTypes(rs.getMetaData());
         List<Object> list = new ArrayList<Object>(100);
-        while (rs.next()) {
+        for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
             Object row = createRow(rs, propertyTypes);
             list.add(row);
         }
         return list;
     }
+
 }

@@ -31,28 +31,53 @@ import org.seasar.framework.util.ArrayMap;
  */
 public class ObjectListResultSetHandlerTest extends TestCase {
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	@SuppressWarnings("unchecked")
+    /**
+     * @throws Exception
+     * 
+     */
+    @SuppressWarnings("unchecked")
     public void testHandle() throws Exception {
-		ObjectListResultSetHandler handler = new ObjectListResultSetHandler(
-				ValueTypes.INTEGER);
-		MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-		MockColumnMetaData columnMeta = new MockColumnMetaData();
-		columnMeta.setColumnLabel("AAA");
-		rsMeta.addColumnMetaData(columnMeta);
-		MockResultSet rs = new MockResultSet(rsMeta);
-		ArrayMap data = new ArrayMap();
-		data.put("AAA", new Integer(5));
-		rs.addRowData(data);
-		data = new ArrayMap();
-		data.put("AAA", new Integer(6));
-		rs.addRowData(data);
-		List ret = (List) handler.handle(rs);
-		assertEquals(2, ret.size());
-		assertEquals(new Integer(5), ret.get(0));
-		assertEquals(new Integer(6), ret.get(1));
-	}
+        ObjectListResultSetHandler handler = new ObjectListResultSetHandler(
+                ValueTypes.INTEGER);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("AAA");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("AAA", new Integer(5));
+        rs.addRowData(data);
+        data = new ArrayMap();
+        data.put("AAA", new Integer(6));
+        rs.addRowData(data);
+        List ret = (List) handler.handle(rs);
+        assertEquals(2, ret.size());
+        assertEquals(new Integer(5), ret.get(0));
+        assertEquals(new Integer(6), ret.get(1));
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public void testHandleWithLimit() throws Exception {
+        ObjectListResultSetHandler handler = new ObjectListResultSetHandler(
+                ValueTypes.INTEGER, 1);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("AAA");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("AAA", new Integer(5));
+        rs.addRowData(data);
+        data = new ArrayMap();
+        data.put("AAA", new Integer(6));
+        rs.addRowData(data);
+        List ret = (List) handler.handle(rs);
+        assertEquals(1, ret.size());
+        assertEquals(new Integer(5), ret.get(0));
+    }
+
 }

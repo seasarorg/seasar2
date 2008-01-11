@@ -75,7 +75,7 @@ public abstract class AbstractEntityMapper {
      *            結果セットの1行分のデータ
      * @return キー
      */
-    protected Object getKey(Object[] values) {
+    public Object getKey(Object[] values) {
         if (idIndices.length == 1) {
             return values[idIndices[0]];
         } else if (idIndices.length > 1) {

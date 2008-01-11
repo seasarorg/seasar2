@@ -27,27 +27,48 @@ import org.seasar.extension.jdbc.ValueType;
  * オブジェクトのリストを返す {@link ResultSetHandler}です。
  * 
  * @author higa
- * 
  */
 public class ObjectListResultSetHandler implements ResultSetHandler {
 
-	private ValueType valueType;
+    /**
+     * 値タイプです。
+     */
+    protected ValueType valueType;
 
-	/**
-	 * {@link ObjectListResultSetHandler}を作成します。
-	 * 
-	 * @param valueType
-	 *            値タイプ
-	 */
-	public ObjectListResultSetHandler(ValueType valueType) {
-		this.valueType = valueType;
-	}
+    /**
+     * リミットです。
+     */
+    protected int limit;
 
-	public Object handle(ResultSet rs) throws SQLException {
-		List<Object> ret = new ArrayList<Object>(100);
-		while (rs.next()) {
-			ret.add(valueType.getValue(rs, 1));
-		}
-		return ret;
-	}
+    /**
+     * {@link ObjectListResultSetHandler}を作成します。
+     * 
+     * @param valueType
+     *            値タイプ
+     */
+    public ObjectListResultSetHandler(ValueType valueType) {
+        this(valueType, 0);
+    }
+
+    /**
+     * {@link ObjectListResultSetHandler}を作成します。
+     * 
+     * @param valueType
+     *            値タイプ
+     * @param limit
+     *            リミット
+     */
+    public ObjectListResultSetHandler(ValueType valueType, int limit) {
+        this.valueType = valueType;
+        this.limit = limit;
+    }
+
+    public Object handle(ResultSet rs) throws SQLException {
+        List<Object> ret = new ArrayList<Object>(100);
+        for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
+            ret.add(valueType.getValue(rs, 1));
+        }
+        return ret;
+    }
+
 }

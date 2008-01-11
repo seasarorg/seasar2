@@ -23,6 +23,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.DbmsDialect;
+import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
@@ -170,6 +171,12 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         return getSingleResultInternal();
     }
 
+    public <RESULT> RESULT iterate(IterationCallback<T, RESULT> callback) {
+        prepare("iterate");
+        logSql();
+        return iterateInternal(callback);
+    }
+
     /**
      * 検索してベースオブジェクトのリストを返します。
      * 
@@ -216,6 +223,30 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
             }
         }
         return ret;
+    }
+
+    /**
+     * 検索して反復した結果を返します。
+     * 
+     * @param <RESULT>
+     *            反復コールバックの戻り値の型
+     * @param callback
+     *            反復コールバック
+     * @return 反復コールバックの戻り値
+     */
+    @SuppressWarnings("unchecked")
+    protected <RESULT> RESULT iterateInternal(
+            final IterationCallback<T, RESULT> callback) {
+        final ResultSetHandler handler = createIterateResultSetHandler(callback);
+        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
+        try {
+            final ResultSet rs = createResultSet(jdbcContext);
+            return (RESULT) handleResultSet(handler, rs);
+        } finally {
+            if (!jdbcContext.isTransactional()) {
+                jdbcContext.destroy();
+            }
+        }
     }
 
     /**
@@ -279,6 +310,16 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
      * @return 結果セットハンドラ
      */
     protected abstract ResultSetHandler createSingleResultResultSetHandler();
+
+    /**
+     * 反復する結果セットハンドラを作成します。
+     * 
+     * @param callback
+     *            反復コールバック
+     * @return 結果セットハンドラ
+     */
+    protected abstract ResultSetHandler createIterateResultSetHandler(
+            final IterationCallback<T, ?> callback);
 
     /**
      * 結果セットを作成します。

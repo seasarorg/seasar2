@@ -30,58 +30,72 @@ import org.seasar.extension.jdbc.ValueType;
  * 
  */
 public abstract class AbstractBeanAutoResultSetHandler implements
-		ResultSetHandler {
+        ResultSetHandler {
 
-	/**
-	 * 値タイプの配列です。
-	 */
-	protected ValueType[] valueTypes;
+    /**
+     * 値タイプの配列です。
+     */
+    protected ValueType[] valueTypes;
 
-	/**
-	 * エンティティマッパーです。
-	 */
-	protected EntityMapper entityMapper;
+    /**
+     * エンティティマッパーです。
+     */
+    protected EntityMapper entityMapper;
 
-	/**
-	 * SQLです。
-	 */
-	protected String sql;
+    /**
+     * SQLです。
+     */
+    protected String sql;
 
-	/**
-	 * {@link AbstractBeanAutoResultSetHandler}を作成します。
-	 * 
-	 * @param valueTypes
-	 *            値タイプの配列
-	 * @param entityMapper
-	 *            エンティティマッパー
-	 * @param sql
-	 *            SQL
-	 */
-	public AbstractBeanAutoResultSetHandler(ValueType[] valueTypes,
-			EntityMapper entityMapper, String sql) {
-		this.valueTypes = valueTypes;
-		this.entityMapper = entityMapper;
-		this.sql = sql;
-	}
+    /**
+     * {@link AbstractBeanAutoResultSetHandler}を作成します。
+     * 
+     * @param valueTypes
+     *            値タイプの配列
+     * @param entityMapper
+     *            エンティティマッパー
+     * @param sql
+     *            SQL
+     */
+    public AbstractBeanAutoResultSetHandler(ValueType[] valueTypes,
+            EntityMapper entityMapper, String sql) {
+        this.valueTypes = valueTypes;
+        this.entityMapper = entityMapper;
+        this.sql = sql;
+    }
 
-	/**
-	 * エンティティを作成します。
-	 * 
-	 * @param rs
-	 *            結果セット
-	 * @param mappingContext
-	 *            マッピングコンテキスト
-	 * @return エンティティ
-	 * @throws SQLException
-	 *             SQL例外が発生した場合
-	 */
-	protected Object createEntity(ResultSet rs, MappingContext mappingContext)
-			throws SQLException {
+    /**
+     * エンティティを作成します。
+     * 
+     * @param rs
+     *            結果セット
+     * @param mappingContext
+     *            マッピングコンテキスト
+     * @return エンティティ
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    protected Object createEntity(ResultSet rs, MappingContext mappingContext)
+            throws SQLException {
+        Object[] values = getValues(rs);
+        return entityMapper.map(values, mappingContext);
+    }
 
-		Object[] values = new Object[valueTypes.length];
-		for (int i = 0; i < valueTypes.length; ++i) {
-			values[i] = valueTypes[i].getValue(rs, i + 1);
-		}
-		return entityMapper.map(values, mappingContext);
-	}
+    /**
+     * 結果セットの現在の行から値の配列を作成します。
+     * 
+     * @param rs
+     *            結果セット
+     * @return 値の配列
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    protected Object[] getValues(ResultSet rs) throws SQLException {
+        Object[] values = new Object[valueTypes.length];
+        for (int i = 0; i < valueTypes.length; ++i) {
+            values[i] = valueTypes[i].getValue(rs, i + 1);
+        }
+        return values;
+    }
+
 }

@@ -29,6 +29,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMapper;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.FromClause;
+import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinMeta;
 import org.seasar.extension.jdbc.JoinType;
@@ -48,8 +49,8 @@ import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotExistsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
+import org.seasar.extension.jdbc.handler.BeanIterationAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.mapper.AbstractEntityMapper;
 import org.seasar.extension.jdbc.mapper.AbstractRelationshipEntityMapper;
@@ -928,19 +929,21 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
 
     @Override
     protected ResultSetHandler createResultListResultSetHandler() {
-        DbmsDialect dialect = jdbcManager.getDialect();
-        if (limit > 0 && !dialect.supportsLimit()) {
-            return new BeanListSupportLimitAutoResultSetHandler(
-                    getValueTypes(), getEntityMapper(), executedSql, limit);
-        }
         return new BeanListAutoResultSetHandler(getValueTypes(),
-                getEntityMapper(), executedSql);
+                getEntityMapper(), executedSql, limit);
     }
 
     @Override
     protected ResultSetHandler createSingleResultResultSetHandler() {
         return new BeanAutoResultSetHandler(getValueTypes(), getEntityMapper(),
                 executedSql);
+    }
+
+    @Override
+    protected ResultSetHandler createIterateResultSetHandler(
+            final IterationCallback<T, ?> callback) {
+        return new BeanIterationAutoResultSetHandler(getValueTypes(),
+                getEntityMapper(), executedSql, limit, callback);
     }
 
     /**

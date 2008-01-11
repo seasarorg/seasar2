@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.query;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
@@ -25,6 +26,8 @@ import javax.persistence.NoResultException;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.DbmsDialect;
+import org.seasar.extension.jdbc.IterationCallback;
+import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
@@ -35,6 +38,7 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.handler.BeanIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcContextImpl;
@@ -528,6 +532,94 @@ public class AbsSelectTest extends TestCase {
     /**
      * 
      */
+    @SuppressWarnings("unchecked")
+    public void testIterateInternal() {
+        final List<AaaDto> list = new ArrayList<AaaDto>();
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
+
+            @Override
+            protected ResultSetHandler createIterateResultSetHandler(
+                    IterationCallback callback) {
+                DbmsDialect dialect = jdbcManager.getDialect();
+                return new BeanIterationResultSetHandler(baseClass, dialect,
+                        "select * from aaa", 0, callback);
+            }
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("FOO2");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("AAA_BBB");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                ArrayMap data = new ArrayMap();
+                data.put("FOO2", "111");
+                data.put("AAA_BBB", "222");
+                rs.addRowData(data);
+                return rs;
+            }
+
+        };
+        query.iterateInternal(new IterationCallback<AaaDto, Integer>() {
+
+            public Integer iterate(AaaDto entity, IterationContext context) {
+                list.add(entity);
+                return context.getRow();
+            }
+        });
+        assertEquals(1, list.size());
+        AaaDto dto = list.get(0);
+        assertEquals("111", dto.foo);
+        assertEquals("222", dto.aaaBbb);
+        assertTrue(jdbcContext.idDestroyed());
+    }
+
+    /**
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public void testIterateListInternal_noResult() {
+        final List<AaaDto> list = new ArrayList<AaaDto>();
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class) {
+
+            @Override
+            protected ResultSetHandler createIterateResultSetHandler(
+                    IterationCallback callback) {
+                DbmsDialect dialect = jdbcManager.getDialect();
+                return new BeanIterationResultSetHandler(baseClass, dialect,
+                        "select * from aaa", 0, callback);
+            }
+
+            @Override
+            protected ResultSet createResultSet(JdbcContext jdbcContext) {
+                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                MockColumnMetaData columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("FOO2");
+                rsMeta.addColumnMetaData(columnMeta);
+                columnMeta = new MockColumnMetaData();
+                columnMeta.setColumnLabel("AAA_BBB");
+                rsMeta.addColumnMetaData(columnMeta);
+                MockResultSet rs = new MockResultSet(rsMeta);
+                return rs;
+            }
+
+        };
+        query.iterateInternal(new IterationCallback<AaaDto, Integer>() {
+
+            public Integer iterate(AaaDto entity, IterationContext context) {
+                list.add(entity);
+                return context.getRow();
+            }
+        });
+        assertTrue(list.isEmpty());
+    }
+
+    /**
+     * 
+     */
     public void testConvertLimitSql() {
         manager.setDialect(new PostgreDialect());
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
@@ -586,6 +678,12 @@ public class AbsSelectTest extends TestCase {
 
         @Override
         protected ResultSetHandler createSingleResultResultSetHandler() {
+            return null;
+        }
+
+        @Override
+        protected ResultSetHandler createIterateResultSetHandler(
+                IterationCallback<T, ?> callback) {
             return null;
         }
 

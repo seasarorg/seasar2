@@ -74,4 +74,47 @@ public class BeanListAutoResultSetHandlerTest extends TestCase {
         assertEquals(new Integer(1), aaa.id);
         assertEquals("SCOTT", aaa.name);
     }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public void testHandleWithLimit() throws Exception {
+        ValueType[] valueTypes = new ValueType[] { ValueTypes.INTEGER,
+                ValueTypes.STRING };
+        Field field1 = Aaa.class.getDeclaredField("id");
+        PropertyMapperImpl propertyMapper = new PropertyMapperImpl(field1, 0);
+        Field field2 = Aaa.class.getDeclaredField("name");
+        PropertyMapperImpl propertyMapper2 = new PropertyMapperImpl(field2, 1);
+        EntityMapperImpl entityMapper = new EntityMapperImpl(Aaa.class,
+                new PropertyMapper[] { propertyMapper, propertyMapper2 },
+                new int[] { 0 });
+
+        BeanListAutoResultSetHandler handler = new BeanListAutoResultSetHandler(
+                valueTypes, entityMapper, "select * from aaa", 1);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("ID");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("NAME");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("ID", new Integer(1));
+        data.put("NAME", "SCOTT");
+        rs.addRowData(data);
+        rs.addRowData(data);
+        data = new ArrayMap();
+        data.put("ID", new Integer(2));
+        data.put("NAME", "SCOTT2");
+        rs.addRowData(data);
+        List list = (List) handler.handle(rs);
+        assertEquals(1, list.size());
+        Aaa aaa = (Aaa) list.get(0);
+        assertEquals(new Integer(1), aaa.id);
+        assertEquals("SCOTT", aaa.name);
+    }
+
 }

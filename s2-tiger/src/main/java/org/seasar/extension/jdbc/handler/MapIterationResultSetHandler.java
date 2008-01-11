@@ -17,33 +17,27 @@ package org.seasar.extension.jdbc.handler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.DbmsDialect;
-import org.seasar.extension.jdbc.PropertyType;
+import org.seasar.extension.jdbc.IterationCallback;
+import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
- * <p>
- * マップのリストを返す {@link ResultSetHandler}の実装クラスです。
- * </p>
- * <p>
- * フェッチする件数を制限することができます。
- * </p>
+ * 問い合わせ結果を<code>Map</code>にして反復する{@link ResultSetHandler}です。
  * 
- * @author higa
- * 
+ * @author koichik
  */
-public class MapListSupportLimitResultSetHandler extends
-        AbstractMapResultSetHandler {
+@SuppressWarnings("unchecked")
+public class MapIterationResultSetHandler extends AbstractMapResultSetHandler {
 
-    /**
-     * リミットです。
-     */
+    /** リミット */
     protected int limit;
+
+    /** 反復コールバック */
+    protected IterationCallback callback;
 
     /**
      * {@link MapListSupportLimitResultSetHandler}を作成します。
@@ -58,46 +52,30 @@ public class MapListSupportLimitResultSetHandler extends
      *            SQL
      * @param limit
      *            リミット
+     * @param callback
+     *            反復コールバック
      */
-    @SuppressWarnings("unchecked")
-    public MapListSupportLimitResultSetHandler(Class<? extends Map> mapClass,
+    public MapIterationResultSetHandler(Class<? extends Map> mapClass,
             DbmsDialect dialect, PersistenceConvention peristenceConvention,
-            String sql, int limit) {
+            String sql, int limit, final IterationCallback callback) {
         super(mapClass, dialect, peristenceConvention, sql);
         this.limit = limit;
-    }
-
-    /**
-     * リミットを返します。
-     * 
-     * @return リミット
-     */
-    public int getLimit() {
-        return limit;
-    }
-
-    /**
-     * リミットを設定します。
-     * 
-     * @param limit
-     *            リミット
-     * @throws IllegalArgumentException
-     *             リミットがゼロ以下の場合。
-     */
-    public void setLimit(int limit) throws IllegalArgumentException {
-        if (limit <= 0) {
-            throw new IllegalArgumentException("limit must be greater than 0.");
-        }
-        this.limit = limit;
+        this.callback = callback;
     }
 
     public Object handle(ResultSet rs) throws SQLException {
-        PropertyType[] propertyTypes = createPropertyTypes(rs.getMetaData());
-        List<Object> list = new ArrayList<Object>(100);
-        for (int i = 0; i < limit && rs.next(); i++) {
-            Object row = createRow(rs, propertyTypes);
-            list.add(row);
+        final IterationContext iterationContext = new IterationContext();
+        Object result = null;
+        for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
+            final Object entity = createRow(rs, createPropertyTypes(rs
+                    .getMetaData()));
+            iterationContext.setRow(rs.getRow());
+            result = callback.iterate(entity, iterationContext);
+            if (iterationContext.isExit()) {
+                return result;
+            }
         }
-        return list;
+        return result;
     }
+
 }

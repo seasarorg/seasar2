@@ -61,4 +61,33 @@ public class MapListResultSetHandlerTest extends TestCase {
         assertEquals("222", map.get("aaaBbb"));
     }
 
+    /**
+     * @throws Exception
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public void testHandleWithLimit() throws Exception {
+        MapListResultSetHandler handler = new MapListResultSetHandler(
+                Map.class, new StandardDialect(),
+                new PersistenceConventionImpl(), "select * from aaa", 1);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("FOO");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("AAA_BBB");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("FOO", "111");
+        data.put("AAA_BBB", "222");
+        rs.addRowData(data);
+        rs.addRowData(data);
+        List list = (List) handler.handle(rs);
+        assertEquals(1, list.size());
+        Map map = (Map) list.get(0);
+        assertEquals("111", map.get("foo"));
+        assertEquals("222", map.get("aaaBbb"));
+    }
+
 }

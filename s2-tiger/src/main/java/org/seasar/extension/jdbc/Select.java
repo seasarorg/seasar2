@@ -137,4 +137,80 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      *             {@link #disallowNoResult()}が呼び出された場合で、検索結果がなかった場合
      */
     T getSingleResult() throws SNonUniqueResultException;
+
+    /**
+     * 問い合わせ結果を一件ごとにコールバックに通知します。
+     * <p>
+     * 問い合わせ結果に含まれる、 基点となるエンティティ({@link JdbcManager#from(Class)}で指定したクラス)またはDTO({@link JdbcManager#selectBySql(Class, String, Object...)}等で指定したクラス)ごとに、
+     * {@link IterationCallback#iterate(Object, IterationContext)}メソッドに通知されます。
+     * 問い合わせ結果全体のリストを作成しないため、 問い合わせ結果が膨大になる場合でもメモリ消費量を抑えることが出来ます。
+     * </p>
+     * <h4>SQL自動生成による問い合わせの場合</h4>
+     * <p>
+     * 問い合わせ結果は基点となるエンティティでソートされている必要があります．
+     * 基点となるエンティティがAで、1対多の関連を持つエンティティBを結合した問い合わせの場合、 結果セットは以下のような並びでなくてはなりません。
+     * </p>
+     * <table border="1">
+     * <tr>
+     * <th>A</th>
+     * <th>B</th>
+     * </tr>
+     * <tr>
+     * <td>A1</td>
+     * <td>B1</td>
+     * </tr>
+     * <tr>
+     * <td>A1</td>
+     * <td>B2</td>
+     * </tr>
+     * <tr>
+     * <td>A2</td>
+     * <td>B1</td>
+     * </tr>
+     * <tr>
+     * <td>A2</td>
+     * <td>B2</td>
+     * </tr>
+     * </table>
+     * <p>
+     * 上記の問い合わせ結果の場合、
+     * {@link IterationCallback#iterate(Object, IterationContext)}メソッドは2回呼び出されます。
+     * ただし，A1に関連づけられたB1およびB2と、A1に関連づけられたB1およびB2は同一のインスタンスではなく、 別のインスタンスになります。
+     * </p>
+     * </p>
+     * <table border="1">
+     * <tr>
+     * <th>A</th>
+     * <th>B</th>
+     * </tr>
+     * <tr>
+     * <td>A1</td>
+     * <td>B1</td>
+     * </tr>
+     * <tr>
+     * <td>A2</td>
+     * <td>B1</td>
+     * </tr>
+     * <tr>
+     * <td>A1</td>
+     * <td>B2</td>
+     * </tr>
+     * <tr>
+     * <td>A2</td>
+     * <td>B2</td>
+     * </tr>
+     * </table>
+     * <p>
+     * 上記の問い合わせ結果の場合、
+     * {@link IterationCallback#iterate(Object, IterationContext)}メソッドは4回呼び出されてしまいます。
+     * </p>
+     * 
+     * @param <RESULT>
+     *            戻り値の型
+     * @param callback
+     *            コールバック
+     * @return コールバックが最後に返した結果
+     */
+    <RESULT> RESULT iterate(IterationCallback<T, RESULT> callback);
+
 }

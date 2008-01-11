@@ -30,6 +30,8 @@ import javax.persistence.Transient;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.IterationCallback;
+import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.JoinMeta;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.PropertyMapper;
@@ -57,8 +59,8 @@ import org.seasar.extension.jdbc.exception.NonEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotExistsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
+import org.seasar.extension.jdbc.handler.BeanIterationAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanListSupportLimitAutoResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.mapper.AbstractEntityMapper;
 import org.seasar.extension.jdbc.mapper.AbstractRelationshipEntityMapper;
@@ -845,8 +847,7 @@ public class AutoSelectImplTest extends TestCase {
         query.limit(10);
         query.prepare("getResultList");
         ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(BeanListSupportLimitAutoResultSetHandler.class, handler
-                .getClass());
+        assertEquals(BeanListAutoResultSetHandler.class, handler.getClass());
     }
 
     /**
@@ -872,6 +873,24 @@ public class AutoSelectImplTest extends TestCase {
         query.prepare("getResultList");
         ResultSetHandler handler = query.createSingleResultResultSetHandler();
         assertEquals(BeanAutoResultSetHandler.class, handler.getClass());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCreateIterateResultSetHandler() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.prepare("getResultList");
+        ResultSetHandler handler = query
+                .createIterateResultSetHandler(new IterationCallback<Aaa, Object>() {
+
+                    public Object iterate(Aaa entity, IterationContext context) {
+                        return null;
+                    }
+                });
+        assertEquals(BeanIterationAutoResultSetHandler.class, handler
+                .getClass());
     }
 
     /**

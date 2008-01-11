@@ -19,6 +19,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.jdbc.IterationCallback;
+import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -26,13 +28,13 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.handler.BeanIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListResultSetHandler;
-import org.seasar.extension.jdbc.handler.BeanListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
+import org.seasar.extension.jdbc.handler.MapIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.MapListResultSetHandler;
-import org.seasar.extension.jdbc.handler.MapListSupportLimitResultSetHandler;
+import org.seasar.extension.jdbc.handler.ObjectIterationResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectListResultSetHandler;
-import org.seasar.extension.jdbc.handler.ObjectListSupportLimitResultSetHandler;
 import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -119,8 +121,7 @@ public class AbsSqlSelectTest extends TestCase {
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.limit = 10;
         ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(BeanListSupportLimitResultSetHandler.class, handler
-                .getClass());
+        assertEquals(BeanListResultSetHandler.class, handler.getClass());
     }
 
     /**
@@ -145,8 +146,7 @@ public class AbsSqlSelectTest extends TestCase {
         MySelect<Integer> query = new MySelect<Integer>(manager, Integer.class);
         query.limit = 10;
         ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(ObjectListSupportLimitResultSetHandler.class, handler
-                .getClass());
+        assertEquals(ObjectListResultSetHandler.class, handler.getClass());
     }
 
     /**
@@ -173,8 +173,7 @@ public class AbsSqlSelectTest extends TestCase {
         MySelect<Map> query = new MySelect<Map>(manager, Map.class);
         query.limit = 10;
         ResultSetHandler handler = query.createResultListResultSetHandler();
-        assertEquals(MapListSupportLimitResultSetHandler.class, handler
-                .getClass());
+        assertEquals(MapListResultSetHandler.class, handler.getClass());
     }
 
     /**
@@ -196,6 +195,56 @@ public class AbsSqlSelectTest extends TestCase {
         MySelect<Integer> query = new MySelect<Integer>(manager, Integer.class);
         ResultSetHandler handler = query.createSingleResultResultSetHandler();
         assertEquals(ObjectResultSetHandler.class, handler.getClass());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCreateIterateResultSetHandler() throws Exception {
+        MySelect<AaaDto> query = new MySelect<AaaDto>(manager, AaaDto.class);
+        IterationCallback<AaaDto, Object> callback = new IterationCallback<AaaDto, Object>() {
+
+            public Object iterate(AaaDto dto, IterationContext context) {
+                return null;
+            }
+        };
+        ResultSetHandler handler = query
+                .createIterateResultSetHandler(callback);
+        assertEquals(BeanIterationResultSetHandler.class, handler.getClass());
+    }
+
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public void testCreateIterateResultSetHandler_map() throws Exception {
+        MySelect<Map> query = new MySelect<Map>(manager, Map.class);
+        IterationCallback<Map, Object> callback = new IterationCallback<Map, Object>() {
+
+            public Object iterate(Map map, IterationContext context) {
+                return null;
+            }
+        };
+        ResultSetHandler handler = query
+                .createIterateResultSetHandler(callback);
+        assertEquals(MapIterationResultSetHandler.class, handler.getClass());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testCreateIterateResultSetHandler_simpleType() throws Exception {
+        MySelect<Integer> query = new MySelect<Integer>(manager, Integer.class);
+        IterationCallback<Integer, Object> callback = new IterationCallback<Integer, Object>() {
+
+            public Object iterate(Integer integer, IterationContext context) {
+                return null;
+            }
+        };
+        ResultSetHandler handler = query
+                .createIterateResultSetHandler(callback);
+        assertEquals(ObjectIterationResultSetHandler.class, handler.getClass());
     }
 
     private static class MySelect<T> extends AbstractSqlSelect<T, MySelect<T>> {

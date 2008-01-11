@@ -23,14 +23,23 @@ package org.seasar.extension.jdbc;
  */
 public interface EntityMapper {
 
-	/**
-	 * 結果セットの1行をエンティティにマッピングします。
-	 * 
-	 * @param values
-	 *            結果セットの1行分のデータ
-	 * @param mappingContext
-	 *            マッピングコンテキスト
-	 * @return エンティティ
-	 */
-	Object map(Object[] values, MappingContext mappingContext);
+    /**
+     * 結果セットの1行をエンティティにマッピングします。
+     * 
+     * @param values
+     *            結果セットの1行分のデータ
+     * @param mappingContext
+     *            マッピングコンテキスト
+     * @return エンティティ
+     */
+    Object map(Object[] values, MappingContext mappingContext);
+
+    /**
+     * キーを返します。
+     * 
+     * @param values
+     *            結果セットの1行分のデータ
+     * @return キー
+     */
+    Object getKey(Object[] values);
 }
