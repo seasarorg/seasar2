@@ -13,14 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.it.auto;
+package org.seasar.extension.jdbc.it.auto.select.join;
 
 import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
-import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
+import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class MappedSuperclassOneToManyTest {
+public class OneToManyTest {
 
     private JdbcManager jdbcManager;
 
@@ -39,14 +39,17 @@ public class MappedSuperclassOneToManyTest {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch() throws Exception {
-        List<ConcreateDepartment> list =
-            jdbcManager.from(ConcreateDepartment.class).leftOuterJoin(
-                "employees").getResultList();
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(1).employees);
         assertNotNull(list.get(2).employees);
         assertNotNull(list.get(3).employees);
+        assertTrue(list.get(3).employees.isEmpty());
     }
 
     /**
@@ -54,10 +57,11 @@ public class MappedSuperclassOneToManyTest {
      * @throws Exception
      */
     public void testLeftOuterJoin() throws Exception {
-        List<ConcreateDepartment> list =
-            jdbcManager.from(ConcreateDepartment.class).leftOuterJoin(
-                "employees",
-                false).getResultList();
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees", false)
+                .getResultList();
         assertEquals(4, list.size());
         assertNull(list.get(0).employees);
         assertNull(list.get(1).employees);
@@ -70,10 +74,11 @@ public class MappedSuperclassOneToManyTest {
      * @throws Exception
      */
     public void testInnerJoin_fetch() throws Exception {
-        List<ConcreateDepartment> list =
-            jdbcManager.from(ConcreateDepartment.class).join(
-                "employees",
-                JoinType.INNER).getResultList();
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .join("employees", JoinType.INNER)
+                .getResultList();
         assertEquals(3, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(1).employees);
@@ -85,8 +90,8 @@ public class MappedSuperclassOneToManyTest {
      * @throws Exception
      */
     public void testInnerJoin() throws Exception {
-        List<ConcreateDepartment> list =
-            jdbcManager.from(ConcreateDepartment.class).join(
+        List<Department> list =
+            jdbcManager.from(Department.class).join(
                 "employees",
                 JoinType.INNER,
                 false).getResultList();

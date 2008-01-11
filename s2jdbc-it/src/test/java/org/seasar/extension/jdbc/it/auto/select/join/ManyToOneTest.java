@@ -13,14 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.it.auto;
+package org.seasar.extension.jdbc.it.auto.select.join;
 
 import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
-import org.seasar.extension.jdbc.it.entity.ConcreateEmployee;
+import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class MappedSuperclassManyToOneTest {
+public class ManyToOneTest {
 
     private JdbcManager jdbcManager;
 
@@ -39,11 +39,10 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).leftOuterJoin(
-                "department").getResultList();
+        List<Employee> list =
+            jdbcManager.from(Employee.class).leftOuterJoin("department").getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (Employee e : list) {
             assertNotNull(e);
             assertNotNull(e.department);
         }
@@ -54,12 +53,13 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testLeftOuterJoin() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).leftOuterJoin(
-                "department",
-                false).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .leftOuterJoin("department", false)
+                .getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (Employee e : list) {
             assertNotNull(e);
             assertNull(e.department);
         }
@@ -70,12 +70,13 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin_fetch() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).join(
-                "department",
-                JoinType.INNER).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("department", JoinType.INNER)
+                .getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (Employee e : list) {
             assertNotNull(e);
             assertNotNull(e.department);
         }
@@ -86,13 +87,13 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).join(
+        List<Employee> list =
+            jdbcManager.from(Employee.class).join(
                 "department",
                 JoinType.INNER,
                 false).getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (Employee e : list) {
             assertNotNull(e);
             assertNull(e.department);
         }
@@ -103,12 +104,13 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin_fetch_self() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).join(
-                "manager",
-                JoinType.INNER).getResultList();
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("manager", JoinType.INNER)
+                .getResultList();
         assertEquals(13, list.size());
-        for (ConcreateEmployee e : list) {
+        for (Employee e : list) {
             assertNotNull(e);
             assertNotNull(e.manager);
         }

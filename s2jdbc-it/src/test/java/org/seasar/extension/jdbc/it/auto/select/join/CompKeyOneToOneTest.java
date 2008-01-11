@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.it.auto;
+package org.seasar.extension.jdbc.it.auto.select.join;
 
 import java.util.List;
 
