@@ -72,7 +72,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testCompKey() throws Exception {
+    public void testExecute_compKey() throws Exception {
         CompKeyEmployee employee = new CompKeyEmployee();
         employee.employeeId1 = 1;
         employee.employeeId2 = 1;
@@ -92,7 +92,7 @@ public class AutoDeleteTest {
      * 
      * @throws Exception
      */
-    public void testMappedSuperclass() throws Exception {
+    public void testExecute_mappedSuperclass() throws Exception {
         ConcreateEmployee employee = new ConcreateEmployee();
         employee.employeeId = 1;
         employee.version = 1;

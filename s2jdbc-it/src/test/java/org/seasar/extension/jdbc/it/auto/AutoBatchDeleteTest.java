@@ -102,7 +102,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testCompKey() throws Exception {
+    public void testExecute_compKey() throws Exception {
         List<CompKeyEmployee> list = new ArrayList<CompKeyEmployee>();
         CompKeyEmployee employee = new CompKeyEmployee();
         employee.employeeId1 = 1;
@@ -139,7 +139,7 @@ public class AutoBatchDeleteTest {
      * 
      * @throws Exception
      */
-    public void testMappedSuperclass() throws Exception {
+    public void testExecute_mappedSuperclass() throws Exception {
         List<ConcreateEmployee> list = new ArrayList<ConcreateEmployee>();
         ConcreateEmployee employee = new ConcreateEmployee();
         employee.employeeId = 1;

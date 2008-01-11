@@ -31,7 +31,7 @@ import static junit.framework.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class OneToOneTest {
+public class SingleKeyOneToOneTest {
 
     private JdbcManager jdbcManager;
 

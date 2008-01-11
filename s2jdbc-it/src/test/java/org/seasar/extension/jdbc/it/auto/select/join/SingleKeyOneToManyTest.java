@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
-import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class ManyToOneTest {
+public class SingleKeyOneToManyTest {
 
     private JdbcManager jdbcManager;
 
@@ -39,13 +39,17 @@ public class ManyToOneTest {
      * @throws Exception
      */
     public void testLeftOuterJoin_fetch() throws Exception {
-        List<Employee> list =
-            jdbcManager.from(Employee.class).leftOuterJoin("department").getResultList();
-        assertEquals(14, list.size());
-        for (Employee e : list) {
-            assertNotNull(e);
-            assertNotNull(e.department);
-        }
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .getResultList();
+        assertEquals(4, list.size());
+        assertNotNull(list.get(0).employees);
+        assertNotNull(list.get(1).employees);
+        assertNotNull(list.get(2).employees);
+        assertNotNull(list.get(3).employees);
+        assertTrue(list.get(3).employees.isEmpty());
     }
 
     /**
@@ -53,16 +57,16 @@ public class ManyToOneTest {
      * @throws Exception
      */
     public void testLeftOuterJoin() throws Exception {
-        List<Employee> list =
+        List<Department> list =
             jdbcManager
-                .from(Employee.class)
-                .leftOuterJoin("department", false)
+                .from(Department.class)
+                .leftOuterJoin("employees", false)
                 .getResultList();
-        assertEquals(14, list.size());
-        for (Employee e : list) {
-            assertNotNull(e);
-            assertNull(e.department);
-        }
+        assertEquals(4, list.size());
+        assertNull(list.get(0).employees);
+        assertNull(list.get(1).employees);
+        assertNull(list.get(2).employees);
+        assertNull(list.get(3).employees);
     }
 
     /**
@@ -70,16 +74,15 @@ public class ManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin_fetch() throws Exception {
-        List<Employee> list =
+        List<Department> list =
             jdbcManager
-                .from(Employee.class)
-                .join("department", JoinType.INNER)
+                .from(Department.class)
+                .join("employees", JoinType.INNER)
                 .getResultList();
-        assertEquals(14, list.size());
-        for (Employee e : list) {
-            assertNotNull(e);
-            assertNotNull(e.department);
-        }
+        assertEquals(3, list.size());
+        assertNotNull(list.get(0).employees);
+        assertNotNull(list.get(1).employees);
+        assertNotNull(list.get(2).employees);
     }
 
     /**
@@ -87,33 +90,14 @@ public class ManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin() throws Exception {
-        List<Employee> list =
-            jdbcManager.from(Employee.class).join(
-                "department",
+        List<Department> list =
+            jdbcManager.from(Department.class).join(
+                "employees",
                 JoinType.INNER,
                 false).getResultList();
-        assertEquals(14, list.size());
-        for (Employee e : list) {
-            assertNotNull(e);
-            assertNull(e.department);
-        }
+        assertEquals(3, list.size());
+        assertNull(list.get(0).employees);
+        assertNull(list.get(1).employees);
+        assertNull(list.get(2).employees);
     }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testInnerJoin_fetch_self() throws Exception {
-        List<Employee> list =
-            jdbcManager
-                .from(Employee.class)
-                .join("manager", JoinType.INNER)
-                .getResultList();
-        assertEquals(13, list.size());
-        for (Employee e : list) {
-            assertNotNull(e);
-            assertNotNull(e.manager);
-        }
-    }
-
 }

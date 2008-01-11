@@ -166,7 +166,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testCompKey() throws Exception {
+    public void testExecute_compKey() throws Exception {
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 99;
         department.departmentId2 = 99;
@@ -191,7 +191,7 @@ public class AutoInsertTest {
      * 
      * @throws Exception
      */
-    public void testMappedSuperclass() throws Exception {
+    public void testExecute_mappedSuperclass() throws Exception {
         ConcreateDepartment department = new ConcreateDepartment();
         department.departmentId = 99;
         department.departmentName = "hoge";

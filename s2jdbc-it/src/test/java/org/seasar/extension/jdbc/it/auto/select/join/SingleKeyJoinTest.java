@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -36,9 +36,40 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class JoinTest {
+public class SingleKeyJoinTest {
 
     private JdbcManager jdbcManager;
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_nest() throws Exception {
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .leftOuterJoin("employees.address")
+                .getResultList();
+        assertEquals(4, list.size());
+        assertNotNull(list.get(0).employees);
+        assertNotNull(list.get(0).employees.get(0).address);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_nest_simpleWhere() throws Exception {
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin("employees")
+                .leftOuterJoin("employees.address")
+                .where(new SimpleWhere().eq("employees.addressId", 3))
+                .getResultList();
+        assertEquals(1, list.size());
+    }
 
     /**
      * 
@@ -66,6 +97,24 @@ public class JoinTest {
                 .join("manager", JoinType.INNER)
                 .leftOuterJoin("department")
                 .leftOuterJoin("address")
+                .getResultList();
+        assertEquals(13, list.size());
+        assertNotNull(list.get(0).department);
+        assertNotNull(list.get(0).manager);
+        assertNotNull(list.get(0).address);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_star_simpleWhere() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .join("manager", JoinType.INNER)
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
                 .where(
                     new SimpleWhere().eq(
                         "department.departmentName",
@@ -74,21 +123,6 @@ public class JoinTest {
                         2000))
                 .getResultList();
         assertEquals(3, list.size());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testJoin_nest() throws Exception {
-        List<Department> list =
-            jdbcManager
-                .from(Department.class)
-                .leftOuterJoin("employees")
-                .leftOuterJoin("employees.address")
-                .where(new SimpleWhere().eq("employees.addressId", 3))
-                .getResultList();
-        assertEquals(1, list.size());
     }
 
     /**

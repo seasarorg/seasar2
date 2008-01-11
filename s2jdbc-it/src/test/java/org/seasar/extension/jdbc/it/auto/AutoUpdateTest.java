@@ -204,7 +204,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testCompKey() throws Exception {
+    public void testExecute_compKey() throws Exception {
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 1;
         department.departmentId2 = 1;
@@ -236,7 +236,7 @@ public class AutoUpdateTest {
      * 
      * @throws Exception
      */
-    public void testMappedSuperclass() throws Exception {
+    public void testExecute_mappedSuperclass() throws Exception {
         ConcreateDepartment department = new ConcreateDepartment();
         department.departmentId = 1;
         department.departmentName = "hoge";

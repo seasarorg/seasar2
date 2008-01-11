@@ -235,7 +235,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testCompKey() throws Exception {
+    public void testExecute_compKey() throws Exception {
         List<CompKeyDepartment> list = new ArrayList<CompKeyDepartment>();
         CompKeyDepartment department = new CompKeyDepartment();
         department.departmentId1 = 1;
@@ -292,7 +292,7 @@ public class AutoBatchUpdateTest {
      * 
      * @throws Exception
      */
-    public void testMappedSuperclass() throws Exception {
+    public void testExecute_mappedSuperclass() throws Exception {
         List<ConcreateDepartment> list = new ArrayList<ConcreateDepartment>();
         ConcreateDepartment department = new ConcreateDepartment();
         department.departmentId = 1;
