@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
+import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
@@ -225,6 +226,28 @@ public class AutoUpdateTest {
                 .getSingleResult();
         assertEquals(1, department.departmentId1);
         assertEquals(1, department.departmentId2);
+        assertEquals(0, department.departmentNo);
+        assertEquals("hoge", department.departmentName);
+        assertNull(department.location);
+        assertEquals(2, department.version);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMappedSuperclass() throws Exception {
+        ConcreateDepartment department = new ConcreateDepartment();
+        department.departmentId = 1;
+        department.departmentName = "hoge";
+        department.version = 1;
+        int result = jdbcManager.update(department).execute();
+        assertEquals(1, result);
+        assertEquals(2, department.version);
+        department =
+            jdbcManager.from(ConcreateDepartment.class).where(
+                new SimpleWhere().eq("departmentId", 1)).getSingleResult();
+        assertEquals(1, department.departmentId);
         assertEquals(0, department.departmentNo);
         assertEquals("hoge", department.departmentName);
         assertNull(department.location);

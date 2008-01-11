@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeE
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
+import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
@@ -236,6 +237,47 @@ public class AutoBatchInsertTest {
                     99)).getSingleResult();
         assertEquals(99, department.departmentId1);
         assertEquals(99, department.departmentId2);
+        assertEquals(99, department.departmentNo);
+        assertEquals("foo", department.departmentName);
+        assertNull(department.location);
+        assertEquals(1, department.version);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMappedSuperclass() throws Exception {
+        List<ConcreateDepartment> list = new ArrayList<ConcreateDepartment>();
+        ConcreateDepartment department = new ConcreateDepartment();
+        department.departmentId = 98;
+        department.departmentNo = 98;
+        department.departmentName = "hoge";
+        list.add(department);
+        ConcreateDepartment department2 = new ConcreateDepartment();
+        department2.departmentId = 99;
+        department2.departmentNo = 99;
+        department2.departmentName = "foo";
+        list.add(department2);
+
+        int[] result = jdbcManager.insertBatch(list).execute();
+        assertEquals(2, result.length);
+        assertEquals(1, department.version);
+        assertEquals(1, department2.version);
+
+        department =
+            jdbcManager.from(ConcreateDepartment.class).where(
+                new SimpleWhere().eq("departmentId", 98)).getSingleResult();
+        assertEquals(98, department.departmentId);
+        assertEquals(98, department.departmentNo);
+        assertEquals("hoge", department.departmentName);
+        assertNull(department.location);
+        assertEquals(1, department.version);
+
+        department =
+            jdbcManager.from(ConcreateDepartment.class).where(
+                new SimpleWhere().eq("departmentId", 99)).getSingleResult();
+        assertEquals(99, department.departmentId);
         assertEquals(99, department.departmentNo);
         assertEquals("foo", department.departmentName);
         assertNull(department.location);

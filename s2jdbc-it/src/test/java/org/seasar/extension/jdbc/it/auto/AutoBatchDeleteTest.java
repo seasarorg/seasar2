@@ -24,6 +24,7 @@ import javax.persistence.OptimisticLockException;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
+import org.seasar.extension.jdbc.it.entity.ConcreateEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
@@ -131,6 +132,35 @@ public class AutoBatchDeleteTest {
                 .where(
                     new SimpleWhere().eq("employeeId1", 2).eq("employeeId2", 2))
                 .getSingleResult();
+        assertNull(employee);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMappedSuperclass() throws Exception {
+        List<ConcreateEmployee> list = new ArrayList<ConcreateEmployee>();
+        ConcreateEmployee employee = new ConcreateEmployee();
+        employee.employeeId = 1;
+        employee.version = 1;
+        list.add(employee);
+        ConcreateEmployee employee2 = new ConcreateEmployee();
+        employee2.employeeId = 2;
+        employee2.version = 1;
+        list.add(employee2);
+
+        int[] result = jdbcManager.deleteBatch(list).execute();
+        assertEquals(2, result.length);
+
+        employee =
+            jdbcManager.from(ConcreateEmployee.class).where(
+                new SimpleWhere().eq("employeeId", 1)).getSingleResult();
+        assertNull(employee);
+
+        employee =
+            jdbcManager.from(ConcreateEmployee.class).where(
+                new SimpleWhere().eq("employeeId", 2)).getSingleResult();
         assertNull(employee);
     }
 
