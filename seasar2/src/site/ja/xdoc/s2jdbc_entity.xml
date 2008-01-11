@@ -22,6 +22,11 @@
 								<a href="#テーブル定義">テーブル定義</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#継承">継承</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -170,6 +175,37 @@ public class Employee {
 				<p>
 					schema属性でスキーマを指定することができます。
 					指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
+				</p>
+			</subsection>
+
+			<subsection name="継承">
+				<p>
+					エンティティは
+					<code>@MappedSuperclass</code>
+					が指定されたクラスを継承できます。
+				</p>
+				<source><![CDATA[@MappedSuperclass
+public abstract class AbstractEmployee {
+    ...
+}]]></source>
+				<source><![CDATA[@Entity
+public class Employee extends AbstractEmployee {
+    ...
+}]]></source>
+				<p>
+					<code>@MappedSuperclass</code>
+					には、エンティティと同じように永続プロパティを定義できます。
+					定義された永続プロパティは、サブクラスの永続プロパティとみなされます。
+					スーパークラスとサブクラスでインスタンスフィールドの名前が重複しないように定義してください。
+				</p>
+				<p>
+					エンティティは
+					<code>@MappedSuperclass</code>
+					が指定されていないクラスも継承できます。
+					しかし、この場合、スーパークラスのプロパティはサブクラスの永続プロパティとみなされません。
+				</p>
+				<p>
+					エンティティが他のエンティティを継承することはサポートされていません。
 				</p>
 			</subsection>
 		</section>
