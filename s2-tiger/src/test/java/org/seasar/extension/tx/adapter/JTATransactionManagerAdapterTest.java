@@ -50,7 +50,7 @@ import static org.easymock.EasyMock.*;
  * @author koichik
  */
 public class JTATransactionManagerAdapterTest extends
-        AbstractTransactionManagerAdapterTest {
+        AbstTransactionManagerAdapterTest {
 
     JTATransactionManagerAdapter target;
 

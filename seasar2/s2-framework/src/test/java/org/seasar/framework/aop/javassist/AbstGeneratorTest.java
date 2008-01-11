@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 /**
  * @author koichik
  */
-public class AbstractGeneratorTest extends TestCase {
+public class AbstGeneratorTest extends TestCase {
 
     /**
      * @throws Exception

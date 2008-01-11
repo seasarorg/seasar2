@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.entity.Aaa;
  * @author higa
  * 
  */
-public class AbstractEntityMapperTest extends TestCase {
+public class AbstEntityMapperTest extends TestCase {
 
     private boolean called = false;
 

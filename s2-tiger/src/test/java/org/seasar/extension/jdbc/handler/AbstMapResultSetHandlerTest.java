@@ -37,7 +37,7 @@ import org.seasar.framework.util.ArrayMap;
  * @author higa
  * 
  */
-public class AbstractMapResultSetHandlerTest extends TestCase {
+public class AbstMapResultSetHandlerTest extends TestCase {
 
     /**
      * 

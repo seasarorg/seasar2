@@ -24,23 +24,23 @@ import org.seasar.framework.util.ClassUtil;
 /**
  * 
  */
-public class AbstractInterTypeTest extends S2FrameworkTestCase {
+public class AbstInterTypeTest extends S2FrameworkTestCase {
 
     /**
      * 
      */
-    public AbstractInterTypeTest() {
+    public AbstInterTypeTest() {
     }
 
     /**
      * @param name
      */
-    public AbstractInterTypeTest(String name) {
+    public AbstInterTypeTest(String name) {
         super(name);
     }
 
     protected void setUp() throws Exception {
-        include(ClassUtil.getShortClassName(AbstractInterTypeTest.class)
+        include(ClassUtil.getShortClassName(AbstInterTypeTest.class)
                 + ".dicon");
     }
 

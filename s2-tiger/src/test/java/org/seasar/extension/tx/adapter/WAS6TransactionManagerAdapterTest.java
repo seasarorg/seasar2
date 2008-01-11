@@ -51,7 +51,7 @@ import static org.easymock.EasyMock.*;
  * @author koichik
  */
 public class WAS6TransactionManagerAdapterTest extends
-        AbstractTransactionManagerAdapterTest {
+        AbstTransactionManagerAdapterTest {
 
     WAS6TransactionManagerAdapter target;
 

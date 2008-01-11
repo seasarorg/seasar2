@@ -48,7 +48,7 @@ import static org.easymock.EasyMock.*;
  * @author koichik
  */
 public class JTAUserTransactionAdapterTest extends
-        AbstractTransactionManagerAdapterTest {
+        AbstTransactionManagerAdapterTest {
 
     JTAUserTransactionAdapter target;
 

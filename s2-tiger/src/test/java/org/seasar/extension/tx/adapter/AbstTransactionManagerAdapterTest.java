@@ -22,7 +22,7 @@ import org.seasar.framework.unit.EasyMockTestCase;
 /**
  * @author koichik
  */
-public abstract class AbstractTransactionManagerAdapterTest extends
+public abstract class AbstTransactionManagerAdapterTest extends
         EasyMockTestCase {
 
     /**

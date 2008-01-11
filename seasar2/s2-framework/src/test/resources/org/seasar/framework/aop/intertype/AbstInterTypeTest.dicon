@@ -2,10 +2,10 @@
 <!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
 	"http://www.seasar.org/dtd/components24.dtd">
 <components>
-	<component class="org.seasar.framework.aop.intertype.AbstractInterTypeTest$FooImpl"/>
+	<component class="org.seasar.framework.aop.intertype.AbstInterTypeTest$FooImpl"/>
 	<component class="java.util.ArrayList">
 		<interType>
-			<component class="org.seasar.framework.aop.intertype.AbstractInterTypeTest$TestInterType"/>
+			<component class="org.seasar.framework.aop.intertype.AbstInterTypeTest$TestInterType"/>
 		</interType>
 	</component>
 </components>

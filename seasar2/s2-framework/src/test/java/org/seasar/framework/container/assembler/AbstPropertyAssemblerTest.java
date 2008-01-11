@@ -41,7 +41,7 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  * @author koichik
  * 
  */
-public class AbstractPropertyAssemblerTest extends TestCase {
+public class AbstPropertyAssemblerTest extends TestCase {
 
     S2Container container;
 

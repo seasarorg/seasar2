@@ -45,7 +45,7 @@ import org.seasar.framework.util.CaseInsensitiveMap;
  * @author higa
  * 
  */
-public class AbstractBeanResultSetHandlerTest extends TestCase {
+public class AbstBeanResultSetHandlerTest extends TestCase {
 
     /**
      * 

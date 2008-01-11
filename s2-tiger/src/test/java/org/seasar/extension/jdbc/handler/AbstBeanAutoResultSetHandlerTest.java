@@ -38,7 +38,7 @@ import org.seasar.framework.util.ArrayMap;
  * @author higa
  * 
  */
-public class AbstractBeanAutoResultSetHandlerTest extends TestCase {
+public class AbstBeanAutoResultSetHandlerTest extends TestCase {
 
     /**
      * @throws Exception
