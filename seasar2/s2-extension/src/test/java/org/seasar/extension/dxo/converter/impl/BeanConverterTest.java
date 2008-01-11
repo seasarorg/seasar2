@@ -321,6 +321,9 @@ public class BeanConverterTest extends AbsConverterTest {
         }
     }
 
+    /**
+     * 
+     */
     public static class Foo {
         /**
          * 
@@ -328,6 +331,9 @@ public class BeanConverterTest extends AbsConverterTest {
         public Object[] array;
     }
 
+    /**
+     * 
+     */
     public static class Bar {
         /**
          * 
