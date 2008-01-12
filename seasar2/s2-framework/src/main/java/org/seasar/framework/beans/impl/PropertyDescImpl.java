@@ -224,13 +224,13 @@ public final class PropertyDescImpl implements PropertyDesc {
 
     public final Object getValue(Object target) {
         try {
-            if (hasReadMethod()) {
-                return MethodUtil.invoke(readMethod, target, EMPTY_ARGS);
-            } else if (field != null) {
-                return FieldUtil.get(field, target);
-            } else {
+            if (!readable) {
                 throw new IllegalStateException(propertyName
                         + " is not readable.");
+            } else if (hasReadMethod()) {
+                return MethodUtil.invoke(readMethod, target, EMPTY_ARGS);
+            } else {
+                return FieldUtil.get(field, target);
             }
         } catch (Throwable t) {
             throw new IllegalPropertyRuntimeException(beanDesc.getBeanClass(),
@@ -241,13 +241,13 @@ public final class PropertyDescImpl implements PropertyDesc {
     public final void setValue(Object target, Object value) {
         try {
             value = convertIfNeed(value);
-            if (hasWriteMethod()) {
-                MethodUtil.invoke(writeMethod, target, new Object[] { value });
-            } else if (field != null) {
-                FieldUtil.set(field, target, value);
-            } else {
+            if (!writable) {
                 throw new IllegalStateException(propertyName
                         + " is not writable.");
+            } else if (hasWriteMethod()) {
+                MethodUtil.invoke(writeMethod, target, new Object[] { value });
+            } else {
+                FieldUtil.set(field, target, value);
             }
         } catch (Throwable t) {
             throw new IllegalPropertyRuntimeException(beanDesc.getBeanClass(),

@@ -73,10 +73,40 @@ public class PropertyDescImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testSetValue_notWritableWithField() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("jjj");
+        try {
+            propDesc.setValue(myBean, null);
+            fail();
+        } catch (IllegalPropertyRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testGetValue_notReable() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("iii");
+        try {
+            propDesc.getValue(myBean);
+            fail();
+        } catch (IllegalPropertyRuntimeException e) {
+            System.out.println(e);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetValue_notReableWithField() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("kkk");
         try {
             propDesc.getValue(myBean);
             fail();
@@ -187,6 +217,10 @@ public class PropertyDescImplTest extends TestCase {
 
         private Timestamp hhh_;
 
+        private String jjj;
+
+        String kkk;
+
         private URL url_;
 
         private Calendar cal;
@@ -250,6 +284,20 @@ public class PropertyDescImplTest extends TestCase {
          */
         public void setFff(int fff) {
             fff_ = fff;
+        }
+
+        /**
+         * @return
+         */
+        public String getJjj() {
+            return jjj;
+        }
+
+        /**
+         * @param kkk
+         */
+        public void setKkk(String kkk) {
+            this.kkk = kkk;
         }
 
         /**
