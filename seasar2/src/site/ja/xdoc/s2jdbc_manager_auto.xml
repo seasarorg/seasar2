@@ -23,6 +23,11 @@
 						</li>
 						<li>
 							<p>
+								<a href="#イテレーションによる検索">イテレーションによる検索</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#結合">結合</a>
 							</p>
 						</li>
@@ -287,6 +292,151 @@ Employee result = jdbcManager.from(Employee.class)
                              .disallowNoResult()
                              .getSingleResult();
 ]]></source>
+			</subsection>
+
+			<subsection name="イテレーションによる検索">
+				<p>
+					検索結果が多くの行を返すため、
+					<code>List</code>
+					でまとめて受け取ることが困難な場合は
+					<code>iterate(IterationCallback)</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+int count = results = jdbcManager
+    .from(Employee.class)
+    .iterate(new IterationCallback<BeanMap, Integer>() {
+        int count;
+        public Integer iterate(BeanMap map, IterationContext context) {
+            if (...) {
+                ++count;
+            }
+            return count;
+        }
+    });
+]]></source>
+				<p>
+					<code>iterate(IterationCallback)</code>
+					の引数には、 次のインターフェースを実装したクラスのインスタンスを渡します。
+				</p>
+				<ul>
+					<li>
+						<p>
+							<code>
+								org.seasar.extension.jdbc.IterationCallback&lt;ENTITY,
+								RESULT&gt;
+							</code>
+						</p>
+					</li>
+				</ul>
+				<p>
+					<code>ENTITY</code>
+					は
+					<code>from()</code>
+					で指定したエンティティクラス、
+					<code>RESULT</code>
+					は
+					<code>iterate(IterationCallback)</code>
+					が返す結果の型を指定します。
+				</p>
+				<p>
+					<code>from()</code>
+					で指定したエンティティ1件ごとに次のメソッドがコールバックされます。
+				</p>
+				<ul>
+					<li>
+						<p>
+							<code>
+								RESULT iterate(ENTITY entity,
+								IterationContext context)
+							</code>
+						</p>
+					</li>
+				</ul>
+				<p>
+					コールバックメソッドが最後に返した値が
+					<code>iterate(IterationCallback)</code>
+					の戻り値となります。
+				</p>
+				<p>
+					コールバックメソッドの第2引数で渡される
+					<code>
+						org.seasar.extension.jdbc.IterationContext
+					</code>
+					の
+					<code>exit</code>
+					プロパティを
+					<code>true</code>
+					にすると、 問い合わせ結果のイテレーションは終了となり、 検索結果の残りは無視されます。
+					その時の戻り値が
+					<code>iterate(IterationCallback)</code>
+					の戻り値となります。
+				</p>
+				<p>
+					1対多関連を
+					<a href="#結合">結合</a>
+					する場合は、
+					<code>from()</code>
+					で指定したエンティティで
+					<a href="#ソート順">ソート</a>
+					して、結果セットが次のような順になるようにします。
+				</p>
+				<table border="1">
+					<tr>
+						<th>
+							<code>from()</code>
+							で指定したエンティティ
+						</th>
+						<th>結合したエンティティ</th>
+					</tr>
+					<tr>
+						<td>A1</td>
+						<td>B1</td>
+					</tr>
+					<tr>
+						<td>A1</td>
+						<td>B2</td>
+					</tr>
+					<tr>
+						<td>A2</td>
+						<td>B1</td>
+					</tr>
+					<tr>
+						<td>A2</td>
+						<td>B2</td>
+					</tr>
+				</table>
+				<p>
+					上記のような結果セットの場合、 コールバックメソッドはA1とA2が1回ずつ、 計2回呼び出されます。
+					A1に関連づけられたB1およびB2のインスタンスと、
+					A2に関連づけられたB1およびB2のインスタンスは異なります(同じ値を持つが同一ではない)。
+				</p>
+				<table border="1">
+					<tr>
+						<th>
+							<code>from()</code>
+							で指定したエンティティ
+						</th>
+						<th>結合したエンティティ</th>
+					</tr>
+					<tr>
+						<td>A1</td>
+						<td>B1</td>
+					</tr>
+					<tr>
+						<td>A2</td>
+						<td>B1</td>
+					</tr>
+					<tr>
+						<td>A1</td>
+						<td>B2</td>
+					</tr>
+					<tr>
+						<td>A2</td>
+						<td>B2</td>
+					</tr>
+				</table>
+				<p>結果セットが上記のような順になっている場合、 コールバックメソッドは4回呼び出されてしまいます。</p>
 			</subsection>
 
 			<subsection name="結合">
