@@ -15,19 +15,19 @@
  */
 package org.seasar.extension.jdbc.it.entity;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-@Table(name = "Employee")
-public class ConcreateEmployee extends AbstractEmployee {
+@Table(name = "Address")
+public class ConcreteAddress extends AbstractAddress {
 
     /** */
-    public BigDecimal salary;
+    @Version
+    public int version;
 }

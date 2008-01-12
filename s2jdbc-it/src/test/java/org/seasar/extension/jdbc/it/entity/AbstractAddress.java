@@ -35,5 +35,5 @@ public abstract class AbstractAddress {
 
     /** */
     @OneToOne(mappedBy = "address")
-    public ConcreateEmployee employee;
+    public ConcreteEmployee employee;
 }

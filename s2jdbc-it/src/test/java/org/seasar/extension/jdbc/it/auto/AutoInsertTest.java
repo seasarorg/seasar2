@@ -30,7 +30,7 @@ import org.seasar.extension.jdbc.it.entity.Authority;
 import org.seasar.extension.jdbc.it.entity.AuthorityType;
 import org.seasar.extension.jdbc.it.entity.AutoStrategy;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
-import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
+import org.seasar.extension.jdbc.it.entity.ConcreteDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
@@ -192,14 +192,14 @@ public class AutoInsertTest {
      * @throws Exception
      */
     public void testExecute_mappedSuperclass() throws Exception {
-        ConcreateDepartment department = new ConcreateDepartment();
+        ConcreteDepartment department = new ConcreteDepartment();
         department.departmentId = 99;
         department.departmentName = "hoge";
         int result = jdbcManager.insert(department).execute();
         assertEquals(1, result);
         assertEquals(1, department.version);
         department =
-            jdbcManager.from(ConcreateDepartment.class).where(
+            jdbcManager.from(ConcreteDepartment.class).where(
                 new SimpleWhere().eq("departmentId", 99)).getSingleResult();
         assertEquals(99, department.departmentId);
         assertEquals(0, department.departmentNo);

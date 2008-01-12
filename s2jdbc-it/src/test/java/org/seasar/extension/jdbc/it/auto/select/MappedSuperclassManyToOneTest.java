@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.JoinType;
-import org.seasar.extension.jdbc.it.entity.ConcreateEmployee;
+import org.seasar.extension.jdbc.it.entity.ConcreteEmployee;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -39,11 +39,11 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testLeftOuterJoin() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).leftOuterJoin(
+        List<ConcreteEmployee> list =
+            jdbcManager.from(ConcreteEmployee.class).leftOuterJoin(
                 "department").getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (ConcreteEmployee e : list) {
             assertNotNull(e);
             assertNotNull(e.department);
         }
@@ -54,12 +54,12 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testLeftOuterJoin_noFetch() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).leftOuterJoin(
+        List<ConcreteEmployee> list =
+            jdbcManager.from(ConcreteEmployee.class).leftOuterJoin(
                 "department",
                 false).getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (ConcreteEmployee e : list) {
             assertNotNull(e);
             assertNull(e.department);
         }
@@ -70,13 +70,13 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin() throws Exception {
-        List<ConcreateEmployee> list =
+        List<ConcreteEmployee> list =
             jdbcManager
-                .from(ConcreateEmployee.class)
+                .from(ConcreteEmployee.class)
                 .innerJoin("department")
                 .getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (ConcreteEmployee e : list) {
             assertNotNull(e);
             assertNotNull(e.department);
         }
@@ -87,12 +87,12 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin_noFetch() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).innerJoin(
+        List<ConcreteEmployee> list =
+            jdbcManager.from(ConcreteEmployee.class).innerJoin(
                 "department",
                 false).getResultList();
         assertEquals(14, list.size());
-        for (ConcreateEmployee e : list) {
+        for (ConcreteEmployee e : list) {
             assertNotNull(e);
             assertNull(e.department);
         }
@@ -103,12 +103,12 @@ public class MappedSuperclassManyToOneTest {
      * @throws Exception
      */
     public void testInnerJoin_self() throws Exception {
-        List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).join(
+        List<ConcreteEmployee> list =
+            jdbcManager.from(ConcreteEmployee.class).join(
                 "manager",
                 JoinType.INNER).getResultList();
         assertEquals(13, list.size());
-        for (ConcreateEmployee e : list) {
+        for (ConcreteEmployee e : list) {
             assertNotNull(e);
             assertNotNull(e.manager);
         }

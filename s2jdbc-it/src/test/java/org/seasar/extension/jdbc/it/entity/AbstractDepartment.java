@@ -43,5 +43,5 @@ public abstract class AbstractDepartment {
 
     /** */
     @OneToMany(mappedBy = "department")
-    public List<ConcreateEmployee> employees;
+    public List<ConcreteEmployee> employees;
 }

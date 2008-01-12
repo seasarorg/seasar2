@@ -25,7 +25,7 @@ import javax.persistence.OptimisticLockException;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
-import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
+import org.seasar.extension.jdbc.it.entity.ConcreteDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
@@ -293,14 +293,14 @@ public class AutoBatchUpdateTest {
      * @throws Exception
      */
     public void testExecute_mappedSuperclass() throws Exception {
-        List<ConcreateDepartment> list = new ArrayList<ConcreateDepartment>();
-        ConcreateDepartment department = new ConcreateDepartment();
+        List<ConcreteDepartment> list = new ArrayList<ConcreteDepartment>();
+        ConcreteDepartment department = new ConcreteDepartment();
         department.departmentId = 1;
         department.departmentName = "hoge";
         department.departmentNo = 10;
         department.version = 1;
         list.add(department);
-        ConcreateDepartment department2 = new ConcreateDepartment();
+        ConcreteDepartment department2 = new ConcreteDepartment();
         department2.departmentId = 2;
         department2.departmentNo = 20;
         department2.departmentName = "foo";
@@ -313,7 +313,7 @@ public class AutoBatchUpdateTest {
         assertEquals(2, department2.version);
 
         department =
-            jdbcManager.from(ConcreateDepartment.class).where(
+            jdbcManager.from(ConcreteDepartment.class).where(
                 new SimpleWhere().eq("departmentId", 1)).getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(10, department.departmentNo);
@@ -322,7 +322,7 @@ public class AutoBatchUpdateTest {
         assertEquals(2, department.version);
 
         department =
-            jdbcManager.from(ConcreateDepartment.class).where(
+            jdbcManager.from(ConcreteDepartment.class).where(
                 new SimpleWhere().eq("departmentId", 2)).getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);

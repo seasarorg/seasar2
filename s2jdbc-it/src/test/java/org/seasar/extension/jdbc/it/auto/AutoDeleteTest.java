@@ -20,7 +20,7 @@ import javax.persistence.OptimisticLockException;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
-import org.seasar.extension.jdbc.it.entity.ConcreateEmployee;
+import org.seasar.extension.jdbc.it.entity.ConcreteEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
@@ -93,13 +93,13 @@ public class AutoDeleteTest {
      * @throws Exception
      */
     public void testExecute_mappedSuperclass() throws Exception {
-        ConcreateEmployee employee = new ConcreateEmployee();
+        ConcreteEmployee employee = new ConcreteEmployee();
         employee.employeeId = 1;
         employee.version = 1;
         int result = jdbcManager.delete(employee).execute();
         assertEquals(1, result);
         employee =
-            jdbcManager.from(ConcreateEmployee.class).where(
+            jdbcManager.from(ConcreteEmployee.class).where(
                 new SimpleWhere().eq("employeeId", 1)).getSingleResult();
         assertNull(employee);
     }

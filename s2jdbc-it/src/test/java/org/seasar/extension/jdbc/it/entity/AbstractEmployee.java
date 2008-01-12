@@ -49,7 +49,7 @@ public abstract class AbstractEmployee {
     /** */
     @ManyToOne
     @JoinColumn(name = "MANAGER_ID", referencedColumnName = "EMPLOYEE_ID")
-    public ConcreateEmployee manager;
+    public ConcreteEmployee manager;
 
     /** */
     @Temporal(TemporalType.DATE)
@@ -61,7 +61,7 @@ public abstract class AbstractEmployee {
     /** */
     @ManyToOne
     @JoinColumn(name = "department_id", referencedColumnName = "DEPARTMENT_ID")
-    public ConcreateDepartment department;
+    public ConcreteDepartment department;
 
     /** */
     public int addressId;
@@ -69,7 +69,7 @@ public abstract class AbstractEmployee {
     /** */
     @OneToOne()
     @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ADDRESS_ID")
-    public ConcreateAddress address;
+    public ConcreteAddress address;
 
     /** */
     @Version

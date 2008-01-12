@@ -15,8 +15,9 @@
  */
 package org.seasar.extension.jdbc.it.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -24,10 +25,9 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "Department")
-public class ConcreateDepartment extends AbstractDepartment {
+@Table(name = "Employee")
+public class ConcreteEmployee extends AbstractEmployee {
 
     /** */
-    @Id
-    public int departmentId;
+    public BigDecimal salary;
 }

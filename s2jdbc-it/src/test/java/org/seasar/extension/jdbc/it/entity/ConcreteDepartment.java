@@ -16,18 +16,18 @@
 package org.seasar.extension.jdbc.it.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-@Table(name = "Address")
-public class ConcreateAddress extends AbstractAddress {
+@Table(name = "Department")
+public class ConcreteDepartment extends AbstractDepartment {
 
     /** */
-    @Version
-    public int version;
+    @Id
+    public int departmentId;
 }
