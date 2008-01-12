@@ -26,7 +26,7 @@ import javax.persistence.Version;
  * 
  */
 @MappedSuperclass
-public class AbstractDepartment {
+public abstract class AbstractDepartment {
 
     /** */
     public int departmentNo;

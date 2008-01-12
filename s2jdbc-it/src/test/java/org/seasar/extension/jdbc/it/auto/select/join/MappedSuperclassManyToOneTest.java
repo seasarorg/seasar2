@@ -38,7 +38,7 @@ public class MappedSuperclassManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin_fetch() throws Exception {
+    public void testLeftOuterJoin() throws Exception {
         List<ConcreateEmployee> list =
             jdbcManager.from(ConcreateEmployee.class).leftOuterJoin(
                 "department").getResultList();
@@ -53,7 +53,7 @@ public class MappedSuperclassManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin() throws Exception {
+    public void testLeftOuterJoin_noFetch() throws Exception {
         List<ConcreateEmployee> list =
             jdbcManager.from(ConcreateEmployee.class).leftOuterJoin(
                 "department",
@@ -69,11 +69,12 @@ public class MappedSuperclassManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch() throws Exception {
+    public void testInnerJoin() throws Exception {
         List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).join(
-                "department",
-                JoinType.INNER).getResultList();
+            jdbcManager
+                .from(ConcreateEmployee.class)
+                .innerJoin("department")
+                .getResultList();
         assertEquals(14, list.size());
         for (ConcreateEmployee e : list) {
             assertNotNull(e);
@@ -85,11 +86,10 @@ public class MappedSuperclassManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin() throws Exception {
+    public void testInnerJoin_noFetch() throws Exception {
         List<ConcreateEmployee> list =
-            jdbcManager.from(ConcreateEmployee.class).join(
+            jdbcManager.from(ConcreateEmployee.class).innerJoin(
                 "department",
-                JoinType.INNER,
                 false).getResultList();
         assertEquals(14, list.size());
         for (ConcreateEmployee e : list) {
@@ -102,7 +102,7 @@ public class MappedSuperclassManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch_self() throws Exception {
+    public void testInnerJoin_self() throws Exception {
         List<ConcreateEmployee> list =
             jdbcManager.from(ConcreateEmployee.class).join(
                 "manager",

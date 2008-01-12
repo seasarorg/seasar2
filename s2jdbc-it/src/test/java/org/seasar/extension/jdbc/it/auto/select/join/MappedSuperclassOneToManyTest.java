@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
 import org.seasar.framework.unit.Seasar2;
 
@@ -38,7 +37,7 @@ public class MappedSuperclassOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin_fetch() throws Exception {
+    public void testLeftOuterJoin() throws Exception {
         List<ConcreateDepartment> list =
             jdbcManager.from(ConcreateDepartment.class).leftOuterJoin(
                 "employees").getResultList();
@@ -53,7 +52,7 @@ public class MappedSuperclassOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin() throws Exception {
+    public void testLeftOuterJoin_noFetch() throws Exception {
         List<ConcreateDepartment> list =
             jdbcManager.from(ConcreateDepartment.class).leftOuterJoin(
                 "employees",
@@ -69,11 +68,12 @@ public class MappedSuperclassOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch() throws Exception {
+    public void testInnerJoin() throws Exception {
         List<ConcreateDepartment> list =
-            jdbcManager.from(ConcreateDepartment.class).join(
-                "employees",
-                JoinType.INNER).getResultList();
+            jdbcManager
+                .from(ConcreateDepartment.class)
+                .innerJoin("employees")
+                .getResultList();
         assertEquals(3, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(1).employees);
@@ -84,11 +84,10 @@ public class MappedSuperclassOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin() throws Exception {
+    public void testInnerJoin_noFetch() throws Exception {
         List<ConcreateDepartment> list =
-            jdbcManager.from(ConcreateDepartment.class).join(
+            jdbcManager.from(ConcreateDepartment.class).innerJoin(
                 "employees",
-                JoinType.INNER,
                 false).getResultList();
         assertEquals(3, list.size());
         assertNull(list.get(0).employees);

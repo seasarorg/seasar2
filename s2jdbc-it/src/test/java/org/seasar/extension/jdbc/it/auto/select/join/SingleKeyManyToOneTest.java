@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.framework.unit.Seasar2;
 
@@ -38,9 +37,12 @@ public class SingleKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin_fetch() throws Exception {
+    public void testLeftOuterJoin() throws Exception {
         List<Employee> list =
-            jdbcManager.from(Employee.class).leftOuterJoin("department").getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .leftOuterJoin("department")
+                .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNotNull(e);
@@ -52,7 +54,7 @@ public class SingleKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin() throws Exception {
+    public void testLeftOuterJoin_noFetch() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -69,11 +71,11 @@ public class SingleKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch() throws Exception {
+    public void testInnerJoin() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("department", JoinType.INNER)
+                .innerJoin("department")
                 .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
@@ -86,12 +88,12 @@ public class SingleKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin() throws Exception {
+    public void testInnerJoin_noFetch() throws Exception {
         List<Employee> list =
-            jdbcManager.from(Employee.class).join(
-                "department",
-                JoinType.INNER,
-                false).getResultList();
+            jdbcManager
+                .from(Employee.class)
+                .innerJoin("department", false)
+                .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {
             assertNotNull(e);
@@ -103,11 +105,11 @@ public class SingleKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch_self() throws Exception {
+    public void testInnerJoin_self() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("manager", JoinType.INNER)
+                .innerJoin("manager")
                 .getResultList();
         assertEquals(13, list.size());
         for (Employee e : list) {

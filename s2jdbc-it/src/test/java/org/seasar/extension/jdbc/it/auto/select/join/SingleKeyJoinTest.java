@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.it.condition.DepartmentCondition;
 import org.seasar.extension.jdbc.it.condition.EmployeeCondition;
@@ -94,7 +93,7 @@ public class SingleKeyJoinTest {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("manager", JoinType.INNER)
+                .innerJoin("manager")
                 .leftOuterJoin("department")
                 .leftOuterJoin("address")
                 .getResultList();
@@ -112,7 +111,7 @@ public class SingleKeyJoinTest {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("manager", JoinType.INNER)
+                .innerJoin("manager")
                 .leftOuterJoin("department")
                 .leftOuterJoin("address")
                 .where(
@@ -133,7 +132,7 @@ public class SingleKeyJoinTest {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
-                .join("manager", JoinType.INNER)
+                .innerJoin("manager")
                 .leftOuterJoin("department")
                 .leftOuterJoin("address")
                 .where(

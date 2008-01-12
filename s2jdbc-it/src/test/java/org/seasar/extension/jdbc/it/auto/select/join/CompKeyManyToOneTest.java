@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.framework.unit.Seasar2;
 
@@ -38,7 +37,7 @@ public class CompKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin_fetch() throws Exception {
+    public void testLeftOuterJoin() throws Exception {
         List<CompKeyEmployee> list =
             jdbcManager
                 .from(CompKeyEmployee.class)
@@ -55,44 +54,10 @@ public class CompKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin() throws Exception {
+    public void testLeftOuterJoin_noFetch() throws Exception {
         List<CompKeyEmployee> list =
-            jdbcManager
-                .from(CompKeyEmployee.class)
-                .leftOuterJoin("department", false)
-                .getResultList();
-        assertEquals(14, list.size());
-        for (CompKeyEmployee e : list) {
-            assertNotNull(e);
-            assertNull(e.department);
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testInnerJoin_fetch() throws Exception {
-        List<CompKeyEmployee> list =
-            jdbcManager.from(CompKeyEmployee.class).join(
+            jdbcManager.from(CompKeyEmployee.class).leftOuterJoin(
                 "department",
-                JoinType.INNER).getResultList();
-        assertEquals(14, list.size());
-        for (CompKeyEmployee e : list) {
-            assertNotNull(e);
-            assertNotNull(e.department);
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    public void testInnerJoin() throws Exception {
-        List<CompKeyEmployee> list =
-            jdbcManager.from(CompKeyEmployee.class).join(
-                "department",
-                JoinType.INNER,
                 false).getResultList();
         assertEquals(14, list.size());
         for (CompKeyEmployee e : list) {
@@ -105,11 +70,45 @@ public class CompKeyManyToOneTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch_self() throws Exception {
+    public void testInnerJoin() throws Exception {
         List<CompKeyEmployee> list =
-            jdbcManager.from(CompKeyEmployee.class).join(
-                "manager",
-                JoinType.INNER).getResultList();
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .innerJoin("department")
+                .getResultList();
+        assertEquals(14, list.size());
+        for (CompKeyEmployee e : list) {
+            assertNotNull(e);
+            assertNotNull(e.department);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testInnerJoin_noFetch() throws Exception {
+        List<CompKeyEmployee> list =
+            jdbcManager.from(CompKeyEmployee.class).innerJoin(
+                "department",
+                false).getResultList();
+        assertEquals(14, list.size());
+        for (CompKeyEmployee e : list) {
+            assertNotNull(e);
+            assertNull(e.department);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testInnerJoin_self() throws Exception {
+        List<CompKeyEmployee> list =
+            jdbcManager
+                .from(CompKeyEmployee.class)
+                .innerJoin("manager")
+                .getResultList();
         assertEquals(13, list.size());
         for (CompKeyEmployee e : list) {
             assertNotNull(e);

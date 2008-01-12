@@ -19,9 +19,8 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
-import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
-import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
+import org.seasar.extension.jdbc.it.entity.ConcreateDepartment;
+import org.seasar.extension.jdbc.it.entity.ConcreateEmployee;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -31,7 +30,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class CompKeyMultiJoinTest {
+public class MappedSuperclassJoinTest {
 
     private JdbcManager jdbcManager;
 
@@ -40,9 +39,9 @@ public class CompKeyMultiJoinTest {
      * @throws Exception
      */
     public void testJoin_nest() throws Exception {
-        List<CompKeyDepartment> list =
-            jdbcManager.from(CompKeyDepartment.class).leftOuterJoin("employees").leftOuterJoin(
-                "employees.address").getResultList();
+        List<ConcreateDepartment> list =
+            jdbcManager.from(ConcreateDepartment.class).leftOuterJoin(
+                "employees").leftOuterJoin("employees.address").getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(0).employees.get(0).address);
@@ -53,10 +52,10 @@ public class CompKeyMultiJoinTest {
      * @throws Exception
      */
     public void testJoin_star() throws Exception {
-        List<CompKeyEmployee> list =
+        List<ConcreateEmployee> list =
             jdbcManager
-                .from(CompKeyEmployee.class)
-                .join("manager", JoinType.INNER)
+                .from(ConcreateEmployee.class)
+                .innerJoin("manager")
                 .leftOuterJoin("department")
                 .leftOuterJoin("address")
                 .getResultList();

@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.framework.unit.Seasar2;
 
@@ -38,7 +37,7 @@ public class SingleKeyOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin_fetch() throws Exception {
+    public void testLeftOuterJoin() throws Exception {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
@@ -56,7 +55,7 @@ public class SingleKeyOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testLeftOuterJoin() throws Exception {
+    public void testLeftOuterJoin_noFetch() throws Exception {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
@@ -73,11 +72,11 @@ public class SingleKeyOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin_fetch() throws Exception {
+    public void testInnerJoin() throws Exception {
         List<Department> list =
             jdbcManager
                 .from(Department.class)
-                .join("employees", JoinType.INNER)
+                .innerJoin("employees")
                 .getResultList();
         assertEquals(3, list.size());
         assertNotNull(list.get(0).employees);
@@ -89,12 +88,12 @@ public class SingleKeyOneToManyTest {
      * 
      * @throws Exception
      */
-    public void testInnerJoin() throws Exception {
+    public void testInnerJoin_noFetch() throws Exception {
         List<Department> list =
-            jdbcManager.from(Department.class).join(
-                "employees",
-                JoinType.INNER,
-                false).getResultList();
+            jdbcManager
+                .from(Department.class)
+                .innerJoin("employees", false)
+                .getResultList();
         assertEquals(3, list.size());
         assertNull(list.get(0).employees);
         assertNull(list.get(1).employees);
