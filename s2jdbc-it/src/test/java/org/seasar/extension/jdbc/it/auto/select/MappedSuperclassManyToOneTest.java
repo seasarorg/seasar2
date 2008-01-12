@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.it.entity.ConcreteEmployee;
 import org.seasar.framework.unit.Seasar2;
 
@@ -40,8 +39,10 @@ public class MappedSuperclassManyToOneTest {
      */
     public void testLeftOuterJoin() throws Exception {
         List<ConcreteEmployee> list =
-            jdbcManager.from(ConcreteEmployee.class).leftOuterJoin(
-                "department").getResultList();
+            jdbcManager
+                .from(ConcreteEmployee.class)
+                .leftOuterJoin("department")
+                .getResultList();
         assertEquals(14, list.size());
         for (ConcreteEmployee e : list) {
             assertNotNull(e);
@@ -104,9 +105,10 @@ public class MappedSuperclassManyToOneTest {
      */
     public void testInnerJoin_self() throws Exception {
         List<ConcreteEmployee> list =
-            jdbcManager.from(ConcreteEmployee.class).join(
-                "manager",
-                JoinType.INNER).getResultList();
+            jdbcManager
+                .from(ConcreteEmployee.class)
+                .innerJoin("manager")
+                .getResultList();
         assertEquals(13, list.size());
         for (ConcreteEmployee e : list) {
             assertNotNull(e);

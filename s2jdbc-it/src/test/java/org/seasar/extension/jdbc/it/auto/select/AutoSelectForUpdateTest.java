@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.it.auto.select;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.it.entity.Employee;
@@ -61,7 +60,7 @@ public class AutoSelectForUpdateTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department", JoinType.INNER)
+            .innerJoin("department")
             .forUpdate()
             .getResultList();
     }
@@ -141,7 +140,7 @@ public class AutoSelectForUpdateTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department", JoinType.INNER)
+            .innerJoin("department")
             .forUpdateNowait()
             .getResultList();
     }
@@ -224,7 +223,7 @@ public class AutoSelectForUpdateTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department", JoinType.INNER)
+            .innerJoin("department")
             .forUpdateNowait("employeeName")
             .getResultList();
     }
@@ -239,7 +238,7 @@ public class AutoSelectForUpdateTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department", JoinType.INNER)
+            .innerJoin("department")
             .forUpdateNowait("department.location")
             .getResultList();
     }
@@ -337,7 +336,7 @@ public class AutoSelectForUpdateTest {
         }
         jdbcManager
             .from(Employee.class)
-            .join("department", JoinType.INNER)
+            .innerJoin("department")
             .forUpdateNowait("employeeName", "department.location")
             .getResultList();
     }
@@ -417,11 +416,8 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, false)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdateWait(1)
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdateWait(
+            1).getResultList();
     }
 
     /**
@@ -500,11 +496,9 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdateWait(1, "employeeName")
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdateWait(
+            1,
+            "employeeName").getResultList();
     }
 
     /**
@@ -515,11 +509,9 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdateWait(1, "department.location")
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdateWait(
+            1,
+            "department.location").getResultList();
     }
 
     /**
@@ -612,11 +604,10 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(WAIT, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdateWait(1, "employeeName", "department.location")
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdateWait(
+            1,
+            "employeeName",
+            "department.location").getResultList();
     }
 
     /**
@@ -697,11 +688,8 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdate("employeeName")
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdate(
+            "employeeName").getResultList();
     }
 
     /**
@@ -712,11 +700,8 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdate("department.location")
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdate(
+            "department.location").getResultList();
     }
 
     /**
@@ -826,11 +811,8 @@ public class AutoSelectForUpdateTest {
             return;
         }
         try {
-            jdbcManager
-                .from(Employee.class)
-                .join("department", JoinType.INNER)
-                .forUpdate("illegal.location")
-                .getResultList();
+            jdbcManager.from(Employee.class).innerJoin("department").forUpdate(
+                "illegal.location").getResultList();
             fail();
         } catch (BaseJoinNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -848,11 +830,8 @@ public class AutoSelectForUpdateTest {
             return;
         }
         try {
-            jdbcManager
-                .from(Employee.class)
-                .join("department", JoinType.INNER)
-                .forUpdate("department")
-                .getResultList();
+            jdbcManager.from(Employee.class).innerJoin("department").forUpdate(
+                "department").getResultList();
             fail();
         } catch (PropertyNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
@@ -867,11 +846,9 @@ public class AutoSelectForUpdateTest {
         if (!implementor.getDialect().supportsForUpdate(NORMAL, true)) {
             return;
         }
-        jdbcManager
-            .from(Employee.class)
-            .join("department", JoinType.INNER)
-            .forUpdate("employeeName", "department.location")
-            .getResultList();
+        jdbcManager.from(Employee.class).innerJoin("department").forUpdate(
+            "employeeName",
+            "department.location").getResultList();
     }
 
     /**
