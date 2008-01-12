@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class GetSingleResultTest {
+public class GetResultTest {
 
     private JdbcManager jdbcManager;
 
