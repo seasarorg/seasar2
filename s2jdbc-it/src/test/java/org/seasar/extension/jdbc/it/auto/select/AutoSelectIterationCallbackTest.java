@@ -106,8 +106,7 @@ public class AutoSelectIterationCallbackTest {
                 .offset(3)
                 .orderBy("employeeId")
                 .iterate(salarySumCallback);
-        assertTrue("should be " + sum.toPlainString(), new BigDecimal(25375)
-            .compareTo(sum) == 0);
+        assertTrue(new BigDecimal(25375).compareTo(sum) == 0);
     }
 
     /**
