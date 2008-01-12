@@ -33,7 +33,7 @@ import static org.seasar.extension.jdbc.SelectForUpdateType.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class ForUpdateTest {
+public class AutoSelectForUpdateTest {
 
     private JdbcManager jdbcManager;
 

@@ -1,0 +1,1 @@
+select employee_id, employee_no from Employee order by employee_no

@@ -39,7 +39,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class WhereTest {
+public class AutoSelectWhereTest {
 
     private JdbcManager jdbcManager;
 

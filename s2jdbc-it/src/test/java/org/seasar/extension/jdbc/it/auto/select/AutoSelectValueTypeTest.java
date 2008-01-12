@@ -39,7 +39,7 @@ import static org.seasar.extension.jdbc.parameter.Parameter.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class ValueTypeTest {
+public class AutoSelectValueTypeTest {
 
     private JdbcManager jdbcManager;
 

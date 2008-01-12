@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-public class TransientTest {
+public class AutoSelectTransientTest {
 
     private JdbcManager jdbcManager;
 
