@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the Seasar Foundation and the Others.
+ * Copyright 2004-2007 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -28,6 +28,7 @@ import junit.framework.TestCase;
  * @author mopemope
  */
 public class JSONSerializerTest extends TestCase {
+
     /**
      * @throws Exception
      */
@@ -121,6 +122,138 @@ public class JSONSerializerTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testToJson_map2() throws Exception {
+        Map child1 = new HashMap();
+        child1.put("aaa", new String[] { "aaa", "bbb", "ccc" });
+        Map child2 = new HashMap();
+        child2.put("bbb", new String[] { "AAA", "BBB", "CCC" });
+
+        Map parent = new HashMap();
+        parent.put("map", new Map[] { child1, child2 });
+        String s = JSONSerializer.serialize(parent);
+        System.out.println(s);
+        // {map:[{aaa:["aaa","bbb","ccc"]},{bbb:["AAA","BBB","CCC"]}]}
+
+        Map eval = (Map) JSONSerializer.eval(s);
+        assertNotNull(eval);
+        System.out.println(eval);
+        Object o = eval.get("map");
+        List maps = (List) o;
+        Map ret = (Map) maps.get(0);
+        System.out.println(ret.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToJson_map3() throws Exception {
+        Hoge hoge = new Hoge();
+        String s = JSONSerializer.serialize(hoge);
+        System.out.println(s);
+        // {map:{maplist:[{aaa:["aaa","bbb","ccc"]},{bbb:["AAA","BBB","CCC"]}]}}
+
+        Map eval = (Map) JSONSerializer.eval(s);
+        assertNotNull(eval);
+        Object o = eval.get("map");
+        assertNotNull(o);
+
+        Map map = (Map) o;
+        List maplist = (List) map.get("maplist");
+        Map aaamap = (Map) maplist.get(0);
+        List strsList1 = (List) aaamap.get("aaa");
+        assertNotNull(strsList1);
+        assertTrue(strsList1.size() == 3);
+        assertEquals("aaa", strsList1.get(0));
+        assertEquals("bbb", strsList1.get(1));
+        assertEquals("ccc", strsList1.get(2));
+
+        Map bbbmap = (Map) maplist.get(1);
+        List strsList2 = (List) bbbmap.get("bbb");
+        assertNotNull(strsList2);
+        assertTrue(strsList2.size() == 3);
+        assertEquals("AAA", strsList2.get(0));
+        assertEquals("BBB", strsList2.get(1));
+        assertEquals("CCC", strsList2.get(2));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToJson_map4() throws Exception {
+        Hoge2 hoge = new Hoge2();
+        String s = JSONSerializer.serialize(hoge);
+        System.out.println(s);
+        // {map:{maplist:[{ccc:[1,2],aaa:["aaa","bbb","ccc"]},{bbb:["AAA","BBB","CCC"]}]}}
+
+        Map eval = (Map) JSONSerializer.eval(s);
+        assertNotNull(eval);
+        Object o = eval.get("map");
+        assertNotNull(o);
+
+        Map map = (Map) o;
+        List maplist = (List) map.get("maplist");
+        Map aaamap = (Map) maplist.get(0);
+        List strsList1 = (List) aaamap.get("aaa");
+        assertNotNull(strsList1);
+        assertTrue(strsList1.size() == 3);
+        assertEquals("aaa", strsList1.get(0));
+        assertEquals("bbb", strsList1.get(1));
+        assertEquals("ccc", strsList1.get(2));
+
+        List ccclist = (List) aaamap.get("ccc");
+        assertNotNull(ccclist);
+        assertTrue(ccclist.size() == 2);
+        assertEquals(new Integer(1), ccclist.get(0));
+        assertEquals(new Integer(2), ccclist.get(1));
+        
+        Map bbbmap = (Map) maplist.get(1);
+        List strsList2 = (List) bbbmap.get("bbb");
+        assertNotNull(strsList2);
+        assertTrue(strsList2.size() == 3);
+        assertEquals("AAA", strsList2.get(0));
+        assertEquals("BBB", strsList2.get(1));
+        assertEquals("CCC", strsList2.get(2));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToJson_map5() throws Exception {
+        Hoge3 hoge = new Hoge3();
+        String s = JSONSerializer.serialize(hoge);
+        System.out.println(s);
+        // {list:[{ccc:[1,2],aaa:["aaa","bbb","ccc"]},{bbb:["AAA","BBB","CCC"]}]}
+        
+        Object eval = JSONSerializer.eval(s);
+        assertNotNull(eval);
+        Map root = (Map) eval;
+        List list = (List) root.get("list");
+        Map child1 = (Map) list.get(0);
+        assertNotNull(child1);
+        assertTrue(child1.size() == 2);
+        List aaalist = (List) child1.get("aaa");
+        assertNotNull(aaalist);
+        assertTrue(aaalist.size() == 3);
+        
+        List ccclist = (List) child1.get("ccc");
+        assertNotNull(ccclist);
+        assertTrue(ccclist.size() == 2);
+        
+        Map child2 = (Map) list.get(1);
+        assertNotNull(child2);
+        assertTrue(child2.size() == 1);
+        
+        List bbblist = (List) child2.get("bbb");
+        assertNotNull(bbblist);
+        assertTrue(bbblist.size() == 3);
+        assertEquals("AAA", bbblist.get(0));
+        assertEquals("BBB", bbblist.get(1));
+        assertEquals("CCC", bbblist.get(2));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testToJson_PrimitiveArray() throws Exception {
         assertEquals("[1]", JSONSerializer.serialize(new int[] { 1 }));
         assertEquals("[1,2,3]", JSONSerializer.serialize(new int[] { 1, 2, 3 }));
@@ -185,6 +318,30 @@ public class JSONSerializerTest extends TestCase {
         assertEquals("\"\\\"\"", JSONSerializer.quote("\""));
         assertEquals("\"\\\\\"", JSONSerializer.quote("\\"));
         assertEquals("\"\\/\"", JSONSerializer.quote("/"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsString() throws Exception {
+        String s = "'aaa'";
+        assertTrue(JSONSerializer.isString(s));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsString2() throws Exception {
+        String s = "\"aaa\"";
+        assertTrue(JSONSerializer.isString(s));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsString3() throws Exception {
+        String s = "aaa";
+        assertFalse(JSONSerializer.isString(s));
     }
 
     /**
@@ -512,4 +669,111 @@ public class JSONSerializerTest extends TestCase {
 
     }
 
+    /**
+     */
+    public static class Hoge {
+
+        private Map map;
+
+        /**
+         * 
+         */
+        public Hoge() {
+            map = new HashMap();
+            Map child1 = new HashMap();
+            child1.put("aaa", new String[] { "aaa", "bbb", "ccc" });
+            Map child2 = new HashMap();
+            child2.put("bbb", new String[] { "AAA", "BBB", "CCC" });
+            map.put("maplist", new Map[] { child1, child2 });
+        }
+
+        /**
+         * @return
+         */
+        public Map getMap() {
+            return map;
+        }
+
+        /**
+         * @param map
+         */
+        public void setMap(Map map) {
+            this.map = map;
+        }
+
+    }
+
+    /**
+     *
+     */
+    public static class Hoge2 {
+
+        private Map map;
+
+        /**
+         * 
+         */
+        public Hoge2() {
+            map = new HashMap();
+            Map child1 = new HashMap();
+            child1.put("aaa", new String[] { "aaa", "bbb", "ccc" });
+            child1.put("ccc", new Integer[] { new Integer(1), new Integer(2) });
+            Map child2 = new HashMap();
+            child2.put("bbb", new String[] { "AAA", "BBB", "CCC" });
+            map.put("maplist", new Map[] { child1, child2 });
+        }
+
+        /**
+         * @return
+         */
+        public Map getMap() {
+            return map;
+        }
+
+        /**
+         * @param map
+         */
+        public void setMap(Map map) {
+            this.map = map;
+        }
+
+    }
+
+    /**
+     *
+     */
+    public static class Hoge3 {
+
+        private List list;
+
+        /**
+         * 
+         */
+        public Hoge3() {
+            list = new ArrayList();
+            Map child1 = new HashMap();
+            child1.put("aaa", new String[] { "aaa", "bbb", "ccc" });
+            child1.put("ccc", new Integer[] { new Integer(1), new Integer(2) });
+            list.add(child1);
+
+            Map child2 = new HashMap();
+            child2.put("bbb", new String[] { "AAA", "BBB", "CCC" });
+            list.add(child2);
+        }
+
+        /**
+         * @return
+         */
+        public List getList() {
+            return list;
+        }
+
+        /**
+         * @param list
+         */
+        public void setList(final List list) {
+            this.list = list;
+        }
+
+    }
 }

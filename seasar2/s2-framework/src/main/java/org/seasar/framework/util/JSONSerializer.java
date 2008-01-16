@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the Seasar Foundation and the Others.
+ * Copyright 2004-2007 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
@@ -38,6 +38,8 @@ public class JSONSerializer {
     private static final String COLON = ":";
 
     private static final String SINGLE_QUOTE = "'";
+
+    private static final String DOUBLE_QUOTE = "\"";
 
     private static final String NULL_STRING = "null";
 
@@ -318,8 +320,10 @@ public class JSONSerializer {
      * @return JSONのString形式であればtrue、そうでなければfalse
      */
     public static boolean isString(String str) {
-        return str.startsWith(JSONSerializer.SINGLE_QUOTE)
-                && str.endsWith(JSONSerializer.SINGLE_QUOTE);
+        return (str.startsWith(JSONSerializer.SINGLE_QUOTE)
+                && str.endsWith(JSONSerializer.SINGLE_QUOTE) || str
+                .startsWith(JSONSerializer.DOUBLE_QUOTE)
+                && str.endsWith(JSONSerializer.DOUBLE_QUOTE));
     }
 
     /**
@@ -354,50 +358,77 @@ public class JSONSerializer {
         String key = null;
         String value = null;
         boolean valueParse = false;
-        int braceStart = 0;
+        boolean isListedData = false;
+        boolean isMappedData = false;
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             switch (c) {
             case '{':
                 if (valueParse) {
-                    buf.append(c);
-                    braceStart++;
-                }
-                break;
-            case '}':
-                if (valueParse) {
-                    if (braceStart > 0) {
-                        buf.append(c);
-                        braceStart--;
+                    String sub = str.substring(i, str.length() - 1);
+                    int count = 0;
+                    for (int j = 0; j < sub.length(); ++j) {
+                        char sc = sub.charAt(j);
+                        if (sc == '{') {
+                            count++;
+                            continue;
+                        }
+                        if (sc == '}' && count > 1) {
+                            count--;
+                        } else if (sc == '}' && count == 1) {
+                            String mapStr = sub.substring(0, j + 1);
+                            Map submap = JSONSerializer.evalMap(mapStr);
+                            map.put(key, submap);
+                            i = i + j;
+                            isMappedData = true;
+                            break;
+                        }
                     }
                 }
                 break;
+            case '}':
+                break;
             case '[':
                 if (valueParse) {
-                    buf.append(c);
-                    braceStart++;
+                    String sub = str.substring(i, str.length() - 1);
+                    int count = 0;
+                    for (int j = 0; j < sub.length(); ++j) {
+                        char sc = sub.charAt(j);
+                        if (sc == '[') {
+                            count++;
+                            continue;
+                        }
+                        if (sc == ']' && count > 1) {
+                            count--;
+                        } else if (sc == ']' && count == 1) {
+                            String arrayStr = sub.substring(0, j + 1);
+                            List list = JSONSerializer.evalArray(arrayStr);
+                            map.put(key, list);
+                            i = i + j;
+                            isListedData = true;
+                            break;
+                        }
+                    }
                 }
                 break;
             case ']':
-                if (valueParse) {
-                    buf.append(c);
-                    braceStart--;
-                }
                 break;
             case ':':
-                if (braceStart > 0) {
-                    buf.append(c);
-                } else {
-                    key = JSONSerializer.evalString(buf.toString().trim());
-                    valueParse = true;
-                    buf = new StringBuffer();
-                }
+                key = JSONSerializer.evalString(buf.toString().trim());
+                valueParse = true;
+                buf = new StringBuffer();
+                isListedData = false;
+                isMappedData = false;
                 break;
             case ',':
-                value = buf.toString().trim();
-                valueParse = false;
-                buf = new StringBuffer();
-                evalAndAddMap(key, value, map);
+                if (!isListedData && !isMappedData) {
+                    value = buf.toString().trim();
+                    valueParse = false;
+                    buf = new StringBuffer();
+                    evalAndAddMap(key, value, map);
+                }
+                isListedData = false;
+                isMappedData = false;
                 break;
             default:
                 buf.append(c);
@@ -407,7 +438,9 @@ public class JSONSerializer {
         if (buf.length() > 0) {
             value = buf.toString().trim();
         }
-        evalAndAddMap(key, value, map);
+        if (value != null) {
+            evalAndAddMap(key, value, map);
+        }
         return map;
     }
 
@@ -422,41 +455,48 @@ public class JSONSerializer {
         List list = new ArrayList();
         StringBuffer buf = new StringBuffer();
         String value = null;
-        int braceStart = 0;
+        boolean isMappedData = false;
         for (int i = 1; i < str.length() - 1; i++) {
             char c = str.charAt(i);
             switch (c) {
             case '{':
-                buf.append(c);
-                braceStart++;
+                String sub = str.substring(i, str.length() - 1);
+                int count = 0;
+                for (int j = 0; j < sub.length(); ++j) {
+                    char sc = sub.charAt(j);
+                    if (sc == '{') {
+                        count++;
+                        continue;
+                    }
+                    if (sc == '}' && count > 1) {
+                        count--;
+                    } else if (sc == '}' && count == 1) {
+                        String mapStr = sub.substring(0, j + 1);
+                        Map map = JSONSerializer.evalMap(mapStr);
+                        list.add(map);
+                        i = i + j;
+                        isMappedData = true;
+                        break;
+                    }
+                }
                 break;
             case '}':
-                if (braceStart > 0) {
-                    buf.append(c);
-                    braceStart--;
-                }
                 break;
             case '[':
                 buf.append(c);
-                braceStart++;
                 break;
             case ']':
                 buf.append(c);
-                braceStart--;
                 break;
             case ':':
-                if (braceStart > 0) {
-                    buf.append(c);
-                }
                 break;
             case ',':
-                if (braceStart > 0) {
-                    buf.append(c);
-                } else {
+                if (!isMappedData) {
                     value = buf.toString().trim();
                     buf = new StringBuffer();
                     JSONSerializer.evalAndAddList(value, list);
                 }
+                isMappedData = false;
                 break;
             default:
                 buf.append(c);
@@ -466,7 +506,9 @@ public class JSONSerializer {
         if (buf.length() > 0) {
             value = buf.toString().trim();
         }
-        JSONSerializer.evalAndAddList(value, list);
+        if (value != null) {
+            JSONSerializer.evalAndAddList(value, list);
+        }
         return list;
     }
 
@@ -531,4 +573,5 @@ public class JSONSerializer {
             return null;
         }
     }
+
 }
