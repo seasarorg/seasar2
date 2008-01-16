@@ -20,6 +20,8 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.beans.converter.NumberConverter;
+
 /**
  * @author higa
  */
@@ -233,6 +235,18 @@ public class AbstCopyTest extends TestCase {
         DestBean dest = new DestBean();
         new MyCopy().prefix("search_").copyBeanToBean(src, dest);
         assertEquals("hoge", dest.eee$fff);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyBeanToBean_converter() throws Exception {
+        Bean bean = new Bean();
+        bean.aaa = "1,000";
+        Bean2 bean2 = new Bean2();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyBeanToBean(
+                bean, bean2);
+        assertEquals(new Integer(1000), bean2.aaa);
     }
 
     /**
@@ -477,6 +491,48 @@ public class AbstCopyTest extends TestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testConvertValue_zeroConverter() throws Exception {
+        assertEquals(new Integer(1), new MyCopy().convertValue(new Integer(1),
+                "aaa", null));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertValue_propertyConverter_asString() throws Exception {
+        assertEquals("1", new MyCopy().converter(new NumberConverter("##0"),
+                "aaa").convertValue(new Integer(1), "aaa", null));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertValue_propertyConverter_asObject() throws Exception {
+        assertEquals(new Long(1), new MyCopy().converter(
+                new NumberConverter("##0"), "aaa").convertValue("1", "aaa",
+                null));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertValue_typeConverter_asString() throws Exception {
+        assertEquals("1", new MyCopy().converter(new NumberConverter("##0"))
+                .convertValue(new Integer(1), "aaa", null));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertValue_typeConverter_asObject() throws Exception {
+        assertEquals(new Long(1), new MyCopy().converter(
+                new NumberConverter("##0")).convertValue("1", "aaa",
+                Integer.class));
+    }
+
+    /**
      * 
      */
     private static class MyCopy extends AbstractCopy<MyCopy> {
@@ -573,5 +629,27 @@ public class AbstCopyTest extends TestCase {
         public void setDdd(String ddd) {
             this.ddd = ddd;
         }
+    }
+
+    /**
+     * 
+     */
+    public static class Bean {
+
+        /**
+         * 
+         */
+        public String aaa;
+    }
+
+    /**
+     * 
+     */
+    public static class Bean2 {
+
+        /**
+         * 
+         */
+        public Integer aaa;
     }
 }

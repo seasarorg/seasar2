@@ -15,10 +15,14 @@
  */
 package org.seasar.framework.beans.util;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.Converter;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
@@ -66,6 +70,16 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * Mapのデリミタです。
      */
     protected char mapDelimiter = '.';
+
+    /**
+     * 特定のプロパティに関連付けられたコンバータです。
+     */
+    protected Map<String, Converter> converterMap = new HashMap<String, Converter>();
+
+    /**
+     * 特定のプロパティに関連付けられていないコンバータです。
+     */
+    protected List<Converter> converters = new ArrayList<Converter>();
 
     /**
      * 操作の対象に含めるプロパティ名を指定します。
@@ -155,6 +169,25 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     }
 
     /**
+     * コンバータを設定します。
+     * 
+     * @param converter
+     * @param propertyNames
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public S converter(Converter converter, String... propertyNames) {
+        if (propertyNames.length == 0) {
+            converters.add(converter);
+        } else {
+            for (String name : propertyNames) {
+                converterMap.put(name, converter);
+            }
+        }
+        return (S) this;
+    }
+
+    /**
      * 対象のプロパティかどうかを返します。
      * 
      * @param name
@@ -214,6 +247,8 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             if (value == null && excludesNull) {
                 continue;
             }
+            value = convertValue(value, destPropertyName, destPropertyDesc
+                    .getPropertyType());
             destPropertyDesc.setValue(dest, value);
         }
     }
@@ -316,5 +351,44 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             return propertyName;
         }
         return propertyName.substring(prefix.length());
+    }
+
+    /**
+     * 値を変換します。
+     * 
+     * @param value
+     *            値
+     * @param destPropertyName
+     *            コピー先のプロパティ名
+     * @param destPropertyClass
+     *            コピー先のプロパティクラス
+     * @return 変換後の値
+     */
+    protected Object convertValue(Object value, String destPropertyName,
+            Class<?> destPropertyClass) {
+        if (value == null) {
+            return null;
+        }
+        Converter converter = converterMap.get(destPropertyName);
+        if (converter == null) {
+            Class<?> targetClass = value.getClass() != String.class ? value
+                    .getClass() : destPropertyClass;
+            if (targetClass == null) {
+                return value;
+            }
+            for (Converter c : converters) {
+                if (c.isTarget(targetClass)) {
+                    converter = c;
+                    break;
+                }
+            }
+            if (converter == null) {
+                return value;
+            }
+        }
+        if (value.getClass() == String.class) {
+            return converter.getAsObject((String) value);
+        }
+        return converter.getAsString(value);
     }
 }
