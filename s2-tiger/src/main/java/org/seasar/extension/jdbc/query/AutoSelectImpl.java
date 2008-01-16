@@ -507,8 +507,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
                     50);
             List<Integer> idIndexList = new ArrayList<Integer>();
-            prepareEntity(inverseEntityMeta, tableAlias, propertyMapperList,
-                    idIndexList);
+            if (!count) {
+                prepareEntity(inverseEntityMeta, tableAlias,
+                        propertyMapperList, idIndexList);
+            }
             PropertyMapper[] propertyMappers = toPropertyMapperArray(propertyMapperList);
             int[] idIndices = toIdIndexArray(idIndexList);
             AbstractRelationshipEntityMapper remapper = createRelationshipEntityMapper(
