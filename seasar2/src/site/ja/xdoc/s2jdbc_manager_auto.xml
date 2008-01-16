@@ -28,6 +28,11 @@
 						</li>
 						<li>
 							<p>
+								<a href="#検索結果の行数取得">検索結果の行数取得</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#結合">結合</a>
 							</p>
 						</li>
@@ -437,6 +442,33 @@ int count = results = jdbcManager
 					</tr>
 				</table>
 				<p>結果セットが上記のような順になっている場合、 コールバックメソッドは4回呼び出されてしまいます。</p>
+			</subsection>
+
+			<subsection name="検索結果の行数取得">
+				<p>
+					SELECT COUNT(*) ～による検索結果の行数を取得する場合は、getCount()を使います。
+				</p>
+				<source><![CDATA[
+long count = jdbcManager.from(Employee.class).getCount();
+]]></source>
+				<p>
+					<code>getCount()</code>
+					が返す値は問い合わせ結果の行数であり、 同等の問い合わせを行った場合に
+					<a href="#複数件検索">
+						<code>getResultList()</code>
+					</a>
+					が返すエンティティの数と一致するとは限りません。
+					<code>from()</code>
+					で指定したエンティティに
+					<a href="s2jdbc_entity.html#一対多関連定義">1対多関連</a>
+					を
+					<a href="#結合">結合</a>
+					した場合、
+					<code>getCount()</code>
+					が返す行数は
+					<code>getResultList()</code>
+					が返すエンティティの数よりも多くなる場合があります。
+				</p>
 			</subsection>
 
 			<subsection name="結合">
@@ -1138,6 +1170,24 @@ jdbcManager.from(Employee.class)
     .getResultList();
 ]]></source>
 				<p>排他制御とページングを組み合わせることはできません。</p>
+				<p>
+					<code>limit()</code>
+					で指定する値は問い合わせ結果の行数であり、
+					<a href="#複数件検索">
+						<code>getResultList()</code>
+					</a>
+					が返すエンティティの数と一致するとは限りません。
+					<code>from()</code>
+					で指定したエンティティに
+					<a href="s2jdbc_entity.html#一対多関連定義">1対多関連</a>
+					を
+					<a href="#結合">結合</a>
+					した場合、
+					<code>getResultList()</code>
+					が返すエンティティの数は
+					<code>limit()</code>
+					で指定した数よりも少なくなる場合があります。
+				</p>
 			</subsection>
 
 			<subsection name="最大行数">

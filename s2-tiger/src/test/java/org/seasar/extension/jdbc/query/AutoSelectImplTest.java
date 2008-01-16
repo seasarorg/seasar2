@@ -417,6 +417,26 @@ public class AutoSelectImplTest extends TestCase {
     }
 
     /**
+     * 
+     */
+    public void testPrepareEntity_getCount() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.count = true;
+        query.prepareCallerClassAndMethodName("getCount");
+        List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
+                50);
+        List<Integer> idIndexList = new ArrayList<Integer>();
+        EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
+        String tableAlias = query.prepareTableAlias(null);
+        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+                idIndexList);
+        assertEquals("select count(T1_.ID)", query.selectClause.toSql());
+        ValueType[] valueTypes = query.getValueTypes();
+        assertEquals(1, valueTypes.length);
+        assertEquals(ValueTypes.LONG, valueTypes[0]);
+    }
+
+    /**
      * @throws Exception
      * 
      */
@@ -2137,4 +2157,5 @@ public class AutoSelectImplTest extends TestCase {
     @Entity
     private static class BadCcc {
     }
+
 }

@@ -51,6 +51,7 @@ import org.seasar.extension.jdbc.exception.VersionPropertyNotExistsRuntimeExcept
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanIterationAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
+import org.seasar.extension.jdbc.handler.ObjectResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.mapper.AbstractEntityMapper;
 import org.seasar.extension.jdbc.mapper.AbstractRelationshipEntityMapper;
@@ -102,6 +103,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * エンティティ名です。
      */
     protected String entityName;
+
+    /**
+     * SELECT COUNT(*)～で行数を取得する場合に<code>true</code>
+     */
+    protected boolean count;
 
     /**
      * select句です。
@@ -314,19 +320,30 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      */
     protected void prepareEntity(EntityMeta em, String tableAlias,
             List<PropertyMapper> propertyMapperList, List<Integer> idIndexList) {
-        for (int i = 0; i < em.getPropertyMetaSize(); i++) {
-            PropertyMeta pm = em.getPropertyMeta(i);
-            if (pm.isTransient() || pm.isRelationship()) {
-                continue;
+        if (count) {
+            List<PropertyMeta> propertyMetaList = em.getIdPropertyMetaList();
+            String selectItem = propertyMetaList.isEmpty() ? "count(*)"
+                    : "count(" + tableAlias + "."
+                            + propertyMetaList.get(0).getColumnMeta().getName()
+                            + ")";
+            selectClause.addSql(selectItem);
+            valueTypeList.add(jdbcManager.getDialect().getValueType(Long.class,
+                    false, null));
+        } else {
+            for (int i = 0; i < em.getPropertyMetaSize(); i++) {
+                PropertyMeta pm = em.getPropertyMeta(i);
+                if (pm.isTransient() || pm.isRelationship()) {
+                    continue;
+                }
+                selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
+                valueTypeList.add(jdbcManager.getDialect().getValueType(pm));
+                propertyMapperList.add(new PropertyMapperImpl(pm.getField(),
+                        selectListIndex));
+                if (pm.isId()) {
+                    idIndexList.add(new Integer(selectListIndex));
+                }
+                ++selectListIndex;
             }
-            selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
-            valueTypeList.add(jdbcManager.getDialect().getValueType(pm));
-            propertyMapperList.add(new PropertyMapperImpl(pm.getField(),
-                    selectListIndex));
-            if (pm.isId()) {
-                idIndexList.add(new Integer(selectListIndex));
-            }
-            ++selectListIndex;
         }
     }
 
@@ -779,6 +796,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return this;
     }
 
+    public long getCount() {
+        count = true;
+        prepare("getCount");
+        logSql();
+        return Long.class.cast(getSingleResultInternal());
+    }
+
     /**
      * where句の条件を準備します。
      * 
@@ -935,6 +959,9 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
 
     @Override
     protected ResultSetHandler createSingleResultResultSetHandler() {
+        if (count) {
+            return new ObjectResultSetHandler(valueTypeList.get(0), executedSql);
+        }
         return new BeanAutoResultSetHandler(getValueTypes(), getEntityMapper(),
                 executedSql);
     }

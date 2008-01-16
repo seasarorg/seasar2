@@ -37,6 +37,17 @@ public class SelectClauseTest extends TestCase {
     /**
      * 
      */
+    public void testAddSql2() {
+        SelectClause selectClause = new SelectClause();
+        selectClause.addSql("count(*)");
+        assertEquals("select count(*)", selectClause.toSql());
+        selectClause.addSql("max(a)");
+        assertEquals("select count(*), max(a)", selectClause.toSql());
+    }
+
+    /**
+     * 
+     */
     public void testGetLength() {
         SelectClause selectClause = new SelectClause();
         assertEquals(0, selectClause.getLength());

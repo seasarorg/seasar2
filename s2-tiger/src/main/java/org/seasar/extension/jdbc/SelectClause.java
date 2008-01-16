@@ -23,63 +23,81 @@ package org.seasar.extension.jdbc;
  */
 public class SelectClause {
 
-	/**
-	 * SQLです。
-	 */
-	protected StringBuilder sql;
+    /**
+     * SQLです。
+     */
+    protected StringBuilder sql;
 
-	/**
-	 * {@link SelectClause}を作成します。
-	 * 
-	 */
-	public SelectClause() {
-		this(300);
-	}
+    /**
+     * {@link SelectClause}を作成します。
+     * 
+     */
+    public SelectClause() {
+        this(300);
+    }
 
-	/**
-	 * {@link SelectClause}を作成します。
-	 * 
-	 * @param capacity
-	 *            初期容量
-	 */
-	public SelectClause(int capacity) {
-		sql = new StringBuilder(capacity);
-	}
+    /**
+     * {@link SelectClause}を作成します。
+     * 
+     * @param capacity
+     *            初期容量
+     */
+    public SelectClause(int capacity) {
+        sql = new StringBuilder(capacity);
+    }
 
-	/**
-	 * SQLの長さを返します。
-	 * 
-	 * @return SQLの長さ
-	 */
-	public int getLength() {
-		return sql.length();
-	}
+    /**
+     * SQLの長さを返します。
+     * 
+     * @return SQLの長さ
+     */
+    public int getLength() {
+        return sql.length();
+    }
 
-	/**
-	 * SQLに変換します。
-	 * 
-	 * @return SQL
-	 */
-	public String toSql() {
-		return sql.toString();
-	}
+    /**
+     * SQLに変換します。
+     * 
+     * @return SQL
+     */
+    public String toSql() {
+        return sql.toString();
+    }
 
-	/**
-	 * select句を追加します。
-	 * 
-	 * @param tableAlias
-	 *            テーブル別名
-	 * @param columnName
-	 *            カラム名
-	 */
-	public void addSql(String tableAlias, String columnName) {
-		if (sql.length() == 0) {
-			sql.append("select ");
-		} else {
-			sql.append(", ");
-		}
-		sql.append(tableAlias);
-		sql.append(".");
-		sql.append(columnName);
-	}
+    /**
+     * select句を追加します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     */
+    public void addSql(String tableAlias, String columnName) {
+        if (sql.length() == 0) {
+            sql.append("select ");
+        } else {
+            sql.append(", ");
+        }
+        sql.append(tableAlias);
+        sql.append(".");
+        sql.append(columnName);
+    }
+
+    /**
+     * select句を追加します。
+     * 
+     * @param selectItem
+     *            セレクト項目
+     * @param columnName
+     *            カラム名
+     */
+    public void addSql(String selectItem) {
+        if (sql.length() == 0) {
+            sql.append("select ");
+        } else {
+            sql.append(", ");
+        }
+        sql.append(selectItem);
+    }
+
 }
