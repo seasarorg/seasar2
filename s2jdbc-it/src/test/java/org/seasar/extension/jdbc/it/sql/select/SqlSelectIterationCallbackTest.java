@@ -38,7 +38,7 @@ public class SqlSelectIterationCallbackTest {
         "select * from Employee order by employee_id";
 
     private static final String SQL2 =
-        "select salary from Employee order by employee_id";
+        "select salary, employee_id from Employee order by employee_id";
 
     private JdbcManager jdbcManager;
 
