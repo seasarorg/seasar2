@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.seasar.extension.dxo.annotation.DestPrefix;
 import org.seasar.extension.dxo.annotation.ExcludeNull;
 import org.seasar.extension.dxo.annotation.SourcePrefix;
 import org.seasar.extension.unit.S2TestCase;
@@ -365,7 +366,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testPrefix_BeanToBean() throws Exception {
+    public void testSrcPrefix_BeanToBean() throws Exception {
         SearchPage src = new SearchPage();
         src.setSearch_name_LIKE("%hoge%");
         src.setSearch_age_GT(Integer.valueOf(25));
@@ -385,7 +386,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public void testPrefix_MapToBean() throws Exception {
+    public void testSrcPrefix_MapToBean() throws Exception {
         Map src = new HashMap();
         src.put("search_name_LIKE", "%hoge%");
         src.put("search_age_GT", Integer.valueOf(25));
@@ -405,7 +406,7 @@ public class DxoInterceptorTigerTest extends S2TestCase {
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public void testPrefix_BeanToMap() throws Exception {
+    public void testSrcPrefix_BeanToMap() throws Exception {
         SearchPage src = new SearchPage();
         src.setSearch_name_LIKE("%hoge%");
         src.setSearch_age_GT(Integer.valueOf(25));
@@ -417,6 +418,68 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         searchDxo.convert(src, dest);
         assertEquals("%hoge%", dest.get("name_LIKE"));
         assertEquals(Integer.valueOf(25), dest.get("age_GT"));
+        assertNull(dest.get("name"));
+        assertNull(dest.get("age"));
+        assertNull(dest.get("hoge"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDestPrefix_BeanToBean() throws Exception {
+        SearchDto src = new SearchDto();
+        src.setName_LIKE("%hoge%");
+        src.setAge_GT(Integer.valueOf(25));
+        src.setName("foo");
+        src.setAge(Integer.valueOf(100));
+        src.setHoge("hoge");
+
+        SearchPage dest = new SearchPage();
+        searchDxo.convert(src, dest);
+        assertEquals("%hoge%", dest.getSearch_name_LIKE());
+        assertEquals(Integer.valueOf(25), dest.getSearch_age_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public void testDestPrefix_MapToBean() throws Exception {
+        Map src = new HashMap();
+        src.put("name_LIKE", "%hoge%");
+        src.put("age_GT", Integer.valueOf(25));
+        src.put("name", "foo");
+        src.put("age", Integer.valueOf(100));
+        src.put("hoge", "hoge");
+
+        SearchPage dest = new SearchPage();
+        searchDxo.convert(src, dest);
+        assertEquals("%hoge%", dest.getSearch_name_LIKE());
+        assertEquals(Integer.valueOf(25), dest.getSearch_age_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public void testDestPrefix_BeanToMap() throws Exception {
+        SearchDto src = new SearchDto();
+        src.setName_LIKE("%hoge%");
+        src.setAge_GT(Integer.valueOf(25));
+        src.setName("foo");
+        src.setAge(Integer.valueOf(100));
+        src.setHoge("hoge");
+
+        Map dest = new HashMap();
+        searchDxo.convert(src, dest);
+        assertEquals("%hoge%", dest.get("search_name_LIKE"));
+        assertEquals(Integer.valueOf(25), dest.get("search_age_GT"));
         assertNull(dest.get("name"));
         assertNull(dest.get("age"));
         assertNull(dest.get("hoge"));
@@ -530,19 +593,20 @@ public class DxoInterceptorTigerTest extends S2TestCase {
     /**
      * 
      */
-    @SourcePrefix("search_")
     public interface SearchDxo {
 
         /**
          * @param src
          * @return
          */
+        @SourcePrefix("search_")
         SearchDto convert(SearchPage src);
 
         /**
          * @param src
          * @return
          */
+        @SourcePrefix("search_")
         @SuppressWarnings("unchecked")
         SearchDto convert(Map src);
 
@@ -551,8 +615,32 @@ public class DxoInterceptorTigerTest extends S2TestCase {
          * @param dest
          * @return
          */
+        @SourcePrefix("search_")
         @SuppressWarnings("unchecked")
         void convert(SearchPage src, Map dest);
+
+        /**
+         * @param src
+         * @param dest
+         */
+        @DestPrefix("search_")
+        void convert(SearchDto src, SearchPage dest);
+
+        /**
+         * @param src
+         * @param dest
+         */
+        @SuppressWarnings("unchecked")
+        @DestPrefix("search_")
+        void convert(Map src, SearchPage dest);
+
+        /**
+         * @param src
+         * @param dest
+         */
+        @SuppressWarnings("unchecked")
+        @DestPrefix("search_")
+        void convert(SearchDto src, Map dest);
 
     }
 

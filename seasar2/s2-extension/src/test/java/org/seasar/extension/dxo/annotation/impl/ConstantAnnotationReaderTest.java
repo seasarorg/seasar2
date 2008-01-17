@@ -102,7 +102,25 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * @throws Exception
+     */
+    public void testGetSourcePrefix() throws Exception {
+        assertEquals("src", factory.getAnnotationReader().getSourcePrefix(
+                Dxo3.class,
+                Dxo3.class.getMethod("convert", new Class[] { Object.class })));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetDestPrefix() throws Exception {
+        assertEquals("dest", factory.getAnnotationReader().getDestPrefix(
+                Dxo3.class,
+                Dxo3.class.getMethod("convert", new Class[] { Object.class })));
+    }
+
+    /**
+     * 
      */
     public interface Dxo {
         /**
@@ -190,7 +208,7 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public interface Dxo2 {
         /**
@@ -200,8 +218,23 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
         Object convert(Object src);
     }
 
+    public interface Dxo3 {
+
+        /** */
+        public static final String convert_SOURCE_PREFIX = "src";
+
+        /** */
+        public static final String convert_DEST_PREFIX = "dest";
+
+        /**
+         * @param src
+         * @return
+         */
+        Object convert(Object src);
+    }
+
     /**
-     *
+     * 
      */
     public static class Hoge {
         /**
@@ -254,7 +287,7 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class HogeDxoConverter extends AbstractConverter {
         /**

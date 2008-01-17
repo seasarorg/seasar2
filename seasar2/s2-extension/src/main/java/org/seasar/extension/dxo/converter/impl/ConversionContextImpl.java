@@ -112,6 +112,9 @@ public class ConversionContextImpl implements ConversionContext {
     /** 変換元JavaBeansのプロパティのprefixです。 */
     protected String sourcePrefix;
 
+    /** 変換先JavaBeansのプロパティのprefixです。 */
+    protected String destPrefix;
+
     static {
         initialize();
     }
@@ -174,6 +177,7 @@ public class ConversionContextImpl implements ConversionContext {
         excludeNull = ((Boolean) getContextInfo(DxoConstants.EXCLUDE_NULL))
                 .booleanValue();
         sourcePrefix = (String) getContextInfo(DxoConstants.SOURCE_PREFIX);
+        destPrefix = (String) getContextInfo(DxoConstants.DEST_PREFIX);
     }
 
     public ConverterFactory getConverterFactory() {
@@ -276,13 +280,23 @@ public class ConversionContextImpl implements ConversionContext {
     }
 
     public String getSourcePropertyName(final String destPropertyName) {
-        if (StringUtil.isEmpty(sourcePrefix)) {
-            return destPropertyName;
+        String sourcePropertyName = destPropertyName;
+        if (!StringUtil.isEmpty(destPrefix)) {
+            if (!sourcePropertyName.startsWith(destPrefix)) {
+                return null;
+            }
+            sourcePropertyName = StringUtil.decapitalize(sourcePropertyName
+                    .substring(destPrefix.length()));
         }
-        if (sourcePrefix.endsWith("_")) {
-            return sourcePrefix + destPropertyName;
+        if (!StringUtil.isEmpty(sourcePrefix)) {
+            if (sourcePrefix.endsWith("_")) {
+                sourcePropertyName = sourcePrefix + sourcePropertyName;
+            } else {
+                sourcePropertyName = sourcePrefix
+                        + StringUtil.capitalize(sourcePropertyName);
+            }
         }
-        return sourcePrefix + StringUtil.capitalize(destPropertyName);
+        return sourcePropertyName;
     }
 
     /**
@@ -334,6 +348,8 @@ public class ConversionContextImpl implements ConversionContext {
                 .valueOf(annotationReader.isExcludeNull(dxoClass, method)));
         contextInfo.put(DxoConstants.SOURCE_PREFIX, annotationReader
                 .getSourcePrefix(dxoClass, method));
+        contextInfo.put(DxoConstants.DEST_PREFIX, annotationReader
+                .getDestPrefix(dxoClass, method));
         contextInfoCache.put(method, contextInfo);
         return contextInfo;
     }

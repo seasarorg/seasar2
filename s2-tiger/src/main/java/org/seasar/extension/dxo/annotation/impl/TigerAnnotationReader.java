@@ -22,6 +22,7 @@ import java.util.Map;
 import org.seasar.extension.dxo.annotation.AnnotationReader;
 import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
+import org.seasar.extension.dxo.annotation.DestPrefix;
 import org.seasar.extension.dxo.annotation.DxoConverter;
 import org.seasar.extension.dxo.annotation.ExcludeNull;
 import org.seasar.extension.dxo.annotation.SourcePrefix;
@@ -151,6 +152,19 @@ public class TigerAnnotationReader implements AnnotationReader {
         }
         if (next != null) {
             return next.getSourcePrefix(dxoClass, method);
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public String getDestPrefix(Class dxoClass, Method method) {
+        final DestPrefix destPrefix = getAnnotation(dxoClass, method,
+                DestPrefix.class);
+        if (destPrefix != null) {
+            return destPrefix.value();
+        }
+        if (next != null) {
+            return next.getDestPrefix(dxoClass, method);
         }
         return null;
     }

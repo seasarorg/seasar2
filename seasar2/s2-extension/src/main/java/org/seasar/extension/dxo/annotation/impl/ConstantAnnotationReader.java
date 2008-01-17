@@ -110,6 +110,20 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return null;
     }
 
+    public String getDestPrefix(final Class dxoClass, final Method method) {
+        final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
+        String fieldName = getConstantAnnotationName(method,
+                DxoConstants.DEST_PREFIX);
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        fieldName = method.getName() + "_" + DxoConstants.DEST_PREFIX;
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return (String) dxoBeanDesc.getFieldValue(fieldName, null);
+        }
+        return null;
+    }
+
     public Map getConverters(final Class destClass) {
         final Map converters = (Map) convertersCache.get(destClass);
         if (converters != null) {

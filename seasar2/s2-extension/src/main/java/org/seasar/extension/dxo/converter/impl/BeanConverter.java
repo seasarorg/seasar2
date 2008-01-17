@@ -195,6 +195,9 @@ public class BeanConverter extends AbstractConverter {
             final ConversionContext context) {
         final String sourcePropertyName = context
                 .getSourcePropertyName(destPropertyName);
+        if (sourcePropertyName == null) {
+            return PROPERTY_NOT_FOUND;
+        }
         if (context.hasEvalueatedValue(sourcePropertyName)) {
             return context.getEvaluatedValue(sourcePropertyName);
         }

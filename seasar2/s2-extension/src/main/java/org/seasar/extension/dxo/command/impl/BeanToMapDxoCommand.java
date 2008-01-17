@@ -48,6 +48,9 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
     /** 変換元Beanのプロパティの接頭辞です。 */
     protected String sourcePrefix;
 
+    /** 変換先Beanのプロパティの接頭辞です。 */
+    protected String destPrefix;
+
     /** {@link Map}の要素型です。Java5以降の場合のみ有効です。 */
     protected Class valueType;
 
@@ -92,6 +95,7 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         }
         excludeNull = annotationReader.isExcludeNull(dxoClass, method);
         sourcePrefix = annotationReader.getSourcePrefix(dxoClass, method);
+        destPrefix = annotationReader.getDestPrefix(dxoClass, method);
         valueType = DxoUtil.getValueTypeOfTargetMap(method);
         if (valueType == Object.class) {
             valueType = null;
@@ -208,20 +212,32 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
      * 変換元プロパティの接頭辞が指定されている場合は、変換元のプロパティ名から接頭辞を取り除いてデキャピタライズしたものが
      * 変換後のプロパティ名となります。
      * </p>
+     * <p>
+     * 変換先プロパティの接頭辞が指定されている場合は、その後ろに変換元のプロパティ名をキャピタライズして付加たものが変換後のプロパティ名となります。
+     * </p>
      * 
      * @param sourcePropertyName
      *            変換元のプロパティ名
      * @return 変換元のプロパティに対応する変換後のプロパティ名
      */
     protected String toDestPropertyName(final String sourcePropertyName) {
-        if (StringUtil.isEmpty(sourcePrefix)) {
-            return sourcePropertyName;
+        String destPropertyName = sourcePropertyName;
+        if (!StringUtil.isEmpty(sourcePrefix)) {
+            if (!sourcePropertyName.startsWith(sourcePrefix)) {
+                return null;
+            }
+            destPropertyName = StringUtil.decapitalize(sourcePropertyName
+                    .substring(sourcePrefix.length()));
         }
-        if (!sourcePropertyName.startsWith(sourcePrefix)) {
-            return null;
+        if (!StringUtil.isEmpty(destPrefix)) {
+            if (destPrefix.endsWith("_")) {
+                destPropertyName = destPrefix + destPropertyName;
+            } else {
+                destPropertyName = destPrefix
+                        + StringUtil.capitalize(destPropertyName);
+            }
         }
-        return StringUtil.decapitalize(sourcePropertyName
-                .substring(sourcePrefix.length()));
+        return destPropertyName;
     }
 
 }

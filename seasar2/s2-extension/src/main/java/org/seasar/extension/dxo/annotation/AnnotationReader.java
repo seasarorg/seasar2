@@ -93,6 +93,17 @@ public interface AnnotationReader {
     String getSourcePrefix(Class dxoClass, Method method);
 
     /**
+     * 変換先プロパティのprefixを返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return 変換先プロパティのprefix
+     */
+    String getDestPrefix(Class dxoClass, Method method);
+
+    /**
      * 変換先クラスに指定されたコンバータの{@link Map}を返します。
      * 
      * @param destClass

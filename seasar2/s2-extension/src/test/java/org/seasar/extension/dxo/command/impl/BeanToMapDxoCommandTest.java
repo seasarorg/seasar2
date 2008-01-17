@@ -190,6 +190,60 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
     /**
      * @throws Exception
      */
+    public void testScalarDestPrefix() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
+                ClassUtil.getMethod(ScalarDxo.class, "convert5",
+                        new Class[] { Hoge.class }));
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+
+        Map dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(4, dest.size());
+        assertEquals(new Integer(100), dest.get("deptFoo"));
+        assertEquals("Hoge", dest.get("deptBar"));
+        assertNull(dest.get("deptBarBar"));
+        assertEquals(new BigDecimal("1000"), dest.get("deptBaz"));
+
+        src = new Hoge(0, null, null);
+        dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(4, dest.size());
+        assertEquals(new Integer(0), dest.get("deptFoo"));
+        assertNull(dest.get("deptBar"));
+        assertNull(dest.get("deptBarBar"));
+        assertNull(dest.get("deptBaz"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testScalarDestPrefix2() throws Exception {
+        DxoCommand command = builder.createDxoCommand(ScalarDxo.class,
+                ClassUtil.getMethod(ScalarDxo.class, "convert6",
+                        new Class[] { Hoge.class }));
+        Hoge src = new Hoge(100, "Hoge", new BigDecimal("1000"));
+
+        Map dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(4, dest.size());
+        assertEquals(new Integer(100), dest.get("dept_foo"));
+        assertEquals("Hoge", dest.get("dept_bar"));
+        assertNull(dest.get("dept_barBar"));
+        assertEquals(new BigDecimal("1000"), dest.get("dept_baz"));
+
+        src = new Hoge(0, null, null);
+        dest = (Map) command.execute(new Object[] { src });
+        assertNotNull(dest);
+        assertEquals(4, dest.size());
+        assertEquals(new Integer(0), dest.get("dept_foo"));
+        assertNull(dest.get("dept_bar"));
+        assertNull(dest.get("dept_barBar"));
+        assertNull(dest.get("dept_baz"));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testArrayToArray1() throws Exception {
         DxoCommand command = builder.createDxoCommand(ToArrayDxo.class,
                 ClassUtil.getMethod(ToArrayDxo.class, "convert",
@@ -339,6 +393,28 @@ public class BeanToMapDxoCommandTest extends S2FrameworkTestCase {
          * @param dest
          */
         void convert4(Hoge src, Map dest);
+
+        /**
+         * 
+         */
+        public static final String convert5_DEST_PREFIX = "dept";
+
+        /**
+         * @param src
+         * @return
+         */
+        Map convert5(Hoge src);
+
+        /**
+         * 
+         */
+        public static final String convert6_DEST_PREFIX = "dept_";
+
+        /**
+         * @param src
+         * @return
+         */
+        Map convert6(Hoge src);
     }
 
     /**

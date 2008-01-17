@@ -332,7 +332,7 @@ public class DxoInterceptorTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testPrefix_BeanToBean() throws Exception {
+    public void testSrcPrefix_BeanToBean() throws Exception {
         SearchPage src = new SearchPage();
         src.setSearch_name_LIKE("%hoge%");
         src.setSearch_age_GT(new Integer(25));
@@ -351,7 +351,7 @@ public class DxoInterceptorTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testPrefix_MapToBean() throws Exception {
+    public void testSrcPrefix_MapToBean() throws Exception {
         Map src = new HashMap();
         src.put("search_name_LIKE", "%hoge%");
         src.put("search_age_GT", new Integer(25));
@@ -370,7 +370,7 @@ public class DxoInterceptorTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testPrefix_BeanToMap() throws Exception {
+    public void testSrcPrefix_BeanToMap() throws Exception {
         SearchPage src = new SearchPage();
         src.setSearch_name_LIKE("%hoge%");
         src.setSearch_age_GT(new Integer(25));
@@ -382,6 +382,66 @@ public class DxoInterceptorTest extends S2TestCase {
         searchDxo.convert(src, dest);
         assertEquals("%hoge%", dest.get("name_LIKE"));
         assertEquals(new Integer(25), dest.get("age_GT"));
+        assertNull(dest.get("name"));
+        assertNull(dest.get("age"));
+        assertNull(dest.get("hoge"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDestPrefix_BeanToBean() throws Exception {
+        SearchDto src = new SearchDto();
+        src.name_LIKE = "%hoge%";
+        src.age_GT = new Integer(25);
+        src.name = "foo";
+        src.age = new Integer(100);
+        src.hoge = "hoge";
+
+        SearchPage dest = new SearchPage();
+        searchDxo.convert2(src, dest);
+        assertEquals("%hoge%", dest.getSearch_name_LIKE());
+        assertEquals(new Integer(25), dest.getSearch_age_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDestPrefix_MapToBean() throws Exception {
+        Map src = new HashMap();
+        src.put("name_LIKE", "%hoge%");
+        src.put("age_GT", new Integer(25));
+        src.put("name", "foo");
+        src.put("age", new Integer(100));
+        src.put("hoge", "hoge");
+
+        SearchPage dest = new SearchPage();
+        searchDxo.convert2(src, dest);
+        assertEquals("%hoge%", dest.getSearch_name_LIKE());
+        assertEquals(new Integer(25), dest.getSearch_age_GT());
+        assertNull(dest.getName());
+        assertNull(dest.getAge());
+        assertNull(dest.getHoge());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDestPrefix_BeanToMap() throws Exception {
+        SearchDto src = new SearchDto();
+        src.name_LIKE = "%hoge%";
+        src.age_GT = new Integer(25);
+        src.name = "foo";
+        src.age = new Integer(100);
+        src.hoge = "hoge";
+
+        Map dest = new HashMap();
+        searchDxo.convert2(src, dest);
+        assertEquals("%hoge%", dest.get("search_name_LIKE"));
+        assertEquals(new Integer(25), dest.get("search_age_GT"));
         assertNull(dest.get("name"));
         assertNull(dest.get("age"));
         assertNull(dest.get("hoge"));
@@ -524,6 +584,30 @@ public class DxoInterceptorTest extends S2TestCase {
          * @return
          */
         void convert(SearchPage src, Map dest);
+
+        /** */
+        public static final String convert2_DEST_PREFIX = "search_";
+
+        /**
+         * @param src
+         * @param dest
+         * @return
+         */
+        void convert2(SearchDto src, SearchPage dest);
+
+        /**
+         * @param src
+         * @param dest
+         * @return
+         */
+        void convert2(Map src, SearchPage dest);
+
+        /**
+         * @param src
+         * @param dest
+         * @return
+         */
+        void convert2(SearchDto src, Map dest);
 
     }
 

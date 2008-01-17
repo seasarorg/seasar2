@@ -53,4 +53,9 @@ public interface DxoConstants {
      */
     String SOURCE_PREFIX = "SOURCE_PREFIX";
 
+    /**
+     * 変換先プロパティのprefixを指定する定数アノテーションの名前です。
+     */
+    String DEST_PREFIX = "DEST_PREFIX";
+
 }
