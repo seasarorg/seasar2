@@ -73,9 +73,7 @@ public class SelectClause {
      *            カラム名
      */
     public void addSql(String tableAlias, String columnName) {
-        if (sql.length() == 0) {
-            sql.append("select ");
-        } else {
+        if (sql.length() > 0) {
             sql.append(", ");
         }
         sql.append(tableAlias);
@@ -92,9 +90,7 @@ public class SelectClause {
      *            カラム名
      */
     public void addSql(String selectItem) {
-        if (sql.length() == 0) {
-            sql.append("select ");
-        } else {
+        if (sql.length() > 0) {
             sql.append(", ");
         }
         sql.append(selectItem);

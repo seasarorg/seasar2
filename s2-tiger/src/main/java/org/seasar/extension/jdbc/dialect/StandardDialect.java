@@ -328,4 +328,8 @@ public class StandardDialect implements DbmsDialect {
         return true;
     }
 
+    public String getHintComment(String hint) {
+        return "";
+    }
+
 }

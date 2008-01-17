@@ -204,4 +204,9 @@ public class OracleDialect extends StandardDialect {
         return new String(buf);
     }
 
+    @Override
+    public String getHintComment(final String hint) {
+        return "/*+ " + hint + " */ ";
+    }
+
 }

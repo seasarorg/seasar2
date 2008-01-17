@@ -156,6 +156,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected int forUpdateWaitSeconds = 0;
 
     /**
+     * ヒントです。
+     */
+    protected String hint;
+
+    /**
      * 値タイプのリストです。
      */
     protected List<ValueType> valueTypeList = new ArrayList<ValueType>(50);
@@ -724,12 +729,19 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * @return SQL
      */
     protected String toSql() {
-        StringBuilder sb = new StringBuilder(selectClause.getLength()
-                + fromClause.getLength() + whereClause.getLength()
-                + orderByClause.getLength());
-        return sb.append(selectClause.toSql()).append(fromClause.toSql())
-                .append(whereClause.toSql()).append(orderByClause.toSql())
-                .toString();
+        String hintComment;
+        if (!StringUtil.isEmpty(hint)) {
+            hintComment = jdbcManager.getDialect().getHintComment(
+                    convertEntityNameToTableAlias(hint));
+        } else {
+            hintComment = "";
+        }
+        StringBuilder sb = new StringBuilder(7 + hintComment.length()
+                + selectClause.getLength() + fromClause.getLength()
+                + whereClause.getLength() + orderByClause.getLength());
+        return sb.append("select ").append(hintComment).append(
+                selectClause.toSql()).append(fromClause.toSql()).append(
+                whereClause.toSql()).append(orderByClause.toSql()).toString();
     }
 
     public AutoSelect<T> where(String criteria, Object... params) {
@@ -1032,6 +1044,34 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return sb.toString();
     }
 
+    /**
+     * 文字列中のエンティティ名をテーブルの別名に変換します。
+     * 
+     * @param str
+     *            入力文字列
+     * @return 入力文字列中のエンティティ名をテーブルの別名に変換した文字列
+     */
+    protected String convertEntityNameToTableAlias(final String str) {
+        final StringBuilder buf = new StringBuilder(20 + str.length());
+        final QueryTokenizer tokenizer = new QueryTokenizer(str);
+        for (int type = tokenizer.nextToken(); type != QueryTokenizer.TT_EOF; type = tokenizer
+                .nextToken()) {
+            final String token = tokenizer.getToken();
+            if (type == QueryTokenizer.TT_WORD) {
+                final String tableAlias = getTableAlias(token
+                        .equals(entityName) ? null : token);
+                if (StringUtil.isEmpty(tableAlias)) {
+                    buf.append(token);
+                } else {
+                    buf.append(tableAlias);
+                }
+            } else {
+                buf.append(token);
+            }
+        }
+        return new String(buf);
+    }
+
     public AutoSelect<T> forUpdate() {
         final DbmsDialect dialect = getJdbcManager().getDialect();
         if (!dialect.supportsForUpdate(SelectForUpdateType.NORMAL, false)) {
@@ -1142,6 +1182,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         forUpdateType = SelectForUpdateType.WAIT;
         forUpdateWaitSeconds = seconds;
         setupForUpdateTargets(propertyNames);
+        return this;
+    }
+
+    public AutoSelect<T> hint(final String hint) {
+        this.hint = hint;
         return this;
     }
 

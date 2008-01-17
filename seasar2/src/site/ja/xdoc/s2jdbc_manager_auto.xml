@@ -71,6 +71,11 @@
 								<a href="#クエリタイムアウト">クエリタイムアウト</a>
 							</p>
 						</li>
+						<li>
+							<p>
+								<a href="#ヒント">ヒント</a>
+							</p>
+						</li>
 					</ul>
 				</li>
 				<li>
@@ -1228,6 +1233,43 @@ jdbcManager.from(Employee.class)
     .getResultList();
 ]]></source>
 			</subsection>
+
+			<subsection name="ヒント">
+				<p>
+					コメントによるヒントを指定する場合は、
+					<code>hint()</code>
+					を使います。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .hint("INDEX(Employee IDX1)")
+    .getResultList();
+]]></source>
+				<p>
+					ヒント中のエンティティ名(上記例では
+					<code>Employee</code>
+					)は別名に置換され、 Oracleでは次のようなコメントがSQLに含まれます。
+				</p>
+				<source><![CDATA[
+/*+ INDEX(T1_ IDX1) */
+]]></source>
+				<p>ヒント中の関連プロパティ名も別名に置換されます。</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .leftOuterJoin("department")
+    .hint("INDEX(department IDX2)")
+    .getResultList();
+]]></source>
+				<p>上記の場合、 OracleやPostgreSQLでは次のようなコメントがSQLに含まれます。</p>
+				<source><![CDATA[
+/*+ INDEX(T2_ IDX2) */
+]]></source>
+				<p>
+					コメントによるヒントをサポートしていないRDBMSの場合、
+					<code>hint()</code>
+					は無視され、 SQLにコメントは付加されません。
+				</p>
+			</subsection>
 		</section>
 
 		<section name="挿入">
@@ -1349,8 +1391,8 @@ int count = jdbcManager.update(employee).execute();
 					<p>注意点</p>
 				</div>
 				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
-					SQL自動生成による更新は出来ません。
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+					のないエンティティは、 SQL自動生成による更新は出来ません。
 				</p>
 			</subsection>
 
@@ -1376,8 +1418,8 @@ int[] countArray = jdbcManager.updateBatch(employees).execute();
 					<p>注意点</p>
 				</div>
 				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
-					SQL自動生成によるバッチ更新は出来ません。
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+					のないエンティティは、 SQL自動生成によるバッチ更新は出来ません。
 				</p>
 			</subsection>
 
@@ -1495,8 +1537,8 @@ int count = jdbcManager.delete(employee).execute();
 					<p>注意点</p>
 				</div>
 				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
-					SQL自動生成による削除は出来ません。
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+					のないエンティティは、 SQL自動生成による削除は出来ません。
 				</p>
 			</subsection>
 
@@ -1522,8 +1564,8 @@ int[] countArray = jdbcManager.deleteBatch(employees).execute();
 					<p>注意点</p>
 				</div>
 				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
-					SQL自動生成によるバッチ削除は出来ません。
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+					のないエンティティは、 SQL自動生成によるバッチ削除は出来ません。
 				</p>
 			</subsection>
 

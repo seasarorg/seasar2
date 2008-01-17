@@ -260,4 +260,12 @@ public interface DbmsDialect {
      */
     boolean supportsOuterJoinForUpdate();
 
+    /**
+     * ヒントコメントを返します。
+     * 
+     * @param hint
+     *            ヒント
+     * @return ヒントコメント
+     */
+    String getHintComment(String hint);
 }

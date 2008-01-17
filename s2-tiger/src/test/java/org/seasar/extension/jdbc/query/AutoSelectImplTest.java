@@ -320,7 +320,7 @@ public class AutoSelectImplTest extends TestCase {
         String tableAlias = query.prepareTableAlias(null);
         query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
                 idIndexList);
-        assertEquals("select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO",
+        assertEquals("T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO",
                 query.selectClause.toSql());
     }
 
@@ -430,7 +430,7 @@ public class AutoSelectImplTest extends TestCase {
         String tableAlias = query.prepareTableAlias(null);
         query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
                 idIndexList);
-        assertEquals("select count(T1_.ID)", query.selectClause.toSql());
+        assertEquals("count(T1_.ID)", query.selectClause.toSql());
         ValueType[] valueTypes = query.getValueTypes();
         assertEquals(1, valueTypes.length);
         assertEquals(ValueTypes.LONG, valueTypes[0]);
@@ -2094,6 +2094,58 @@ public class AutoSelectImplTest extends TestCase {
                         + "from AAA T1_ with (updlock, rowlock) "
                         + "left outer join BBB T2_ with (updlock, rowlock) on T1_.BBB_ID = T2_.ID "
                         + "order by T2_.ID desc", query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testHint() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.hint("index(Aaa index)");
+        query.prepare("getResultList");
+        assertEquals(
+                "select /*+ index(T1_ index) */ T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO "
+                        + "from AAA T1_", query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testHint_notSupport() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.hint("index(Aaa index)");
+        query.prepare("getResultList");
+        assertEquals("select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO "
+                + "from AAA T1_", query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testHint_withJoin() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb", false);
+        query.hint("index(bbb index)");
+        query.prepare("getResultList");
+        assertEquals(
+                "select /*+ index(T2_ index) */ T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO "
+                        + "from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testConvertEntityNameToTableAlias() {
+        manager.setDialect(new OracleDialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb").leftOuterJoin("bbb.ddds");
+        query.prepare("getResultList");
+        assertEquals("T1_", query.convertEntityNameToTableAlias("Aaa"));
+        assertEquals("T2_", query.convertEntityNameToTableAlias("bbb"));
+        assertEquals("T3_", query.convertEntityNameToTableAlias("bbb.ddds"));
     }
 
     @Entity

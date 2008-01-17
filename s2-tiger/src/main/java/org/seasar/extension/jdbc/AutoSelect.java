@@ -299,6 +299,15 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     AutoSelect<T> forUpdateWait(int seconds, String... propertyNames);
 
     /**
+     * ヒントを設定します。
+     * 
+     * @param hint
+     *            ヒント
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> hint(String hint);
+
+    /**
      * SELECT COUNT(*)の結果である行数を返します。
      * 
      * @return SELECT COUNT(*)の結果である行数
