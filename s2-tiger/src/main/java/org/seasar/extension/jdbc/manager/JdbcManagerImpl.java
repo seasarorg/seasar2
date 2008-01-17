@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.AutoProcedureCall;
 import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.AutoUpdate;
 import org.seasar.extension.jdbc.DbmsDialect;
+import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -47,6 +48,7 @@ import org.seasar.extension.jdbc.SqlFunctionCall;
 import org.seasar.extension.jdbc.SqlProcedureCall;
 import org.seasar.extension.jdbc.SqlSelect;
 import org.seasar.extension.jdbc.SqlUpdate;
+import org.seasar.extension.jdbc.exception.NoIdPropertyRuntimeException;
 import org.seasar.extension.jdbc.query.AutoBatchDeleteImpl;
 import org.seasar.extension.jdbc.query.AutoBatchInsertImpl;
 import org.seasar.extension.jdbc.query.AutoBatchUpdateImpl;
@@ -68,6 +70,7 @@ import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.exception.EmptyRuntimeException;
 
 /**
  * {@link JdbcManager}の実装クラスです。
@@ -155,15 +158,45 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
     }
 
     public <T> AutoUpdate<T> update(final T entity) {
+        final EntityMeta entityMeta = entityMetaFactory.getEntityMeta(entity
+                .getClass());
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
+            throw new NoIdPropertyRuntimeException("ESSR0761", entityMeta
+                    .getName());
+        }
         return new AutoUpdateImpl<T>(this, entity).queryTimeout(queryTimeout);
     }
 
     public <T> AutoBatchUpdate<T> updateBatch(final T... entities) {
+        if (entities == null) {
+            throw new NullPointerException("entities");
+        }
+        if (entities.length == 0) {
+            throw new EmptyRuntimeException("entities");
+        }
+        final EntityMeta entityMeta = entityMetaFactory
+                .getEntityMeta(entities[0].getClass());
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
+            throw new NoIdPropertyRuntimeException("ESSR0761", entityMeta
+                    .getName());
+        }
         return new AutoBatchUpdateImpl<T>(this, Arrays.asList(entities))
                 .queryTimeout(queryTimeout);
     }
 
     public <T> AutoBatchUpdate<T> updateBatch(final List<T> entities) {
+        if (entities == null) {
+            throw new NullPointerException("entities");
+        }
+        if (entities.isEmpty()) {
+            throw new EmptyRuntimeException("entities");
+        }
+        final EntityMeta entityMeta = entityMetaFactory.getEntityMeta(entities
+                .get(0).getClass());
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
+            throw new NoIdPropertyRuntimeException("ESSR0761", entityMeta
+                    .getName());
+        }
         return new AutoBatchUpdateImpl<T>(this, entities)
                 .queryTimeout(queryTimeout);
     }
@@ -200,15 +233,45 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
     }
 
     public <T> AutoDelete<T> delete(final T entity) {
+        final EntityMeta entityMeta = entityMetaFactory.getEntityMeta(entity
+                .getClass());
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
+            throw new NoIdPropertyRuntimeException("ESSR0762", entityMeta
+                    .getName());
+        }
         return new AutoDeleteImpl<T>(this, entity).queryTimeout(queryTimeout);
     }
 
     public <T> AutoBatchDelete<T> deleteBatch(final T... entities) {
+        if (entities == null) {
+            throw new NullPointerException("entities");
+        }
+        if (entities.length == 0) {
+            throw new EmptyRuntimeException("entities");
+        }
+        final EntityMeta entityMeta = entityMetaFactory
+                .getEntityMeta(entities[0].getClass());
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
+            throw new NoIdPropertyRuntimeException("ESSR0762", entityMeta
+                    .getName());
+        }
         return new AutoBatchDeleteImpl<T>(this, Arrays.asList(entities))
                 .queryTimeout(queryTimeout);
     }
 
     public <T> AutoBatchDelete<T> deleteBatch(final List<T> entities) {
+        if (entities == null) {
+            throw new NullPointerException("entities");
+        }
+        if (entities.isEmpty()) {
+            throw new EmptyRuntimeException("entities");
+        }
+        final EntityMeta entityMeta = entityMetaFactory.getEntityMeta(entities
+                .get(0).getClass());
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
+            throw new NoIdPropertyRuntimeException("ESSR0762", entityMeta
+                    .getName());
+        }
         return new AutoBatchDeleteImpl<T>(this, entities)
                 .queryTimeout(queryTimeout);
     }

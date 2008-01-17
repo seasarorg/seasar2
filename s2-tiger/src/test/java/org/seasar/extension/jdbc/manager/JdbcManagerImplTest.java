@@ -26,6 +26,8 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.entity.Iii;
+import org.seasar.extension.jdbc.exception.NoIdPropertyRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl.SynchronizationImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -371,6 +373,13 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertSame(eee, query.getEntity());
+
+        try {
+            manager.update(new Iii());
+            fail();
+        } catch (NoIdPropertyRuntimeException expected) {
+            System.out.println(expected);
+        }
     }
 
     /**
@@ -387,6 +396,13 @@ public class JdbcManagerImplTest extends TestCase {
         assertSame(entities[0], query.getEntities().get(0));
         assertSame(entities[1], query.getEntities().get(1));
         assertSame(entities[2], query.getEntities().get(2));
+
+        try {
+            manager.updateBatch(new Iii[] { new Iii() });
+            fail();
+        } catch (NoIdPropertyRuntimeException expected) {
+            System.out.println(expected);
+        }
     }
 
     /**
@@ -400,6 +416,13 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertSame(entities, query.getEntities());
+
+        try {
+            manager.updateBatch(Arrays.asList(new Iii()));
+            fail();
+        } catch (NoIdPropertyRuntimeException expected) {
+            System.out.println(expected);
+        }
     }
 
     /**
@@ -412,6 +435,13 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertSame(eee, query.getEntity());
+
+        try {
+            manager.delete(new Iii());
+            fail();
+        } catch (NoIdPropertyRuntimeException expected) {
+            System.out.println(expected);
+        }
     }
 
     /**
@@ -428,6 +458,13 @@ public class JdbcManagerImplTest extends TestCase {
         assertSame(entities[0], query.getEntities().get(0));
         assertSame(entities[1], query.getEntities().get(1));
         assertSame(entities[2], query.getEntities().get(2));
+
+        try {
+            manager.deleteBatch(new Iii[] { new Iii() });
+            fail();
+        } catch (NoIdPropertyRuntimeException expected) {
+            System.out.println(expected);
+        }
     }
 
     /**
@@ -441,6 +478,13 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(query);
         assertSame(manager, query.getJdbcManager());
         assertSame(entities, query.getEntities());
+
+        try {
+            manager.deleteBatch(Arrays.asList(new Iii()));
+            fail();
+        } catch (NoIdPropertyRuntimeException expected) {
+            System.out.println(expected);
+        }
     }
 
     /**

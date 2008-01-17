@@ -1344,6 +1344,14 @@ int count = jdbcManager.update(employee).execute();
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>注意点</p>
+				</div>
+				<p>
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
+					SQL自動生成による更新は出来ません。
+				</p>
 			</subsection>
 
 			<subsection name="バッチ更新">
@@ -1362,6 +1370,14 @@ int[] countArray = jdbcManager.updateBatch(employees).execute();
 					更新するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
+				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>注意点</p>
+				</div>
+				<p>
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
+					SQL自動生成によるバッチ更新は出来ません。
 				</p>
 			</subsection>
 
@@ -1474,6 +1490,14 @@ int count = jdbcManager.delete(employee).execute();
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>注意点</p>
+				</div>
+				<p>
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
+					SQL自動生成による削除は出来ません。
+				</p>
 			</subsection>
 
 			<subsection name="バッチ削除">
@@ -1492,6 +1516,14 @@ int[] countArray = jdbcManager.deleteBatch(employees).execute();
 					削除するときに、バージョンによる楽観的排他制御をすることができます。 詳しくは、
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
+				</p>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>注意点</p>
+				</div>
+				<p>
+					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>のないエンティティは、
+					SQL自動生成によるバッチ削除は出来ません。
 				</p>
 			</subsection>
 
