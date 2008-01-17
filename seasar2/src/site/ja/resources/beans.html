@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <!-- don't edit start -->
 <head>
-<title>Seasar - Beans -</title>
+<title>Seasar - S2BeanUtils -</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
@@ -53,6 +53,9 @@ Beansクラスを使うには、S2-Tigerが必要です。
 <ul>
 <li><a href="#copy">プロパティのコピー</a></li>
 <li><a href="#createAndCopy">オブジェクトの生成とプロパティのコピー</a></li>
+<li><a href="#converter">コンバータ</a></li>
+<li><a href="#dateConverter">日付コンバータ</a></li>
+<li><a href="#numberConverter">数値コンバータ</a></li>
 <li><a href="#includes">特定のプロパティだけを対象にする</a></li>
 <li><a href="#excludes">特定のプロパティだけを対象外にする</a></li>
 <li><a href="#prefix">特定のプレフィックスのついたプロパティだけを対象にする</a></li>
@@ -85,6 +88,75 @@ SrcBean src = new SrcBean();
 ...
 DestBean dest = Beans.createAndCopy(DestBean.class, src).execute();
 </pre>
+
+<h2><a name="converter">コンバータ</a></h2>
+<p>
+特定の型やプロパティに値を設定するときに、
+変換が必要な場合は、
+<code>converter(Converter converter, String... propertyNames)</code>を使います。
+</p>
+<p>
+Converterは、下記のようなインターフェースです。
+</p>
+<pre>
+public interface Converter {
+
+    /**
+     * 値を文字列として返します。
+     * 
+     * @param value
+     *            値
+     * @return 文字列としての値
+     */
+    String getAsString(Object value);
+
+    /**
+     * 値をオブジェクトとして返します。
+     * 
+     * @param value
+     *            値
+     * @return オブジェクトとしての値
+     */
+    Object getAsObject(String value);
+
+    /**
+     * 対象の型かどうかを返します。 対象のプロパティを指定しない場合に呼び出されます。
+     * 
+     * @param clazz
+     * @return
+     */
+    boolean isTarget(Class clazz);
+}
+</pre>
+<p>
+propertyNamesでプロパティが指定された場合は、そのプロパティがコンバータの対象になり、
+プロパティが指定されない場合は、Converter#isTarget(プロパティの型)がtrueを返す
+プロパティが対象になります。
+</p>
+<p>
+標準のコンバータとして、org.seasar.framework.beans.converterに
+DateConverterとNumberConverterが用意されています。
+どちらのコンバータもコンストラクタで、日付あるいは数値のパターンを指定します。
+パターンの書式は、DateFormat、DecimalFormatのものを指定します。。
+</p>
+
+<h2><a name="dateConverter">日付コンバータ</a></h2>
+<p>
+日付用のコンバータの指定は、
+<code>dateConverter(String pattern, String... propertyNames)</code>を使います。
+</p>
+<p>
+patternは、DateFormatのパターンを指定します。
+</p>
+
+<h2><a name="numberConverter">数値コンバータ</a></h2>
+<p>
+数値用のコンバータの指定は、
+<code>numberConverter(String pattern, String... propertyNames)</code>を使います。
+</p>
+<p>
+patternは、DecimalFormatのパターンを指定します。
+</p>
 
 <h2><a name="includes">特定のプロパティだけを対象にする</a></h2>
 <p>
