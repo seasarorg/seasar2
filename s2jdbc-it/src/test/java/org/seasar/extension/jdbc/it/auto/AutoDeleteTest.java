@@ -17,11 +17,14 @@ package org.seasar.extension.jdbc.it.auto;
 
 import javax.persistence.OptimisticLockException;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.NoIdPropertyRuntimeException;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.ConcreteEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 
@@ -149,5 +152,17 @@ public class AutoDeleteTest {
                 .suppresOptimisticLockException()
                 .execute();
         assertEquals(0, result);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test(expected = NoIdPropertyRuntimeException.class)
+    public void testNoId() throws Exception {
+        NoId noId = new NoId();
+        noId.value1 = 1;
+        noId.value1 = 2;
+        jdbcManager.delete(noId).execute();
     }
 }

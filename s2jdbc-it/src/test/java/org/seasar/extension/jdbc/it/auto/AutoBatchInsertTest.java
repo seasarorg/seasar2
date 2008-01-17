@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
 import org.seasar.extension.jdbc.it.entity.TableStrategy;
@@ -491,6 +492,21 @@ public class AutoBatchInsertTest {
             fail();
         } catch (EntityExistsException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testNoId() throws Exception {
+        NoId noId1 = new NoId();
+        noId1.value1 = 1;
+        noId1.value2 = 1;
+        NoId noId2 = new NoId();
+        noId2.value1 = 1;
+        noId2.value2 = 1;
+        jdbcManager.insertBatch(noId1, noId2).execute();
+        assertEquals(4L, jdbcManager.from(NoId.class).getCount());
     }
 
 }

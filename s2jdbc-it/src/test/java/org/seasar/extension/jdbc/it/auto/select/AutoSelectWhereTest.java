@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
@@ -562,12 +563,9 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
+    @Test(expected = IllegalIdPropertySizeRuntimeException.class)
     public void testId_IllegalSize() throws Exception {
-        try {
-            jdbcManager.from(Employee.class).id(10, 11).getSingleResult();
-        } catch (IllegalIdPropertySizeRuntimeException e) {
-            System.out.println(e);
-        }
+        jdbcManager.from(Employee.class).id(10, 11).getSingleResult();
     }
 
     /**

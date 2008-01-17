@@ -15,34 +15,19 @@
  */
 package org.seasar.extension.jdbc.it.entity;
 
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-@Table(name = "NO_PK")
-public class NoPk2 {
+public class NoId {
 
     /** */
-    public int column1;
+    public int value1;
 
     /** */
-    public int column2;
+    public int value2;
 
-    /** */
-    @ManyToOne
-    @JoinColumn(name = "column2", referencedColumnName = "column1")
-    public NoPk2 noPk2;
-
-    /** */
-    @OneToMany(mappedBy = "noPk2")
-    public List<NoPk2> noPk2s;
 }

@@ -16,17 +16,21 @@
 package org.seasar.extension.jdbc.it.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-public class NoPk {
+public class OwnerOfNoId {
 
     /** */
-    public int column1;
+    @Id
+    public int id;
 
     /** */
-    public int column2;
+    @ManyToOne
+    public NoId noId;
 }

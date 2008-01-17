@@ -25,8 +25,10 @@ import java.util.Map;
 
 import javax.persistence.EntityExistsException;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.NoIdPropertyRuntimeException;
 import org.seasar.extension.jdbc.exception.SOptimisticLockException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.ConcreteDepartment;
@@ -35,6 +37,7 @@ import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.extension.jdbc.it.entity.Tense;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
@@ -417,5 +420,17 @@ public class AutoUpdateTest {
         assertEquals(timestamp, tense.calTimestamp.getTimeInMillis());
         assertEquals(timestamp, tense.dateTimestamp.getTime());
         assertEquals(timestamp, tense.sqlTimestamp.getTime());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test(expected = NoIdPropertyRuntimeException.class)
+    public void testNoId() throws Exception {
+        NoId noId = new NoId();
+        noId.value1 = 1;
+        noId.value1 = 2;
+        jdbcManager.update(noId).execute();
     }
 }

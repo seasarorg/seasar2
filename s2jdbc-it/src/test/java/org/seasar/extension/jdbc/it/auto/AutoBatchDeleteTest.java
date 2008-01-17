@@ -21,11 +21,14 @@ import java.util.List;
 
 import javax.persistence.OptimisticLockException;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.NoIdPropertyRuntimeException;
 import org.seasar.extension.jdbc.it.entity.CompKeyEmployee;
 import org.seasar.extension.jdbc.it.entity.ConcreteEmployee;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 
@@ -254,5 +257,20 @@ public class AutoBatchDeleteTest {
             }
         }
         return false;
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test(expected = NoIdPropertyRuntimeException.class)
+    public void testNoId() throws Exception {
+        NoId noId1 = new NoId();
+        noId1.value1 = 1;
+        noId1.value2 = 1;
+        NoId noId2 = new NoId();
+        noId2.value1 = 1;
+        noId2.value2 = 1;
+        jdbcManager.deleteBatch(noId1, noId2).execute();
     }
 }

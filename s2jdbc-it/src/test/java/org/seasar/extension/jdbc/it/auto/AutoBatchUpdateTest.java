@@ -22,8 +22,10 @@ import java.util.List;
 import javax.persistence.EntityExistsException;
 import javax.persistence.OptimisticLockException;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.exception.NoIdPropertyRuntimeException;
 import org.seasar.extension.jdbc.it.entity.CompKeyDepartment;
 import org.seasar.extension.jdbc.it.entity.ConcreteDepartment;
 import org.seasar.extension.jdbc.it.entity.Department;
@@ -31,6 +33,7 @@ import org.seasar.extension.jdbc.it.entity.Department2;
 import org.seasar.extension.jdbc.it.entity.Department3;
 import org.seasar.extension.jdbc.it.entity.Department4;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 import org.seasar.framework.unit.annotation.Prerequisite;
@@ -521,6 +524,22 @@ public class AutoBatchUpdateTest {
             fail();
         } catch (EntityExistsException e) {
         }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test(expected = NoIdPropertyRuntimeException.class)
+    public void testNoId() throws Exception {
+        NoId noId1 = new NoId();
+        noId1.value1 = 1;
+        noId1.value1 = 2;
+        NoId noId2 = new NoId();
+        noId2.value1 = 1;
+        noId2.value1 = 2;
+        jdbcManager.updateBatch(noId1, noId2).execute();
+
     }
 
     private boolean containsSuccessNoInfo(int[] batchResult) {

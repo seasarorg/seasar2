@@ -40,6 +40,7 @@ import org.seasar.extension.jdbc.it.entity.IdentityStrategy;
 import org.seasar.extension.jdbc.it.entity.Job;
 import org.seasar.extension.jdbc.it.entity.JobType;
 import org.seasar.extension.jdbc.it.entity.LargeObject;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy2;
 import org.seasar.extension.jdbc.it.entity.SequenceStrategy3;
@@ -493,5 +494,17 @@ public class AutoInsertTest {
         jdbcManager.insert(authority).execute();
         jdbcManager.from(Authority.class).id(10).getSingleResult();
         assertEquals(100, authority.authorityType.value());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testNoId() throws Exception {
+        NoId noId = new NoId();
+        noId.value1 = 1;
+        noId.value2 = 1;
+        jdbcManager.insert(noId).execute();
+        assertEquals(3L, jdbcManager.from(NoId.class).getCount());
     }
 }
