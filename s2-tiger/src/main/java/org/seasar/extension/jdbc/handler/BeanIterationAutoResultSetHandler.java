@@ -84,7 +84,6 @@ public class BeanIterationAutoResultSetHandler extends
                 entity = entityMapper.map(values, mappingContext);
                 previousKey = key;
             }
-            iterationContext.setRow(rs.getRow());
         }
         if (entity != null) {
             result = callback.iterate(entity, iterationContext);

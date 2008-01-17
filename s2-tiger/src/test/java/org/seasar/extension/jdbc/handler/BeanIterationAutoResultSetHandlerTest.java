@@ -59,7 +59,6 @@ public class BeanIterationAutoResultSetHandlerTest extends TestCase {
 
                     public Integer iterate(Aaa entity, IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         return count;
                     }
@@ -102,7 +101,6 @@ public class BeanIterationAutoResultSetHandlerTest extends TestCase {
 
                     public Integer iterate(Aaa entity, IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         return count;
                     }
@@ -137,7 +135,6 @@ public class BeanIterationAutoResultSetHandlerTest extends TestCase {
 
                     public Integer iterate(Aaa entity, IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         if (list.size() == 2) {
                             context.setExit(true);
@@ -173,10 +170,7 @@ public class BeanIterationAutoResultSetHandlerTest extends TestCase {
                 valueTypes, entityMapper, "select * from aaa", 0,
                 new IterationCallback<Aaa, Integer>() {
 
-                    private int[] expectedRowNum = new int[] { 2, 3, 5 };
-
                     public Integer iterate(Aaa entity, IterationContext context) {
-                        assertEquals(expectedRowNum[count], context.getRow());
                         ++count;
                         list.add(entity);
                         return count;

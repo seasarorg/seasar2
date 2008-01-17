@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc;
 
-import java.sql.ResultSet;
 
 /**
  * 問い合わせ結果を反復するコンテキストです。
@@ -25,34 +24,9 @@ import java.sql.ResultSet;
 public class IterationContext {
 
     /**
-     * 現在処理中のエンティティ(またはDTO)に対応する{@link ResultSet}の行番号
-     */
-    protected int row;
-
-    /**
      * 反復を終了する場合<code>true</code>
      */
     protected boolean exit;
-
-    /**
-     * 現在処理中のエンティティ(またはDTO)に対応する{@link ResultSet}の行番号を返します。
-     * 
-     * @return 現在処理中のエンティティ(またはDTO)に対応する{@link ResultSet}の行番号
-     * @see ResultSet#getRow()
-     */
-    public int getRow() {
-        return row;
-    }
-
-    /**
-     * 現在処理中のエンティティ(またはDTO)に対応する{@link ResultSet}の行番号を設定します。
-     * 
-     * @param row
-     *            現在処理中のエンティティ(またはDTO)に対応する{@link ResultSet}の行番号
-     */
-    public void setRow(final int row) {
-        this.row = row;
-    }
 
     /**
      * 反復を終了する場合は<code>true</code>を設定します。

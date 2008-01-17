@@ -567,7 +567,7 @@ public class AbsSelectTest extends TestCase {
 
             public Integer iterate(AaaDto entity, IterationContext context) {
                 list.add(entity);
-                return context.getRow();
+                return null;
             }
         });
         assertEquals(1, list.size());
@@ -611,7 +611,7 @@ public class AbsSelectTest extends TestCase {
 
             public Integer iterate(AaaDto entity, IterationContext context) {
                 list.add(entity);
-                return context.getRow();
+                return null;
             }
         });
         assertTrue(list.isEmpty());

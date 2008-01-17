@@ -63,7 +63,6 @@ public class ObjectIterationResultSetHandler implements ResultSetHandler {
         final IterationContext iterationContext = new IterationContext();
         Object result = null;
         for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
-            iterationContext.setRow(rs.getRow());
             result = callback.iterate(valueType.getValue(rs, 1),
                     iterationContext);
             if (iterationContext.isExit()) {

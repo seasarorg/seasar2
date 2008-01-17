@@ -53,7 +53,6 @@ public class MapIterationResultSetHandlerTest extends TestCase {
 
                     public Integer iterate(Map entity, IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         return count;
                     }
@@ -93,7 +92,6 @@ public class MapIterationResultSetHandlerTest extends TestCase {
 
                     public Integer iterate(Map entity, IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         return count;
                     }
@@ -125,7 +123,6 @@ public class MapIterationResultSetHandlerTest extends TestCase {
 
                     public Integer iterate(Map entity, IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         if (list.size() == 2) {
                             context.setExit(true);

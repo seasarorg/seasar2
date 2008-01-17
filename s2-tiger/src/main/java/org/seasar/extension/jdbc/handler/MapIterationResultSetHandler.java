@@ -69,7 +69,6 @@ public class MapIterationResultSetHandler extends AbstractMapResultSetHandler {
         for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
             final Object entity = createRow(rs, createPropertyTypes(rs
                     .getMetaData()));
-            iterationContext.setRow(rs.getRow());
             result = callback.iterate(entity, iterationContext);
             if (iterationContext.isExit()) {
                 return result;

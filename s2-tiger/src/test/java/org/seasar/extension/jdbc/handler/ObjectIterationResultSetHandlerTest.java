@@ -51,7 +51,6 @@ public class ObjectIterationResultSetHandlerTest extends TestCase {
                     public Integer iterate(Integer entity,
                             IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         return count;
                     }
@@ -80,7 +79,6 @@ public class ObjectIterationResultSetHandlerTest extends TestCase {
                     public Integer iterate(Integer entity,
                             IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         return count;
                     }
@@ -107,7 +105,6 @@ public class ObjectIterationResultSetHandlerTest extends TestCase {
                     public Integer iterate(Integer entity,
                             IterationContext context) {
                         ++count;
-                        assertEquals(count, context.getRow());
                         list.add(entity);
                         if (list.size() == 2) {
                             context.setExit(true);
