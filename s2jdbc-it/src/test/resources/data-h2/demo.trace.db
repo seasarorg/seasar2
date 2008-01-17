@@ -488,3 +488,35 @@ org.h2.jdbc.JdbcSQLException: Table L not found [42S02-55]
 	at org.h2.server.web.WebThread.process(WebThread.java:344)
 	at org.h2.server.web.WebThread.processRequest(WebThread.java:117)
 	at org.h2.server.web.WebThread.run(WebThread.java:144)
+01-17 23:45:53 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: テーブル NO_ID が見つかりません
+Table NO_ID not found [42S02-62]
+	at org.h2.message.Message.getSQLException(Message.java:89)
+	at org.h2.message.Message.getSQLException(Message.java:93)
+	at org.h2.message.Message.getSQLException(Message.java:71)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:55)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:85)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:64)
+	at org.h2.command.Command.executeUpdate(Command.java:122)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:155)
+	at org.h2.server.web.WebThread.getResult(WebThread.java:1392)
+	at org.h2.server.web.WebThread.query(WebThread.java:1054)
+	at org.h2.server.web.WebThread.process(WebThread.java:375)
+	at org.h2.server.web.WebThread.processRequest(WebThread.java:131)
+	at org.h2.server.web.WebThread.run(WebThread.java:158)
+01-17 23:45:53 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: テーブル OWNER_OF_NO_ID が見つかりません
+Table OWNER_OF_NO_ID not found [42S02-62]
+	at org.h2.message.Message.getSQLException(Message.java:89)
+	at org.h2.message.Message.getSQLException(Message.java:93)
+	at org.h2.message.Message.getSQLException(Message.java:71)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:55)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:85)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:64)
+	at org.h2.command.Command.executeUpdate(Command.java:122)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:155)
+	at org.h2.server.web.WebThread.getResult(WebThread.java:1392)
+	at org.h2.server.web.WebThread.query(WebThread.java:1054)
+	at org.h2.server.web.WebThread.process(WebThread.java:375)
+	at org.h2.server.web.WebThread.processRequest(WebThread.java:131)
+	at org.h2.server.web.WebThread.run(WebThread.java:158)
