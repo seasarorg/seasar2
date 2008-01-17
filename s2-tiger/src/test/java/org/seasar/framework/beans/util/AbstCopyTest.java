@@ -20,6 +20,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.beans.ConverterRuntimeException;
 import org.seasar.framework.beans.converter.NumberConverter;
 
 /**
@@ -335,6 +336,102 @@ public class AbstCopyTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testCopyBeanToMap_converter() throws Exception {
+        Bean bean = new Bean();
+        bean.aaa = "1,000";
+        Map<String, Object> map = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyBeanToMap(
+                bean, map);
+        assertEquals("1,000", map.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyBeanToMap_converter2() throws Exception {
+        Bean bean = new Bean();
+        bean.aaa = "1,000";
+        Map<String, Object> map = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0"), "aaa")
+                .copyBeanToMap(bean, map);
+        assertEquals(new Long(1000), map.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyBeanToMap_converter3() throws Exception {
+        Bean2 bean2 = new Bean2();
+        bean2.aaa = new Integer(1000);
+        Map<String, Object> map = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyBeanToMap(
+                bean2, map);
+        assertEquals("1,000", map.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToBean_converter() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", new Integer(1000));
+        Bean bean = new Bean();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToBean(map,
+                bean);
+        assertEquals("1,000", bean.aaa);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToBean_converter2() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", "1,000");
+        Bean2 bean2 = new Bean2();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToBean(map,
+                bean2);
+        assertEquals(new Integer(1000), bean2.aaa);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_converter() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", new Integer(1000));
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToMap(map,
+                map2);
+        assertEquals("1,000", map2.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_converter2() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", "1,000");
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToMap(map,
+                map2);
+        assertEquals("1,000", map2.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_converter3() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", "1,000");
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0"), "aaa")
+                .copyMapToMap(map, map2);
+        assertEquals(new Long(1000), map2.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCopyMapToBean() throws Exception {
         Map<String, Object> src = new HashMap<String, Object>();
         src.put("aaa", "aaa");
@@ -530,6 +627,18 @@ public class AbstCopyTest extends TestCase {
         assertEquals(new Long(1), new MyCopy().converter(
                 new NumberConverter("##0")).convertValue("1", "aaa",
                 Integer.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertValue_throwable() throws Exception {
+        try {
+            new MyCopy().converter(new NumberConverter("##0")).convertValue(
+                    "a", "aaa", Integer.class);
+        } catch (ConverterRuntimeException e) {
+            System.out.println(e);
+        }
     }
 
     /**

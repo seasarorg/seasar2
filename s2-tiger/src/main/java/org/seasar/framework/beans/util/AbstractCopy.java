@@ -23,7 +23,10 @@ import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.Converter;
+import org.seasar.framework.beans.ConverterRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.converter.DateConverter;
+import org.seasar.framework.beans.converter.NumberConverter;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
@@ -173,7 +176,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * 
      * @param converter
      * @param propertyNames
-     * @return
+     * @return このインスタンス自身
      */
     @SuppressWarnings("unchecked")
     public S converter(Converter converter, String... propertyNames) {
@@ -185,6 +188,32 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             }
         }
         return (S) this;
+    }
+
+    /**
+     * 日付のコンバータを設定します。
+     * 
+     * @param pattern
+     *            日付のパターン
+     * @param propertyNames
+     *            プロパティ名の配列
+     * @return このインスタンス自身
+     */
+    public S dateConverter(String pattern, String... propertyNames) {
+        return converter(new DateConverter(pattern), propertyNames);
+    }
+
+    /**
+     * 数値のコンバータを設定します。
+     * 
+     * @param pattern
+     *            数値のパターン
+     * @param propertyNames
+     *            プロパティ名の配列
+     * @return このインスタンス自身
+     */
+    public S numberConverter(String pattern, String... propertyNames) {
+        return converter(new NumberConverter(pattern), propertyNames);
     }
 
     /**
@@ -278,6 +307,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             }
             String destPropertyName = trimPrefix(srcPropertyName.replace(
                     beanDelimiter, mapDelimiter));
+            value = convertValue(value, destPropertyName, null);
             dest.put(destPropertyName, value);
         }
     }
@@ -311,6 +341,8 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             if (value == null && excludesNull) {
                 continue;
             }
+            value = convertValue(value, destPropertyName, destPropertyDesc
+                    .getPropertyType());
             destPropertyDesc.setValue(dest, value);
         }
     }
@@ -335,6 +367,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             if (value == null && excludesNull) {
                 continue;
             }
+            value = convertValue(value, destPropertyName, null);
             dest.put(destPropertyName, value);
         }
     }
@@ -386,9 +419,13 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
                 return value;
             }
         }
-        if (value.getClass() == String.class) {
-            return converter.getAsObject((String) value);
+        try {
+            if (value.getClass() == String.class) {
+                return converter.getAsObject((String) value);
+            }
+            return converter.getAsString(value);
+        } catch (Throwable cause) {
+            throw new ConverterRuntimeException(destPropertyName, value, cause);
         }
-        return converter.getAsString(value);
     }
 }

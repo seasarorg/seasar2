@@ -17,6 +17,8 @@ package org.seasar.framework.beans.util;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.beans.converter.DateConverter;
+
 /**
  * @author higa
  */
@@ -31,6 +33,19 @@ public class BeansTest extends TestCase {
         MyBean dest = new MyBean();
         Beans.copy(src, dest).execute();
         assertEquals("aaa", dest.aaa);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopy_beanToBean_converter() throws Exception {
+        MyBean src = new MyBean();
+        src.aaa = "2008/01/17";
+        MyBean2 dest = new MyBean2();
+        Beans.copy(src, dest).converter(new DateConverter("yyyy/MM/dd"))
+                .execute();
+        System.out.println(dest.aaa);
+        assertNotNull(dest.aaa);
     }
 
     /**
