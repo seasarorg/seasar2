@@ -1260,7 +1260,7 @@ jdbcManager.from(Employee.class)
     .hint("INDEX(department IDX2)")
     .getResultList();
 ]]></source>
-				<p>上記の場合、 OracleやPostgreSQLでは次のようなコメントがSQLに含まれます。</p>
+				<p>上記の場合、 Oracleでは次のようなコメントがSQLに含まれます。</p>
 				<source><![CDATA[
 /*+ INDEX(T2_ IDX2) */
 ]]></source>
