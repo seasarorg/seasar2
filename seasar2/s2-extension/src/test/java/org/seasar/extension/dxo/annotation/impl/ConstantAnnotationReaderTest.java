@@ -218,6 +218,10 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
         Object convert(Object src);
     }
 
+    /**
+     * 
+     * 
+     */
     public interface Dxo3 {
 
         /** */
