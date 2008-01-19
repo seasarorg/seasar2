@@ -153,12 +153,10 @@ public final class PropertyDescImpl implements PropertyDesc {
         if (field != null) {
             parameterizedClassDesc = ParameterizedClassDescFactory
                     .createParameterizedClassDesc(field);
-        }
-        if (readMethod != null) {
+        } else if (readMethod != null) {
             parameterizedClassDesc = ParameterizedClassDescFactory
                     .createParameterizedClassDesc(readMethod);
-        }
-        if (writeMethod != null) {
+        } else if (writeMethod != null) {
             parameterizedClassDesc = ParameterizedClassDescFactory
                     .createParameterizedClassDesc(writeMethod, 0);
         }
