@@ -26,7 +26,7 @@ import org.seasar.framework.beans.ParameterizedClassDesc;
 public class ParameterizedClassDescImpl implements ParameterizedClassDesc {
 
     /** 原型となるクラス */
-    protected Class rowClass;
+    protected Class rawClass;
 
     /** 型引数を表す{@link ParameterizedClassDesc}の配列 */
     protected ParameterizedClassDesc[] arguments;
@@ -40,24 +40,24 @@ public class ParameterizedClassDescImpl implements ParameterizedClassDesc {
     /**
      * インスタンスを構築します。
      * 
-     * @param rowClass
+     * @param rawClass
      *            原型となるクラス
      */
-    public ParameterizedClassDescImpl(final Class rowClass) {
-        this.rowClass = rowClass;
+    public ParameterizedClassDescImpl(final Class rawClass) {
+        this.rawClass = rawClass;
     }
 
     /**
      * インスタンスを構築します。
      * 
-     * @param rowClass
+     * @param rawClass
      *            原型となるクラス
      * @param arguments
      *            型引数を表す{@link ParameterizedClassDesc}の配列
      */
-    public ParameterizedClassDescImpl(final Class rowClass,
+    public ParameterizedClassDescImpl(final Class rawClass,
             final ParameterizedClassDesc[] arguments) {
-        this.rowClass = rowClass;
+        this.rawClass = rawClass;
         this.arguments = arguments;
     }
 
@@ -66,17 +66,17 @@ public class ParameterizedClassDescImpl implements ParameterizedClassDesc {
     }
 
     public Class getRawClass() {
-        return rowClass;
+        return rawClass;
     }
 
     /**
      * 原型となるクラスを設定します。
      * 
-     * @param rowClass
+     * @param rawClass
      *            原型となるクラス
      */
-    public void setRowClass(final Class rowClass) {
-        this.rowClass = rowClass;
+    public void setRawClass(final Class rawClass) {
+        this.rawClass = rawClass;
     }
 
     public ParameterizedClassDesc[] getArguments() {
