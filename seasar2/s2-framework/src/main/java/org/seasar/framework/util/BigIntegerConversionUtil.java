@@ -51,8 +51,11 @@ public final class BigIntegerConversionUtil {
         } else if (o instanceof BigInteger) {
             return (BigInteger) o;
         } else {
-            long l = LongConversionUtil.toLong(o, pattern).longValue();
-            return BigInteger.valueOf(l);
+            Long l = LongConversionUtil.toLong(o, pattern);
+            if (l == null) {
+                return null;
+            }
+            return BigInteger.valueOf(l.longValue());
         }
     }
 }

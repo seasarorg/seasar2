@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class IntegerConversionUtilTest extends TestCase {
 
@@ -36,5 +36,12 @@ public class IntegerConversionUtilTest extends TestCase {
      */
     public void testToPrimitiveInt() throws Exception {
         assertEquals("1", 1000, IntegerConversionUtil.toPrimitiveInt("1,000"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToIntegerForEmptyString() throws Exception {
+        assertNull(IntegerConversionUtil.toInteger(""));
     }
 }

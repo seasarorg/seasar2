@@ -110,4 +110,11 @@ public class BigDecimalConversionUtilTest extends TestCase {
                 new BigDecimal("1.23E-7").compareTo(BigDecimalConversionUtil
                         .toBigDecimal("0.000000123")));
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testToBigDecimalForEmptyString() throws Exception {
+        assertNull(BigDecimalConversionUtil.toBigDecimal(""));
+    }
 }

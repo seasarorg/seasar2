@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DoubleConversionUtilTest extends TestCase {
 
@@ -37,5 +37,12 @@ public class DoubleConversionUtilTest extends TestCase {
     public void testToPrimitiveDouble() throws Exception {
         assertEquals("1", 1000.5, DoubleConversionUtil
                 .toPrimitiveDouble("1,000.5"), 0);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToDoubleForEmptyString() throws Exception {
+        assertNull(DoubleConversionUtil.toDouble(""));
     }
 }

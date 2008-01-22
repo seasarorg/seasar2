@@ -65,6 +65,9 @@ public final class DoubleConversionUtil {
     }
 
     private static Double toDouble(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         return new Double(DecimalFormatUtil.normalize(s));
     }
 

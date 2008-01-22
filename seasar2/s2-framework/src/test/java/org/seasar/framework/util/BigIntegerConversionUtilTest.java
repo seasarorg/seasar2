@@ -21,26 +21,12 @@ import junit.framework.TestCase;
  * @author higa
  * 
  */
-public class LongConversionUtilTest extends TestCase {
+public class BigIntegerConversionUtilTest extends TestCase {
 
     /**
      * @throws Exception
      */
-    public void testToLong() throws Exception {
-        assertEquals("1", new Long("1000"), LongConversionUtil.toLong("1,000"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToPrimitiveLong() throws Exception {
-        assertEquals("1", 1000, LongConversionUtil.toPrimitiveLong("1,000"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testToLongForEmptyString() throws Exception {
-        assertNull(LongConversionUtil.toLong(""));
+    public void testToBigIntegerForEmptyString() throws Exception {
+        assertNull(BigIntegerConversionUtil.toBigInteger(""));
     }
 }

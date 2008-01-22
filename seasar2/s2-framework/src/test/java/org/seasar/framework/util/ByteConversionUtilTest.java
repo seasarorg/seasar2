@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ByteConversionUtilTest extends TestCase {
 
@@ -35,5 +35,12 @@ public class ByteConversionUtilTest extends TestCase {
      */
     public void testToPrimitiveByteConversionUtilTest() throws Exception {
         assertEquals("1", 100, ByteConversionUtil.toPrimitiveByte("100"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToByteForEmptyString() throws Exception {
+        assertNull(ByteConversionUtil.toByte(""));
     }
 }

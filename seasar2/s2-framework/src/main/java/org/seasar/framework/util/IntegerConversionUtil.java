@@ -68,6 +68,9 @@ public final class IntegerConversionUtil {
     }
 
     private static Integer toInteger(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         return new Integer(DecimalFormatUtil.normalize(s));
     }
 

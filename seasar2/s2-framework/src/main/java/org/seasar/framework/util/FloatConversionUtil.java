@@ -65,6 +65,9 @@ public final class FloatConversionUtil {
     }
 
     private static Float toFloat(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         return new Float(DecimalFormatUtil.normalize(s));
     }
 

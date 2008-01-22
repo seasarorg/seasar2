@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class ShortConversionUtilTest extends TestCase {
 
@@ -36,5 +36,12 @@ public class ShortConversionUtilTest extends TestCase {
      */
     public void testToPrimitiveShort() throws Exception {
         assertEquals("1", 1000, ShortConversionUtil.toPrimitiveShort("1,000"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToShortForEmptyString() throws Exception {
+        assertNull(ShortConversionUtil.toShort(""));
     }
 }

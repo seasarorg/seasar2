@@ -67,6 +67,9 @@ public final class LongConversionUtil {
     }
 
     private static Long toLong(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         return new Long(DecimalFormatUtil.normalize(s));
     }
 

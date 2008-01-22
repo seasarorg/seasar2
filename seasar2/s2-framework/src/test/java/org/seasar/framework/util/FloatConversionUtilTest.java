@@ -19,7 +19,7 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class FloatConversionUtilTest extends TestCase {
 
@@ -37,5 +37,12 @@ public class FloatConversionUtilTest extends TestCase {
     public void testToPrimitiveFloat() throws Exception {
         assertEquals("1", 1000.5, FloatConversionUtil
                 .toPrimitiveFloat("1,000.5"), 0);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToFloatForEmptyString() throws Exception {
+        assertNull(FloatConversionUtil.toFloat(""));
     }
 }

@@ -71,6 +71,9 @@ public final class ShortConversionUtil {
     }
 
     private static Short toShort(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         return new Short(DecimalFormatUtil.normalize(s));
     }
 

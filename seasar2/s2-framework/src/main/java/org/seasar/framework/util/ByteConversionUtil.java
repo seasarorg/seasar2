@@ -68,6 +68,9 @@ public final class ByteConversionUtil {
     }
 
     private static Byte toByte(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         return new Byte(DecimalFormatUtil.normalize(s));
     }
 

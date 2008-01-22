@@ -73,6 +73,12 @@ public final class BigDecimalConversionUtil {
                 return new BigDecimal(new SimpleDateFormat(pattern).format(o));
             }
             return new BigDecimal(Long.toString(((java.util.Date) o).getTime()));
+        } else if (o instanceof String) {
+            String s = (String) o;
+            if (StringUtil.isEmpty(s)) {
+                return null;
+            }
+            return normalizer.normalize(new BigDecimal(s));
         } else {
             return normalizer.normalize(new BigDecimal(o.toString()));
         }
