@@ -22,9 +22,16 @@ import junit.framework.TestCase;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DateConversionUtilTest extends TestCase {
+
+    /**
+     * @throws Exception
+     */
+    public void testToDate() throws Exception {
+        assertNull(DateConversionUtil.toDate("", null));
+    }
 
     /**
      * @throws Exception

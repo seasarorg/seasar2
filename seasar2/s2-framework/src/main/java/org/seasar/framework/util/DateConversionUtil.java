@@ -84,6 +84,9 @@ public final class DateConversionUtil {
      * @return
      */
     public static Date toDate(String s, String pattern, Locale locale) {
+        if (StringUtil.isEmpty(s)) {
+            return null;
+        }
         SimpleDateFormat sdf = getDateFormat(s, pattern, locale);
         try {
             return sdf.parse(s);
