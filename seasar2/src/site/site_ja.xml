@@ -43,7 +43,20 @@
       <item name="セットアップ" href="setup.html"/>
       <item name="DIContainer" href="DIContainer.html"/>
       <item name="AOP" href="aop.html"/>
-      <item name="S2JDBC" href="s2jdbc.html"/>
+
+      <item name="S2JDBC" href="s2jdbc.html" collapse="true">
+        <item name="S2JDBCとは" href="s2jdbc_abstract.html"/>
+        <item name="チュートリアル" href="s2jdbc_tutorial.html"/>
+        <item name="セットアップ" href="s2jdbc_setup.html"/>
+        <item name="エンティティ" href="s2jdbc_entity.html"/>
+        <item name="JdbcManager" href="s2jdbc_manager.html" collapse="true">
+          <item name="SQL自動生成による操作" href="s2jdbc_manager_auto.html"/>
+          <item name="SQLによる操作" href="s2jdbc_manager_sql.html"/>
+          <item name="SQLファイルによる操作" href="s2jdbc_manager_sqlfile.html"/>
+        </item>
+        <item name="その他の機能" href="s2jdbc_other.html"/>
+      </item>
+
       <item name="FAQ (全般)" href="http://www.seasar.org/wiki/index.php?FAQ%2FS2Container"/>
       <item name="FAQ (AOP)" href="http://www.seasar.org/wiki/index.php?FAQ%2FS2AOP"/>
     </menu>

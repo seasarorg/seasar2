@@ -10,23 +10,49 @@
 					<li><p><a href="setup.html">セットアップ</a></p></li>
 					<li><p><a href="DIContainer.html">DIContainer</a></p></li>
 					<li><p><a href="aop.html">AOP</a></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="DBアクセス／トランザクション">
+				<ul>
+					<li><p><a href="jdbc.html">JDBCの設定</a></p></li>
+					<li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
 					<li><p><a href="transaction.html">トランザクションの設定</a></p></li>
 					<li><p><a href="tx.html">トランザクションの自動制御</a></p></li>
-					<li><p><a href="jdbc.html">JDBCの設定</a></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="Webアプリケーション">
+				<ul>
 					<li><p><a href="garble.html">文字化け対策</a></p></li>
-					<li><p><a href="s2jdbc.html">S2JDBC</a></p></li>
-					<li><p><a href="beans.html">S2BeanUtils</a></p></li>
-					<li><p><a href="S2Unit.html">S2Unit</a></p></li>
-					<li><p><a href="ognl.html">OGNLガイド</a></p></li>
-					<li><p><a href="S2Logger.html">Logger</a></p></li>
-					<li><p><a href="ejb3.html">EJB3.0 Simplified API</a></p></li>
-					<li><p><a href="stdDicon.html">S2標準dicon</a></p></li>
-					<li><p><a href="s2dxo.html">S2Dxo</a></p></li>
 					<li><p><a href="dbsession.html">DBセッションレプリケーション</a></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="ユーティリティ">
+				<ul>
+					<li><p><a href="s2dxo.html">S2Dxo</a></p></li>
+					<li><p><a href="beans.html">S2BeanUtils</a></p></li>
+				</ul>
+			</subsection>
+
+			<subsection name="テスト">
+				<ul>
+					<li><p><a href="S2Unit.html">S2Unit</a></p></li>
 					<li><p><a href="S2JUnit4.html">S2JUnit4</a></p></li>
 					<li><p><a href="easyMock.html">EasyMockサポート</a></p></li>
 				</ul>
 			</subsection>
+
+			<subsection name="その他">
+				<ul>
+					<li><p><a href="stdDicon.html">S2標準dicon</a></p></li>
+					<li><p><a href="S2Logger.html">Logger</a></p></li>
+					<li><p><a href="ejb3.html">EJB3.0 Simplified API</a></p></li>
+					<li><p><a href="ognl.html">OGNLガイド</a></p></li>
+				</ul>
+			</subsection>
+
 			<!--
 			<subsection name="リファレンス(作成中)">
 				<ul>
