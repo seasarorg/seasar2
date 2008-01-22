@@ -120,6 +120,27 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    public void testGetExcludeNull() throws Exception {
+        assertTrue(factory.getAnnotationReader().isExcludeNull(
+                Dxo.class,
+                Dxo.class.getMethod("convertExNull",
+                        new Class[] { Object.class })));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetExcludeWhitespace() throws Exception {
+        assertTrue(factory.getAnnotationReader()
+                .isExcludeWhitespace(
+                        Dxo.class,
+                        Dxo.class.getMethod("convertExWs",
+                                new Class[] { Object.class })));
+    }
+
+    /**
      * 
      */
     public interface Dxo {
@@ -205,6 +226,29 @@ public class ConstantAnnotationReaderTest extends S2FrameworkTestCase {
          * @return
          */
         Map[] convert(Integer[] src);
+
+        /**
+         * 
+         */
+        String convertExNull_EXCLUDE_NULL = null;
+
+        /**
+         * @param src
+         * @return
+         */
+        Object convertExNull(Object src);
+
+        /**
+         * 
+         */
+        String convertExWs_EXCLUDE_WHITESPACE = null;
+
+        /**
+         * @param src
+         * @return
+         */
+        Object convertExWs(Object src);
+
     }
 
     /**

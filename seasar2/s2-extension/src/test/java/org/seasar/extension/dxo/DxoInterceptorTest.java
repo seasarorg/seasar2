@@ -230,6 +230,34 @@ public class DxoInterceptorTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    public void testExcludeWhitespace() throws Exception {
+        Employee emp = new Employee();
+        emp.setEname("");
+        Department dept = new Department();
+        dept.setDname("\n");
+        emp.setDepartment(dept);
+
+        EmpDto dest = new EmpDto();
+        dest.setEname("foo");
+        dest.setDname("bar");
+        beanDxo.convertExcludeWhitespace(emp, dest);
+        assertEquals("foo", dest.getEname());
+        assertEquals("bar", dest.getDname());
+
+        emp.setEname("hoge");
+        beanDxo.convertExcludeWhitespace(emp, dest);
+        assertEquals("hoge", dest.getEname());
+        assertEquals("bar", dest.getDname());
+
+        dept.setDname("hogehoge");
+        beanDxo.convertExcludeWhitespace(emp, dest);
+        assertEquals("hoge", dest.getEname());
+        assertEquals("hogehoge", dest.getDname());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testFromMap_Scalar() throws Exception {
         Map src = new HashMap();
         src.put("foo", new Integer(100));
@@ -255,6 +283,33 @@ public class DxoInterceptorTest extends S2TestCase {
 
         assertNotNull(dest);
         assertEquals("Hoge", dest.getBarBar());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testFromMap_ExcludeWhitespace() throws Exception {
+        Map src = new CaseInsensitiveMap();
+        src.put("ename", "");
+        src.put("job", " \t\r\n ");
+
+        EmpDto empDto = new EmpDto();
+        empDto.setEname("foo");
+        empDto.setJob("bar");
+
+        fromMapDxo.convertExcludeWhitespace(src, empDto);
+        assertEquals("foo", empDto.getEname());
+        assertEquals("bar", empDto.getJob());
+
+        src.put("ename", "hoge");
+        fromMapDxo.convertExcludeWhitespace(src, empDto);
+        assertEquals("hoge", empDto.getEname());
+        assertEquals("bar", empDto.getJob());
+
+        src.put("job", null);
+        fromMapDxo.convertExcludeWhitespace(src, empDto);
+        assertEquals("hoge", empDto.getEname());
+        assertNull(empDto.getJob());
     }
 
     /**
@@ -301,6 +356,31 @@ public class DxoInterceptorTest extends S2TestCase {
         assertEquals("Hoge", dest.get("two"));
         assertEquals(new BigDecimal("1000"), dest.get("three"));
         assertEquals("100Hoge1000", dest.get("four"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToMap_ExcludeWhitespace() throws Exception {
+        EmpDto src = new EmpDto();
+        src.setEname("");
+        src.setJob("  ");
+
+        Map dest = new HashMap();
+
+        toMapDxo.convertExcludeWhitespace(src, dest);
+        assertEquals(0, dest.size());
+
+        src.setEname("foo");
+        toMapDxo.convertExcludeWhitespace(src, dest);
+        assertEquals(1, dest.size());
+        assertEquals("foo", dest.get("ename"));
+
+        src.setJob("bar");
+        toMapDxo.convertExcludeWhitespace(src, dest);
+        assertEquals(2, dest.size());
+        assertEquals("foo", dest.get("ename"));
+        assertEquals("bar", dest.get("job"));
     }
 
     /**
@@ -513,6 +593,17 @@ public class DxoInterceptorTest extends S2TestCase {
          * @param empDto
          */
         void convertExcludeNull(Employee employee, EmpDto empDto);
+
+        /**
+         * 
+         */
+        String convertExcludeWhitespace_EXCLUDE_WHITESPACE = null;
+
+        /**
+         * @param employee
+         * @param empDto
+         */
+        void convertExcludeWhitespace(Employee employee, EmpDto empDto);
     }
 
     /**
@@ -530,6 +621,17 @@ public class DxoInterceptorTest extends S2TestCase {
          * @return
          */
         Hoge[] convert(Map[] src);
+
+        /**
+         * 
+         */
+        String convertExcludeWhitespace_EXCLUDE_WHITESPACE = null;
+
+        /**
+         * @param src
+         * @param empDto
+         */
+        void convertExcludeWhitespace(Map src, EmpDto empDto);
     }
 
     /**
@@ -557,6 +659,22 @@ public class DxoInterceptorTest extends S2TestCase {
          * @return
          */
         Map[] convert(Hoge[] src);
+
+        /**
+         * 
+         */
+        String convertExcludeWhitespace_EXCLUDE_NULL = null;
+
+        /**
+         * 
+         */
+        String convertExcludeWhitespace_EXCLUDE_WHITESPACE = null;
+
+        /**
+         * @param empDto
+         * @param dest
+         */
+        void convertExcludeWhitespace(EmpDto empDto, Map dest);
     }
 
     /**

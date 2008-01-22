@@ -82,6 +82,17 @@ public interface AnnotationReader {
     boolean isExcludeNull(Class dxoClass, Method method);
 
     /**
+     * 変換元プロパティの値が空白(スペース，復帰，改行，タブ文字のみ)の場合に変換先プロパティに値を設定しない場合は<code>true</code>を返します。
+     * 
+     * @param dxoClass
+     *            Dxoクラスまたはインタフェース
+     * @param method
+     *            Dxoメソッド
+     * @return 変換元プロパティの値が<code>null</code>の場合に変換先プロパティに値を設定しない場合は<code>true</code>
+     */
+    boolean isExcludeWhitespace(Class dxoClass, Method method);
+
+    /**
      * 変換元プロパティのprefixを返します。
      * 
      * @param dxoClass

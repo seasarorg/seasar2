@@ -109,6 +109,9 @@ public class ConversionContextImpl implements ConversionContext {
     /** 変換先のJavaBeansに<code>null</code>の値を設定しないことを示します。 */
     protected boolean excludeNull;
 
+    /** 変換先のJavaBeansに空白(スペース，復帰，改行，タブ文字のみ)の値を設定しないことを示します。 */
+    protected boolean excludeWhitespace;
+
     /** 変換元JavaBeansのプロパティのprefixです。 */
     protected String sourcePrefix;
 
@@ -175,6 +178,8 @@ public class ConversionContextImpl implements ConversionContext {
             evaluatedValues = conversionRule.evaluate(source);
         }
         excludeNull = ((Boolean) getContextInfo(DxoConstants.EXCLUDE_NULL))
+                .booleanValue();
+        excludeWhitespace = ((Boolean) getContextInfo(DxoConstants.EXCLUDE_WHITESPACE))
                 .booleanValue();
         sourcePrefix = (String) getContextInfo(DxoConstants.SOURCE_PREFIX);
         destPrefix = (String) getContextInfo(DxoConstants.DEST_PREFIX);
@@ -243,6 +248,14 @@ public class ConversionContextImpl implements ConversionContext {
 
     public boolean isExcludeNull() {
         return excludeNull;
+    }
+
+    public boolean isExcludeWhitespace() {
+        return excludeWhitespace;
+    }
+
+    public boolean isIncludeWhitespace() {
+        return !excludeWhitespace;
     }
 
     public NestedPropertyInfo getNestedPropertyInfo(final Class srcClass,
@@ -346,6 +359,9 @@ public class ConversionContextImpl implements ConversionContext {
         }
         contextInfo.put(DxoConstants.EXCLUDE_NULL, Boolean
                 .valueOf(annotationReader.isExcludeNull(dxoClass, method)));
+        contextInfo.put(DxoConstants.EXCLUDE_WHITESPACE,
+                Boolean.valueOf(annotationReader.isExcludeWhitespace(dxoClass,
+                        method)));
         contextInfo.put(DxoConstants.SOURCE_PREFIX, annotationReader
                 .getSourcePrefix(dxoClass, method));
         contextInfo.put(DxoConstants.DEST_PREFIX, annotationReader

@@ -45,6 +45,9 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
     /** 変換先の{@link Map}に<code>null</code>のマッピングを追加しない場合に<code>true</code>。 */
     protected boolean excludeNull;
 
+    /** 変換先の{@link Map}に空白(スペース，復帰，改行，タブ文字のみ)のマッピングを追加しない場合に<code>true</code>。 */
+    protected boolean excludeWhitespace;
+
     /** 変換元Beanのプロパティの接頭辞です。 */
     protected String sourcePrefix;
 
@@ -94,6 +97,8 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
             parsedExpression = DxoUtil.parseRule(expression);
         }
         excludeNull = annotationReader.isExcludeNull(dxoClass, method);
+        excludeWhitespace = annotationReader.isExcludeWhitespace(dxoClass,
+                method);
         sourcePrefix = annotationReader.getSourcePrefix(dxoClass, method);
         destPrefix = annotationReader.getDestPrefix(dxoClass, method);
         valueType = DxoUtil.getValueTypeOfTargetMap(method);
@@ -116,6 +121,9 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
         if (excludeNull) {
             removeNullEntry(dest);
         }
+        if (excludeNull) {
+            removeWhitespaceEntry(dest);
+        }
         if (valueType == null) {
             return dest;
         }
@@ -132,12 +140,29 @@ public class BeanToMapDxoCommand extends AbstractDxoCommand {
      * {@link Map}から値が<code>null</code>のマッピングを取り除きます。
      * 
      * @param map
-     *            <code>null</code>のマッピングを取り除く{@link Map}
+     *            <code>null</code>のマッピングを取り除いた{@link Map}
      */
     protected void removeNullEntry(final Map map) {
         for (final Iterator it = map.entrySet().iterator(); it.hasNext();) {
             final Entry entry = (Entry) it.next();
             if (entry.getValue() == null) {
+                it.remove();
+            }
+        }
+    }
+
+    /**
+     * {@link Map}から値が空白(スペース，復帰，改行，タブ文字のみ)のマッピングを取り除きます。
+     * 
+     * @param map
+     *            空白(スペース，復帰，改行，タブ文字のみ)のマッピングを取り除いた{@link Map}
+     */
+    protected void removeWhitespaceEntry(final Map map) {
+        for (final Iterator it = map.entrySet().iterator(); it.hasNext();) {
+            final Entry entry = (Entry) it.next();
+            final Object value = entry.getValue();
+            if (value != null && (value instanceof String)
+                    && ((String) value).trim().length() == 0) {
                 it.remove();
             }
         }

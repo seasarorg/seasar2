@@ -25,6 +25,7 @@ import org.seasar.extension.dxo.annotation.DatePattern;
 import org.seasar.extension.dxo.annotation.DestPrefix;
 import org.seasar.extension.dxo.annotation.DxoConverter;
 import org.seasar.extension.dxo.annotation.ExcludeNull;
+import org.seasar.extension.dxo.annotation.ExcludeWhitespace;
 import org.seasar.extension.dxo.annotation.SourcePrefix;
 import org.seasar.extension.dxo.annotation.TimePattern;
 import org.seasar.extension.dxo.annotation.TimestampPattern;
@@ -139,6 +140,19 @@ public class TigerAnnotationReader implements AnnotationReader {
         }
         if (next != null) {
             return next.isExcludeNull(dxoClass, method);
+        }
+        return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean isExcludeWhitespace(final Class dxoClass, final Method method) {
+        final ExcludeWhitespace excludeWhitespace = getAnnotation(dxoClass,
+                method, ExcludeWhitespace.class);
+        if (excludeWhitespace != null) {
+            return true;
+        }
+        if (next != null) {
+            return next.isExcludeWhitespace(dxoClass, method);
         }
         return false;
     }

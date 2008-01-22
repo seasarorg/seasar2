@@ -96,6 +96,20 @@ public class ConstantAnnotationReader implements AnnotationReader {
         return false;
     }
 
+    public boolean isExcludeWhitespace(final Class dxoClass, final Method method) {
+        final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
+        String fieldName = getConstantAnnotationName(method,
+                DxoConstants.EXCLUDE_WHITESPACE);
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return true;
+        }
+        fieldName = method.getName() + "_" + DxoConstants.EXCLUDE_WHITESPACE;
+        if (dxoBeanDesc.hasField(fieldName)) {
+            return true;
+        }
+        return false;
+    }
+
     public String getSourcePrefix(final Class dxoClass, final Method method) {
         final BeanDesc dxoBeanDesc = BeanDescFactory.getBeanDesc(dxoClass);
         String fieldName = getConstantAnnotationName(method,

@@ -157,6 +157,28 @@ public interface ConversionContext {
     boolean isIncludeNull();
 
     /**
+     * 変換先のJavaBeansに空白(スペース，復帰，改行，タブ文字のみ)の値を設定しない場合は<code>true</code>を返します。
+     * <p>
+     * この値はDxoインターフェースの{@link org.seasar.extension.dxo.DxoConstants#EXCLUDE_WHITESPACE}アノテーションに
+     * <code>true</code>が指定された場合にのみ<code>true</code>となります。
+     * その場合、変換元のプロパティが空白だと変換先のプロパティには値を設定しません。
+     * </p>
+     * 
+     * @return 変換先のJavaBeansに空白(スペース，復帰，改行，タブ文字のみ)の値を設定しない場合は<code>true</code>、そうでない場合は<code>false</code>
+     */
+    boolean isExcludeWhitespace();
+
+    /**
+     * 変換先のJavaBeansに空白(スペース，復帰，改行，タブ文字のみ)の値を設定する場合は<code>true</code>を返します。
+     * <p>
+     * この値は{@link #isExcludeWhitespace()}の否定です。
+     * </p>
+     * 
+     * @return 変換先のJavaBeansに空白(スペース，復帰，改行，タブ文字のみ)の値を設定する場合は<code>true</code>、そうでない場合は<code>false</code>
+     */
+    boolean isIncludeWhitespace();
+
+    /**
      * ネストしたプロパティの情報を返します。 該当するプロパティが存在しない場合は<code>null</code>を返します。
      * 
      * @param srcClass

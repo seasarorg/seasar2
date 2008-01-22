@@ -49,6 +49,11 @@ public interface DxoConstants {
     String EXCLUDE_NULL = "EXCLUDE_NULL";
 
     /**
+     * 変換元プロパティの値が空白(スペース，復帰，改行，タブ文字のみ)の場合に変換先プロパティに値を設定しないことを指定する定数アノテーションの名前です。
+     */
+    String EXCLUDE_WHITESPACE = "EXCLUDE_WHITESPACE";
+
+    /**
      * 変換元プロパティのprefixを指定する定数アノテーションの名前です。
      */
     String SOURCE_PREFIX = "SOURCE_PREFIX";

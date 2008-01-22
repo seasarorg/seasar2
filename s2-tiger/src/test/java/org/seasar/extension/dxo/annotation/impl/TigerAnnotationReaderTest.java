@@ -26,6 +26,8 @@ import org.seasar.extension.dxo.annotation.AnnotationReaderFactory;
 import org.seasar.extension.dxo.annotation.ConversionRule;
 import org.seasar.extension.dxo.annotation.DatePattern;
 import org.seasar.extension.dxo.annotation.DxoConverter;
+import org.seasar.extension.dxo.annotation.ExcludeNull;
+import org.seasar.extension.dxo.annotation.ExcludeWhitespace;
 import org.seasar.extension.dxo.converter.ConversionContext;
 import org.seasar.extension.dxo.converter.Converter;
 import org.seasar.extension.dxo.converter.impl.AbstractConverter;
@@ -109,6 +111,46 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
     }
 
     /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public void testIsExcludeNull() throws Exception {
+        assertTrue(factory.getAnnotationReader().isExcludeNull(
+                Dxo.class,
+                Dxo.class.getMethod("convertExNull",
+                        new Class[] { Object.class })));
+        assertTrue(factory.getAnnotationReader().isExcludeNull(
+                Dxo2.class,
+                Dxo2.class.getMethod("convertExNull",
+                        new Class[] { Object.class })));
+        assertFalse(factory.getAnnotationReader()
+                .isExcludeNull(
+                        Dxo.class,
+                        Dxo.class.getMethod("convertExWs",
+                                new Class[] { Object.class })));
+    }
+
+    /**
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    public void testIsExcludeWs() throws Exception {
+        assertTrue(factory.getAnnotationReader()
+                .isExcludeWhitespace(
+                        Dxo.class,
+                        Dxo.class.getMethod("convertExWs",
+                                new Class[] { Object.class })));
+        assertTrue(factory.getAnnotationReader().isExcludeWhitespace(
+                Dxo2.class,
+                Dxo2.class.getMethod("convertExWs",
+                        new Class[] { Object.class })));
+        assertFalse(factory.getAnnotationReader().isExcludeWhitespace(
+                Dxo.class,
+                Dxo.class.getMethod("convertExNull",
+                        new Class[] { Object.class })));
+    }
+
+    /**
      * 
      */
     @DatePattern("class default")
@@ -161,6 +203,20 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
          */
         @SuppressWarnings("unchecked")
         Map[] convert(Integer[] src);
+
+        /**
+         * @param src
+         * @return
+         */
+        @ExcludeNull
+        Object convertExNull(Object src);
+
+        /**
+         * @param src
+         * @return
+         */
+        @ExcludeWhitespace
+        Object convertExWs(Object src);
     }
 
     /**
@@ -173,6 +229,28 @@ public class TigerAnnotationReaderTest extends S2FrameworkTestCase {
          * @return
          */
         Object convert(Object src);
+
+        /**
+         * 
+         */
+        String convertExNull_EXCLUDE_NULL = null;
+
+        /**
+         * @param src
+         * @return
+         */
+        Object convertExNull(Object src);
+
+        /**
+         * 
+         */
+        String convertExWs_EXCLUDE_WHITESPACE = null;
+
+        /**
+         * @param src
+         * @return
+         */
+        Object convertExWs(Object src);
     }
 
     /**

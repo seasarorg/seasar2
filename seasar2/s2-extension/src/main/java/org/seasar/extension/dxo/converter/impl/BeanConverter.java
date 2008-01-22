@@ -152,6 +152,12 @@ public class BeanConverter extends AbstractConverter {
             }
             return;
         }
+        if (sourcePropertyValue instanceof String
+                && ((String) sourcePropertyValue).trim().length() == 0) {
+            if (context.isExcludeWhitespace()) {
+                return;
+            }
+        }
         final Class sourcePropertyClass = sourcePropertyValue.getClass();
         if (shallowCopy
                 && destPropertyClass.isAssignableFrom(sourcePropertyClass)) {
