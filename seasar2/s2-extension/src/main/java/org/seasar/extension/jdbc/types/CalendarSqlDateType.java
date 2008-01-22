@@ -61,7 +61,7 @@ public class CalendarSqlDateType extends SqlDateType {
     }
 
     protected java.sql.Date toSqlDate(Object value) {
-        Calendar calendar = CalendarConversionUtil.localize((Calendar) value);
+        Calendar calendar = CalendarConversionUtil.localize(toCalendar(value));
         Calendar base = Calendar.getInstance();
         base.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
         base.set(Calendar.MONTH, calendar.get(Calendar.MONTH));

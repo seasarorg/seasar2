@@ -69,6 +69,15 @@ public class CalendarSqlDateTypeTest extends TestCase {
      * 
      * @throws Exception
      */
+    public void testToSqlDate_fromString() throws Exception {
+        Date date = cdType.toSqlDate("2008/01/28");
+        assertNotNull(date);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testToSqlDate_timeZone() throws Exception {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("JST"));
         calendar.set(Calendar.YEAR, 2007);

@@ -42,8 +42,7 @@ public class DateSqlDateTypeTest extends TestCase {
         calendar.set(Calendar.MINUTE, 34);
         calendar.set(Calendar.SECOND, 56);
         calendar.set(Calendar.MILLISECOND, 789);
-        java.sql.Date date = new DateSqlDateType()
-                .toSqlDate(calendar.getTime());
+        java.sql.Date date = ddType.toSqlDate(calendar.getTime());
         calendar.clear();
         calendar.setTime(date);
         assertEquals(2007, calendar.get(Calendar.YEAR));
@@ -53,6 +52,15 @@ public class DateSqlDateTypeTest extends TestCase {
         assertEquals(0, calendar.get(Calendar.MINUTE));
         assertEquals(0, calendar.get(Calendar.SECOND));
         assertEquals(0, calendar.get(Calendar.MILLISECOND));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToSqlDate_fromString() throws Exception {
+        java.sql.Date date = ddType.toSqlDate("2008/01/28");
+        assertNotNull(date);
     }
 
     /**

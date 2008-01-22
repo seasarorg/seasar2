@@ -69,6 +69,15 @@ public class CalendarTimeTypeTest extends TestCase {
      * 
      * @throws Exception
      */
+    public void testToTime_fromString() throws Exception {
+        Time time = ctType.toTime("2008/01/28");
+        assertNotNull(time);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testToTime_timeZone() throws Exception {
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("JST"));
         calendar.set(Calendar.YEAR, 2007);

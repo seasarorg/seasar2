@@ -63,7 +63,7 @@ public class DateSqlDateType extends SqlDateType {
 
     protected java.sql.Date toSqlDate(Object value) {
         Calendar base = Calendar.getInstance();
-        base.setTime((Date) value);
+        base.setTime(toDate(value));
         base.set(Calendar.HOUR_OF_DAY, 0);
         base.set(Calendar.MINUTE, 0);
         base.set(Calendar.SECOND, 0);

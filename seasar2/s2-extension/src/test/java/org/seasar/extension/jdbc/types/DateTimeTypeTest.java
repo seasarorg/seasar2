@@ -43,7 +43,7 @@ public class DateTimeTypeTest extends TestCase {
         calendar.set(Calendar.MINUTE, 34);
         calendar.set(Calendar.SECOND, 56);
         calendar.set(Calendar.MILLISECOND, 789);
-        Time time = new DateTimeType().toTime(calendar.getTime());
+        Time time = dtType.toTime(calendar.getTime());
         calendar.clear();
         calendar.setTime(time);
         assertEquals(1970, calendar.get(Calendar.YEAR));
@@ -53,6 +53,15 @@ public class DateTimeTypeTest extends TestCase {
         assertEquals(34, calendar.get(Calendar.MINUTE));
         assertEquals(56, calendar.get(Calendar.SECOND));
         assertEquals(789, calendar.get(Calendar.MILLISECOND));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToTime_fromString() throws Exception {
+        Time time = dtType.toTime("2008/01/28");
+        assertNotNull(time);
     }
 
     /**

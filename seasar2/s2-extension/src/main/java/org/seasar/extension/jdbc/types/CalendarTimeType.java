@@ -62,7 +62,7 @@ public class CalendarTimeType extends TimeType {
     }
 
     protected Time toTime(Object value) {
-        Calendar calendar = CalendarConversionUtil.localize((Calendar) value);
+        Calendar calendar = CalendarConversionUtil.localize(toCalendar(value));
         Calendar base = Calendar.getInstance();
         base.set(Calendar.YEAR, 1970);
         base.set(Calendar.MONTH, Calendar.JANUARY);

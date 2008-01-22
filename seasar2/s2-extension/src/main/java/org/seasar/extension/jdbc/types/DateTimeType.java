@@ -64,7 +64,7 @@ public class DateTimeType extends TimeType {
 
     protected Time toTime(Object value) {
         Calendar base = Calendar.getInstance();
-        base.setTime((Date) value);
+        base.setTime(toDate(value));
         base.set(Calendar.YEAR, 1970);
         base.set(Calendar.MONTH, Calendar.JANUARY);
         base.set(Calendar.DATE, 1);
