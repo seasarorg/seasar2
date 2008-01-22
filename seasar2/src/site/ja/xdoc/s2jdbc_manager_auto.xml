@@ -863,6 +863,14 @@ jdbcManager.from(Employee.class)
 								valueがnullあるいはBoolean.FALSEの時は追加されません。
 							</td>
 						</tr>
+						<tr>
+							<td>
+								excludesWhitespace()
+							</td>
+							<td>
+								valueが空白文字列の時は条件に追加されません。
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<h4>
