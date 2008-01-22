@@ -59,6 +59,8 @@ Beansクラスを使うには、S2-Tigerが必要です。
 <li><a href="#includes">特定のプロパティだけを対象にする</a></li>
 <li><a href="#excludes">特定のプロパティだけを対象外にする</a></li>
 <li><a href="#prefix">特定のプレフィックスのついたプロパティだけを対象にする</a></li>
+<li><a href="#excludesNull">null値のプロパティを対象外にする</a></li>
+<li><a href="#excludesWhitespace">空白文字列のプロパティを対象外にする</a></li>
 <li><a href="#beanDelimiter_mapDelimiter">beanDelimiterとmapDelimiter</a></li>
 <li><a href="#BeanMap">BeanMap</a></li>
 </ul>
@@ -194,6 +196,30 @@ public where_aaa;
 ...
 <a href="#BeanMap">BeanMap</a> map = Beans.createAndCopy(<a href="#BeanMap">BeanMap.class</a>, this).prefix("where_").execute();
 System.out.println(map.get("aaa"));
+</pre>
+
+<h2><a name="excludesNull">null値のプロパティを対象外にする</a></h2>
+<p>
+null値のプロパティを対象外にするには、
+<code>excludesNull()</code>を使います。
+</p>
+<pre>
+SrcBean src = new SrcBean();
+DestBean dest = new DestBean();
+...
+Beans.copy(src, dest).excludesNull().execute();
+</pre>
+
+<h2><a name="excludesWhitespace">空白文字列のプロパティを対象外にする</a></h2>
+<p>
+空白文字列のプロパティを対象外にするには、
+<code>excludesWhitespace()</code>を使います。
+</p>
+<pre>
+SrcBean src = new SrcBean();
+DestBean dest = new DestBean();
+...
+Beans.copy(src, dest).excludesWhitespace().execute();
 </pre>
 
 <h2><a name="beanDelimiter_mapDelimiter">beanDelimiterとmapDelimiter</a></h2>
