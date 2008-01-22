@@ -230,6 +230,29 @@ public class AbstCopyTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testCopyBeanToBean_whitespace() throws Exception {
+        SrcBean src = new SrcBean();
+        src.ccc = " ";
+        DestBean dest = new DestBean();
+        new MyCopy().copyBeanToBean(src, dest);
+        assertEquals(" ", dest.ccc);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyBeanToBean_excludesWhitespace() throws Exception {
+        SrcBean src = new SrcBean();
+        src.ccc = " ";
+        DestBean dest = new DestBean();
+        dest.ccc = "ccc";
+        new MyCopy().excludesWhitespace().copyBeanToBean(src, dest);
+        assertEquals("ccc", dest.ccc);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCopyBeanToBean_prefix() throws Exception {
         SrcBean src = new SrcBean();
         src.search_eee$fff = "hoge";
@@ -325,6 +348,30 @@ public class AbstCopyTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testCopyBeanToMap_whitespace() throws Exception {
+        SrcBean src = new SrcBean();
+        src.ccc = " ";
+        Map<String, Object> dest = new HashMap<String, Object>();
+        dest.put("ccc", "ccc");
+        new MyCopy().copyBeanToMap(src, dest);
+        assertEquals(" ", dest.get("ccc"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyBeanToMap_excludesWhitespace() throws Exception {
+        SrcBean src = new SrcBean();
+        src.ccc = " ";
+        Map<String, Object> dest = new HashMap<String, Object>();
+        dest.put("ccc", "ccc");
+        new MyCopy().excludesWhitespace().copyBeanToMap(src, dest);
+        assertEquals("ccc", dest.get("ccc"));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCopyBeanToMap_prefix() throws Exception {
         SrcBean src = new SrcBean();
         src.search_eee$fff = "hoge";
@@ -396,42 +443,6 @@ public class AbstCopyTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testCopyMapToMap_converter() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("aaa", new Integer(1000));
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToMap(map,
-                map2);
-        assertEquals("1,000", map2.get("aaa"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testCopyMapToMap_converter2() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("aaa", "1,000");
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToMap(map,
-                map2);
-        assertEquals("1,000", map2.get("aaa"));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testCopyMapToMap_converter3() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("aaa", "1,000");
-        Map<String, Object> map2 = new HashMap<String, Object>();
-        new MyCopy().converter(new NumberConverter("#,##0"), "aaa")
-                .copyMapToMap(map, map2);
-        assertEquals(new Long(1000), map2.get("aaa"));
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testCopyMapToBean() throws Exception {
         Map<String, Object> src = new HashMap<String, Object>();
         src.put("aaa", "aaa");
@@ -497,6 +508,30 @@ public class AbstCopyTest extends TestCase {
         DestBean dest = new DestBean();
         dest.ccc = "ccc";
         new MyCopy().excludesNull().copyMapToBean(src, dest);
+        assertEquals("ccc", dest.ccc);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToBean_whitespace() throws Exception {
+        Map<String, Object> src = new HashMap<String, Object>();
+        src.put("ccc", " ");
+        DestBean dest = new DestBean();
+        dest.ccc = "ccc";
+        new MyCopy().copyMapToBean(src, dest);
+        assertEquals(" ", dest.ccc);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToBean_excludesWhitespace() throws Exception {
+        Map<String, Object> src = new HashMap<String, Object>();
+        src.put("ccc", " ");
+        DestBean dest = new DestBean();
+        dest.ccc = "ccc";
+        new MyCopy().excludesWhitespace().copyMapToBean(src, dest);
         assertEquals("ccc", dest.ccc);
     }
 
@@ -579,12 +614,72 @@ public class AbstCopyTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testCopyMapToMap_whitespace() throws Exception {
+        Map<String, Object> src = new HashMap<String, Object>();
+        src.put("bbb", " ");
+        Map<String, Object> dest = new HashMap<String, Object>();
+        dest.put("bbb", "bbb");
+        new MyCopy().copyMapToMap(src, dest);
+        assertEquals(" ", dest.get("bbb"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_excludesWhitespace() throws Exception {
+        Map<String, Object> src = new HashMap<String, Object>();
+        src.put("bbb", " ");
+        Map<String, Object> dest = new HashMap<String, Object>();
+        dest.put("bbb", "bbb");
+        new MyCopy().excludesWhitespace().copyMapToMap(src, dest);
+        assertEquals("bbb", dest.get("bbb"));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCopyMapToMap_prefix() throws Exception {
         Map<String, Object> src = new HashMap<String, Object>();
         src.put("search_eee.fff", "hoge");
         Map<String, Object> dest = new HashMap<String, Object>();
         new MyCopy().prefix("search_").copyMapToMap(src, dest);
         assertEquals("hoge", dest.get("eee.fff"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_converter() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", new Integer(1000));
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToMap(map,
+                map2);
+        assertEquals("1,000", map2.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_converter2() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", "1,000");
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0")).copyMapToMap(map,
+                map2);
+        assertEquals("1,000", map2.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testCopyMapToMap_converter3() throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("aaa", "1,000");
+        Map<String, Object> map2 = new HashMap<String, Object>();
+        new MyCopy().converter(new NumberConverter("#,##0"), "aaa")
+                .copyMapToMap(map, map2);
+        assertEquals(new Long(1000), map2.get("aaa"));
     }
 
     /**

@@ -60,6 +60,11 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     protected boolean excludesNull = false;
 
     /**
+     * 空白を操作の対象外にするかどうかです。
+     */
+    protected boolean excludesWhitespace = false;
+
+    /**
      * プレフィックスです。
      */
     protected String prefix;
@@ -121,13 +126,22 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     /**
      * null値のプロパティを操作の対象外にします。
      * 
-     * @param propertyNames
-     *            プロパティ名の配列
      * @return このインスタンス自身
      */
     @SuppressWarnings("unchecked")
     public S excludesNull() {
         this.excludesNull = true;
+        return (S) this;
+    }
+
+    /**
+     * 空白のプロパティを操作の対象外にします。
+     * 
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public S excludesWhitespace() {
+        this.excludesWhitespace = true;
         return (S) this;
     }
 
@@ -273,6 +287,10 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
                 continue;
             }
             Object value = srcPropertyDesc.getValue(src);
+            if (value instanceof String && excludesWhitespace
+                    && ((String) value).trim().length() == 0) {
+                continue;
+            }
             if (value == null && excludesNull) {
                 continue;
             }
@@ -302,6 +320,10 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
                 continue;
             }
             Object value = srcPropertyDesc.getValue(src);
+            if (value instanceof String && excludesWhitespace
+                    && ((String) value).trim().length() == 0) {
+                continue;
+            }
             if (value == null && excludesNull) {
                 continue;
             }
@@ -338,6 +360,10 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
                 continue;
             }
             Object value = src.get(srcPropertyName);
+            if (value instanceof String && excludesWhitespace
+                    && ((String) value).trim().length() == 0) {
+                continue;
+            }
             if (value == null && excludesNull) {
                 continue;
             }
@@ -364,6 +390,10 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             }
             String destPropertyName = trimPrefix(srcPropertyName);
             Object value = src.get(srcPropertyName);
+            if (value instanceof String && excludesWhitespace
+                    && ((String) value).trim().length() == 0) {
+                continue;
+            }
             if (value == null && excludesNull) {
                 continue;
             }
