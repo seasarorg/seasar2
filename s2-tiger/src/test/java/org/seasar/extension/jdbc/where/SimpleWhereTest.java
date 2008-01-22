@@ -61,7 +61,7 @@ public class SimpleWhereTest extends TestCase {
         assertEquals(" ", normalized[2]);
         assertEquals(Integer.valueOf(1), normalized[3]);
 
-        w.ignoreWhitespace();
+        w.excludesWhitespace();
 
         assertNull(w.normalize(null));
         assertNull(w.normalize(""));
@@ -95,8 +95,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testEq_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testEq_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.eq("id", ""));
         assertEquals("", w.getCriteria());
     }
@@ -122,8 +122,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testNe_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testNe_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.ne("id", " "));
         assertEquals("", w.getCriteria());
     }
@@ -149,8 +149,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testLt_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testLt_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.lt("id", "\t"));
         assertEquals("", w.getCriteria());
     }
@@ -176,8 +176,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testLe_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testLe_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.le("id", "\n"));
         assertEquals("", w.getCriteria());
     }
@@ -203,8 +203,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testGt_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testGt_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.gt("id", "\r"));
         assertEquals("", w.getCriteria());
     }
@@ -230,8 +230,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testGe_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testGe_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.ge("id", "\r\n"));
         assertEquals("", w.getCriteria());
     }
@@ -257,8 +257,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testIn_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testIn_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.in("id", "", " ", "\t"));
         assertEquals("", w.getCriteria());
     }
@@ -293,8 +293,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testNotIn_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testNotIn_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.notIn("id", null, "", " ", "\n"));
         assertEquals("", w.getCriteria());
     }
@@ -329,8 +329,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testLike_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testLike_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.like("name", ""));
         assertEquals("", w.getCriteria());
     }
@@ -356,8 +356,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testStarts_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testStarts_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.starts("name", ""));
         assertEquals("", w.getCriteria());
     }
@@ -383,8 +383,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testEnds_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testEnds_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.ends("name", ""));
         assertEquals("", w.getCriteria());
     }
@@ -410,8 +410,8 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
-    public void testContains_ignoreWhitespace() {
-        SimpleWhere w = new SimpleWhere().ignoreWhitespace();
+    public void testContains_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.contains("name", ""));
         assertEquals("", w.getCriteria());
     }

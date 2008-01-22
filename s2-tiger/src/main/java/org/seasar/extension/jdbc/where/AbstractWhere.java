@@ -45,7 +45,7 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、
      * 条件に加えない場合は<code>true</code>
      */
-    protected boolean ignoreWhitespace;
+    protected boolean excludesWhitespace;
 
     /**
      * インスタンスを構築します。
@@ -85,7 +85,7 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      *         それ以外なら元の値
      */
     protected Object normalize(final Object value) {
-        if (ignoreWhitespace && value instanceof String) {
+        if (excludesWhitespace && value instanceof String) {
             if (StringUtil.isEmpty(String.class.cast(value).trim())) {
                 return null;
             }
@@ -103,7 +103,7 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      *         それ以外なら元の値からなる配列
      */
     protected Object[] normalize(final Object... values) {
-        if (!ignoreWhitespace || values == null) {
+        if (!excludesWhitespace || values == null) {
             return values;
         }
         final List<Object> list = CollectionsUtil.newArrayList(values.length);
@@ -120,11 +120,23 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、条件に加えないことを指定します。
      * 
      * @return このインスタンス自身
+     * @see #ignoreWhitespace()
      */
     @SuppressWarnings("unchecked")
-    public T ignoreWhitespace() {
-        ignoreWhitespace = true;
+    public T excludesWhitespace() {
+        excludesWhitespace = true;
         return (T) this;
+    }
+
+    /**
+     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、条件に加えないことを指定します。
+     * 
+     * @return このインスタンス自身
+     * 
+     */
+    @Deprecated
+    public T ignoreWhitespace() {
+        return excludesWhitespace();
     }
 
     /**
