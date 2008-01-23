@@ -98,10 +98,6 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      */
     @SuppressWarnings("unchecked")
     public S includes(String... propertyNames) {
-        if (excludePropertyNames.length > 0) {
-            throw new IllegalArgumentException(
-                    "Do not specify both includes and excludes.");
-        }
         this.includePropertyNames = propertyNames;
         return (S) this;
     }
@@ -115,10 +111,6 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      */
     @SuppressWarnings("unchecked")
     public S excludes(String... propertyNames) {
-        if (includePropertyNames.length > 0) {
-            throw new IllegalArgumentException(
-                    "Do not specify both includes and excludes.");
-        }
         this.excludePropertyNames = propertyNames;
         return (S) this;
     }
@@ -242,6 +234,11 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             for (String s : includePropertyNames) {
                 if (s.equals(name)
                         && (prefix == null || name.startsWith(prefix))) {
+                    for (String s2 : excludePropertyNames) {
+                        if (s2.equals(name)) {
+                            return false;
+                        }
+                    }
                     return true;
                 }
             }

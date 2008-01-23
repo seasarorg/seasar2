@@ -41,39 +41,11 @@ public class AbstCopyTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testIncludes_excludes() throws Exception {
-        MyCopy copy = new MyCopy();
-        copy.excludes("hoge");
-        try {
-            copy.includes("aaa");
-            fail();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e);
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
     public void testExcludes() throws Exception {
         MyCopy copy = new MyCopy();
         assertSame(copy, copy.excludes("hoge"));
         assertEquals(1, copy.excludePropertyNames.length);
         assertEquals("hoge", copy.excludePropertyNames[0]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testExcludes_includes() throws Exception {
-        MyCopy copy = new MyCopy();
-        copy.includes("hoge");
-        try {
-            copy.excludes("aaa");
-            fail();
-        } catch (IllegalArgumentException e) {
-            System.out.println(e);
-        }
     }
 
     /**
@@ -146,6 +118,19 @@ public class AbstCopyTest extends TestCase {
         MyCopy copy = new MyCopy().prefix("search_");
         assertTrue(copy.isTargetProperty("search_aaa"));
         assertFalse(copy.isTargetProperty("bbb"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsTargetProperty_includes_excludes() throws Exception {
+        MyCopy copy = new MyCopy();
+        copy.includes("hoge", "hoge2");
+        copy.excludes("hoge2", "hoge3");
+        assertTrue(copy.isTargetProperty("hoge"));
+        assertFalse(copy.isTargetProperty("hoge2"));
+        assertFalse(copy.isTargetProperty("hoge3"));
+        assertFalse(copy.isTargetProperty("hoge4"));
     }
 
     /**
