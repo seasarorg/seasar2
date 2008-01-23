@@ -176,7 +176,8 @@ Beans.copy(src, dest).includes("foo", "bar").execute();
 <p>
 特定のプロパティだけを対象外にするには、
 <code>excludes(String... propertyNames)</code>を使います。
-includes()と同時に指定することはできません。
+includes()と同時に指定した場合は、includes()で指定されたプロパティから
+excludes()で指定されているものが除かれます。
 </p>
 <pre>
 SrcBean src = new SrcBean();
