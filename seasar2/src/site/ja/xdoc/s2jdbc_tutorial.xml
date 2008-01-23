@@ -866,90 +866,14 @@ public class SelectWithDepartmentDto {
 		<section name="多態">
         <p>
         S2JDBCは、エンティティの継承をサポートしていませんが、
-        列挙型とストラテジパターンを組み合わせて、
-        多態を実現できます。
-        </p>
-        <p>
-        従業員の仕事のタイプに応じた振る舞いを
-        JobStrategyとして定義します。
-        </p>
-        <p>
-        src/main/java/examples/entity/JobStrategy.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
-package examples.entity;
-
-public interface JobStrategy {
-
-    int calculateBonus(int salary);
-}
-]]></source>
-        <p>
-        給料に応じたボーナスを計算するメソッドが定義されています。
-        </p>
-        <p>
-        仕事のタイプ別にJobStrategyを実装します。
-        </p>
-        <source><![CDATA[
-package examples.entity;
-
-public class Clerk implements JobStrategy {
-
-    public int calculateBonus(int salary) {
-        return salary;
-    }
-}
-]]></source>
-        <source><![CDATA[
-package examples.entity;
-
-public class Salesman implements JobStrategy {
-
-    public int calculateBonus(int salary) {
-        return salary * 2;
-    }
-}
-]]></source>
-        <source><![CDATA[
-package examples.entity;
-
-public class Manager implements JobStrategy {
-
-    public int calculateBonus(int salary) {
-        return salary * 3;
-    }
-}
-]]></source>
-        <source><![CDATA[
-package examples.entity;
-
-public class Analyst implements JobStrategy {
-
-    public int calculateBonus(int salary) {
-        return salary * 4;
-    }
-}
-]]></source>
-        <source><![CDATA[
-package examples.entity;
-
-public class President implements JobStrategy {
-
-    public int calculateBonus(int salary) {
-        return salary * 5;
-    }
-}
-]]></source>
-        <p>
-        JobTypeの列挙型でタイプに応じたストラテジを生成します。
-        列挙型に対応するカラムは文字列で定義しておけば、
-        列挙型と文字列の変換はSeasar2によって自動的に行なわれます。
+        列挙型を使って多態を実現できます。
         </p>
         <p>
         src/main/java/examples/entity/JobType.java
-         を見てみましょう。
+         を見てみましょう。Enumのそれぞれの値にボーナスを計算するcalculateBonus()が
+         定義されています。
         </p>
+
         <source><![CDATA[
 package examples.entity;
 
@@ -957,36 +881,36 @@ public enum JobType {
 
     CLERK {
         @Override
-        public JobStrategy createStrategy() {
-            return new Clerk();
+        public int calculateBonus(int salary) {
+            return salary;
         }
     },
     SALESMAN {
         @Override
-        public JobStrategy createStrategy() {
-            return new Salesman();
+        public int calculateBonus(int salary) {
+            return salary * 2;
         }
     },
     MANAGER {
         @Override
-        public JobStrategy createStrategy() {
-            return new Manager();
+        public int calculateBonus(int salary) {
+            return salary * 3;
         }
     },
     ANALYST {
         @Override
-        public JobStrategy createStrategy() {
-            return new Analyst();
+        public int calculateBonus(int salary) {
+            return salary * 4;
         }
     },
     PRESIDENT {
         @Override
-        public JobStrategy createStrategy() {
-            return new President();
+        public int calculateBonus(int salary) {
+            return salary * 5;
         }
     };
 
-    public abstract JobStrategy createStrategy();
+    public abstract int calculateBonus(int salary);
 }
 ]]></source>
         <p>
@@ -1001,7 +925,7 @@ List<Employee> results =
     jdbcManager.from(Employee.class).getResultList();
 int totalBonus = 0;
 for (Employee e : results) {
-    totalBonus += e.jobType.createStrategy().calculateBonus(e.salary);
+    totalBonus += e.jobType.calculateBonus(e.salary);
 }
 System.out.println("Total Bonus:" + totalBonus);
 ]]></source>
