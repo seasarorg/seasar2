@@ -120,12 +120,12 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_eq_ignoreWhitespace() throws Exception {
+    public void testWhere_eq_excludesWhitespace() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
                 .where(
-                    new SimpleWhere().ignoreWhitespace().eq(
+                    new SimpleWhere().excludesWhitespace().eq(
                         "employeeName",
                         "  "))
                 .getResultList();
@@ -463,17 +463,14 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_or_ignoreWhitespace() throws Exception {
+    public void testWhere_or_excludesWhitespace() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
                 .where(
-                    new ComplexWhere()
-                        .ignoreWhitespace()
-                        .eq("employeeName", "")
-                        .or()
-                        .ge("salary", 3000)
-                        .eq("employeeName", ""))
+                    new ComplexWhere().excludesWhitespace().eq(
+                        "employeeName",
+                        "").or().ge("salary", 3000).eq("employeeName", ""))
                 .orderBy("employeeName")
                 .getResultList();
         assertEquals(3, list.size());
