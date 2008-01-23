@@ -40,7 +40,7 @@ public class TypeStrategyTest extends S2TestCase {
             jdbcManager.from(Employee.class).getResultList();
         int totalBonus = 0;
         for (Employee e : results) {
-            totalBonus += e.jobType.createStrategy().calculateBonus(e.salary);
+            totalBonus += e.jobType.calculateBonus(e.salary);
         }
         System.out.println("Total Bonus:" + totalBonus);
     }

@@ -28,8 +28,8 @@ public enum JobType {
      */
     CLERK {
         @Override
-        public JobStrategy createStrategy() {
-            return new Clerk();
+        public int calculateBonus(int salary) {
+            return salary;
         }
     },
     /**
@@ -37,8 +37,8 @@ public enum JobType {
      */
     SALESMAN {
         @Override
-        public JobStrategy createStrategy() {
-            return new Salesman();
+        public int calculateBonus(int salary) {
+            return salary * 2;
         }
     },
     /**
@@ -46,8 +46,8 @@ public enum JobType {
      */
     MANAGER {
         @Override
-        public JobStrategy createStrategy() {
-            return new Manager();
+        public int calculateBonus(int salary) {
+            return salary * 3;
         }
     },
     /**
@@ -55,8 +55,8 @@ public enum JobType {
      */
     ANALYST {
         @Override
-        public JobStrategy createStrategy() {
-            return new Analyst();
+        public int calculateBonus(int salary) {
+            return salary * 4;
         }
     },
     /**
@@ -64,15 +64,17 @@ public enum JobType {
      */
     PRESIDENT {
         @Override
-        public JobStrategy createStrategy() {
-            return new President();
+        public int calculateBonus(int salary) {
+            return salary * 5;
         }
     };
 
     /**
-     * 仕事に応じた振る舞いを定義するストラテジを作成します。
+     * ボーナスを計算します。
      * 
-     * @return 仕事ストラテジ
+     * @param salary
+     *            給与
+     * @return ボーナス
      */
-    public abstract JobStrategy createStrategy();
+    public abstract int calculateBonus(int salary);
 }
