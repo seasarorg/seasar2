@@ -43,7 +43,8 @@ import org.seasar.framework.util.SLinkedList;
  * 
  * @author higa
  */
-public final class TransactionImpl implements ExtendedTransaction {
+public final class TransactionImpl implements ExtendedTransaction,
+        SynchronizationRegister {
 
     private static final int VOTE_READONLY = 0;
 
@@ -520,14 +521,6 @@ public final class TransactionImpl implements ExtendedTransaction {
         synchronizations.add(sync);
     }
 
-    /**
-     * 特定の順序で呼び出される<code>Synchronization</code>インスタンスを登録します。
-     * 
-     * @param sync
-     *            <code>Synchronization</code>インスタンス
-     * @throws IllegalStateException
-     *             トランザクションが一停止状態または非活動中の場合
-     */
     public void registerInterposedSynchronization(Synchronization sync)
             throws IllegalStateException {
 
@@ -536,31 +529,12 @@ public final class TransactionImpl implements ExtendedTransaction {
         interposedSynchronizations.add(sync);
     }
 
-    /**
-     * 指定されたキーで指定された値をトランザクションに関連付けます。
-     * 
-     * @param key
-     *            キー
-     * @param value
-     *            値
-     * @throws IllegalStateException
-     *             トランザクションが一停止状態または非活動中の場合
-     */
     public void putResource(Object key, Object value)
             throws IllegalStateException {
         assertNotSuspended();
         resourceMap.put(key, value);
     }
 
-    /**
-     * 指定されたキーでトランザクションに関連付けられた値を返します。
-     * 
-     * @param key
-     *            キー
-     * @return トランザクションに関連付けられた値
-     * @throws IllegalStateException
-     *             トランザクションが一停止状態または非活動中の場合
-     */
     public Object getResource(Object key) throws IllegalStateException {
         assertNotSuspended();
         return resourceMap.get(key);
