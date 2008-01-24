@@ -18,6 +18,8 @@ package org.seasar.framework.beans.util;
 import java.util.HashMap;
 
 /**
+ * Stringがキーで、存在しないキーにアクセスする(get)と例外を投げるマップです。
+ * 
  * @author higa
  * 
  */
