@@ -107,6 +107,9 @@ public final class DoubleConversionUtil {
     }
 
     private static double toPrimitiveDouble(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return 0;
+        }
         return Double.parseDouble(DecimalFormatUtil.normalize(s));
     }
 }

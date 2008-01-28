@@ -27,7 +27,7 @@ public class IntegerConversionUtilTest extends TestCase {
      * @throws Exception
      */
     public void testToInteger() throws Exception {
-        assertEquals("1", new Integer("1000"), IntegerConversionUtil
+        assertEquals(new Integer("1000"), IntegerConversionUtil
                 .toInteger("1,000"));
     }
 
@@ -35,7 +35,14 @@ public class IntegerConversionUtilTest extends TestCase {
      * @throws Exception
      */
     public void testToPrimitiveInt() throws Exception {
-        assertEquals("1", 1000, IntegerConversionUtil.toPrimitiveInt("1,000"));
+        assertEquals(1000, IntegerConversionUtil.toPrimitiveInt("1,000"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToPrimitiveIntForEmptyString() throws Exception {
+        assertEquals(0, IntegerConversionUtil.toPrimitiveInt(""));
     }
 
     /**

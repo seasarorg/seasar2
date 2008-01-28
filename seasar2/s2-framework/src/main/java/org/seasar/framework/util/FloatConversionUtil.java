@@ -107,6 +107,9 @@ public final class FloatConversionUtil {
     }
 
     private static float toPrimitiveFloat(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return 0;
+        }
         return Float.parseFloat(DecimalFormatUtil.normalize(s));
     }
 }

@@ -27,14 +27,21 @@ public class LongConversionUtilTest extends TestCase {
      * @throws Exception
      */
     public void testToLong() throws Exception {
-        assertEquals("1", new Long("1000"), LongConversionUtil.toLong("1,000"));
+        assertEquals(new Long("1000"), LongConversionUtil.toLong("1,000"));
     }
 
     /**
      * @throws Exception
      */
     public void testToPrimitiveLong() throws Exception {
-        assertEquals("1", 1000, LongConversionUtil.toPrimitiveLong("1,000"));
+        assertEquals(1000, LongConversionUtil.toPrimitiveLong("1,000"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToPrimitiveLongForEmptyString() throws Exception {
+        assertEquals(0, LongConversionUtil.toPrimitiveLong(""));
     }
 
     /**

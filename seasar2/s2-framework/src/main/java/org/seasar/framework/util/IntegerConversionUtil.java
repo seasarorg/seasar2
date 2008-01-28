@@ -112,6 +112,9 @@ public final class IntegerConversionUtil {
     }
 
     private static int toPrimitiveInt(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return 0;
+        }
         return Integer.parseInt(DecimalFormatUtil.normalize(s));
     }
 }

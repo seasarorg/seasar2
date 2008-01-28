@@ -26,15 +26,22 @@ public class ByteConversionUtilTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testToByteConversionUtilTest() throws Exception {
-        assertEquals("1", new Byte("100"), ByteConversionUtil.toByte("100"));
+    public void testToByte() throws Exception {
+        assertEquals(new Byte("100"), ByteConversionUtil.toByte("100"));
     }
 
     /**
      * @throws Exception
      */
-    public void testToPrimitiveByteConversionUtilTest() throws Exception {
-        assertEquals("1", 100, ByteConversionUtil.toPrimitiveByte("100"));
+    public void testToPrimitiveByte() throws Exception {
+        assertEquals(100, ByteConversionUtil.toPrimitiveByte("100"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToPrimitiveByte_emptyString() throws Exception {
+        assertEquals(0, ByteConversionUtil.toPrimitiveByte(""));
     }
 
     /**

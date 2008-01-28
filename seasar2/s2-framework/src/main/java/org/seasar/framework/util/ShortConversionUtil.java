@@ -118,6 +118,9 @@ public final class ShortConversionUtil {
     }
 
     private static short toPrimitiveShort(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return 0;
+        }
         return Short.parseShort(DecimalFormatUtil.normalize(s));
     }
 }

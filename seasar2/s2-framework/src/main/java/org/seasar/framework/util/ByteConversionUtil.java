@@ -111,6 +111,9 @@ public final class ByteConversionUtil {
     }
 
     private static byte toPrimitiveByte(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return 0;
+        }
         return Byte.parseByte(DecimalFormatUtil.normalize(s));
     }
 }

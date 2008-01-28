@@ -110,6 +110,9 @@ public final class LongConversionUtil {
     }
 
     private static long toPrimitiveLong(String s) {
+        if (StringUtil.isEmpty(s)) {
+            return 0;
+        }
         return Long.parseLong(DecimalFormatUtil.normalize(s));
     }
 }

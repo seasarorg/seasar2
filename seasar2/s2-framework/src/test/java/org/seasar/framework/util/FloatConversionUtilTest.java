@@ -27,7 +27,7 @@ public class FloatConversionUtilTest extends TestCase {
      * @throws Exception
      */
     public void testToFloat() throws Exception {
-        assertEquals("1", new Float("1000.5"), FloatConversionUtil
+        assertEquals(new Float("1000.5"), FloatConversionUtil
                 .toFloat("1,000.5"));
     }
 
@@ -35,8 +35,14 @@ public class FloatConversionUtilTest extends TestCase {
      * @throws Exception
      */
     public void testToPrimitiveFloat() throws Exception {
-        assertEquals("1", 1000.5, FloatConversionUtil
-                .toPrimitiveFloat("1,000.5"), 0);
+        assertEquals(1000.5, FloatConversionUtil.toPrimitiveFloat("1,000.5"), 0);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToPrimitiveFloatForEmptyString() throws Exception {
+        assertEquals(0, FloatConversionUtil.toPrimitiveFloat(""), 0);
     }
 
     /**
