@@ -44,6 +44,7 @@
 <ul>
 <li><a href="#EncodingFilter">EncodingFilter</a></li>
 <li><a href="#TomcatUseBodyEncodingForURI">TomcatでGETの文字化け</a></li>
+<li><a href="#TomcatURIEncoding">TomcatでリクエストURLの文字化け</a></li>
 </ul>
 
 <h2><a name="EncodingFilter">EncodingFilter</a></h2>
@@ -75,6 +76,16 @@ Tomcat5以上を使っているときに、GETが文字化けすることがあ�
 </p>
 <pre>
 &lt;Connector ... useBodyEncodingForURI="true"/&gt; 
+</pre>
+
+<h2><a name="TomcatURIEncoding">TomcatでリクエストURLの文字化け</a></h2>
+<p>
+Tomcatを使っているときに、リクエストURL(パス)が文字化けすることがあります。
+そのような場合には、server.xmlのConnectorタグに次の指定を追加します。
+UTF-8の部分は、encodingfilterの設定にあわせてください。
+</p>
+<pre>
+&lt;Connector ... URIEncoding="UTF-8"/&gt; 
 </pre>
 <!-- document end -->
 <!-- don't edit start --></td>
