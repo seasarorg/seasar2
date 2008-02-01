@@ -28,6 +28,16 @@
 				</li>
 				<li>
 					<p>
+						<a href="#イテレーション">イテレーション</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#行数取得">行数取得</a>
+					</p>
+				</li>
+				<li>
+					<p>
 						<a href="#結合">結合</a>
 					</p>
 				</li>
@@ -68,7 +78,9 @@
 				</li>
 				<li>
 					<p>
-						<a href="#SQLによるマップで返す複数件検索">SQLによるマップで返す複数件検索</a>
+						<a href="#SQLによるマップで返す複数件検索">
+							SQLによるマップで返す複数件検索
+						</a>
 					</p>
 				</li>
 				<li>
@@ -90,30 +102,26 @@
 		</section>
 
 		<section name="セットアップ">
-		<p>
-		S2JDBC-Tutorial-xxx.zipを解凍し、その中にあるs2jdbc-tutorialを
-		Eclipseにインポートしてください。これだけでセットアップは完了です。
-		</p>
-		このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、
-		起動など特に必要ありません。
-		データの追加や変更をしたい場合は、src/test/resources/data/test.script
-		を適当に変更してください。
-		<p>
-		</p>
+			<p>
+				S2JDBC-Tutorial-xxx.zipを解凍し、その中にあるs2jdbc-tutorialを
+				Eclipseにインポートしてください。これだけでセットアップは完了です。
+			</p>
+			このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、 起動など特に必要ありません。
+			データの追加や変更をしたい場合は、src/test/resources/data/test.script
+			を適当に変更してください。
+			<p></p>
 		</section>
-		
+
 		<section name="エンティティ">
-		<p>
-		テーブルのデータとJavaのオブジェクトのマッピングは、
-		エンティティに対してアノテーションで指定します。
-		エンティティというのは、テーブルの1行に対応するJavaのオブジェクトだと
-		理解していれば良いでしょう。
-		</p>
-		<p>
-		それでは、Employeeエンティティを見てみましょう。
-		src/main/java/examples/entity/Employee.javaを開いてください。
-		</p>
-		<source><![CDATA[
+			<p>
+				テーブルのデータとJavaのオブジェクトのマッピングは、 エンティティに対してアノテーションで指定します。
+				エンティティというのは、テーブルの1行に対応するJavaのオブジェクトだと 理解していれば良いでしょう。
+			</p>
+			<p>
+				それでは、Employeeエンティティを見てみましょう。
+				src/main/java/examples/entity/Employee.javaを開いてください。
+			</p>
+			<source><![CDATA[
 package examples.entity;
 
 import javax.persistence.Entity;
@@ -151,34 +159,35 @@ public class Employee {
     public Integer version;
 }
 ]]></source>
-		<p>
-		エンティティであることを示すには、@Entityが必要です。
-		詳しくは、<a href="s2jdbc_entity.html#エンティティ定義">エンティティ定義</a>を参照してください。
-		</p>
-		<p>
-		識別子のフィールドには、@Idをつけます。
-		識別子をSeasar2に自動生成させる場合は、@GeneratedValueをつけます。
-		詳しくは、<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>を参照してください。
-		</p>
-		<p>
-		Seasar2では、publicフィールドを使ってシンプルにプロパティを定義することができます。
-		詳しくは、<a href="s2jdbc_abstract.html#シンプルなプロパティ">シンプルなプロパティ</a>
-		を参照してください。
-		</p>
-		<p>
-		カラム名とプロパティ名が同じなら、カラム用のアノテーションは特に必要ありません。
-		また、AAA_BBBのようなカラム名用の'_'記法を、
-		aaaBbbのようなプロパティ名用のキャメル記法へ変換することも
-		Seasar2によって自動的に行われるので、
-		アノテーションを指定する必要はありません。
-		詳しくは、<a href="s2jdbc_entity.html#カラム定義">カラム定義</a>を参照してください。
-		</p>
-		<p>
-		JobTypeは次のような列挙型です。
-		実際のソースではもう少し複雑ですが、
-		わかりやすくするために今回は簡略化しています。
-		</p>
-		<source><![CDATA[
+			<p>
+				エンティティであることを示すには、@Entityが必要です。 詳しくは、
+				<a href="s2jdbc_entity.html#エンティティ定義">エンティティ定義</a>
+				を参照してください。
+			</p>
+			<p>
+				識別子のフィールドには、@Idをつけます。
+				識別子をSeasar2に自動生成させる場合は、@GeneratedValueをつけます。 詳しくは、
+				<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+				を参照してください。
+			</p>
+			<p>
+				Seasar2では、publicフィールドを使ってシンプルにプロパティを定義することができます。 詳しくは、
+				<a href="s2jdbc_abstract.html#シンプルなプロパティ">シンプルなプロパティ</a>
+				を参照してください。
+			</p>
+			<p>
+				カラム名とプロパティ名が同じなら、カラム用のアノテーションは特に必要ありません。
+				また、AAA_BBBのようなカラム名用の'_'記法を、
+				aaaBbbのようなプロパティ名用のキャメル記法へ変換することも Seasar2によって自動的に行われるので、
+				アノテーションを指定する必要はありません。 詳しくは、
+				<a href="s2jdbc_entity.html#カラム定義">カラム定義</a>
+				を参照してください。
+			</p>
+			<p>
+				JobTypeは次のような列挙型です。 実際のソースではもう少し複雑ですが、
+				わかりやすくするために今回は簡略化しています。
+			</p>
+			<source><![CDATA[
 package examples.entity;
 
 public enum JobType {
@@ -190,80 +199,69 @@ public enum JobType {
     PRESIDENT;
 }
 ]]></source>
-        <p>
-        job_typeカラムを文字列で定義しておけば、
-        カラムには、'CLERK'のように文字列として格納され、
-        エンティティでは、列挙型に自動的にマッピングされます。
-        </p>
-        <p>
-        EmployeeとDepartmentには、多対一の関連があり、次のように定義されています。
-        </p>
-        <source><![CDATA[
+			<p>
+				job_typeカラムを文字列で定義しておけば、 カラムには、'CLERK'のように文字列として格納され、
+				エンティティでは、列挙型に自動的にマッピングされます。
+			</p>
+			<p>EmployeeとDepartmentには、多対一の関連があり、次のように定義されています。</p>
+			<source><![CDATA[
 @ManyToOne
 public Department department;
 ]]></source>
-		<p>
-		逆の立場から見ると、DepartmentとEmployeeは一対多の関連があり、
-		次のように定義されています。
-		</p>
-	　　<source><![CDATA[
+			<p>
+				逆の立場から見ると、DepartmentとEmployeeは一対多の関連があり、 次のように定義されています。
+			</p>
+			　　
+			<source><![CDATA[
 @OneToMany(mappedBy = "department")
 public List<Employee> employeeList;
 ]]></source>
-        <p>
-        mappedBy属性によって関連の所有者側のプロパティを指定します。
-        関連の所有者側とは、外部キーを持っているほうを意味します。
-        今回のケースは、department_idという外部キー(プロパティ名はdepartmentId)をEmployeeが
-        持っているのでEmployeeが関連の所有者になります。
-        mappedBy属性によって、双方の関連がリンクされることになります。
-        </p>
-        <p>
-        EmployeeとAddressには、一対一の関連があり、次のように定義されています。
-        </p>
-        <source><![CDATA[
+			<p>
+				mappedBy属性によって関連の所有者側のプロパティを指定します。
+				関連の所有者側とは、外部キーを持っているほうを意味します。
+				今回のケースは、department_idという外部キー(プロパティ名はdepartmentId)をEmployeeが
+				持っているのでEmployeeが関連の所有者になります。
+				mappedBy属性によって、双方の関連がリンクされることになります。
+			</p>
+			<p>EmployeeとAddressには、一対一の関連があり、次のように定義されています。</p>
+			<source><![CDATA[
 @OneToOne
 public Address address;
 ]]></source>
-		<p>
-		逆の立場から見ても、AddressとEmployeeは一対一の関連があり、
-		次のように定義されています。
-		</p>
-	　　<source><![CDATA[
+			<p>逆の立場から見ても、AddressとEmployeeは一対一の関連があり、 次のように定義されています。</p>
+			　　
+			<source><![CDATA[
 @OneToMany(mappedBy = "address")
 public Employee employee;
 ]]></source>
-        <p>
-        mappedBy属性によって関連の所有者側のプロパティを指定します。
-        関連の所有者側とは、外部キーを持っているほうを意味します。
-        今回のケースは、address_idという外部キー(プロパティ名はaddressId)をEmployeeが
-        持っているのでEmployeeが関連の所有者になります。
-        mappedBy属性によって、双方の関連がリンクされることになります。
-        </p>
-        <p>
-        詳しくは、<a href="s2jdbc_entity.html#関連定義">関連定義</a>を参照してください。
-        </p>
-        <p>
-        楽観的排他制御をするには、int, long, Integer, Longの型を持つフィールドに
-        @Versionをつけます。
-        詳しくは、<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
-        を参照してください。
-        </p>
-        <p>
-        これで、エンティティの基本的な説明は終わりました。
-        それでは、早速動かしてみましょう。
-        </p>
-        </section>
-        
-        <section name="複数件検索">
-        <p>
-        Seasar2の機能をいろいろ試してみるには、
-        S2TestCaseを継承したクラスを使うと便利です。
-        </p>
-        <p>
-        src/test/java/examples/entity/GetResultListTest.java
-        を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				mappedBy属性によって関連の所有者側のプロパティを指定します。
+				関連の所有者側とは、外部キーを持っているほうを意味します。
+				今回のケースは、address_idという外部キー(プロパティ名はaddressId)をEmployeeが
+				持っているのでEmployeeが関連の所有者になります。
+				mappedBy属性によって、双方の関連がリンクされることになります。
+			</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_entity.html#関連定義">関連定義</a>
+				を参照してください。
+			</p>
+			<p>
+				楽観的排他制御をするには、int, long, Integer, Longの型を持つフィールドに
+				@Versionをつけます。 詳しくは、
+				<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
+				を参照してください。
+			</p>
+			<p>これで、エンティティの基本的な説明は終わりました。 それでは、早速動かしてみましょう。</p>
+		</section>
+
+		<section name="複数件検索">
+			<p>Seasar2の機能をいろいろ試してみるには、 S2TestCaseを継承したクラスを使うと便利です。</p>
+			<p>
+				src/test/java/examples/entity/GetResultListTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 package examples.entity;
 
 import java.util.List;
@@ -284,40 +282,40 @@ public class GetResultListTest extends S2TestCase {
     }
 }
 ]]></source>
-        <p>
-        setUp()でapp.diconを読み込み、JdbcManagerのフィールドを定義しておけば、
-        testXxx()の中で、JdbcManagerを使うことができます。
-        このJdbcManagerを使ってデータベースにアクセスします。
-        </p>
-        <p>
-        複数件検索を行うには、from()の引数に検索したいエンティティのクラスを指定し、
-        getResultList()を呼び出します。
-        このテストケースを実行するには、ソースを右クリックして、
-        Run As -> JUnit Testを選びます。
-        </p>
-        <source><![CDATA[
+			<p>
+				setUp()でapp.diconを読み込み、JdbcManagerのフィールドを定義しておけば、
+				testXxx()の中で、JdbcManagerを使うことができます。
+				このJdbcManagerを使ってデータベースにアクセスします。
+			</p>
+			<p>
+				複数件検索を行うには、from()の引数に検索したいエンティティのクラスを指定し、
+				getResultList()を呼び出します。 このテストケースを実行するには、ソースを右クリックして、 Run
+				As -> JUnit Testを選びます。
+			</p>
+			<source><![CDATA[
 List<Employee> results =
     jdbcManager.from(Employee.class).getResultList();
 for (Employee e : results) {
     System.out.println(e.name);
 }
 ]]></source>
-        <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#複数件検索">複数件検索</a>
-        を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#複数件検索">複数件検索</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="1件検索">
-        <p>
-        1件検索を行うには、from()の引数に検索したいエンティティのクラスを指定し、
-        getSingleResult()を呼び出します。
-        </p>
-        <p>
-        src/test/java/examples/entity/GetSingleResultTest.java
-        を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				1件検索を行うには、from()の引数に検索したいエンティティのクラスを指定し、
+				getSingleResult()を呼び出します。
+			</p>
+			<p>
+				src/test/java/examples/entity/GetSingleResultTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 Employee result =
     jdbcManager
         .from(Employee.class)
@@ -325,36 +323,124 @@ Employee result =
         .getSingleResult();
 System.out.println(result.name);
 ]]></source>
-        <p>
-        where()で条件を指定することができます。
-        SQLでできることはすべて指定することができます。
-        SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
-        </p>
-        <p>
-        where()の2番目以降の引数は、可変長引数になっています。
-        例えば、次のように複数指定できます。
-        </p>
-        <source><![CDATA[
+			<p>
+				where()で条件を指定することができます。 SQLでできることはすべて指定することができます。
+				SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
+			</p>
+			<p>where()の2番目以降の引数は、可変長引数になっています。 例えば、次のように複数指定できます。</p>
+			<source><![CDATA[
 where("id = ? or name = ?", 1, "SCOTT")
 ]]></source>
-        <p>
-        詳しくは、<a href="s2jdbc_manager_auto.html#1件検索">1件検索</a>と
-       <a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
-        を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#1件検索">1件検索</a>
+				と
+				<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
+		<section name="イテレーション">
+			<p>
+				<code>getResultList()</code>
+				を使うと、検索結果を全て含むリストが返されます。
+				このため、検索結果が膨大な場合は大量のメモリを消費してしまいます．
+			</p>
+			<p>このような場合は、エンティティ1件ごとにコールバックされるイテレーションを使うと効果的です。</p>
+			<p>
+				src/test/java/examples/entity/IterateTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
+public void testIterate() throws Exception {
+    long sum =
+        jdbcManager.from(Employee.class).iterate(
+            new IterationCallback<Employee, Long>() {
+                private long sum;
+
+                public Long iterate(Employee emp, IterationContext context) {
+                    sum += emp.salary;
+                    return sum;
+                }
+            });
+    System.out.println(sum);
+}
+]]></source>
+			<p>
+				この例では、全従業員の給与の合計を求めています。 エンティティ1件ごとに匿名クラスの
+				<code>iterate()</code>
+				メソッドがコールバックされ、 その中で給与の累計を求めてその時点の累計を戻り値としています。
+				イテレーションの最後の戻り値が全体の戻り値となります。
+			</p>
+			<p>イテレーションを途中で打ち切ることもできます。</p>
+			<source><![CDATA[
+public void testIterateExit() throws Exception {
+    Employee emp =
+        jdbcManager.from(Employee.class).iterate(
+            new IterationCallback<Employee, Employee>() {
+                private long sum;
+
+                public Employee iterate(Employee emp,
+                        IterationContext context) {
+                    sum += emp.salary;
+                    if (sum > 10000) {
+                        context.setExit(true);
+                    }
+                    return emp;
+                }
+            });
+    System.out.println(emp.name);
+}
+]]></source>
+			<p>
+				この例では、従業員の給与の合計が10000を越えると
+				<code>IterationContext</code>
+				の
+				<code>setExit()</code>
+				を呼び出しすことで、 イテレーションを終了します。 イテレーションの最後の戻り値が全体の戻り値となります。
+			</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#イテレーションによる検索">
+					イテレーションによる検索
+				</a>
+				を参照してください。
+			</p>
+		</section>
+
+		<section name="行数取得">
+			<p>
+				検索結果の行数を
+				<code>select count(*)</code>
+				で取得するには、from()の引数に検索したいエンティティのクラスを指定し、
+				getCount()を呼び出します。
+			</p>
+			<p>
+				src/test/java/examples/entity/GetCountTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
+public void testGetCount() throws Exception {
+    long count = jdbcManager.from(Employee.class).getCount();
+    System.out.println(count);
+}
+]]></source>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#検索結果の行数取得">
+					検索結果の行数取得
+				</a>
+				を参照してください。
+			</p>
+		</section>
+
 		<section name="結合">
-        <p>
-        他のエンティティと結合するには、
-        innerJoin()またはleftOuterJoin()の引数に<b>関連のプロパティ名</b>を指定します。
-        エンティティ名ではないので注意してください。
-        </p>
-        <p>
-        src/test/java/examples/entity/JoinTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				他のエンティティと結合するには、 innerJoin()またはleftOuterJoin()の引数に
+				<b>関連のプロパティ名</b>
+				を指定します。 エンティティ名ではないので注意してください。
+			</p>
+			<p>src/test/java/examples/entity/JoinTest.java を見てみましょう。</p>
+			<source><![CDATA[
 List<Employee> results =
     jdbcManager
         .from(Employee.class)
@@ -369,33 +455,31 @@ for (Employee e : results) {
         + e.address.name);
 }
 ]]></source>
-        <p>
-         結合した関連エンティティのプロパティは、結合名.プロパティ名(例えばaddress.name)で指定します。
-         ネストした指定(aaa.bbb.ccc)も可能です。
-         ネストした指定をする場合は、必ずinnerJoin()/leftOuterJoin()で指定しておく必要があります。
-         例えば、aaa.bbb.cccのプロパティを指定するには、leftOuterJoin("aaa.bbb")を指定します。
-        </p>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#結合">結合</a>
-         を参照してください。
-        </p>
+			<p>
+				結合した関連エンティティのプロパティは、結合名.プロパティ名(例えばaddress.name)で指定します。
+				ネストした指定(aaa.bbb.ccc)も可能です。
+				ネストした指定をする場合は、必ずinnerJoin()/leftOuterJoin()で指定しておく必要があります。
+				例えば、aaa.bbb.cccのプロパティを指定するには、leftOuterJoin("aaa.bbb")を指定します。
+			</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#結合">結合</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="where句の簡易指定">
-        <p>
-        where句を文字列で組み立てる場合、
-         条件が指定されなかったらwhere句からはずしたり、
-         最初の条件にはandをつけないけど2番名の条件からはandをつけたりなど、
-         いろいろなことを考慮しながら文字列を組み立てる必要があります。
-        </p>
-        <p>
-         これらの面倒な処理を簡易に行えるようにしたのがSimpleWhereです。
-        </p>
-        <p>
-        src/test/java/examples/entity/SimpleWhereTest.java
-        を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				where句を文字列で組み立てる場合、 条件が指定されなかったらwhere句からはずしたり、
+				最初の条件にはandをつけないけど2番名の条件からはandをつけたりなど、
+				いろいろなことを考慮しながら文字列を組み立てる必要があります。
+			</p>
+			<p>これらの面倒な処理を簡易に行えるようにしたのがSimpleWhereです。</p>
+			<p>
+				src/test/java/examples/entity/SimpleWhereTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 List<Employee> results =
     jdbcManager
         .from(Employee.class)
@@ -409,30 +493,29 @@ for (Employee e : results) {
     System.out.println(e.name + ", " + e.address.name);
 }
 ]]></source>
-        <p>
-        starts()の最初の引数はプロパティ名で、like '?%'に変換されます。
-        ends()の最初の引数はプロパティ名で、like '%?'に変換されます。
-         それぞれの条件は、andで結合されます。
-         上記のサンプルでは、"A"や"1"のように直接リテラルを渡していますが、
-         変数を渡した場合、変数がnullの場合は、条件に含まれなくなります。
-        </p>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
-         を参照してください。
-        </p>
+			<p>
+				starts()の最初の引数はプロパティ名で、like '?%'に変換されます。
+				ends()の最初の引数はプロパティ名で、like '%?'に変換されます。
+				それぞれの条件は、andで結合されます。
+				上記のサンプルでは、"A"や"1"のように直接リテラルを渡していますが、
+				変数を渡した場合、変数がnullの場合は、条件に含まれなくなります。
+			</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="ソート順">
-        <p>
-        orderBy()でソート順を指定することができます。
-        SQLでできることはすべて指定することができます。
-        SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
-        </p>
-        <p>
-        src/test/java/examples/entity/OrderByTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				orderBy()でソート順を指定することができます。 SQLでできることはすべて指定することができます。
+				SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
+			</p>
+			<p>
+				src/test/java/examples/entity/OrderByTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
 List<Employee> results =
     jdbcManager
         .from(Employee.class)
@@ -442,26 +525,25 @@ for (Employee e : results) {
     System.out.println(e.name);
 }
 ]]></source>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
-         を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="ページング">
-        <p>
-		ページングを指定する場合は、
-		limit(), offset()を使います。
-		limit()には、取得する行数を指定します。
-		offset()には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
-		ページングを指定するには、必ず
-		<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>の指定も必要です。
-        </p>
-        <p>
-        src/test/java/examples/entity/PagingTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				ページングを指定する場合は、 limit(), offset()を使います。
+				limit()には、取得する行数を指定します。 offset()には、最初に取得する行の位置を指定します。
+				最初の行の位置は0になります。 ページングを指定するには、必ず
+				<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
+				の指定も必要です。
+			</p>
+			<p>
+				src/test/java/examples/entity/PagingTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
 List<Employee> results =
     jdbcManager
         .from(Employee.class)
@@ -473,22 +555,19 @@ for (Employee e : results) {
     System.out.println(e.id);
 }
 ]]></source>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#ページング">ページング</a>
-         を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#ページング">ページング</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="挿入">
-        <p>
-		エンティティを挿入するには、
-		insert()とexecute()を組み合わせます。
-        </p>
-        <p>
-        src/test/java/examples/entity/InsertTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>エンティティを挿入するには、 insert()とexecute()を組み合わせます。</p>
+			<p>
+				src/test/java/examples/entity/InsertTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
 public void testInsertTx() throws Exception {
     Employee emp = new Employee();
     emp.name = "test";
@@ -498,30 +577,24 @@ public void testInsertTx() throws Exception {
     System.out.println(emp.id);
 }
 ]]></source>
-        <p>
-         テストメソッドがTxで終わっていると、テスト時実行前にトランザクションが開始され、
-         テスト終了後に自動的にロールバックされます。
-         そのため、何度でも同じテストを繰り返すことができます。
-        </p>
-        <p>
-        識別子は@GeneratedValueが指定されているので自動的に設定されます。
-        </p>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#挿入">挿入</a>
-         を参照してください。
-        </p>
+			<p>
+				テストメソッドがTxで終わっていると、テスト時実行前にトランザクションが開始され、
+				テスト終了後に自動的にロールバックされます。 そのため、何度でも同じテストを繰り返すことができます。
+			</p>
+			<p>識別子は@GeneratedValueが指定されているので自動的に設定されます。</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#挿入">挿入</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="更新">
-        <p>
-		エンティティを更新するには、
-		update()とexecute()を組み合わせます。
-        </p>
-        <p>
-        src/test/java/examples/entity/UpdateTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>エンティティを更新するには、 update()とexecute()を組み合わせます。</p>
+			<p>
+				src/test/java/examples/entity/UpdateTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
 Employee emp =
     jdbcManager
         .from(Employee.class)
@@ -532,27 +605,23 @@ System.out.println(emp.version);
 jdbcManager.update(emp).execute();
 System.out.println(emp.version);
 ]]></source>
-        <p>
-        versionプロパティには、@Versionが指定されているので、
-        Seasar2による楽観的排他制御が行なわれて、
-         更新に成功するとversionの値がインクリメントされます。
-        </p>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#更新">更新</a>
-         を参照してください。
-        </p>
+			<p>
+				versionプロパティには、@Versionが指定されているので、
+				Seasar2による楽観的排他制御が行なわれて、 更新に成功するとversionの値がインクリメントされます。
+			</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#更新">更新</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="削除">
-        <p>
-		エンティティを削除するには、
-		delete()とexecute()を組み合わせます。
-        </p>
-        <p>
-        src/test/java/examples/entity/DeleteTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>エンティティを削除するには、 delete()とexecute()を組み合わせます。</p>
+			<p>
+				src/test/java/examples/entity/DeleteTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
 Employee emp =
     jdbcManager
         .from(Employee.class)
@@ -566,24 +635,23 @@ emp =
         .getSingleResult();
 System.out.println(emp);
 ]]></source>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_auto.html#削除">削除</a>
-         を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_auto.html#削除">削除</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="SQLによる複数件取得">
-        <p>
-        SQLの自動生成は便利な機能ですが、
-        SQLを自分で書きたいこともあるでしょう。
-		SQLを使って複数件検索するには、
-		selectBySql()とgetResultList()を組み合わせます。
-        </p>
-        <p>
-        src/test/java/examples/entity/SqlGetResultListTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				SQLの自動生成は便利な機能ですが、 SQLを自分で書きたいこともあるでしょう。
+				SQLを使って複数件検索するには、 selectBySql()とgetResultList()を組み合わせます。
+			</p>
+			<p>
+				src/test/java/examples/entity/SqlGetResultListTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 private static final String SELECT_EMPLOYEE_DTO =
     "select e.*, d.name as department_name"
         + " from employee e left outer join department d"
@@ -598,40 +666,36 @@ for (EmployeeDto e : results) {
     System.out.println(e.name + " " + e.departmentName);
 }
 ]]></source>
-        <p>
-        selectBySql()の最初の引数は、結果を受け取るJavaBeansです。
-         結果セットのカラム名とJavaBeansのプロパティ名を
-         あわせておけば自動的にマッピングされます。
-        AAA_BBBのような'_'記法とaaaBbbのようなキャメル記法の
-         マッピングも自動的に行なわれます。
-        </p>
-        <p>
-        selectBySql()の3番目以降の引数は、可変長引数になっています。
-         例えば、次のように複数指定できます。
-        </p>
-        <source><![CDATA[
+			<p>
+				selectBySql()の最初の引数は、結果を受け取るJavaBeansです。
+				結果セットのカラム名とJavaBeansのプロパティ名を あわせておけば自動的にマッピングされます。
+				AAA_BBBのような'_'記法とaaaBbbのようなキャメル記法の マッピングも自動的に行なわれます。
+			</p>
+			<p>
+				selectBySql()の3番目以降の引数は、可変長引数になっています。 例えば、次のように複数指定できます。
+			</p>
+			<source><![CDATA[
 selectBySql(EmployeeDto.class, "... id = ? or name = ?", 1, "SCOTT")
 ]]></source>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_sql.html#複数件検索">SQLによる複数件検索</a>
-         を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_sql.html#複数件検索">SQLによる複数件検索</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="SQLによるマップで返す複数件検索">
-        <p>
-        SQLを使って結果をマップで返すには、
-		selectBySql()の最初の引数をRowMap.classにします。
-		RowMapはMap&lt;String, Object&gt;なクラスで、
-		存在しないキーにアクセスすると 例外が発生します。
-		キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-		変換したものです。
-        </p>
-        <p>
-        src/test/java/examples/entity/SqlMapTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				SQLを使って結果をマップで返すには、
+				selectBySql()の最初の引数をRowMap.classにします。
+				RowMapはMap&lt;String, Object&gt;なクラスで、 存在しないキーにアクセスすると
+				例外が発生します。 キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
+				変換したものです。
+			</p>
+			<p>
+				src/test/java/examples/entity/SqlMapTest.java を見てみましょう。
+			</p>
+			<source><![CDATA[
 private static final String LABEL_VALUE =
     "select name as label, id as value from employee";
 ...
@@ -641,22 +705,23 @@ for (RowMap m : results) {
     System.out.println(m);
 }
 ]]></source>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_sql.html#複数件検索">SQLによる複数件検索</a>
-         を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_sql.html#複数件検索">SQLによる複数件検索</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="SQLによる1件取得">
-        <p>
-        SQLを使って1件検索するには、
-		selectBySql()とgetSingleResult()を組み合わせます。
-        </p>
-        <p>
-        src/test/java/examples/entity/SqlGetSingleResultTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				SQLを使って1件検索するには、
+				selectBySql()とgetSingleResult()を組み合わせます。
+			</p>
+			<p>
+				src/test/java/examples/entity/SqlGetSingleResultTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 private static final String SELECT_COUNT = "select count(*) from employee";
 ...
 Integer result =
@@ -665,70 +730,61 @@ Integer result =
         .getSingleResult();
 System.out.println(result);
 ]]></source>
-        <p>
-        selectリストが1つだけの場合は、
-        selectBySql()の最初の引数に、
-        JavaBeansではなく、Integer.classやString.class
-         などのカラムの型に応じたクラスを指定します。
-        </p>
-        <p>
-         詳しくは、<a href="s2jdbc_manager_sql.html#1件検索">SQLによる1件検索</a>
-         を参照してください。
-        </p>
+			<p>
+				selectリストが1つだけの場合は、 selectBySql()の最初の引数に、
+				JavaBeansではなく、Integer.classやString.class
+				などのカラムの型に応じたクラスを指定します。
+			</p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_sql.html#1件検索">SQLによる1件検索</a>
+				を参照してください。
+			</p>
 		</section>
-		
+
 		<section name="SQLファイル">
-        <p>
-         複雑で長いSQL文はソースコードに直接記述するよりも、
-         ファイルに書いたほうがメンテナンスがしやすくなります。
-        </p>
-        <p>
-		SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
-		ルートパッケージ.sql.テーブル名
-		のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
-		employeeテーブルに関するSQLファイルは、
-		examples/sql/employeeディレクトリにおくと良いでしょう。
-		</p>
-		<p>
-		何のパラメータもない単純なSQLファイルは次のようになります。
-		</p>
-		<source><![CDATA[
+			<p>
+				複雑で長いSQL文はソースコードに直接記述するよりも、 ファイルに書いたほうがメンテナンスがしやすくなります。
+			</p>
+			<p>
+				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、 ルートパッケージ.sql.テーブル名
+				のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
+				employeeテーブルに関するSQLファイルは、
+				examples/sql/employeeディレクトリにおくと良いでしょう。
+			</p>
+			<p>何のパラメータもない単純なSQLファイルは次のようになります。</p>
+			<source><![CDATA[
 select * from employee
 where
 salary >= 1000
 and salary <= 2000
 ]]></source>
-		<p>
-		1000の部分をsalaryMin
-		というパラメータで置き換えるには、
-		次のように置き換えたいリテラルの左にSQLコメントでパラメータ名を埋め込みます。
-		リテラルを文字列として直接置き換えるのではなく、
-		PreparedStatmentを使ったバインド変数に置き換えるので、
-		SQLインジェクション対策も問題ありません。
-		</p>
-		<source><![CDATA[
+			<p>
+				1000の部分をsalaryMin というパラメータで置き換えるには、
+				次のように置き換えたいリテラルの左にSQLコメントでパラメータ名を埋め込みます。
+				リテラルを文字列として直接置き換えるのではなく、
+				PreparedStatmentを使ったバインド変数に置き換えるので、
+				SQLインジェクション対策も問題ありません。
+			</p>
+			<source><![CDATA[
 select * from employee
 where
 salary >= /*salaryMin*/1000
 and salary <= 2000
 ]]></source>
-		<p>
-		同様に2000の部分も
-		salaryMaxというパラメータで置き換えます。
-		</p>
-		<source><![CDATA[
+			<p>同様に2000の部分も salaryMaxというパラメータで置き換えます。</p>
+			<source><![CDATA[
 select * from employee
 where
 salary >= /*salaryMin*/1000
 and salary <= /*salaryMax*/2000
 ]]></source>
-		<p>
-		検索条件の入力画面などによくあるパターンで、
-		何か条件が入力されていれば検索条件に追加し、
-		入力されていなければ条件には追加しないということを実装してみましょう。
-		このような場合は、IFコメントとENDコメントを組み合わせます。
-		</p>
-		<source><![CDATA[
+			<p>
+				検索条件の入力画面などによくあるパターンで、 何か条件が入力されていれば検索条件に追加し、
+				入力されていなければ条件には追加しないということを実装してみましょう。
+				このような場合は、IFコメントとENDコメントを組み合わせます。
+			</p>
+			<source><![CDATA[
 select * from employee
 where
 /*IF salaryMin != null*/
@@ -738,43 +794,42 @@ salary >= /*salaryMin*/1000
 and salary <= /*salaryMax*/2000
 /*END*/
 ]]></source>
-		<p>
-		IFコメントの内容がtrueなら、
-		IFコメントとENDコメントで囲んでいる内容が出力されます。
-		IFコメントの条件は、OGNLによって評価されます。
-		詳しくは、<a href="ognl.html">OGNLガイド</a>を参照してください。
-		</p>
-		<p>
-		上記のように記述すると、salaryMinがnullではなくて、
-		salaryMaxがnullのときには、
-		下記のように正しいSQLになります。
-		</p>
-		<source><![CDATA[
+			<p>
+				IFコメントの内容がtrueなら、 IFコメントとENDコメントで囲んでいる内容が出力されます。
+				IFコメントの条件は、OGNLによって評価されます。 詳しくは、
+				<a href="ognl.html">OGNLガイド</a>
+				を参照してください。
+			</p>
+			<p>
+				上記のように記述すると、salaryMinがnullではなくて、 salaryMaxがnullのときには、
+				下記のように正しいSQLになります。
+			</p>
+			<source><![CDATA[
 select * from employee
 where
 salary >= ?
 ]]></source>
-		<p>
-		しかしsalaryMinがnullでsalaryMaxがnullではないときは、
-		次のような不正(andがwhereの直後にある)なSQLになります。
-		</p>
-		<source><![CDATA[
+			<p>
+				しかしsalaryMinがnullでsalaryMaxがnullではないときは、
+				次のような不正(andがwhereの直後にある)なSQLになります。
+			</p>
+			<source><![CDATA[
 select * from employee
 where
 and salary <= ?
 ]]></source>
-		<p>
-		また、salaryMinとsalaryMaxがnullの場合も、
-		次のような不正(whereだけがある)なSQLになります。
-		</p>
-		<source><![CDATA[
+			<p>
+				また、salaryMinとsalaryMaxがnullの場合も、
+				次のような不正(whereだけがある)なSQLになります。
+			</p>
+			<source><![CDATA[
 select * from employee
 where
 ]]></source>
-		<p>
-		この問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
-		</p>
-		<source><![CDATA[
+			<p>
+				この問題に対応するためには、where句の部分を次のように、 BEGINコメントとENDコメントで囲みます。
+			</p>
+			<source><![CDATA[
 select * from employee
 /*BEGIN*/
 where
@@ -786,29 +841,29 @@ and salary <= /*salaryMax*/2000
 /*END*/
 /*END*/
 ]]></source>
-		<p>
-		このようにすると、salaryMinがnullでsalaryMaxがnullではないときは、
-		salaryMaxの条件は、BEGINコメントとENDコメントで囲まれた最初の条件なので、
-		andの部分が自動的に削除されて次のようになります。
-		</p>
-		<source><![CDATA[
+			<p>
+				このようにすると、salaryMinがnullでsalaryMaxがnullではないときは、
+				salaryMaxの条件は、BEGINコメントとENDコメントで囲まれた最初の条件なので、
+				andの部分が自動的に削除されて次のようになります。
+			</p>
+			<source><![CDATA[
 select * from employee
 where
 salary <= ?
 ]]></source>
-		<p>
-		また、salaryMinとsalaryMaxがnullの場合は、
-		BEGINコメントとENDコメントで囲まれた部分に1つも条件に一致するものがないので、
-		BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
-		</p>
-		<source><![CDATA[
+			<p>
+				また、salaryMinとsalaryMaxがnullの場合は、
+				BEGINコメントとENDコメントで囲まれた部分に1つも条件に一致するものがないので、
+				BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
+			</p>
+			<source><![CDATA[
 select * from employee
 ]]></source>
-        <p>
-        src/main/resources/examples/sql/employee/selectWithDepartment.sql
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				src/main/resources/examples/sql/employee/selectWithDepartment.sql
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 select e.*, d.name as department_name
 from employee e left outer join department d on e.department_id = d.id
 /*BEGIN*/
@@ -822,16 +877,16 @@ where
 /*END*/
 order by e.salary
 ]]></source>
-        <p>
-        SQLファイルを使って複数件検索するには、
-		selectBySqlFile()とgetResultList()を組み合わせます。
-        </p>
-        <p>
-        src/test/java/examples/entity/SqlFileTest.javaと
-        src/main/java/examples/dto/SelectWithDepartmentDto.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>
+				SQLファイルを使って複数件検索するには、
+				selectBySqlFile()とgetResultList()を組み合わせます。
+			</p>
+			<p>
+				src/test/java/examples/entity/SqlFileTest.javaと
+				src/main/java/examples/dto/SelectWithDepartmentDto.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 private static final String SQL_FILE =
     "examples/sql/employee/selectWithDepartment.sql";
 ...
@@ -847,7 +902,7 @@ for (EmployeeDto e : results) {
         .println(e.name + " " + e.salary + " " + e.departmentName);
 }
 ]]></source>
-        <source><![CDATA[
+			<source><![CDATA[
 package examples.dto;
 
 public class SelectWithDepartmentDto {
@@ -857,24 +912,22 @@ public class SelectWithDepartmentDto {
     public Integer salaryMax;
 }
 ]]></source>
-        <p>
-        詳しくは、<a href="s2jdbc_manager_sqlfile.html">SQLファイル</a>
-        を参照してください。
-        </p>
+			<p>
+				詳しくは、
+				<a href="s2jdbc_manager_sqlfile.html">SQLファイル</a>
+				を参照してください。
+			</p>
 		</section>
-		
-		<section name="多態">
-        <p>
-        S2JDBCは、エンティティの継承をサポートしていませんが、
-        列挙型を使って多態を実現できます。
-        </p>
-        <p>
-        src/main/java/examples/entity/JobType.java
-         を見てみましょう。Enumのそれぞれの値にボーナスを計算するcalculateBonus()が
-         定義されています。
-        </p>
 
-        <source><![CDATA[
+		<section name="多態">
+			<p>S2JDBCは、エンティティの継承をサポートしていませんが、 列挙型を使って多態を実現できます。</p>
+			<p>
+				src/main/java/examples/entity/JobType.java
+				を見てみましょう。Enumのそれぞれの値にボーナスを計算するcalculateBonus()が
+				定義されています。
+			</p>
+
+			<source><![CDATA[
 package examples.entity;
 
 public enum JobType {
@@ -913,14 +966,12 @@ public enum JobType {
     public abstract int calculateBonus(int salary);
 }
 ]]></source>
-        <p>
-        全従業員のボーナスの合計を求めるロジックは次のようになります。
-        </p>
-        <p>
-        src/test/java/examples/entity/TypeStrategyTest.java
-         を見てみましょう。
-        </p>
-        <source><![CDATA[
+			<p>全従業員のボーナスの合計を求めるロジックは次のようになります。</p>
+			<p>
+				src/test/java/examples/entity/TypeStrategyTest.java
+				を見てみましょう。
+			</p>
+			<source><![CDATA[
 List<Employee> results =
     jdbcManager.from(Employee.class).getResultList();
 int totalBonus = 0;
@@ -929,9 +980,7 @@ for (Employee e : results) {
 }
 System.out.println("Total Bonus:" + totalBonus);
 ]]></source>
-        <p>
-         このやり方は、継承より委譲という良いプログラミングスタイルに従っています。
-        </p>
+			<p>このやり方は、継承より委譲という良いプログラミングスタイルに従っています。</p>
 		</section>
 	</body>
 </document>
