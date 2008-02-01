@@ -84,6 +84,10 @@ public class StandardDialect implements DbmsDialect {
         return sql;
     }
 
+    public String convertGetCountSql(String sql) {
+        return "select count(*) from ( " + sql + " )";
+    }
+
     public ValueType getValueType(PropertyMeta propertyMeta) {
         return propertyMeta.getValueType();
     }

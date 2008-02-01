@@ -622,6 +622,19 @@ public class SqlSelectImplTest extends TestCase {
 
     /**
      * 
+     */
+    public void testPrepareSql_getCount() {
+        SqlSelectImpl<Long> query = new SqlSelectImpl<Long>(manager,
+                Long.class, "select * from aaa");
+        query.count = true;
+        query.prepare("getResultList");
+        query.prepareSql();
+        assertEquals("select count(*) from ( select * from aaa )",
+                query.executedSql);
+    }
+
+    /**
+     * 
      * @throws Exception
      */
     public void testParams_valueType() throws Exception {

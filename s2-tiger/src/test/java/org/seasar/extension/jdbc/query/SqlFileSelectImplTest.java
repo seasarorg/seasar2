@@ -310,6 +310,26 @@ public class SqlFileSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareSql_getCount() {
+        MyDto dto = new MyDto();
+        dto.id = 1;
+        dto.offset = 5;
+        dto.limit = 10;
+        manager.setDialect(new PostgreDialect());
+        SqlFileSelectImpl<Long> query = new SqlFileSelectImpl<Long>(manager,
+                Long.class, PATH, dto);
+        query.count = true;
+        query.prepareCallerClassAndMethodName("getCount");
+        query.prepareNode();
+        query.prepareParameter();
+        query.prepareSql();
+        assertEquals("select count(*) from ( select * from aaa where id = ? )",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
     public void testGetResultList() {
         MyDto dto = new MyDto();
         dto.id = 1;

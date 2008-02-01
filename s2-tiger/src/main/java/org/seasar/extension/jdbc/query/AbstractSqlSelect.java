@@ -122,4 +122,16 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
                 executedSql, limit, callback);
     }
 
+    /**
+     * 件数取得用SQLに変換します。
+     * 
+     * @param sql
+     *            SQL
+     * @return 件数取得用SQL
+     * @see DbmsDialect#convertGetCountSql(String)
+     */
+    protected String convertGetCountSql(final String sql) {
+        return jdbcManager.getDialect().convertGetCountSql(sql);
+    }
+
 }

@@ -199,4 +199,9 @@ public class StandardDialectTest extends TestCase {
         assertEquals(ValueTypes.CLOB, dialect.getValueType(pm));
     }
 
+    public void testConvertGetCountSql() throws Exception {
+        String sql = "select * from emp";
+        String expected = "select count(*) from ( select * from emp )";
+        assertEquals(expected, dialect.convertGetCountSql(sql));
+    }
 }

@@ -105,11 +105,6 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String entityName;
 
     /**
-     * SELECT COUNT(*)～で行数を取得する場合に<code>true</code>
-     */
-    protected boolean count;
-
-    /**
      * select句です。
      */
     protected SelectClause selectClause = new SelectClause();
@@ -808,13 +803,6 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         versionPropertyMeta = entityMeta.getVersionPropertyMeta();
         this.versionProperty = versionProperty;
         return this;
-    }
-
-    public long getCount() {
-        count = true;
-        prepare("getCount");
-        logSql();
-        return Long.class.cast(getSingleResultInternal());
     }
 
     /**

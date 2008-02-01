@@ -87,6 +87,11 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     protected TemporalType resultTemporalType;
 
     /**
+     * SELECT COUNT(*)～で行数を取得する場合に<code>true</code>
+     */
+    protected boolean count;
+
+    /**
      * {@link AbstractSelect}を作成します。
      * 
      * @param jdbcManager
@@ -175,6 +180,13 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         prepare("iterate");
         logSql();
         return iterateInternal(callback);
+    }
+
+    public long getCount() {
+        count = true;
+        prepare("getCount");
+        logSql();
+        return Long.class.cast(getSingleResultInternal());
     }
 
     /**

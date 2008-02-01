@@ -70,7 +70,11 @@ public class SqlSelectImpl<T> extends AbstractSqlSelect<T, SqlSelect<T>>
      * SQLを準備します。
      */
     protected void prepareSql() {
-        executedSql = convertLimitSql(sql);
+        if (count) {
+            executedSql = convertGetCountSql(sql);
+        } else {
+            executedSql = convertLimitSql(sql);
+        }
     }
 
     /**

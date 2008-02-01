@@ -176,7 +176,12 @@ public class SqlFileSelectImpl<T> extends
      * SQLを準備します。
      */
     protected void prepareSql() {
-        executedSql = convertLimitSql(sqlContext.getSql());
+        final String sql = sqlContext.getSql();
+        if (count) {
+            executedSql = convertGetCountSql(sql);
+        } else {
+            executedSql = convertLimitSql(sql);
+        }
     }
 
 }

@@ -75,7 +75,7 @@ public interface DbmsDialect {
     boolean needsParameterForResultSet();
 
     /**
-     * limit用<code>SQL</code>に変換します。
+     * limit用SQLに変換します。
      * 
      * @param sql
      *            SQL
@@ -83,9 +83,18 @@ public interface DbmsDialect {
      *            オフセット
      * @param limit
      *            リミット
-     * @return limit用<code>SQL</code>
+     * @return limit用SQL
      */
     String convertLimitSql(String sql, int offset, int limit);
+
+    /**
+     * 件数取得用SQLに変換します。
+     * 
+     * @param sql
+     *            SQL
+     * @return 件数取得用SQL
+     */
+    String convertGetCountSql(String sql);
 
     /**
      * 値タイプを返します。
