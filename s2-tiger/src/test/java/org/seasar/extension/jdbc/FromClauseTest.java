@@ -44,7 +44,7 @@ public class FromClauseTest extends TestCase {
         List<JoinColumnMeta> joinColumnMetaList = new ArrayList<JoinColumnMeta>();
         joinColumnMetaList.add(new JoinColumnMeta("BBB_ID", "BBB_ID"));
         fromClause.addSql(JoinType.LEFT_OUTER, "BBB", "_T2", "_T1", "_T2",
-                joinColumnMetaList, " with (updlock, rowlock)");
+                joinColumnMetaList, " with (updlock, rowlock)", null);
         assertEquals(
                 " from AAA _T1 left outer join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID",
                 fromClause.toSql());
@@ -59,7 +59,7 @@ public class FromClauseTest extends TestCase {
         List<JoinColumnMeta> joinColumnMetaList = new ArrayList<JoinColumnMeta>();
         joinColumnMetaList.add(new JoinColumnMeta("BBB_ID", "BBB_ID"));
         fromClause.addSql(JoinType.INNER, "BBB", "_T2", "_T1", "_T2",
-                joinColumnMetaList, " with (updlock, rowlock)");
+                joinColumnMetaList, " with (updlock, rowlock)", null);
         assertEquals(
                 " from AAA _T1 inner join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID",
                 fromClause.toSql());
@@ -75,9 +75,10 @@ public class FromClauseTest extends TestCase {
         joinColumnMetaList.add(new JoinColumnMeta("BBB_ID", "BBB_ID"));
         joinColumnMetaList.add(new JoinColumnMeta("BBB_ID2", "BBB_ID2"));
         fromClause.addSql(JoinType.INNER, "BBB", "_T2", "_T1", "_T2",
-                joinColumnMetaList, " with (updlock, rowlock)");
+                joinColumnMetaList, " with (updlock, rowlock)",
+                "_T1.XXX is null and _T2.YYY is not null");
         assertEquals(
-                " from AAA _T1 inner join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID and _T1.BBB_ID2 = _T2.BBB_ID2",
+                " from AAA _T1 inner join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID and _T1.BBB_ID2 = _T2.BBB_ID2 and _T1.XXX is null and _T2.YYY is not null",
                 fromClause.toSql());
     }
 }

@@ -97,9 +97,27 @@ public class StandardDialectTest extends TestCase {
         List<JoinColumnMeta> joinColumnMetaList = new ArrayList<JoinColumnMeta>();
         joinColumnMetaList.add(new JoinColumnMeta("BBB_ID", "BBB_ID"));
         dialect.setupJoin(fromClause, null, JoinType.LEFT_OUTER, "BBB", "_T2",
-                "_T1", "_T2", joinColumnMetaList, " with (updlock, rowlock)");
+                "_T1", "_T2", joinColumnMetaList, " with (updlock, rowlock)",
+                null);
         assertEquals(
                 " from AAA _T1 left outer join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID",
+                fromClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testSetupJoin_WithCondition() {
+        StandardDialect dialect = new StandardDialect();
+        FromClause fromClause = new FromClause();
+        fromClause.addSql("AAA", "_T1");
+        List<JoinColumnMeta> joinColumnMetaList = new ArrayList<JoinColumnMeta>();
+        joinColumnMetaList.add(new JoinColumnMeta("BBB_ID", "BBB_ID"));
+        dialect.setupJoin(fromClause, null, JoinType.LEFT_OUTER, "BBB", "_T2",
+                "_T1", "_T2", joinColumnMetaList, " with (updlock, rowlock)",
+                "_T1.XXX is null");
+        assertEquals(
+                " from AAA _T1 left outer join BBB _T2 with (updlock, rowlock) on _T1.BBB_ID = _T2.BBB_ID and _T1.XXX is null",
                 fromClause.toSql());
     }
 
@@ -199,6 +217,9 @@ public class StandardDialectTest extends TestCase {
         assertEquals(ValueTypes.CLOB, dialect.getValueType(pm));
     }
 
+    /**
+     * @throws Exception
+     */
     public void testConvertGetCountSql() throws Exception {
         String sql = "select * from emp";
         String expected = "select count(*) from ( select * from emp )";

@@ -155,9 +155,10 @@ public class StandardDialect implements DbmsDialect {
     public void setupJoin(FromClause fromClause, WhereClause whereClause,
             JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
-            List<JoinColumnMeta> joinColumnMetaList, String lockHint) {
+            List<JoinColumnMeta> joinColumnMetaList, String lockHint,
+            String condition) {
         fromClause.addSql(joinType, tableName, tableAlias, fkTableAlias,
-                pkTableAlias, joinColumnMetaList, lockHint);
+                pkTableAlias, joinColumnMetaList, lockHint, condition);
 
     }
 

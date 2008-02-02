@@ -201,6 +201,34 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testInnerJoin_condition() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.innerJoin("bbb", "bbb.id < 100");
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+        assertEquals("bbb.id < 100", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
+    public void testInnerJoin_where() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.innerJoin("bbb", new SimpleWhere().isNull("bbb.ccc", true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
     public void testInnerJoin_fetch() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.innerJoin("bbb", false);
@@ -209,6 +237,36 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals("bbb", joinMeta.getName());
         assertEquals(JoinType.INNER, joinMeta.getJoinType());
         assertFalse(joinMeta.isFetch());
+    }
+
+    /**
+     * 
+     */
+    public void testInnerJoin_fetch_condition() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.innerJoin("bbb", false, "bbb.id < 100");
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+        assertEquals("bbb.id < 100", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
+    public void testInnerJoin_fetch_where() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query
+                .innerJoin("bbb", false, new SimpleWhere().isNull("bbb.ccc",
+                        true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
     }
 
     /**
@@ -227,6 +285,34 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testLeftOuterJoin_condition() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb", "bbb.id < 100");
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+        assertEquals("bbb.id < 100", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
+    public void testLeftOuterJoin_where() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb", new SimpleWhere().isNull("bbb.ccc", true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
     public void testLeftOuterJoin_fetch() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.leftOuterJoin("bbb", false);
@@ -235,6 +321,36 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals("bbb", joinMeta.getName());
         assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
         assertFalse(joinMeta.isFetch());
+    }
+
+    /**
+     * 
+     */
+    public void testLeftOuterJoin_fetch_condition() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb", false, new SimpleWhere().isNull("bbb.ccc",
+                true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
+    public void testLeftOuterJoin_fetch_where() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb", false, new SimpleWhere().isNull("bbb.ccc",
+                true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.LEFT_OUTER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
     }
 
     /**
@@ -253,6 +369,35 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testJoin_joinType_condition() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb", JoinType.INNER, "bbb.id < 100");
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+        assertEquals("bbb.id < 100", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
+    public void testJoin_joinType_where() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb", JoinType.INNER, new SimpleWhere().isNull("bbb.ccc",
+                true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertTrue(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
     public void testJoin_joinType_fetch() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.join("bbb", JoinType.INNER, false);
@@ -261,6 +406,35 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals("bbb", joinMeta.getName());
         assertEquals(JoinType.INNER, joinMeta.getJoinType());
         assertFalse(joinMeta.isFetch());
+    }
+
+    /**
+     * 
+     */
+    public void testJoin_joinType_fetch_condition() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb", JoinType.INNER, false, "bbb.id < 100");
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+        assertEquals("bbb.id < 100", joinMeta.getCondition());
+    }
+
+    /**
+     * 
+     */
+    public void testJoin_joinType_fetch_where() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.join("bbb", JoinType.INNER, false, new SimpleWhere().isNull(
+                "bbb.ccc", true));
+        assertEquals(1, query.getJoinMetaSize());
+        JoinMeta joinMeta = query.getJoinMeta(0);
+        assertEquals("bbb", joinMeta.getName());
+        assertEquals(JoinType.INNER, joinMeta.getJoinType());
+        assertFalse(joinMeta.isFetch());
+        assertEquals("bbb.ccc is null", joinMeta.getCondition());
     }
 
     /**
@@ -849,6 +1023,19 @@ public class AutoSelectImplTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testPrepareJoin_sql_condition() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb", "bbb.id = 100", new Object[0]));
+        String expected = "select T1_.ID, T1_.NAME, T1_.BBB_ID, T1_.DTO, T2_.ID, T2_.NAME, T2_.CCC_ID from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID and T2_.ID = 100";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testCreateResultListResultSetHandler_nopaging()
             throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
@@ -1029,6 +1216,24 @@ public class AutoSelectImplTest extends TestCase {
                         + "from EEE T1_ "
                         + "where T1_.ID = ? and T1_.VERSION = ? and (T1_.LAST_UPDATED = ?)",
                 query.executedSql);
+        assertEquals(new Integer(1), query.paramList.get(0).value);
+        assertEquals(new Integer(2), query.paramList.get(1).value);
+        assertTrue(query.paramList.get(2).value instanceof Date);
+    }
+
+    /**
+     * 
+     */
+    public void testIdVersionSql_withJoinCondition() {
+        AutoSelectImpl<Eee> query = new AutoSelectImpl<Eee>(manager, Eee.class);
+        query.leftOuterJoin("fff", false, "fff.id = 100").id(1).version(2)
+                .where("lastUpdated = ?", Parameter.date(new Date()));
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID, T1_.NAME, T1_.LONG_TEXT, T1_.FFF_ID, T1_.VERSION, T1_.LAST_UPDATED "
+                        + "from EEE T1_ left outer join FFF T2_ on T1_.FFF_ID = T2_.ID and T2_.ID = 100 "
+                        + "where T1_.ID = ? and T1_.VERSION = ? and (T1_.LAST_UPDATED = ?)",
+                query.executedSql);
     }
 
     /**
@@ -1051,8 +1256,8 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         assertSame(query, query.where("id = ?", 1));
         assertEquals("id = ?", query.criteria);
-        assertEquals(1, query.getParamSize());
-        assertEquals(1, query.getParam(0).value);
+        assertEquals(1, query.whereParams.size());
+        assertEquals(1, query.whereParams.get(0));
     }
 
     /**

@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc;
 
 import java.util.List;
 
+import org.seasar.framework.util.StringUtil;
+
 /**
  * from句を組み立てるクラスです。
  * 
@@ -114,10 +116,13 @@ public class FromClause {
      *            結合カラムメタデータのリスト
      * @param lockHint
      *            ロックヒント
+     * @param condition
+     *            付加的な結合条件
      */
     public void addSql(JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
-            List<JoinColumnMeta> joinColumnMetaList, String lockHint) {
+            List<JoinColumnMeta> joinColumnMetaList, String lockHint,
+            String condition) {
         switch (joinType) {
         case INNER:
             sql.append(" inner join ");
@@ -140,5 +145,12 @@ public class FromClause {
             sql.append(pkTableAlias).append(".").append(
                     jcm.getReferencedColumnName());
         }
+        if (!StringUtil.isEmpty(condition)) {
+            if (sql.length() > 0) {
+                sql.append(" and ");
+            }
+            sql.append(condition);
+        }
     }
+
 }

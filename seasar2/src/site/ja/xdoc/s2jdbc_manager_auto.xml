@@ -34,11 +34,46 @@
 						<li>
 							<p>
 								<a href="#結合">結合</a>
+								<ul>
+									<li><p><a href="#結合条件の追加">結合条件の追加</a></p></li>
+									<li><p><a href="#結合のネスト">結合のネスト</a></p></li>
+								</ul>
 							</p>
 						</li>
 						<li>
 							<p>
 								<a href="#検索条件">検索条件</a>
+								<ul>
+									<li>
+										<p>
+											<a href="#IDとバージョンによる指定">
+												IDとバージョンによる指定
+											</a>
+										</p>
+									</li>
+									<li>
+										<p>
+											<a href="#SQL文字列による指定">
+												SQL文字列による指定
+											</a>
+										</p>
+									</li>
+									<li>
+										<p>
+											<a
+												href="#SimpleWhereによる指定">
+												SimpleWhereによる指定
+											</a>
+										</p>
+									</li>
+									<li>
+										<p>
+											<a href="#Mapによる指定">
+												Mapによる指定
+											</a>
+										</p>
+									</li>
+								</ul>
 							</p>
 						</li>
 						<li>
@@ -481,22 +516,27 @@ long count = jdbcManager.from(Employee.class).getCount();
 				<ul>
 					<li>
 						<p>
-							<code>innerJoin(String)</code>
+							<code>innerJoin(String name)</code>
 						</p>
 					</li>
 					<li>
 						<p>
-							<code>innerJoin(String, boolean)</code>
+							<code>
+								innerJoin(String name, boolean fetch)
+							</code>
 						</p>
 					</li>
 					<li>
 						<p>
-							<code>leftOuterJoin(String)</code>
+							<code>leftOuterJoin(String name)</code>
 						</p>
 					</li>
 					<li>
 						<p>
-							<code>leftOuterJoin(String, boolean)</code>
+							<code>
+								leftOuterJoin(String name, boolean
+								fetch)
+							</code>
 						</p>
 					</li>
 				</ul>
@@ -517,6 +557,115 @@ List<Employee> results = jdbcManager.from(Employee.class)
                                     .where("department.name = 'RESEARCH'")
                                     .getResultList();
 ]]></source>
+				<h4>
+					<a name="結合条件の追加">結合条件の追加</a>
+				</h4>
+				<p>追加の結合条件を指定することもできます。</p>
+				<p>追加の結合条件をSQL文字列で指定する場合は、次のメソッドを使用します。</p>
+				<ul>
+					<li>
+						<p>
+							<code>
+								innerJoin(String name, String condition,
+								Object... params)
+							</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>
+								innerJoin(String name, boolean fetch,
+								String condition, Object... params)
+							</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>
+								leftOuterJoin(String name, String
+								condition, Object... params)
+							</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>
+								leftOuterJoin(String name, boolean
+								fetch, String condition, Object...
+								params)
+							</code>
+						</p>
+					</li>
+				</ul>
+				<p>
+					引数<code>condition</code>に指定できる条件は、SQLと同じです。
+					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
+					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
+					プロパティ名になります。
+				</p>
+				<source><![CDATA[
+List<Department> results = jdbcManager.from(Department.class)
+                                    .leftOuterJoin("employee", "employee.salary > ?", 1000)
+                                    .getResultList();
+]]></source>
+				<p>
+					指定方法の詳細は「
+					<a href="#SQL文字列による指定">SQL文字列による指定</a>
+					」を参照してください。
+				</p>
+				<p>
+					追加の結合条件を
+					<code>SimpleWhere</code>
+					で指定する場合は、次のメソッドを使用します。
+				</p>
+				<ul>
+					<li>
+						<p>
+							<code>
+								innerJoin(String name, Where condition)
+							</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>
+								innerJoin(String name, boolean fetch,
+								Where condition)
+							</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>
+								leftOuterJoin(String name, Where
+								condition)
+							</code>
+						</p>
+					</li>
+					<li>
+						<p>
+							<code>
+								leftOuterJoin(String name, boolean
+								fetch, Where condition)
+							</code>
+						</p>
+					</li>
+				</ul>
+				<source><![CDATA[
+List<Department> results = jdbcManager.from(Department.class)
+                                    .leftOuterJoin("employee", 
+                                        new SimpleWhere().gt("employee.salary", 1000))
+                                    .getResultList();
+]]></source>
+				<p>
+					指定方法の詳細は「
+					<a href="#SimpleWhereによる指定">SimpleWhereによる指定</a>
+					」を参照してください。
+				</p>
+
+				<h4>
+					<a name="結合のネスト">結合のネスト</a>
+				</h4>
 				<p>
 					結合は、employee.addressのようにネストすることもできます。
 					ネストする場合は、必ずベースとなる結合を先に指定します。
@@ -532,7 +681,9 @@ List<Department> results = jdbcManager.from(Department.class)
 			</subsection>
 
 			<subsection name="検索条件">
-				<h4>IDとバージョンによる指定</h4>
+				<h4>
+					<a name="IDとバージョンによる指定">IDとバージョンによる指定</a>
+				</h4>
 				<p>
 					IDプロパティ (主キー) を指定して検索対象を指定する場合は、
 					<code>id(Object...)</code>
@@ -555,7 +706,9 @@ jdbcManager.from(Department.class)
 ]]></source>
 				<p>IDを指定しないでバージョンだけを指定することはできません。</p>
 
-				<h4>SQL文字列による指定</h4>
+				<h4>
+					<a name="SQL文字列による指定">SQL文字列による指定</a>
+				</h4>
 				<p>
 					より複雑な検索条件を指定する場合は、where()を使います。
 					where()に書くことのできる条件は、SQLと同じです。
@@ -588,15 +741,15 @@ jdbcManager.from(Department.class)
 					</dt>
 					<dd>パラメータをSQL標準のDATE型 (日付のみ) として扱います。</dd>
 					<dt>
-						<code>date(Date)</code>
+						<code>time(Date)</code>
 						または
-						<code>date(Calendar)</code>
+						<code>time(Calendar)</code>
 					</dt>
 					<dd>パラメータをSQL標準のTIME型 (時刻のみ) として扱います。</dd>
 					<dt>
-						<code>date(Date)</code>
+						<code>timestamp(Date)</code>
 						または
-						<code>date(Calendar)</code>
+						<code>timestamp(Calendar)</code>
 					</dt>
 					<dd>パラメータをSQL標準のTIMESTAMP型 (日付と時刻) として扱います。</dd>
 				</dl>
@@ -639,8 +792,7 @@ jdbcManager.from(Employee.class)
 ]]></source>
 
 				<h4>
-					<code>SimpleWhere</code>
-					による指定
+					<a name="SimpleWhereによる指定">SimpleWhereによる指定</a>
 				</h4>
 				<p>
 					検索条件の入力画面などでは、ユーザの入力があった部分をandでつないで、
@@ -864,18 +1016,14 @@ jdbcManager.from(Employee.class)
 							</td>
 						</tr>
 						<tr>
-							<td>
-								excludesWhitespace()
-							</td>
-							<td>
-								valueが空白文字列の時は条件に追加されません。
-							</td>
+							<td>excludesWhitespace()</td>
+							<td>valueが空白文字列の時は条件に追加されません。</td>
 						</tr>
 					</tbody>
 				</table>
+
 				<h4>
-					<code>SimpleWhere</code>
-					による指定
+					<a name="Mapによる指定">Mapによる指定</a>
 				</h4>
 				<p>Mapを使うと次のようになります。</p>
 				<source><![CDATA[

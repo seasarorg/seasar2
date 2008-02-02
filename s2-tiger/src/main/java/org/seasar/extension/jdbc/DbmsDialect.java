@@ -140,11 +140,14 @@ public interface DbmsDialect {
      *            結合カラムメタデータのリスト
      * @param lockHint
      *            ロックヒント
+     * @param condition
+     *            付加的な結合条件
      */
     void setupJoin(FromClause fromClause, WhereClause whereClause,
             JoinType joinType, String tableName, String tableAlias,
             String fkTableAlias, String pkTableAlias,
-            List<JoinColumnMeta> joinColumnMetaList, String lockHint);
+            List<JoinColumnMeta> joinColumnMetaList, String lockHint,
+            String condition);
 
     /**
      * {@link GeneratedValue#strategy()}に{@link GenerationType#AUTO}が指定された場合の、

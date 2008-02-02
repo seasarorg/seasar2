@@ -171,6 +171,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected Map<String, AbstractEntityMapper> entityMapperMap = new HashMap<String, AbstractEntityMapper>();
 
     /**
+     * where句のパラメータです。
+     */
+    protected List<Object> whereParams = new ArrayList<Object>();
+
+    /**
      * Mapによるwhere句の条件指定です。
      */
     protected Map<String, ? extends Object> conditions;
@@ -226,24 +231,85 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return join(name, JoinType.INNER);
     }
 
+    public AutoSelect<T> innerJoin(String name, String condition,
+            Object... params) {
+        return join(name, JoinType.INNER, condition, params);
+    }
+
+    public AutoSelect<T> innerJoin(String name, Where condition) {
+        return join(name, JoinType.INNER, condition);
+    }
+
     public AutoSelect<T> innerJoin(String name, boolean fetch) {
         return join(name, JoinType.INNER, fetch);
+    }
+
+    public AutoSelect<T> innerJoin(String name, boolean fetch,
+            String condition, Object... params) {
+        return join(name, JoinType.INNER, fetch, condition, params);
+    }
+
+    public AutoSelect<T> innerJoin(String name, boolean fetch, Where condition) {
+        return join(name, JoinType.INNER, fetch, condition);
     }
 
     public AutoSelect<T> leftOuterJoin(String name) {
         return join(name, JoinType.LEFT_OUTER);
     }
 
+    public AutoSelect<T> leftOuterJoin(String name, String condition,
+            Object... params) {
+        return join(name, JoinType.LEFT_OUTER, condition, params);
+    }
+
+    public AutoSelect<T> leftOuterJoin(String name, Where condition) {
+        return join(name, JoinType.LEFT_OUTER, condition);
+    }
+
     public AutoSelect<T> leftOuterJoin(String name, boolean fetch) {
         return join(name, JoinType.LEFT_OUTER, fetch);
+    }
+
+    public AutoSelect<T> leftOuterJoin(String name, boolean fetch,
+            String condition, Object... params) {
+        return join(name, JoinType.LEFT_OUTER, fetch, condition, params);
+    }
+
+    public AutoSelect<T> leftOuterJoin(String name, boolean fetch,
+            Where condition) {
+        return join(name, JoinType.LEFT_OUTER, fetch, condition);
     }
 
     public AutoSelect<T> join(String name, JoinType joinType) {
         return join(name, joinType, true);
     }
 
+    public AutoSelect<T> join(String name, JoinType joinType, String condition,
+            Object... params) {
+        return join(name, joinType, true, condition, params);
+    }
+
+    public AutoSelect<T> join(String name, JoinType joinType, Where condition) {
+        return join(name, joinType, true, condition);
+    }
+
     public AutoSelect<T> join(String name, JoinType joinType, boolean fetch) {
         joinMetaList.add(new JoinMeta(name, joinType, fetch));
+        return this;
+    }
+
+    public AutoSelect<T> join(String name, JoinType joinType, boolean fetch,
+            String condition, Object... params) {
+        joinMetaList
+                .add(new JoinMeta(name, joinType, fetch, condition, params));
+        return this;
+    }
+
+    public AutoSelect<T> join(String name, JoinType joinType, boolean fetch,
+            Where condition) {
+        joinMetaList.add(new JoinMeta(name, joinType, fetch, condition
+                .getCriteria(), condition.getParams(), condition
+                .getPropertyNames()));
         return this;
     }
 
@@ -273,6 +339,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         prepareTarget();
         prepareJoins();
         prepareIdVersion();
+        prepareWhere();
         prepareConditions();
         prepareCriteria();
         prepareOrderBy();
@@ -523,7 +590,21 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         jdbcManager.getDialect().setupJoin(fromClause, whereClause,
                 joinMeta.getJoinType(),
                 inverseEntityMeta.getTableMeta().getFullName(), tableAlias,
-                fkTableAlias, pkTableAlias, joinColumnMetaList, lockHint);
+                fkTableAlias, pkTableAlias, joinColumnMetaList, lockHint,
+                convertCriteria(joinMeta.getCondition()));
+        if (!StringUtil.isEmpty(joinMeta.getCondition())) {
+            final Object[] params = joinMeta.getConditionParams();
+            final String[] propertyNames = joinMeta.getConditionPropertyNames();
+            if (propertyNames == null) {
+                for (Object param : params) {
+                    addParam(param);
+                }
+            } else {
+                for (int i = 0; i < params.length; ++i) {
+                    prepareParams(propertyNames[i], params[i]);
+                }
+            }
+        }
     }
 
     /**
@@ -748,7 +829,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             throw new NullPointerException("params");
         }
         for (Object o : params) {
-            addParam(o);
+            whereParams.add(o);
         }
         return this;
     }
@@ -806,8 +887,16 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     }
 
     /**
+     * where句のパラメータを準備します。
+     */
+    protected void prepareWhere() {
+        for (final Object param : whereParams) {
+            addParam(param);
+        }
+    }
+
+    /**
      * where句の条件を準備します。
-     * 
      */
     protected void prepareConditions() {
         if (conditions == null || conditions.size() == 0) {
@@ -896,21 +985,18 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             where.eq(versionPropertyMeta.getName(), versionProperty);
         }
         whereClause.addSql(convertCriteria(where.getCriteria()));
+        for (int i = 0; i < idProperties.length; ++i) {
+            prepareParams(idPropertyMetaList.get(i).getName(), idProperties[i]);
+        }
+        if (versionProperty != null) {
+            prepareParams(versionPropertyMeta.getName(), versionProperty);
+        }
     }
 
     /**
      * パラメータを準備します。
      */
     protected void prepareParams() {
-        if (idProperties != null) {
-            for (int i = 0; i < idProperties.length; ++i) {
-                prepareParams(idPropertyMetaList.get(i).getName(),
-                        idProperties[i]);
-            }
-            if (versionProperty != null) {
-                prepareParams(versionPropertyMeta.getName(), versionProperty);
-            }
-        }
         for (int i = 0; i < criteriaParams.length; i++) {
             final String name = criteriaPropertyNames[i];
             final Object value = criteriaParams[i];
@@ -1010,6 +1096,9 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * @return カラム名で記述されたクライテリア
      */
     protected String convertCriteria(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return str;
+        }
         StringBuilder sb = new StringBuilder(20 + str.length());
         QueryTokenizer tokenizer = new QueryTokenizer(str);
         for (int type = tokenizer.nextToken(); type != QueryTokenizer.TT_EOF; type = tokenizer

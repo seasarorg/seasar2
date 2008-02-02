@@ -46,6 +46,46 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
      * 内部結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param condition
+     *            付加的な結合条件
+     * @param params
+     *            付加的な結合条件のパラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #join(String, JoinType)
+     */
+    AutoSelect<T> innerJoin(String name, String condition, Object... params);
+
+    /**
+     * 内部結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param condition
+     *            付加的な結合条件
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #join(String, JoinType)
+     */
+    AutoSelect<T> innerJoin(String name, Where condition);
+
+    /**
+     * 内部結合するプロパティを指定します。
      * 
      * @param name
      *            内部結合する関連のプロパティ名
@@ -55,6 +95,43 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @see #join(String, JoinType, boolean)
      */
     AutoSelect<T> innerJoin(String name, boolean fetch);
+
+    /**
+     * 内部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param condition
+     *            付加的な結合条件
+     * @param params
+     *            付加的な結合条件のパラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> innerJoin(String name, boolean fetch, String condition,
+            Object... params);
+
+    /**
+     * 内部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param condition
+     *            付加的な結合条件
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> innerJoin(String name, boolean fetch, Where condition);
 
     /**
      * 左外部結合するプロパティを指定します。
@@ -72,6 +149,46 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
      * 左外部結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param condition
+     *            付加的な結合条件
+     * @param params
+     *            付加的な結合条件のパラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #join(String, JoinType)
+     */
+    AutoSelect<T> leftOuterJoin(String name, String condition, Object... params);
+
+    /**
+     * 左外部結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param condition
+     *            付加的な結合条件
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #join(String, JoinType)
+     */
+    AutoSelect<T> leftOuterJoin(String name, Where condition);
+
+    /**
+     * 左外部結合するプロパティを指定します。
      * 
      * @param name
      *            左外部結合する関連のプロパティ名
@@ -81,6 +198,43 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @see #join(String, JoinType, boolean)
      */
     AutoSelect<T> leftOuterJoin(String name, boolean fetch);
+
+    /**
+     * 左外部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param condition
+     *            付加的な結合条件
+     * @param params
+     *            付加的な結合条件のパラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> leftOuterJoin(String name, boolean fetch, String condition,
+            Object... params);
+
+    /**
+     * 左外部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param condition
+     *            付加的な結合条件
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> leftOuterJoin(String name, boolean fetch, Where condition);
 
     /**
      * 結合するプロパティを指定します。
@@ -96,6 +250,49 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @see #join(String, JoinType, boolean)
      */
     AutoSelect<T> join(String name, JoinType joinType);
+
+    /**
+     * 結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            結合するプロパティ名
+     * @param joinType
+     *            結合タイプ
+     * @param condition
+     *            付加的な結合条件
+     * @param params
+     *            付加的な結合条件のパラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> join(String name, JoinType joinType, String condition,
+            Object... params);
+
+    /**
+     * 結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            結合するプロパティ名
+     * @param joinType
+     *            結合タイプ
+     * @param condition
+     *            付加的な結合条件
+     * @return このインスタンス自身
+     * @see #join(String, JoinType, boolean)
+     */
+    AutoSelect<T> join(String name, JoinType joinType, Where condition);
 
     /**
      * 結合するプロパティを指定します。
@@ -117,6 +314,62 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @return このインスタンス自身
      */
     AutoSelect<T> join(String name, JoinType joinType, boolean fetch);
+
+    /**
+     * 結合するプロパティを指定します。
+     * 
+     * @param name
+     *            <p>
+     *            結合するプロパティ名。
+     *            </p>
+     *            <p>
+     *            ネストしている場合は、<code>aaa.bbb</code>のように.で区切ります。
+     *            </p>
+     *            <p>
+     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>)を指定する必要があります。
+     *            </p>
+     * @param joinType
+     *            結合タイプ
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param condition
+     *            付加的な結合条件
+     * @param params
+     *            付加的な結合条件のパラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> join(String name, JoinType joinType, boolean fetch,
+            String condition, Object... params);
+
+    /**
+     * 結合するプロパティを指定します。
+     * 
+     * @param name
+     *            <p>
+     *            結合するプロパティ名。
+     *            </p>
+     *            <p>
+     *            ネストしている場合は、<code>aaa.bbb</code>のように.で区切ります。
+     *            </p>
+     *            <p>
+     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>)を指定する必要があります。
+     *            </p>
+     * @param joinType
+     *            結合タイプ
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param condition
+     *            付加的な結合条件
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> join(String name, JoinType joinType, boolean fetch,
+            Where condition);
 
     /**
      * where句の条件にIdプロパティ(主キー)を指定します。
