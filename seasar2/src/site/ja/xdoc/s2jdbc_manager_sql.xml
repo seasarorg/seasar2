@@ -28,6 +28,11 @@
 						</li>
 						<li>
 							<p>
+								<a href="#検索結果の行数取得">検索結果の行数取得</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#ページング">ページング</a>
 							</p>
 						</li>
@@ -233,9 +238,7 @@ int count = results = jdbcManager
 					<code>iterate(IterationCallback)</code>
 					が返す結果の型を指定します。
 				</p>
-				<p>
-					問い合わせ結果の1行ごとに次のメソッドがコールバックされます。
-				</p>
+				<p>問い合わせ結果の1行ごとに次のメソッドがコールバックされます。</p>
 				<ul>
 					<li>
 						<p>
@@ -264,6 +267,25 @@ int count = results = jdbcManager
 					その時の戻り値が
 					<code>iterate(IterationCallback)</code>
 					の戻り値となります。
+				</p>
+			</subsection>
+
+			<subsection name="検索結果の行数取得">
+				<p>
+					SELECT COUNT(*)
+					～による検索結果の行数を取得する場合は、getCountBySql()を使います。
+				</p>
+				<source><![CDATA[
+long count = jdbcManager.getCountBySql("select ...");
+]]></source>
+				<p>
+					このメソッドは通常、
+					<code>
+						select count(*) from (
+						<var>SQL</var>
+						)
+					</code>
+					を 実行した結果を返します。
 				</p>
 			</subsection>
 

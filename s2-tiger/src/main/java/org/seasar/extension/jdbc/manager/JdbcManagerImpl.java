@@ -132,6 +132,11 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
                 maxRows).fetchSize(fetchSize).queryTimeout(queryTimeout);
     }
 
+    public long getCountBySql(String sql, Object... params) {
+        return new SqlSelectImpl<Long>(this, Long.class, sql, params)
+                .getCount();
+    }
+
     public <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path) {
         return selectBySqlFile(baseClass, path, null);
     }
@@ -141,6 +146,16 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
         return new SqlFileSelectImpl<T>(this, baseClass, path, parameter)
                 .maxRows(maxRows).fetchSize(fetchSize).queryTimeout(
                         queryTimeout);
+    }
+
+    public long getCountBySqlFile(String path) {
+        return new SqlFileSelectImpl<Long>(this, Long.class, path, null)
+                .getCount();
+    }
+
+    public long getCountBySqlFile(String path, Object parameter) {
+        return new SqlFileSelectImpl<Long>(this, Long.class, path, parameter)
+                .getCount();
     }
 
     public <T> AutoInsert<T> insert(final T entity) {

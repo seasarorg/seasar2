@@ -213,11 +213,4 @@ public interface Select<T, S extends Select<T, S>> extends Query<S> {
      */
     <RESULT> RESULT iterate(IterationCallback<T, RESULT> callback);
 
-    /**
-     * SELECT COUNT(*)の結果である行数を返します。
-     * 
-     * @return SELECT COUNT(*)の結果である行数
-     */
-    long getCount();
-
 }

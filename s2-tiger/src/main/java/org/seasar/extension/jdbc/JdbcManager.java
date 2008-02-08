@@ -65,6 +65,28 @@ public interface JdbcManager {
             Object... params);
 
     /**
+     * {@link #selectBySql}で実行可能なSQLが返す結果セットの行数を返します。
+     * <p>
+     * このメソッドは通常、<code>select count(*) from (<var>SQL</var>)</code>を
+     * 実行した結果を返します。
+     * </p>
+     * 
+     * @param sql
+     *            SQL
+     * @param params
+     *            パラメータの配列
+     *            <p>
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return SQLが返す結果セットの行数
+     * @see DbmsDialect#convertGetCountSql(String)
+     */
+    long getCountBySql(String sql, Object... params);
+
+    /**
      * SQLファイル検索を作成します。
      * 
      * @param <T>
@@ -108,6 +130,49 @@ public interface JdbcManager {
      */
     <T> SqlFileSelect<T> selectBySqlFile(Class<T> baseClass, String path,
             Object parameter);
+
+    /**
+     * {@link #selectBySql}で実行可能なSQLが返す結果セットの行数を返します。
+     * <p>
+     * このメソッドは通常、<code>select count(*) from (<var>SQL</var>)</code>を
+     * 実行した結果を返します。
+     * </p>
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @return SQLが返す結果セットの行数
+     * @see DbmsDialect#convertGetCountSql(String)
+     */
+    long getCountBySqlFile(String path);
+
+    /**
+     * {@link #selectBySql}で実行可能なSQLが返す結果セットの行数を返します。
+     * <p>
+     * このメソッドは通常、<code>select count(*) from (<var>SQL</var>)</code>を
+     * 実行した結果を返します。
+     * </p>
+     * 
+     * @param path
+     *            SQLファイルのパス
+     * @param parameter
+     *            <p>
+     *            パラメータ。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値を直接指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせます。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return SQLが返す結果セットの行数
+     * @see DbmsDialect#convertGetCountSql(String)
+     */
+    long getCountBySqlFile(String path, Object parameter);
 
     /**
      * 自動挿入を作成します。

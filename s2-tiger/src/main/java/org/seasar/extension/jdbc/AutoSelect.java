@@ -560,4 +560,11 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      */
     AutoSelect<T> hint(String hint);
 
+    /**
+     * SELECT COUNT(*)の結果である行数を返します。
+     * 
+     * @return SELECT COUNT(*)の結果である行数
+     */
+    long getCount();
+
 }

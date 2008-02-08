@@ -36,8 +36,7 @@ public class SqlFileSelectGetCountTest {
      */
     public void testGetCount() throws Exception {
         String path = getClass().getName().replace(".", "/") + "_getCount.sql";
-        long count =
-            jdbcManager.selectBySqlFile(Long.class, path, 9).getCount();
+        long count = jdbcManager.getCountBySqlFile(path, 9);
         assertEquals(3L, count);
     }
 }

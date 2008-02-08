@@ -40,6 +40,11 @@
 						</li>
 						<li>
 							<p>
+								<a href="#検索結果の行数取得">検索結果の行数取得</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#ページング">ページング</a>
 							</p>
 						</li>
@@ -491,31 +496,6 @@ BeanMap result = jdbcManager
 ]]></source>
 			</subsection>
 
-			<subsection name="ページング">
-				<p>
-					ページングを指定する場合は、
-					<code>limit(), offset()</code>
-					を使います。
-					<code>limit()</code>
-					には、取得する行数を指定します。
-					<code>offset()</code>
-					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
-					ページングを指定するには、必ず
-					<code>ordey by</code>
-					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
-				</p>
-				<source><![CDATA[
-select id, name, ... from employee order by name
-]]></source>
-				<source><![CDATA[
-jdbcManager.selectBySqlFile(EmployeeDto.class,
-    "examples/sql/employee/selectAll.sql")
-    .limit(100)
-    .offset(10)
-    .getResultList();
-]]></source>
-			</subsection>
-
 			<subsection name="イテレーションによる検索">
 				<p>
 					検索結果が多くの行を返すため、
@@ -595,7 +575,56 @@ int count = results = jdbcManager
 					の戻り値となります。
 				</p>
 			</subsection>
-		</section>
+
+			<subsection name="検索結果の行数取得">
+				<p>
+					SELECT COUNT(*)
+					～による検索結果の行数を取得する場合は、getCountBySqlFile()を使います。
+				</p>
+				<source><![CDATA[
+long count = jdbcManager.getCountBySqlFile(examples/sql/employee/selectAll.sql);
+]]></source>
+				<p>
+					このメソッドは通常、
+					<code>
+						select count(*) from (
+						<var>SQL</var>
+						)
+					</code>
+					を 実行した結果を返します。
+				</p>
+				<p>
+					SQLファイルのパラメータが複数の場合は、
+					<code>getCountBySqlFile()</code>
+					の3番目の引数をJavaBeansにして、
+					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+				</p>
+			</subsection>
+
+			<subsection name="ページング">
+				<p>
+					ページングを指定する場合は、
+					<code>limit(), offset()</code>
+					を使います。
+					<code>limit()</code>
+					には、取得する行数を指定します。
+					<code>offset()</code>
+					には、最初に取得する行の位置を指定します。 最初の行の位置は0になります。
+					ページングを指定するには、必ず
+					<code>ordey by</code>
+					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
+				</p>
+				<source><![CDATA[
+select id, name, ... from employee order by name
+]]></source>
+				<source><![CDATA[
+jdbcManager.selectBySqlFile(EmployeeDto.class,
+    "examples/sql/employee/selectAll.sql")
+    .limit(100)
+    .offset(10)
+    .getResultList();
+]]></source>
+			</subsection>
 
 		<section name="挿入・更新・削除">
 			<subsection name="1件挿入・更新・削除">
@@ -653,6 +682,7 @@ int count = jdbcManager.updateBySqlFile(
     .execute();
 ]]></source>
 			</subsection>
+		</section>
 
 			<subsection name="バッチ挿入・更新・削除">
 				<p>
