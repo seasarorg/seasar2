@@ -15,12 +15,14 @@
  */
 package org.seasar.extension.jdbc.it.auto.select;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.ConcreteDepartment;
 import org.seasar.extension.jdbc.it.entity.ConcreteEmployee;
+import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -63,5 +65,32 @@ public class MappedSuperclassJoinTest {
         assertNotNull(list.get(0).department);
         assertNotNull(list.get(0).manager);
         assertNotNull(list.get(0).address);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_condition() throws Exception {
+        List<ConcreteEmployee> list =
+            jdbcManager.from(ConcreteEmployee.class).innerJoin(
+                "department",
+                "managerId = ?",
+                9).where("salary > ?", new BigDecimal(2000)).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_condition_where() throws Exception {
+        List<ConcreteEmployee> list =
+            jdbcManager
+                .from(ConcreteEmployee.class)
+                .innerJoin("department", new SimpleWhere().eq("managerId", 9))
+                .where(new SimpleWhere().gt("salary", new BigDecimal(2000)))
+                .getResultList();
+        assertEquals(3, list.size());
     }
 }

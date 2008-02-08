@@ -177,4 +177,32 @@ public class SingleKeyJoinTest {
             System.out.println(e.getMessage());
         }
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_condition() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).innerJoin(
+                "department",
+                "managerId = ?",
+                9).where("salary > ?", new BigDecimal(2000)).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_condition_where() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .innerJoin("department", new SimpleWhere().eq("managerId", 9))
+                .where(new SimpleWhere().gt("salary", new BigDecimal(2000)))
+                .getResultList();
+        assertEquals(3, list.size());
+    }
+
 }
