@@ -1,0 +1,1 @@
+select * from Employee where manager_id = /*manager_id*/99
