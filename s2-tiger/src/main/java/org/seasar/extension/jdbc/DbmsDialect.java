@@ -202,9 +202,11 @@ public interface DbmsDialect {
      * 
      * @param sequenceName
      *            シーケンス名
+     * @param allocationSize
+     *            アロケーションサイズ
      * @return シーケンスの値を取得するSQL
      */
-    String getSequenceNextValString(String sequenceName);
+    String getSequenceNextValString(String sequenceName, int allocationSize);
 
     /**
      * デフォルトのバッチサイズを返します。

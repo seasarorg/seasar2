@@ -39,6 +39,9 @@ public class SequenceIdGenerator extends AbstractPreAllocateIdGenerator {
     /** シーケンスの名前 */
     protected String sequenceName;
 
+    /** アロケーションサイズ */
+    protected int allocationSize;
+
     /**
      * インスタンスを構築します。
      * 
@@ -54,13 +57,14 @@ public class SequenceIdGenerator extends AbstractPreAllocateIdGenerator {
             final SequenceGenerator sequenceGenerator) {
         super(entityMeta, propertyMeta, sequenceGenerator.allocationSize());
         sequenceName = getSequenceName(sequenceGenerator);
+        allocationSize = sequenceGenerator.allocationSize();
     }
 
     @Override
     protected long getNewInitialValue(final JdbcManagerImplementor jdbcManager,
             final SqlLogger sqlLogger) {
         final String sql = jdbcManager.getDialect().getSequenceNextValString(
-                sequenceName);
+                sequenceName, allocationSize);
         sqlLogger.logSql(sql);
         final PreparedStatement ps = jdbcManager.getJdbcContext()
                 .getPreparedStatement(sql);

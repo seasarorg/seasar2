@@ -65,8 +65,10 @@ public class FirebirdDialect extends StandardDialect {
     }
 
     @Override
-    public String getSequenceNextValString(final String sequenceName) {
-        return "select RDB$GENERATOR_NAME from RDB$GENERATORS";
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
+        return "select gen_id( " + sequenceName + ", " + allocationSize
+                + " ) from RDB$DATABASE";
     }
 
 }

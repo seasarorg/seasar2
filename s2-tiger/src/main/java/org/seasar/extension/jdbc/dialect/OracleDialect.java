@@ -169,7 +169,8 @@ public class OracleDialect extends StandardDialect {
     }
 
     @Override
-    public String getSequenceNextValString(final String sequenceName) {
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
         return "select " + sequenceName + ".nextval from dual";
     }
 

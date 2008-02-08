@@ -96,7 +96,8 @@ public class Db2Dialect extends StandardDialect {
     }
 
     @Override
-    public String getSequenceNextValString(final String sequenceName) {
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
         return "values nextval for " + sequenceName;
     }
 

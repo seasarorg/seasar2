@@ -80,7 +80,8 @@ public class HsqlDialect extends StandardDialect {
     }
 
     @Override
-    public String getSequenceNextValString(final String sequenceName) {
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
         return "SELECT NEXT VALUE FOR "
                 + sequenceName
                 + " FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE table_name = 'SYSTEM_TABLES'";

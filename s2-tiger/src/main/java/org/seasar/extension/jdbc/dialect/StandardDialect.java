@@ -187,7 +187,8 @@ public class StandardDialect implements DbmsDialect {
         return false;
     }
 
-    public String getSequenceNextValString(final String sequenceName) {
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
         return null;
     }
 

@@ -83,7 +83,8 @@ public class H2Dialect extends StandardDialect {
     }
 
     @Override
-    public String getSequenceNextValString(final String sequenceName) {
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
         return "call next value for " + sequenceName;
     }
 
