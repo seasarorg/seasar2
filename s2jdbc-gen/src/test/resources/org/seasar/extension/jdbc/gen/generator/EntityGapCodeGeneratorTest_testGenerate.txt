@@ -1,0 +1,33 @@
+package hoge;
+
+import java.util.Date;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+
+@MappedSuperclass
+public abstract class AbstractHoge {
+
+    @Id
+    @GeneratedValue
+    public int id;
+
+    public String name;
+
+    @Lob
+    public byte[] lob;
+
+    @Temporal(TemporalType.DATE)
+    public Date date;
+
+    @Transient
+    public String temp;
+
+    @Version
+    public Integer version;
+}

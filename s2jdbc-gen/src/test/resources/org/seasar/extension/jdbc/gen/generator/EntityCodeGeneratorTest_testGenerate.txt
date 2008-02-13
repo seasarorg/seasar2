@@ -1,0 +1,8 @@
+package hoge;
+
+import foo.AbstractHoge;
+import javax.persistence.Entity;
+
+@Entity
+public class Hoge extends AbstractHoge {
+}
