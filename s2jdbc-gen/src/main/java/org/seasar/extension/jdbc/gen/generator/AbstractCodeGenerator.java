@@ -24,78 +24,93 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.seasar.extension.jdbc.gen.CodeGenerator;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
+import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
+import org.seasar.extension.jdbc.gen.util.JavaFileUtil;
 import org.seasar.extension.jdbc.gen.util.TemplateUtil;
 import org.seasar.extension.jdbc.gen.util.WriterUtil;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
  * @author taedium
  * 
  */
-public abstract class AbstractCodeGenerator {
+public abstract class AbstractCodeGenerator implements CodeGenerator {
 
-    protected static String GAP_CLASSNAME_SUFFIX = "Abstract";
+    protected EntityModel entityModel;
 
-    protected static String EXTENSION = "java";
+    protected String entityClassName;
 
-    protected String packageName;
+    protected String entityGapClassName;
 
-    protected Template template;
+    protected String templateName;
+
+    protected Configuration configuration;
 
     protected String encoding;
 
     protected File destDir;
 
-    public AbstractCodeGenerator(String packageName, Template template,
-            String encoding, File destDir) {
-        this.packageName = packageName;
-        this.template = template;
+    public AbstractCodeGenerator(EntityModel entityModel,
+            String entityClassName, String entityGapClassName,
+            String templateName, Configuration configuration, String encoding,
+            File destDir) {
+        this.entityModel = entityModel;
+        this.entityClassName = entityClassName;
+        this.entityGapClassName = entityGapClassName;
+        this.templateName = templateName;
+        this.configuration = configuration;
         this.encoding = encoding;
         this.destDir = destDir;
     }
 
-    public void generate(EntityModel entityModel) {
-        Map<String, Object> root = createRoot(entityModel);
-        Writer writer = openWriter(entityModel);
+    public void generate() {
+        Map<String, Object> root = createRoot();
+        Writer writer = openWriter();
         try {
+            Template template = ConfigurationUtil.getTemplate(configuration,
+                    templateName);
             TemplateUtil.process(template, root, writer);
         } finally {
             WriterUtil.close(writer);
         }
     }
 
-    protected Map<String, Object> createRoot(EntityModel entityModel) {
+    protected Map<String, Object> createRoot() {
         Map<String, Object> root = new HashMap<String, Object>();
-        root.put("package", packageName);
-        root.put("imports", getImports(entityModel));
+        String[] elements = ClassUtil
+                .splitPackageAndShortClassName(getTargetClassName());
+        String packageName = elements[0];
+        String shortClassName = elements[1];
+        String gapShortClassName = ClassUtil
+                .splitPackageAndShortClassName(entityGapClassName)[1];
+        root.put("packageName", packageName);
+        root.put("imports", getImports());
+        root.put("shortClassName", shortClassName);
+        root.put("gapShortClassName", gapShortClassName);
         root.put("entityModel", entityModel);
-        root.put("gapClassName", getGapClassName(entityModel));
         return root;
     }
 
-    protected Writer openWriter(EntityModel entityModel) {
-        File packageDir = new File(destDir, packageName.replace(".", "/"));
+    protected Writer openWriter() {
+        String className = getTargetClassName();
+        File packageDir = new File(destDir, JavaFileUtil
+                .getPackageDirName(className));
         if (!packageDir.exists()) {
             packageDir.mkdirs();
         }
-        File file = new File(packageDir, getFileName(entityModel));
-        FileOutputStream fos = FileOutputStreamUtil.create(file);
+        File javaFile = new File(destDir, JavaFileUtil
+                .getJavaFileName(className));
+        FileOutputStream fos = FileOutputStreamUtil.create(javaFile);
         return new OutputStreamWriter(fos, Charset.forName(encoding));
     }
 
-    protected String getGapClassName(EntityModel entityModel) {
-        return GAP_CLASSNAME_SUFFIX + entityModel.getName();
-    }
+    protected abstract Set<String> getImports();
 
-    protected String getFileName(EntityModel entityModel) {
-        return getClassName(entityModel) + "." + EXTENSION;
-    }
-
-    protected abstract Set<String> getImports(EntityModel entityModel);
-
-    protected abstract String getClassName(EntityModel entityModel);
-
+    protected abstract String getTargetClassName();
 }

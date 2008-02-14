@@ -1,9 +1,9 @@
-package ${package};
+package ${packageName};
 
 <#list imports as import>
 import ${import};
 </#list>
 
 @Entity
-public class ${entityModel.name} extends ${gapClassName} {
+public class ${shortClassName} extends ${gapShortClassName} {
 }

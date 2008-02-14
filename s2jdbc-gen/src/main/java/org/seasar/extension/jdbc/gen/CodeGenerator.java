@@ -13,34 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
-
-import org.junit.Test;
-
-import static junit.framework.Assert.*;
+package org.seasar.extension.jdbc.gen;
 
 /**
  * @author taedium
  * 
  */
-public class CodeGenerationCommandTest {
+public interface CodeGenerator {
 
-    @Test
-    public void test() throws Exception {
-        CodeGenerationCommand command = new CodeGenerationCommand();
-        // command.execute();
-    }
-
-    @Test
-    public void testGetClassName() throws Exception {
-        CodeGenerationCommand command = new CodeGenerationCommand();
-        String name = command.getClassName("aaa", "bbb", "Ccc");
-        assertEquals("aaa.bbb.Ccc", name);
-    }
-
-    @Test
-    public void getEntityClassName() throws Exception {
-        fail();
-    }
-
+    void generate();
 }

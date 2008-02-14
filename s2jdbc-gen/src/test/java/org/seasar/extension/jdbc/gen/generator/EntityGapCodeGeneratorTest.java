@@ -33,7 +33,6 @@ import org.seasar.framework.util.TextUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 
 import static junit.framework.Assert.*;
 
@@ -43,26 +42,14 @@ import static junit.framework.Assert.*;
  */
 public class EntityGapCodeGeneratorTest {
 
-    private EntityGapCodeGenerator generator;
-
-    private Writer writer;
+    private Configuration config;
 
     @Before
     public void before() throws Exception {
         File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration cfg = new Configuration();
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
-        cfg.setDirectoryForTemplateLoading(file);
-        Template template = cfg.getTemplate("entityGapCode.ftl");
-        writer = new StringWriter();
-        generator = new EntityGapCodeGenerator("hoge", template, "UTF-8",
-                new File("dest")) {
-
-            @Override
-            protected Writer openWriter(EntityModel entityModel) {
-                return writer;
-            }
-        };
+        config = new Configuration();
+        config.setObjectWrapper(new DefaultObjectWrapper());
+        config.setDirectoryForTemplateLoading(file);
     }
 
     @Test
@@ -105,7 +92,18 @@ public class EntityGapCodeGeneratorTest {
         entityModel.addPropertyModel(temp);
         entityModel.addPropertyModel(version);
 
-        generator.generate(entityModel);
+        final Writer writer = new StringWriter();
+        EntityGapCodeGenerator generator = new EntityGapCodeGenerator(
+                entityModel, "bar.Hoge", "foo.AbstractHoge",
+                "entityGapCode.ftl", config, "UTF-8", new File("dest")) {
+
+            @Override
+            public Writer openWriter() {
+                return writer;
+            }
+        };
+
+        generator.generate();
         String path = EntityGapCodeGeneratorTest.class.getName().replace(".",
                 "/")
                 + "_testGenerate.txt";
@@ -123,7 +121,10 @@ public class EntityGapCodeGeneratorTest {
         entityModel.setName("Hoge");
         entityModel.addPropertyModel(date);
 
-        Set<String> importNames = generator.getImports(entityModel);
+        EntityGapCodeGenerator generator = new EntityGapCodeGenerator(
+                entityModel, "bar.Hoge", "foo.AbstractHoge",
+                "entityGapCode.ftl", config, "UTF-8", new File("dest"));
+        Set<String> importNames = generator.getImports();
         assertEquals(4, importNames.size());
         assertTrue(importNames.contains(MappedSuperclass.class.getName()));
         assertTrue(importNames.contains(Temporal.class.getName()));

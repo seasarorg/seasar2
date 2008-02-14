@@ -1,11 +1,11 @@
-package ${package};
+package ${packageName};
 
 <#list imports as import>
 import ${import};
 </#list>
 
 @MappedSuperclass
-public abstract class ${gapClassName} {
+public abstract class ${shortClassName} {
 <#list entityModel.propertyModelList as p>
 
   <#if p.id>

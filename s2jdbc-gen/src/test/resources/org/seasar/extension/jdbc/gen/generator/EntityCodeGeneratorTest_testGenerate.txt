@@ -1,4 +1,4 @@
-package hoge;
+package bar;
 
 import foo.AbstractHoge;
 import javax.persistence.Entity;

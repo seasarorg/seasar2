@@ -32,7 +32,6 @@ import org.seasar.framework.util.TextUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.Template;
 
 import static junit.framework.Assert.*;
 
@@ -42,26 +41,14 @@ import static junit.framework.Assert.*;
  */
 public class EntityCodeGeneratorTest {
 
-    private EntityCodeGenerator generator;
-
-    private Writer writer;
+    private Configuration config;
 
     @Before
     public void before() throws Exception {
         File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration cfg = new Configuration();
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
-        cfg.setDirectoryForTemplateLoading(file);
-        Template template = cfg.getTemplate("entityCode.ftl");
-        writer = new StringWriter();
-        generator = new EntityCodeGenerator("hoge", "foo", template, "UTF-8",
-                new File("dest")) {
-
-            @Override
-            protected Writer openWriter(EntityModel entityModel) {
-                return writer;
-            }
-        };
+        config = new Configuration();
+        config.setObjectWrapper(new DefaultObjectWrapper());
+        config.setDirectoryForTemplateLoading(file);
     }
 
     @Test
@@ -75,7 +62,18 @@ public class EntityCodeGeneratorTest {
         entityModel.setName("Hoge");
         entityModel.addPropertyModel(id);
 
-        generator.generate(entityModel);
+        final Writer writer = new StringWriter();
+        EntityCodeGenerator generator = new EntityCodeGenerator(entityModel,
+                "bar.Hoge", "foo.AbstractHoge", "entityCode.ftl", config, "UTF-8",
+                new File("dest")) {
+
+            @Override
+            protected Writer openWriter() {
+                return writer;
+            }
+        };
+
+        generator.generate();
         String path = EntityCodeGeneratorTest.class.getName().replace(".", "/")
                 + "_testGenerate.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
@@ -92,7 +90,10 @@ public class EntityCodeGeneratorTest {
         entityModel.setName("Hoge");
         entityModel.addPropertyModel(date);
 
-        Set<String> importNames = generator.getImports(entityModel);
+        EntityCodeGenerator generator = new EntityCodeGenerator(entityModel,
+                "bar.Hoge", "foo.AbstractHoge", "entityCode.ftl", config, "UTF-8",
+                new File("dest"));
+        Set<String> importNames = generator.getImports();
         assertEquals(2, importNames.size());
         assertTrue(importNames.contains(Entity.class.getName()));
         assertTrue(importNames.contains("foo.AbstractHoge"));

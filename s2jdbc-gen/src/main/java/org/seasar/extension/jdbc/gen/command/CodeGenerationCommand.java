@@ -23,6 +23,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.gen.CodeGenerator;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenerationDialect;
 import org.seasar.extension.jdbc.gen.converter.EntityModelConverter;
 import org.seasar.extension.jdbc.gen.converter.PropertyModelConverter;
@@ -34,6 +36,7 @@ import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.extension.jdbc.gen.reader.SchemaReader;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
+import org.seasar.extension.jdbc.gen.util.JavaFileUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
@@ -42,7 +45,6 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.ResourceUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -52,29 +54,33 @@ import freemarker.template.Template;
  * @author taedium
  * 
  */
-public class CodeGenerationCommand {
+public class CodeGenerationCommand implements Command {
 
-    protected String rootPackageName = "";
+    protected String gapClassNameSuffix = DEFAULT_GAP_CLASS_NAME_SUFFIX;
 
-    protected String entityPackageName = "entity";
+    protected String rootPackageName = DEFAULT_ROOT_PACKAGE_NAME;
 
-    protected String entityGapPackageName = entityPackageName;
+    protected String entityPackageName = DEFAULT_ENTITY_PACKAGE_NAME;
 
-    protected String jdbcManagerName = "jdbcManager";
+    protected String entityGapPackageName = DEFAULT_ENTITY_PACKAGE_NAME;
 
-    protected File templateDir = ResourceUtil.getResourceAsFile("templates");
+    protected String jdbcManagerName = DEFAULT_JDBC_MANAGER_NAME;
 
-    protected File destDir = new File("src/main/java");
+    protected File templateDir = DEFAULT_TEMPLATE_FILE;
 
-    protected String encoding = "UTF-8";
+    protected File destDir = DEFAULT_DEST_DIR;
 
-    protected String versionColumn = "VERSION";
+    protected String encoding = DEFAULT_ENCODING;
 
-    protected String entityTemplateName = "entityCode.ftl";
+    protected String versionColumn = DEFAULT_VERSION_COLUMN;
 
-    protected String entityGapTemplateName = "entityGapCode.ftl";
+    protected String entityTemplate = DEFAULT_ENTITY_TEMPLATE;
 
-    protected String dicon = "s2jdbc.dicon";
+    protected String entityGapTemplate = DEFAULT_ENTITU_GAP_TEMPLATE;
+
+    protected String dicon = DEFAULT_DICON;
+
+    protected String schema = DEFAULT_SCHEMA;
 
     protected boolean initialized;
 
@@ -176,12 +182,14 @@ public class CodeGenerationCommand {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
-            SchemaReader schemaReader = new SchemaReader(metaData,
-                    generationDialect);
-            return schemaReader.getTableModels(null);
+            return createSchemaReader(metaData).getTableModels(null);
         } finally {
             ConnectionUtil.close(con);
         }
+    }
+
+    protected SchemaReader createSchemaReader(DatabaseMetaData metaData) {
+        return new SchemaReader(metaData, generationDialect);
     }
 
     protected List<EntityModel> convert(List<TableModel> tableModels) {
@@ -210,32 +218,50 @@ public class CodeGenerationCommand {
     }
 
     protected void generate(List<EntityModel> entityModels) {
-        EntityCodeGenerator generator = createEntityCodeGenerator();
-        EntityGapCodeGenerator gapGenerator = createEntityGapCodeGenerator();
         for (EntityModel entityModel : entityModels) {
-            generator.generate(entityModel);
-            gapGenerator.generate(entityModel);
+            if (!existsEntityCode(entityModel)) {
+                createEntityCodeGenerator(entityModel).generate();
+            }
+            createEntityGapCodeGenerator(entityModel).generate();
         }
     }
 
-    protected EntityCodeGenerator createEntityCodeGenerator() {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                entityPackageName);
-        String gapClassPackageName = ClassUtil.concatName(rootPackageName,
-                entityGapPackageName);
-        return new EntityCodeGenerator(packageName, gapClassPackageName,
-                createTemplate(entityTemplateName), encoding, destDir);
+    protected boolean existsEntityCode(EntityModel entityModel) {
+        String className = getEntityClassName(entityModel.getName());
+        String fileName = JavaFileUtil.getJavaFileName(className);
+        File javaFile = new File(destDir, fileName);
+        return javaFile.exists();
     }
 
-    protected EntityGapCodeGenerator createEntityGapCodeGenerator() {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                entityGapPackageName);
-        return new EntityGapCodeGenerator(packageName,
-                createTemplate(entityGapTemplateName), encoding, destDir);
+    protected CodeGenerator createEntityCodeGenerator(EntityModel entityModel) {
+        String entityName = entityModel.getName();
+        return new EntityCodeGenerator(entityModel,
+                getEntityClassName(entityName),
+                getEntityGapClassName(entityName), entityTemplate,
+                configuration, encoding, destDir);
     }
 
-    protected Template createTemplate(String templateName) {
-        return ConfigurationUtil.getTemplate(configuration, templateName);
+    protected CodeGenerator createEntityGapCodeGenerator(EntityModel entityModel) {
+        String entityName = entityModel.getName();
+        return new EntityGapCodeGenerator(entityModel,
+                getEntityClassName(entityName),
+                getEntityGapClassName(entityName), entityGapTemplate,
+                configuration, encoding, destDir);
     }
 
+    protected String getEntityClassName(String entityName) {
+        return getClassName(rootPackageName, entityPackageName, entityName);
+    }
+
+    protected String getEntityGapClassName(String entityName) {
+        return getClassName(rootPackageName, entityGapPackageName,
+                gapClassNameSuffix + entityName);
+    }
+
+    protected String getClassName(String rootPackageName,
+            String subPackageName, String className) {
+        String fullPackageName = ClassUtil.concatName(rootPackageName,
+                subPackageName);
+        return ClassUtil.concatName(fullPackageName, className);
+    }
 }

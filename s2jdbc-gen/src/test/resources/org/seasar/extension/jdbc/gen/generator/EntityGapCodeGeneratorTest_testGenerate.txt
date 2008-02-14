@@ -1,4 +1,4 @@
-package hoge;
+package foo;
 
 import java.util.Date;
 import javax.persistence.GeneratedValue;

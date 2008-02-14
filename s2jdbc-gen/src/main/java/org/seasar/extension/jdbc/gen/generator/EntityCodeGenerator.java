@@ -22,9 +22,8 @@ import java.util.TreeSet;
 import javax.persistence.Entity;
 
 import org.seasar.extension.jdbc.gen.model.EntityModel;
-import org.seasar.framework.util.ClassUtil;
 
-import freemarker.template.Template;
+import freemarker.template.Configuration;
 
 /**
  * @author taedium
@@ -32,26 +31,24 @@ import freemarker.template.Template;
  */
 public class EntityCodeGenerator extends AbstractCodeGenerator {
 
-    protected String gapClassPackageName;
-
-    public EntityCodeGenerator(String packageName, String gapClassPackageName,
-            Template template, String encoding, File destDir) {
-        super(packageName, template, encoding, destDir);
-        this.gapClassPackageName = gapClassPackageName;
+    public EntityCodeGenerator(EntityModel entityModel, String entityClassName,
+            String entityGapClassName, String templateName,
+            Configuration configuration, String encoding, File destDir) {
+        super(entityModel, entityClassName, entityGapClassName, templateName,
+                configuration, encoding, destDir);
     }
 
     @Override
-    protected Set<String> getImports(EntityModel entityModel) {
+    protected Set<String> getImports() {
         Set<String> result = new TreeSet<String>();
         result.add(Entity.class.getName());
-        result.add(ClassUtil.concatName(gapClassPackageName,
-                getGapClassName(entityModel)));
+        result.add(entityGapClassName);
         return result;
     }
 
     @Override
-    protected String getClassName(EntityModel entityModel) {
-        return entityModel.getName();
+    protected String getTargetClassName() {
+        return entityClassName;
     }
 
 }

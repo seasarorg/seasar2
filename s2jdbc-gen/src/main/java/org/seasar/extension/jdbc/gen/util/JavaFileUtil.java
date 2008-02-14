@@ -13,34 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.util;
 
-import org.junit.Test;
-
-import static junit.framework.Assert.*;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author taedium
  * 
  */
-public class CodeGenerationCommandTest {
+public class JavaFileUtil {
 
-    @Test
-    public void test() throws Exception {
-        CodeGenerationCommand command = new CodeGenerationCommand();
-        // command.execute();
+    protected static String EXT = ".java";
+
+    private JavaFileUtil() {
     }
 
-    @Test
-    public void testGetClassName() throws Exception {
-        CodeGenerationCommand command = new CodeGenerationCommand();
-        String name = command.getClassName("aaa", "bbb", "Ccc");
-        assertEquals("aaa.bbb.Ccc", name);
+    public static String getPackageDirName(String className) {
+        String packageName = ClassUtil.splitPackageAndShortClassName(className)[0];
+        return packageName.replace(".", "/");
     }
 
-    @Test
-    public void getEntityClassName() throws Exception {
-        fail();
+    public static String getJavaFileName(String className) {
+        return className.replace(".", "/") + EXT;
     }
 
 }

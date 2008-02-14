@@ -32,7 +32,7 @@ import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
 import org.seasar.framework.util.ClassUtil;
 
-import freemarker.template.Template;
+import freemarker.template.Configuration;
 
 /**
  * @author taedium
@@ -40,12 +40,15 @@ import freemarker.template.Template;
  */
 public class EntityGapCodeGenerator extends AbstractCodeGenerator {
 
-    public EntityGapCodeGenerator(String packageName, Template template,
-            String encoding, File destDir) {
-        super(packageName, template, encoding, destDir);
+    public EntityGapCodeGenerator(EntityModel entityModel,
+            String entityClassName, String entityGapClassName,
+            String templateName, Configuration configuration, String encoding,
+            File destDir) {
+        super(entityModel, entityClassName, entityGapClassName, templateName,
+                configuration, encoding, destDir);
     }
 
-    protected Set<String> getImports(EntityModel entityModel) {
+    protected Set<String> getImports() {
         Set<String> result = new TreeSet<String>();
         result.add(MappedSuperclass.class.getName());
         for (PropertyModel pm : entityModel.getPropertyModelList()) {
@@ -72,8 +75,8 @@ public class EntityGapCodeGenerator extends AbstractCodeGenerator {
     }
 
     @Override
-    protected String getClassName(EntityModel entityModel) {
-        return getGapClassName(entityModel);
+    protected String getTargetClassName() {
+        return entityGapClassName;
     }
 
 }
