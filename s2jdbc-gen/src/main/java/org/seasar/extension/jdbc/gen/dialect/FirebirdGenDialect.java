@@ -13,23 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
-
-import javax.persistence.TemporalType;
+package org.seasar.extension.jdbc.gen.dialect;
 
 /**
  * @author taedium
  * 
  */
-public interface GenerationDialect {
+public class FirebirdGenDialect extends StandardGenDialect {
 
-    String getDefaultSchema(String userName);
-
-    boolean isUserTable(String tableName);
-
-    boolean isLobType(int sqlType, String typeName);
-
-    TemporalType getTemporalType(int sqlType, String typeName);
-
-    Class<?> getJavaType(int sqlType, String typeName, boolean nullable);
 }

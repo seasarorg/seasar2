@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.converter;
 
+import java.sql.Types;
+
 import javax.persistence.TemporalType;
 
 import org.junit.Before;
@@ -60,10 +62,19 @@ public class PropertyModelConverterTest {
     }
 
     @Test
+    public void testPropertyClass() throws Exception {
+        ColumnModel columnModel = new ColumnModel();
+        columnModel.setName("hoge");
+        columnModel.setSqlType(Types.VARCHAR);
+        PropertyModel propertyModel = converter.convert(columnModel);
+        assertEquals(String.class, propertyModel.getPropertyClass());
+    }
+
+    @Test
     public void testTemporalType() throws Exception {
         ColumnModel columnModel = new ColumnModel();
         columnModel.setName("hoge");
-        columnModel.setTypeName("DATE");
+        columnModel.setSqlType(Types.DATE);
         PropertyModel propertyModel = converter.convert(columnModel);
         assertEquals(TemporalType.DATE, propertyModel.getTemporalType());
     }
@@ -72,7 +83,7 @@ public class PropertyModelConverterTest {
     public void testLob() throws Exception {
         ColumnModel columnModel = new ColumnModel();
         columnModel.setName("hoge");
-        columnModel.setTypeName("BLOB");
+        columnModel.setSqlType(Types.BLOB);
         PropertyModel propertyModel = converter.convert(columnModel);
         assertTrue(propertyModel.isLob());
     }

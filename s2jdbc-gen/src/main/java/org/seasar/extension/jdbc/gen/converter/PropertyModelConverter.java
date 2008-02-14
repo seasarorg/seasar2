@@ -28,7 +28,7 @@ public class PropertyModelConverter {
 
     private PersistenceConvention persistenceConvention;
 
-    private GenerationDialect generationDialect;
+    private GenerationDialect dialect;
 
     private String versionColumn;
 
@@ -38,7 +38,7 @@ public class PropertyModelConverter {
     }
 
     public void setGenerationDialect(GenerationDialect generationDialect) {
-        this.generationDialect = generationDialect;
+        this.dialect = generationDialect;
     }
 
     public void setVersionColumn(String versionColumn) {
@@ -50,7 +50,9 @@ public class PropertyModelConverter {
         doName(columnModel, propertyModel);
         doId(columnModel, propertyModel);
         doLob(columnModel, propertyModel);
+        doPropertyClass(columnModel, propertyModel);
         doTemporalType(columnModel, propertyModel);
+        doTransient(columnModel, propertyModel);
         doVersion(columnModel, propertyModel);
         return propertyModel;
     }
@@ -64,15 +66,27 @@ public class PropertyModelConverter {
         propertyModel.setId(columnModel.isPrimaryKey());
     }
 
+    protected void doPropertyClass(ColumnModel columnModel,
+            PropertyModel propertyModel) {
+        Class<?> clazz = dialect.getJavaType(
+                columnModel.getSqlType(), columnModel.getTypeName(),
+                columnModel.isNullable());
+        propertyModel.setPropertyClass(clazz);
+    }
+
     protected void doLob(ColumnModel columnModel, PropertyModel propertyModel) {
-        propertyModel.setLob(generationDialect.isLobType(columnModel
-                .getTypeName()));
+        propertyModel.setLob(dialect.isLobType(columnModel
+                .getSqlType(), columnModel.getTypeName()));
     }
 
     protected void doTemporalType(ColumnModel columnModel,
             PropertyModel propertyModel) {
-        propertyModel.setTemporalType(generationDialect
-                .getTemporalType(columnModel.getTypeName()));
+        propertyModel.setTemporalType(dialect.getTemporalType(
+                columnModel.getSqlType(), columnModel.getTypeName()));
+    }
+
+    protected void doTransient(ColumnModel columnModel,
+            PropertyModel propertyModel) {
     }
 
     protected void doVersion(ColumnModel columnModel,

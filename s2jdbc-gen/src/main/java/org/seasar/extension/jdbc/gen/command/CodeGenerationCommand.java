@@ -23,11 +23,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.gen.GenerationDialect;
 import org.seasar.extension.jdbc.gen.converter.EntityModelConverter;
 import org.seasar.extension.jdbc.gen.converter.PropertyModelConverter;
-import org.seasar.extension.jdbc.gen.dialect.GenerationDialects;
+import org.seasar.extension.jdbc.gen.dialect.GenerationDialectManager;
 import org.seasar.extension.jdbc.gen.exception.TooManyRootPackageNameRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.EntityCodeGenerator;
 import org.seasar.extension.jdbc.gen.generator.EntityGapCodeGenerator;
@@ -35,6 +34,7 @@ import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.extension.jdbc.gen.reader.SchemaReader;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.S2Container;
@@ -54,15 +54,13 @@ import freemarker.template.Template;
  */
 public class CodeGenerationCommand {
 
-    protected static String GAP_PACKAGE = "gap";
-
     protected String rootPackageName = "";
 
     protected String entityPackageName = "entity";
 
-    protected String entityGapPackageName = createEntityGapPackageName();
+    protected String entityGapPackageName = entityPackageName;
 
-    protected String dataSourceName = "dataSource";
+    protected String jdbcManagerName = "jdbcManager";
 
     protected File templateDir = ResourceUtil.getResourceAsFile("templates");
 
@@ -147,11 +145,12 @@ public class CodeGenerationCommand {
             SingletonS2ContainerFactory.init();
         }
         S2Container container = SingletonS2ContainerFactory.getContainer();
-        dataSource = (DataSource) container.getComponent(dataSourceName);
-        persistenceConvention = (PersistenceConvention) container
-                .getComponent(PersistenceConvention.class);
-        generationDialect = GenerationDialects.get((DbmsDialect) container
-                .getComponent(DbmsDialect.class));
+        JdbcManagerImplementor jdbcManager = (JdbcManagerImplementor) container
+                .getComponent(jdbcManagerName);
+        dataSource = jdbcManager.getDataSource();
+        persistenceConvention = jdbcManager.getPersistenceConvention();
+        generationDialect = GenerationDialectManager
+                .getGenerationDialect(jdbcManager.getDialect());
         if (container.hasComponentDef(NamingConvention.class)) {
             NamingConvention nc = (NamingConvention) container
                     .getComponent(NamingConvention.class);
@@ -163,7 +162,7 @@ public class CodeGenerationCommand {
                 rootPackageName = rootPackageNames[0];
             }
             entityPackageName = nc.getEntityPackageName();
-            entityGapPackageName = createEntityGapPackageName();
+            entityGapPackageName = entityPackageName;
         }
     }
 
@@ -237,10 +236,6 @@ public class CodeGenerationCommand {
 
     protected Template createTemplate(String templateName) {
         return ConfigurationUtil.getTemplate(configuration, templateName);
-    }
-
-    protected String createEntityGapPackageName() {
-        return ClassUtil.concatName(entityPackageName, GAP_PACKAGE);
     }
 
 }

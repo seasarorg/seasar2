@@ -77,7 +77,11 @@ public abstract class AbstractCodeGenerator {
     }
 
     protected Writer openWriter(EntityModel entityModel) {
-        File file = new File(destDir, getFileName(entityModel));
+        File packageDir = new File(destDir, packageName.replace(".", "/"));
+        if (!packageDir.exists()) {
+            packageDir.mkdirs();
+        }
+        File file = new File(packageDir, getFileName(entityModel));
         FileOutputStream fos = FileOutputStreamUtil.create(file);
         return new OutputStreamWriter(fos, Charset.forName(encoding));
     }

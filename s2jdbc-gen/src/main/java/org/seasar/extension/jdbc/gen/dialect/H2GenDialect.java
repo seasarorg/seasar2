@@ -15,30 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.seasar.extension.jdbc.DbmsDialect;
-import org.seasar.extension.jdbc.gen.GenerationDialect;
-
 /**
  * @author taedium
  * 
  */
-public class GenerationDialects {
+public class H2GenDialect extends StandardGenDialect {
 
-    protected static Map<String, GenerationDialect> dialects = new HashMap<String, GenerationDialect>();
-    static {
-    }
-
-    private GenerationDialects() {
-    }
-
-    public static GenerationDialect get(DbmsDialect dialect) {
-        GenerationDialect generationDialect = dialects.get(dialect.getName());
-        if (generationDialect != null) {
-            return generationDialect;
-        }
-        return new StandardGenDialect();
-    }
 }

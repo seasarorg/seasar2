@@ -21,4 +21,8 @@ package org.seasar.extension.jdbc.gen.dialect;
  */
 public class HsqlGenDialect extends StandardGenDialect {
 
+    @Override
+    public String getDefaultSchema(String userName) {
+        return null;
+    }
 }

@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.generator.EntityCodeGenerator;
 
 import static junit.framework.Assert.*;
 
@@ -27,9 +28,15 @@ public class CodeGenerationCommandTest {
 
     @Test
     public void test() throws Exception {
-        // CodeGenerationCommand command = new CodeGenerationCommand();
+        CodeGenerationCommand command = new CodeGenerationCommand() {
+
+            @Override
+            protected EntityCodeGenerator createEntityCodeGenerator() {
+                // TODO Auto-generated method stub
+                return super.createEntityCodeGenerator();
+            }
+        };
         // command.execute();
         fail();
     }
-
 }

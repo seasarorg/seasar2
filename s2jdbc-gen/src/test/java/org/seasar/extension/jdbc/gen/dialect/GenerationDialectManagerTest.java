@@ -13,23 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.dialect;
 
-import javax.persistence.TemporalType;
+import org.junit.Test;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
+import org.seasar.extension.jdbc.gen.GenerationDialect;
+
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public interface GenerationDialect {
+public class GenerationDialectManagerTest {
 
-    String getDefaultSchema(String userName);
+    @Test
+    public void testGetGenerationDialect() {
+        GenerationDialect generationDialect = GenerationDialectManager
+                .getGenerationDialect(new OracleDialect());
+        assertEquals(GenerationDialectManager.ORACLE, generationDialect);
+    }
 
-    boolean isUserTable(String tableName);
-
-    boolean isLobType(int sqlType, String typeName);
-
-    TemporalType getTemporalType(int sqlType, String typeName);
-
-    Class<?> getJavaType(int sqlType, String typeName, boolean nullable);
 }
