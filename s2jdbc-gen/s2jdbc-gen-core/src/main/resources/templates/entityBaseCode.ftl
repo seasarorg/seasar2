@@ -10,7 +10,9 @@ public abstract class ${shortClassName} {
 
   <#if p.id>
     @Id
+    <#if !entityModel.compositeId>
     @GeneratedValue
+    </#if>
   </#if>
   <#if p.lob>
     @Lob

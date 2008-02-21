@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.javacode;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 
@@ -29,24 +30,39 @@ import static org.junit.Assert.*;
  */
 public class EntityCodeTest {
 
-    @Test
-    public void test() throws Exception {
-        EntityModel model = new EntityModel();
-        EntityCode code = new EntityCode(model, "hoge.Foo", "bar.AbstractFoo",
+    private EntityModel model;
+
+    private EntityCode code;
+
+    @Before
+    public void setUp() {
+        model = new EntityModel();
+        code = new EntityCode(model, "hoge.Foo", "bar.AbstractFoo",
                 "entityCode.ftl");
+    }
 
+    @Test
+    public void testGetEntityModel() {
         assertEquals(model, code.getEntityModel());
-        assertEquals("hoge", code.getPackageName());
+    }
 
+    @Test
+    public void testGetShortClassName() {
+        assertEquals("Foo", code.getShortClassName());
+    }
+
+    @Test
+    public void testGetShortBaseClassName() {
+        assertEquals("AbstractFoo", code.getShortBaseClassName());
+    }
+
+    @Test
+    public void testGetImportPackageNames() throws Exception {
         Set<String> imports = code.getImportPackageNames();
         assertEquals(2, imports.size());
         Iterator<String> it = imports.iterator();
         assertEquals("bar.AbstractFoo", it.next());
         assertEquals("javax.persistence.Entity", it.next());
-
-        assertEquals("Foo", code.getShortClassName());
-        assertEquals("AbstractFoo", code.getShortBaseClassName());
-
-        assertEquals("entityCode.ftl", code.getTemplateName());
     }
+
 }

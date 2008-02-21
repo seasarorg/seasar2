@@ -16,31 +16,29 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.gen.EntityModelConverter;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.JavaCode;
 import org.seasar.extension.jdbc.gen.JavaCodeGenerator;
-import org.seasar.extension.jdbc.gen.converter.EntityModelConverter;
-import org.seasar.extension.jdbc.gen.converter.PropertyModelConverter;
+import org.seasar.extension.jdbc.gen.PropertyModelConverter;
+import org.seasar.extension.jdbc.gen.SchemaReader;
+import org.seasar.extension.jdbc.gen.converter.EntityModelConverterImpl;
+import org.seasar.extension.jdbc.gen.converter.PropertyModelConverterImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.TooManyRootPackageNameRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.JavaCodeGeneratorImpl;
 import org.seasar.extension.jdbc.gen.javacode.EntityBaseCode;
 import org.seasar.extension.jdbc.gen.javacode.EntityCode;
+import org.seasar.extension.jdbc.gen.model.DbTableDesc;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
-import org.seasar.extension.jdbc.gen.model.TableModel;
-import org.seasar.extension.jdbc.gen.reader.SchemaReader;
+import org.seasar.extension.jdbc.gen.reader.SchemaReaderImpl;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
-import org.seasar.extension.jdbc.gen.util.JavaFileUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.extension.jdbc.util.ConnectionUtil;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.convention.NamingConvention;
@@ -49,6 +47,7 @@ import org.seasar.framework.util.ClassUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
+import static org.seasar.extension.jdbc.gen.command.GenEntitiesConstants.*;
 
 /**
  * @author taedium
@@ -56,7 +55,9 @@ import freemarker.template.DefaultObjectWrapper;
  */
 public class GenEntitiesCommand {
 
-    protected String baseClassNameSuffix;
+    protected String diconName;
+
+    protected String jdbcManagerName;
 
     protected String rootPackageName;
 
@@ -64,15 +65,17 @@ public class GenEntitiesCommand {
 
     protected String entityBasePackageName;
 
-    protected String jdbcManagerName;
-
-    protected File templateDir;
+    protected String baseClassNameSuffix;
 
     protected File destDir;
 
+    protected String javaCodeEncoding;
+
+    protected File templateDir;
+
     protected String templateEncoding;
 
-    protected String javaCodeEncoding;
+    protected String schemaName;
 
     protected String versionColumnName;
 
@@ -80,22 +83,23 @@ public class GenEntitiesCommand {
 
     protected String entityBaseTemplateName;
 
-    protected String diconName;
-
-    protected String schemaName;
-
     protected boolean initialized;
-
-    protected Configuration configuration;
 
     protected DataSource dataSource;
 
-    protected GenDialect generationDialect;
+    protected GenDialect dialect;
 
     protected PersistenceConvention persistenceConvention;
 
-    public void setTemplateEncoding(String encoding) {
-        this.templateEncoding = encoding;
+    public GenEntitiesCommand() {
+    }
+
+    public void setDiconName(String diconName) {
+        this.diconName = diconName;
+    }
+
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
     }
 
     public void setRootPackageName(String rootPackageName) {
@@ -106,29 +110,43 @@ public class GenEntitiesCommand {
         this.entityPackageName = entityPackageName;
     }
 
-    public void setEntityBasePackageName(String entityGapPackageName) {
-        this.entityBasePackageName = entityGapPackageName;
+    public void setEntityBasePackageName(String entityBasePackageName) {
+        this.entityBasePackageName = entityBasePackageName;
+    }
+
+    public void setBaseClassNameSuffix(String baseClassNameSuffix) {
+        this.baseClassNameSuffix = baseClassNameSuffix;
+    }
+
+    public void setTemplateDir(File templateDir) {
+        this.templateDir = templateDir;
+    }
+
+    public void setTemplateEncoding(String templateEncoding) {
+        this.templateEncoding = templateEncoding;
     }
 
     public void setDestDir(File destDir) {
         this.destDir = destDir;
     }
 
-    public void setVersionColumnName(String versionColumn) {
-        this.versionColumnName = versionColumn;
+    public void setJavaCodeEncoding(String javaCodeEncoding) {
+        this.javaCodeEncoding = javaCodeEncoding;
     }
 
-    public void setDiconName(String dicon) {
-        this.diconName = dicon;
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
     }
 
-    public GenEntitiesCommand() {
+    public void setVersionColumnName(String versionColumnName) {
+        this.versionColumnName = versionColumnName;
     }
 
     public void execute() {
         init();
         try {
-            generate(convert(getTableModels()));
+            SchemaReader reader = createSchemaReader();
+            generate(convert(reader.getDbTableDescs(schemaName)));
         } finally {
             destroy();
         }
@@ -136,55 +154,6 @@ public class GenEntitiesCommand {
 
     protected void init() {
         setupDefaults();
-        initContainer();
-    }
-
-    protected void setupDefaults() {
-        if (baseClassNameSuffix == null) {
-            baseClassNameSuffix = GenEntitiesConstants.GAP_CLASS_NAME_SUFFIX;
-        }
-        if (rootPackageName == null) {
-            rootPackageName = GenEntitiesConstants.ROOT_PACKAGE_NAME;
-        }
-        if (entityPackageName == null) {
-            entityPackageName = GenEntitiesConstants.ENTITY_PACKAGE_NAME;
-        }
-        if (entityBasePackageName == null) {
-            entityBasePackageName = GenEntitiesConstants.ENTITY_PACKAGE_NAME;
-        }
-        if (jdbcManagerName == null) {
-            jdbcManagerName = GenEntitiesConstants.JDBC_MANAGER_NAME;
-        }
-        if (templateDir == null) {
-            templateDir = GenEntitiesConstants.TEMPLATE_DIR;
-        }
-        if (destDir == null) {
-            destDir = GenEntitiesConstants.DEST_DIR;
-        }
-        if (templateEncoding == null) {
-            templateEncoding = GenEntitiesConstants.ENCODING;
-        }
-        if (javaCodeEncoding == null) {
-            javaCodeEncoding = GenEntitiesConstants.ENCODING;
-        }
-        if (versionColumnName == null) {
-            versionColumnName = GenEntitiesConstants.VERSION_COLUMN_NAME;
-        }
-        if (entityTemplateName == null) {
-            entityTemplateName = GenEntitiesConstants.ENTITY_TEMPLATE_NAME;
-        }
-        if (entityBaseTemplateName == null) {
-            entityBaseTemplateName = GenEntitiesConstants.ENTITU_BASE_TEMPLATE_NAME;
-        }
-        if (diconName == null) {
-            diconName = GenEntitiesConstants.DICON_NAME;
-        }
-        if (schemaName == null) {
-            schemaName = GenEntitiesConstants.SCHEMA_NAME;
-        }
-    }
-
-    protected void initContainer() {
         if (!SingletonS2ContainerFactory.hasContainer()) {
             initialized = true;
             SingletonS2ContainerFactory.setConfigPath(diconName);
@@ -195,20 +164,70 @@ public class GenEntitiesCommand {
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         persistenceConvention = jdbcManager.getPersistenceConvention();
-        generationDialect = GenDialectManager
-                .getGenerationDialect(jdbcManager.getDialect());
+        dialect = GenDialectManager.getGenerationDialect(jdbcManager
+                .getDialect());
         if (container.hasComponentDef(NamingConvention.class)) {
             NamingConvention nc = (NamingConvention) container
                     .getComponent(NamingConvention.class);
-            String[] rootPackageNames = nc.getRootPackageNames();
-            if (rootPackageNames.length > 1) {
-                throw new TooManyRootPackageNameRuntimeException();
+            if (nc.getRootPackageNames().length > 0) {
+                if (nc.getRootPackageNames().length > 1) {
+                    throw new TooManyRootPackageNameRuntimeException();
+                }
+                if (!ROOT_PACKAGE_NAME.equals(rootPackageName)) {
+                    rootPackageName = nc.getRootPackageNames()[0];
+                }
+                if (!ENTITY_PACKAGE_NAME.equals(entityPackageName)) {
+                    entityPackageName = nc.getEntityPackageName();
+                }
+                if (!ENTITY_BASE_PACKAGE_NAME.equals(entityBasePackageName)) {
+                    entityBasePackageName = nc.getEntityPackageName();
+                }
             }
-            if (rootPackageNames.length == 1) {
-                rootPackageName = rootPackageNames[0];
-            }
-            entityPackageName = nc.getEntityPackageName();
-            entityBasePackageName = entityPackageName;
+        }
+    }
+
+    protected void setupDefaults() {
+        if (diconName == null) {
+            diconName = DICON_NAME;
+        }
+        if (jdbcManagerName == null) {
+            jdbcManagerName = JDBC_MANAGER_NAME;
+        }
+        if (rootPackageName == null) {
+            rootPackageName = ROOT_PACKAGE_NAME;
+        }
+        if (entityPackageName == null) {
+            entityPackageName = ENTITY_PACKAGE_NAME;
+        }
+        if (entityBasePackageName == null) {
+            entityBasePackageName = ENTITY_PACKAGE_NAME;
+        }
+        if (baseClassNameSuffix == null) {
+            baseClassNameSuffix = GAP_CLASS_NAME_SUFFIX;
+        }
+        if (destDir == null) {
+            destDir = DEST_DIR;
+        }
+        if (javaCodeEncoding == null) {
+            javaCodeEncoding = JAVA_CODE_ENCODING;
+        }
+        if (templateDir == null) {
+            templateDir = TEMPLATE_DIR;
+        }
+        if (templateEncoding == null) {
+            templateEncoding = TEMPLATE_ENCODING;
+        }
+        if (entityTemplateName == null) {
+            entityTemplateName = ENTITY_TEMPLATE_NAME;
+        }
+        if (entityBaseTemplateName == null) {
+            entityBaseTemplateName = ENTITU_BASE_TEMPLATE_NAME;
+        }
+        if (schemaName == null) {
+            schemaName = SCHEMA_NAME;
+        }
+        if (versionColumnName == null) {
+            versionColumnName = VERSION_COLUMN_NAME;
         }
     }
 
@@ -218,50 +237,35 @@ public class GenEntitiesCommand {
         }
     }
 
-    protected List<TableModel> getTableModels() {
-        Connection con = DataSourceUtil.getConnection(dataSource);
-        try {
-            DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
-            return createSchemaReader(metaData).getTableModels(null);
-        } finally {
-            ConnectionUtil.close(con);
-        }
+    protected SchemaReader createSchemaReader() {
+        return new SchemaReaderImpl(dataSource, dialect);
     }
 
-    protected SchemaReader createSchemaReader(DatabaseMetaData metaData) {
-        return new SchemaReader(metaData, generationDialect);
-    }
-
-    protected List<EntityModel> convert(List<TableModel> tableModels) {
+    protected List<EntityModel> convert(List<DbTableDesc> tableDescs) {
         List<EntityModel> entityModels = new ArrayList<EntityModel>();
-        EntityModelConverter converter = createEntityModelConverter();
-        for (TableModel tableModel : tableModels) {
-            EntityModel entityModel = converter.convert(tableModel);
+        EntityModelConverter entityConverter = createEntityModelConverter();
+        for (DbTableDesc tableDesc : tableDescs) {
+            EntityModel entityModel = entityConverter.convert(tableDesc);
             entityModels.add(entityModel);
         }
         return entityModels;
     }
 
     protected EntityModelConverter createEntityModelConverter() {
-        EntityModelConverter converter = new EntityModelConverter();
-        converter.setPersistenceConvention(persistenceConvention);
-        converter.setPropertyModelConverter(createPropertyModelConverter());
-        return converter;
+        return new EntityModelConverterImpl(persistenceConvention,
+                createPropertyModelConverter());
     }
 
     protected PropertyModelConverter createPropertyModelConverter() {
-        PropertyModelConverter converter = new PropertyModelConverter();
-        converter.setPersistenceConvention(persistenceConvention);
-        converter.setGenerationDialect(generationDialect);
-        converter.setVersionColumn(versionColumnName);
-        return converter;
+        return new PropertyModelConverterImpl(persistenceConvention, dialect,
+                versionColumnName);
     }
 
     protected void generate(List<EntityModel> entityModels) {
         JavaCodeGenerator generator = createJavaCodeGenerator();
         for (EntityModel entityModel : entityModels) {
             JavaCode entityCode = createEntityCode(entityModel);
-            if (!exists(entityCode)) {
+            if (!exists(entityCode, destDir)) {
                 generator.generate(entityCode);
             }
             JavaCode entityBaseCode = createEntityBaseCode(entityModel);
@@ -274,25 +278,21 @@ public class GenEntitiesCommand {
         cfg.setObjectWrapper(new DefaultObjectWrapper());
         ConfigurationUtil.setDirectoryForTemplateLoading(cfg, templateDir);
         return new JavaCodeGeneratorImpl(cfg, destDir, templateEncoding);
-
-    }
-
-    protected boolean exists(JavaCode javaCode) {
-        String fileName = JavaFileUtil.getJavaFileName(javaCode.getClassName());
-        File javaFile = new File(destDir, fileName);
-        return javaFile.exists();
     }
 
     protected EntityCode createEntityCode(EntityModel entityModel) {
-        String entityName = entityModel.getName();
-        return new EntityCode(entityModel, getEntityClassName(entityName),
-                getEntityBaseClassName(entityName), entityTemplateName);
+        String entityClassName = getEntityClassName(entityModel.getName());
+        String entityBaseClassName = getEntityBaseClassName(entityModel
+                .getName());
+        return new EntityCode(entityModel, entityClassName,
+                entityBaseClassName, entityTemplateName);
     }
 
     protected EntityBaseCode createEntityBaseCode(EntityModel entityModel) {
-        String entityName = entityModel.getName();
-        return new EntityBaseCode(entityModel,
-                getEntityBaseClassName(entityName), entityBaseTemplateName);
+        String entityBaseClassName = getEntityBaseClassName(entityModel
+                .getName());
+        return new EntityBaseCode(entityModel, entityBaseClassName,
+                entityBaseTemplateName);
     }
 
     protected String getEntityClassName(String entityName) {
@@ -309,5 +309,9 @@ public class GenEntitiesCommand {
         String fullPackageName = ClassUtil.concatName(rootPackageName,
                 subPackageName);
         return ClassUtil.concatName(fullPackageName, className);
+    }
+
+    protected boolean exists(JavaCode javaCode, File baseDir) {
+        return javaCode.getFile(baseDir).exists();
     }
 }

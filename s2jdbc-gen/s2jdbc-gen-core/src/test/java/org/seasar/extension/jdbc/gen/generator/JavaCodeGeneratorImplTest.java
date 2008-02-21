@@ -22,7 +22,7 @@ import java.io.Writer;
 import javax.persistence.TemporalType;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.JavaCode;
+import org.seasar.extension.jdbc.gen.javacode.AbstractJavaCode;
 import org.seasar.extension.jdbc.gen.javacode.EntityBaseCode;
 import org.seasar.extension.jdbc.gen.javacode.EntityCode;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
@@ -58,8 +58,7 @@ public class JavaCodeGeneratorImplTest {
         generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
-            protected File createJavaFile(JavaCode javaCode) {
-                return null;
+            protected void makeDirsIfNecessary(File dir) {
             }
 
             @Override
@@ -67,8 +66,10 @@ public class JavaCodeGeneratorImplTest {
                 return writer;
             }
         };
-        generator.generate(new MyJavaCode("aaa"));
-        assertEquals("aaa", writer.toString());
+        generator.generate(new MyJavaCode("hoge.Foo", getClass()
+                .getSimpleName()
+                + "_hoge.ftl"));
+        assertEquals("hoge", writer.toString());
     }
 
     @Test
@@ -81,8 +82,7 @@ public class JavaCodeGeneratorImplTest {
         generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
-            protected File createJavaFile(JavaCode javaCode) {
-                return null;
+            protected void makeDirsIfNecessary(File dir) {
             }
 
             @Override
@@ -109,8 +109,7 @@ public class JavaCodeGeneratorImplTest {
         generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
-            protected File createJavaFile(JavaCode javaCode) {
-                return null;
+            protected void makeDirsIfNecessary(File dir) {
             }
 
             @Override
@@ -165,24 +164,53 @@ public class JavaCodeGeneratorImplTest {
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
-    public static class MyJavaCode implements JavaCode {
+    @Test
+    public void testGenerateEntityBase_compositeId() throws Exception {
+        File file = ResourceUtil.getResourceAsFile("templates");
+        Configuration cfg = new Configuration();
+        cfg.setObjectWrapper(new DefaultObjectWrapper());
+        cfg.setDirectoryForTemplateLoading(file);
+        writer = new StringWriter();
+        generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
 
-        private String hoge;
+            @Override
+            protected void makeDirsIfNecessary(File dir) {
+            }
 
-        public MyJavaCode(String hoge) {
-            this.hoge = hoge;
+            @Override
+            protected Writer openWriter(File file) {
+                return writer;
+            }
+        };
+
+        PropertyModel id1 = new PropertyModel();
+        id1.setName("id1");
+        id1.setId(true);
+        id1.setPropertyClass(int.class);
+
+        PropertyModel id2 = new PropertyModel();
+        id2.setName("id2");
+        id2.setId(true);
+        id2.setPropertyClass(int.class);
+
+        EntityModel model = new EntityModel();
+        model.setName("Foo");
+        model.addPropertyModel(id1);
+        model.addPropertyModel(id2);
+
+        EntityBaseCode code = new EntityBaseCode(model, "bar.AbstractFoo",
+                "entityBaseCode.ftl");
+        generator.generate(code);
+        String path = getClass().getName().replace(".", "/")
+                + "_entityBaseCode_compositeId.txt";
+        assertEquals(TextUtil.readUTF8(path), writer.toString());
+    }
+
+    public static class MyJavaCode extends AbstractJavaCode {
+
+        public MyJavaCode(String className, String templateName) {
+            super(className, templateName);
         }
 
-        public String getHoge() {
-            return hoge;
-        }
-
-        public String getClassName() {
-            return "MyEntity";
-        }
-
-        public String getTemplateName() {
-            return getClass().getSimpleName() + ".ftl";
-        }
     }
 }

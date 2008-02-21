@@ -15,24 +15,14 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
+import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
+import org.seasar.extension.jdbc.gen.model.PropertyModel;
 
 /**
  * @author taedium
  * 
  */
-public interface JavaCode {
+public interface PropertyModelConverter {
 
-    String EXT = ".java";
-
-    String getPackageName();
-
-    String getClassName();
-
-    String getTemplateName();
-
-    File getPackageDir(File baseDir);
-
-    File getFile(File baseDir);
-
+    PropertyModel convert(DbColumnDesc columnDesc);
 }

@@ -15,24 +15,15 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
+import java.util.List;
+
+import org.seasar.extension.jdbc.gen.model.DbTableDesc;
 
 /**
  * @author taedium
  * 
  */
-public interface JavaCode {
+public interface SchemaReader {
 
-    String EXT = ".java";
-
-    String getPackageName();
-
-    String getClassName();
-
-    String getTemplateName();
-
-    File getPackageDir(File baseDir);
-
-    File getFile(File baseDir);
-
+    List<DbTableDesc> getDbTableDescs(String schemaName);
 }

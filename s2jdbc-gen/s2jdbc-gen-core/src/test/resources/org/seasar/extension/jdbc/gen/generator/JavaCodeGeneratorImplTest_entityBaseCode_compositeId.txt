@@ -1,0 +1,14 @@
+package bar;
+
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
+public abstract class AbstractFoo {
+
+    @Id
+    public int id1;
+
+    @Id
+    public int id2;
+}

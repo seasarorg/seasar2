@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
@@ -31,32 +32,42 @@ import static org.junit.Assert.*;
  */
 public class EntityBaseCodeTest {
 
-    @Test
-    public void test() throws Exception {
+    private EntityModel model;
+
+    private EntityBaseCode code;
+
+    @Before
+    public void setUp() {
         PropertyModel aaa = new PropertyModel();
         aaa.setName("aaa");
         aaa.setPropertyClass(BigDecimal.class);
         PropertyModel bbb = new PropertyModel();
         bbb.setName("bbb");
         bbb.setPropertyClass(String.class);
-        EntityModel model = new EntityModel();
+        model = new EntityModel();
         model.addPropertyModel(aaa);
         model.addPropertyModel(bbb);
-
-        EntityBaseCode code = new EntityBaseCode(model, "bar.AbstractFoo",
+        code = new EntityBaseCode(model, "bar.AbstractFoo",
                 "entityBaseCode.ftl");
+    }
 
+    @Test
+    public void testGetEntityModel() {
         assertEquals(model, code.getEntityModel());
-        assertEquals("bar", code.getPackageName());
+    }
 
+    @Test
+    public void testGetShortClassName() {
+        assertEquals("AbstractFoo", code.getShortClassName());
+    }
+
+    @Test
+    public void testGetImportPackageNames() throws Exception {
         Set<String> imports = code.getImportPackageNames();
         assertEquals(2, imports.size());
         Iterator<String> it = imports.iterator();
         assertEquals("java.math.BigDecimal", it.next());
         assertEquals("javax.persistence.MappedSuperclass", it.next());
-
-        assertEquals("AbstractFoo", code.getShortClassName());
-
-        assertEquals("entityBaseCode.ftl", code.getTemplateName());
     }
+
 }

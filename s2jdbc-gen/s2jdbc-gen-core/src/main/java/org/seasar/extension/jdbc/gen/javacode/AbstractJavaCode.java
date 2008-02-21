@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.javacode;
 
+import java.io.File;
+
 import org.seasar.extension.jdbc.gen.JavaCode;
 import org.seasar.framework.util.ClassUtil;
 
@@ -24,13 +26,20 @@ import org.seasar.framework.util.ClassUtil;
  */
 public abstract class AbstractJavaCode implements JavaCode {
 
+    protected String packageName;
+
     protected String className;
 
     protected String templateName;
 
     public AbstractJavaCode(String className, String templateName) {
+        this.packageName = ClassUtil.splitPackageAndShortClassName(className)[0];
         this.className = className;
         this.templateName = templateName;
+    }
+
+    public String getPackageName() {
+        return packageName;
     }
 
     public String getClassName() {
@@ -41,8 +50,13 @@ public abstract class AbstractJavaCode implements JavaCode {
         return templateName;
     }
 
-    protected String getPackageName(String className) {
-        return ClassUtil.splitPackageAndShortClassName(className)[0];
+    public File getPackageDir(File baseDir) {
+        return new File(baseDir, packageName.replace('.', File.separatorChar));
+    }
+
+    public File getFile(File baseDir) {
+        return new File(baseDir, className.replace('.', File.separatorChar)
+                + EXT);
     }
 
     protected String getShortClassName(String className) {

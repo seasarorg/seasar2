@@ -5,17 +5,8 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/db2jcc_license_cu.jar"/>
-	<classpathentry kind="lib" path="lib/db2jcc.jar"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-java-5.0.7-bin.jar"/>
-	<classpathentry kind="lib" path="lib/postgresql-8.3dev-601.jdbc3.jar"/>
-	<classpathentry kind="lib" path="lib/h2-1.0.60.jar"/>
-	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.7.jar"/>
-	<classpathentry kind="lib" path="lib/derby.jar"/>
-	<classpathentry kind="lib" path="lib/derbyLocale_ja_JP.jar"/>
-	<classpathentry kind="lib" path="lib/derbyrun.jar"/>
-	<classpathentry kind="lib" path="lib/derbytools.jar"/>
-	<classpathentry kind="lib" path="lib/freemarker-2.3.12.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.12.jar" sourcepath="lib/sources/freemarker-2.3.12-sources.jar"/>
+	<classpathentry kind="lib" path="lib/ant-1.6.5.jar" sourcepath="lib/sources/ant-1.6.5-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="output" path="build/classes"/>

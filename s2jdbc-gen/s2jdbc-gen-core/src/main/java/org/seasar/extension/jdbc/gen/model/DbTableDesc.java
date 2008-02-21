@@ -23,43 +23,49 @@ import java.util.List;
  * @author taedium
  * 
  */
-public class EntityModel {
+public class DbTableDesc {
 
     protected String name;
 
-    protected boolean compositeId;
+    protected String schema;
 
-    protected List<PropertyModel> propertyModelList = new ArrayList<PropertyModel>();
+    protected List<DbColumnDesc> columnDescList = new ArrayList<DbColumnDesc>();
 
-    protected List<PropertyModel> idPropertyModelList = new ArrayList<PropertyModel>();
-
+    /**
+     * @return Returns the name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     *            The name to set.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    public void addPropertyModel(PropertyModel propertyModel) {
-        propertyModelList.add(propertyModel);
-        if (propertyModel.isId()) {
-            idPropertyModelList.add(propertyModel);
-            if (idPropertyModelList.size() > 1) {
-                compositeId = true;
-            }
-        }
+    /**
+     * @return Returns the schema.
+     */
+    public String getSchema() {
+        return schema;
     }
 
-    public List<PropertyModel> getPropertyModelList() {
-        return Collections.unmodifiableList(propertyModelList);
+    /**
+     * @param schema
+     *            The schema to set.
+     */
+    public void setSchema(String schema) {
+        this.schema = schema;
     }
 
-    public List<PropertyModel> getIdPropertyModelList() {
-        return Collections.unmodifiableList(idPropertyModelList);
+    public void addColumnDesc(DbColumnDesc columnDesc) {
+        columnDescList.add(columnDesc);
     }
 
-    public boolean isCompositeId() {
-        return compositeId;
+    public List<DbColumnDesc> getColumnDescList() {
+        return Collections.unmodifiableList(columnDescList);
     }
 }

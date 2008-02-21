@@ -13,26 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
-
-import java.io.File;
+package org.seasar.extension.jdbc.gen.task;
 
 /**
  * @author taedium
  * 
  */
-public interface JavaCode {
+public class GenSchemaTask extends GenTask {
 
-    String EXT = ".java";
-
-    String getPackageName();
-
-    String getClassName();
-
-    String getTemplateName();
-
-    File getPackageDir(File baseDir);
-
-    File getFile(File baseDir);
-
+    /**
+     * インスタンスを構築します。
+     */
+    public GenSchemaTask() {
+        super("org.seasar.extension.jdbc.gen.command.GenSchemaCommand");
+    }
 }

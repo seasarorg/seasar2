@@ -40,18 +40,20 @@ public class EntityBaseCode extends AbstractJavaCode {
 
     protected EntityModel entityModel;
 
-    protected String packageName;
-
     protected Set<String> importPackageNames;
 
     protected String shortClassName;
 
-    public EntityModel getEntityModel() {
-        return entityModel;
+    public EntityBaseCode(EntityModel entityModel, String className,
+            String templateName) {
+        super(className, templateName);
+        this.entityModel = entityModel;
+        this.importPackageNames = createImportPackageNames();
+        this.shortClassName = getShortClassName(className);
     }
 
-    public String getPackageName() {
-        return packageName;
+    public EntityModel getEntityModel() {
+        return entityModel;
     }
 
     public Set<String> getImportPackageNames() {
@@ -62,30 +64,15 @@ public class EntityBaseCode extends AbstractJavaCode {
         return shortClassName;
     }
 
-    public EntityBaseCode(EntityModel entityModel, String className,
-            String templateName) {
-        super(className, templateName);
-        this.entityModel = entityModel;
-        this.packageName = getPackageName(className);
-        this.importPackageNames = createImportPackageNames();
-        this.shortClassName = getShortClassName(className);
-    }
-
-    protected String getPackageName(String className) {
-        return ClassUtil.splitPackageAndShortClassName(className)[0];
-    }
-
-    protected String createPackageName(String className) {
-        return ClassUtil.splitPackageAndShortClassName(className)[0];
-    }
-
     protected Set<String> createImportPackageNames() {
         Set<String> packageNames = new TreeSet<String>();
         packageNames.add(MappedSuperclass.class.getName());
         for (PropertyModel pm : entityModel.getPropertyModelList()) {
             if (pm.isId()) {
                 packageNames.add(Id.class.getName());
-                packageNames.add(GeneratedValue.class.getName());
+                if (!entityModel.isCompositeId()) {
+                    packageNames.add(GeneratedValue.class.getName());
+                }
             } else if (pm.isLob()) {
                 packageNames.add(Lob.class.getName());
             } else if (pm.getTemporalType() != null) {

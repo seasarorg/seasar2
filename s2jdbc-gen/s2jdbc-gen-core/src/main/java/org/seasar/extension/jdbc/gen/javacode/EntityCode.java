@@ -30,20 +30,23 @@ public class EntityCode extends AbstractJavaCode {
 
     protected EntityModel entityModel;
 
-    protected String packageName;
-
     protected Set<String> importPackageNames;
 
     protected String shortClassName;
 
     protected String shortBaseClassName;
 
-    public EntityModel getEntityModel() {
-        return entityModel;
+    public EntityCode(EntityModel entityModel, String className,
+            String baseClassName, String templateName) {
+        super(className, templateName);
+        this.entityModel = entityModel;
+        this.importPackageNames = createImportPackageNames(baseClassName);
+        this.shortClassName = getShortClassName(className);
+        this.shortBaseClassName = getShortClassName(baseClassName);
     }
 
-    public String getPackageName() {
-        return packageName;
+    public EntityModel getEntityModel() {
+        return entityModel;
     }
 
     public Set<String> getImportPackageNames() {
@@ -56,16 +59,6 @@ public class EntityCode extends AbstractJavaCode {
 
     public String getShortBaseClassName() {
         return shortBaseClassName;
-    }
-
-    public EntityCode(EntityModel entityModel, String className,
-            String baseClassName, String templateName) {
-        super(className, templateName);
-        this.entityModel = entityModel;
-        this.packageName = getPackageName(className);
-        this.importPackageNames = createImportPackageNames(baseClassName);
-        this.shortClassName = getShortClassName(className);
-        this.shortBaseClassName = getShortClassName(baseClassName);
     }
 
     protected Set<String> createImportPackageNames(String baseClassName) {

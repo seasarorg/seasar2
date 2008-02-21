@@ -25,27 +25,32 @@ import org.seasar.framework.util.ResourceUtil;
  */
 public class GenEntitiesConstants {
 
-    static String GAP_CLASS_NAME_SUFFIX = "Abstract";
+    public static String GAP_CLASS_NAME_SUFFIX = "Abstract";
 
-    static String ROOT_PACKAGE_NAME = "";
+    public static String ROOT_PACKAGE_NAME = "";
 
-    static String ENTITY_PACKAGE_NAME = "entity";
+    public static String ENTITY_PACKAGE_NAME = "entity";
 
-    static String JDBC_MANAGER_NAME = "jdbcManager";
+    public static String ENTITY_BASE_PACKAGE_NAME = "entity";
 
-    static File TEMPLATE_DIR = ResourceUtil.getResourceAsFile("templates");
+    public static String JDBC_MANAGER_NAME = "jdbcManager";
 
-    static File DEST_DIR = new File("src/main/java");
+    public static File TEMPLATE_DIR = ResourceUtil
+            .getResourceAsFile("templates");
 
-    static String ENCODING = "UTF-8";
+    public static File DEST_DIR = new File("src/main/java");
 
-    static String VERSION_COLUMN_NAME = "versionColumn";
+    public static String TEMPLATE_ENCODING = "UTF-8";
 
-    static String ENTITY_TEMPLATE_NAME = "entityCode.ftl";
+    public static String JAVA_CODE_ENCODING = "UTF-8";
 
-    static String ENTITU_BASE_TEMPLATE_NAME = "entityBaseCode.ftl";
+    public static String VERSION_COLUMN_NAME = "versionColumn";
 
-    static String DICON_NAME = "s2jdbc.dicon";
+    public static String ENTITY_TEMPLATE_NAME = "entityCode.ftl";
 
-    static String SCHEMA_NAME = null;
+    public static String ENTITU_BASE_TEMPLATE_NAME = "entityBaseCode.ftl";
+
+    public static String DICON_NAME = "s2jdbc.dicon";
+
+    public static String SCHEMA_NAME = null;
 }

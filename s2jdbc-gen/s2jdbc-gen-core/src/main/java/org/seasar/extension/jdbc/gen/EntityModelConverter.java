@@ -15,24 +15,14 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
+import org.seasar.extension.jdbc.gen.model.DbTableDesc;
+import org.seasar.extension.jdbc.gen.model.EntityModel;
 
 /**
  * @author taedium
  * 
  */
-public interface JavaCode {
+public interface EntityModelConverter {
 
-    String EXT = ".java";
-
-    String getPackageName();
-
-    String getClassName();
-
-    String getTemplateName();
-
-    File getPackageDir(File baseDir);
-
-    File getFile(File baseDir);
-
+    EntityModel convert(DbTableDesc tableDesc);
 }
