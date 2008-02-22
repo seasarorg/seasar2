@@ -229,74 +229,16 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     @Override
     public List<Method> getTestMethods(final Class<?> clazz) {
         final List<Method> results = new ArrayList<Method>();
-        for (Class<?> eachClass : getSuperClasses(clazz)) {
+        for (Class<?> eachClass : IntrospectorUtil.getSuperClasses(clazz)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
                 if (isTestMethod(eachMethod)
-                        && !isShadowed(eachMethod, results)) {
+                        && !IntrospectorUtil.isShadowed(eachMethod, results)) {
                     results.add(eachMethod);
                 }
             }
         }
         return results;
-    }
-
-    /**
-     * スーパークラスのリストを返します。
-     * 
-     * @param clazz
-     *            基点となるクラス
-     * @return スーパークラスのリスト
-     */
-    protected List<Class<?>> getSuperClasses(final Class<?> clazz) {
-        final ArrayList<Class<?>> results = new ArrayList<Class<?>>();
-        Class<?> current = clazz;
-        while (current != null && current != Object.class) {
-            results.add(current);
-            current = current.getSuperclass();
-        }
-        return results;
-    }
-
-    /**
-     * <code>method</code>が<code>result</code>内のメソッドに隠蔽されるならば<code>true</code>を返します。
-     * 
-     * @param method
-     *            検査の対象のメソッド
-     * @param results
-     *            隠蔽されていないメソッドのリスト
-     * @return <code>result</code>内のメソッドに<code>method</code>が隠蔽される場合<code>true</code>、そうでない場合<code>false</code>
-     */
-    protected boolean isShadowed(final Method method, final List<Method> results) {
-        for (final Method each : results) {
-            if (isShadowed(method, each))
-                return true;
-        }
-        return false;
-    }
-
-    /**
-     * <code>current</code>が<code>previous</code>に隠蔽される場合<code>true</code>を返します。
-     * 
-     * @param current
-     *            検査の対象のメソッド
-     * @param previous
-     *            隠蔽されていないメソッド
-     * @return <<code>current</code>が<code>previous</code>に隠蔽される場合<code>true</code>、そうでない場合<code>false</code>
-     */
-    protected boolean isShadowed(final Method current, final Method previous) {
-        if (!previous.getName().equals(current.getName())) {
-            return false;
-        }
-        if (previous.getParameterTypes().length != current.getParameterTypes().length) {
-            return false;
-        }
-        for (int i = 0; i < previous.getParameterTypes().length; i++) {
-            if (!previous.getParameterTypes()[i].equals(current
-                    .getParameterTypes()[i]))
-                return false;
-        }
-        return true;
     }
 
     /**
@@ -415,7 +357,7 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
      * @return 指定されたメソッド、メソッドが見つからない場合<code>null</code>
      */
     protected Method getMethod(final Class<?> clazz, final String methodName) {
-        for (Class<?> eachClass : getSuperClasses(clazz)) {
+        for (Class<?> eachClass : IntrospectorUtil.getSuperClasses(clazz)) {
             final Method[] methods = eachClass.getDeclaredMethods();
             for (final Method eachMethod : methods) {
                 if (eachMethod.getName().equals(methodName)) {

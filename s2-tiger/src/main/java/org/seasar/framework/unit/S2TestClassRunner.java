@@ -16,8 +16,13 @@
 package org.seasar.framework.unit;
 
 import org.junit.internal.runners.InitializationError;
-import org.junit.internal.runners.TestClassRunner;
+import org.junit.runner.Description;
 import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
+import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 
 /**
@@ -25,7 +30,9 @@ import org.junit.runner.notification.RunNotifier;
  * 
  * @author taedium
  */
-public class S2TestClassRunner extends TestClassRunner {
+public class S2TestClassRunner extends Runner implements Filterable, Sortable {
+
+    private final Runner delegate;
 
     /**
      * インスタンスを構築します。
@@ -39,11 +46,37 @@ public class S2TestClassRunner extends TestClassRunner {
      */
     public S2TestClassRunner(final Class<?> clazz, final Runner runner)
             throws InitializationError {
-        super(clazz, runner);
+        delegate = runner;
+        final S2MethodValidator methodValidator = new S2MethodValidator(clazz);
+        validate(methodValidator);
+        methodValidator.assertValid();
+    }
+
+    /**
+     * メソッドの検証を実行します。
+     * 
+     * @param methodValidator
+     *            メソッドバリデータ
+     */
+    protected void validate(final S2MethodValidator methodValidator) {
+        methodValidator.validateMethodsForDefaultRunner();
     }
 
     @Override
     public void run(final RunNotifier notifier) {
-        fEnclosedRunner.run(notifier);
+        delegate.run(notifier);
+    }
+
+    @Override
+    public Description getDescription() {
+        return delegate.getDescription();
+    }
+
+    public void filter(Filter filter) throws NoTestsRemainException {
+        filter.apply(delegate);
+    }
+
+    public void sort(Sorter sorter) {
+        sorter.apply(delegate);
     }
 }

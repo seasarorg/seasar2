@@ -17,6 +17,7 @@ package org.seasar.framework.unit.impl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.Test.None;
-import org.junit.internal.runners.TestIntrospector;
 import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
@@ -137,24 +137,53 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
     }
 
     public List<Method> getBeforeClassMethods(final Class<?> clazz) {
-        return new TestIntrospector(clazz)
-                .getTestMethods(beforeClassAnnotation);
+        return getAnnotatedMethods(clazz, beforeClassAnnotation);
     }
 
     public List<Method> getAfterClassMethods(final Class<?> clazz) {
-        return new TestIntrospector(clazz).getTestMethods(afterClassAnnotation);
+        return getAnnotatedMethods(clazz, afterClassAnnotation);
     }
 
     public List<Method> getBeforeMethods(final Class<?> clazz) {
-        return new TestIntrospector(clazz).getTestMethods(beforeAnnotation);
+        return getAnnotatedMethods(clazz, beforeAnnotation);
     }
 
     public List<Method> getAfterMethods(final Class<?> clazz) {
-        return new TestIntrospector(clazz).getTestMethods(afterAnnotation);
+        return getAnnotatedMethods(clazz, afterAnnotation);
     }
 
     public List<Method> getTestMethods(final Class<?> clazz) {
-        return new TestIntrospector(clazz).getTestMethods(Test.class);
+        return getAnnotatedMethods(clazz, Test.class);
+    }
+
+    /**
+     * アノテーションが付与されたメソッドのリストを返します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @param annotationClass
+     *            アノテーションクラス
+     * @return アノテーションが付与されたメソッドのリスト
+     */
+    protected List<Method> getAnnotatedMethods(Class<?> clazz,
+            Class<? extends Annotation> annotationClass) {
+        List<Method> results = IntrospectorUtil.getAnnotatedMethods(clazz,
+                annotationClass);
+        if (runsTopToBottom(annotationClass))
+            Collections.reverse(results);
+        return results;
+    }
+
+    /**
+     * クラスの階層構造の上位から実行するならば<code>true</code>を返します。
+     * 
+     * @param annotation
+     *            アノテーション
+     * @return クラスの階層構造の上位から実行するならば<code>true</code>
+     */
+    protected boolean runsTopToBottom(Class<? extends Annotation> annotation) {
+        return annotation.equals(Before.class)
+                || annotation.equals(BeforeClass.class);
     }
 
     public Method getEachBeforeMethod(final Class<?> clazz, final Method method) {

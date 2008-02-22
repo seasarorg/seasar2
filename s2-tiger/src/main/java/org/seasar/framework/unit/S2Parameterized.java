@@ -23,7 +23,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 
 import org.junit.internal.runners.CompositeRunner;
-import org.junit.internal.runners.MethodValidator;
 import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.*;
@@ -147,7 +146,7 @@ public class S2Parameterized extends S2TestClassRunner {
     }
 
     @Override
-    protected void validate(final MethodValidator methodValidator) {
+    protected void validate(final S2MethodValidator methodValidator) {
         methodValidator.validateStaticMethods();
         methodValidator.validateInstanceMethods();
     }

@@ -37,7 +37,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.internal.runners.TestClassRunner;
+import org.junit.internal.runners.JUnit4ClassRunner;
 import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
@@ -2031,7 +2031,7 @@ public class Seasar2Test extends TestCase {
     public static class NormalJunit4 implements Seasar2.Provider {
 
         public Runner createTestClassRunner(Class<?> clazz) throws Exception {
-            return new TestClassRunner(clazz);
+            return new JUnit4ClassRunner(clazz);
         }
     }
 
