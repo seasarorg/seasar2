@@ -23,7 +23,6 @@ import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.task.GenTask;
 import org.seasar.framework.exception.IORuntimeException;
 
 import static org.junit.Assert.*;
@@ -36,6 +35,10 @@ public class GenTaskTest {
 
     private ClassLoader classLoader;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         String classpath = System.getProperty("java.class.path");
@@ -49,24 +52,36 @@ public class GenTaskTest {
         classLoader = new ChildFirstClassLoader(cl);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testToURLs() throws Exception {
-        GenTask genTask = new GenTask();
+        GenTask genTask = new GenTask("dummy");
         URL[] urls = genTask.toURLs(new String[] { "a", "b", "c" });
         assertEquals(3, urls.length);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testLoadClass() throws Exception {
-        GenTask genTask = new GenTask();
+        GenTask genTask = new GenTask("dummy");
         Class<?> clazz = genTask.loadClass(getClass().getName() + "$Hoge",
                 classLoader);
         assertEquals(classLoader, clazz.getClassLoader());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testExecute() throws Exception {
-        GenTask genTask = new GenTask();
+        GenTask genTask = new GenTask("dummy");
         Class<?> clazz = Class.forName(getClass().getName() + "$Hoge", true,
                 classLoader);
         Object hoge = clazz.newInstance();
@@ -77,27 +92,49 @@ public class GenTaskTest {
         assertEquals(classLoader, foo.getClass().getClassLoader());
     }
 
+    /**
+     * 
+     */
     public static class Hoge {
 
+        /**
+         * 
+         */
         public Foo foo;
 
+        /**
+         * 
+         */
         public void execute() {
             foo = new Foo();
         }
 
     }
 
+    /**
+     * 
+     */
     public static class Foo {
     }
 
+    /**
+     * 
+     */
     public static class ChildFirstClassLoader extends ClassLoader {
 
+        /**
+         * 
+         * @param parent
+         */
         public ChildFirstClassLoader(ClassLoader parent) {
             super(parent);
         }
 
+        /**
+         * 
+         */
         @Override
-        protected synchronized Class loadClass(String name, boolean resolve)
+        protected synchronized Class<?> loadClass(String name, boolean resolve)
                 throws ClassNotFoundException {
             if (!name.equals(Hoge.class.getName())
                     && !name.equals(Foo.class.getName())) {

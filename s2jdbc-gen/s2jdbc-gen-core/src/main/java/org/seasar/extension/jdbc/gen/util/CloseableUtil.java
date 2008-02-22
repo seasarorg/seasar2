@@ -13,12 +13,34 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.exception;
+package org.seasar.extension.jdbc.gen.util;
+
+import java.io.Closeable;
+import java.io.IOException;
+
+import org.seasar.framework.exception.IORuntimeException;
 
 /**
- * @author taedium
+ * {@link Closeable}のユーティリティクラスです。
  * 
+ * @author taedium
  */
-public class TooManyRootPackageNameRuntimeException extends RuntimeException {
+public class CloseableUtil {
 
+    private CloseableUtil() {
+    }
+
+    /**
+     * クローズします。
+     * 
+     * @param closeable
+     *            {@link Closeable}
+     */
+    public static void close(Closeable closeable) {
+        try {
+            closeable.close();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }

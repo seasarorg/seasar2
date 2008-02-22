@@ -25,6 +25,9 @@ import static org.junit.Assert.*;
  */
 public class BeanUtilTest {
 
+    /**
+     * 
+     */
     @Test
     public void testCopy() {
         Src src = new Src();
@@ -37,6 +40,10 @@ public class BeanUtilTest {
         assertEquals("foo", dest.getCcc());
     }
 
+    /**
+     * 
+     * 
+     */
     public static class Src {
 
         private String aaa;
@@ -45,32 +52,61 @@ public class BeanUtilTest {
 
         private String ccc;
 
+        /**
+         * 
+         * @return
+         */
         public String getAaa() {
             return aaa;
         }
 
+        /**
+         * 
+         * @param aaa
+         */
         public void setAaa(String aaa) {
             this.aaa = aaa;
         }
 
+        /**
+         * 
+         * @return
+         */
         public String getBbb() {
             return bbb;
         }
 
+        /**
+         * 
+         * @param bbb
+         */
         public void setBbb(String bbb) {
             this.bbb = bbb;
         }
 
+        /**
+         * 
+         * @return
+         */
         public String getCcc() {
             return ccc;
         }
 
+        /**
+         * 
+         * @param ccc
+         */
         public void setCcc(String ccc) {
             this.ccc = ccc;
         }
 
     }
 
+    /**
+     * 
+     * @author taedium
+     * 
+     */
     public static class Dest {
 
         private String aaa;
@@ -79,26 +115,50 @@ public class BeanUtilTest {
 
         private String ccc;
 
+        /**
+         * 
+         * @return
+         */
         public String getAaa() {
             return aaa;
         }
 
+        /**
+         * 
+         * @param aaa
+         */
         public void setAaa(String aaa) {
             this.aaa = aaa;
         }
 
+        /**
+         * 
+         * @return
+         */
         public String getBbb() {
             return bbb;
         }
 
+        /**
+         * 
+         * @param bbb
+         */
         public void setBbb(String bbb) {
             this.bbb = bbb;
         }
 
+        /**
+         * 
+         * @return
+         */
         public String getCcc() {
             return ccc;
         }
 
+        /**
+         * 
+         * @param ccc
+         */
         public void setCcc(String ccc) {
             this.ccc = ccc;
         }

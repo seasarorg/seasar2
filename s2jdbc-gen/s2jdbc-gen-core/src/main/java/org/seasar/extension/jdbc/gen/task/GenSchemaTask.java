@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.task;
 
+import org.seasar.extension.jdbc.gen.command.GenSchemaCommand;
+
 /**
  * @author taedium
  * 
@@ -25,6 +27,6 @@ public class GenSchemaTask extends GenTask {
      * インスタンスを構築します。
      */
     public GenSchemaTask() {
-        super("org.seasar.extension.jdbc.gen.command.GenSchemaCommand");
+        super(GenSchemaCommand.class.getName());
     }
 }

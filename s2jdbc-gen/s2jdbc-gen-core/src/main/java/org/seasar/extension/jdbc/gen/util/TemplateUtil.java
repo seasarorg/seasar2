@@ -25,17 +25,29 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 /**
- * @author taedium
+ * {@link Template}のユーティリティクラスです。
  * 
+ * @author taedium
  */
 public class TemplateUtil {
 
     private TemplateUtil() {
     }
 
-    public static void process(Template template, Object rootMap, Writer out) {
+    /**
+     * テンプレートを処理します。
+     * 
+     * @param template
+     *            テンプレート
+     * @param dataModel
+     *            データモデル
+     * @param writer
+     * @link {@link Writer}
+     */
+    public static void process(Template template, Object dataModel,
+            Writer writer) {
         try {
-            template.process(rootMap, out);
+            template.process(dataModel, writer);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         } catch (TemplateException e) {

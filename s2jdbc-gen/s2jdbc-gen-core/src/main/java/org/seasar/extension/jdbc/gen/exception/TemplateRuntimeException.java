@@ -15,13 +15,25 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
-/**
- * @author taedium
- * 
- */
-public class TemplateRuntimeException extends RuntimeException {
+import org.seasar.framework.exception.SRuntimeException;
 
-    public TemplateRuntimeException(Throwable t) {
-        super(t);
+import freemarker.template.TemplateException;
+
+/**
+ * <code>TemplateException</code>をラップする例外です。
+ * 
+ * @author taedium
+ */
+public class TemplateRuntimeException extends SRuntimeException {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * {@link TemplateRuntimeException}を生成します。
+     * 
+     * @param cause
+     */
+    public TemplateRuntimeException(TemplateException cause) {
+        super("ESSR0017", new Object[] { cause }, cause);
     }
 }

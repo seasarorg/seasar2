@@ -24,30 +24,24 @@ import java.net.URLClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.seasar.extension.jdbc.gen.util.BeanUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author taedium
+ * 生成するタスクです。
  * 
+ * @author taedium
  */
 public class GenTask extends Task {
 
+    /** このタスクから実行するコマンドクラスの名前 */
     protected String commandClassName;
 
-    protected String classpathRef;
-
-    public void setClasspathRef(String classpathRef) {
-        this.classpathRef = classpathRef;
-    }
-
-    /**
-     * インスタンスを構築します。
-     */
-    public GenTask() {
-    }
+    /** クラスパス */
+    protected Path classpath;
 
     /**
      * 指定されたクラス名でインスタンスを構築します。
@@ -61,8 +55,7 @@ public class GenTask extends Task {
 
     @Override
     public void execute() throws BuildException {
-        Path path = (Path) getProject().getReference(classpathRef);
-        URL[] urls = toURLs(path.list());
+        URL[] urls = toURLs(classpath.list());
         ClassLoader cl = createClassLoader(urls);
         Class<?> clazz = loadClass(commandClassName, cl);
         Object command = ClassUtil.newInstance(clazz);
@@ -70,6 +63,13 @@ public class GenTask extends Task {
         execute(clazz, command, cl);
     }
 
+    /**
+     * パス文字列の配列を{@link URL}の配列に変換します。
+     * 
+     * @param paths
+     *            パス文字列の配列
+     * @return {@link URL}の配列
+     */
     protected URL[] toURLs(String[] paths) {
         try {
             URL[] urls = new URL[paths.length];
@@ -82,10 +82,26 @@ public class GenTask extends Task {
         }
     }
 
+    /**
+     * {@link URL}の配列からクラスをロードするクラスローダーを作成します。
+     * 
+     * @param urls
+     *            {@link URL}の配列
+     * @return クラスローダー
+     */
     protected ClassLoader createClassLoader(URL[] urls) {
         return new URLClassLoader(urls);
     }
 
+    /**
+     * 指定されたクラスローダーでクラスをロードします。
+     * 
+     * @param className
+     *            クラス名
+     * @param classLoader
+     *            クラスローダー
+     * @return ロードされたクラス
+     */
     protected Class<?> loadClass(String className, ClassLoader classLoader) {
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
@@ -96,10 +112,28 @@ public class GenTask extends Task {
         }
     }
 
+    /**
+     * JavaBeans形式のオブジェクトのプロパティをコピーします。
+     * 
+     * @param src
+     *            コピー元
+     * @param dest
+     *            コピー先
+     */
     protected void copy(Object src, Object dest) {
         BeanUtil.copy(this, dest);
     }
 
+    /**
+     * コマンドを実行します。
+     * 
+     * @param clazz
+     *            コマンドクラス
+     * @param command
+     *            コマンドのインスタンス
+     * @param classLoader
+     *            コマンドを実行するクラスローダー
+     */
     protected void execute(Class<?> clazz, Object command,
             ClassLoader classLoader) {
         Method method = ClassUtil.getMethod(clazz, "execute", null);
@@ -110,6 +144,38 @@ public class GenTask extends Task {
         } finally {
             Thread.currentThread().setContextClassLoader(original);
         }
+    }
+
+    /**
+     * クラスパスを設定します。
+     * 
+     * @param classpath
+     *            クラスパス
+     */
+    public void setClasspath(Path classpath) {
+        createClasspath().append(classpath);
+    }
+
+    /**
+     * クラスパスの参照を設定します。
+     * 
+     * @param reference
+     *            クラスパスの参照
+     */
+    public void setClasspathRef(Reference reference) {
+        createClasspath().setRefid(reference);
+    }
+
+    /**
+     * クラスパスを作成します。
+     * 
+     * @return クラスパス
+     */
+    protected Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(getProject());
+        }
+        return classpath.createPath();
     }
 
 }

@@ -13,27 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.util;
+package org.seasar.extension.jdbc.gen.command;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * @author taedium
- * 
+ *
  */
-public class WriterUtil {
+public class GenSchemaCommand {
 
-    private WriterUtil() {
-    }
-
-    public static void close(Writer writer) {
-        try {
-            writer.close();
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-    }
 }

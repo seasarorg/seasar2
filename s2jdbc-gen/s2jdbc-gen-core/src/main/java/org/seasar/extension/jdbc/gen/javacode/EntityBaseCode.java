@@ -73,14 +73,18 @@ public class EntityBaseCode extends AbstractJavaCode {
                 if (!entityModel.isCompositeId()) {
                     packageNames.add(GeneratedValue.class.getName());
                 }
-            } else if (pm.isLob()) {
+            }
+            if (pm.isLob()) {
                 packageNames.add(Lob.class.getName());
-            } else if (pm.getTemporalType() != null) {
+            }
+            if (pm.getTemporalType() != null) {
                 packageNames.add(Temporal.class.getName());
                 packageNames.add(TemporalType.class.getName());
-            } else if (pm.isTransient()) {
+            }
+            if (pm.isTransient()) {
                 packageNames.add(Transient.class.getName());
-            } else if (pm.isVersion()) {
+            }
+            if (pm.isVersion()) {
                 packageNames.add(Version.class.getName());
             }
 

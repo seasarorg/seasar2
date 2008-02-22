@@ -20,14 +20,23 @@ import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
- * @author taedium
+ * JavaBeansに関するユーティリティークラスです。
  * 
+ * @author taedium
  */
 public class BeanUtil {
 
     private BeanUtil() {
     }
 
+    /**
+     * JavaBeansのプロパティをコピーします。
+     * 
+     * @param src
+     *            コピー元
+     * @param dest
+     *            コピー先
+     */
     public static void copy(Object src, Object dest) {
         BeanDesc srcBeanDesc = BeanDescFactory.getBeanDesc(src.getClass());
         BeanDesc destBeanDesc = BeanDescFactory.getBeanDesc(dest.getClass());

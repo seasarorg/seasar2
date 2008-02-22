@@ -50,7 +50,7 @@ public class GenEntitiesConstants {
 
     public static String ENTITU_BASE_TEMPLATE_NAME = "entityBaseCode.ftl";
 
-    public static String DICON_NAME = "s2jdbc.dicon";
+    public static String DICON_FILE = "s2jdbc.dicon";
 
     public static String SCHEMA_NAME = null;
 }

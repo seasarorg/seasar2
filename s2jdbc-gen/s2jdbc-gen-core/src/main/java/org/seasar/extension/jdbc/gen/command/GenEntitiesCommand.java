@@ -17,7 +17,10 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -30,7 +33,6 @@ import org.seasar.extension.jdbc.gen.SchemaReader;
 import org.seasar.extension.jdbc.gen.converter.EntityModelConverterImpl;
 import org.seasar.extension.jdbc.gen.converter.PropertyModelConverterImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.exception.TooManyRootPackageNameRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.JavaCodeGeneratorImpl;
 import org.seasar.extension.jdbc.gen.javacode.EntityBaseCode;
 import org.seasar.extension.jdbc.gen.javacode.EntityCode;
@@ -55,7 +57,7 @@ import static org.seasar.extension.jdbc.gen.command.GenEntitiesConstants.*;
  */
 public class GenEntitiesCommand {
 
-    protected String diconName;
+    protected String diconFile;
 
     protected String jdbcManagerName;
 
@@ -65,7 +67,7 @@ public class GenEntitiesCommand {
 
     protected String entityBasePackageName;
 
-    protected String baseClassNameSuffix;
+    protected String entityBaseClassNameSuffix;
 
     protected File destDir;
 
@@ -76,6 +78,8 @@ public class GenEntitiesCommand {
     protected String templateEncoding;
 
     protected String schemaName;
+
+    protected String tableNamePattern;
 
     protected String versionColumnName;
 
@@ -94,8 +98,8 @@ public class GenEntitiesCommand {
     public GenEntitiesCommand() {
     }
 
-    public void setDiconName(String diconName) {
-        this.diconName = diconName;
+    public void setDiconFile(String diconFile) {
+        this.diconFile = diconFile;
     }
 
     public void setJdbcManagerName(String jdbcManagerName) {
@@ -114,8 +118,8 @@ public class GenEntitiesCommand {
         this.entityBasePackageName = entityBasePackageName;
     }
 
-    public void setBaseClassNameSuffix(String baseClassNameSuffix) {
-        this.baseClassNameSuffix = baseClassNameSuffix;
+    public void setEntityBaseClassNameSuffix(String entityBaseClassNameSuffix) {
+        this.entityBaseClassNameSuffix = entityBaseClassNameSuffix;
     }
 
     public void setTemplateDir(File templateDir) {
@@ -138,6 +142,10 @@ public class GenEntitiesCommand {
         this.schemaName = schemaName;
     }
 
+    public void setTableNamePattern(String tableNamePattern) {
+        this.tableNamePattern = tableNamePattern;
+    }
+
     public void setVersionColumnName(String versionColumnName) {
         this.versionColumnName = versionColumnName;
     }
@@ -145,8 +153,7 @@ public class GenEntitiesCommand {
     public void execute() {
         init();
         try {
-            SchemaReader reader = createSchemaReader();
-            generate(convert(reader.getDbTableDescs(schemaName)));
+            generate(convert(filter(read())));
         } finally {
             destroy();
         }
@@ -156,7 +163,7 @@ public class GenEntitiesCommand {
         setupDefaults();
         if (!SingletonS2ContainerFactory.hasContainer()) {
             initialized = true;
-            SingletonS2ContainerFactory.setConfigPath(diconName);
+            SingletonS2ContainerFactory.setConfigPath(diconFile);
             SingletonS2ContainerFactory.init();
         }
         S2Container container = SingletonS2ContainerFactory.getContainer();
@@ -169,26 +176,23 @@ public class GenEntitiesCommand {
         if (container.hasComponentDef(NamingConvention.class)) {
             NamingConvention nc = (NamingConvention) container
                     .getComponent(NamingConvention.class);
-            if (nc.getRootPackageNames().length > 0) {
-                if (nc.getRootPackageNames().length > 1) {
-                    throw new TooManyRootPackageNameRuntimeException();
-                }
-                if (!ROOT_PACKAGE_NAME.equals(rootPackageName)) {
+            if (ROOT_PACKAGE_NAME.equals(rootPackageName)) {
+                if (nc.getRootPackageNames().length > 0) {
                     rootPackageName = nc.getRootPackageNames()[0];
                 }
-                if (!ENTITY_PACKAGE_NAME.equals(entityPackageName)) {
-                    entityPackageName = nc.getEntityPackageName();
-                }
-                if (!ENTITY_BASE_PACKAGE_NAME.equals(entityBasePackageName)) {
-                    entityBasePackageName = nc.getEntityPackageName();
-                }
+            }
+            if (ENTITY_PACKAGE_NAME.equals(entityPackageName)) {
+                entityPackageName = nc.getEntityPackageName();
+            }
+            if (ENTITY_BASE_PACKAGE_NAME.equals(entityBasePackageName)) {
+                entityBasePackageName = nc.getEntityPackageName();
             }
         }
     }
 
     protected void setupDefaults() {
-        if (diconName == null) {
-            diconName = DICON_NAME;
+        if (diconFile == null) {
+            diconFile = DICON_FILE;
         }
         if (jdbcManagerName == null) {
             jdbcManagerName = JDBC_MANAGER_NAME;
@@ -202,8 +206,8 @@ public class GenEntitiesCommand {
         if (entityBasePackageName == null) {
             entityBasePackageName = ENTITY_PACKAGE_NAME;
         }
-        if (baseClassNameSuffix == null) {
-            baseClassNameSuffix = GAP_CLASS_NAME_SUFFIX;
+        if (entityBaseClassNameSuffix == null) {
+            entityBaseClassNameSuffix = GAP_CLASS_NAME_SUFFIX;
         }
         if (destDir == null) {
             destDir = DEST_DIR;
@@ -237,8 +241,24 @@ public class GenEntitiesCommand {
         }
     }
 
+    protected List<DbTableDesc> read() {
+        SchemaReader reader = createSchemaReader();
+        return reader.getDbTableDescs(schemaName);
+    }
+
     protected SchemaReader createSchemaReader() {
         return new SchemaReaderImpl(dataSource, dialect);
+    }
+
+    protected List<DbTableDesc> filter(List<DbTableDesc> tableDescs) {
+        Pattern p = Pattern.compile(tableNamePattern, Pattern.CASE_INSENSITIVE);
+        for (Iterator<DbTableDesc> it = tableDescs.iterator(); it.hasNext();) {
+            String name = it.next().getName();
+            if (!p.matcher(name).matches()) {
+                it.remove();
+            }
+        }
+        return tableDescs;
     }
 
     protected List<EntityModel> convert(List<DbTableDesc> tableDescs) {
@@ -276,11 +296,12 @@ public class GenEntitiesCommand {
     protected JavaCodeGenerator createJavaCodeGenerator() {
         Configuration cfg = new Configuration();
         cfg.setObjectWrapper(new DefaultObjectWrapper());
+        cfg.setEncoding(Locale.getDefault(), templateEncoding);
         ConfigurationUtil.setDirectoryForTemplateLoading(cfg, templateDir);
-        return new JavaCodeGeneratorImpl(cfg, destDir, templateEncoding);
+        return new JavaCodeGeneratorImpl(cfg, destDir, javaCodeEncoding);
     }
 
-    protected EntityCode createEntityCode(EntityModel entityModel) {
+    protected JavaCode createEntityCode(EntityModel entityModel) {
         String entityClassName = getEntityClassName(entityModel.getName());
         String entityBaseClassName = getEntityBaseClassName(entityModel
                 .getName());
@@ -288,7 +309,7 @@ public class GenEntitiesCommand {
                 entityBaseClassName, entityTemplateName);
     }
 
-    protected EntityBaseCode createEntityBaseCode(EntityModel entityModel) {
+    protected JavaCode createEntityBaseCode(EntityModel entityModel) {
         String entityBaseClassName = getEntityBaseClassName(entityModel
                 .getName());
         return new EntityBaseCode(entityModel, entityBaseClassName,
@@ -301,7 +322,7 @@ public class GenEntitiesCommand {
 
     protected String getEntityBaseClassName(String entityName) {
         return getClassName(rootPackageName, entityBasePackageName,
-                baseClassNameSuffix + entityName);
+                entityBaseClassNameSuffix + entityName);
     }
 
     protected String getClassName(String rootPackageName,

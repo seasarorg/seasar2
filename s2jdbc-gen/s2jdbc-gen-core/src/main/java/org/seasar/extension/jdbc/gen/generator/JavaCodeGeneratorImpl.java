@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.JavaCode;
 import org.seasar.extension.jdbc.gen.JavaCodeGenerator;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.gen.util.TemplateUtil;
-import org.seasar.extension.jdbc.gen.util.WriterUtil;
+import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 import freemarker.template.Configuration;
@@ -57,7 +57,7 @@ public class JavaCodeGeneratorImpl implements JavaCodeGenerator {
                     javaCode.getTemplateName());
             TemplateUtil.process(template, javaCode, writer);
         } finally {
-            WriterUtil.close(writer);
+            CloseableUtil.close(writer);
         }
     }
 

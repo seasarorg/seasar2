@@ -24,14 +24,23 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
- * @author taedium
+ * {@link Configuration}のユーティリティークラスです。
  * 
+ * @author taedium
  */
 public class ConfigurationUtil {
 
     private ConfigurationUtil() {
     }
 
+    /**
+     * テンプレートファイルを格納するディレクトリを設定します。
+     * 
+     * @param configuration
+     *            {@link Configuration}
+     * @param dir
+     *            テンプレートファイルを格納するディレクトリ
+     */
     public static void setDirectoryForTemplateLoading(
             Configuration configuration, File dir) {
         try {
@@ -41,6 +50,15 @@ public class ConfigurationUtil {
         }
     }
 
+    /**
+     * {@link Template}を取得します。
+     * 
+     * @param configuration
+     *            {@link Configuration}
+     * @param name
+     *            テンプレートの名前
+     * @return {@link Template}
+     */
     public static Template getTemplate(Configuration configuration, String name) {
         try {
             return configuration.getTemplate(name);
