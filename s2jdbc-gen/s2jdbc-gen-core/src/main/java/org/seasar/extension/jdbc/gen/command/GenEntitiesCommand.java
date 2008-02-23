@@ -387,7 +387,7 @@ public class GenEntitiesCommand implements GenCommand {
         for (int i = 0; i < propSize; i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             if (!propertyDesc.hasWriteMethod()) {
-                return;
+                continue;
             }
             Field f = propertyDesc.getField();
             logger.log("DS2JDBCGen0001", new Object[] { f.getName(),
