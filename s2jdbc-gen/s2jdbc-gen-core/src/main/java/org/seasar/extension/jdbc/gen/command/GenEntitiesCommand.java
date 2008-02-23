@@ -17,10 +17,8 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -257,7 +255,7 @@ public class GenEntitiesCommand implements GenCommand {
     public void execute() {
         init();
         try {
-            generate(convert(filter(read())));
+            generate(convert(read()));
         } finally {
             destroy();
         }
@@ -363,7 +361,7 @@ public class GenEntitiesCommand implements GenCommand {
      */
     protected List<DbTableDesc> read() {
         SchemaReader reader = createSchemaReader();
-        return reader.read(schemaName);
+        return reader.read(schemaName, tableNamePattern);
     }
 
     /**
@@ -373,24 +371,6 @@ public class GenEntitiesCommand implements GenCommand {
      */
     protected SchemaReader createSchemaReader() {
         return new SchemaReaderImpl(dataSource, dialect);
-    }
-
-    /**
-     * {@link DbTableDesc}をフィルタします
-     * 
-     * @param tableDescs
-     *            テーブル記述
-     * @return フィルタされた{@link DbTableDesc}のリスト
-     */
-    protected List<DbTableDesc> filter(List<DbTableDesc> tableDescs) {
-        Pattern p = Pattern.compile(tableNamePattern, Pattern.CASE_INSENSITIVE);
-        for (Iterator<DbTableDesc> it = tableDescs.iterator(); it.hasNext();) {
-            String name = it.next().getName();
-            if (!p.matcher(name).matches()) {
-                it.remove();
-            }
-        }
-        return tableDescs;
     }
 
     /**

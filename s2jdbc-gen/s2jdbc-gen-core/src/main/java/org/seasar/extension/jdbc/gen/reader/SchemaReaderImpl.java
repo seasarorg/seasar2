@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
@@ -62,14 +63,16 @@ public class SchemaReaderImpl implements SchemaReader {
         this.dialect = dialect;
     }
 
-    public List<DbTableDesc> read(String schemaName) {
+    public List<DbTableDesc> read(String schemaName, String tableNamePattern) {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
             String schema = schemaName != null ? schemaName
                     : getDefaultSchemaName(metaData);
+            List<String> tables = getTables(metaData, schemaName);
+
             List<DbTableDesc> result = new ArrayList<DbTableDesc>();
-            for (String table : getTables(metaData, schema)) {
+            for (String table : filterTables(tables, tableNamePattern)) {
                 if (!dialect.isUserTable(table)) {
                     continue;
                 }
@@ -107,17 +110,17 @@ public class SchemaReaderImpl implements SchemaReader {
     /**
      * テーブル名のセットを返します。
      * 
-     * @param metadata
+     * @param metaData
      *            メタデータ
      * @param schemaName
      *            スキーマ名
      * @return テーブル名のセット
      */
-    protected List<String> getTables(DatabaseMetaData metadata,
+    protected List<String> getTables(DatabaseMetaData metaData,
             String schemaName) {
         List<String> result = new ArrayList<String>();
         try {
-            ResultSet rs = metadata.getTables(null, schemaName, null,
+            ResultSet rs = metaData.getTables(null, schemaName, null,
                     new String[] { "TABLE" });
             try {
                 while (rs.next()) {
@@ -130,6 +133,27 @@ public class SchemaReaderImpl implements SchemaReader {
         } catch (SQLException e) {
             throw new SQLRuntimeException(e);
         }
+    }
+
+    /**
+     * テーブル名をフィルタリングします。
+     * 
+     * @param tables
+     *            テーブル名のリスト
+     * @param tableNamePattern
+     *            テーブル名のパターン
+     * @return フィルタリングされたテーブル名の新しいリスト
+     */
+    protected List<String> filterTables(List<String> tables,
+            String tableNamePattern) {
+        List<String> result = new ArrayList<String>();
+        Pattern p = Pattern.compile(tableNamePattern, Pattern.CASE_INSENSITIVE);
+        for (String tableName : tables) {
+            if (p.matcher(tableName).matches()) {
+                result.add(tableName);
+            }
+        }
+        return result;
     }
 
     /**

@@ -19,6 +19,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -180,6 +181,21 @@ public class SchemaReaderImplTest {
         assertEquals(2, tables.size());
         assertEquals("table1", tables.get(0));
         assertEquals("table2", tables.get(1));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testFilterTables() throws Exception {
+        SchemaReaderImpl reader = new SchemaReaderImpl(null,
+                new StandardGenDialect());
+        List<String> tables = Arrays.asList("AAA", "BBB", "abc");
+        List<String> list = reader.filterTables(tables, "A.*");
+        assertEquals(2, list.size());
+        assertEquals("AAA", list.get(0));
+        assertEquals("abc", list.get(1));
     }
 
 }

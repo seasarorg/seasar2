@@ -35,5 +35,5 @@ public interface SchemaReader {
      *            正規表現で表されたテーブル名のパターン
      * @return テーブル記述
      */
-    List<DbTableDesc> read(String schemaName);
+    List<DbTableDesc> read(String schemaName, String tableNamePattern);
 }
