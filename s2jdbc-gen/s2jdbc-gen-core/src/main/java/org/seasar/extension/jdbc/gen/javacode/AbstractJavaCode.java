@@ -21,20 +21,37 @@ import org.seasar.extension.jdbc.gen.JavaCode;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * {@link JavaCode}の抽象クラスです。
  * 
+ * @author taedium
  */
 public abstract class AbstractJavaCode implements JavaCode {
 
-    protected String packageName;
-
+    /** クラス名 */
     protected String className;
 
+    /** パッケージ名 */
+    protected String packageName;
+
+    /** パッケージ名を除いたクラス名 */
+    protected String shortClassName;
+
+    /** テンプレート名 */
     protected String templateName;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param className
+     *            クラス名
+     * @param templateName
+     *            テンプレート名
+     */
     public AbstractJavaCode(String className, String templateName) {
-        this.packageName = ClassUtil.splitPackageAndShortClassName(className)[0];
         this.className = className;
+        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
+        this.packageName = elements[0];
+        this.shortClassName = elements[1];
         this.templateName = templateName;
     }
 
@@ -44,6 +61,10 @@ public abstract class AbstractJavaCode implements JavaCode {
 
     public String getClassName() {
         return className;
+    }
+
+    public String getShortClassName() {
+        return shortClassName;
     }
 
     public String getTemplateName() {
@@ -57,10 +78,6 @@ public abstract class AbstractJavaCode implements JavaCode {
     public File getFile(File baseDir) {
         return new File(baseDir, className.replace('.', File.separatorChar)
                 + EXT);
-    }
-
-    protected String getShortClassName(String className) {
-        return ClassUtil.splitPackageAndShortClassName(className)[1];
     }
 
 }

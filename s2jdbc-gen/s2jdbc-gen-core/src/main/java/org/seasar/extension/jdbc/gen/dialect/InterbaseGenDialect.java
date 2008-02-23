@@ -16,8 +16,9 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 /**
- * @author taedium
+ * Interbaseの方言を扱うクラスです。
  * 
+ * @author taedium
  */
 public class InterbaseGenDialect extends StandardGenDialect {
 

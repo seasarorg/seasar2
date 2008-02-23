@@ -28,34 +28,50 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntityCodeTest {
+public class EntityJavaCodeTest {
 
     private EntityModel model;
 
-    private EntityCode code;
+    private EntityJavaCode code;
 
+    /**
+     * 
+     */
     @Before
     public void setUp() {
         model = new EntityModel();
-        code = new EntityCode(model, "hoge.Foo", "bar.AbstractFoo",
+        code = new EntityJavaCode(model, "hoge.Foo", "bar.AbstractFoo",
                 "entityCode.ftl");
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetEntityModel() {
         assertEquals(model, code.getEntityModel());
     }
 
+    /**
+     * 
+     */
     @Test
-    public void testGetShortClassName() {
-        assertEquals("Foo", code.getShortClassName());
+    public void testGetBaseClassName() {
+        assertEquals("bar.AbstractFoo", code.getBaseClassName());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetShortBaseClassName() {
         assertEquals("AbstractFoo", code.getShortBaseClassName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetImportPackageNames() throws Exception {
         Set<String> imports = code.getImportPackageNames();

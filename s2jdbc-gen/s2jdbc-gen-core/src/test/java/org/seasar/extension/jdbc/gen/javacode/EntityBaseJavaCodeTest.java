@@ -30,12 +30,15 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntityBaseCodeTest {
+public class EntityBaseJavaCodeTest {
 
     private EntityModel model;
 
-    private EntityBaseCode code;
+    private EntityBaseJavaCode code;
 
+    /**
+     * 
+     */
     @Before
     public void setUp() {
         PropertyModel aaa = new PropertyModel();
@@ -47,20 +50,22 @@ public class EntityBaseCodeTest {
         model = new EntityModel();
         model.addPropertyModel(aaa);
         model.addPropertyModel(bbb);
-        code = new EntityBaseCode(model, "bar.AbstractFoo",
+        code = new EntityBaseJavaCode(model, "bar.AbstractFoo",
                 "entityBaseCode.ftl");
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetEntityModel() {
         assertEquals(model, code.getEntityModel());
     }
 
-    @Test
-    public void testGetShortClassName() {
-        assertEquals("AbstractFoo", code.getShortClassName());
-    }
-
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetImportPackageNames() throws Exception {
         Set<String> imports = code.getImportPackageNames();

@@ -16,8 +16,9 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 /**
- * @author taedium
+ * MS SQL Serverの方言を扱うクラスです。
  * 
+ * @author taedium
  */
 public class MssqlGenDialect extends StandardGenDialect {
 

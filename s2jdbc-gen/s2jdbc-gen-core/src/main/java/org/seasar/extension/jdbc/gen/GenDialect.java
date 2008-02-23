@@ -18,18 +18,62 @@ package org.seasar.extension.jdbc.gen;
 import javax.persistence.TemporalType;
 
 /**
- * @author taedium
+ * RDBMSごとの方言を扱うインタフェースです。
  * 
+ * @author taedium
  */
 public interface GenDialect {
 
-    String getDefaultSchema(String userName);
+    /**
+     * デフォルトのスキーマ名を返します。
+     * 
+     * @param userName
+     *            ユーザー名
+     * @return スキーマ名
+     */
+    String getDefaultSchemaName(String userName);
 
+    /**
+     * ユーザーテーブルならば{@code true}を返します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return ユーザーテーブルならば{@code true}
+     */
     boolean isUserTable(String tableName);
 
+    /**
+     * {@code LOB}型であれば{@code true}を返します。
+     * 
+     * @param sqlType
+     *            SQL型
+     * @param typeName
+     *            型名
+     * @return LOB型であれば{@code true}
+     */
     boolean isLobType(int sqlType, String typeName);
 
+    /**
+     * 時間型を返します。
+     * 
+     * @param sqlType
+     *            SQL型
+     * @param typeName
+     *            型名
+     * @return 時間型
+     */
     TemporalType getTemporalType(int sqlType, String typeName);
 
+    /**
+     * Javaの型を返します。
+     * 
+     * @param sqlType
+     *            SQL型
+     * @param typeName
+     *            型名
+     * @param nullable
+     *            NULLが可能であれば{@code true}
+     * @return Javaの型
+     */
     Class<?> getJavaType(int sqlType, String typeName, boolean nullable);
 }

@@ -25,13 +25,15 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerationDialectManagerTest {
+public class GenDialectManagerTest {
 
+    /**
+     * 
+     */
     @Test
-    public void testGetGenerationDialect() {
-        GenDialect generationDialect = GenDialectManager
-                .getGenerationDialect(new OracleDialect());
-        assertEquals(GenDialectManager.ORACLE, generationDialect);
+    public void testGetDialect() {
+        GenDialect dialect = GenDialectManager.getDialect(new OracleDialect());
+        assertEquals(GenDialectManager.ORACLE, dialect);
     }
 
 }

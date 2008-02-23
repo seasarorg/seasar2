@@ -18,125 +18,161 @@ package org.seasar.extension.jdbc.gen.model;
 import javax.persistence.TemporalType;
 
 /**
- * @author taedium
+ * プロパティのモデルです。
  * 
+ * @author taedium
  */
 public class PropertyModel {
 
+    /** 名前 */
     protected String name;
 
+    /** プロパティのクラス */
     protected Class<?> propertyClass;
 
+    /** 識別子であれば{@code true} */
     protected boolean id;
 
+    /** 時制の種別 */
     protected TemporalType temporalType;
 
+    /** バージョンであれば{@code true} */
     protected boolean version;
 
+    /** 一時的であれば{@code true} */
     protected boolean trnsient;
 
+    /** {@code LOB}であれば{@code true} */
     protected boolean lob;
 
     /**
-     * @return Returns the name.
+     * 名前を返します。
+     * 
+     * @return 名前
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 名前を設定します。
+     * 
      * @param name
-     *            The name to set.
+     *            名前
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the propertyClass.
+     * プロパティのクラスを返します。
+     * 
+     * @return プロパティのクラス
      */
     public Class<?> getPropertyClass() {
         return propertyClass;
     }
 
     /**
+     * プロパティのクラスを設定します。
+     * 
      * @param propertyClass
-     *            The propertyClass to set.
+     *            プロパティのクラス
      */
     public void setPropertyClass(Class<?> propertyClass) {
         this.propertyClass = propertyClass;
     }
 
     /**
-     * @return Returns the id.
+     * 識別子であれば{@code true}を返します。
+     * 
+     * @return 識別子であれば{@code true}、そうでなければ{@code false}
      */
     public boolean isId() {
         return id;
     }
 
     /**
+     * 識別子であれば{@code true}を設定します。
+     * 
      * @param id
-     *            The id to set.
+     *            識別子であれば{@code true}
      */
     public void setId(boolean id) {
         this.id = id;
     }
 
     /**
-     * @return Returns the temporalType.
+     * 時制の種別を返します。
+     * 
+     * @return 時制の種別
      */
     public TemporalType getTemporalType() {
         return temporalType;
     }
 
     /**
+     * 時制の種別を設定します。
+     * 
      * @param temporalType
-     *            The temporalType to set.
+     *            時制の種別
      */
     public void setTemporalType(TemporalType temporalType) {
         this.temporalType = temporalType;
     }
 
     /**
-     * @return Returns the version.
+     * バージョンであれば{@code true}を返します。
+     * 
+     * @return バージョンであれば{@code true}、そうでなければ{@code false}
      */
     public boolean isVersion() {
         return version;
     }
 
     /**
+     * バージョンであれば{@code true}を設定します。
+     * 
      * @param version
-     *            The version to set.
+     *            バージョンであれば{@code true}
      */
     public void setVersion(boolean version) {
         this.version = version;
     }
 
     /**
-     * @return Returns the trnsient.
+     * 一時的であれば{@code true}を返します。
+     * 
+     * @return 一時的であれば{@code true}、そうでなければ{@code false}
      */
     public boolean isTransient() {
         return trnsient;
     }
 
     /**
+     * 一時的であれば{@code true}を設定します。
+     * 
      * @param trnsient
-     *            The trnsient to set.
+     *            一時的であれば{@code true}
      */
     public void setTransient(boolean trnsient) {
         this.trnsient = trnsient;
     }
 
     /**
-     * @return Returns the lob.
+     * {@code LOB}であれば{@code true}を返します。
+     * 
+     * @return {@code LOB}であれば{@code true}、そうでなければ{@code false}
      */
     public boolean isLob() {
         return lob;
     }
 
     /**
+     * {@code LOB}であれば{@code true}を設定します。
+     * 
      * @param lob
-     *            The lob to set.
+     *            {@code LOB}であれば{@code true}
      */
     public void setLob(boolean lob) {
         this.lob = lob;

@@ -41,38 +41,55 @@ import org.seasar.extension.jdbc.gen.GenDialect;
  */
 public class GenDialectManager {
 
+    /** DB2 390の{@code GenDialect} */
     protected static GenDialect DB2_390 = new Db2390GenDialect();
 
+    /** DB2 400の{@code GenDialect} */
     protected static GenDialect DB2_400 = new Db2400GenDialect();
 
+    /** DB2の{@code GenDialect} */
     protected static GenDialect DB2 = new Db2GenDialect();
 
+    /** Derbyの{@code GenDialect} */
     protected static GenDialect DERBY = new DerbyGenDialect();
 
+    /** Firebirdの{@code GenDialect} */
     protected static GenDialect FIREBIRD = new FirebirdGenDialect();
 
+    /** H2の{@code GenDialect} */
     protected static GenDialect H2 = new H2GenDialect();
 
+    /** HSQLDBの{@code GenDialect} */
     protected static GenDialect HSQL = new HsqlGenDialect();
 
+    /** Interbaseの{@code GenDialect} */
     protected static GenDialect INTERBASE = new InterbaseGenDialect();
 
+    /** MaxDBの{@code GenDialect} */
     protected static GenDialect MAXDB = new MaxdbGenDialect();
 
+    /** MS SQL Server 2005の{@code GenDialect} */
     protected static GenDialect MSSQL_2005 = new Mssql2005GenDialect();
 
+    /** MS SQL Serverの{@code GenDialect} */
     protected static GenDialect MSSQL = new MssqlGenDialect();
 
+    /** MySQLの{@code GenDialect} */
     protected static GenDialect MYSQL = new MysqlGenDialect();
 
+    /** Oracleの{@code GenDialect} */
     protected static GenDialect ORACLE = new OracleGenDialect();
 
+    /** PostgreSQLの{@code GenDialect} */
     protected static GenDialect POSTGRE = new PostgreGenDialect();
 
+    /** Sybaseの{@code GenDialect} */
     protected static GenDialect SYBASE = new SybaseGenDialect();
 
+    /** 標準の{@code GenDialect} */
     protected static StandardGenDialect STANDARD = new StandardGenDialect();
 
+    /** {@code DbmsDialect}をキー、{@code GenDialect}を値とするマップ */
     protected static Map<String, GenDialect> dialectMap = new HashMap<String, GenDialect>();
     static {
         dialectMap.put(Db2390Dialect.class.getName(), DB2_390);
@@ -94,7 +111,14 @@ public class GenDialectManager {
     private GenDialectManager() {
     }
 
-    public static GenDialect getGenerationDialect(DbmsDialect dbmsDialect) {
+    /**
+     * {@code DbmsDialect}に対応する{@code GenDialect}を返します。
+     * 
+     * @param dbmsDialect
+     *            {@code DbmsDialect}
+     * @return {@code GenDialect}
+     */
+    public static GenDialect getDialect(DbmsDialect dbmsDialect) {
         String className = dbmsDialect.getClass().getName();
         GenDialect generationDialect = dialectMap.get(className);
         if (generationDialect != null) {

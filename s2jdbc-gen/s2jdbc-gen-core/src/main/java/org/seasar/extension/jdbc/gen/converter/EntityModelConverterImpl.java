@@ -24,15 +24,26 @@ import org.seasar.extension.jdbc.gen.model.PropertyModel;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
- * @author taedium
+ * {@link EntityModelConverter}の実装クラスです。
  * 
+ * @author taedium
  */
 public class EntityModelConverterImpl implements EntityModelConverter {
 
+    /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
+    /** プロパティモデルへのコンバータ */
     protected PropertyModelConverter propertyModelConverter;
 
+    /**
+     * インスタンスを生成します。
+     * 
+     * @param persistenceConvention
+     *            永続化層の命名規約
+     * @param propertyModelConverter
+     *            プロパティモデルへのコンバータ
+     */
     public EntityModelConverterImpl(
             PersistenceConvention persistenceConvention,
             PropertyModelConverter propertyModelConverter) {
@@ -51,6 +62,14 @@ public class EntityModelConverterImpl implements EntityModelConverter {
         return entityModel;
     }
 
+    /**
+     * 名前を処理します。
+     * 
+     * @param tableDesc
+     *            テーブル定義
+     * @param entityModel
+     *            エンティティモデル
+     */
     public void doName(DbTableDesc tableDesc, EntityModel entityModel) {
         entityModel.setName(persistenceConvention
                 .fromTableNameToEntityName(tableDesc.getName()));

@@ -20,27 +20,49 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author taedium
+ * エンティティのモデルです。
  * 
+ * @author taedium
  */
 public class EntityModel {
 
+    /** 名前 */
     protected String name;
 
+    /** 複合IDをもつならば{@code true} */
     protected boolean compositeId;
 
+    /** プロパティモデルのリスト */
     protected List<PropertyModel> propertyModelList = new ArrayList<PropertyModel>();
 
+    /** IDであるプロパティモデルのリスト */
     protected List<PropertyModel> idPropertyModelList = new ArrayList<PropertyModel>();
 
+    /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * プロパティモデルを追加します。
+     * 
+     * @param propertyModel
+     *            プロパティモデル
+     */
     public void addPropertyModel(PropertyModel propertyModel) {
         propertyModelList.add(propertyModel);
         if (propertyModel.isId()) {
@@ -51,15 +73,30 @@ public class EntityModel {
         }
     }
 
+    /**
+     * プロパティモデルのリストを返します。
+     * 
+     * @return プロパティモデルのリスト
+     */
     public List<PropertyModel> getPropertyModelList() {
         return Collections.unmodifiableList(propertyModelList);
     }
 
+    /**
+     * 識別子のプロパティモデルのリストを返します。
+     * 
+     * @return 識別子のプロパティモデルのリスト
+     */
     public List<PropertyModel> getIdPropertyModelList() {
         return Collections.unmodifiableList(idPropertyModelList);
     }
 
-    public boolean isCompositeId() {
+    /**
+     * 複合識別子を持つならば{@code true}を返します。
+     * 
+     * @return 複合識別子を持つならば{@code true}、そうでないならば{@code false}
+     */
+    public boolean hasCompositeId() {
         return compositeId;
     }
 }

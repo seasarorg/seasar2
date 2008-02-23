@@ -20,10 +20,20 @@ import java.util.List;
 import org.seasar.extension.jdbc.gen.model.DbTableDesc;
 
 /**
- * @author taedium
+ * スキーマを読み取るインタフェースです。
  * 
+ * @author taedium
  */
 public interface SchemaReader {
 
-    List<DbTableDesc> getDbTableDescs(String schemaName);
+    /**
+     * スキーマを読みデータベースのテーブル記述を返します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     * @param tableNamePattern
+     *            正規表現で表されたテーブル名のパターン
+     * @return テーブル記述
+     */
+    List<DbTableDesc> read(String schemaName);
 }

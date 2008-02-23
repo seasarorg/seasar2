@@ -21,28 +21,42 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 
 import org.seasar.extension.jdbc.gen.JavaCode;
-import org.seasar.extension.jdbc.gen.JavaCodeGenerator;
+import org.seasar.extension.jdbc.gen.JavaFileGenerator;
+import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.gen.util.TemplateUtil;
-import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
- * @author taedium
+ * {@link JavaFileGenerator}の実装クラスです。
  * 
+ * @author taedium
  */
-public class JavaCodeGeneratorImpl implements JavaCodeGenerator {
+public class JavaFileGeneratorImpl implements JavaFileGenerator {
 
+    /** FreeMarkerの設定 */
     protected Configuration configuration;
 
+    /** 基盤となるディレクトリ */
     protected File baseDir;
 
+    /** エンコーディング */
     protected String encoding;
 
-    public JavaCodeGeneratorImpl(Configuration configuration, File baseDir,
+    /**
+     * インスタンスを生成します。
+     * 
+     * @param configuration
+     *            FreeMarkerの設定
+     * @param baseDir
+     *            基盤となるディレクトリ
+     * @param encoding
+     *            エンコーディング
+     */
+    public JavaFileGeneratorImpl(Configuration configuration, File baseDir,
             String encoding) {
         this.configuration = configuration;
         this.baseDir = baseDir;
@@ -61,12 +75,25 @@ public class JavaCodeGeneratorImpl implements JavaCodeGenerator {
         }
     }
 
+    /**
+     * 必要であればディレクトリを作成します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     */
     protected void makeDirsIfNecessary(File dir) {
         if (!dir.exists()) {
             dir.mkdirs();
         }
     }
 
+    /**
+     * {@link Writer}を作成します。
+     * 
+     * @param file
+     *            Javaファイル
+     * @return {@link Writer}
+     */
     protected Writer openWriter(File file) {
         return new OutputStreamWriter(FileOutputStreamUtil.create(file),
                 Charset.forName(encoding));

@@ -16,8 +16,9 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 /**
- * @author taedium
+ * Derbyの方言を扱うクラスです。
  * 
+ * @author taedium
  */
 public class DerbyGenDialect extends StandardGenDialect {
 

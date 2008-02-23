@@ -16,11 +16,15 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * 生成を実行するコマンドを表すインタフェースです。
  * 
+ * @author taedium
  */
 public interface GenCommand {
 
+    /**
+     * 実行します。
+     */
     void execute();
 
 }

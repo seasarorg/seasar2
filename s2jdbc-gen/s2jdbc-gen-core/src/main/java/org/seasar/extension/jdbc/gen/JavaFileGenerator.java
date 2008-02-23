@@ -16,10 +16,17 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * Javaファイルを生成するインタフェースです。
  * 
+ * @author taedium
  */
-public interface JavaCodeGenerator {
+public interface JavaFileGenerator {
 
+    /**
+     * {@link JavaCode}からJavaファイルを生成します。
+     * 
+     * @param javaCode
+     *            Javaコード
+     */
     void generate(JavaCode javaCode);
 }

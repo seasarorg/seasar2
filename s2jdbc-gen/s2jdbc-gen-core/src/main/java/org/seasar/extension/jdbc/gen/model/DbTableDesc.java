@@ -20,51 +20,74 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author taedium
+ * データベースのテーブル記述です。
  * 
+ * @author taedium
  */
 public class DbTableDesc {
 
+    /** 名前 */
     protected String name;
 
+    /** スキーマ名 */
     protected String schema;
 
+    /** カラム記述のリスト */
     protected List<DbColumnDesc> columnDescList = new ArrayList<DbColumnDesc>();
 
     /**
-     * @return Returns the name.
+     * 名前を返します。
+     * 
+     * @return 名前
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 名前を設定します。
+     * 
      * @param name
-     *            The name to set.
+     *            名前
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the schema.
+     * スキーマ名を返します
+     * 
+     * @return スキーマ名
      */
     public String getSchema() {
         return schema;
     }
 
     /**
+     * スキーマ名を設定します。
+     * 
      * @param schema
-     *            The schema to set.
+     *            スキーマ名
      */
     public void setSchema(String schema) {
         this.schema = schema;
     }
 
+    /**
+     * カラム記述を追加します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     */
     public void addColumnDesc(DbColumnDesc columnDesc) {
         columnDescList.add(columnDesc);
     }
 
+    /**
+     * カラム記述のリストを返します。
+     * 
+     * @return カラム記述のリスト
+     */
     public List<DbColumnDesc> getColumnDescList() {
         return Collections.unmodifiableList(columnDescList);
     }

@@ -26,13 +26,18 @@ import javax.persistence.TemporalType;
 import org.seasar.extension.jdbc.gen.GenDialect;
 
 /**
- * @author taedium
+ * 標準的な方言をあつかうクラスです。
  * 
+ * @author taedium
  */
 public class StandardGenDialect implements GenDialect {
 
+    /** SQL型をキー、Javaクラスを値とするマップ */
     protected Map<Integer, Class<?>> javaTypeMap = new HashMap<Integer, Class<?>>();
 
+    /**
+     * インスタンスを構築します。
+     */
     public StandardGenDialect() {
         javaTypeMap.put(Types.ARRAY, Object.class);
         javaTypeMap.put(Types.BIGINT, Long.class);
@@ -93,7 +98,7 @@ public class StandardGenDialect implements GenDialect {
         return null;
     }
 
-    public String getDefaultSchema(String userName) {
+    public String getDefaultSchemaName(String userName) {
         return userName;
     }
 

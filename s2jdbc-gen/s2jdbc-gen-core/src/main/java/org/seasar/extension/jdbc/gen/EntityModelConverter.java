@@ -19,10 +19,18 @@ import org.seasar.extension.jdbc.gen.model.DbTableDesc;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 
 /**
- * @author taedium
+ * {@link DbTableDesc}を{@link EntityModel}に変換するインタフェースです。
  * 
+ * @author taedium
  */
 public interface EntityModelConverter {
 
+    /**
+     * 変換します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return エンティティモデル
+     */
     EntityModel convert(DbTableDesc tableDesc);
 }

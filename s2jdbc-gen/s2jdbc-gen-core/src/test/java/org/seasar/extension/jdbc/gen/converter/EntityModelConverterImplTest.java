@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
@@ -34,6 +34,10 @@ public class EntityModelConverterImplTest {
 
     private EntityModelConverterImpl converter;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -42,6 +46,10 @@ public class EntityModelConverterImplTest {
         converter = new EntityModelConverterImpl(pc, propertyModelConverter);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testName() throws Exception {
         DbTableDesc tableDesc = new DbTableDesc();
@@ -50,6 +58,10 @@ public class EntityModelConverterImplTest {
         assertEquals("Hoge", entityModel.getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testPropertyModelSize() throws Exception {
         DbColumnDesc columnDesc1 = new DbColumnDesc();
@@ -64,6 +76,10 @@ public class EntityModelConverterImplTest {
         assertEquals(2, entityModel.getPropertyModelList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetCompositeId() throws Exception {
         DbColumnDesc columnDesc1 = new DbColumnDesc();
@@ -78,6 +94,6 @@ public class EntityModelConverterImplTest {
         tableDesc.addColumnDesc(columnDesc2);
         EntityModel entityModel = converter.convert(tableDesc);
         assertEquals(2, entityModel.getIdPropertyModelList().size());
-        assertTrue(entityModel.isCompositeId());
+        assertTrue(entityModel.hasCompositeId());
     }
 }

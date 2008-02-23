@@ -22,17 +22,31 @@ import org.seasar.extension.jdbc.gen.model.PropertyModel;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
- * @author taedium
+ * {@link PropertyModelConverter}の実装クラスです。
  * 
+ * @author taedium
  */
 public class PropertyModelConverterImpl implements PropertyModelConverter {
 
+    /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** バージョンカラム */
     protected String versionColumn;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param persistenceConvention
+     *            永続化層の命名規約
+     * @param dialect
+     *            方言
+     * @param versionColumn
+     *            バージョンカラム
+     */
     public PropertyModelConverterImpl(
             PersistenceConvention persistenceConvention, GenDialect dialect,
             String versionColumn) {
@@ -53,15 +67,39 @@ public class PropertyModelConverterImpl implements PropertyModelConverter {
         return propertyModel;
     }
 
+    /**
+     * 名前を処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doName(DbColumnDesc columnDesc, PropertyModel propertyModel) {
         propertyModel.setName(persistenceConvention
                 .fromColumnNameToPropertyName(columnDesc.getName()));
     }
 
+    /**
+     * 識別子を処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doId(DbColumnDesc columnDesc, PropertyModel propertyModel) {
         propertyModel.setId(columnDesc.isPrimaryKey());
     }
 
+    /**
+     * プロパティのクラスを処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doPropertyClass(DbColumnDesc columnDesc,
             PropertyModel propertyModel) {
         Class<?> clazz = dialect.getJavaType(columnDesc.getSqlType(),
@@ -69,21 +107,53 @@ public class PropertyModelConverterImpl implements PropertyModelConverter {
         propertyModel.setPropertyClass(clazz);
     }
 
+    /**
+     * <code>LOB</code>を処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doLob(DbColumnDesc columnDesc, PropertyModel propertyModel) {
         propertyModel.setLob(dialect.isLobType(columnDesc.getSqlType(),
                 columnDesc.getTypeName()));
     }
 
+    /**
+     * 時制の種別を処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doTemporalType(DbColumnDesc columnDesc,
             PropertyModel propertyModel) {
         propertyModel.setTemporalType(dialect.getTemporalType(columnDesc
                 .getSqlType(), columnDesc.getTypeName()));
     }
 
+    /**
+     * 一時的なプロパティを処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doTransient(DbColumnDesc columnDesc,
             PropertyModel propertyModel) {
     }
 
+    /**
+     * バージョンを処理します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @param propertyModel
+     *            プロパティモデル
+     */
     protected void doVersion(DbColumnDesc columnDesc,
             PropertyModel propertyModel) {
         if (versionColumn.equalsIgnoreCase(columnDesc.getName())) {

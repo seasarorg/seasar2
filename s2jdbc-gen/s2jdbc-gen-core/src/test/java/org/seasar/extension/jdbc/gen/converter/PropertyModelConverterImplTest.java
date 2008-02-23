@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
@@ -36,6 +36,9 @@ public class PropertyModelConverterImplTest {
 
     private PropertyModelConverterImpl converter;
 
+    /**
+     * 
+     */
     @Before
     public void setUp() {
         converter = new PropertyModelConverterImpl(
@@ -43,6 +46,10 @@ public class PropertyModelConverterImplTest {
                 "VERSION");
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testName() throws Exception {
         DbColumnDesc columnDesc = new DbColumnDesc();
@@ -51,6 +58,10 @@ public class PropertyModelConverterImplTest {
         assertEquals("hoge", propertyModel.getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testId() throws Exception {
         DbColumnDesc columnDesc = new DbColumnDesc();
@@ -60,6 +71,10 @@ public class PropertyModelConverterImplTest {
         assertTrue(propertyModel.isId());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testPropertyClass() throws Exception {
         DbColumnDesc columnDesc = new DbColumnDesc();
@@ -69,6 +84,10 @@ public class PropertyModelConverterImplTest {
         assertEquals(String.class, propertyModel.getPropertyClass());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testTemporalType() throws Exception {
         DbColumnDesc columnDesc = new DbColumnDesc();
@@ -78,6 +97,10 @@ public class PropertyModelConverterImplTest {
         assertEquals(TemporalType.DATE, propertyModel.getTemporalType());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testLob() throws Exception {
         DbColumnDesc columnDesc = new DbColumnDesc();
@@ -87,6 +110,10 @@ public class PropertyModelConverterImplTest {
         assertTrue(propertyModel.isLob());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testVersion() throws Exception {
         DbColumnDesc columnDesc = new DbColumnDesc();

@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
@@ -36,6 +36,10 @@ import static junit.framework.Assert.*;
  */
 public class SchemaReaderImplTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetPrimaryKeys() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
@@ -72,6 +76,10 @@ public class SchemaReaderImplTest {
         assertTrue(primaryKeys.contains("pk2"));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetDbColumnDescs() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
@@ -136,6 +144,10 @@ public class SchemaReaderImplTest {
         assertTrue(desc.isNullable());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetTables() throws Exception {
         final MockResultSet resultSet = new MockResultSet();

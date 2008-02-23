@@ -28,49 +28,76 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.seasar.extension.jdbc.gen.JavaCode;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * エンティティの基底クラスを表す{@link JavaCode}の実装です。
  * 
+ * @author taedium
  */
-public class EntityBaseCode extends AbstractJavaCode {
+public class EntityBaseJavaCode extends AbstractJavaCode {
 
+    /** エンティティモデル */
     protected EntityModel entityModel;
 
+    /** インポートパッケージ名のセット */
     protected Set<String> importPackageNames;
 
-    protected String shortClassName;
-
-    public EntityBaseCode(EntityModel entityModel, String className,
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param entityModel
+     *            エンティティモデル名
+     * @param className
+     *            クラス名
+     * @param templateName
+     *            テンプレート名
+     */
+    public EntityBaseJavaCode(EntityModel entityModel, String className,
             String templateName) {
         super(className, templateName);
         this.entityModel = entityModel;
+        this.shortClassName = ClassUtil
+                .splitPackageAndShortClassName(className)[1];
         this.importPackageNames = createImportPackageNames();
-        this.shortClassName = getShortClassName(className);
-    }
-
-    public EntityModel getEntityModel() {
-        return entityModel;
     }
 
     public Set<String> getImportPackageNames() {
         return Collections.unmodifiableSet(importPackageNames);
     }
 
-    public String getShortClassName() {
-        return shortClassName;
+    public String getBaseClassName() {
+        return null;
     }
 
+    public String getShortBaseClassName() {
+        return null;
+    }
+
+    /**
+     * エンティティモデルを返します。
+     * 
+     * @return エンティティモデル
+     */
+    public EntityModel getEntityModel() {
+        return entityModel;
+    }
+
+    /**
+     * インポートパッケージ名のセットを作成します。
+     * 
+     * @return インポートパッケージ名のセット
+     */
     protected Set<String> createImportPackageNames() {
         Set<String> packageNames = new TreeSet<String>();
         packageNames.add(MappedSuperclass.class.getName());
         for (PropertyModel pm : entityModel.getPropertyModelList()) {
             if (pm.isId()) {
                 packageNames.add(Id.class.getName());
-                if (!entityModel.isCompositeId()) {
+                if (!entityModel.hasCompositeId()) {
                     packageNames.add(GeneratedValue.class.getName());
                 }
             }

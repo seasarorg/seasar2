@@ -16,8 +16,9 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 /**
- * @author taedium
+ * DB2の方言を扱うクラスです。
  * 
+ * @author taedium
  */
 public class Db2GenDialect extends StandardGenDialect {
 

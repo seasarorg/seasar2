@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
@@ -32,6 +32,10 @@ public class GenEntitiesCommandTest {
 
     private GenEntitiesCommand command;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         command = new GenEntitiesCommand();
@@ -44,48 +48,84 @@ public class GenEntitiesCommandTest {
         command.dialect = new StandardGenDialect();
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testCreateEntityCode() throws Exception {
-        assertNotNull(command.createEntityCode(new EntityModel()));
+    public void testCreateEntityJavaCode() throws Exception {
+        assertNotNull(command.createEntityJavaCode(new EntityModel()));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testCreateEntityBaseCode() throws Exception {
-        assertNotNull(command.createEntityBaseCode(new EntityModel()));
+    public void testCreateEntityJavaBaseCode() throws Exception {
+        assertNotNull(command.createEntityBaseJavaCode(new EntityModel()));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreateSchemaReader() throws Exception {
         assertNotNull(command.createSchemaReader());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreateEntityModelConverter() throws Exception {
         assertNotNull(command.createEntityModelConverter());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreatePropertyModelConverter() throws Exception {
         assertNotNull(command.createPropertyModelConverter());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreateJavaCodeGenerator() throws Exception {
-        assertNotNull(command.createJavaCodeGenerator());
+        assertNotNull(command.createJavaFileGenerator());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetClassName() throws Exception {
         String className = command.getClassName("aaa", "bbb", "Ccc");
         assertEquals("aaa.bbb.Ccc", className);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetEntityClassName() throws Exception {
         String className = command.getEntityClassName("Hoge");
         assertEquals("aaa.entity.Hoge", className);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetEntityBaseClassName() throws Exception {
         String className = command.getEntityBaseClassName("Hoge");

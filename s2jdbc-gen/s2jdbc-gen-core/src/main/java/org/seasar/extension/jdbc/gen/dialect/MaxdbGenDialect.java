@@ -16,8 +16,9 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 /**
- * @author taedium
+ * MaxDBの方言を扱うクラスです。
  * 
+ * @author taedium
  */
 public class MaxdbGenDialect extends StandardGenDialect {
 

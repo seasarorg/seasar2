@@ -16,118 +16,162 @@
 package org.seasar.extension.jdbc.gen.model;
 
 /**
- * @author taedium
+ * データベースのカラム記述です。
  * 
+ * @author taedium
  */
 public class DbColumnDesc {
 
+    /** 名前 */
     protected String name;
 
+    /** SQL型 */
     protected int sqlType;
 
+    /** 型名 */
     protected String typeName;
 
+    /** 長さ */
     protected int length;
 
+    /** スケール */
     protected int scale;
 
+    /** NULL可能ならば{@code true} */
     protected boolean nullable;
 
+    /** 主キーの場合{@code true} */
     protected boolean primaryKey;
 
     /**
-     * @return Returns the name.
+     * 名前を返します。
+     * 
+     * @return 名前
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 名前を設定します。
+     * 
      * @param name
-     *            The name to set.
+     *            名前
      */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * SQL型を返します。
+     * 
+     * @return SQL型
+     */
     public int getSqlType() {
         return sqlType;
     }
 
+    /**
+     * SQL型をセットします。
+     * 
+     * @param sqlType
+     *            SQL型
+     */
     public void setSqlType(int sqlType) {
         this.sqlType = sqlType;
     }
 
     /**
-     * @return Returns the typeName.
+     * 型名を返します。
+     * 
+     * @return 型名
      */
     public String getTypeName() {
         return typeName;
     }
 
     /**
+     * SQL型の名前を設定します。
+     * 
      * @param typeName
-     *            The typeName to set.
+     *            SQL型の名前
      */
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
 
     /**
-     * @return Returns the length.
+     * 長さを返します。
+     * 
+     * @return 長さ
      */
     public int getLength() {
         return length;
     }
 
     /**
+     * 長さを設定します。
+     * 
      * @param length
-     *            The length to set.
+     *            長さ
      */
     public void setLength(int length) {
         this.length = length;
     }
 
     /**
-     * @return Returns the scale.
+     * スケールを返します。
+     * 
+     * @return スケール
      */
     public int getScale() {
         return scale;
     }
 
     /**
+     * スケールを設定します。
+     * 
      * @param scale
-     *            The scale to set.
+     *            スケール
      */
     public void setScale(int scale) {
         this.scale = scale;
     }
 
     /**
-     * @return Returns the nullable.
+     * NULL可能の場合{@code true}を返します。
+     * 
+     * @return NULL可能の場合{@code true}、そうでない場合{@code false}
      */
     public boolean isNullable() {
         return nullable;
     }
 
     /**
+     * NULL可能の場合{@code true}を設定します。
+     * 
      * @param nullable
-     *            The nullable to set.
+     *            NULL可能の場合{@code true}
      */
     public void setNullable(boolean nullable) {
         this.nullable = nullable;
     }
 
     /**
-     * @return Returns the primaryKey.
+     * 主キーの場合{@code true}を返します。
+     * 
+     * @return 主キーの場合{@code true}、そうでない場合{@code false}
      */
     public boolean isPrimaryKey() {
         return primaryKey;
     }
 
     /**
+     * 主キーの場合 {@code true}を設定します。
+     * 
      * @param primaryKey
-     *            The primaryKey to set.
+     *            主キーの場合 {@code true}
+     * 
      */
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;

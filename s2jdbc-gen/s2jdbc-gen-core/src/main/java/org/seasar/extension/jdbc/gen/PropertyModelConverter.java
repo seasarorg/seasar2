@@ -19,10 +19,18 @@ import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
 
 /**
- * @author taedium
+ * {@link DbColumnDesc}を{@link PropertyModel}に変換するインタフェースです。
  * 
+ * @author taedium
  */
 public interface PropertyModelConverter {
 
+    /**
+     * 変換します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @return プロパティモデル
+     */
     PropertyModel convert(DbColumnDesc columnDesc);
 }

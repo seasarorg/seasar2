@@ -37,26 +37,37 @@ import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.ResultSetUtil;
 
 /**
- * @author taedium
+ * {@code SchemaReader}の実装クラスです。
  * 
+ * @author taedium
  */
 public class SchemaReaderImpl implements SchemaReader {
 
+    /** データソース */
     protected DataSource dataSource;
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dataSource
+     *            データソース
+     * @param dialect
+     *            方言
+     */
     public SchemaReaderImpl(DataSource dataSource, GenDialect dialect) {
         this.dataSource = dataSource;
         this.dialect = dialect;
     }
 
-    public List<DbTableDesc> getDbTableDescs(String schemaName) {
+    public List<DbTableDesc> read(String schemaName) {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
             String schema = schemaName != null ? schemaName
-                    : getDefaultSchema(metaData);
+                    : getDefaultSchemaName(metaData);
             List<DbTableDesc> result = new ArrayList<DbTableDesc>();
             for (String table : getTables(metaData, schema)) {
                 if (!dialect.isUserTable(table)) {
@@ -81,11 +92,27 @@ public class SchemaReaderImpl implements SchemaReader {
         }
     }
 
-    protected String getDefaultSchema(DatabaseMetaData metaData) {
+    /**
+     * デフォルトのスキーマ名を返します。
+     * 
+     * @param metaData
+     *            メタデータ
+     * @return デフォルトのスキーマ名
+     */
+    protected String getDefaultSchemaName(DatabaseMetaData metaData) {
         String userName = DatabaseMetaDataUtil.getUserName(metaData);
-        return dialect.getDefaultSchema(userName);
+        return dialect.getDefaultSchemaName(userName);
     }
 
+    /**
+     * テーブル名のセットを返します。
+     * 
+     * @param metadata
+     *            メタデータ
+     * @param schemaName
+     *            スキーマ名
+     * @return テーブル名のセット
+     */
     protected List<String> getTables(DatabaseMetaData metadata,
             String schemaName) {
         List<String> result = new ArrayList<String>();
@@ -105,6 +132,17 @@ public class SchemaReaderImpl implements SchemaReader {
         }
     }
 
+    /**
+     * カラム記述のリストを返します。
+     * 
+     * @param metaData
+     *            メタデータ
+     * @param schemaName
+     *            スキーマ名
+     * @param tableName
+     *            テーブル名
+     * @return カラム記述のリスト
+     */
     protected List<DbColumnDesc> getDbColumnDescs(DatabaseMetaData metaData,
             String schemaName, String tableName) {
         List<DbColumnDesc> result = new ArrayList<DbColumnDesc>();
@@ -131,6 +169,17 @@ public class SchemaReaderImpl implements SchemaReader {
         }
     }
 
+    /**
+     * 主キーのセットを返します。
+     * 
+     * @param metaData
+     *            メタデータ
+     * @param schemaName
+     *            スキーマ名
+     * @param tableName
+     *            テーブル名
+     * @return 主キーのセット
+     */
     protected Set<String> getPrimaryKeys(DatabaseMetaData metaData,
             String schemaName, String tableName) {
         Set<String> result = new HashSet<String>();

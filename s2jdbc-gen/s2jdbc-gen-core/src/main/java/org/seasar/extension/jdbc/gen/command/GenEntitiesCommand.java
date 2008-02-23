@@ -24,18 +24,20 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.EntityModelConverter;
+import org.seasar.extension.jdbc.gen.GenCommand;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.JavaCode;
-import org.seasar.extension.jdbc.gen.JavaCodeGenerator;
+import org.seasar.extension.jdbc.gen.JavaFileGenerator;
 import org.seasar.extension.jdbc.gen.PropertyModelConverter;
 import org.seasar.extension.jdbc.gen.SchemaReader;
 import org.seasar.extension.jdbc.gen.converter.EntityModelConverterImpl;
 import org.seasar.extension.jdbc.gen.converter.PropertyModelConverterImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.generator.JavaCodeGeneratorImpl;
-import org.seasar.extension.jdbc.gen.javacode.EntityBaseCode;
-import org.seasar.extension.jdbc.gen.javacode.EntityCode;
+import org.seasar.extension.jdbc.gen.generator.JavaFileGeneratorImpl;
+import org.seasar.extension.jdbc.gen.javacode.EntityBaseJavaCode;
+import org.seasar.extension.jdbc.gen.javacode.EntityJavaCode;
 import org.seasar.extension.jdbc.gen.model.DbTableDesc;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.reader.SchemaReaderImpl;
@@ -46,108 +48,210 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourceUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-import static org.seasar.extension.jdbc.gen.command.GenEntitiesConstants.*;
+import static org.seasar.extension.jdbc.gen.command.GenEntitiesCommand.Default.*;
 
 /**
- * @author taedium
+ * エンティティのJavaファイルを生成する{@link GenCommand}の実装クラスです。
  * 
+ * @author taedium
  */
-public class GenEntitiesCommand {
+public class GenEntitiesCommand implements GenCommand {
 
+    /** diconファイル */
     protected String diconFile;
 
+    /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName;
 
+    /** ルートパッケージ名 */
     protected String rootPackageName;
 
+    /** エンティティパッケージ名 */
     protected String entityPackageName;
 
+    /** エンティティ基底クラスのパッケージ名 */
     protected String entityBasePackageName;
 
-    protected String entityBaseClassNameSuffix;
+    /** エンティティ基底クラスのプレフィックス */
+    protected String entityBaseClassNamePrefix;
 
+    /** 生成するJavaファイルの出力先ディレクトリ */
     protected File destDir;
 
-    protected String javaCodeEncoding;
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding;
 
+    /** テンプレートファイルを格納するディレクトリ */
     protected File templateDir;
 
-    protected String templateEncoding;
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding;
 
+    /** スキーマ名 */
     protected String schemaName;
 
+    /** 正規表現で表されるテーブル名のパターン */
     protected String tableNamePattern;
 
+    /** バージョンカラムの名前 */
     protected String versionColumnName;
 
+    /** エンティティクラスのテンプレート名 */
     protected String entityTemplateName;
 
+    /** エンティティ基底クラスのテンプレート名 */
     protected String entityBaseTemplateName;
 
+    /** このインスタンスで{@link SingletonS2ContainerFactory}が初期化されたら{@code true} */
     protected boolean initialized;
 
+    /** データソース */
     protected DataSource dataSource;
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
+    /**
+     * インスタンスを構築します。
+     */
     public GenEntitiesCommand() {
     }
 
+    /**
+     * diconファイルを設定します。
+     * 
+     * @param diconFile
+     *            daiconファイル
+     */
     public void setDiconFile(String diconFile) {
         this.diconFile = diconFile;
     }
 
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
     }
 
+    /**
+     * ルートパッケージ名を設定します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
     public void setRootPackageName(String rootPackageName) {
         this.rootPackageName = rootPackageName;
     }
 
+    /**
+     * エンティティパッケージ名を設定します。
+     * 
+     * @param entityPackageName
+     *            エンティティパッケージ名
+     */
     public void setEntityPackageName(String entityPackageName) {
         this.entityPackageName = entityPackageName;
     }
 
+    /**
+     * エンティティ基底クラスのパッケージ名を設定します。
+     * 
+     * @param entityBasePackageName
+     *            エンティティ基底クラスのパッケージ名
+     */
     public void setEntityBasePackageName(String entityBasePackageName) {
         this.entityBasePackageName = entityBasePackageName;
     }
 
-    public void setEntityBaseClassNameSuffix(String entityBaseClassNameSuffix) {
-        this.entityBaseClassNameSuffix = entityBaseClassNameSuffix;
+    /**
+     * エンティティ基底クラス名のサフィックスを設定します。
+     * 
+     * @param entityBaseClassNameSuffix
+     *            エンティティ基底クラス名のサフィックス
+     */
+    public void setEntityBaseClassNamePrefix(String entityBaseClassNameSuffix) {
+        this.entityBaseClassNamePrefix = entityBaseClassNameSuffix;
     }
 
+    /**
+     * テンプレートファイルを格納するディレクトリを設定します。
+     * 
+     * @param templateDir
+     *            テンプレートファイルを格納するディレクトリ
+     */
     public void setTemplateDir(File templateDir) {
         this.templateDir = templateDir;
     }
 
-    public void setTemplateEncoding(String templateEncoding) {
-        this.templateEncoding = templateEncoding;
+    /**
+     * テンプレートのエンコーディングを設定します。
+     * 
+     * @param templateEncoding
+     *            テンプレートのエンコーディング
+     */
+    public void setTemplateFileEncoding(String templateEncoding) {
+        this.templateFileEncoding = templateEncoding;
     }
 
+    /**
+     * 生成Javaファイル出力先ディレクトリを設定します。
+     * 
+     * @param destDir
+     *            生成Javaファイル出力先ディレクトリ
+     */
     public void setDestDir(File destDir) {
         this.destDir = destDir;
     }
 
-    public void setJavaCodeEncoding(String javaCodeEncoding) {
-        this.javaCodeEncoding = javaCodeEncoding;
+    /**
+     * Javaコードのエンコーディングを設定します。
+     * 
+     * @param javaCodeEncoding
+     *            Javaコードのエンコーディング
+     */
+    public void setJavaFileEncoding(String javaCodeEncoding) {
+        this.javaFileEncoding = javaCodeEncoding;
     }
 
+    /**
+     * スキーマ名を設定します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     */
     public void setSchemaName(String schemaName) {
         this.schemaName = schemaName;
     }
 
-    public void setTableNamePattern(String tableNamePattern) {
-        this.tableNamePattern = tableNamePattern;
-    }
-
+    /**
+     * バージョン用カラム名を設定します。
+     * 
+     * @param versionColumnName
+     *            バージョン用カラム名を設定します。
+     */
     public void setVersionColumnName(String versionColumnName) {
         this.versionColumnName = versionColumnName;
+    }
+
+    /**
+     * 正規表現で表されたテーブル名のパターンを正規表現で設定します。
+     * 
+     * @param tableNamePattern
+     *            テーブル名のパターン
+     */
+    public void setTableNamePattern(String tableNamePattern) {
+        this.tableNamePattern = tableNamePattern;
     }
 
     public void execute() {
@@ -159,6 +263,9 @@ public class GenEntitiesCommand {
         }
     }
 
+    /**
+     * 初期化します。
+     */
     protected void init() {
         setupDefaults();
         if (!SingletonS2ContainerFactory.hasContainer()) {
@@ -171,8 +278,7 @@ public class GenEntitiesCommand {
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         persistenceConvention = jdbcManager.getPersistenceConvention();
-        dialect = GenDialectManager.getGenerationDialect(jdbcManager
-                .getDialect());
+        dialect = GenDialectManager.getDialect(jdbcManager.getDialect());
         if (container.hasComponentDef(NamingConvention.class)) {
             NamingConvention nc = (NamingConvention) container
                     .getComponent(NamingConvention.class);
@@ -190,12 +296,15 @@ public class GenEntitiesCommand {
         }
     }
 
+    /**
+     * デフォルト値を設定します。
+     */
     protected void setupDefaults() {
         if (diconFile == null) {
             diconFile = DICON_FILE;
         }
         if (jdbcManagerName == null) {
-            jdbcManagerName = JDBC_MANAGER_NAME;
+            jdbcManagerName = Default.JDBC_MANAGER_NAME;
         }
         if (rootPackageName == null) {
             rootPackageName = ROOT_PACKAGE_NAME;
@@ -204,22 +313,22 @@ public class GenEntitiesCommand {
             entityPackageName = ENTITY_PACKAGE_NAME;
         }
         if (entityBasePackageName == null) {
-            entityBasePackageName = ENTITY_PACKAGE_NAME;
+            entityBasePackageName = ENTITY_BASE_PACKAGE_NAME;
         }
-        if (entityBaseClassNameSuffix == null) {
-            entityBaseClassNameSuffix = GAP_CLASS_NAME_SUFFIX;
+        if (entityBaseClassNamePrefix == null) {
+            entityBaseClassNamePrefix = ENTITY_BASE_CLASS_NAME_PREFIX;
         }
         if (destDir == null) {
             destDir = DEST_DIR;
         }
-        if (javaCodeEncoding == null) {
-            javaCodeEncoding = JAVA_CODE_ENCODING;
+        if (javaFileEncoding == null) {
+            javaFileEncoding = JAVA_FILE_ENCODING;
         }
         if (templateDir == null) {
             templateDir = TEMPLATE_DIR;
         }
-        if (templateEncoding == null) {
-            templateEncoding = TEMPLATE_ENCODING;
+        if (templateFileEncoding == null) {
+            templateFileEncoding = TEMPLATE_FILE_ENCODING;
         }
         if (entityTemplateName == null) {
             entityTemplateName = ENTITY_TEMPLATE_NAME;
@@ -233,23 +342,46 @@ public class GenEntitiesCommand {
         if (versionColumnName == null) {
             versionColumnName = VERSION_COLUMN_NAME;
         }
+        if (tableNamePattern == null) {
+            tableNamePattern = TABLE_NAME_PATTERN;
+        }
     }
 
+    /**
+     * 破棄します。
+     */
     protected void destroy() {
         if (initialized) {
             SingletonS2ContainerFactory.destroy();
         }
     }
 
+    /**
+     * 読み込みます。
+     * 
+     * @return 読み込まれたテーブル記述のリスト
+     */
     protected List<DbTableDesc> read() {
         SchemaReader reader = createSchemaReader();
-        return reader.getDbTableDescs(schemaName);
+        return reader.read(schemaName);
     }
 
+    /**
+     * {@link SchemaReader}の実装を作成します。
+     * 
+     * @return {@link SchemaReader}の実装
+     */
     protected SchemaReader createSchemaReader() {
         return new SchemaReaderImpl(dataSource, dialect);
     }
 
+    /**
+     * {@link DbTableDesc}をフィルタします
+     * 
+     * @param tableDescs
+     *            テーブル記述
+     * @return フィルタされた{@link DbTableDesc}のリスト
+     */
     protected List<DbTableDesc> filter(List<DbTableDesc> tableDescs) {
         Pattern p = Pattern.compile(tableNamePattern, Pattern.CASE_INSENSITIVE);
         for (Iterator<DbTableDesc> it = tableDescs.iterator(); it.hasNext();) {
@@ -261,6 +393,13 @@ public class GenEntitiesCommand {
         return tableDescs;
     }
 
+    /**
+     * テーブル記述のリストをエンティティモデルのリストに変換します。
+     * 
+     * @param tableDescs
+     *            テーブル記述のリスト
+     * @return エンティティモデルのリスト
+     */
     protected List<EntityModel> convert(List<DbTableDesc> tableDescs) {
         List<EntityModel> entityModels = new ArrayList<EntityModel>();
         EntityModelConverter entityConverter = createEntityModelConverter();
@@ -271,68 +410,192 @@ public class GenEntitiesCommand {
         return entityModels;
     }
 
+    /**
+     * {@link EntityModelConverter}の実装を作成します。
+     * 
+     * @return {@link EntityModelConverter}の実装
+     */
     protected EntityModelConverter createEntityModelConverter() {
         return new EntityModelConverterImpl(persistenceConvention,
                 createPropertyModelConverter());
     }
 
+    /**
+     * {@link PropertyModelConverter}の実装を作成します。
+     * 
+     * @return {@link PropertyModelConverter}の実装
+     */
     protected PropertyModelConverter createPropertyModelConverter() {
         return new PropertyModelConverterImpl(persistenceConvention, dialect,
                 versionColumnName);
     }
 
+    /**
+     * エンティティのJavaファイルを生成します。
+     * 
+     * @param entityModels
+     *            エンティティモデルのリスト
+     */
     protected void generate(List<EntityModel> entityModels) {
-        JavaCodeGenerator generator = createJavaCodeGenerator();
+        JavaFileGenerator generator = createJavaFileGenerator();
         for (EntityModel entityModel : entityModels) {
-            JavaCode entityCode = createEntityCode(entityModel);
+            JavaCode entityCode = createEntityJavaCode(entityModel);
             if (!exists(entityCode, destDir)) {
                 generator.generate(entityCode);
             }
-            JavaCode entityBaseCode = createEntityBaseCode(entityModel);
+            JavaCode entityBaseCode = createEntityBaseJavaCode(entityModel);
             generator.generate(entityBaseCode);
         }
     }
 
-    protected JavaCodeGenerator createJavaCodeGenerator() {
+    /**
+     * {@link JavaFileGenerator}の実装を作成します。
+     * 
+     * @return {@link JavaFileGenerator}の実装
+     */
+    protected JavaFileGenerator createJavaFileGenerator() {
         Configuration cfg = new Configuration();
         cfg.setObjectWrapper(new DefaultObjectWrapper());
-        cfg.setEncoding(Locale.getDefault(), templateEncoding);
+        cfg.setEncoding(Locale.getDefault(), templateFileEncoding);
         ConfigurationUtil.setDirectoryForTemplateLoading(cfg, templateDir);
-        return new JavaCodeGeneratorImpl(cfg, destDir, javaCodeEncoding);
+        return new JavaFileGeneratorImpl(cfg, destDir, javaFileEncoding);
     }
 
-    protected JavaCode createEntityCode(EntityModel entityModel) {
+    /**
+     * エンティティクラスのJavaコードを表す{@link JavaCode}の実装を作成します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @return {@link JavaCode}の実装
+     */
+    protected JavaCode createEntityJavaCode(EntityModel entityModel) {
         String entityClassName = getEntityClassName(entityModel.getName());
         String entityBaseClassName = getEntityBaseClassName(entityModel
                 .getName());
-        return new EntityCode(entityModel, entityClassName,
+        return new EntityJavaCode(entityModel, entityClassName,
                 entityBaseClassName, entityTemplateName);
     }
 
-    protected JavaCode createEntityBaseCode(EntityModel entityModel) {
+    /**
+     * エンティティ基底クラスのJavaコードを表す{@link JavaCode}の実装を作成します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @return {@link JavaCode}の実装
+     */
+    protected JavaCode createEntityBaseJavaCode(EntityModel entityModel) {
         String entityBaseClassName = getEntityBaseClassName(entityModel
                 .getName());
-        return new EntityBaseCode(entityModel, entityBaseClassName,
+        return new EntityBaseJavaCode(entityModel, entityBaseClassName,
                 entityBaseTemplateName);
     }
 
+    /**
+     * エンティティクラス名を返します。
+     * 
+     * @param entityName
+     *            エンティティ名
+     * @return エンティティクラス名
+     */
     protected String getEntityClassName(String entityName) {
         return getClassName(rootPackageName, entityPackageName, entityName);
     }
 
+    /**
+     * エンティティ基底クラス名を返します。
+     * 
+     * @param entityName
+     *            エンティティ名
+     * @return エンティティ基底クラス名
+     */
     protected String getEntityBaseClassName(String entityName) {
         return getClassName(rootPackageName, entityBasePackageName,
-                entityBaseClassNameSuffix + entityName);
+                entityBaseClassNamePrefix + entityName);
     }
 
+    /**
+     * クラス名を返します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     * @param subPackageName
+     *            サブパッケージ名
+     * @param entityName
+     *            エンティティ名
+     * @return クラス名
+     */
     protected String getClassName(String rootPackageName,
-            String subPackageName, String className) {
+            String subPackageName, String entityName) {
         String fullPackageName = ClassUtil.concatName(rootPackageName,
                 subPackageName);
-        return ClassUtil.concatName(fullPackageName, className);
+        return ClassUtil.concatName(fullPackageName, entityName);
     }
 
+    /**
+     * {@code javaCode}がすでに存在する場合に{@code true}を返します。
+     * 
+     * @param javaCode
+     *            Javaコード
+     * @param baseDir
+     *            基盤となるディレクトリ
+     * @return すでに存在する場合に{@code true}、そうでない場合{@code false}
+     */
     protected boolean exists(JavaCode javaCode, File baseDir) {
         return javaCode.getFile(baseDir).exists();
+    }
+
+    /**
+     * {@link GenEntitiesCommand}のプロパティのデフォルト値を表します。
+     * 
+     * @author taedium
+     */
+    public static class Default {
+
+        /** エンティティ基底クラス名のプレフィックス */
+        public static String ENTITY_BASE_CLASS_NAME_PREFIX = "Abstract";
+
+        /** ルートパッケージ名 */
+        public static String ROOT_PACKAGE_NAME = "";
+
+        /** エンティティパッケージ名 */
+        public static String ENTITY_PACKAGE_NAME = "entity";
+
+        /** エンティティ基底クラスのパッケージ名 */
+        public static String ENTITY_BASE_PACKAGE_NAME = "entity";
+
+        /** {@link JdbcManager}のコンポーネント名 */
+        public static String JDBC_MANAGER_NAME = "jdbcManager";
+
+        /** テンプレートを格納するディレクトリ */
+        public static File TEMPLATE_DIR = ResourceUtil
+                .getResourceAsFile("templates");
+
+        /** 生成Javaファイル出力ディレクトリ */
+        public static File DEST_DIR = new File("src/main/java");
+
+        /** テンプレートファイルのエンコーディング */
+        public static String TEMPLATE_FILE_ENCODING = "UTF-8";
+
+        /** Javaファイルのエンコーディング */
+        public static String JAVA_FILE_ENCODING = "UTF-8";
+
+        /** バージョン用カラムの名前 */
+        public static String VERSION_COLUMN_NAME = "versionColumn";
+
+        /** エンティティクラスのテンプレート名 */
+        public static String ENTITY_TEMPLATE_NAME = "entity.ftl";
+
+        /** エンティティ基底クラスのテンプレート名 */
+        public static String ENTITU_BASE_TEMPLATE_NAME = "entityBase.ftl";
+
+        /** diconファイル */
+        public static String DICON_FILE = "s2jdbc.dicon";
+
+        /** スキーマ名 */
+        public static String SCHEMA_NAME = null;
+
+        /** テーブル名のパターン */
+        public static String TABLE_NAME_PATTERN = ".*";
+
     }
 }

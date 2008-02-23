@@ -42,20 +42,20 @@ public class GenEntitiesTask extends GenTask {
     /** エンティティ基底クラスのパッケージ名 */
     protected String entityBasePackageName;
 
-    /** エンティティ基底クラス名のサフィックス */
-    protected String entityBaseClassNameSuffix;
+    /** エンティティ基底クラス名のプレフィックス */
+    protected String entityBaseClassNamePrefix;
 
     /** テンプレートファイルを格納するディレクトリ */
     protected File templateDir;
 
-    /** テンプレートのエンコーディング */
-    protected String templateEncoding;
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding;
 
-    /** 生成Javaファイル出力先ディレクトリ */
+    /** 生成するJavaファイルの出力先ディレクトリ */
     protected File destDir;
 
-    /** Javaコードのエンコーディング */
-    protected String javaCodeEncoding;
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding;
 
     /** スキーマの名前 */
     protected String schemaName;
@@ -74,7 +74,7 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * diconファイルを取得します。
+     * diconファイルを返します。
      * 
      * @return diconファイル
      */
@@ -112,7 +112,7 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * ルートパッケージ名を取得します。
+     * ルートパッケージ名を返します。
      * 
      * @return ルートパッケージ名
      */
@@ -131,7 +131,7 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * エンティティパッケージ名を取得します。
+     * エンティティパッケージ名を返します。
      * 
      * @return エンティティパッケージ名
      */
@@ -150,7 +150,7 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * エンティティ基底クラスのパッケージ名を取得します。
+     * エンティティ基底クラスのパッケージ名を返します。
      * 
      * @return エンティティ基底クラスのパッケージ名
      */
@@ -169,12 +169,12 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * エンティティ基底クラス名のサフィックスを取得します。
+     * エンティティ基底クラス名のサフィックスを返します。
      * 
      * @return エンティティ基底クラス名のサフィックス
      */
-    public String getEntityBaseClassNameSuffix() {
-        return entityBaseClassNameSuffix;
+    public String getEntityBaseClassNamePrefix() {
+        return entityBaseClassNamePrefix;
     }
 
     /**
@@ -183,14 +183,14 @@ public class GenEntitiesTask extends GenTask {
      * @param entityBaseClassNameSuffix
      *            エンティティ基底クラス名のサフィックス
      */
-    public void setEntityBaseClassNameSuffix(String entityBaseClassNameSuffix) {
-        this.entityBaseClassNameSuffix = entityBaseClassNameSuffix;
+    public void setEntityBaseClassNamePrefix(String entityBaseClassNameSuffix) {
+        this.entityBaseClassNamePrefix = entityBaseClassNameSuffix;
     }
 
     /**
      * テンプレートファイルを格納するディレクトリ
      * 
-     * @return テンプレートファイルを格納するディレクトリを取得します。
+     * @return テンプレートファイルを格納するディレクトリを返します。
      */
     public File getTemplateDir() {
         return templateDir;
@@ -207,12 +207,12 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * テンプレートのエンコーディングを取得します。
+     * テンプレートのエンコーディングを返します。
      * 
      * @return テンプレートのエンコーディング
      */
-    public String getTemplateEncoding() {
-        return templateEncoding;
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
     }
 
     /**
@@ -221,12 +221,12 @@ public class GenEntitiesTask extends GenTask {
      * @param templateEncoding
      *            テンプレートのエンコーディング
      */
-    public void setTemplateEncoding(String templateEncoding) {
-        this.templateEncoding = templateEncoding;
+    public void setTemplateFileEncoding(String templateEncoding) {
+        this.templateFileEncoding = templateEncoding;
     }
 
     /**
-     * 生成Javaファイル出力先ディレクトリを取得します。
+     * 生成Javaファイル出力先ディレクトリを返します。
      * 
      * @return 生成Javaファイル出力先ディレクトリ
      */
@@ -245,12 +245,12 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * Javaコードのエンコーディングを取得します。
+     * Javaコードのエンコーディングを返します。
      * 
      * @return Javaコードのエンコーディング
      */
-    public String getJavaCodeEncoding() {
-        return javaCodeEncoding;
+    public String getJavaFileEncoding() {
+        return javaFileEncoding;
     }
 
     /**
@@ -259,12 +259,12 @@ public class GenEntitiesTask extends GenTask {
      * @param javaCodeEncoding
      *            Javaコードのエンコーディング
      */
-    public void setJavaCodeEncoding(String javaCodeEncoding) {
-        this.javaCodeEncoding = javaCodeEncoding;
+    public void setJavaFileEncoding(String javaCodeEncoding) {
+        this.javaFileEncoding = javaCodeEncoding;
     }
 
     /**
-     * スキーマ名を取得します。
+     * スキーマ名を返します。
      * 
      * @return スキーマ名
      */
@@ -283,7 +283,7 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * バージョン用カラム名を取得します。
+     * バージョン用カラム名を返します。
      * 
      * @return バージョン用カラム名を設定します。
      */
@@ -302,7 +302,7 @@ public class GenEntitiesTask extends GenTask {
     }
 
     /**
-     * 正規表現で表されたテーブル名のパターンを取得します。
+     * 正規表現で表されたテーブル名のパターンを返します。
      * 
      * @return テーブル名のパターン
      */

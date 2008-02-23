@@ -18,13 +18,14 @@ package org.seasar.extension.jdbc.gen.generator;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Set;
 
 import javax.persistence.TemporalType;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.javacode.AbstractJavaCode;
-import org.seasar.extension.jdbc.gen.javacode.EntityBaseCode;
-import org.seasar.extension.jdbc.gen.javacode.EntityCode;
+import org.seasar.extension.jdbc.gen.javacode.EntityBaseJavaCode;
+import org.seasar.extension.jdbc.gen.javacode.EntityJavaCode;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
 import org.seasar.framework.util.ClassUtil;
@@ -33,19 +34,22 @@ import org.seasar.framework.util.TextUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
-
-import static junit.framework.Assert.*;
+import static org.junit.Assert.*;
 
 /**
  * @author taedium
  * 
  */
-public class JavaCodeGeneratorImplTest {
+public class JavaFileGeneratorImplTest {
 
-    private JavaCodeGeneratorImpl generator;
+    private JavaFileGeneratorImpl generator;
 
     private Writer writer;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGenerate() throws Exception {
         String packageName = ClassUtil.getPackageName(getClass());
@@ -55,7 +59,7 @@ public class JavaCodeGeneratorImplTest {
         cfg.setObjectWrapper(new DefaultObjectWrapper());
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
-        generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
+        generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
@@ -72,6 +76,10 @@ public class JavaCodeGeneratorImplTest {
         assertEquals("hoge", writer.toString());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGenerateEntityCode() throws Exception {
         File file = ResourceUtil.getResourceAsFile("templates");
@@ -79,7 +87,7 @@ public class JavaCodeGeneratorImplTest {
         cfg.setObjectWrapper(new DefaultObjectWrapper());
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
-        generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
+        generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
@@ -91,14 +99,17 @@ public class JavaCodeGeneratorImplTest {
             }
         };
         EntityModel model = new EntityModel();
-        EntityCode code = new EntityCode(model, "hoge.Foo", "bar.AbstractFoo",
-                "entityCode.ftl");
+        EntityJavaCode code = new EntityJavaCode(model, "hoge.Foo",
+                "bar.AbstractFoo", "entity.ftl");
         generator.generate(code);
-        String path = getClass().getName().replace(".", "/")
-                + "_entityCode.txt";
+        String path = getClass().getName().replace(".", "/") + "_entity.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGenerateEntityBase() throws Exception {
         File file = ResourceUtil.getResourceAsFile("templates");
@@ -106,7 +117,7 @@ public class JavaCodeGeneratorImplTest {
         cfg.setObjectWrapper(new DefaultObjectWrapper());
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
-        generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
+        generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
@@ -156,14 +167,18 @@ public class JavaCodeGeneratorImplTest {
         model.addPropertyModel(temp);
         model.addPropertyModel(version);
 
-        EntityBaseCode code = new EntityBaseCode(model, "bar.AbstractFoo",
-                "entityBaseCode.ftl");
+        EntityBaseJavaCode code = new EntityBaseJavaCode(model,
+                "bar.AbstractFoo", "entityBase.ftl");
         generator.generate(code);
         String path = getClass().getName().replace(".", "/")
-                + "_entityBaseCode.txt";
+                + "_entityBase.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGenerateEntityBase_compositeId() throws Exception {
         File file = ResourceUtil.getResourceAsFile("templates");
@@ -171,7 +186,7 @@ public class JavaCodeGeneratorImplTest {
         cfg.setObjectWrapper(new DefaultObjectWrapper());
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
-        generator = new JavaCodeGeneratorImpl(cfg, null, "UTF-8") {
+        generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
@@ -198,18 +213,40 @@ public class JavaCodeGeneratorImplTest {
         model.addPropertyModel(id1);
         model.addPropertyModel(id2);
 
-        EntityBaseCode code = new EntityBaseCode(model, "bar.AbstractFoo",
-                "entityBaseCode.ftl");
+        EntityBaseJavaCode code = new EntityBaseJavaCode(model,
+                "bar.AbstractFoo", "entityBase.ftl");
         generator.generate(code);
         String path = getClass().getName().replace(".", "/")
-                + "_entityBaseCode_compositeId.txt";
+                + "_entityBase_compositeId.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
+    /**
+     * 
+     * @author taedium
+     * 
+     */
     public static class MyJavaCode extends AbstractJavaCode {
 
+        /**
+         * 
+         * @param className
+         * @param templateName
+         */
         public MyJavaCode(String className, String templateName) {
             super(className, templateName);
+        }
+
+        public String getBaseClassName() {
+            return null;
+        }
+
+        public Set<String> getImportPackageNames() {
+            return null;
+        }
+
+        public String getShortBaseClassName() {
+            return null;
         }
 
     }

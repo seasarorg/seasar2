@@ -16,23 +16,83 @@
 package org.seasar.extension.jdbc.gen;
 
 import java.io.File;
+import java.util.Set;
 
 /**
- * @author taedium
+ * Javaのコードを表すインタフェースです。
  * 
+ * @author taedium
  */
 public interface JavaCode {
 
+    /** 拡張子 */
     String EXT = ".java";
 
+    /**
+     * パッケージ名を返します。
+     * 
+     * @return
+     */
     String getPackageName();
 
+    /**
+     * インポートパッケージ名のセットを返します。
+     * 
+     * @return インポートパッケージ名のセット
+     */
+    Set<String> getImportPackageNames();
+
+    /**
+     * クラス名を返します。
+     * 
+     * @return
+     */
     String getClassName();
 
+    /**
+     * パッケージ名を除いたクラス名を返します。
+     * 
+     * @return
+     */
+    String getShortClassName();
+
+    /**
+     * 基底クラス名を返します。
+     * 
+     * @return 基底クラス名
+     */
+    String getBaseClassName();
+
+    /**
+     * パッケージ名を除いた基底クラス名
+     * 
+     * @return パッケージ名を除いた基底クラス名を返します。
+     */
+    String getShortBaseClassName();
+
+    /**
+     * テンプレート名を返します。
+     * 
+     * @return
+     */
     String getTemplateName();
 
+    /**
+     * パッケージのディレクトリを返します。
+     * 
+     * @param baseDir
+     *            基盤となるディレクトリ
+     * @return パッケージのディレクトリ
+     */
     File getPackageDir(File baseDir);
 
+    /**
+     * Javaファイルを返します。
+     * 
+     * @param baseDir
+     *            基盤となるディレクトリ
+     * @return Javaファイル
+     */
     File getFile(File baseDir);
 
 }
