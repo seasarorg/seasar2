@@ -629,7 +629,7 @@ public class SqlSelectImplTest extends TestCase {
         query.count = true;
         query.prepare("getResultList");
         query.prepareSql();
-        assertEquals("select count(*) from ( select * from aaa )",
+        assertEquals("select count(*) from ( select * from aaa ) _COUNT_",
                 query.executedSql);
     }
 
