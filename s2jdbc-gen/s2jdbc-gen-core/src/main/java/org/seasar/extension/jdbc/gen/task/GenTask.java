@@ -31,7 +31,17 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * 生成するタスクです。
+ * コンストラクタで受け取る文字列が表すクラスを新しいクラスローダーを使って呼び出すタスクです。
+ * <p>
+ * コンストラクタで受け取る文字列はコマンドクラスと呼びます。コマンドクラスは次の規約に従う必要があります。
+ * </p>
+ * <li>publicなクラスである
+ * <li>executeという名前のメソッドをもつ
+ * <li>executeメソッドは、pulibcで、引数を持たず、非スタティックである
+ * 
+ * <p>
+ * このタスクに設定されたプロパティはコマンドクラスのインスタンスにコピーされます。
+ * </p>
  * 
  * @author taedium
  */

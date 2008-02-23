@@ -33,6 +33,10 @@ import static org.junit.Assert.*;
  */
 public class GenTaskTest {
 
+    private String commandClassName;
+
+    private GenTask task;
+
     private ClassLoader classLoader;
 
     /**
@@ -41,6 +45,9 @@ public class GenTaskTest {
      */
     @Before
     public void setUp() throws Exception {
+        commandClassName = getClass().getName() + "$Hoge";
+        task = new GenTask(commandClassName);
+
         String classpath = System.getProperty("java.class.path");
         String pathSeparator = System.getProperty("path.separator");
         String[] paths = classpath.split("\\" + pathSeparator);
@@ -58,8 +65,7 @@ public class GenTaskTest {
      */
     @Test
     public void testToURLs() throws Exception {
-        GenTask genTask = new GenTask("dummy");
-        URL[] urls = genTask.toURLs(new String[] { "a", "b", "c" });
+        URL[] urls = task.toURLs(new String[] { "a", "b", "c" });
         assertEquals(3, urls.length);
     }
 
@@ -69,8 +75,7 @@ public class GenTaskTest {
      */
     @Test
     public void testLoadClass() throws Exception {
-        GenTask genTask = new GenTask("dummy");
-        Class<?> clazz = genTask.loadClass(getClass().getName() + "$Hoge",
+        Class<?> clazz = task.loadClass(getClass().getName() + "$Hoge",
                 classLoader);
         assertEquals(classLoader, clazz.getClassLoader());
     }
@@ -81,11 +86,9 @@ public class GenTaskTest {
      */
     @Test
     public void testExecute() throws Exception {
-        GenTask genTask = new GenTask("dummy");
-        Class<?> clazz = Class.forName(getClass().getName() + "$Hoge", true,
-                classLoader);
+        Class<?> clazz = Class.forName(commandClassName, true, classLoader);
         Object hoge = clazz.newInstance();
-        genTask.execute(clazz, hoge, classLoader);
+        task.execute(clazz, hoge, classLoader);
         Field field = clazz.getField("foo");
         Object foo = field.get(hoge);
         assertNotNull(foo);

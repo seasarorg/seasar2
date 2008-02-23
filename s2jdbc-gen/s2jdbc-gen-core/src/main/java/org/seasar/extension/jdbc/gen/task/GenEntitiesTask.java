@@ -70,7 +70,17 @@ public class GenEntitiesTask extends GenTask {
      * インスタンスを構築します。
      */
     public GenEntitiesTask() {
-        super(GenEntitiesCommand.class.getName());
+        this(GenEntitiesCommand.class.getName());
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param commandClassName
+     *            コマンドクラス名
+     */
+    public GenEntitiesTask(String commandClassName) {
+        super(commandClassName);
     }
 
     /**
