@@ -470,11 +470,9 @@ public class GenEntitiesCommand implements GenCommand {
         JavaFileGenerator generator = createJavaFileGenerator();
         for (EntityModel entityModel : entityModels) {
             JavaCode entityCode = createEntityJavaCode(entityModel);
-            if (!exists(entityCode, destDir)) {
-                generator.generate(entityCode);
-            }
+            generator.generate(entityCode);
             JavaCode entityBaseCode = createEntityBaseJavaCode(entityModel);
-            generator.generate(entityBaseCode);
+            generator.generate(entityBaseCode, true);
         }
     }
 
@@ -559,19 +557,6 @@ public class GenEntitiesCommand implements GenCommand {
         String fullPackageName = ClassUtil.concatName(rootPackageName,
                 subPackageName);
         return ClassUtil.concatName(fullPackageName, entityName);
-    }
-
-    /**
-     * {@code javaCode}がすでに存在する場合に{@code true}を返します。
-     * 
-     * @param javaCode
-     *            Javaコード
-     * @param baseDir
-     *            基盤となるディレクトリ
-     * @return すでに存在する場合に{@code true}、そうでない場合{@code false}
-     */
-    protected boolean exists(JavaCode javaCode, File baseDir) {
-        return javaCode.getFile(baseDir).exists();
     }
 
     /**

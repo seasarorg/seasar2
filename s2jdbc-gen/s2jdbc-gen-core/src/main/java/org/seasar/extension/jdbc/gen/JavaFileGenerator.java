@@ -25,8 +25,30 @@ public interface JavaFileGenerator {
     /**
      * {@link JavaCode}からJavaファイルを生成します。
      * 
+     * <p>
+     * このメソッドの呼び出しは次のメソッドの実行に相当します。
+     * </p>
+     * <blockquote>
+     * 
+     * <pre>
+     *  generate(javaCode, false)
+     * </pre>
+     * 
+     * </blockquote>
+     * 
      * @param javaCode
      *            Javaコード
      */
     void generate(JavaCode javaCode);
+
+    /**
+     * {@link JavaCode}からJavaファイルを生成します。
+     * 
+     * @param javaCode
+     *            Javaコード
+     * @param overwrite
+     *            すでに存在する場合に上書きするならば{@code true}、何もしないならば{@code false}
+     */
+    void generate(JavaCode javaCode, boolean overwrite);
+
 }

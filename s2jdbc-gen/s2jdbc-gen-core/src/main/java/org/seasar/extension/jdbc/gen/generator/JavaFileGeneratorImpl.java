@@ -68,17 +68,35 @@ public class JavaFileGeneratorImpl implements JavaFileGenerator {
     }
 
     public void generate(JavaCode javaCode) {
+        generate(javaCode, false);
+    }
+
+    public void generate(JavaCode javaCode, boolean overwrite) {
+        if (!overwrite && exists(javaCode.getFile(baseDir))) {
+            return;
+        }
         makeDirsIfNecessary(javaCode.getPackageDir(baseDir));
-        File javaFile = javaCode.getFile(baseDir);
-        Writer writer = openWriter(javaFile);
+        Writer writer = openWriter(javaCode.getFile(baseDir));
         try {
             Template template = ConfigurationUtil.getTemplate(configuration,
                     javaCode.getTemplateName());
             TemplateUtil.process(template, javaCode, writer);
-            logger.log("DS2JDBCGen0002", new Object[] { javaFile.getPath() });
+            logger.log("DS2JDBCGen0002", new Object[] { javaCode.getFile(
+                    baseDir).getPath() });
         } finally {
             CloseableUtil.close(writer);
         }
+    }
+
+    /**
+     * ファイルが存在すれば{@code true}を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return ファイルが存在すれば{@code true}、存在しなければ{@code false}
+     */
+    protected boolean exists(File file) {
+        return file.exists();
     }
 
     /**

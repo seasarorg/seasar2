@@ -62,6 +62,11 @@ public class JavaFileGeneratorImplTest {
         generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
 
             @Override
+            protected boolean exists(File file) {
+                return false;
+            }
+
+            @Override
             protected void makeDirsIfNecessary(File dir) {
             }
 
@@ -88,6 +93,11 @@ public class JavaFileGeneratorImplTest {
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
         generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
+
+            @Override
+            protected boolean exists(File file) {
+                return false;
+            }
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
@@ -118,6 +128,11 @@ public class JavaFileGeneratorImplTest {
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
         generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
+
+            @Override
+            protected boolean exists(File file) {
+                return false;
+            }
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
@@ -187,6 +202,11 @@ public class JavaFileGeneratorImplTest {
         cfg.setDirectoryForTemplateLoading(file);
         writer = new StringWriter();
         generator = new JavaFileGeneratorImpl(cfg, null, "UTF-8") {
+
+            @Override
+            protected boolean exists(File file) {
+                return false;
+            }
 
             @Override
             protected void makeDirsIfNecessary(File dir) {
