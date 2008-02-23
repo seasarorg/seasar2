@@ -60,11 +60,18 @@ public class GenTask extends Task {
      *            このタスクから処理が委譲されるクラスの名前です。
      */
     public GenTask(String commandClassName) {
+        if (commandClassName == null) {
+            throw new NullPointerException(commandClassName);
+        }
         this.commandClassName = commandClassName;
     }
 
     @Override
     public void execute() throws BuildException {
+        if (classpath == null) {
+            throw new BuildException("classpath is not specified for '"
+                    + getTaskName() + "' task");
+        }
         URL[] urls = toURLs(classpath.list());
         ClassLoader cl = createClassLoader(urls);
         Class<?> clazz = loadClass(commandClassName, cl);
@@ -181,7 +188,7 @@ public class GenTask extends Task {
      * 
      * @return クラスパス
      */
-    protected Path createClasspath() {
+    public Path createClasspath() {
         if (classpath == null) {
             classpath = new Path(getProject());
         }
