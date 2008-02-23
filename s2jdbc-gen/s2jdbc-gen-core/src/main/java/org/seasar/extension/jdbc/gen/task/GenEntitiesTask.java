@@ -48,6 +48,12 @@ public class GenEntitiesTask extends GenTask {
     /** テンプレートファイルを格納するディレクトリ */
     protected File templateDir;
 
+    /** エンティティクラスのテンプレート名 */
+    protected String entityTemplateName;
+
+    /** エンティティ基底クラスのテンプレート名 */
+    protected String entityBaseTemplateName;
+
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding;
 
@@ -214,6 +220,45 @@ public class GenEntitiesTask extends GenTask {
      */
     public void setTemplateDir(File templateDir) {
         this.templateDir = templateDir;
+    }
+
+    /**
+     * エンティティクラスのテンプレート名を返します。
+     * 
+     * @return エンティティクラスのテンプレート名
+     */
+
+    public String getEntityTemplateName() {
+        return entityTemplateName;
+    }
+
+    /**
+     * エンティティクラスのテンプレート名を設定します。
+     * 
+     * @param entityTemplateName
+     *            エンティティクラスのテンプレート名
+     */
+    public void setEntityTemplateName(String entityTemplateName) {
+        this.entityTemplateName = entityTemplateName;
+    }
+
+    /**
+     * エンティティ基底クラスのテンプレート名を返します。
+     * 
+     * @return エンティティ基底クラスのテンプレート名
+     */
+    public String getEntityBaseTemplateName() {
+        return entityBaseTemplateName;
+    }
+
+    /**
+     * エンティティ基底クラスのテンプレート名
+     * 
+     * @param entityBaseTemplateName
+     *            エンティティ基底クラスのテンプレート名
+     */
+    public void setEntityBaseTemplateName(String entityBaseTemplateName) {
+        this.entityBaseTemplateName = entityBaseTemplateName;
     }
 
     /**

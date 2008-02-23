@@ -25,6 +25,7 @@ import org.seasar.extension.jdbc.gen.JavaFileGenerator;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.gen.util.TemplateUtil;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 import freemarker.template.Configuration;
@@ -36,6 +37,9 @@ import freemarker.template.Template;
  * @author taedium
  */
 public class JavaFileGeneratorImpl implements JavaFileGenerator {
+
+    /** ロガー */
+    protected Logger logger = Logger.getLogger(JavaFileGeneratorImpl.class);
 
     /** FreeMarkerの設定 */
     protected Configuration configuration;
@@ -65,11 +69,13 @@ public class JavaFileGeneratorImpl implements JavaFileGenerator {
 
     public void generate(JavaCode javaCode) {
         makeDirsIfNecessary(javaCode.getPackageDir(baseDir));
-        Writer writer = openWriter(javaCode.getFile(baseDir));
+        File javaFile = javaCode.getFile(baseDir);
+        Writer writer = openWriter(javaFile);
         try {
             Template template = ConfigurationUtil.getTemplate(configuration,
                     javaCode.getTemplateName());
             TemplateUtil.process(template, javaCode, writer);
+            logger.log("DS2JDBCGen0002", new Object[] { javaFile.getPath() });
         } finally {
             CloseableUtil.close(writer);
         }

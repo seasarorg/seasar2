@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -41,11 +42,16 @@ import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.reader.SchemaReaderImpl;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.FieldUtil;
 import org.seasar.framework.util.ResourceUtil;
 
 import freemarker.template.Configuration;
@@ -58,6 +64,9 @@ import static org.seasar.extension.jdbc.gen.command.GenEntitiesCommand.Default.*
  * @author taedium
  */
 public class GenEntitiesCommand implements GenCommand {
+
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(GenEntitiesCommand.class);
 
     /** diconファイル */
     protected String diconFile;
@@ -86,6 +95,12 @@ public class GenEntitiesCommand implements GenCommand {
     /** テンプレートファイルを格納するディレクトリ */
     protected File templateDir;
 
+    /** エンティティクラスのテンプレート名 */
+    protected String entityTemplateName;
+
+    /** エンティティ基底クラスのテンプレート名 */
+    protected String entityBaseTemplateName;
+
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding;
 
@@ -97,12 +112,6 @@ public class GenEntitiesCommand implements GenCommand {
 
     /** バージョンカラムの名前 */
     protected String versionColumnName;
-
-    /** エンティティクラスのテンプレート名 */
-    protected String entityTemplateName;
-
-    /** エンティティ基底クラスのテンプレート名 */
-    protected String entityBaseTemplateName;
 
     /** このインスタンスで{@link SingletonS2ContainerFactory}が初期化されたら{@code true} */
     protected boolean initialized;
@@ -190,6 +199,26 @@ public class GenEntitiesCommand implements GenCommand {
      */
     public void setTemplateDir(File templateDir) {
         this.templateDir = templateDir;
+    }
+
+    /**
+     * エンティティクラスのテンプレート名を設定します。
+     * 
+     * @param entityTemplateName
+     *            エンティティクラスのテンプレート名
+     */
+    public void setEntityTemplateName(String entityTemplateName) {
+        this.entityTemplateName = entityTemplateName;
+    }
+
+    /**
+     * エンティティ基底クラスのテンプレート名
+     * 
+     * @param entityBaseTemplateName
+     *            エンティティ基底クラスのテンプレート名
+     */
+    public void setEntityBaseTemplateName(String entityBaseTemplateName) {
+        this.entityBaseTemplateName = entityBaseTemplateName;
     }
 
     /**
@@ -292,6 +321,9 @@ public class GenEntitiesCommand implements GenCommand {
                 entityBasePackageName = nc.getEntityPackageName();
             }
         }
+        if (logger.isDebugEnabled()) {
+            logProperties();
+        }
     }
 
     /**
@@ -332,7 +364,7 @@ public class GenEntitiesCommand implements GenCommand {
             entityTemplateName = ENTITY_TEMPLATE_NAME;
         }
         if (entityBaseTemplateName == null) {
-            entityBaseTemplateName = ENTITU_BASE_TEMPLATE_NAME;
+            entityBaseTemplateName = ENTITY_BASE_TEMPLATE_NAME;
         }
         if (schemaName == null) {
             schemaName = SCHEMA_NAME;
@@ -342,6 +374,24 @@ public class GenEntitiesCommand implements GenCommand {
         }
         if (tableNamePattern == null) {
             tableNamePattern = TABLE_NAME_PATTERN;
+        }
+    }
+
+    /**
+     * このインスタンスに設定可能なプロパティをログ出力します。
+     */
+    protected void logProperties() {
+        Class<?> clazz = getClass();
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
+        int propSize = beanDesc.getPropertyDescSize();
+        for (int i = 0; i < propSize; i++) {
+            PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
+            if (!propertyDesc.hasWriteMethod()) {
+                return;
+            }
+            Field f = propertyDesc.getField();
+            logger.log("DS2JDBCGen0001", new Object[] { f.getName(),
+                    FieldUtil.get(f, this) });
         }
     }
 
@@ -560,13 +610,13 @@ public class GenEntitiesCommand implements GenCommand {
         public static String JAVA_FILE_ENCODING = "UTF-8";
 
         /** バージョン用カラムの名前 */
-        public static String VERSION_COLUMN_NAME = "versionColumn";
+        public static String VERSION_COLUMN_NAME = "version";
 
         /** エンティティクラスのテンプレート名 */
         public static String ENTITY_TEMPLATE_NAME = "entity.ftl";
 
         /** エンティティ基底クラスのテンプレート名 */
-        public static String ENTITU_BASE_TEMPLATE_NAME = "entityBase.ftl";
+        public static String ENTITY_BASE_TEMPLATE_NAME = "entityBase.ftl";
 
         /** diconファイル */
         public static String DICON_FILE = "s2jdbc.dicon";
