@@ -552,5 +552,9 @@ public final class ValueTypes {
         public String toText(Object value) {
             throw new UnsupportedOperationException("toText");
         }
+
+        public int getSqlType() {
+            return Types.NULL;
+        }
     }
 }

@@ -145,4 +145,11 @@ public interface ValueType {
      * @return 値の文字列表現
      */
     String toText(Object value);
+
+    /**
+     * JDBCのSQL型を返します。
+     * 
+     * @return JDBCのSQL型
+     */
+    int getSqlType();
 }

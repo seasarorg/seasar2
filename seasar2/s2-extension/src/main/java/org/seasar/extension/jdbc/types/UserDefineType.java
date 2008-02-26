@@ -113,4 +113,8 @@ public class UserDefineType implements ValueType {
     public String toText(Object value) {
         return baseValueType.toText(fromJavaToDb(value));
     }
+
+    public int getSqlType() {
+        return baseValueType.getSqlType();
+    }
 }
