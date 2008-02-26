@@ -182,6 +182,11 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         return iterateInternal(callback);
     }
 
+    /**
+     * SQLが返す結果セットの行数を返します。
+     * 
+     * @return SQLが返す結果セットの行数
+     */
     public long getCount() {
         count = true;
         prepare("getCount");
