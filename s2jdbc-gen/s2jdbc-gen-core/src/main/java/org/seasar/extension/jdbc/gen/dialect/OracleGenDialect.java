@@ -15,11 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * Oracleの方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class OracleGenDialect extends StandardGenDialect {
+
+    public OracleGenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
 }

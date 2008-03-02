@@ -305,7 +305,7 @@ public class GenEntitiesCommand implements GenCommand {
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         persistenceConvention = jdbcManager.getPersistenceConvention();
-        dialect = GenDialectManager.getDialect(jdbcManager.getDialect());
+        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         if (container.hasComponentDef(NamingConvention.class)) {
             NamingConvention nc = (NamingConvention) container
                     .getComponent(NamingConvention.class);

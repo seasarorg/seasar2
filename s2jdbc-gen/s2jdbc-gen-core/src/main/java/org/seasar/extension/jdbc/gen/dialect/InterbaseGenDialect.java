@@ -15,11 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * Interbaseの方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class InterbaseGenDialect extends StandardGenDialect {
+
+    public InterbaseGenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
 }

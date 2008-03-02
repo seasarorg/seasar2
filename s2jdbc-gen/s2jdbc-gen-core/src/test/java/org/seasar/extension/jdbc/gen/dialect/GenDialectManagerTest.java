@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.gen.GenDialect;
 
@@ -32,8 +33,11 @@ public class GenDialectManagerTest {
      */
     @Test
     public void testGetDialect() {
-        GenDialect dialect = GenDialectManager.getDialect(new OracleDialect());
-        assertEquals(GenDialectManager.ORACLE, dialect);
+        DbmsDialect dbmsDialect = new OracleDialect();
+        GenDialect dialect = GenDialectManager.getGenDialect(dbmsDialect);
+        assertNotNull(dialect);
+        assertTrue(dialect instanceof OracleGenDialect);
+        GenDialect dialect2 = GenDialectManager.getGenDialect(dbmsDialect);
+        assertSame(dialect, dialect2);
     }
-
 }

@@ -15,12 +15,18 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * HSQLDBの方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class HsqlGenDialect extends StandardGenDialect {
+
+    public HsqlGenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
     @Override
     public String getDefaultSchemaName(String userName) {

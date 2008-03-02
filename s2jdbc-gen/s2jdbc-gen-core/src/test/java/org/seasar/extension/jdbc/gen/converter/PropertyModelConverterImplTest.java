@@ -21,9 +21,12 @@ import javax.persistence.TemporalType;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
 import org.seasar.extension.jdbc.gen.model.PropertyModel;
+import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
 import static org.junit.Assert.*;
@@ -41,8 +44,9 @@ public class PropertyModelConverterImplTest {
      */
     @Before
     public void setUp() {
-        converter = new PropertyModelConverterImpl(
-                new PersistenceConventionImpl(), new StandardGenDialect(),
+        PersistenceConvention convention = new PersistenceConventionImpl();
+        GenDialect dialect = new StandardGenDialect(new StandardDialect());
+        converter = new PropertyModelConverterImpl(convention, dialect,
                 "VERSION");
     }
 

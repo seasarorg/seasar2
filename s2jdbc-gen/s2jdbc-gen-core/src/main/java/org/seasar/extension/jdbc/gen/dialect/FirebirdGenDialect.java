@@ -15,11 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * Firebirdの方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class FirebirdGenDialect extends StandardGenDialect {
+
+    public FirebirdGenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
 }

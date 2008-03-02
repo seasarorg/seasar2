@@ -15,11 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * Derbyの方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class DerbyGenDialect extends StandardGenDialect {
+
+    public DerbyGenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
 }

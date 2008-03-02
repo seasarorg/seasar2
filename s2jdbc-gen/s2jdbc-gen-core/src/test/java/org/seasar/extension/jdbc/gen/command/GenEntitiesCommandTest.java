@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.command;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -45,7 +46,7 @@ public class GenEntitiesCommandTest {
         command.setupDefaults();
         command.dataSource = new MockDataSource();
         command.persistenceConvention = new PersistenceConventionImpl();
-        command.dialect = new StandardGenDialect();
+        command.dialect = new StandardGenDialect(new StandardDialect());
     }
 
     /**

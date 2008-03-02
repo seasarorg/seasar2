@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.converter;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
 import org.seasar.extension.jdbc.gen.model.DbTableDesc;
@@ -40,10 +42,12 @@ public class EntityModelConverterImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        PersistenceConvention pc = new PersistenceConventionImpl();
+        PersistenceConvention convention = new PersistenceConventionImpl();
+        GenDialect dialect = new StandardGenDialect(new StandardDialect());
         PropertyModelConverterImpl propertyModelConverter = new PropertyModelConverterImpl(
-                pc, new StandardGenDialect(), "VERSION");
-        converter = new EntityModelConverterImpl(pc, propertyModelConverter);
+                convention, dialect, "VERSION");
+        converter = new EntityModelConverterImpl(convention,
+                propertyModelConverter);
     }
 
     /**

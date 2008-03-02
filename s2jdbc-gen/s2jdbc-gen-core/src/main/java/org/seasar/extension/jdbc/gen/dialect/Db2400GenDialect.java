@@ -15,11 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * DB2 400の方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class Db2400GenDialect extends Db2390GenDialect {
+
+    public Db2400GenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
 }

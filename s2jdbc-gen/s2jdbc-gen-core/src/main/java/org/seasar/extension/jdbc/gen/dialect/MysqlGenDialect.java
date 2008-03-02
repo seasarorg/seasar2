@@ -15,11 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import org.seasar.extension.jdbc.DbmsDialect;
+
 /**
  * MySQLの方言を扱うクラスです。
  * 
  * @author taedium
  */
 public class MysqlGenDialect extends StandardGenDialect {
+
+    public MysqlGenDialect(DbmsDialect dbmsDialect) {
+        super(dbmsDialect);
+    }
 
 }

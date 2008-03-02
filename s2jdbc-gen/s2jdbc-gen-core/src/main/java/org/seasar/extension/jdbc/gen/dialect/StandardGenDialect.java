@@ -18,12 +18,15 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.SqlType;
 
 /**
  * 標準的な方言をあつかうクラスです。
@@ -35,10 +38,15 @@ public class StandardGenDialect implements GenDialect {
     /** SQL型をキー、Javaクラスを値とするマップ */
     protected Map<Integer, Class<?>> javaTypeMap = new HashMap<Integer, Class<?>>();
 
+    protected Map<Integer, SqlType> sqlTypeMap = new HashMap<Integer, SqlType>();
+
+    protected DbmsDialect dbmsDialect;
+
     /**
      * インスタンスを構築します。
      */
-    public StandardGenDialect() {
+    public StandardGenDialect(DbmsDialect dbmsDialect) {
+        this.dbmsDialect = dbmsDialect;
         javaTypeMap.put(Types.ARRAY, Object.class);
         javaTypeMap.put(Types.BIGINT, Long.class);
         javaTypeMap.put(Types.BINARY, byte[].class);
@@ -69,6 +77,38 @@ public class StandardGenDialect implements GenDialect {
         javaTypeMap.put(Types.TINYINT, Short.class);
         javaTypeMap.put(Types.VARBINARY, byte[].class);
         javaTypeMap.put(Types.VARCHAR, String.class);
+
+        sqlTypeMap.put(Types.ARRAY, StandardSqlType.ARRAY);
+        sqlTypeMap.put(Types.BIGINT, StandardSqlType.BIGINT);
+        sqlTypeMap.put(Types.BINARY, StandardSqlType.BYNARY);
+        sqlTypeMap.put(Types.BIT, StandardSqlType.BIT);
+        sqlTypeMap.put(Types.BLOB, StandardSqlType.BLOB);
+        sqlTypeMap.put(Types.BOOLEAN, StandardSqlType.BLOOEAN);
+        sqlTypeMap.put(Types.CHAR, StandardSqlType.CHAR);
+        sqlTypeMap.put(Types.CLOB, StandardSqlType.CLOB);
+        sqlTypeMap.put(Types.DATALINK, StandardSqlType.DATALINK);
+        sqlTypeMap.put(Types.DATE, StandardSqlType.DATE);
+        sqlTypeMap.put(Types.DECIMAL, StandardSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DISTINCT, StandardSqlType.DISTINCT);
+        sqlTypeMap.put(Types.DOUBLE, StandardSqlType.DOUBLE);
+        sqlTypeMap.put(Types.FLOAT, StandardSqlType.FLOAT);
+        sqlTypeMap.put(Types.INTEGER, StandardSqlType.INTEGER);
+        sqlTypeMap.put(Types.JAVA_OBJECT, StandardSqlType.JAVA_OBJECT);
+        sqlTypeMap.put(Types.LONGVARBINARY, StandardSqlType.LONGVARBINARY);
+        sqlTypeMap.put(Types.LONGVARCHAR, StandardSqlType.LONGVARBINARY);
+        sqlTypeMap.put(Types.NULL, StandardSqlType.NULL);
+        sqlTypeMap.put(Types.NUMERIC, StandardSqlType.NUMERIC);
+        sqlTypeMap.put(Types.OTHER, StandardSqlType.OTHER);
+        sqlTypeMap.put(Types.REAL, StandardSqlType.REAL);
+        sqlTypeMap.put(Types.REF, StandardSqlType.REF);
+        sqlTypeMap.put(Types.SMALLINT, StandardSqlType.SMALLINT);
+        sqlTypeMap.put(Types.STRUCT, StandardSqlType.STRUCT);
+        sqlTypeMap.put(Types.TIME, StandardSqlType.TIME);
+        sqlTypeMap.put(Types.TIMESTAMP, StandardSqlType.TIMESTAMP);
+        sqlTypeMap.put(Types.TINYINT, StandardSqlType.TINYINT);
+        sqlTypeMap.put(Types.VARBINARY, StandardSqlType.VARBINARY);
+        sqlTypeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
+
     }
 
     public boolean isUserTable(String tableName) {
@@ -104,6 +144,106 @@ public class StandardGenDialect implements GenDialect {
 
     public Class<?> getJavaType(int sqlType, String typeName, boolean nullable) {
         return javaTypeMap.get(sqlType);
+    }
+
+    public SqlType getSqlType(int sqlType) {
+        return sqlTypeMap.get(sqlType);
+    }
+
+    public DbmsDialect getDbmsDialect() {
+        return dbmsDialect;
+    }
+
+    public static enum StandardSqlType implements SqlType {
+
+        ARRAY,
+
+        BIGINT,
+
+        BYNARY,
+
+        BIT,
+
+        BLOB,
+
+        BLOOEAN,
+
+        CHAR {
+
+            @Override
+            public String toText(int length, int presision, int scale) {
+                return format("char(%d)", length);
+            }
+
+        },
+
+        CLOB,
+
+        DATE,
+
+        DATALINK,
+
+        DECIMAL,
+
+        DISTINCT,
+
+        DOUBLE,
+
+        FLOAT,
+
+        INTEGER,
+
+        JAVA_OBJECT,
+
+        LONGVARBINARY,
+
+        LONGVARCHAR,
+
+        NULL,
+
+        NUMERIC,
+
+        OTHER,
+
+        REAL,
+
+        REF,
+
+        SMALLINT,
+
+        STRUCT,
+
+        TIME,
+
+        TIMESTAMP,
+
+        TINYINT,
+
+        VARCHAR {
+
+            @Override
+            public String toText(int length, int presision, int scale) {
+                return format("varchar(%d)", length);
+            }
+        },
+
+        VARBINARY {
+
+            @Override
+            public String toText(int length, int presision, int scale) {
+                return format("varbinary(%d)", length);
+            }
+        },
+        ;
+
+        public String toText(int length, int presision, int scale) {
+            return name().toLowerCase();
+        }
+
+        protected String format(String format, Object... args) {
+            return new Formatter().format(format, args).toString();
+        }
+
     }
 
 }

@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
 import org.seasar.framework.mock.sql.MockResultSet;
@@ -68,8 +70,8 @@ public class SchemaReaderImplTest {
             }
 
         };
-        SchemaReaderImpl reader = new SchemaReaderImpl(null,
-                new StandardGenDialect());
+        GenDialect dialect = new StandardGenDialect(new StandardDialect());
+        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
         Set<String> primaryKeys = reader.getPrimaryKeys(metaData, "schemaName",
                 "tableName");
         assertEquals(2, primaryKeys.size());
@@ -123,8 +125,8 @@ public class SchemaReaderImplTest {
             }
         };
 
-        SchemaReaderImpl reader = new SchemaReaderImpl(null,
-                new StandardGenDialect());
+        GenDialect dialect = new StandardGenDialect(new StandardDialect());
+        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
         List<DbColumnDesc> columnDescs = reader.getDbColumnDescs(metaData,
                 "schemaName", "tableName");
         assertEquals(2, columnDescs.size());
@@ -175,8 +177,8 @@ public class SchemaReaderImplTest {
             }
         };
 
-        SchemaReaderImpl reader = new SchemaReaderImpl(null,
-                new StandardGenDialect());
+        GenDialect dialect = new StandardGenDialect(new StandardDialect());
+        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
         List<String> tables = reader.getTables(metaData, "schemaName");
         assertEquals(2, tables.size());
         assertEquals("table1", tables.get(0));
@@ -189,8 +191,8 @@ public class SchemaReaderImplTest {
      */
     @Test
     public void testFilterTables() throws Exception {
-        SchemaReaderImpl reader = new SchemaReaderImpl(null,
-                new StandardGenDialect());
+        GenDialect dialect = new StandardGenDialect(new StandardDialect());
+        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
         List<String> tables = Arrays.asList("AAA", "BBB", "abc");
         List<String> list = reader.filterTables(tables, "A.*");
         assertEquals(2, list.size());
