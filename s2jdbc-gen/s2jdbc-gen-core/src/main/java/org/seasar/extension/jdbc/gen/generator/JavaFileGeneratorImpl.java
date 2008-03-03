@@ -38,6 +38,9 @@ import freemarker.template.Template;
  */
 public class JavaFileGeneratorImpl implements JavaFileGenerator {
 
+    /** javaファイルの拡張子 */
+    protected static final String EXTENSION = ".java";
+
     /** ロガー */
     protected Logger logger = Logger.getLogger(JavaFileGeneratorImpl.class);
 
@@ -72,20 +75,48 @@ public class JavaFileGeneratorImpl implements JavaFileGenerator {
     }
 
     public void generate(JavaCode javaCode, boolean overwrite) {
-        if (!overwrite && exists(javaCode.getFile(baseDir))) {
+        File javaFile = createJavaFile(javaCode);
+        if (!overwrite && exists(javaFile)) {
             return;
         }
-        makeDirsIfNecessary(javaCode.getPackageDir(baseDir));
-        Writer writer = openWriter(javaCode.getFile(baseDir));
+        File packageDir = createPackageDir(javaCode);
+        makeDirsIfNecessary(packageDir);
+        Writer writer = openWriter(javaFile);
         try {
             Template template = ConfigurationUtil.getTemplate(configuration,
                     javaCode.getTemplateName());
             TemplateUtil.process(template, javaCode, writer);
-            logger.log("DS2JDBCGen0002", new Object[] { javaCode.getFile(
-                    baseDir).getPath() });
+            logger.log("DS2JDBCGen0002", new Object[] { javaFile.getPath() });
         } finally {
             CloseableUtil.close(writer);
         }
+    }
+
+    /**
+     * Javaファイルを作成します。
+     * 
+     * @param javaCode
+     *            Javaコード
+     * @return Javaファイル
+     */
+    protected File createJavaFile(JavaCode javaCode) {
+        String fileName = javaCode.getClassName().replace('.',
+                File.separatorChar)
+                + EXTENSION;
+        return new File(baseDir, fileName);
+    }
+
+    /**
+     * パッケージのディレクトリを作成します。
+     * 
+     * @param javaCode
+     *            Javaコード
+     * @return パッケージのディレクトリ
+     */
+    protected File createPackageDir(JavaCode javaCode) {
+        String dirName = javaCode.getPackageName().replace('.',
+                File.separatorChar);
+        return new File(baseDir, dirName);
     }
 
     /**

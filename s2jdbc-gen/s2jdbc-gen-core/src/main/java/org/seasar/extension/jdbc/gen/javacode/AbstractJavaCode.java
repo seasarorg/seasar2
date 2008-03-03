@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.javacode;
 
-import java.io.File;
-
 import org.seasar.extension.jdbc.gen.JavaCode;
 import org.seasar.framework.util.ClassUtil;
 
@@ -69,15 +67,6 @@ public abstract class AbstractJavaCode implements JavaCode {
 
     public String getTemplateName() {
         return templateName;
-    }
-
-    public File getPackageDir(File baseDir) {
-        return new File(baseDir, packageName.replace('.', File.separatorChar));
-    }
-
-    public File getFile(File baseDir) {
-        return new File(baseDir, className.replace('.', File.separatorChar)
-                + EXT);
     }
 
 }

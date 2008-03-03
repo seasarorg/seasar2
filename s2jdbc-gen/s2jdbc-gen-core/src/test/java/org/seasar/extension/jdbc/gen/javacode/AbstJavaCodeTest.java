@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.javacode;
 
-import java.io.File;
 import java.util.Set;
 
 import org.junit.Before;
@@ -87,29 +86,6 @@ public class AbstJavaCodeTest {
     @Test
     public void testGetTemplateName() throws Exception {
         assertEquals("bar.ftl", code.getTemplateName());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetPackageDir() throws Exception {
-        File packageDir = code.getPackageDir(new File("base"));
-        String path = "base" + File.separator + "hoge";
-        assertEquals(path, packageDir.getPath());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetFile() throws Exception {
-        File file = code.getFile(new File("base"));
-        String path = "base" + File.separator + "hoge" + File.separator
-                + "Foo.java";
-        assertEquals(path, file.getPath());
     }
 
 }
