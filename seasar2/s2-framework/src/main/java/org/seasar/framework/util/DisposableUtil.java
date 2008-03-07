@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.util;
 
+import java.beans.Introspector;
 import java.util.LinkedList;
 
 import ognl.OgnlRuntime;
@@ -78,6 +79,7 @@ public class DisposableUtil {
         }
         disposables.clear();
         OgnlRuntime.clearCache();
+        Introspector.flushCaches();
         Logger.dispose();
     }
 
