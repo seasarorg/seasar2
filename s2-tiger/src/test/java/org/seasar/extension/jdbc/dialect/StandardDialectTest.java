@@ -222,7 +222,7 @@ public class StandardDialectTest extends TestCase {
      */
     public void testConvertGetCountSql() throws Exception {
         String sql = "select * from emp";
-        String expected = "select count(*) from ( select * from emp ) _COUNT_";
+        String expected = "select count(*) from ( select * from emp ) COUNT_";
         assertEquals(expected, dialect.convertGetCountSql(sql));
     }
 }

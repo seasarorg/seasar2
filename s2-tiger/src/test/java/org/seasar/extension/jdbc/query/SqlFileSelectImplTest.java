@@ -324,7 +324,7 @@ public class SqlFileSelectImplTest extends TestCase {
         query.prepareParameter();
         query.prepareSql();
         assertEquals(
-                "select count(*) from ( select * from aaa where id = ? ) _COUNT_",
+                "select count(*) from ( select * from aaa where id = ? ) COUNT_",
                 query.executedSql);
     }
 
