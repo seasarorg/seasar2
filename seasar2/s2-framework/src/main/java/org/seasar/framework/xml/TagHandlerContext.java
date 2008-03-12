@@ -27,7 +27,7 @@ import org.xml.sax.Locator;
  * @author higa
  * 
  */
-public final class TagHandlerContext {
+public class TagHandlerContext {
 
     private static final Integer ONE = new Integer(1);
 

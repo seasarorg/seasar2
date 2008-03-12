@@ -35,7 +35,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author higa
  * 
  */
-public final class SaxHandler extends DefaultHandler {
+public class SaxHandler extends DefaultHandler {
 
     private TagHandlerRule tagHandlerRule;
 

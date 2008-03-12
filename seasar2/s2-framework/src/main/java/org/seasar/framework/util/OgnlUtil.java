@@ -170,12 +170,11 @@ public final class OgnlUtil {
         public Class classForName(String className, Map ctx)
                 throws ClassNotFoundException {
             try {
-                return Class.forName(className, true, classLoader);
+                return classLoader.loadClass(className);
             } catch (ClassNotFoundException ex) {
                 int dot = className.indexOf('.');
                 if (dot < 0) {
-                    return Class.forName("java.lang." + className, true,
-                            classLoader);
+                    return classLoader.loadClass("java.lang." + className);
                 } else {
                     throw ex;
                 }

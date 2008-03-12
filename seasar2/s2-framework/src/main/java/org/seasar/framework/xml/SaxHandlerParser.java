@@ -30,7 +30,7 @@ import org.xml.sax.InputSource;
  * @author higa
  * 
  */
-public final class SaxHandlerParser {
+public class SaxHandlerParser {
 
     private SaxHandler saxHandler;
 
