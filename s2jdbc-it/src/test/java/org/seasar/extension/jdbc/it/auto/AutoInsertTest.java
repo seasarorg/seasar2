@@ -48,9 +48,11 @@ import org.seasar.extension.jdbc.it.entity.TableStrategy;
 import org.seasar.extension.jdbc.it.entity.TableStrategy2;
 import org.seasar.extension.jdbc.it.entity.TableStrategy3;
 import org.seasar.extension.jdbc.it.entity.TableStrategy4;
+import org.seasar.extension.jdbc.it.entity.TableStrategy5;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.annotation.Prerequisite;
 
 import static org.junit.Assert.*;
 
@@ -328,6 +330,19 @@ public class AutoInsertTest {
     public void testId_table_explicitGenerator() throws Exception {
         for (int i = 0; i < 110; i++) {
             TableStrategy2 entity = new TableStrategy2();
+            jdbcManager.insert(entity).execute();
+            assertNotNull(entity.id);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV not in {'hsqldb', 'h2', 'standard', 'oracle', 'db2', 'mysql', 'postgre'}")
+    public void testId_table_qualifiedGenerator() throws Exception {
+        for (int i = 0; i < 110; i++) {
+            TableStrategy5 entity = new TableStrategy5();
             jdbcManager.insert(entity).execute();
             assertNotNull(entity.id);
         }

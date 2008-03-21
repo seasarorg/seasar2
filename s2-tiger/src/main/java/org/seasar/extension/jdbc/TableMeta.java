@@ -23,63 +23,91 @@ package org.seasar.extension.jdbc;
  */
 public class TableMeta {
 
-	/**
-	 * 名前です。
-	 */
-	protected String name;
+    /**
+     * 名前です。
+     */
+    protected String name;
 
-	/**
-	 * スキーマです。
-	 */
-	protected String schema;
+    /**
+     * カタログです。
+     */
+    protected String catalog;
 
-	/**
-	 * 名前を返します。
-	 * 
-	 * @return 名前
-	 */
-	public String getName() {
-		return name;
-	}
+    /**
+     * スキーマです。
+     */
+    protected String schema;
 
-	/**
-	 * 名前を設定します。
-	 * 
-	 * @param name
-	 *            名前
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * スキーマを返します。
-	 * 
-	 * @return スキーマ
-	 */
-	public String getSchema() {
-		return schema;
-	}
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * スキーマを設定します。
-	 * 
-	 * @param schema
-	 *            スキーマ
-	 */
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
+    /**
+     * カタログを返します。
+     * 
+     * @return カタログ
+     */
+    public String getCatalog() {
+        return catalog;
+    }
 
-	/**
-	 * スキーマを含んだ完全な名前を返します。
-	 * 
-	 * @return スキーマを含んだ完全な名前
-	 */
-	public String getFullName() {
-		if (schema == null) {
-			return name;
-		}
-		return schema + "." + name;
-	}
+    /**
+     * カタログを設定します。
+     * 
+     * @param catalog
+     *            カタログ
+     */
+    public void setCatalog(String catalog) {
+        this.catalog = catalog;
+    }
+
+    /**
+     * スキーマを返します。
+     * 
+     * @return スキーマ
+     */
+    public String getSchema() {
+        return schema;
+    }
+
+    /**
+     * スキーマを設定します。
+     * 
+     * @param schema
+     *            スキーマ
+     */
+    public void setSchema(String schema) {
+        this.schema = schema;
+    }
+
+    /**
+     * カタログやスキーマを含んだ完全な名前を返します。
+     * 
+     * @return カタログやスキーマを含んだ完全な名前
+     */
+    public String getFullName() {
+        StringBuilder buf = new StringBuilder();
+        if (catalog != null) {
+            buf.append(catalog).append(".");
+        }
+        if (schema != null) {
+            buf.append(schema).append(".");
+        }
+        return buf.append(name).toString();
+    }
 }

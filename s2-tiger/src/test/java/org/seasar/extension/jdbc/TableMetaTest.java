@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc;
 
-import org.seasar.extension.jdbc.TableMeta;
-
 import junit.framework.TestCase;
 
 /**
@@ -25,22 +23,43 @@ import junit.framework.TestCase;
  */
 public class TableMetaTest extends TestCase {
 
-	/**
-	 * 
-	 */
-	public void testGetFullName() {
-		TableMeta tableMeta = new TableMeta();
-		tableMeta.setName("HOGE");
-		assertEquals("HOGE", tableMeta.getFullName());
-	}
+    /**
+     * 
+     */
+    public void testGetFullName() {
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setName("HOGE");
+        assertEquals("HOGE", tableMeta.getFullName());
+    }
 
-	/**
-	 * 
-	 */
-	public void testGetFullName_schema() {
-		TableMeta tableMeta = new TableMeta();
-		tableMeta.setName("HOGE");
-		tableMeta.setSchema("SCOTT");
-		assertEquals("SCOTT.HOGE", tableMeta.getFullName());
-	}
+    /**
+     * 
+     */
+    public void testGetFullName_schema() {
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setName("HOGE");
+        tableMeta.setSchema("SCOTT");
+        assertEquals("SCOTT.HOGE", tableMeta.getFullName());
+    }
+
+    /**
+     * 
+     */
+    public void testGetFullName_catalog() {
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setName("HOGE");
+        tableMeta.setCatalog("CATALOG");
+        assertEquals("CATALOG.HOGE", tableMeta.getFullName());
+    }
+
+    /**
+     * 
+     */
+    public void testGetFullName_catalog_schema() {
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setName("HOGE");
+        tableMeta.setCatalog("CATALOG");
+        tableMeta.setSchema("SCOTT");
+        assertEquals("CATALOG.SCOTT.HOGE", tableMeta.getFullName());
+    }
 }

@@ -33,47 +33,51 @@ import org.seasar.framework.util.StringUtil;
  */
 public class TableMetaFactoryImpl implements TableMetaFactory {
 
-	private PersistenceConvention persistenceConvention;
+    private PersistenceConvention persistenceConvention;
 
-	public TableMeta createTableMeta(Class<?> entityClass, EntityMeta entityMeta) {
-		TableMeta tableMeta = new TableMeta();
-		String defaultName = persistenceConvention
-				.fromEntityNameToTableName(entityMeta.getName());
-		Table table = entityClass.getAnnotation(Table.class);
-		if (table != null) {
-			String name = table.name();
-			if (StringUtil.isEmpty(name)) {
-				name = defaultName;
-			}
-			tableMeta.setName(name);
-			String schema = table.schema();
-			if (!StringUtil.isEmpty(schema)) {
-				tableMeta.setSchema(schema);
-			}
-		} else {
-			tableMeta.setName(defaultName);
-		}
-		return tableMeta;
-	}
+    public TableMeta createTableMeta(Class<?> entityClass, EntityMeta entityMeta) {
+        TableMeta tableMeta = new TableMeta();
+        String defaultName = persistenceConvention
+                .fromEntityNameToTableName(entityMeta.getName());
+        Table table = entityClass.getAnnotation(Table.class);
+        if (table != null) {
+            String name = table.name();
+            if (StringUtil.isEmpty(name)) {
+                name = defaultName;
+            }
+            tableMeta.setName(name);
+            String catalog = table.catalog();
+            if (!StringUtil.isEmpty(catalog)) {
+                tableMeta.setCatalog(catalog);
+            }
+            String schema = table.schema();
+            if (!StringUtil.isEmpty(schema)) {
+                tableMeta.setSchema(schema);
+            }
+        } else {
+            tableMeta.setName(defaultName);
+        }
+        return tableMeta;
+    }
 
-	/**
-	 * 永続化用の規約を返します。
-	 * 
-	 * @return 永続化用の規約
-	 */
-	public PersistenceConvention getPersistenceConvention() {
-		return persistenceConvention;
-	}
+    /**
+     * 永続化用の規約を返します。
+     * 
+     * @return 永続化用の規約
+     */
+    public PersistenceConvention getPersistenceConvention() {
+        return persistenceConvention;
+    }
 
-	/**
-	 * 永続化用の規約を設定します。
-	 * 
-	 * @param persistenceConvention
-	 *            永続化用の規約
-	 */
-	@Binding(bindingType = BindingType.MUST)
-	public void setPersistenceConvention(
-			PersistenceConvention persistenceConvention) {
-		this.persistenceConvention = persistenceConvention;
-	}
+    /**
+     * 永続化用の規約を設定します。
+     * 
+     * @param persistenceConvention
+     *            永続化用の規約
+     */
+    @Binding(bindingType = BindingType.MUST)
+    public void setPersistenceConvention(
+            PersistenceConvention persistenceConvention) {
+        this.persistenceConvention = persistenceConvention;
+    }
 }

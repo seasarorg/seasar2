@@ -49,6 +49,9 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
     /** 識別子に付けられたアノテーション */
     protected TableGenerator tableGenerator;
 
+    /** 採番テーブルのカタログ名 */
+    protected String catalog;
+
     /** 採番テーブルのスキーマ名 */
     protected String schema;
 
@@ -84,6 +87,7 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
             final PropertyMeta propertyMeta, final TableGenerator tableGenerator) {
         super(entityMeta, propertyMeta, tableGenerator.allocationSize());
         this.tableGenerator = tableGenerator;
+        catalog = getCatalog();
         schema = getSchema();
         table = getTable();
         pkColumnName = getPkColumnName();
@@ -149,6 +153,19 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
                     propertyMeta.getName());
         }
         return Number.class.cast(result);
+    }
+
+    /**
+     * 採番テーブルのカタログ名を返します。
+     * 
+     * @return 採番テーブルのカタログ名
+     */
+    protected String getCatalog() {
+        final String catalog = tableGenerator.catalog();
+        if (!StringUtil.isEmpty(catalog)) {
+            return catalog;
+        }
+        return entityMeta.getTableMeta().getCatalog();
     }
 
     /**
@@ -225,6 +242,9 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
     protected String createUpdateSql() {
         final StringBuilder buf = new StringBuilder(100);
         buf.append("update ");
+        if (!StringUtil.isEmpty(catalog)) {
+            buf.append(catalog).append('.');
+        }
         if (!StringUtil.isEmpty(schema)) {
             buf.append(schema).append('.');
         }
@@ -242,6 +262,9 @@ public class TableIdGenerator extends AbstractPreAllocateIdGenerator {
     protected String createSelectSql() {
         final StringBuilder buf = new StringBuilder(100);
         buf.append("select ").append(valueColumnName).append(" from ");
+        if (!StringUtil.isEmpty(catalog)) {
+            buf.append(catalog).append('.');
+        }
         if (!StringUtil.isEmpty(schema)) {
             buf.append(schema).append('.');
         }
