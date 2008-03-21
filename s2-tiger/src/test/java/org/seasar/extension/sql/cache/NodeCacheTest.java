@@ -77,4 +77,15 @@ public class NodeCacheTest extends TestCase {
     public void testGetNode_notFound() {
         assertNull(NodeCache.getNode("notFound", null));
     }
+
+    /**
+     * 
+     */
+    public void testGetNode_withBom() {
+        Node node = NodeCache.getNode(getPath(), "bom");
+        assertNotNull(node);
+        SqlContextImpl ctx = new SqlContextImpl();
+        node.accept(ctx);
+        assertEquals("with BOM", ctx.getSql());
+    }
 }

@@ -92,6 +92,9 @@ public final class NodeCache {
         }
         Reader reader = InputStreamReaderUtil.create(is, "UTF-8");
         String sql = ReaderUtil.readText(reader);
+        if (sql.length() > 0 && sql.charAt(0) == '\uFEFF') {
+            sql = sql.substring(1);
+        }
         return new SqlParserImpl(sql).parse();
     }
 
