@@ -37,6 +37,9 @@ import org.seasar.framework.util.InputStreamUtil;
  */
 public class BytesType extends AbstractValueType {
 
+    /** 空のバイト配列 */
+    public static final byte[] EMPTY_BYTES = new byte[0];
+
     /** バイト配列を<code>getBytes()/setBytes()</code>で扱うトレイト */
     public static final Trait BYTES_TRAIT = new BytesTrait();
 
@@ -148,6 +151,9 @@ public class BytesType extends AbstractValueType {
             return null;
         }
         final long length = blob.length();
+        if (length == 0) {
+            return EMPTY_BYTES;
+        }
         if (length > Integer.MAX_VALUE) {
             throw new ArrayIndexOutOfBoundsException();
         }
