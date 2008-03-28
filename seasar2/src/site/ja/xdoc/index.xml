@@ -45,6 +45,23 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2008/02/28</dt>
+				<dd>
+					<div>
+						Seasar2 2.4.24 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#a5706828">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#paef0c28">移行ガイド</a>)
+					</div>
+				</dd>
+				<dt>2008/03/26</dt>
+				<dd>
+					ひがやすを著「
+					<a href="http://www.amazon.co.jp/dp/4774134368/">
+						Seasar2によるスーパーアジャイルなWeb開発
+					</a>
+					」(技術評論社) が発売されました．
+				</dd>
 				<dt>2008/02/22</dt>
 				<dd>
 					<div>
