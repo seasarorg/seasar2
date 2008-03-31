@@ -16,6 +16,7 @@
 package org.seasar.framework.env;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
@@ -196,6 +197,28 @@ public class Env {
         } else {
             clearValue();
         }
+    }
+
+    /**
+     * 環境名設定ファイルを設定します。
+     * 
+     * @param fileObj
+     *            環境設定ファイルを表す {@link File} オブジェクト
+     * @throws EmptyRuntimeException
+     *             <code>fileObj</code>が<code>null</code>の場合にスローされます
+     * @throws FileNotFoundException
+     *             <code>fileObj</code>の示すファイルが存在しない場合にスローされます
+     */
+    public static void setFile(final File fileObj) throws FileNotFoundException {
+        if (fileObj == null) {
+            throw new EmptyRuntimeException("fileObj");
+        }
+        if (!fileObj.exists()) {
+            throw new FileNotFoundException(fileObj.getAbsolutePath());
+        }
+        Env.filePath = fileObj.getAbsolutePath();
+        file = fileObj;
+        calcValue();
     }
 
     /**

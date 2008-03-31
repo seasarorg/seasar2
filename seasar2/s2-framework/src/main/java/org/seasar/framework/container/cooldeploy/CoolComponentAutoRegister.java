@@ -66,7 +66,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
 
     private NamingConvention namingConvention;
 
-    private Set registerdClasses = new HashSet();
+    /**
+     * 登録されたクラスを保持するためのセットです。
+     */
+    protected Set registerdClasses = new HashSet();
 
     /**
      * {@link CoolComponentAutoRegister}を作成します。
@@ -92,7 +95,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      * 
      * @param container
      */
-    public void setContainer(S2Container container) {
+    public void setContainer(final S2Container container) {
         this.container = container;
     }
 
@@ -111,7 +114,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      * @param protocol
      * @return {@link Strategy}
      */
-    protected Strategy getStrategy(String protocol) {
+    protected Strategy getStrategy(final String protocol) {
         return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
@@ -121,7 +124,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      * @param protocol
      * @param strategy
      */
-    protected void addStrategy(String protocol, Strategy strategy) {
+    protected void addStrategy(final String protocol, final Strategy strategy) {
         strategies.put(protocol, strategy);
     }
 
@@ -139,7 +142,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      * 
      * @param creators
      */
-    public void setCreators(ComponentCreator[] creators) {
+    public void setCreators(final ComponentCreator[] creators) {
         this.creators = creators;
     }
 
@@ -157,7 +160,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      * 
      * @param namingConvention
      */
-    public void setNamingConvention(NamingConvention namingConvention) {
+    public void setNamingConvention(final NamingConvention namingConvention) {
         this.namingConvention = namingConvention;
     }
 
@@ -214,7 +217,8 @@ public class CoolComponentAutoRegister implements ClassHandler {
         }
     }
 
-    public void processClass(String packageName, String shortClassName) {
+    public void processClass(final String packageName,
+            final String shortClassName) {
         if (shortClassName.indexOf('$') != -1) {
             return;
         }
@@ -247,7 +251,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      * @param componentClass
      * @return {@link ComponentDef}
      */
-    protected ComponentDef createComponentDef(Class componentClass) {
+    protected ComponentDef createComponentDef(final Class componentClass) {
         for (int i = 0; i < creators.length; ++i) {
             ComponentCreator creator = creators[i];
             ComponentDef cd = creator.createComponentDef(componentClass);
@@ -279,7 +283,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      */
     protected class FileSystemStrategy implements Strategy {
 
-        public void registerAll(String path, URL url) {
+        public void registerAll(final String path, final URL url) {
             File rootDir = getRootDir(path, url);
             String[] rootPackageNames = namingConvention.getRootPackageNames();
             for (int i = 0; i < rootPackageNames.length; ++i) {
@@ -295,7 +299,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
          * @param url
          * @return ルートディレクトリ
          */
-        protected File getRootDir(String path, URL url) {
+        protected File getRootDir(final String path, final URL url) {
             File file = URLUtil.toFile(url);
             String[] names = StringUtil.split(path, "/");
             for (int i = 0; i < names.length; ++i) {
@@ -311,7 +315,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      */
     protected class JarFileStrategy implements Strategy {
 
-        public void registerAll(String path, URL url) {
+        public void registerAll(final String path, final URL url) {
             JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
         }
@@ -322,7 +326,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
          * @param url
          * @return {@link JarFile}
          */
-        protected JarFile createJarFile(URL url) {
+        protected JarFile createJarFile(final URL url) {
             return JarFileUtil.toJarFile(url);
         }
     }
@@ -332,7 +336,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      */
     protected class ZipFileStrategy implements Strategy {
 
-        public void registerAll(String path, URL url) {
+        public void registerAll(final String path, final URL url) {
             final JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
         }
@@ -343,7 +347,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
          * @param url
          * @return {@link JarFile}
          */
-        protected JarFile createJarFile(URL url) {
+        protected JarFile createJarFile(final URL url) {
             final String jarFileName = ZipFileUtil.toZipFilePath(url);
             return JarFileUtil.create(new File(jarFileName));
         }
@@ -354,7 +358,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
      */
     protected class CodeSourceFileStrategy implements Strategy {
 
-        public void registerAll(String path, URL url) {
+        public void registerAll(final String path, final URL url) {
             final JarFile jarFile = createJarFile(url);
             ClassTraversal.forEach(jarFile, CoolComponentAutoRegister.this);
         }
