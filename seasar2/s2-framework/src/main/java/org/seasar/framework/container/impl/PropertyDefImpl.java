@@ -31,7 +31,8 @@ public class PropertyDefImpl extends ArgDefImpl implements PropertyDef {
 
     private String propertyName;
 
-    private BindingTypeDef bindingTypeDef = BindingTypeDefFactory.SHOULD;
+    private BindingTypeDef bindingTypeDef = BindingTypeDefFactory
+            .getBindingTypeDef(BindingTypeDef.SHOULD_NAME);
 
     private AccessTypeDef accessTypeDef = AccessTypeDefFactory.PROPERTY;
 

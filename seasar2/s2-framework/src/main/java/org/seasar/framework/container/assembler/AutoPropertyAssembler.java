@@ -21,6 +21,7 @@ import java.util.Set;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.container.AccessTypeDef;
+import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 
@@ -64,8 +65,9 @@ public class AutoPropertyAssembler extends AbstractPropertyAssembler {
             PropertyDesc propDesc = beanDesc.getPropertyDesc(i);
             String propName = propDesc.getPropertyName();
             if (!names.contains(propName)) {
-                BindingTypeDefFactory.SHOULD.bind(getComponentDef(), null,
-                        propDesc, component);
+                BindingTypeDefFactory.getBindingTypeDef(
+                        BindingTypeDef.SHOULD_NAME).bind(getComponentDef(),
+                        null, propDesc, component);
             }
         }
     }

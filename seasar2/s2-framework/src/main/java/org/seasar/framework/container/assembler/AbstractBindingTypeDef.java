@@ -145,10 +145,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Class propType = field.getType();
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
-            if (cd.getComponentName() != null
-                    && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
-                            .endsWithIgnoreCase(cd.getComponentName(),
-                                    ContainerConstants.PACKAGE_SEP + propName))) {
+            if (isAutoBindable(propName, propType, cd)) {
                 Object value = getValue(componentDef, propType, component,
                         propName);
                 setValue(componentDef, field, component, value);
@@ -201,10 +198,7 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
         Class propType = propertyDesc.getPropertyType();
         if (container.hasComponentDef(propType)) {
             ComponentDef cd = container.getComponentDef(propType);
-            if (cd.getComponentName() != null
-                    && (cd.getComponentName().equalsIgnoreCase(propName) || StringUtil
-                            .endsWithIgnoreCase(cd.getComponentName(),
-                                    ContainerConstants.PACKAGE_SEP + propName))) {
+            if (isAutoBindable(propName, propType, cd)) {
                 Object value = getValue(componentDef, propType, component,
                         propName);
                 setValue(componentDef, propertyDesc, component, value);
@@ -239,6 +233,25 @@ public abstract class AbstractBindingTypeDef implements BindingTypeDef {
             }
         }
         return false;
+    }
+
+    /**
+     * プロパティにコンポーネントを自動バインディング可能なら<code>true</code>を返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param propertyType
+     *            プロパティの型
+     * @param cd
+     *            コンポーネント定義
+     * @return プロパティにコンポーネントを自動バインディング可能なら<code>true</code>
+     */
+    protected boolean isAutoBindable(final String propertyName,
+            final Class propertyType, final ComponentDef cd) {
+        return cd.getComponentName() != null
+                && (cd.getComponentName().equalsIgnoreCase(propertyName) || StringUtil
+                        .endsWithIgnoreCase(cd.getComponentName(),
+                                ContainerConstants.PACKAGE_SEP + propertyName));
     }
 
     /**

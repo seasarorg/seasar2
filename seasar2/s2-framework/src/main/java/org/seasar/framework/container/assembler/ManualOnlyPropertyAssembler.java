@@ -18,6 +18,7 @@ package org.seasar.framework.container.assembler;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.seasar.framework.container.BindingTypeDef;
 import org.seasar.framework.container.ComponentDef;
 import org.seasar.framework.container.PropertyDef;
 
@@ -47,8 +48,12 @@ public class ManualOnlyPropertyAssembler extends AbstractPropertyAssembler {
         int size = cd.getPropertyDefSize();
         for (int i = 0; i < size; ++i) {
             PropertyDef propDef = cd.getPropertyDef(i);
-            propDef.getAccessTypeDef().bind(getComponentDef(), propDef,
-                    BindingTypeDefFactory.NONE, component);
+            propDef.getAccessTypeDef().bind(
+                    getComponentDef(),
+                    propDef,
+                    BindingTypeDefFactory
+                            .getBindingTypeDef(BindingTypeDef.NONE_NAME),
+                    component);
             names.add(propDef.getPropertyName());
         }
         if (cd.isExternalBinding()) {
