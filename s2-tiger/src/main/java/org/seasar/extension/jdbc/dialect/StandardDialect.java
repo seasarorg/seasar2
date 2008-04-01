@@ -293,22 +293,55 @@ public class StandardDialect implements DbmsDialect {
      * @return 原因となった{@link SQLException#getSQLState() SQLステート}
      */
     protected String getSQLState(Throwable t) {
-        String sqlState = null;
+        SQLException cause = getCauseSQLException(t);
+        if (cause != null && !StringUtil.isEmpty(cause.getSQLState())) {
+            return cause.getSQLState();
+        }
+        return null;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}を返します。
+     * <p>
+     * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、例外コードが設定されていない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}
+     */
+    protected Integer getErrorCode(Throwable t) {
+        SQLException cause = getCauseSQLException(t);
+        if (cause != null) {
+            return cause.getErrorCode();
+        }
+        return null;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException SQL例外}を返します。
+     * <p>
+     * 例外チェーンにSQL例外が存在しない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException SQL例外}
+     */
+    protected SQLException getCauseSQLException(Throwable t) {
+        SQLException cause = null;
         while (t != null) {
             if (t instanceof SQLException) {
-                final SQLException sqlException = SQLException.class.cast(t);
-                final String tempState = sqlException.getSQLState();
-                if (!StringUtil.isEmpty(tempState)) {
-                    sqlState = tempState;
-                }
-                if (sqlException.getNextException() != null) {
-                    t = sqlException.getNextException();
+                cause = SQLException.class.cast(t);
+                if (cause.getNextException() != null) {
+                    cause = cause.getNextException();
+                    t = cause;
                     continue;
                 }
             }
             t = t.getCause();
         }
-        return sqlState;
+        return cause;
     }
 
     public boolean supportsForUpdate(final SelectForUpdateType type,

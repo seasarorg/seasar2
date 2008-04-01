@@ -33,6 +33,11 @@ import org.seasar.framework.util.tiger.Pair;
  */
 public class OracleDialect extends StandardDialect {
 
+    /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final int uniqueConstraintViolationCode = 1;
+
     private boolean supportsBooleanToInt = true;
 
     private boolean supportsWaveDashToFullwidthTilde = true;
@@ -208,6 +213,15 @@ public class OracleDialect extends StandardDialect {
     @Override
     public String getHintComment(final String hint) {
         return "/*+ " + hint + " */ ";
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final Integer code = getErrorCode(t);
+        if (code != null) {
+            return uniqueConstraintViolationCode == code.intValue();
+        }
+        return false;
     }
 
 }

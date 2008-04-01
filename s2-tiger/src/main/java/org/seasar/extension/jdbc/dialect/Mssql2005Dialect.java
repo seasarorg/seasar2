@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
-
 /**
  * MS SQLServer用の方言をあつかうクラスです。
  * 
@@ -23,6 +22,11 @@ package org.seasar.extension.jdbc.dialect;
  * 
  */
 public class Mssql2005Dialect extends MssqlDialect {
+
+    /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final int uniqueConstraintViolationCode = 2627;
 
     @Override
     public boolean supportsOffset() {
@@ -36,5 +40,14 @@ public class Mssql2005Dialect extends MssqlDialect {
         }
         return super.convertLimitSql(sql, offset, limit);
 
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final Integer code = getErrorCode(t);
+        if (code != null) {
+            return uniqueConstraintViolationCode == code.intValue();
+        }
+        return false;
     }
 }

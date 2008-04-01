@@ -48,6 +48,11 @@ import org.seasar.framework.util.tiger.Pair;
 public class PostgreDialect extends StandardDialect {
 
     /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final String uniqueConstraintViolationCode = "23505";
+
+    /**
      * BLOB用の値タイプです。
      */
     protected final static ValueType BLOB_TYPE = new BytesType(
@@ -184,6 +189,12 @@ public class PostgreDialect extends StandardDialect {
     @Override
     public boolean supportsOuterJoinForUpdate() {
         return false;
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final String state = getSQLState(t);
+        return uniqueConstraintViolationCode.equals(state);
     }
 
     /**

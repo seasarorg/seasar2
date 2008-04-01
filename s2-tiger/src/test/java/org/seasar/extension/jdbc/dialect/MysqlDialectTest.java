@@ -15,9 +15,11 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
-import org.seasar.extension.jdbc.dialect.MysqlDialect;
+import java.sql.SQLException;
 
 import junit.framework.TestCase;
+
+import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
@@ -25,38 +27,55 @@ import junit.framework.TestCase;
  */
 public class MysqlDialectTest extends TestCase {
 
-	private MysqlDialect dialect = new MysqlDialect();
+    private MysqlDialect dialect = new MysqlDialect();
 
-	/**
-	 * @throws Exception
-	 */
-	public void testConvertLimitSql_limitOnly() throws Exception {
-		String sql = "select * from emp order by id";
-		String expected = sql + " limit 5";
-		assertEquals(expected, dialect.convertLimitSql(sql, 0, 5));
+    /**
+     * @throws Exception
+     */
+    public void testConvertLimitSql_limitOnly() throws Exception {
+        String sql = "select * from emp order by id";
+        String expected = sql + " limit 5";
+        assertEquals(expected, dialect.convertLimitSql(sql, 0, 5));
 
-	}
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public void testConvertLimitSql_offsetOnly() throws Exception {
-		String sql = "select * from emp order by id";
-		try {
-			dialect.convertLimitSql(sql, 5, 0);
-		} catch (IllegalArgumentException e) {
-			System.out.println(e);
-		}
+    /**
+     * @throws Exception
+     */
+    public void testConvertLimitSql_offsetOnly() throws Exception {
+        String sql = "select * from emp order by id";
+        try {
+            dialect.convertLimitSql(sql, 5, 0);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
+        }
+    }
 
-	}
+    /**
+     * @throws Exception
+     */
+    public void testConvertLimitSql_offsetLimit() throws Exception {
+        String sql = "select e.* from emp e order by id";
+        String expected = sql + " limit 5, 10";
+        assertEquals(expected, dialect.convertLimitSql(sql, 5, 10));
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public void testConvertLimitSql_offsetLimit() throws Exception {
-		String sql = "select e.* from emp e order by id";
-		String expected = sql + " limit 5, 10";
-		assertEquals(expected, dialect.convertLimitSql(sql, 5, 10));
-
-	}
+    /**
+     * @throws Exception
+     */
+    public void testIsUniqueConstraintViolation() throws Exception {
+        assertTrue(dialect.isUniqueConstraintViolation(new Exception(
+                new SQLRuntimeException(SQLException.class
+                        .cast(new SQLException("foo", "XXX")
+                                .initCause(new SQLException("bar", "23000",
+                                        1062)))))));
+        assertFalse(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "23000")))))));
+        assertFalse(dialect.isUniqueConstraintViolation(new Exception(
+                new RuntimeException())));
+    }
 }

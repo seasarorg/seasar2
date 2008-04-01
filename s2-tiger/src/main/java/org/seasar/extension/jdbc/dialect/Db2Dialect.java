@@ -28,6 +28,11 @@ import org.seasar.framework.util.tiger.Pair;
  */
 public class Db2Dialect extends StandardDialect {
 
+    /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final String uniqueConstraintViolationCode = "23505";
+
     @Override
     public String getName() {
         return "db2";
@@ -110,6 +115,12 @@ public class Db2Dialect extends StandardDialect {
     @Override
     public boolean supportsOuterJoinForUpdate() {
         return false;
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final String state = getSQLState(t);
+        return uniqueConstraintViolationCode.equals(state);
     }
 
 }

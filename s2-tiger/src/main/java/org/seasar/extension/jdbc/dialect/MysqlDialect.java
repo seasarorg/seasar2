@@ -25,6 +25,11 @@ import javax.persistence.GenerationType;
  */
 public class MysqlDialect extends StandardDialect {
 
+    /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final int uniqueConstraintViolationCode = 1062;
+
     @Override
     public String getName() {
         return "mysql";
@@ -73,4 +78,12 @@ public class MysqlDialect extends StandardDialect {
         return true;
     }
 
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final Integer code = getErrorCode(t);
+        if (code != null) {
+            return uniqueConstraintViolationCode == code.intValue();
+        }
+        return false;
+    }
 }

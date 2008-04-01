@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
@@ -112,5 +114,25 @@ public class OracleDialectTest extends TestCase {
      */
     public void testNeedsParameterForResultSet() throws Exception {
         assertTrue(dialect.needsParameterForResultSet());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsUniqueConstraintViolation() throws Exception {
+        assertTrue(dialect.isUniqueConstraintViolation(new Exception(
+                new SQLRuntimeException(
+                        SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "23000", 1)))))));
+        assertFalse(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "23000")))))));
+        assertFalse(dialect.isUniqueConstraintViolation(new Exception(
+                new RuntimeException())));
     }
 }

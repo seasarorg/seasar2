@@ -15,9 +15,12 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.sql.SQLException;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.exception.OrderByNotFoundRuntimeException;
+import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
  * @author higa
@@ -71,6 +74,25 @@ public class Db2DialectTest extends TestCase {
         } catch (OrderByNotFoundRuntimeException e) {
             System.out.println(e.getMessage());
         }
+    }
 
+    /**
+     * @throws Exception
+     */
+    public void testIsUniqueConstraintViolation() throws Exception {
+        assertTrue(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "23505")))))));
+        assertFalse(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
+                                .cast(new SQLException("foo", "XXX")
+                                        .initCause(new SQLException("bar",
+                                                "23000")))))));
+        assertFalse(dialect.isUniqueConstraintViolation(new Exception(
+                new RuntimeException())));
     }
 }
