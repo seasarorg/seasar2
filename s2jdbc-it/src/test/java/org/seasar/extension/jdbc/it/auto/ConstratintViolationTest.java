@@ -32,7 +32,7 @@ import static junit.framework.Assert.*;
  * 
  */
 @RunWith(Seasar2.class)
-@Prerequisite("#ENV not in {'hsqldb', 'h2', 'standard'}")
+@Prerequisite("#ENV not in {'standard'}")
 public class ConstratintViolationTest {
 
     private JdbcManager jdbcManager;

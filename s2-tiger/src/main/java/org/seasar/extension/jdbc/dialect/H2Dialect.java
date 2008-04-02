@@ -25,6 +25,11 @@ import javax.persistence.GenerationType;
  */
 public class H2Dialect extends StandardDialect {
 
+    /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final int uniqueConstraintViolationCode = 23001;
+
     @Override
     public String getName() {
         return "h2";
@@ -86,6 +91,15 @@ public class H2Dialect extends StandardDialect {
     public String getSequenceNextValString(final String sequenceName,
             final int allocationSize) {
         return "call next value for " + sequenceName;
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final Integer code = getErrorCode(t);
+        if (code != null) {
+            return uniqueConstraintViolationCode == code.intValue();
+        }
+        return false;
     }
 
 }

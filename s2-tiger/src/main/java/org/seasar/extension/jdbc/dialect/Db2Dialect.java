@@ -29,7 +29,7 @@ import org.seasar.framework.util.tiger.Pair;
 public class Db2Dialect extends StandardDialect {
 
     /**
-     * 一意制約違反を表す例外コード
+     * 一意制約違反を表すSQLステート
      */
     protected static final String uniqueConstraintViolationCode = "23505";
 

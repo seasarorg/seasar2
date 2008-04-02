@@ -27,6 +27,11 @@ import org.seasar.extension.jdbc.SelectForUpdateType;
  */
 public class HsqlDialect extends StandardDialect {
 
+    /**
+     * 一意制約違反を表す例外コード
+     */
+    protected static final int uniqueConstraintViolationCode = -104;
+
     @Override
     public String getName() {
         return "hsql";
@@ -90,6 +95,15 @@ public class HsqlDialect extends StandardDialect {
     @Override
     public boolean supportsForUpdate(final SelectForUpdateType type,
             boolean withTarget) {
+        return false;
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final Integer code = getErrorCode(t);
+        if (code != null) {
+            return uniqueConstraintViolationCode == code.intValue();
+        }
         return false;
     }
 

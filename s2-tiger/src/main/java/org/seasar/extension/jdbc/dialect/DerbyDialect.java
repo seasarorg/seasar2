@@ -25,6 +25,11 @@ import javax.persistence.GenerationType;
  */
 public class DerbyDialect extends StandardDialect {
 
+    /**
+     * 一意制約違反を表すSQLステート
+     */
+    protected static final String uniqueConstraintViolationCode = "23505";
+
     @Override
     public String getName() {
         return "derby";
@@ -49,6 +54,12 @@ public class DerbyDialect extends StandardDialect {
     public String getIdentitySelectString(final String tableName,
             final String columnName) {
         return "values identity_val_local()";
+    }
+
+    @Override
+    public boolean isUniqueConstraintViolation(Throwable t) {
+        final String state = getSQLState(t);
+        return uniqueConstraintViolationCode.equals(state);
     }
 
 }
