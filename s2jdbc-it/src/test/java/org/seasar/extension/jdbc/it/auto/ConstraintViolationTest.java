@@ -33,7 +33,7 @@ import static junit.framework.Assert.*;
  */
 @RunWith(Seasar2.class)
 @Prerequisite("#ENV not in {'standard'}")
-public class ConstratintViolationTest {
+public class ConstraintViolationTest {
 
     private JdbcManager jdbcManager;
 
