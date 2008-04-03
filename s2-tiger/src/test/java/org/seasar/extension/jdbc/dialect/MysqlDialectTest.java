@@ -68,6 +68,11 @@ public class MysqlDialectTest extends TestCase {
                 new SQLRuntimeException(SQLException.class
                         .cast(new SQLException("foo", "XXX")
                                 .initCause(new SQLException("bar", "23000",
+                                        1022)))))));
+        assertTrue(dialect.isUniqueConstraintViolation(new Exception(
+                new SQLRuntimeException(SQLException.class
+                        .cast(new SQLException("foo", "XXX")
+                                .initCause(new SQLException("bar", "23000",
                                         1062)))))));
         assertFalse(dialect
                 .isUniqueConstraintViolation(new Exception(

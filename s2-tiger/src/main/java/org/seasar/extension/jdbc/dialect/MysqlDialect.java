@@ -15,7 +15,12 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.util.Arrays;
+import java.util.Set;
+
 import javax.persistence.GenerationType;
+
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
  * MySQL用の方言をあつかうクラスです。
@@ -28,7 +33,8 @@ public class MysqlDialect extends StandardDialect {
     /**
      * 一意制約違反を表す例外コード
      */
-    protected static final int uniqueConstraintViolationCode = 1062;
+    protected static final Set<Integer> uniqueConstraintViolationCode = CollectionsUtil
+            .newHashSet(Arrays.asList(1022, 1062));
 
     @Override
     public String getName() {
@@ -82,7 +88,7 @@ public class MysqlDialect extends StandardDialect {
     public boolean isUniqueConstraintViolation(Throwable t) {
         final Integer code = getErrorCode(t);
         if (code != null) {
-            return uniqueConstraintViolationCode == code.intValue();
+            return uniqueConstraintViolationCode.contains(code);
         }
         return false;
     }
