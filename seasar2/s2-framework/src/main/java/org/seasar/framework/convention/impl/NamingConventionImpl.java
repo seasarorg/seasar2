@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.convention.impl;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,8 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipFile;
 
-import org.seasar.framework.convention.ExistChecker;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.ArrayUtil;
@@ -31,10 +33,12 @@ import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.MapUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
+import org.seasar.framework.util.ZipFileUtil;
 
 /**
  * {@link NamingConvention}の実装クラスです。
@@ -128,7 +132,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param pageSuffix
      */
-    public void setPageSuffix(final String pageSuffix) {
+    public void setPageSuffix(String pageSuffix) {
         this.pageSuffix = pageSuffix;
     }
 
@@ -141,7 +145,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param actionSuffix
      */
-    public void setActionSuffix(final String actionSuffix) {
+    public void setActionSuffix(String actionSuffix) {
         this.actionSuffix = actionSuffix;
     }
 
@@ -154,7 +158,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param connectorSuffix
      */
-    public void setConnectorSuffix(final String connectorSuffix) {
+    public void setConnectorSuffix(String connectorSuffix) {
         this.connectorSuffix = connectorSuffix;
     }
 
@@ -167,7 +171,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param daoSuffix
      */
-    public void setDaoSuffix(final String daoSuffix) {
+    public void setDaoSuffix(String daoSuffix) {
         this.daoSuffix = daoSuffix;
     }
 
@@ -180,7 +184,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param dtoSuffix
      */
-    public void setDtoSuffix(final String dtoSuffix) {
+    public void setDtoSuffix(String dtoSuffix) {
         this.dtoSuffix = dtoSuffix;
     }
 
@@ -193,7 +197,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param dxoSuffix
      */
-    public void setDxoSuffix(final String dxoSuffix) {
+    public void setDxoSuffix(String dxoSuffix) {
         this.dxoSuffix = dxoSuffix;
     }
 
@@ -206,7 +210,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param helperSuffix
      */
-    public void setHelperSuffix(final String helperSuffix) {
+    public void setHelperSuffix(String helperSuffix) {
         this.helperSuffix = helperSuffix;
     }
 
@@ -219,7 +223,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param interceptorSuffix
      */
-    public void setInterceptorSuffix(final String interceptorSuffix) {
+    public void setInterceptorSuffix(String interceptorSuffix) {
         this.interceptorSuffix = interceptorSuffix;
     }
 
@@ -232,7 +236,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param logicSuffix
      */
-    public void setLogicSuffix(final String logicSuffix) {
+    public void setLogicSuffix(String logicSuffix) {
         this.logicSuffix = logicSuffix;
     }
 
@@ -245,7 +249,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param serviceSuffix
      */
-    public void setServiceSuffix(final String serviceSuffix) {
+    public void setServiceSuffix(String serviceSuffix) {
         this.serviceSuffix = serviceSuffix;
     }
 
@@ -258,7 +262,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param validatorSuffix
      */
-    public void setValidatorSuffix(final String validatorSuffix) {
+    public void setValidatorSuffix(String validatorSuffix) {
         this.validatorSuffix = validatorSuffix;
     }
 
@@ -271,7 +275,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param converterSuffix
      */
-    public void setConverterSuffix(final String converterSuffix) {
+    public void setConverterSuffix(String converterSuffix) {
         this.converterSuffix = converterSuffix;
     }
 
@@ -284,7 +288,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param implementationSuffix
      */
-    public void setImplementationSuffix(final String implementationSuffix) {
+    public void setImplementationSuffix(String implementationSuffix) {
         this.implementationSuffix = implementationSuffix;
     }
 
@@ -341,7 +345,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param entityPackage
      */
-    public void setEntityPackage(final String entityPackage) {
+    public void setEntityPackage(String entityPackage) {
         this.entityPackageName = entityPackage;
     }
 
@@ -354,7 +358,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param viewExtension
      */
-    public void setViewExtension(final String viewExtension) {
+    public void setViewExtension(String viewExtension) {
         this.viewExtension = viewExtension;
     }
 
@@ -367,7 +371,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param viewRootPath
      */
-    public void setViewRootPath(final String viewRootPath) {
+    public void setViewRootPath(String viewRootPath) {
         this.viewRootPath = viewRootPath;
     }
 
@@ -385,7 +389,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * @param subApplicationRootPackageName
      */
     public void setSubApplicationRootPackageName(
-            final String subApplicationRootPackageName) {
+            String subApplicationRootPackageName) {
         this.subApplicationRootPackageName = subApplicationRootPackageName;
     }
 
@@ -398,7 +402,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param rootPackageName
      */
-    public void addRootPackageName(final String rootPackageName) {
+    public void addRootPackageName(String rootPackageName) {
         rootPackageNames = (String[]) ArrayUtil.add(rootPackageNames,
                 rootPackageName);
         addExistChecker(rootPackageName);
@@ -413,7 +417,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * 
      * @param ignorePackageName
      */
-    public void addIgnorePackageName(final String ignorePackageName) {
+    public void addIgnorePackageName(String ignorePackageName) {
         ignorePackageNames = (String[]) ArrayUtil.add(ignorePackageNames,
                 ignorePackageName);
     }
@@ -432,14 +436,14 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 .put(implementationClassName, interfaceName);
     }
 
-    public String fromSuffixToPackageName(final String suffix) {
+    public String fromSuffixToPackageName(String suffix) {
         if (StringUtil.isEmpty(suffix)) {
             throw new EmptyRuntimeException("suffix");
         }
         return suffix.toLowerCase();
     }
 
-    public String fromClassNameToShortComponentName(final String className) {
+    public String fromClassNameToShortComponentName(String className) {
         if (StringUtil.isEmpty(className)) {
             throw new EmptyRuntimeException("className");
         }
@@ -490,7 +494,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return buf.toString();
     }
 
-    public Class fromComponentNameToClass(final String componentName) {
+    public Class fromComponentNameToClass(String componentName) {
         if (StringUtil.isEmpty(componentName)) {
             throw new EmptyRuntimeException("componentName");
         }
@@ -537,7 +541,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      *            サフィックス
      * @return サブアプリケーションサフィックスかどうか
      */
-    protected boolean isSubApplicationSuffix(final String suffix) {
+    protected boolean isSubApplicationSuffix(String suffix) {
         if (pageSuffix.equals(suffix)) {
             return true;
         }
@@ -588,7 +592,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return null;
     }
 
-    public String toImplementationClassName(final String className) {
+    public String toImplementationClassName(String className) {
         String implementationClassName = (String) interfaceToImplementationMap
                 .get(className);
         if (implementationClassName != null) {
@@ -604,7 +608,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 + className.substring(index + 1) + implementationSuffix;
     }
 
-    public String toInterfaceClassName(final String className) {
+    public String toInterfaceClassName(String className) {
         String interfaceClassName = (String) implementationToInterfaceMap
                 .get(className);
         if (interfaceClassName != null) {
@@ -640,7 +644,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return false;
     }
 
-    public Class toCompleteClass(final Class clazz) {
+    public Class toCompleteClass(Class clazz) {
         if (!clazz.isInterface()) {
             return clazz;
         }
@@ -651,7 +655,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return clazz;
     }
 
-    public String fromComponentNameToPartOfClassName(final String componentName) {
+    public String fromComponentNameToPartOfClassName(String componentName) {
         if (componentName == null) {
             throw new EmptyRuntimeException("componentName");
         }
@@ -667,11 +671,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return buf.toString();
     }
 
-    public String fromComponentNameToSuffix(final String componentName) {
+    public String fromComponentNameToSuffix(String componentName) {
         return fromNameToSuffix(componentName);
     }
 
-    public String fromClassNameToSuffix(final String componentName) {
+    public String fromClassNameToSuffix(String componentName) {
         return fromNameToSuffix(componentName);
     }
 
@@ -682,7 +686,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      *            名前
      * @return サフィックス
      */
-    protected String fromNameToSuffix(final String name) {
+    protected String fromNameToSuffix(String name) {
         if (StringUtil.isEmpty(name)) {
             throw new EmptyRuntimeException("name");
         }
@@ -694,14 +698,14 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return null;
     }
 
-    public boolean isValidViewRootPath(final String path) {
+    public boolean isValidViewRootPath(String path) {
         if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             return false;
         }
         return true;
     }
 
-    public String fromPathToPageName(final String path) {
+    public String fromPathToPageName(String path) {
         return fromPathToComponentName(path, pageSuffix);
     }
 
@@ -714,8 +718,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      *            サフィックス
      * @return コンポーネント名
      */
-    protected String fromPathToComponentName(final String path,
-            final String nameSuffix) {
+    protected String fromPathToComponentName(String path, String nameSuffix) {
         if (!path.startsWith(viewRootPath) || !path.endsWith(viewExtension)) {
             throw new IllegalArgumentException(path);
         }
@@ -731,11 +734,11 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 + StringUtil.decapitalize(componentName.substring(pos + 1));
     }
 
-    public String fromPathToActionName(final String path) {
+    public String fromPathToActionName(String path) {
         return fromPathToComponentName(path, actionSuffix);
     }
 
-    public String fromPageNameToPath(final String pageName) {
+    public String fromPageNameToPath(String pageName) {
         if (!pageName.endsWith(pageSuffix)) {
             throw new IllegalArgumentException(pageName);
         }
@@ -745,12 +748,12 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 + name.replace(PACKAGE_SEPARATOR, '/') + viewExtension;
     }
 
-    public String fromPageClassToPath(final Class pageClass) {
+    public String fromPageClassToPath(Class pageClass) {
         String componentName = fromClassNameToComponentName(pageClass.getName());
         return fromPageNameToPath(componentName);
     }
 
-    public String fromActionNameToPath(final String actionName) {
+    public String fromActionNameToPath(String actionName) {
         if (!actionName.endsWith(actionSuffix)) {
             throw new IllegalArgumentException(actionName);
         }
@@ -760,7 +763,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 + name.replace(PACKAGE_SEPARATOR, '/') + viewExtension;
     }
 
-    public String fromActionNameToPageName(final String actionName) {
+    public String fromActionNameToPageName(String actionName) {
         if (!actionName.endsWith(actionSuffix)) {
             throw new IllegalArgumentException(actionName);
         }
@@ -809,7 +812,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         return false;
     }
 
-    public boolean isIgnoreClassName(final String className) {
+    public boolean isIgnoreClassName(String className) {
         for (int i = 0; i < ignorePackageNames.length; ++i) {
             if (className.startsWith(ignorePackageNames[i] + ".")) {
                 return true;
@@ -891,4 +894,156 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         }
         return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
     }
+
+    /**
+     * パス名を返します。
+     * 
+     * @param lastClassName
+     *            クラス名の最後
+     * @return パス名
+     */
+    protected static String getPathName(final String lastClassName) {
+        return lastClassName.replace('.', '/') + ".class";
+    }
+
+    /**
+     * 存在チェッカのインターフェースです。
+     * 
+     */
+    protected static interface ExistChecker {
+        /**
+         * クラスが存在するかどうかを返します。
+         * 
+         * @param lastClassName
+         * @return クラスが存在するかどうか
+         */
+        boolean isExist(String lastClassName);
+
+        /**
+         * リソースを開放します。
+         */
+        void close();
+    }
+
+    /**
+     * ファイル用の存在チェッカです。
+     * 
+     */
+    protected static class FileExistChecker implements ExistChecker {
+        private File rootFile;
+
+        /**
+         * インスタンスを作成します。
+         * 
+         * @param rootUrl
+         *            ルートURL
+         */
+        protected FileExistChecker(final URL rootUrl) {
+            rootFile = URLUtil.toFile(rootUrl);
+        }
+
+        public boolean isExist(final String lastClassName) {
+            final File file = new File(rootFile, getPathName(lastClassName));
+            return file.exists();
+        }
+
+        public void close() {
+        }
+    }
+
+    /**
+     * jar用の存在チェッカです。
+     * 
+     */
+    protected static class JarExistChecker implements ExistChecker {
+        private JarFile jarFile;
+
+        private String rootPath;
+
+        /**
+         * インスタンスを作成します。
+         * 
+         * @param jarUrl
+         *            jar URL
+         * @param rootPackageName
+         *            ルートパッケージ名
+         */
+        protected JarExistChecker(final URL jarUrl, final String rootPackageName) {
+            jarFile = JarFileUtil.toJarFile(jarUrl);
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(final String lastClassName) {
+            return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+
+        public void close() {
+            JarFileUtil.close(jarFile);
+        }
+    }
+
+    /**
+     * zip用の存在チェッカです。
+     * 
+     */
+    protected static class ZipExistChecker implements ExistChecker {
+        private ZipFile zipFile;
+
+        private String rootPath;
+
+        /**
+         * インスタンスを作成します。
+         * 
+         * @param zipUrl
+         *            zip URL
+         * @param rootPackageName
+         *            ルートパッケージ名
+         */
+        protected ZipExistChecker(final URL zipUrl, final String rootPackageName) {
+            zipFile = ZipFileUtil.toZipFile(zipUrl);
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(final String lastClassName) {
+            return zipFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+
+        public void close() {
+            ZipFileUtil.close(zipFile);
+        }
+    }
+
+    /**
+     * OC4J用の存在チェッカです。
+     * 
+     */
+    protected static class CodeSourceExistChecker implements ExistChecker {
+        private JarFile jarFile;
+
+        private String rootPath;
+
+        /**
+         * インスタンスを作成します。
+         * 
+         * @param url
+         *            URL
+         * @param rootPackageName
+         *            ルートパッケージ名
+         */
+        protected CodeSourceExistChecker(final URL url,
+                final String rootPackageName) {
+            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
+            jarFile = JarFileUtil.toJarFile(jarUrl);
+            this.rootPath = rootPackageName.replace('.', '/') + "/";
+        }
+
+        public boolean isExist(final String lastClassName) {
+            return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
+        }
+
+        public void close() {
+            JarFileUtil.close(jarFile);
+        }
+    }
+
 }

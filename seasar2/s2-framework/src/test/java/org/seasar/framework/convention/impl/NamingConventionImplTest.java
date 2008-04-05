@@ -18,7 +18,8 @@ package org.seasar.framework.convention.impl;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.seasar.framework.convention.ExistChecker;
+import org.seasar.framework.convention.impl.NamingConventionImpl.ExistChecker;
+import org.seasar.framework.convention.impl.NamingConventionImpl.FileExistChecker;
 import org.seasar.framework.convention.impl.dao.AaaDao;
 import org.seasar.framework.convention.impl.dao.BbbDao;
 import org.seasar.framework.convention.impl.dao.impl.BbbDaoImpl;
