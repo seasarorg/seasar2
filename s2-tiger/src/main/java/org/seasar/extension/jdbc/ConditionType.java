@@ -193,7 +193,7 @@ public enum ConditionType {
         }
     },
     /**
-     * likeです。
+     * like ?です。
      */
     LIKE {
 
@@ -201,6 +201,25 @@ public enum ConditionType {
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
             return makeName(tableAlias, columnName) + " like ?";
+        }
+    },
+    /**
+     * like ? escape ?です。
+     */
+    LIKE_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ? escape ?";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            final Object[] values = Object[].class.cast(value);
+            super.addValue(valueList, values[0]);
+            super.addValue(valueList, values[1]);
+            return 2;
         }
     },
     /**

@@ -408,6 +408,42 @@ public class ConditionTypeTest extends TestCase {
     /**
      * 
      */
+    public void testLIKE_ESCAPE_getCondition() {
+        assertEquals("T1_.ID like ? escape ?", ConditionType.LIKE_ESCAPE
+                .getCondition("T1_", "ID", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testLIKE_ESCAPE_getCondition_name() {
+        assertEquals("id like ? escape ?", ConditionType.LIKE_ESCAPE
+                .getCondition("id", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testLIKE_ESCAPE_addValue() {
+        List<Object> paramList = new ArrayList<Object>();
+        assertEquals(2, ConditionType.LIKE_ESCAPE.addValue(paramList,
+                new Object[] { "hoge", '$' }));
+        assertEquals(2, paramList.size());
+        assertEquals("hoge", paramList.get(0));
+        assertEquals('$', paramList.get(1));
+    }
+
+    /**
+     * 
+     */
+    public void testLIKE_ESCAPE_isTarget() {
+        assertTrue(ConditionType.LIKE_ESCAPE.isTarget("hoge"));
+        assertFalse(ConditionType.LIKE_ESCAPE.isTarget(null));
+    }
+
+    /**
+     * 
+     */
     public void testSTARTS_getCondition() {
         assertEquals("T1_.ID like ?", ConditionType.STARTS.getCondition("T1_",
                 "ID", "hoge"));

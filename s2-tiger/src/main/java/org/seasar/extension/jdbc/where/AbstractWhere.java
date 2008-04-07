@@ -304,6 +304,25 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     }
 
     /**
+     * <code>like</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @param escape
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T like(final String propertyName, final String value,
+            final char escape) {
+        final Object normalizedValue = normalize(value);
+        if (ConditionType.LIKE_ESCAPE.isTarget(normalizedValue)) {
+            addCondition(ConditionType.LIKE_ESCAPE, propertyName, new Object[] {
+                    normalizedValue, escape });
+        }
+        return (T) this;
+    }
+
+    /**
      * <code>like '?%'</code>の条件を追加します。
      * 
      * @param propertyName

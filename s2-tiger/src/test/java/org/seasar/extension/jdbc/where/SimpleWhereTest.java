@@ -338,6 +338,35 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
+    public void testLike_escape() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.like("name", "100$%", '$'));
+        assertEquals("name like ? escape ?", w.getCriteria());
+        assertEquals("100$%", w.paramList.get(0));
+        assertEquals('$', w.paramList.get(1));
+    }
+
+    /**
+     * 
+     */
+    public void testLike_escape_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.like("name", null, '$'));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testLike_escape_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.like("name", "", '$'));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
     public void testStarts() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.starts("name", "hoge"));
