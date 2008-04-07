@@ -442,6 +442,40 @@ public class ConditionTypeTest extends TestCase {
     /**
      * 
      */
+    public void testSTARTS_ESCAPE_getCondition() {
+        assertEquals("T1_.ID like ? escape '$'", ConditionType.STARTS_ESCAPE
+                .getCondition("T1_", "ID", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testSTARTS_ESCAPE_getCondition_name() {
+        assertEquals("id like ? escape '$'", ConditionType.STARTS_ESCAPE
+                .getCondition("id", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testSTARTS_ESCAPE_addValue() {
+        List<Object> paramList = new ArrayList<Object>();
+        assertEquals(1, ConditionType.STARTS_ESCAPE.addValue(paramList, "hoge"));
+        assertEquals(1, paramList.size());
+        assertEquals("hoge%", paramList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testSTARTS_ESCAPE_isTarget() {
+        assertTrue(ConditionType.STARTS_ESCAPE.isTarget("hoge"));
+        assertFalse(ConditionType.STARTS_ESCAPE.isTarget(null));
+    }
+
+    /**
+     * 
+     */
     public void testENDS_getCondition() {
         assertEquals("T1_.ID like ?", ConditionType.ENDS.getCondition("T1_",
                 "ID", "hoge"));
@@ -470,6 +504,40 @@ public class ConditionTypeTest extends TestCase {
     public void testENDS_isTarget() {
         assertTrue(ConditionType.ENDS.isTarget("hoge"));
         assertFalse(ConditionType.ENDS.isTarget(null));
+    }
+
+    /**
+     * 
+     */
+    public void testENDS_ESCAPE_getCondition() {
+        assertEquals("T1_.ID like ? escape '$'", ConditionType.ENDS_ESCAPE
+                .getCondition("T1_", "ID", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testENDS_ESCAPE_getCondition_name() {
+        assertEquals("id like ? escape '$'", ConditionType.ENDS_ESCAPE
+                .getCondition("id", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testENDS_ESCAPE_addValue() {
+        List<Object> paramList = new ArrayList<Object>();
+        assertEquals(1, ConditionType.ENDS_ESCAPE.addValue(paramList, "hoge"));
+        assertEquals(1, paramList.size());
+        assertEquals("%hoge", paramList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testENDS_ESCAPE_isTarget() {
+        assertTrue(ConditionType.ENDS_ESCAPE.isTarget("hoge"));
+        assertFalse(ConditionType.ENDS_ESCAPE.isTarget(null));
     }
 
     /**
@@ -504,6 +572,41 @@ public class ConditionTypeTest extends TestCase {
     public void testCONTAINS_isTarget() {
         assertTrue(ConditionType.CONTAINS.isTarget("hoge"));
         assertFalse(ConditionType.CONTAINS.isTarget(null));
+    }
+
+    /**
+     * 
+     */
+    public void testCONTAINS_ESCAPE_getCondition() {
+        assertEquals("T1_.ID like ? escape '$'", ConditionType.CONTAINS_ESCAPE
+                .getCondition("T1_", "ID", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testCONTAINS_ESCAPE_getCondition_name() {
+        assertEquals("id like ? escape '$'", ConditionType.CONTAINS_ESCAPE
+                .getCondition("id", "hoge"));
+    }
+
+    /**
+     * 
+     */
+    public void testCONTAINS_ESCAPE_addValue() {
+        List<Object> paramList = new ArrayList<Object>();
+        assertEquals(1, ConditionType.CONTAINS_ESCAPE.addValue(paramList,
+                "hoge"));
+        assertEquals(1, paramList.size());
+        assertEquals("%hoge%", paramList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testCONTAINS_ESCAPE_isTarget() {
+        assertTrue(ConditionType.CONTAINS_ESCAPE.isTarget("hoge"));
+        assertFalse(ConditionType.CONTAINS_ESCAPE.isTarget(null));
     }
 
     /**

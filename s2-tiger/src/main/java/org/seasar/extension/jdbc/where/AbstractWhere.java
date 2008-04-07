@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.where;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.Where;
@@ -31,6 +33,12 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  *            このクラスのサブクラス
  */
 public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
+
+    /** LIKE 述語で指定される検索条件中のワイルドカードをエスケープするためのパターン */
+    protected static final Pattern WILDCARD_PATTERN = Pattern.compile("[$%_]");
+
+    /** LIKE述語で指定される検索条件中のワイルドカード文字をエスケープするための文字 */
+    protected static final char WILDCARD_ESCAPE_CHAR = '$';
 
     /** 現在のクライテリアを保持する文字列バッファ */
     protected StringBuilder criteriaSb = new StringBuilder(100);
@@ -114,6 +122,18 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
             }
         }
         return list.toArray(new Object[list.size()]);
+    }
+
+    /**
+     * LIKE述語で使用される検索条件のワイルドカードを<code>'$'</code>でエスケープします．
+     * 
+     * @param likeCondition
+     *            LIKE述語で使用される検索条件の文字列
+     * @return ワイルドカードを<code>'$'</code>でエスケープした文字列
+     */
+    protected String escapeWildcard(final String likeCondition) {
+        final Matcher matcher = WILDCARD_PATTERN.matcher(likeCondition);
+        return matcher.replaceAll("\\$$0");
     }
 
     /**
@@ -292,9 +312,16 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      */
     @SuppressWarnings("unchecked")
     public T starts(final String propertyName, final String value) {
-        final Object normalizedValue = normalize(value);
+        final String normalizedValue = String.class.cast(normalize(value));
         if (ConditionType.STARTS.isTarget(normalizedValue)) {
-            addCondition(ConditionType.STARTS, propertyName, normalizedValue);
+            if (normalizedValue.indexOf('%') == -1
+                    && normalizedValue.indexOf('_') == -1) {
+                addCondition(ConditionType.STARTS, propertyName,
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.STARTS_ESCAPE, propertyName,
+                        escapeWildcard(String.class.cast(normalizedValue)));
+            }
         }
         return (T) this;
     }
@@ -308,9 +335,15 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      */
     @SuppressWarnings("unchecked")
     public T ends(final String propertyName, final String value) {
-        final Object normalizedValue = normalize(value);
+        final String normalizedValue = String.class.cast(normalize(value));
         if (ConditionType.ENDS.isTarget(normalizedValue)) {
-            addCondition(ConditionType.ENDS, propertyName, normalizedValue);
+            if (normalizedValue.indexOf('%') == -1
+                    && normalizedValue.indexOf('_') == -1) {
+                addCondition(ConditionType.ENDS, propertyName, normalizedValue);
+            } else {
+                addCondition(ConditionType.ENDS_ESCAPE, propertyName,
+                        escapeWildcard(String.class.cast(normalizedValue)));
+            }
         }
         return (T) this;
     }
@@ -324,9 +357,16 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      */
     @SuppressWarnings("unchecked")
     public T contains(final String propertyName, final String value) {
-        final Object normalizedValue = normalize(value);
+        final String normalizedValue = String.class.cast(normalize(value));
         if (ConditionType.CONTAINS.isTarget(normalizedValue)) {
-            addCondition(ConditionType.CONTAINS, propertyName, normalizedValue);
+            if (normalizedValue.indexOf('%') == -1
+                    && normalizedValue.indexOf('_') == -1) {
+                addCondition(ConditionType.CONTAINS, propertyName,
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.CONTAINS_ESCAPE, propertyName,
+                        escapeWildcard(String.class.cast(normalizedValue)));
+            }
         }
         return (T) this;
     }

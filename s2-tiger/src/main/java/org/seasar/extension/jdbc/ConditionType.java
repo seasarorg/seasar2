@@ -220,6 +220,22 @@ public enum ConditionType {
         }
     },
     /**
+     * like '?%' escape '$'です。
+     */
+    STARTS_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ? escape '$'";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, value + "%");
+        }
+    },
+    /**
      * like '%?'です。
      */
     ENDS {
@@ -236,6 +252,22 @@ public enum ConditionType {
         }
     },
     /**
+     * like '%?' escape '$'です。
+     */
+    ENDS_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ? escape '$'";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value);
+        }
+    },
+    /**
      * like '%?%'です。
      */
     CONTAINS {
@@ -244,6 +276,22 @@ public enum ConditionType {
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
             return makeName(tableAlias, columnName) + " like ?";
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value + "%");
+        }
+    },
+    /**
+     * like '%?%' escape '$'です。
+     */
+    CONTAINS_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeName(tableAlias, columnName) + " like ? escape '$'";
         }
 
         @Override

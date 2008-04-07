@@ -347,6 +347,16 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
+    public void testStarts_withMetachar() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.starts("name", "$100%"));
+        assertEquals("name like ? escape '$'", w.getCriteria());
+        assertEquals("$$100$%%", w.paramList.get(0));
+    }
+
+    /**
+     * 
+     */
     public void testStarts_null() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.starts("name", null));
@@ -374,6 +384,16 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
+    public void testEnds_withMetachar() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.ends("name", "$100%"));
+        assertEquals("name like ? escape '$'", w.getCriteria());
+        assertEquals("%$$100$%", w.paramList.get(0));
+    }
+
+    /**
+     * 
+     */
     public void testEnds_null() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.ends("name", null));
@@ -396,6 +416,16 @@ public class SimpleWhereTest extends TestCase {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.contains("name", "hoge"));
         assertEquals("name like ?", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testContains_withMetachar() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.contains("name", "$100%"));
+        assertEquals("name like ? escape '$'", w.getCriteria());
+        assertEquals("%$$100$%%", w.paramList.get(0));
     }
 
     /**
@@ -461,4 +491,9 @@ public class SimpleWhereTest extends TestCase {
         assertEquals("", w.getCriteria());
     }
 
+    public void testEscapeWildcard() {
+        SimpleWhere w = new SimpleWhere();
+        assertEquals("aaa", w.escapeWildcard("aaa"));
+        assertEquals("$$$%$_", w.escapeWildcard("$%_"));
+    }
 }
