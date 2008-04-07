@@ -35,8 +35,18 @@
 							<p>
 								<a href="#結合">結合</a>
 								<ul>
-									<li><p><a href="#結合条件の追加">結合条件の追加</a></p></li>
-									<li><p><a href="#結合のネスト">結合のネスト</a></p></li>
+									<li>
+										<p>
+											<a href="#結合条件の追加">
+												結合条件の追加
+											</a>
+										</p>
+									</li>
+									<li>
+										<p>
+											<a href="#結合のネスト">結合のネスト</a>
+										</p>
+									</li>
 								</ul>
 							</p>
 						</li>
@@ -598,8 +608,9 @@ List<Employee> results = jdbcManager.from(Employee.class)
 					</li>
 				</ul>
 				<p>
-					引数<code>condition</code>に指定できる条件は、SQLと同じです。
-					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
+					引数
+					<code>condition</code>
+					に指定できる条件は、SQLと同じです。 SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
 					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
 					プロパティ名になります。
 				</p>
@@ -957,6 +968,18 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
+								like(String propertyName, String value,
+								char escape)
+							</td>
+							<td>
+								<code>
+									propertyName like ? escape ?
+								</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
 								starts(String propertyName, String
 								value)
 							</td>
@@ -965,7 +988,9 @@ jdbcManager.from(Employee.class)
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最後に自動的に
 								<code>%</code>
-								が追加されます。
+								が追加されます。 valueに
+								<code>'%', '_'</code>
+								が含まれる場合はエスケープされます。
 							</td>
 						</tr>
 						<tr>
@@ -977,7 +1002,9 @@ jdbcManager.from(Employee.class)
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最初に自動的に
 								<code>%</code>
-								が追加されます。
+								が追加されます。 valueに
+								<code>'%', '_'</code>
+								が含まれる場合はエスケープされます。
 							</td>
 						</tr>
 						<tr>
@@ -990,7 +1017,9 @@ jdbcManager.from(Employee.class)
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最初と最後に自動的に
 								<code>%</code>
-								が追加されます。
+								が追加されます。 valueに
+								<code>'%', '_'</code>
+								が含まれる場合はエスケープされます。
 							</td>
 						</tr>
 						<tr>
