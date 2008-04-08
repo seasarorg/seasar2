@@ -536,3 +536,19 @@ Table CONSTRAINT_CHECKING not found [42S02-60]
 	at org.h2.server.web.WebThread.process(WebThread.java:375)
 	at org.h2.server.web.WebThread.processRequest(WebThread.java:131)
 	at org.h2.server.web.WebThread.run(WebThread.java:158)
+04-08 11:16:51 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: ÉeÅ[ÉuÉã PATTERN Ç™å©Ç¬Ç©ÇËÇ‹ÇπÇÒ
+Table PATTERN not found [42S02-60]
+	at org.h2.message.Message.getSQLException(Message.java:84)
+	at org.h2.message.Message.getSQLException(Message.java:88)
+	at org.h2.message.Message.getSQLException(Message.java:66)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:55)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:85)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:64)
+	at org.h2.command.Command.executeUpdate(Command.java:123)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:156)
+	at org.h2.server.web.WebThread.getResult(WebThread.java:1387)
+	at org.h2.server.web.WebThread.query(WebThread.java:1049)
+	at org.h2.server.web.WebThread.process(WebThread.java:375)
+	at org.h2.server.web.WebThread.processRequest(WebThread.java:131)
+	at org.h2.server.web.WebThread.run(WebThread.java:158)
