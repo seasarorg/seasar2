@@ -130,12 +130,16 @@ public class SqlFileUpdateTest {
      * @throws Exception
      */
     public void testEntityExistsException_update() throws Exception {
+        jdbcManager
+            .updateBySql(
+                "insert into Department (department_id, department_no) values (99, 99)")
+            .execute();
         String path =
             getClass().getName().replace(".", "/")
                 + "_EntityExistsException_update.sql";
         MyDto3 dto = new MyDto3();
         dto.departmentId = 1;
-        dto.departmentId2 = 2;
+        dto.departmentId2 = 99;
         try {
             jdbcManager.updateBySqlFile(path, dto).execute();
             fail();

@@ -87,12 +87,16 @@ public class SqlUpdateTest {
      * @throws Exception
      */
     public void testEntityExistsException_update() throws Exception {
+        jdbcManager
+            .updateBySql(
+                "insert into Department (department_id, department_no) values (99, 99)")
+            .execute();
         String sql =
             "update Department set department_id = ? where department_id = ?";
         try {
             jdbcManager
                 .updateBySql(sql, int.class, int.class)
-                .params(1, 2)
+                .params(1, 99)
                 .execute();
             fail();
         } catch (EntityExistsException e) {
