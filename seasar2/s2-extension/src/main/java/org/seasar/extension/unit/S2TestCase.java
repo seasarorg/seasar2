@@ -523,7 +523,10 @@ public abstract class S2TestCase extends S2FrameworkTestCase {
                 try {
                     String columnName = expected.getColumnName(j);
                     Object expectedValue = expectedRow.getValue(columnName);
-                    ColumnType ct = ColumnTypes.getColumnType(expectedValue);
+                    ColumnType ct = expected.getColumnType(j);
+                    if (ct == null || ct == ColumnTypes.OBJECT) {
+                        ct = ColumnTypes.getColumnType(expectedValue);
+                    }
                     Object actualValue = actualRow.getValue(columnName);
                     if (!ct.equals(expectedValue, actualValue)) {
                         assertEquals(message + ":Row=" + i + ":columnName="

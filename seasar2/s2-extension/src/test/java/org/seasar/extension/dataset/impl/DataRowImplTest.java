@@ -29,7 +29,7 @@ import org.seasar.extension.dataset.types.ColumnTypes;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DataRowImplTest extends TestCase {
 
@@ -196,6 +196,21 @@ public class DataRowImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testEquals7() throws Exception {
+        DataTable table = new DataTableImpl("hoge");
+        table.addColumn("aaa", ColumnTypes.NOT_TRIM_STRING);
+        DataTable table2 = new DataTableImpl("hoge2");
+        table2.addColumn("aaa");
+        DataRow row = table.addRow();
+        DataRow row2 = table2.addRow();
+        row.setValue("aaa", "111  ");
+        row2.setValue("aaa", "111");
+        assertFalse(row.equals(row2));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCopyFromMap() throws Exception {
         DataTable table = new DataTableImpl("hoge");
         table.addColumn("aaa");
@@ -257,7 +272,7 @@ public class DataRowImplTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class MyBean {
 
