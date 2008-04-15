@@ -16,9 +16,14 @@
 package org.seasar.framework.unit.impl;
 
 import java.lang.reflect.Method;
+import java.sql.Types;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.seasar.extension.dataset.ColumnType;
 import org.seasar.extension.dataset.DataSet;
+import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.ComponentDef;
@@ -87,6 +92,12 @@ public class SimpleInternalTestContext implements InternalTestContext {
 
     /** S2コンテナが初期化されたかどうかを表すフラグ */
     protected boolean containerInitialized;
+
+    /** {@link ColumnTypes}から登録除去された{@link ColumnType カラムの型}をクラスをキーにして管理するマップ */
+    protected Map<Class<?>, ColumnType> deregisteredColumnTypesByClass = new HashMap<Class<?>, ColumnType>();
+
+    /** {@link ColumnTypes}から登録除去された{@link ColumnType カラムの型}をSQL型をキーにして管理するマップ */
+    protected Map<Integer, ColumnType> deregisteredColumnTypesBySqlType = new HashMap<Integer, ColumnType>();
 
     /**
      * S2コンテナを設定します。
@@ -319,4 +330,50 @@ public class SimpleInternalTestContext implements InternalTestContext {
         return jtaEnabled;
     }
 
+    public void registerColumnTypes() {
+        if (!trimString) {
+            registerColumnType(String.class, ColumnTypes.NOT_TRIM_STRING);
+            registerColumnType(Types.CHAR, ColumnTypes.NOT_TRIM_STRING);
+            registerColumnType(Types.LONGVARCHAR, ColumnTypes.NOT_TRIM_STRING);
+            registerColumnType(Types.VARCHAR, ColumnTypes.NOT_TRIM_STRING);
+        }
+    }
+
+    /**
+     * カラムの型を登録します。
+     * 
+     * @param clazz
+     *            クラス
+     * @param columnType
+     *            カラムの型
+     */
+    protected void registerColumnType(Class<?> clazz, ColumnType columnType) {
+        ColumnType original = ColumnTypes.registerColumnType(clazz, columnType);
+        deregisteredColumnTypesByClass.put(clazz, original);
+    }
+
+    /**
+     * カラムの型を登録します。
+     * 
+     * @param sqlType
+     *            SQL型
+     * @param columnType
+     *            カラムの型
+     */
+    protected void registerColumnType(int sqlType, ColumnType columnType) {
+        ColumnType original = ColumnTypes.registerColumnType(sqlType,
+                columnType);
+        deregisteredColumnTypesBySqlType.put(sqlType, original);
+    }
+
+    public void revertColumnTypes() {
+        for (Map.Entry<Class<?>, ColumnType> e : deregisteredColumnTypesByClass
+                .entrySet()) {
+            ColumnTypes.registerColumnType(e.getKey(), e.getValue());
+        }
+        for (Map.Entry<Integer, ColumnType> e : deregisteredColumnTypesBySqlType
+                .entrySet()) {
+            ColumnTypes.registerColumnType(e.getKey(), e.getValue());
+        }
+    }
 }

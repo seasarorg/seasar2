@@ -244,19 +244,24 @@ public class S2TestMethodRunner {
                     runEachBefore();
                     initContainer();
                     try {
-                        bindFields();
+                        testContext.registerColumnTypes();
                         try {
-                            final boolean recorded = runEachRecord();
-                            if (recorded) {
-                                easyMockSupport.replay();
-                            }
-                            runTest();
-                            if (recorded) {
-                                easyMockSupport.verify();
-                                easyMockSupport.reset();
+                            bindFields();
+                            try {
+                                final boolean recorded = runEachRecord();
+                                if (recorded) {
+                                    easyMockSupport.replay();
+                                }
+                                runTest();
+                                if (recorded) {
+                                    easyMockSupport.verify();
+                                    easyMockSupport.reset();
+                                }
+                            } finally {
+                                unbindFields();
                             }
                         } finally {
-                            unbindFields();
+                            testContext.revertColumnTypes();
                         }
                     } finally {
                         testContext.destroyContainer();

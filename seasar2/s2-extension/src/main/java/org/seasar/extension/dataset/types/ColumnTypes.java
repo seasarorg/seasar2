@@ -19,12 +19,12 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.dataset.ColumnType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.util.MapUtil;
 
 /**
  * カラムの型を管理するクラスです。
@@ -83,28 +83,50 @@ public final class ColumnTypes {
      */
     public static final ColumnType BOOLEAN = new BooleanType();
 
-    private static Map types_ = new HashMap();
+    private static Map typesByClass = MapUtil.createHashMap(20);
+
+    private static Map typesBySqlType = MapUtil.createHashMap(20);
 
     static {
-        types_.put(String.class, STRING);
-        types_.put(short.class, BIGDECIMAL);
-        types_.put(Short.class, BIGDECIMAL);
-        types_.put(int.class, BIGDECIMAL);
-        types_.put(Integer.class, BIGDECIMAL);
-        types_.put(long.class, BIGDECIMAL);
-        types_.put(Long.class, BIGDECIMAL);
-        types_.put(float.class, BIGDECIMAL);
-        types_.put(Float.class, BIGDECIMAL);
-        types_.put(double.class, BIGDECIMAL);
-        types_.put(Double.class, BIGDECIMAL);
-        types_.put(boolean.class, BOOLEAN);
-        types_.put(Boolean.class, BOOLEAN);
-        types_.put(BigDecimal.class, BIGDECIMAL);
-        types_.put(Timestamp.class, TIMESTAMP);
-        types_.put(java.sql.Date.class, TIMESTAMP);
-        types_.put(java.util.Date.class, TIMESTAMP);
-        types_.put(Calendar.class, TIMESTAMP);
-        types_.put(new byte[0].getClass(), BINARY);
+        registerColumnType(String.class, STRING);
+        registerColumnType(short.class, BIGDECIMAL);
+        registerColumnType(Short.class, BIGDECIMAL);
+        registerColumnType(int.class, BIGDECIMAL);
+        registerColumnType(Integer.class, BIGDECIMAL);
+        registerColumnType(long.class, BIGDECIMAL);
+        registerColumnType(Long.class, BIGDECIMAL);
+        registerColumnType(float.class, BIGDECIMAL);
+        registerColumnType(Float.class, BIGDECIMAL);
+        registerColumnType(double.class, BIGDECIMAL);
+        registerColumnType(Double.class, BIGDECIMAL);
+        registerColumnType(boolean.class, BOOLEAN);
+        registerColumnType(Boolean.class, BOOLEAN);
+        registerColumnType(BigDecimal.class, BIGDECIMAL);
+        registerColumnType(Timestamp.class, TIMESTAMP);
+        registerColumnType(java.sql.Date.class, TIMESTAMP);
+        registerColumnType(java.util.Date.class, TIMESTAMP);
+        registerColumnType(Calendar.class, TIMESTAMP);
+        registerColumnType(new byte[0].getClass(), BINARY);
+
+        registerColumnType(Types.TINYINT, BIGDECIMAL);
+        registerColumnType(Types.SMALLINT, BIGDECIMAL);
+        registerColumnType(Types.INTEGER, BIGDECIMAL);
+        registerColumnType(Types.BIGINT, BIGDECIMAL);
+        registerColumnType(Types.REAL, BIGDECIMAL);
+        registerColumnType(Types.FLOAT, BIGDECIMAL);
+        registerColumnType(Types.DOUBLE, BIGDECIMAL);
+        registerColumnType(Types.DECIMAL, BIGDECIMAL);
+        registerColumnType(Types.NUMERIC, BIGDECIMAL);
+        registerColumnType(Types.BOOLEAN, BOOLEAN);
+        registerColumnType(Types.DATE, TIMESTAMP);
+        registerColumnType(Types.TIME, TIMESTAMP);
+        registerColumnType(Types.TIMESTAMP, TIMESTAMP);
+        registerColumnType(Types.BINARY, BINARY);
+        registerColumnType(Types.VARBINARY, BINARY);
+        registerColumnType(Types.LONGVARBINARY, BINARY);
+        registerColumnType(Types.CHAR, STRING);
+        registerColumnType(Types.LONGVARCHAR, STRING);
+        registerColumnType(Types.VARCHAR, STRING);
     }
 
     private ColumnTypes() {
@@ -157,34 +179,12 @@ public final class ColumnTypes {
      * @return カラムの型
      */
     public static ColumnType getColumnType(int type) {
-        switch (type) {
-        case Types.TINYINT:
-        case Types.SMALLINT:
-        case Types.INTEGER:
-        case Types.BIGINT:
-        case Types.REAL:
-        case Types.FLOAT:
-        case Types.DOUBLE:
-        case Types.DECIMAL:
-        case Types.NUMERIC:
-            return BIGDECIMAL;
-        case Types.BOOLEAN:
-            return BOOLEAN;
-        case Types.DATE:
-        case Types.TIME:
-        case Types.TIMESTAMP:
-            return TIMESTAMP;
-        case Types.BINARY:
-        case Types.VARBINARY:
-        case Types.LONGVARBINARY:
-            return BINARY;
-        case Types.CHAR:
-        case Types.LONGVARCHAR:
-        case Types.VARCHAR:
-            return STRING;
-        default:
-            return OBJECT;
+        ColumnType columnType = (ColumnType) typesBySqlType.get(new Integer(
+                type));
+        if (columnType != null) {
+            return columnType;
         }
+        return OBJECT;
     }
 
     /**
@@ -209,16 +209,39 @@ public final class ColumnTypes {
      * @return カラムの型
      */
     public static ColumnType getColumnType(Class clazz) {
-        ColumnType columnType = getColumnType0(clazz);
+        ColumnType columnType = (ColumnType) typesByClass.get(clazz);
         if (columnType != null) {
             return columnType;
         }
         return OBJECT;
     }
 
-    private static ColumnType getColumnType0(Class clazz) {
-        synchronized (types_) {
-            return (ColumnType) types_.get(clazz);
-        }
+    /**
+     * カラムの型を登録します。
+     * 
+     * @param sqlType
+     *            SQL型
+     * @param columnType
+     *            カラムの型
+     * @return 指定されたSQL型に関連した以前のカラムの型。カラムの型にマッピングなかった場合には<code>null</code>
+     */
+    public static ColumnType registerColumnType(int sqlType,
+            ColumnType columnType) {
+        return (ColumnType) typesBySqlType
+                .put(new Integer(sqlType), columnType);
+    }
+
+    /**
+     * カラムの型を登録します。
+     * 
+     * @param clazz
+     *            クラス
+     * @param columnType
+     *            カラムの型
+     * @return 指定されたクラスに関連した以前のカラムの型。カラムの型にマッピングなかった場合には<code>null</code>
+     */
+    public static ColumnType registerColumnType(Class clazz,
+            ColumnType columnType) {
+        return (ColumnType) typesByClass.put(clazz, columnType);
     }
 }

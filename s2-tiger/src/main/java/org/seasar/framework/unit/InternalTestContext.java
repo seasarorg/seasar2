@@ -17,6 +17,8 @@ package org.seasar.framework.unit;
 
 import java.lang.reflect.Method;
 
+import org.seasar.extension.dataset.ColumnType;
+import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.container.S2Container;
@@ -118,4 +120,14 @@ public interface InternalTestContext extends TestContext {
      * @return JTAが使用可能の場合<code>true</code>、そうでない場合<code>false</code>
      */
     boolean isJtaEnabled();
+
+    /**
+     * {@link ColumnType カラムの型}を{@link ColumnTypes}に登録します。
+     */
+    void registerColumnTypes();
+
+    /**
+     * {@link #registerColumnTypes()}で登録した{@link ColumnType カラムの型}を元に戻します。
+     */
+    void revertColumnTypes();
 }
