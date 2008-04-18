@@ -63,7 +63,7 @@ public class MessageResourceBundleFacadeTest extends TestCase {
     /**
      * @throws Exception
      */
-    public void testIsModified() throws Exception {
+    public void testIsModified_hot() throws Exception {
         HotdeployUtil.setHotdeploy(true);
         try {
             URL url = ResourceUtil.getResource(PATH);
@@ -78,6 +78,22 @@ public class MessageResourceBundleFacadeTest extends TestCase {
         } finally {
             HotdeployUtil.clearHotdeploy();
         }
+
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testIsModified_cool() throws Exception {
+        URL url = ResourceUtil.getResource(PATH);
+        File file = ResourceUtil.getFile(url);
+        MessageResourceBundleFacade facade = new MessageResourceBundleFacade(
+                url);
+
+        assertFalse(facade.isModified());
+        Thread.sleep(500);
+        file.setLastModified(new Date().getTime());
+        assertFalse(facade.isModified());
 
     }
 

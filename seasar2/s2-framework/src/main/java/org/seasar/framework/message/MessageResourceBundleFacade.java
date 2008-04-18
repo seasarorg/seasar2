@@ -107,8 +107,10 @@ public class MessageResourceBundleFacade {
      */
     protected void setup(URL url) {
         AssertionUtil.assertNotNull("url", url);
-        file = ResourceUtil.getFile(url);
-        if (file != null && HotdeployUtil.isHotdeploy()) {
+        if (HotdeployUtil.isHotdeploy()) {
+            file = ResourceUtil.getFile(url);
+        }
+        if (file != null) {
             lastModified = file.lastModified();
             bundle = createBundle(file);
         } else {
