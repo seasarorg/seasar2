@@ -3,7 +3,7 @@
 	"http://www.seasar.org/dtd/components24.dtd">
 <components namespace="jta">
 	<description>
-		Sun Java System Application Server version 9 が提供する JTA 実装を使用するための設定ファイルです．
+		Sun Java System Application Server version 9 および GlassFish が提供する JTA 実装を使用するための設定ファイルです．
 
 		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
 		・REQUIRED
@@ -22,7 +22,7 @@
 	<!-- TransactionManager from JNDI -->
 	<component name="TransactionManager"
 			class="javax.transaction.TransactionManager">
-		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionManager")
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:appserver/TransactionManager")
 	</component>
 
 	<!-- TransactionSynchronizationRegistry from JNDI -->
