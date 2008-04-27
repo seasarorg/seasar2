@@ -286,8 +286,8 @@
       <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
     </snapshotRepository>
     <site>
-      <id>www.seasar.org</id>
-      <url>scp://www.seasar.org/home/groups/s2container/public_html/2.4/</url>
+      <id>maven.seasar.org</id>
+      <url>dav:https://www.seasar.org/site/s2container/2.4</url>
     </site>
   </distributionManagement>
 
