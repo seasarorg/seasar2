@@ -692,7 +692,7 @@ public transient MyDto myDto2;
 					<code>@ManyToOne</code>
 					を使います。複数のEmployeeに1つのDepartementが関連付けられる場合、
 					EmployeeからみてDepartmentは多対一関連になります。
-					関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+					関連には、所有者、被所有者という概念があり、外部キーを持っているほうが所有者になります。
 				</p>
 				<p>
 					上記のケースは、Employeeのテーブルに、
@@ -720,16 +720,16 @@ public class Employee {
 					<code>@OneToMany</code>
 					を使います。1つのDepartmentに複数のEmployeeが関連付けられる場合、
 					DepartmentからみてEmployeeは一対多関連になります。
-					関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+					関連には、所有者、被所有者という概念があり、外部キーを持っているほうが所有者になります。
 				</p>
 				<p>
 					上記のケースは、Employeeのテーブルに、
 					department_id(プロパティ名はdepartmentId)という外部キーがあり、
 					Departmentの方は、外部キーを持っていないので、
-					Departmentは関連の非所有者になります。
+					Departmentは関連の被所有者になります。
 				</p>
 				<p>
-					関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
+					関連の被所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
 					Departmentからみて一対多でEmployeeが関連付けられていて、
 					そのEmployeeからみるとDepartmentがdepartmentプロパティとして、
 					多対一で関連付けられています。お互いが相互の関連であることを示すために
@@ -759,16 +759,16 @@ public class Department {
 					EmployeeからみてAddressは一対一関連になります。
 					同じように、1つのAddressに1つのEmployeeが関連付けられているので、
 					AddressからみてEmployeeも一対一関連になります。
-					関連には、所有者、非所有者という概念があり、外部キーを持っているほうが所有者になります。
+					関連には、所有者、被所有者という概念があり、外部キーを持っているほうが所有者になります。
 				</p>
 				<p>
 					上記のケースは、Employeeのテーブルに、
 					address_id(プロパティ名はaddressId)という外部キーがあるので、
 					Employeeは関連の所有者になります。Addressの方は、外部キーを持っていないので、
-					Addressは関連の非所有者になります。
+					Addressは関連の被所有者になります。
 				</p>
 				<p>
-					関連の非所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
+					関連の被所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
 					Addressから見ると一対一でEmployeeが関連付けられていて、
 					そのEmployeeからみるとAddressがaddressプロパティとして、
 					一対一で関連付けられています。お互いが相互の関連であることを示すために
