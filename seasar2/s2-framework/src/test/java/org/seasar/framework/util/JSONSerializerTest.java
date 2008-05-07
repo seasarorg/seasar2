@@ -112,11 +112,11 @@ public class JSONSerializerTest extends TestCase {
         assertEquals("{}", JSONSerializer.serialize(new HashMap()));
         HashMap map = new HashMap();
         map.put("aaa", new Integer(1));
-        assertEquals("{aaa:1}", JSONSerializer.serialize(map));
+        assertEquals("{\"aaa\":1}", JSONSerializer.serialize(map));
         map.put("bbb", new Integer(2));
-        assertEquals("{aaa:1,bbb:2}", JSONSerializer.serialize(map));
+        assertEquals("{\"aaa\":1,\"bbb\":2}", JSONSerializer.serialize(map));
         map.put("bbb", new HashMap());
-        assertEquals("{aaa:1,bbb:{}}", JSONSerializer.serialize(map));
+        assertEquals("{\"aaa\":1,\"bbb\":{}}", JSONSerializer.serialize(map));
     }
 
     /**
@@ -205,7 +205,7 @@ public class JSONSerializerTest extends TestCase {
         assertTrue(ccclist.size() == 2);
         assertEquals(new Integer(1), ccclist.get(0));
         assertEquals(new Integer(2), ccclist.get(1));
-        
+
         Map bbbmap = (Map) maplist.get(1);
         List strsList2 = (List) bbbmap.get("bbb");
         assertNotNull(strsList2);
@@ -223,7 +223,7 @@ public class JSONSerializerTest extends TestCase {
         String s = JSONSerializer.serialize(hoge);
         System.out.println(s);
         // {list:[{ccc:[1,2],aaa:["aaa","bbb","ccc"]},{bbb:["AAA","BBB","CCC"]}]}
-        
+
         Object eval = JSONSerializer.eval(s);
         assertNotNull(eval);
         Map root = (Map) eval;
@@ -234,15 +234,15 @@ public class JSONSerializerTest extends TestCase {
         List aaalist = (List) child1.get("aaa");
         assertNotNull(aaalist);
         assertTrue(aaalist.size() == 3);
-        
+
         List ccclist = (List) child1.get("ccc");
         assertNotNull(ccclist);
         assertTrue(ccclist.size() == 2);
-        
+
         Map child2 = (Map) list.get(1);
         assertNotNull(child2);
         assertTrue(child2.size() == 1);
-        
+
         List bbblist = (List) child2.get("bbb");
         assertNotNull(bbblist);
         assertTrue(bbblist.size() == 3);
@@ -704,7 +704,7 @@ public class JSONSerializerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge2 {
 
@@ -740,7 +740,7 @@ public class JSONSerializerTest extends TestCase {
     }
 
     /**
-     *
+     * 
      */
     public static class Hoge3 {
 

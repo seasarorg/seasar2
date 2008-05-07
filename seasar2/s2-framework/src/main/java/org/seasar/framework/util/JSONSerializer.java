@@ -181,7 +181,7 @@ public class JSONSerializer {
         buf.append(JSONSerializer.START_BRACE);
         for (Iterator i = map.keySet().iterator(); i.hasNext();) {
             String key = (String) i.next();
-            buf.append(key + JSONSerializer.COLON);
+            buf.append(quote(key) + JSONSerializer.COLON);
             appendSerializeObject(buf, map.get(key));
             buf.append(JSONSerializer.COMMA);
         }
