@@ -48,6 +48,7 @@ public class Postgre81DialectTest extends TestCase {
     /**
      * 
      */
+    @SuppressWarnings("unchecked")
     public void testGetForUpdateString() {
         assertEquals(" for update", dialect.getForUpdateString(
                 SelectForUpdateType.NORMAL, 0));

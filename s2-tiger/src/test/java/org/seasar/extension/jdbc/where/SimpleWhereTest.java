@@ -520,6 +520,9 @@ public class SimpleWhereTest extends TestCase {
         assertEquals("", w.getCriteria());
     }
 
+    /**
+     * 
+     */
     public void testEscapeWildcard() {
         SimpleWhere w = new SimpleWhere();
         assertEquals("aaa", w.escapeWildcard("aaa"));
