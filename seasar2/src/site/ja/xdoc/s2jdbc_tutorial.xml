@@ -231,7 +231,7 @@ public Address address;
 			<p>逆の立場から見ても、AddressとEmployeeは一対一の関連があり、 次のように定義されています。</p>
 			　　
 			<source><![CDATA[
-@OneToMany(mappedBy = "address")
+@OneToOne(mappedBy = "address")
 public Employee employee;
 ]]></source>
 			<p>
