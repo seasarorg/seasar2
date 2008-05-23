@@ -66,9 +66,9 @@ public class ComplexWhere extends AbstractWhere<ComplexWhere> implements Where {
             return this;
         }
         if (criteriaSb.length() > 0) {
-            criteriaSb.append(" and (");
+            criteriaSb.append(" and");
         }
-        criteriaSb.append(factorCriteria).append(")");
+        criteriaSb.append(" (").append(factorCriteria).append(")");
         paramList.addAll(Arrays.asList(factor.getParams()));
         propertyNameList.addAll(Arrays.asList(factor.getPropertyNames()));
         return this;

@@ -93,4 +93,18 @@ public class ComplexWhereTest extends TestCase {
         assertEquals(6, w.getPropertyNames().length);
     }
 
+    /**
+     * 
+     */
+    public void testAnd2() {
+        ComplexWhere w = new ComplexWhere();
+        w.eq("a", null).eq("b", null).and(
+                new ComplexWhere().eq("c", 3).or().eq("d", 4)).eq("e", 5).eq(
+                "f", 6);
+        assertEquals(" ((c = ?) or (d = ?)) and e = ? and f = ?", w
+                .getCriteria());
+        assertEquals(4, w.getParams().length);
+        assertEquals(4, w.getPropertyNames().length);
+    }
+
 }
