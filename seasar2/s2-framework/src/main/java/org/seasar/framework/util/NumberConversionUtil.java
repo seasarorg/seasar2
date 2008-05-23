@@ -53,6 +53,8 @@ public final class NumberConversionUtil {
             return ShortConversionUtil.toShort(o);
         } else if (type == BigInteger.class) {
             return BigIntegerConversionUtil.toBigInteger(o);
+        } else if (type == Byte.class) {
+            return ByteConversionUtil.toByte(o);
         }
         return o;
     }
@@ -101,6 +103,12 @@ public final class NumberConversionUtil {
                 return b;
             }
             return Boolean.FALSE;
+        } else if (type == byte.class) {
+            Byte b = ByteConversionUtil.toByte(o);
+            if (b != null) {
+                return b;
+            }
+            return new Byte((byte) 0);
         }
         return o;
     }

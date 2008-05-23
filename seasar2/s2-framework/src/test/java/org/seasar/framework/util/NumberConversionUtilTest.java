@@ -22,9 +22,27 @@ import junit.framework.TestCase;
 
 /**
  * @author shot
- *
+ * 
  */
 public class NumberConversionUtilTest extends TestCase {
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertNumber_byte() throws Exception {
+        assertEquals(new Byte("1"), NumberConversionUtil.convertNumber(
+                Byte.class, "1"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertNumber_primitiveWrapper() throws Exception {
+        assertEquals(new Byte("1"), NumberConversionUtil
+                .convertPrimitiveWrapper(byte.class, "1"));
+        assertEquals(new Byte("0"), NumberConversionUtil
+                .convertPrimitiveWrapper(byte.class, null));
+    }
 
     /**
      * @throws Exception
@@ -47,7 +65,8 @@ public class NumberConversionUtilTest extends TestCase {
      */
     public void testFindFractionDelimeter3() throws Exception {
         String delim = NumberConversionUtil.findDecimalSeparator(null);
-        char c = new DecimalFormatSymbols(Locale.getDefault()).getDecimalSeparator();
+        char c = new DecimalFormatSymbols(Locale.getDefault())
+                .getDecimalSeparator();
         assertEquals(Character.toString(c), delim);
     }
 
@@ -73,7 +92,8 @@ public class NumberConversionUtilTest extends TestCase {
      */
     public void testFindIntegerDelimeter3() throws Exception {
         String delim = NumberConversionUtil.findGroupingSeparator(null);
-        char c = new DecimalFormatSymbols(Locale.getDefault()).getGroupingSeparator();
+        char c = new DecimalFormatSymbols(Locale.getDefault())
+                .getGroupingSeparator();
         assertEquals(Character.toString(c), delim);
     }
 
