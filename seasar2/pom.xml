@@ -230,6 +230,9 @@
       <name>PPOI</name>
       <url>http://softlab.tsukuba-bunko.org/</url>
     </contributor>
+    <contributor>
+      <name>Kan Ogawa</name>
+    </contributor>
   </contributors>
 
   <!-- Environment Settings -->
