@@ -45,6 +45,17 @@ public class CreateAndCopyTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testExecute_beanToMap_exclude_prefix() throws Exception {
+        MyBean3 src = new MyBean3();
+        BeanMap dest = new CreateAndCopy<BeanMap>(BeanMap.class, src).prefix(
+                "abc_").excludes("abc_exclude").execute();
+        assertEquals(1, dest.size());
+        assertEquals("abc", dest.get("value"));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testExecute_mapToBean() throws Exception {
         BeanMap src = new BeanMap();
         src.put("aaa", "aaa");
