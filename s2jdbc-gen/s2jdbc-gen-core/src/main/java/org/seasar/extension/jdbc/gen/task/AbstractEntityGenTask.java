@@ -17,24 +17,14 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.command.GenEntitiesCommand;
-
 /**
- * エンティティのJavaファイルを生成するタスクです。
- * 
  * @author taedium
+ * 
  */
-public class GenEntitiesTask extends GenTask {
+public abstract class AbstractEntityGenTask extends AbstractGenTask {
 
     /** diconファイル */
     protected String diconFile;
-
-    /** {@link JdbcManager}のコンポーネント名 */
-    protected String jdbcManagerName;
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName;
 
     /** エンティティパッケージ名 */
     protected String entityPackageName;
@@ -74,18 +64,11 @@ public class GenEntitiesTask extends GenTask {
 
     /**
      * インスタンスを構築します。
-     */
-    public GenEntitiesTask() {
-        this(GenEntitiesCommand.class.getName());
-    }
-
-    /**
-     * インスタンスを構築します。
      * 
      * @param commandClassName
      *            コマンドクラス名
      */
-    public GenEntitiesTask(String commandClassName) {
+    public AbstractEntityGenTask(String commandClassName) {
         super(commandClassName);
     }
 
@@ -106,44 +89,6 @@ public class GenEntitiesTask extends GenTask {
      */
     public void setDiconFile(String diconFile) {
         this.diconFile = diconFile;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名です。
-     * 
-     * @return {@link JdbcManager}のコンポーネント名
-     */
-    public String getJdbcManagerName() {
-        return jdbcManagerName;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        this.jdbcManagerName = jdbcManagerName;
-    }
-
-    /**
-     * ルートパッケージ名を返します。
-     * 
-     * @return ルートパッケージ名
-     */
-    public String getRootPackageName() {
-        return rootPackageName;
-    }
-
-    /**
-     * ルートパッケージ名を設定します。
-     * 
-     * @param rootPackageName
-     *            ルートパッケージ名
-     */
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
     }
 
     /**

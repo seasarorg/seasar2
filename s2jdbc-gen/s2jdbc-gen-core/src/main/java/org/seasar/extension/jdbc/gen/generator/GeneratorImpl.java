@@ -20,8 +20,8 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 
-import org.seasar.extension.jdbc.gen.EntityGenerator;
 import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.gen.util.TemplateUtil;
@@ -32,14 +32,14 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 /**
- * {@link EntityGenerator}の実装クラスです。
+ * {@link Generator}の実装クラスです。
  * 
  * @author taedium
  */
-public class EntityGeneratorImpl implements EntityGenerator {
+public class GeneratorImpl implements Generator {
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(EntityGeneratorImpl.class);
+    protected Logger logger = Logger.getLogger(GeneratorImpl.class);
 
     /** FreeMarkerの設定 */
     protected Configuration configuration;
@@ -50,7 +50,7 @@ public class EntityGeneratorImpl implements EntityGenerator {
      * @param configuration
      *            FreeMarkerの設定
      */
-    public EntityGeneratorImpl(Configuration configuration) {
+    public GeneratorImpl(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -62,7 +62,7 @@ public class EntityGeneratorImpl implements EntityGenerator {
         if (!overwrite && exists(context.getFile())) {
             return;
         }
-        makeDirsIfNecessary(context.getDir());
+        makeDirsIfNotExists(context.getDir());
         Writer writer = openWriter(context);
         try {
             Template template = ConfigurationUtil.getTemplate(configuration,
@@ -75,16 +75,36 @@ public class EntityGeneratorImpl implements EntityGenerator {
         }
     }
 
+    /**
+     * {@code file}が存在する場合に{@code true}を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return {@code file}が存在する場合は{@code true}、そうでない場合は{@code false}
+     */
     protected boolean exists(File file) {
         return file.exists();
     }
 
-    protected void makeDirsIfNecessary(File dir) {
+    /**
+     * {@code dir}が存在しない場合に作成します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     */
+    protected void makeDirsIfNotExists(File dir) {
         if (!dir.exists()) {
             dir.mkdirs();
         }
     }
 
+    /**
+     * {@link Writer}を開きます。
+     * 
+     * @param context
+     *            コンテキスト
+     * @return
+     */
     protected Writer openWriter(GenerationContext context) {
         return new OutputStreamWriter(FileOutputStreamUtil.create(context
                 .getFile()), Charset.forName(context.getEncoding()));

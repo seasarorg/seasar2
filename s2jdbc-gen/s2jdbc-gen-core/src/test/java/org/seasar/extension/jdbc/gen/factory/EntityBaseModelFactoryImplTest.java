@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.model.AttributeDesc;
-import org.seasar.extension.jdbc.gen.model.EntityCode;
+import org.seasar.extension.jdbc.gen.model.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
 
 import static org.junit.Assert.*;
@@ -31,16 +31,16 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntityCodeFactoryImplTest {
+public class EntityBaseModelFactoryImplTest {
 
-    private EntityCodeFactoryImpl factory = new EntityCodeFactoryImpl();
+    private EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
 
     /**
      * 
      * @throws Exception
      */
     @Test
-    public void testGetEntityCode() throws Exception {
+    public void testGetEntityBaseModel() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -79,17 +79,22 @@ public class EntityCodeFactoryImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityCode code = factory.getEntityCode(entityDesc, "aaa.bbb.Hoge",
+        EntityBaseModel model = factory.getEntityBaseModel(entityDesc,
                 "aaa.bbb.ccc.AbstractHoge");
-        assertEquals("aaa.bbb", code.getPackageName());
-        assertEquals("aaa.bbb.Hoge", code.getClassName());
-        assertEquals("Hoge", code.getShortClassName());
-        assertEquals("aaa.bbb.ccc.AbstractHoge", code.getBaseClassName());
-        assertEquals("AbstractHoge", code.getShortBaseClassName());
-        Set<String> set = code.getImportPackageNameSet();
-        assertEquals(2, set.size());
+        assertEquals("aaa.bbb.ccc", model.getPackageName());
+        assertEquals("aaa.bbb.ccc.AbstractHoge", model.getClassName());
+        assertEquals("AbstractHoge", model.getShortClassName());
+        Set<String> set = model.getImportPackageNameSet();
+        assertEquals(9, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals("aaa.bbb.ccc.AbstractHoge", iterator.next());
-        assertEquals("javax.persistence.Entity", iterator.next());
+        assertEquals("java.util.Date", iterator.next());
+        assertEquals("javax.persistence.GeneratedValue", iterator.next());
+        assertEquals("javax.persistence.Id", iterator.next());
+        assertEquals("javax.persistence.Lob", iterator.next());
+        assertEquals("javax.persistence.MappedSuperclass", iterator.next());
+        assertEquals("javax.persistence.Temporal", iterator.next());
+        assertEquals("javax.persistence.TemporalType", iterator.next());
+        assertEquals("javax.persistence.Transient", iterator.next());
+        assertEquals("javax.persistence.Version", iterator.next());
     }
 }

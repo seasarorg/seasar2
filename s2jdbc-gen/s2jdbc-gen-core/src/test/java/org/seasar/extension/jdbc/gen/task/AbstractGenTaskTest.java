@@ -31,11 +31,11 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenTaskTest {
+public class AbstractGenTaskTest {
 
     private String commandClassName;
 
-    private GenTask task;
+    private AbstractGenTask task;
 
     private ClassLoader classLoader;
 
@@ -46,7 +46,7 @@ public class GenTaskTest {
     @Before
     public void setUp() throws Exception {
         commandClassName = getClass().getName() + "$Hoge";
-        task = new GenTask(commandClassName);
+        task = new AbstractGenTaskStub(commandClassName);
 
         String classpath = System.getProperty("java.class.path");
         String pathSeparator = System.getProperty("path.separator");
@@ -159,6 +159,22 @@ public class GenTaskTest {
             } catch (IOException e) {
                 throw new IORuntimeException(e);
             }
+        }
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public static class AbstractGenTaskStub extends AbstractGenTask {
+
+        /**
+         * 
+         * @param commandClassName
+         */
+        public AbstractGenTaskStub(String commandClassName) {
+            super(commandClassName);
         }
     }
 

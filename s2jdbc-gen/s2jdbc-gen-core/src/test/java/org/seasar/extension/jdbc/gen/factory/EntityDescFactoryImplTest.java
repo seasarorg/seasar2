@@ -65,6 +65,18 @@ public class EntityDescFactoryImplTest {
      * @throws Exception
      */
     @Test
+    public void testTableName() throws Exception {
+        DbTableMeta dbTableMeta = new DbTableMeta();
+        dbTableMeta.setName("HOGE");
+        EntityDesc entityDesc = factory.getEntityDesc(dbTableMeta);
+        assertEquals("HOGE", entityDesc.getTableName());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testGetAttributeDescList() throws Exception {
         DbColumnMeta columnMeta1 = new DbColumnMeta();
         columnMeta1.setName("BAR");

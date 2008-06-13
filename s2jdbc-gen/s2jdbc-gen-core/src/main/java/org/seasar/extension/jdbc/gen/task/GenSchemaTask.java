@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.command.GenSchemaCommand;
  * 
  * @author taedium
  */
-public class GenSchemaTask extends GenTask {
+public class GenSchemaTask extends AbstractGenTask {
 
     /**
      * インスタンスを構築します。

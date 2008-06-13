@@ -22,7 +22,7 @@ import java.util.TreeSet;
  * @author taedium
  * 
  */
-public class EntityBaseCode {
+public class EntityBaseModel {
 
     protected String packageName;
 

@@ -29,6 +29,9 @@ public class EntityDesc {
     /** 名前 */
     protected String name;
 
+    /** テーブルの名前 */
+    protected String tableName;
+
     /** 複合識別子をもつならば{@code true} */
     protected boolean compositeId;
 
@@ -37,6 +40,12 @@ public class EntityDesc {
 
     /** 識別子である属性記述のリスト */
     protected List<AttributeDesc> idAttributeDescList = new ArrayList<AttributeDesc>();
+
+    /**
+     * インスタンスを構築します。
+     */
+    public EntityDesc() {
+    }
 
     /**
      * 名前を返します。
@@ -55,6 +64,25 @@ public class EntityDesc {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * テーブルの名前を返します。
+     * 
+     * @return テーブルの名前
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * テーブルの名前を設定します。
+     * 
+     * @param tableName
+     *            テーブルの名前
+     */
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     /**

@@ -24,21 +24,22 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import org.seasar.extension.jdbc.gen.EntityBaseCodeFactory;
+import org.seasar.extension.jdbc.gen.EntityBaseModelFactory;
 import org.seasar.extension.jdbc.gen.model.AttributeDesc;
-import org.seasar.extension.jdbc.gen.model.EntityBaseCode;
+import org.seasar.extension.jdbc.gen.model.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * {@link EntityBaseModel}のファクトリです。
  * 
+ * @author taedium
  */
-public class EntityBaseCodeFactoryImpl implements EntityBaseCodeFactory {
+public class EntityBaseModelFactoryImpl implements EntityBaseModelFactory {
 
-    public EntityBaseCode getEntityBaseCode(EntityDesc entityDesc,
+    public EntityBaseModel getEntityBaseModel(EntityDesc entityDesc,
             String className) {
-        EntityBaseCode code = new EntityBaseCode();
+        EntityBaseModel code = new EntityBaseModel();
         code.setClassName(className);
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
         code.setPackageName(elements[0]);
@@ -48,33 +49,41 @@ public class EntityBaseCodeFactoryImpl implements EntityBaseCodeFactory {
         return code;
     }
 
-    protected void doImportPackageNames(EntityBaseCode code,
+    /**
+     * インポートするパッケージ名を処理します。
+     * 
+     * @param model
+     *            エンティティ基底クラスのモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void doImportPackageNames(EntityBaseModel model,
             EntityDesc entityDesc) {
-        code.addImportPackageName(MappedSuperclass.class.getName());
+        model.addImportPackageName(MappedSuperclass.class.getName());
         for (AttributeDesc attr : entityDesc.getAttributeDescList()) {
             if (attr.isId()) {
-                code.addImportPackageName(Id.class.getName());
+                model.addImportPackageName(Id.class.getName());
                 if (!entityDesc.hasCompositeId()) {
-                    code.addImportPackageName(GeneratedValue.class.getName());
+                    model.addImportPackageName(GeneratedValue.class.getName());
                 }
             }
             if (attr.isLob()) {
-                code.addImportPackageName(Lob.class.getName());
+                model.addImportPackageName(Lob.class.getName());
             }
             if (attr.getTemporalType() != null) {
-                code.addImportPackageName(Temporal.class.getName());
-                code.addImportPackageName(TemporalType.class.getName());
+                model.addImportPackageName(Temporal.class.getName());
+                model.addImportPackageName(TemporalType.class.getName());
             }
             if (attr.isTransient()) {
-                code.addImportPackageName(Transient.class.getName());
+                model.addImportPackageName(Transient.class.getName());
             }
             if (attr.isVersion()) {
-                code.addImportPackageName(Version.class.getName());
+                model.addImportPackageName(Version.class.getName());
             }
 
             String name = ClassUtil.getPackageName(attr.getAttributeClass());
             if (name != null && !"java.lang".equals(name)) {
-                code.addImportPackageName(attr.getAttributeClass().getName());
+                model.addImportPackageName(attr.getAttributeClass().getName());
             }
         }
     }

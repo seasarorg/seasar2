@@ -45,7 +45,7 @@ import org.seasar.framework.util.MethodUtil;
  * 
  * @author taedium
  */
-public class GenTask extends Task {
+public abstract class AbstractGenTask extends Task {
 
     /** このタスクから実行するコマンドクラスの名前 */
     protected String commandClassName;
@@ -59,7 +59,7 @@ public class GenTask extends Task {
      * @param commandClassName
      *            このタスクから処理が委譲されるクラスの名前です。
      */
-    public GenTask(String commandClassName) {
+    public AbstractGenTask(String commandClassName) {
         if (commandClassName == null) {
             throw new NullPointerException(commandClassName);
         }

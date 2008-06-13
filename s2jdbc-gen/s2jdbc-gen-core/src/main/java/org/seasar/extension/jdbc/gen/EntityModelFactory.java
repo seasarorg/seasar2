@@ -15,14 +15,15 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.model.EntityBaseCode;
+import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
 
 /**
  * @author taedium
  * 
  */
-public interface EntityBaseCodeFactory {
+public interface EntityModelFactory {
 
-    EntityBaseCode getEntityBaseCode(EntityDesc entityDesc, String className);
+    EntityModel getEntityModel(EntityDesc entityDesc, String className,
+            String baseClassName);
 }

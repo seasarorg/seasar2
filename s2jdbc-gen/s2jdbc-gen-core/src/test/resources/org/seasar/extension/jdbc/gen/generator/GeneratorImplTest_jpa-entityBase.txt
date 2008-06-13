@@ -1,0 +1,82 @@
+package bar;
+
+import java.util.Date;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
+
+@MappedSuperclass
+public abstract class AbstractFoo {
+
+    @Id
+    @GeneratedValue
+    private int id;
+
+    private String name;
+
+    @Lob
+    private byte[] lob;
+
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
+    @Transient
+    private String temp;
+
+    @Version
+    private Integer version;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public byte[] getLob() {
+        return lob;
+    }
+
+    public void setLob(byte[] lob) {
+        this.lob = lob;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getTemp() {
+        return temp;
+    }
+
+    public void setTemp(String temp) {
+        this.temp = temp;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+}

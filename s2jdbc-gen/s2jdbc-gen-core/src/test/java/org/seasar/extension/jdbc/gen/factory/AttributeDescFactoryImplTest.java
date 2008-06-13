@@ -65,6 +65,18 @@ public class AttributeDescFactoryImplTest {
      * @throws Exception
      */
     @Test
+    public void testColumnName() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("HOGE");
+        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        assertEquals("HOGE", attributeDesc.getColumnName());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testIsId() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");

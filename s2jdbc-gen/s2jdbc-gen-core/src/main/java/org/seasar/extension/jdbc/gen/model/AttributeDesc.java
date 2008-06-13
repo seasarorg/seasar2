@@ -27,6 +27,9 @@ public class AttributeDesc {
     /** 名前 */
     protected String name;
 
+    /** カラムの名前 */
+    protected String columnName;
+
     /** 属性のクラス */
     protected Class<?> attributeClass;
 
@@ -46,6 +49,12 @@ public class AttributeDesc {
     protected boolean lob;
 
     /**
+     * インスタンスを構築します。
+     */
+    public AttributeDesc() {
+    }
+
+    /**
      * 名前を返します。
      * 
      * @return 名前
@@ -62,6 +71,25 @@ public class AttributeDesc {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * カラムの名前を返します。
+     * 
+     * @return カラムの名前
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * カラムの名前を設定します。
+     * 
+     * @param columnName
+     *            カラムの名前
+     */
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
     }
 
     /**

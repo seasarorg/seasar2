@@ -53,6 +53,7 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
     public EntityDesc getEntityDesc(DbTableMeta tableMeta) {
         EntityDesc entityDesc = new EntityDesc();
         doName(tableMeta, entityDesc);
+        doTableName(tableMeta, entityDesc);
         for (DbColumnMeta columnMeta : tableMeta.getColumnMetaList()) {
             AttributeDesc attributeDesc = attributeDescFactory
                     .getAttributeDesc(columnMeta);
@@ -65,12 +66,24 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      * 名前を処理します。
      * 
      * @param tableMeta
-     *            テーブルメタデータ
+     *            テーブルメタ情報
      * @param entityDesc
      *            エンティティ記述
      */
     public void doName(DbTableMeta tableMeta, EntityDesc entityDesc) {
         entityDesc.setName(persistenceConvention
                 .fromTableNameToEntityName(tableMeta.getName()));
+    }
+
+    /**
+     * テーブルの名前を処理します。
+     * 
+     * @param tableMeta
+     *            テーブルメタ情報
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    public void doTableName(DbTableMeta tableMeta, EntityDesc entityDesc) {
+        entityDesc.setTableName(tableMeta.getName());
     }
 }

@@ -17,20 +17,21 @@ package org.seasar.extension.jdbc.gen.factory;
 
 import javax.persistence.Entity;
 
-import org.seasar.extension.jdbc.gen.EntityCodeFactory;
-import org.seasar.extension.jdbc.gen.model.EntityCode;
+import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
+import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * {@link EntityModel}のファクトリです。
  * 
+ * @author taedium
  */
-public class EntityCodeFactoryImpl implements EntityCodeFactory {
+public class EntityModelFactoryImpl implements EntityModelFactory {
 
-    public EntityCode getEntityCode(EntityDesc entityDesc, String className,
+    public EntityModel getEntityModel(EntityDesc entityDesc, String className,
             String baseClassName) {
-        EntityCode code = new EntityCode();
+        EntityModel code = new EntityModel();
         code.setClassName(className);
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
         code.setPackageName(elements[0]);
@@ -44,8 +45,16 @@ public class EntityCodeFactoryImpl implements EntityCodeFactory {
         return code;
     }
 
-    protected void doImportPackageNames(EntityCode code, EntityDesc entityDesc) {
-        code.addImportPackageName(Entity.class.getName());
-        code.addImportPackageName(code.getBaseClassName());
+    /**
+     * インポートするパッケージ名を処理します。
+     * 
+     * @param model
+     *            エンティティクラスのモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void doImportPackageNames(EntityModel model, EntityDesc entityDesc) {
+        model.addImportPackageName(Entity.class.getName());
+        model.addImportPackageName(model.getBaseClassName());
     }
 }

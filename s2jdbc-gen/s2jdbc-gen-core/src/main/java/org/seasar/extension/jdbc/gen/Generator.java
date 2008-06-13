@@ -20,10 +20,24 @@ package org.seasar.extension.jdbc.gen;
  * 
  * @author taedium
  */
-public interface EntityGenerator {
+public interface Generator {
 
+    /**
+     * 生成します。
+     * 
+     * @param context
+     *            コンテキスト
+     */
     void generate(GenerationContext context);
 
+    /**
+     * 生成します。
+     * 
+     * @param context
+     *            コンテキスト
+     * @param overwrite
+     *            上書きする場合は{@code true}、しない場合は{@code false}
+     */
     void generate(GenerationContext context, boolean overwrite);
 
 }

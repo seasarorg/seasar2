@@ -55,25 +55,26 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         this.versionColumn = versionColumn;
     }
 
-    public AttributeDesc getAttributeDesc(DbColumnMeta columnDesc) {
-        AttributeDesc propertyModel = new AttributeDesc();
-        doName(columnDesc, propertyModel);
-        doId(columnDesc, propertyModel);
-        doLob(columnDesc, propertyModel);
-        doAttributeClass(columnDesc, propertyModel);
-        doTemporalType(columnDesc, propertyModel);
-        doTransient(columnDesc, propertyModel);
-        doVersion(columnDesc, propertyModel);
-        return propertyModel;
+    public AttributeDesc getAttributeDesc(DbColumnMeta columnMeta) {
+        AttributeDesc attributeDesc = new AttributeDesc();
+        doName(columnMeta, attributeDesc);
+        doColumnName(columnMeta, attributeDesc);
+        doId(columnMeta, attributeDesc);
+        doLob(columnMeta, attributeDesc);
+        doAttributeClass(columnMeta, attributeDesc);
+        doTemporalType(columnMeta, attributeDesc);
+        doTransient(columnMeta, attributeDesc);
+        doVersion(columnMeta, attributeDesc);
+        return attributeDesc;
     }
 
     /**
      * 名前を処理します。
      * 
      * @param columnMeta
-     *            カラム記述
+     *            カラムメタ情報
      * @param attributeDesc
-     *            プロパティモデル
+     *            属性記述
      */
     protected void doName(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
         attributeDesc.setName(persistenceConvention
@@ -81,10 +82,23 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     }
 
     /**
+     * カラムの名前を処理します。
+     * 
+     * @param columnMeta
+     *            カラムメタ情報
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doColumnName(DbColumnMeta columnMeta,
+            AttributeDesc attributeDesc) {
+        attributeDesc.setColumnName(columnMeta.getName());
+    }
+
+    /**
      * 識別子を処理します。
      * 
      * @param columnMeta
-     *            カラムメタデータ
+     *            カラムメタ情報
      * @param attributeDesc
      *            属性記述
      */
@@ -96,7 +110,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * プロパティのクラスを処理します。
      * 
      * @param columnMeta
-     *            カラムメタデータ
+     *            カラムメタ情報
      * @param attributeDesc
      *            属性記述
      */
@@ -111,7 +125,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * <code>LOB</code>を処理します。
      * 
      * @param columnMeta
-     *            カラムメタデータ
+     *            カラムメタ情報
      * @param attributeDesc
      *            属性記述
      */
@@ -124,7 +138,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * 時制の種別を処理します。
      * 
      * @param columnMeta
-     *            カラムメタデータ
+     *            カラムメタ情報
      * @param attributeDesc
      *            属性記述
      */
@@ -138,7 +152,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * 一時的なプロパティを処理します。
      * 
      * @param columnMeta
-     *            カラムメタデータ
+     *            カラムメタ情報
      * @param attributeDesc
      *            属性記述
      */
@@ -150,7 +164,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * バージョンを処理します。
      * 
      * @param columnMeta
-     *            カラムメタデータ
+     *            カラムメタ情報
      * @param attributeDesc
      *            属性記述
      */
