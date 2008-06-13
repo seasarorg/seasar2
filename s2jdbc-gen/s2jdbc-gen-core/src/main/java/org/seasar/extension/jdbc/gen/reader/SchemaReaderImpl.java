@@ -29,8 +29,8 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SchemaReader;
-import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
-import org.seasar.extension.jdbc.gen.model.DbTableDesc;
+import org.seasar.extension.jdbc.gen.model.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.model.DbTableMeta;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
@@ -63,31 +63,33 @@ public class SchemaReaderImpl implements SchemaReader {
         this.dialect = dialect;
     }
 
-    public List<DbTableDesc> read(String schemaName, String tableNamePattern) {
+    public List<DbTableMeta> read(String schemaName, String tableNamePattern) {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
-            String schema = schemaName != null ? schemaName
+            schemaName = schemaName != null ? schemaName
                     : getDefaultSchemaName(metaData);
-            List<String> tables = getTables(metaData, schemaName);
+            List<String> tableNames = getTableNameList(metaData, schemaName);
 
-            List<DbTableDesc> result = new ArrayList<DbTableDesc>();
-            for (String table : filterTables(tables, tableNamePattern)) {
-                if (!dialect.isUserTable(table)) {
+            List<DbTableMeta> result = new ArrayList<DbTableMeta>();
+            for (String tableName : filterTableNames(tableNames,
+                    tableNamePattern)) {
+                if (!dialect.isUserTable(tableName)) {
                     continue;
                 }
-                DbTableDesc tableDesc = new DbTableDesc();
-                tableDesc.setName(table);
+                DbTableMeta tableMeta = new DbTableMeta();
+                tableMeta.setName(tableName);
 
-                Set<String> primaryKeys = getPrimaryKeys(metaData, schema,
-                        table);
-                for (DbColumnDesc cm : getDbColumnDescs(metaData, schema, table)) {
+                Set<String> primaryKeys = getPrimaryKeySet(metaData,
+                        schemaName, tableName);
+                for (DbColumnMeta cm : getDbColumnMetaList(metaData,
+                        schemaName, tableName)) {
                     if (primaryKeys.contains(cm.getName())) {
                         cm.setPrimaryKey(true);
                     }
-                    tableDesc.addColumnDesc(cm);
+                    tableMeta.addColumnMeta(cm);
                 }
-                result.add(tableDesc);
+                result.add(tableMeta);
             }
             return result;
         } finally {
@@ -116,7 +118,7 @@ public class SchemaReaderImpl implements SchemaReader {
      *            スキーマ名
      * @return テーブル名のセット
      */
-    protected List<String> getTables(DatabaseMetaData metaData,
+    protected List<String> getTableNameList(DatabaseMetaData metaData,
             String schemaName) {
         List<String> result = new ArrayList<String>();
         try {
@@ -138,19 +140,19 @@ public class SchemaReaderImpl implements SchemaReader {
     /**
      * テーブル名をフィルタリングします。
      * 
-     * @param tables
+     * @param tableNames
      *            テーブル名のリスト
      * @param tableNamePattern
      *            テーブル名のパターン
      * @return フィルタリングされたテーブル名の新しいリスト
      */
-    protected List<String> filterTables(List<String> tables,
+    protected List<String> filterTableNames(List<String> tableNames,
             String tableNamePattern) {
         List<String> result = new ArrayList<String>();
         Pattern p = Pattern.compile(tableNamePattern, Pattern.CASE_INSENSITIVE);
-        for (String tableName : tables) {
-            if (p.matcher(tableName).matches()) {
-                result.add(tableName);
+        for (String name : tableNames) {
+            if (p.matcher(name).matches()) {
+                result.add(name);
             }
         }
         return result;
@@ -165,17 +167,17 @@ public class SchemaReaderImpl implements SchemaReader {
      *            スキーマ名
      * @param tableName
      *            テーブル名
-     * @return カラム記述のリスト
+     * @return カラムメタデータのリスト
      */
-    protected List<DbColumnDesc> getDbColumnDescs(DatabaseMetaData metaData,
+    protected List<DbColumnMeta> getDbColumnMetaList(DatabaseMetaData metaData,
             String schemaName, String tableName) {
-        List<DbColumnDesc> result = new ArrayList<DbColumnDesc>();
+        List<DbColumnMeta> result = new ArrayList<DbColumnMeta>();
         try {
             ResultSet rs = metaData.getColumns(null, schemaName, tableName,
                     null);
             try {
                 while (rs.next()) {
-                    DbColumnDesc columnDesc = new DbColumnDesc();
+                    DbColumnMeta columnDesc = new DbColumnMeta();
                     columnDesc.setName(rs.getString(4));
                     columnDesc.setSqlType(rs.getInt(5));
                     columnDesc.setTypeName(rs.getString(6));
@@ -204,7 +206,7 @@ public class SchemaReaderImpl implements SchemaReader {
      *            テーブル名
      * @return 主キーのセット
      */
-    protected Set<String> getPrimaryKeys(DatabaseMetaData metaData,
+    protected Set<String> getPrimaryKeySet(DatabaseMetaData metaData,
             String schemaName, String tableName) {
         Set<String> result = new HashSet<String>();
         try {

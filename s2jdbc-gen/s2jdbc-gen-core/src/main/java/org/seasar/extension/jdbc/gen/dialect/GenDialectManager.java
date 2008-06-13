@@ -15,11 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.dialect.Db2390Dialect;
@@ -34,10 +31,10 @@ import org.seasar.extension.jdbc.dialect.MaxdbDialect;
 import org.seasar.extension.jdbc.dialect.Mssql2005Dialect;
 import org.seasar.extension.jdbc.dialect.MysqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
+import org.seasar.extension.jdbc.dialect.Postgre81Dialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.SybaseDialect;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
@@ -45,113 +42,105 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class GenDialectManager {
 
-    /** DB2 390用の{@code GenDialect}の実装クラス */
-    protected static Class<Db2390GenDialect> DB2_390 = Db2390GenDialect.class;
+    protected static Db2390GenDialect DB2_390 = new Db2390GenDialect();
 
-    /** DB2 400用の{@code GenDialect}の実装クラス */
-    protected static Class<Db2400GenDialect> DB2_400 = Db2400GenDialect.class;
+    protected static Db2400GenDialect DB2_400 = new Db2400GenDialect();
 
-    /** DB2用の{@code GenDialect}の実装クラス */
-    protected static Class<Db2GenDialect> DB2 = Db2GenDialect.class;
+    protected static Db2GenDialect DB2 = new Db2GenDialect();
 
-    /** Derby用の{@code GenDialect}の実装クラス */
-    protected static Class<DerbyGenDialect> DERBY = DerbyGenDialect.class;
+    protected static DerbyGenDialect DERBY = new DerbyGenDialect();
 
-    /** Firebird用の{@code GenDialect}の実装クラス */
-    protected static Class<FirebirdGenDialect> FIREBIRD = FirebirdGenDialect.class;
+    protected static FirebirdGenDialect FIREBIRD = new FirebirdGenDialect();
 
-    /** H2用の{@code GenDialect}の実装クラス */
-    protected static Class<H2GenDialect> H2 = H2GenDialect.class;
+    protected static H2GenDialect H2 = new H2GenDialect();
 
-    /** HSQLDB用の{@code GenDialect}の実装クラス */
-    protected static Class<HsqlGenDialect> HSQL = HsqlGenDialect.class;
+    protected static HsqlGenDialect HSQL = new HsqlGenDialect();
 
-    /** Interbase用の{@code GenDialect}の実装クラス */
-    protected static Class<InterbaseGenDialect> INTERBASE = InterbaseGenDialect.class;
+    protected static InterbaseGenDialect INTERBASE = new InterbaseGenDialect();
 
-    /** MaxDB用の{@code GenDialect}の実装クラス */
-    protected static Class<MaxdbGenDialect> MAXDB = MaxdbGenDialect.class;
+    protected static MaxdbGenDialect MAXDB = new MaxdbGenDialect();
 
-    /** MS SQL Server 2005用の{@code GenDialect}の実装クラス */
-    protected static Class<Mssql2005GenDialect> MSSQL_2005 = Mssql2005GenDialect.class;
+    protected static Mssql2005GenDialect MSSQL_2005 = new Mssql2005GenDialect();
 
-    /** MS SQL Server用の{@code GenDialect}の実装クラス */
-    protected static Class<MssqlGenDialect> MSSQL = MssqlGenDialect.class;
+    protected static MssqlGenDialect MSSQL = new MssqlGenDialect();
 
-    /** MySQL用の{@code GenDialect}の実装クラス */
-    protected static Class<MysqlGenDialect> MYSQL = MysqlGenDialect.class;
+    protected static MysqlGenDialect MYSQL = new MysqlGenDialect();
 
-    /** Oracle用の{@code GenDialect}の実装クラス */
-    protected static Class<OracleGenDialect> ORACLE = OracleGenDialect.class;
+    protected static OracleGenDialect ORACLE = new OracleGenDialect();
 
-    /** PostgreSQL用の{@code GenDialect}の実装クラス */
-    protected static Class<PostgreGenDialect> POSTGRE = PostgreGenDialect.class;
+    protected static PostgreGenDialect POSTGRE = new PostgreGenDialect();
 
-    /** Sybase用の{@code GenDialect}の実装クラス */
-    protected static Class<SybaseGenDialect> SYBASE = SybaseGenDialect.class;
+    protected static Postgre81GenDialect POSTGRE81 = new Postgre81GenDialect();
 
-    /** 標準の{@code GenDialect}の実装クラス */
-    protected static Class<StandardGenDialect> STANDARD = StandardGenDialect.class;
+    protected static SybaseGenDialect SYBASE = new SybaseGenDialect();
 
-    /** {@code DbmsDialect}のクラス名をキー、{@code Class<? extends GenDialect>}のクラスを値とするマップ */
-    protected static Map<String, Class<? extends GenDialect>> getDialectClassMap = new HashMap<String, Class<? extends GenDialect>>();
+    protected static StandardGenDialect STANDARD = new StandardGenDialect();
+
+    protected static Map<String, GenDialect> dialectMap = new HashMap<String, GenDialect>();
     static {
-        getDialectClassMap.put(Db2390Dialect.class.getName(), DB2_390);
-        getDialectClassMap.put(Db2400Dialect.class.getName(), DB2_400);
-        getDialectClassMap.put(Db2Dialect.class.getName(), DB2);
-        getDialectClassMap.put(DerbyDialect.class.getName(), DERBY);
-        getDialectClassMap.put(FirebirdDialect.class.getName(), FIREBIRD);
-        getDialectClassMap.put(H2Dialect.class.getName(), H2);
-        getDialectClassMap.put(HsqlDialect.class.getName(), HSQL);
-        getDialectClassMap.put(InterbaseDialect.class.getName(), INTERBASE);
-        getDialectClassMap.put(MaxdbDialect.class.getName(), MAXDB);
-        getDialectClassMap.put(Mssql2005Dialect.class.getName(), MSSQL_2005);
-        getDialectClassMap.put(MysqlDialect.class.getName(), MYSQL);
-        getDialectClassMap.put(OracleDialect.class.getName(), ORACLE);
-        getDialectClassMap.put(PostgreDialect.class.getName(), POSTGRE);
-        getDialectClassMap.put(SybaseDialect.class.getName(), SYBASE);
+        dialectMap.put(Db2390Dialect.class.getName(), DB2_390);
+        dialectMap.put(Db2400Dialect.class.getName(), DB2_400);
+        dialectMap.put(Db2Dialect.class.getName(), DB2);
+        dialectMap.put(DerbyDialect.class.getName(), DERBY);
+        dialectMap.put(FirebirdDialect.class.getName(), FIREBIRD);
+        dialectMap.put(H2Dialect.class.getName(), H2);
+        dialectMap.put(HsqlDialect.class.getName(), HSQL);
+        dialectMap.put(InterbaseDialect.class.getName(), INTERBASE);
+        dialectMap.put(MaxdbDialect.class.getName(), MAXDB);
+        dialectMap.put(Mssql2005Dialect.class.getName(), MSSQL_2005);
+        dialectMap.put(MysqlDialect.class.getName(), MYSQL);
+        dialectMap.put(OracleDialect.class.getName(), ORACLE);
+        dialectMap.put(PostgreDialect.class.getName(), POSTGRE);
+        dialectMap.put(Postgre81Dialect.class.getName(), POSTGRE81);
+        dialectMap.put(SybaseDialect.class.getName(), SYBASE);
     }
 
-    /** {@link GenDialect}のキャッシュ */
-    protected static ConcurrentMap<DbmsDialect, GenDialect> genDialectCache = new ConcurrentHashMap<DbmsDialect, GenDialect>();
+    protected static Map<String, GenDialect> namedDialectMap = new HashMap<String, GenDialect>();
+    static {
+        namedDialectMap.put("db2390", DB2_390);
+        namedDialectMap.put("db2400", DB2_400);
+        namedDialectMap.put("db2", DB2);
+        namedDialectMap.put("derby", DERBY);
+        namedDialectMap.put("firebird", FIREBIRD);
+        namedDialectMap.put("h2", H2);
+        namedDialectMap.put("hsql", HSQL);
+        namedDialectMap.put("interbase", INTERBASE);
+        namedDialectMap.put("maxdb", MAXDB);
+        namedDialectMap.put("mssql2005", MSSQL_2005);
+        namedDialectMap.put("mysql", MYSQL);
+        namedDialectMap.put("oracle", ORACLE);
+        namedDialectMap.put("postgre", POSTGRE);
+        namedDialectMap.put("postgre", POSTGRE81);
+        namedDialectMap.put("sybase", SYBASE);
+    }
 
     private GenDialectManager() {
     }
 
-    /**
-     * {@code DbmsDialect}に対応する{@code GenDialect}を返します。
-     * 
-     * @param dbmsDialect
-     *            {@code DbmsDialect}
-     * @return {@code GenDialect}
-     */
     public static GenDialect getGenDialect(DbmsDialect dbmsDialect) {
         if (dbmsDialect == null) {
             throw new NullPointerException("dbmsDialect");
         }
-        GenDialect dialect = genDialectCache.get(dbmsDialect);
+        GenDialect dialect = dialectMap.get(dbmsDialect.getClass().getName());
         if (dialect != null) {
             return dialect;
         }
-        dialect = createGenDialect(dbmsDialect);
-        GenDialect dialect2 = genDialectCache.putIfAbsent(dbmsDialect, dialect);
-        return dialect2 != null ? dialect2 : dialect;
+        return STANDARD;
     }
 
-    protected static GenDialect createGenDialect(DbmsDialect dbmsDialect) {
-        Class<? extends GenDialect> dialectClass = getDialectClassMap
-                .get(dbmsDialect.getClass().getName());
-        if (dialectClass == null) {
-            dialectClass = STANDARD;
+    /**
+     * 名前に対応する{@code GenDialect}を返します。
+     * 
+     * @param dialectName
+     *            方言の名前
+     * @return {@code GenDialect}
+     */
+    public static GenDialect getGenDialect(String dialectName) {
+        GenDialect dialect = namedDialectMap.get(dialectName);
+        if (dialect != null) {
+            return dialect;
         }
-        Constructor<? extends GenDialect> constructor = ReflectionUtil
-                .getConstructor(dialectClass, DbmsDialect.class);
-        return ReflectionUtil.newInstance(constructor, dbmsDialect);
-    }
-
-    protected static void addGenDialectClass(String dbmsDialectClassName,
-            Class<? extends GenDialect> genDialectClass) {
-        getDialectClassMap.put(dbmsDialectClassName, genDialectClass);
+        return STANDARD;
     }
 
 }

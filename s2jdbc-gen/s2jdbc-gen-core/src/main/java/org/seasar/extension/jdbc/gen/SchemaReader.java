@@ -17,7 +17,7 @@ package org.seasar.extension.jdbc.gen;
 
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.model.DbTableDesc;
+import org.seasar.extension.jdbc.gen.model.DbTableMeta;
 
 /**
  * スキーマを読み取るインタフェースです。
@@ -35,5 +35,5 @@ public interface SchemaReader {
      *            正規表現で表されたテーブル名のパターン
      * @return テーブル記述
      */
-    List<DbTableDesc> read(String schemaName, String tableNamePattern);
+    List<DbTableMeta> read(String schemaName, String tableNamePattern);
 }

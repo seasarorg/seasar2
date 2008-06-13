@@ -15,22 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.model.DbTableDesc;
-import org.seasar.extension.jdbc.gen.model.EntityModel;
+import org.seasar.extension.jdbc.gen.model.DbTableMeta;
+import org.seasar.extension.jdbc.gen.model.EntityDesc;
 
 /**
- * {@link DbTableDesc}を{@link EntityModel}に変換するインタフェースです。
+ * {@link EntityDesc}のファクトリです。
  * 
  * @author taedium
  */
-public interface EntityModelConverter {
+public interface EntityDescFactory {
 
     /**
-     * 変換します。
+     * エンティティ記述を返します。
      * 
-     * @param tableDesc
-     *            テーブル記述
-     * @return エンティティモデル
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @return エンティティ記述
      */
-    EntityModel convert(DbTableDesc tableDesc);
+    EntityDesc getEntityDesc(DbTableMeta tableMeta);
 }

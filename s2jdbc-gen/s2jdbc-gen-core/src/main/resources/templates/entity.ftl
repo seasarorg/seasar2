@@ -1,6 +1,6 @@
 package ${packageName};
 
-<#list importPackageNames as name>
+<#list importPackageNameSet as name>
 import ${name};
 </#list>
 

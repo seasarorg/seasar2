@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 
 /**
  * DB2の方言を扱うクラスです。
@@ -24,8 +23,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
  */
 public class Db2GenDialect extends StandardGenDialect {
 
-    public Db2GenDialect(DbmsDialect dbmsDialect) {
-        super(dbmsDialect);
+    public Db2GenDialect() {
     }
 
 }

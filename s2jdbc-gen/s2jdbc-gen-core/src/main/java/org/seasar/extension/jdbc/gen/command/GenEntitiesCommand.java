@@ -24,30 +24,33 @@ import java.util.Locale;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.EntityModelConverter;
+import org.seasar.extension.jdbc.gen.AttributeDescFactory;
+import org.seasar.extension.jdbc.gen.EntityBaseCodeFactory;
+import org.seasar.extension.jdbc.gen.EntityCodeFactory;
+import org.seasar.extension.jdbc.gen.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.EntityGenerator;
 import org.seasar.extension.jdbc.gen.GenCommand;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.JavaCode;
-import org.seasar.extension.jdbc.gen.JavaFileGenerator;
-import org.seasar.extension.jdbc.gen.PropertyModelConverter;
+import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.SchemaReader;
-import org.seasar.extension.jdbc.gen.converter.EntityModelConverterImpl;
-import org.seasar.extension.jdbc.gen.converter.PropertyModelConverterImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.generator.JavaFileGeneratorImpl;
-import org.seasar.extension.jdbc.gen.javacode.EntityBaseJavaCode;
-import org.seasar.extension.jdbc.gen.javacode.EntityJavaCode;
-import org.seasar.extension.jdbc.gen.model.DbTableDesc;
-import org.seasar.extension.jdbc.gen.model.EntityModel;
+import org.seasar.extension.jdbc.gen.factory.AttributeDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.factory.EntityBaseCodeFactoryImpl;
+import org.seasar.extension.jdbc.gen.factory.EntityCodeFactoryImpl;
+import org.seasar.extension.jdbc.gen.factory.EntityDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.generator.EntityGeneratorImpl;
+import org.seasar.extension.jdbc.gen.model.DbTableMeta;
+import org.seasar.extension.jdbc.gen.model.EntityBaseCode;
+import org.seasar.extension.jdbc.gen.model.EntityCode;
+import org.seasar.extension.jdbc.gen.model.EntityDesc;
 import org.seasar.extension.jdbc.gen.reader.SchemaReaderImpl;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
@@ -74,10 +77,7 @@ public class GenEntitiesCommand implements GenCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName;
 
-    /** ルートパッケージ名 */
-    protected String rootPackageName;
-
-    /** エンティティパッケージ名 */
+    /** エンティティクラスのパッケージ名 */
     protected String entityPackageName;
 
     /** エンティティ基底クラスのパッケージ名 */
@@ -125,6 +125,16 @@ public class GenEntitiesCommand implements GenCommand {
     /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
+    protected SchemaReader schemaReader;
+
+    protected EntityDescFactory entityDescFactory;
+
+    protected EntityGenerator entityGenerator;
+
+    protected EntityCodeFactory entityCodeFactory;
+
+    protected EntityBaseCodeFactory entityBaseCodeFactory;
+
     /**
      * インスタンスを構築します。
      */
@@ -149,16 +159,6 @@ public class GenEntitiesCommand implements GenCommand {
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
-    }
-
-    /**
-     * ルートパッケージ名を設定します。
-     * 
-     * @param rootPackageName
-     *            ルートパッケージ名
-     */
-    public void setRootPackageName(String rootPackageName) {
-        this.rootPackageName = rootPackageName;
     }
 
     /**
@@ -284,7 +284,9 @@ public class GenEntitiesCommand implements GenCommand {
     public void execute() {
         init();
         try {
-            generate(convert(read()));
+            List<DbTableMeta> tableMetaList = read();
+            List<EntityDesc> entityDescList = convert(tableMetaList);
+            generate(entityDescList);
         } finally {
             destroy();
         }
@@ -295,35 +297,26 @@ public class GenEntitiesCommand implements GenCommand {
      */
     protected void init() {
         setupDefaults();
+
         if (!SingletonS2ContainerFactory.hasContainer()) {
             initialized = true;
             SingletonS2ContainerFactory.setConfigPath(diconFile);
             SingletonS2ContainerFactory.init();
         }
-        S2Container container = SingletonS2ContainerFactory.getContainer();
-        JdbcManagerImplementor jdbcManager = (JdbcManagerImplementor) container
+        JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         persistenceConvention = jdbcManager.getPersistenceConvention();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-        if (container.hasComponentDef(NamingConvention.class)) {
-            NamingConvention nc = (NamingConvention) container
-                    .getComponent(NamingConvention.class);
-            if (ROOT_PACKAGE_NAME.equals(rootPackageName)) {
-                if (nc.getRootPackageNames().length > 0) {
-                    rootPackageName = nc.getRootPackageNames()[0];
-                }
-            }
-            if (ENTITY_PACKAGE_NAME.equals(entityPackageName)) {
-                entityPackageName = nc.getEntityPackageName();
-            }
-            if (ENTITY_BASE_PACKAGE_NAME.equals(entityBasePackageName)) {
-                entityBasePackageName = nc.getEntityPackageName();
-            }
-        }
         if (logger.isDebugEnabled()) {
             logProperties();
         }
+
+        schemaReader = createSchemaReader();
+        entityDescFactory = createEntityDescFactory();
+        entityGenerator = createEntityGenerator();
+        entityCodeFactory = createEntityCodeFactory();
+        entityBaseCodeFactory = createEntityBaseCodeFactory();
     }
 
     /**
@@ -334,10 +327,7 @@ public class GenEntitiesCommand implements GenCommand {
             diconFile = DICON_FILE;
         }
         if (jdbcManagerName == null) {
-            jdbcManagerName = Default.JDBC_MANAGER_NAME;
-        }
-        if (rootPackageName == null) {
-            rootPackageName = ROOT_PACKAGE_NAME;
+            jdbcManagerName = JDBC_MANAGER_NAME;
         }
         if (entityPackageName == null) {
             entityPackageName = ENTITY_PACKAGE_NAME;
@@ -386,13 +376,62 @@ public class GenEntitiesCommand implements GenCommand {
         int propSize = beanDesc.getPropertyDescSize();
         for (int i = 0; i < propSize; i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
-            if (!propertyDesc.hasWriteMethod()) {
-                continue;
+            if (propertyDesc.hasWriteMethod()) {
+                Field f = propertyDesc.getField();
+                logger.log("DS2JDBCGen0001", new Object[] { f.getName(),
+                        FieldUtil.get(f, this) });
             }
-            Field f = propertyDesc.getField();
-            logger.log("DS2JDBCGen0001", new Object[] { f.getName(),
-                    FieldUtil.get(f, this) });
         }
+    }
+
+    /**
+     * {@link SchemaReader}の実装を作成します。
+     * 
+     * @return {@link SchemaReader}の実装
+     */
+    protected SchemaReader createSchemaReader() {
+        return new SchemaReaderImpl(dataSource, dialect);
+    }
+
+    /**
+     * {@link EntityDescFactory}の実装を作成します。
+     * 
+     * @return {@link EntityDescFactory}の実装
+     */
+    protected EntityDescFactory createEntityDescFactory() {
+        return new EntityDescFactoryImpl(persistenceConvention,
+                createAttributeDescFactory());
+    }
+
+    /**
+     * {@link AttributeDescFactory}の実装を作成します。
+     * 
+     * @return {@link AttributeDescFactory}の実装
+     */
+    protected AttributeDescFactory createAttributeDescFactory() {
+        return new AttributeDescFactoryImpl(persistenceConvention, dialect,
+                versionColumnName);
+    }
+
+    protected EntityCodeFactory createEntityCodeFactory() {
+        return new EntityCodeFactoryImpl();
+    }
+
+    protected EntityBaseCodeFactory createEntityBaseCodeFactory() {
+        return new EntityBaseCodeFactoryImpl();
+    }
+
+    /**
+     * {@link EntityGenerator}の実装を作成します。
+     * 
+     * @return {@link EntityGenerator}の実装
+     */
+    protected EntityGenerator createEntityGenerator() {
+        Configuration cfg = new Configuration();
+        cfg.setObjectWrapper(new DefaultObjectWrapper());
+        cfg.setEncoding(Locale.getDefault(), templateFileEncoding);
+        ConfigurationUtil.setDirectoryForTemplateLoading(cfg, templateDir);
+        return new EntityGeneratorImpl(cfg);
     }
 
     /**
@@ -409,154 +448,72 @@ public class GenEntitiesCommand implements GenCommand {
      * 
      * @return 読み込まれたテーブル記述のリスト
      */
-    protected List<DbTableDesc> read() {
-        SchemaReader reader = createSchemaReader();
-        return reader.read(schemaName, tableNamePattern);
+    protected List<DbTableMeta> read() {
+        return schemaReader.read(schemaName, tableNamePattern);
     }
 
-    /**
-     * {@link SchemaReader}の実装を作成します。
-     * 
-     * @return {@link SchemaReader}の実装
-     */
-    protected SchemaReader createSchemaReader() {
-        return new SchemaReaderImpl(dataSource, dialect);
-    }
-
-    /**
-     * テーブル記述のリストをエンティティモデルのリストに変換します。
-     * 
-     * @param tableDescs
-     *            テーブル記述のリスト
-     * @return エンティティモデルのリスト
-     */
-    protected List<EntityModel> convert(List<DbTableDesc> tableDescs) {
-        List<EntityModel> entityModels = new ArrayList<EntityModel>();
-        EntityModelConverter entityConverter = createEntityModelConverter();
-        for (DbTableDesc tableDesc : tableDescs) {
-            EntityModel entityModel = entityConverter.convert(tableDesc);
-            entityModels.add(entityModel);
+    protected List<EntityDesc> convert(List<DbTableMeta> tableMetaList) {
+        List<EntityDesc> result = new ArrayList<EntityDesc>();
+        for (DbTableMeta tableMeta : tableMetaList) {
+            EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
+            result.add(entityDesc);
         }
-        return entityModels;
-    }
-
-    /**
-     * {@link EntityModelConverter}の実装を作成します。
-     * 
-     * @return {@link EntityModelConverter}の実装
-     */
-    protected EntityModelConverter createEntityModelConverter() {
-        return new EntityModelConverterImpl(persistenceConvention,
-                createPropertyModelConverter());
-    }
-
-    /**
-     * {@link PropertyModelConverter}の実装を作成します。
-     * 
-     * @return {@link PropertyModelConverter}の実装
-     */
-    protected PropertyModelConverter createPropertyModelConverter() {
-        return new PropertyModelConverterImpl(persistenceConvention, dialect,
-                versionColumnName);
+        return result;
     }
 
     /**
      * エンティティのJavaファイルを生成します。
      * 
-     * @param entityModels
+     * @param entityDescList
      *            エンティティモデルのリスト
      */
-    protected void generate(List<EntityModel> entityModels) {
-        JavaFileGenerator generator = createJavaFileGenerator();
-        for (EntityModel entityModel : entityModels) {
-            JavaCode entityCode = createEntityJavaCode(entityModel);
-            generator.generate(entityCode);
-            JavaCode entityBaseCode = createEntityBaseJavaCode(entityModel);
-            generator.generate(entityBaseCode, true);
+    protected void generate(List<EntityDesc> entityDescList) {
+        for (EntityDesc entityDesc : entityDescList) {
+            GenerationContext entityCtx = getEntityGenerationContext(entityDesc);
+            entityGenerator.generate(entityCtx, false);
+            GenerationContext entityBaseCtx = getEntityBaseGenerationContext(entityDesc);
+            entityGenerator.generate(entityBaseCtx);
         }
     }
 
-    /**
-     * {@link JavaFileGenerator}の実装を作成します。
-     * 
-     * @return {@link JavaFileGenerator}の実装
-     */
-    protected JavaFileGenerator createJavaFileGenerator() {
-        Configuration cfg = new Configuration();
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
-        cfg.setEncoding(Locale.getDefault(), templateFileEncoding);
-        ConfigurationUtil.setDirectoryForTemplateLoading(cfg, templateDir);
-        return new JavaFileGeneratorImpl(cfg, destDir, javaFileEncoding);
-    }
-
-    /**
-     * エンティティクラスのJavaコードを表す{@link JavaCode}の実装を作成します。
-     * 
-     * @param entityModel
-     *            エンティティモデル
-     * @return {@link JavaCode}の実装
-     */
-    protected JavaCode createEntityJavaCode(EntityModel entityModel) {
-        String entityClassName = getEntityClassName(entityModel.getName());
-        String entityBaseClassName = getEntityBaseClassName(entityModel
+    protected GenerationContext getEntityGenerationContext(EntityDesc entityDesc) {
+        String className = ClassUtil.concatName(entityPackageName, entityDesc
                 .getName());
-        return new EntityJavaCode(entityModel, entityClassName,
-                entityBaseClassName, entityTemplateName);
+        String baseClassName = getEntityBaseClassName(entityDesc.getName());
+        EntityCode code = entityCodeFactory.getEntityCode(entityDesc,
+                className, baseClassName);
+
+        return getGenerationContext(code, className, entityTemplateName);
     }
 
-    /**
-     * エンティティ基底クラスのJavaコードを表す{@link JavaCode}の実装を作成します。
-     * 
-     * @param entityModel
-     *            エンティティモデル
-     * @return {@link JavaCode}の実装
-     */
-    protected JavaCode createEntityBaseJavaCode(EntityModel entityModel) {
-        String entityBaseClassName = getEntityBaseClassName(entityModel
-                .getName());
-        return new EntityBaseJavaCode(entityModel, entityBaseClassName,
-                entityBaseTemplateName);
+    protected GenerationContext getEntityBaseGenerationContext(
+            EntityDesc entityDesc) {
+        String className = getEntityBaseClassName(entityDesc.getName());
+        EntityBaseCode code = entityBaseCodeFactory.getEntityBaseCode(
+                entityDesc, className);
+        return getGenerationContext(code, className, entityBaseTemplateName);
     }
 
-    /**
-     * エンティティクラス名を返します。
-     * 
-     * @param entityName
-     *            エンティティ名
-     * @return エンティティクラス名
-     */
-    protected String getEntityClassName(String entityName) {
-        return getClassName(rootPackageName, entityPackageName, entityName);
+    protected String getEntityBaseClassName(String entityClassName) {
+        return ClassUtil.concatName(entityBasePackageName,
+                entityBaseClassNamePrefix + entityClassName);
     }
 
-    /**
-     * エンティティ基底クラス名を返します。
-     * 
-     * @param entityName
-     *            エンティティ名
-     * @return エンティティ基底クラス名
-     */
-    protected String getEntityBaseClassName(String entityName) {
-        return getClassName(rootPackageName, entityBasePackageName,
-                entityBaseClassNamePrefix + entityName);
-    }
+    protected GenerationContext getGenerationContext(Object model,
+            String className, String templateName) {
+        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
 
-    /**
-     * クラス名を返します。
-     * 
-     * @param rootPackageName
-     *            ルートパッケージ名
-     * @param subPackageName
-     *            サブパッケージ名
-     * @param entityName
-     *            エンティティ名
-     * @return クラス名
-     */
-    protected String getClassName(String rootPackageName,
-            String subPackageName, String entityName) {
-        String fullPackageName = ClassUtil.concatName(rootPackageName,
-                subPackageName);
-        return ClassUtil.concatName(fullPackageName, entityName);
+        String packagePath = elements[0].replace('.', File.separatorChar);
+        File dir = new File(destDir, packagePath);
+        File file = new File(dir, elements[1] + ".java");
+
+        GenerationContext context = new GenerationContext();
+        context.setDir(dir);
+        context.setFile(file);
+        context.setEncoding(javaFileEncoding);
+        context.setModel(model);
+        context.setTemplateName(templateName);
+        return context;
     }
 
     /**

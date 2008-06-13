@@ -76,7 +76,7 @@ public class PrimaryKeyModelConverterImpl implements PrimaryKeyModelConverter {
     }
 
     protected GenerationType getGenerationType(PropertyMeta propertyMeta) {
-        DbmsDialect dbmsDialect = dialect.getDbmsDialect();
+        DbmsDialect dbmsDialect = null;// dialect.getDbmsDialect();
         GenerationType generationType = propertyMeta.getGenerationType();
         return generationType == GenerationType.AUTO ? dbmsDialect
                 .getDefaultGenerationType() : generationType;

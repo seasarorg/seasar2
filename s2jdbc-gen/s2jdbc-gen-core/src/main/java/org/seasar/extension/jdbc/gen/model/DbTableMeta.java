@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * データベースのテーブル記述です。
+ * データベースのテーブルのメタデータです。
  * 
  * @author taedium
  */
-public class DbTableDesc {
+public class DbTableMeta {
 
     /** 名前 */
     protected String name;
@@ -32,8 +32,8 @@ public class DbTableDesc {
     /** スキーマ名 */
     protected String schema;
 
-    /** カラム記述のリスト */
-    protected List<DbColumnDesc> columnDescList = new ArrayList<DbColumnDesc>();
+    /** カラムのメタデータのリスト */
+    protected List<DbColumnMeta> columnMetaList = new ArrayList<DbColumnMeta>();
 
     /**
      * 名前を返します。
@@ -74,21 +74,21 @@ public class DbTableDesc {
     }
 
     /**
-     * カラム記述を追加します。
+     * カラムのメタデータを追加します。
      * 
      * @param columnDesc
      *            カラム記述
      */
-    public void addColumnDesc(DbColumnDesc columnDesc) {
-        columnDescList.add(columnDesc);
+    public void addColumnMeta(DbColumnMeta columnDesc) {
+        columnMetaList.add(columnDesc);
     }
 
     /**
-     * カラム記述のリストを返します。
+     * カラムのメタデータのリストを返します。
      * 
-     * @return カラム記述のリスト
+     * @return カラムのメタデータのリスト
      */
-    public List<DbColumnDesc> getColumnDescList() {
-        return Collections.unmodifiableList(columnDescList);
+    public List<DbColumnMeta> getColumnMetaList() {
+        return Collections.unmodifiableList(columnMetaList);
     }
 }

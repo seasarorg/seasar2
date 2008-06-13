@@ -13,17 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.dialect;
+package org.seasar.extension.jdbc.gen;
 
+import org.seasar.extension.jdbc.gen.model.EntityCode;
+import org.seasar.extension.jdbc.gen.model.EntityDesc;
 
 /**
- * Interbaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class InterbaseGenDialect extends StandardGenDialect {
+public interface EntityCodeFactory {
 
-    public InterbaseGenDialect() {
-    }
-
+    EntityCode getEntityCode(EntityDesc entityDesc, String className,
+            String baseClassName);
 }

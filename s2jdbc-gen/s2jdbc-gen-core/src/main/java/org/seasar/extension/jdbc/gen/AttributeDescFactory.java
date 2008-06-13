@@ -15,22 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
-import org.seasar.extension.jdbc.gen.model.PropertyModel;
+import org.seasar.extension.jdbc.gen.model.AttributeDesc;
+import org.seasar.extension.jdbc.gen.model.DbColumnMeta;
 
 /**
- * {@link DbColumnDesc}を{@link PropertyModel}に変換するインタフェースです。
+ * {@link AttributeDesc}のファクトリです。
  * 
  * @author taedium
  */
-public interface PropertyModelConverter {
+public interface AttributeDescFactory {
 
     /**
-     * 変換します。
+     * 属性記述を返します。
      * 
-     * @param columnDesc
-     *            カラム記述
-     * @return プロパティモデル
+     * @param columnMeta
+     *            カラムメタデータ
+     * @return 属性記述
      */
-    PropertyModel convert(DbColumnDesc columnDesc);
+    AttributeDesc getAttributeDesc(DbColumnMeta columnMeta);
 }

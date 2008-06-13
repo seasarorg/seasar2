@@ -1,31 +1,31 @@
 package ${packageName};
 
-<#list importPackageNames as name>
+<#list importPackageNameSet as name>
 import ${name};
 </#list>
 
 @MappedSuperclass
 public abstract class ${shortClassName} {
-<#list entityModel.propertyModelList as p>
+<#list entityDesc.attributeDescList as attr>
 
-  <#if p.id>
+  <#if attr.id>
     @Id
-    <#if !entityModel.hasCompositeId()>
+    <#if !entityDesc.hasCompositeId()>
     @GeneratedValue
     </#if>
   </#if>
-  <#if p.lob>
+  <#if attr.lob>
     @Lob
   </#if>
-  <#if p.temporalType??>
-    @Temporal(TemporalType.${p.temporalType})
+  <#if attr.temporalType??>
+    @Temporal(TemporalType.${attr.temporalType})
   </#if>
-  <#if p.transient>
+  <#if attr.transient>
     @Transient
   </#if>
-  <#if p.version>
+  <#if attr.version>
     @Version
   </#if>
-    public ${p.propertyClass.simpleName} ${p.name};
+    public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>
 }

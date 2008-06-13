@@ -81,5 +81,4 @@ public interface GenDialect {
 
     SqlType getSqlType(int sqlType);
 
-    DbmsDialect getDbmsDialect();
 }

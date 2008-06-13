@@ -15,15 +15,14 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-
 /**
- * Interbaseの方言を扱うクラスです。
+ * PostgreSQLの方言を扱うクラスです。
  * 
  * @author taedium
  */
-public class InterbaseGenDialect extends StandardGenDialect {
+public class Postgre81GenDialect extends PostgreGenDialect {
 
-    public InterbaseGenDialect() {
+    public Postgre81GenDialect() {
     }
 
 }

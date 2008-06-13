@@ -13,24 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.model;
-
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * ファイルを生成するインタフェースです。
  * 
+ * @author taedium
  */
-public class KeyTest {
+public interface EntityGenerator {
 
-    @Test
-    public void test() throws Exception {
-        Key key = new Key(new Object[] { "hoge", "foo" });
-        Key key2 = new Key(new Object[] { "bar", "foo" });
-        assertFalse(key.equals(key2));
-        Key key3 = new Key(new Object[] { "hoge", "foo" });
-        assertTrue(key.equals(key3));
-    }
+    void generate(GenerationContext context);
+
+    void generate(GenerationContext context, boolean overwrite);
+
 }

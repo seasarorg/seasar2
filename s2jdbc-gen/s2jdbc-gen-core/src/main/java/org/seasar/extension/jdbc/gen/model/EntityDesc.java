@@ -20,23 +20,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * エンティティのモデルです。
+ * エンティティ記述です。
  * 
  * @author taedium
  */
-public class EntityModel {
+public class EntityDesc {
 
     /** 名前 */
     protected String name;
 
-    /** 複合IDをもつならば{@code true} */
+    /** 複合識別子をもつならば{@code true} */
     protected boolean compositeId;
 
-    /** プロパティモデルのリスト */
-    protected List<PropertyModel> propertyModelList = new ArrayList<PropertyModel>();
+    /** 属性記述のリスト */
+    protected List<AttributeDesc> attributeDescList = new ArrayList<AttributeDesc>();
 
-    /** IDであるプロパティモデルのリスト */
-    protected List<PropertyModel> idPropertyModelList = new ArrayList<PropertyModel>();
+    /** 識別子である属性記述のリスト */
+    protected List<AttributeDesc> idAttributeDescList = new ArrayList<AttributeDesc>();
 
     /**
      * 名前を返します。
@@ -58,37 +58,37 @@ public class EntityModel {
     }
 
     /**
-     * プロパティモデルを追加します。
+     * 属性を追加します。
      * 
-     * @param propertyModel
-     *            プロパティモデル
+     * @param attributeDesc
+     *            属性
      */
-    public void addPropertyModel(PropertyModel propertyModel) {
-        propertyModelList.add(propertyModel);
-        if (propertyModel.isId()) {
-            idPropertyModelList.add(propertyModel);
-            if (idPropertyModelList.size() > 1) {
+    public void addAttribute(AttributeDesc attributeDesc) {
+        attributeDescList.add(attributeDesc);
+        if (attributeDesc.isId()) {
+            idAttributeDescList.add(attributeDesc);
+            if (idAttributeDescList.size() > 1) {
                 compositeId = true;
             }
         }
     }
 
     /**
-     * プロパティモデルのリストを返します。
+     * 属性のリストを返します。
      * 
-     * @return プロパティモデルのリスト
+     * @return 属性のリスト
      */
-    public List<PropertyModel> getPropertyModelList() {
-        return Collections.unmodifiableList(propertyModelList);
+    public List<AttributeDesc> getAttributeDescList() {
+        return Collections.unmodifiableList(attributeDescList);
     }
 
     /**
-     * 識別子のプロパティモデルのリストを返します。
+     * 識別子である属性のリストを返します。
      * 
-     * @return 識別子のプロパティモデルのリスト
+     * @return 識別子である属性のリスト
      */
-    public List<PropertyModel> getIdPropertyModelList() {
-        return Collections.unmodifiableList(idPropertyModelList);
+    public List<AttributeDesc> getIdAttributeDescList() {
+        return Collections.unmodifiableList(idAttributeDescList);
     }
 
     /**

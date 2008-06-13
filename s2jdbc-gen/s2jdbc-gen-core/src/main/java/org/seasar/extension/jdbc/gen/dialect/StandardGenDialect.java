@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.persistence.TemporalType;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlType;
 
@@ -40,13 +39,10 @@ public class StandardGenDialect implements GenDialect {
 
     protected Map<Integer, SqlType> sqlTypeMap = new HashMap<Integer, SqlType>();
 
-    protected DbmsDialect dbmsDialect;
-
     /**
      * インスタンスを構築します。
      */
-    public StandardGenDialect(DbmsDialect dbmsDialect) {
-        this.dbmsDialect = dbmsDialect;
+    public StandardGenDialect() {
         javaTypeMap.put(Types.ARRAY, Object.class);
         javaTypeMap.put(Types.BIGINT, Long.class);
         javaTypeMap.put(Types.BINARY, byte[].class);
@@ -148,10 +144,6 @@ public class StandardGenDialect implements GenDialect {
 
     public SqlType getSqlType(int sqlType) {
         return sqlTypeMap.get(sqlType);
-    }
-
-    public DbmsDialect getDbmsDialect() {
-        return dbmsDialect;
     }
 
     public static enum StandardSqlType implements SqlType {

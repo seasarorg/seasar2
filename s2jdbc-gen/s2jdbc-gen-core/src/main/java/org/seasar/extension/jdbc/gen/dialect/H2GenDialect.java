@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 
 /**
  * H2の方言を扱うクラスです。
@@ -24,9 +23,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
  */
 public class H2GenDialect extends StandardGenDialect {
 
-    public H2GenDialect(DbmsDialect dbmsDialect) {
-        super(dbmsDialect);
-        // TODO Auto-generated constructor stub
+    public H2GenDialect() {
     }
 
     @Override

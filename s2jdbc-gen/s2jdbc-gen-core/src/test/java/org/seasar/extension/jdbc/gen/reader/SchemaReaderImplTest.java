@@ -23,11 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.dialect.StandardDialect;
-import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.model.DbColumnDesc;
+import org.seasar.extension.jdbc.gen.model.DbColumnMeta;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
 
@@ -39,12 +38,23 @@ import static org.junit.Assert.*;
  */
 public class SchemaReaderImplTest {
 
+    private SchemaReaderImpl reader;
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        reader = new SchemaReaderImpl(null, new StandardGenDialect());
+    }
+
     /**
      * 
      * @throws Exception
      */
     @Test
-    public void testGetPrimaryKeys() throws Exception {
+    public void testGetPrimaryKeySet() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
@@ -70,13 +80,10 @@ public class SchemaReaderImplTest {
             }
 
         };
-        GenDialect dialect = new StandardGenDialect(new StandardDialect());
-        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
-        Set<String> primaryKeys = reader.getPrimaryKeys(metaData, "schemaName",
-                "tableName");
-        assertEquals(2, primaryKeys.size());
-        assertTrue(primaryKeys.contains("pk1"));
-        assertTrue(primaryKeys.contains("pk2"));
+        Set<String> list = reader.getPrimaryKeySet(metaData, "schema", "table");
+        assertEquals(2, list.size());
+        assertTrue(list.contains("pk1"));
+        assertTrue(list.contains("pk2"));
     }
 
     /**
@@ -84,7 +91,7 @@ public class SchemaReaderImplTest {
      * @throws Exception
      */
     @Test
-    public void testGetDbColumnDescs() throws Exception {
+    public void testGetDbColumnMetaList() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
@@ -125,26 +132,24 @@ public class SchemaReaderImplTest {
             }
         };
 
-        GenDialect dialect = new StandardGenDialect(new StandardDialect());
-        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
-        List<DbColumnDesc> columnDescs = reader.getDbColumnDescs(metaData,
+        List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
                 "schemaName", "tableName");
-        assertEquals(2, columnDescs.size());
-        DbColumnDesc desc = columnDescs.get(0);
-        assertEquals("column1", desc.getName());
-        assertEquals(Types.DECIMAL, desc.getSqlType());
-        assertEquals("DECIMAL", desc.getTypeName());
-        assertEquals(10, desc.getLength());
-        assertEquals(3, desc.getScale());
-        assertFalse(desc.isNullable());
+        assertEquals(2, list.size());
+        DbColumnMeta columnMeta = list.get(0);
+        assertEquals("column1", columnMeta.getName());
+        assertEquals(Types.DECIMAL, columnMeta.getSqlType());
+        assertEquals("DECIMAL", columnMeta.getTypeName());
+        assertEquals(10, columnMeta.getLength());
+        assertEquals(3, columnMeta.getScale());
+        assertFalse(columnMeta.isNullable());
 
-        desc = columnDescs.get(1);
-        assertEquals("column2", desc.getName());
-        assertEquals(Types.VARCHAR, desc.getSqlType());
-        assertEquals("VARCHAR", desc.getTypeName());
-        assertEquals(10, desc.getLength());
-        assertEquals(0, desc.getScale());
-        assertTrue(desc.isNullable());
+        columnMeta = list.get(1);
+        assertEquals("column2", columnMeta.getName());
+        assertEquals(Types.VARCHAR, columnMeta.getSqlType());
+        assertEquals("VARCHAR", columnMeta.getTypeName());
+        assertEquals(10, columnMeta.getLength());
+        assertEquals(0, columnMeta.getScale());
+        assertTrue(columnMeta.isNullable());
     }
 
     /**
@@ -152,7 +157,7 @@ public class SchemaReaderImplTest {
      * @throws Exception
      */
     @Test
-    public void testGetTables() throws Exception {
+    public void testgetTableNameList() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
@@ -177,12 +182,10 @@ public class SchemaReaderImplTest {
             }
         };
 
-        GenDialect dialect = new StandardGenDialect(new StandardDialect());
-        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
-        List<String> tables = reader.getTables(metaData, "schemaName");
-        assertEquals(2, tables.size());
-        assertEquals("table1", tables.get(0));
-        assertEquals("table2", tables.get(1));
+        List<String> list = reader.getTableNameList(metaData, "schemaName");
+        assertEquals(2, list.size());
+        assertEquals("table1", list.get(0));
+        assertEquals("table2", list.get(1));
     }
 
     /**
@@ -190,11 +193,9 @@ public class SchemaReaderImplTest {
      * @throws Exception
      */
     @Test
-    public void testFilterTables() throws Exception {
-        GenDialect dialect = new StandardGenDialect(new StandardDialect());
-        SchemaReaderImpl reader = new SchemaReaderImpl(null, dialect);
+    public void testFilterTableNames() throws Exception {
         List<String> tables = Arrays.asList("AAA", "BBB", "abc");
-        List<String> list = reader.filterTables(tables, "A.*");
+        List<String> list = reader.filterTableNames(tables, "A.*");
         assertEquals(2, list.size());
         assertEquals("AAA", list.get(0));
         assertEquals("abc", list.get(1));

@@ -20,7 +20,7 @@ package org.seasar.extension.jdbc.gen.model;
  * 
  * @author taedium
  */
-public class DbColumnDesc {
+public class DbColumnMeta {
 
     /** 名前 */
     protected String name;

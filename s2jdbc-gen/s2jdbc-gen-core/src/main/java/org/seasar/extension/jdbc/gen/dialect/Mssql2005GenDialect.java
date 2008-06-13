@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 
 /**
  * MS SQL Server 2005の方言を扱うクラスです。
@@ -24,8 +23,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
  */
 public class Mssql2005GenDialect extends MssqlGenDialect {
 
-    public Mssql2005GenDialect(DbmsDialect dbmsDialect) {
-        super(dbmsDialect);
+    public Mssql2005GenDialect() {
     }
 
 }

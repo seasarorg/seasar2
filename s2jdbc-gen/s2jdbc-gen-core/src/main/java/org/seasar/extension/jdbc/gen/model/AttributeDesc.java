@@ -18,17 +18,17 @@ package org.seasar.extension.jdbc.gen.model;
 import javax.persistence.TemporalType;
 
 /**
- * プロパティのモデルです。
+ * エンティティの属性記述です。
  * 
  * @author taedium
  */
-public class PropertyModel {
+public class AttributeDesc {
 
     /** 名前 */
     protected String name;
 
-    /** プロパティのクラス */
-    protected Class<?> propertyClass;
+    /** 属性のクラス */
+    protected Class<?> attributeClass;
 
     /** 識別子であれば{@code true} */
     protected boolean id;
@@ -65,22 +65,22 @@ public class PropertyModel {
     }
 
     /**
-     * プロパティのクラスを返します。
+     * 属性のクラスを返します。
      * 
-     * @return プロパティのクラス
+     * @return 属性のクラス
      */
-    public Class<?> getPropertyClass() {
-        return propertyClass;
+    public Class<?> getAttributeClass() {
+        return attributeClass;
     }
 
     /**
-     * プロパティのクラスを設定します。
+     * 属性のクラスを設定します。
      * 
-     * @param propertyClass
-     *            プロパティのクラス
+     * @param attributeClass
+     *            属性のクラス
      */
-    public void setPropertyClass(Class<?> propertyClass) {
-        this.propertyClass = propertyClass;
+    public void setAttributeClass(Class<?> attributeClass) {
+        this.attributeClass = attributeClass;
     }
 
     /**

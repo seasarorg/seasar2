@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 
 /**
  * HSQLDBの方言を扱うクラスです。
@@ -24,8 +23,7 @@ import org.seasar.extension.jdbc.DbmsDialect;
  */
 public class HsqlGenDialect extends StandardGenDialect {
 
-    public HsqlGenDialect(DbmsDialect dbmsDialect) {
-        super(dbmsDialect);
+    public HsqlGenDialect() {
     }
 
     @Override
