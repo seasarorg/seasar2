@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/ant-1.6.5.jar" sourcepath="lib/sources/ant-1.6.5-sources.jar"/>
+	<classpathentry kind="lib" path="lib/ojdbc5.jar"/>
+	<classpathentry kind="lib" path="lib/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-annotation_1.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-ejb_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-interceptor_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-jpa_3.0_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-jta_1.1_spec-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/geronimo-jta_1.1_spec-1.0-tsr.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.4.ga.jar"/>
+	<classpathentry kind="lib" path="lib/junit-3.8.2.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="lib/ognl-2.6.9-patch-20070908.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.0-FINAL.jar"/>
+	<classpathentry kind="lib" path="lib/s2-extension-2.4.25.jar"/>
+	<classpathentry kind="lib" path="lib/s2-framework-2.4.25.jar"/>
+	<classpathentry kind="lib" path="lib/s2-tiger-2.4.25.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.12.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>
