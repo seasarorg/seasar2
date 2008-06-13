@@ -46,6 +46,7 @@
 <ul>
 <li><a href="#S2DBCP">S2DBCP</a></li>
 <li><a href="#GenericApplicationServer">一般的なアプリケーションサーバ</a></li>
+<li><a href="#DataSourceDynamicSwiching">データソースの動的な切り替え</a></li>
 </ul>
 </li>
 </ul>
@@ -231,6 +232,97 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
     &lt;/component&gt;
 &lt;/components&gt;
 </pre>
+
+<h3><a name="DataSourceDynamicSwiching">データソースの動的な切り替え</a></h3>
+<p>
+ユーザーの種類などにより動的にデータソースを切り替えたい場合は、<code>SelectableDataSourceProxy</code>と<code>DataSourceFactory</code>を利用します。
+以下に、これらを利用するための設定とプログラムについて例を示します。
+</p>
+<p>
+まず、データソースごとにjdbc.diconをコピーし、新しいdiconファイルを作成します。ここでは、jdbc-hoge.diconとjdbc-foo.diconという名前で作成します。
+</p>
+
+<h4>jdbc-hoge.dicon</h4>
+<pre>
+&lt;components namespace="jdbc"&gt;
+    &lt;include path="jta.dicon"/&gt;
+    &lt;include path="jdbc-extension.dicon"/&gt;
+    
+    ...
+    
+    &lt;component name="<b>hogeDataSource</b>"
+       class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
+&lt;/components&gt;
+</pre>
+<h4>jdbc-foo.dicon</h4>
+<pre>
+&lt;components namespace="jdbc"&gt;
+    &lt;include path="jta.dicon"/&gt;
+    &lt;include path="jdbc-extension.dicon"/&gt;
+    
+    ...
+    
+    &lt;component name="<b>fooDataSource</b>"
+       class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
+&lt;/components&gt;
+</pre>
+
+<p>
+<code>DataSource</code>のコンポーネントにはデータソースごとに異なる名前をつけてください。そのとき、名前は「<i>任意のプレフィックス</i> + DataSource」としてください。
+</p>
+<p />
+<p>
+次に、新規作成したdiconファイルをjdbc.diconでインクルードし、さらにjdbc.diconに<code>SelectableDataSourceProxy</code>のコンポーネントを定義します。
+</p>
+<h4>jdbc.dicon</h4>
+<pre>
+&lt;components namespace="jdbc"&gt;
+    &lt;include path="jdbc-hoge.dicon"/&gt;
+    &lt;include path="jdbc-foo.dicon"/&gt;
+    
+    &lt;component name="dataSource" class="org.seasar.extension.datasource.impl.SelectableDataSourceProxy"/&gt;
+&lt;/components&gt;
+</pre>
+<p>
+以上で、diconファイルの設定は完了です。
+</p>
+<p>
+プログラムでは、<code>org.seasar.extension.datasource.DataSourceFactory</code>を使ってデータソース名を設定します。
+データソース名の設定は、データソースが使用される前に行います。
+通常は、インターセプタやServlet Filterで行うのが良いでしょう。
+ここでは、インターセプタを使った例を示します。
+</p>
+
+<h4>サンプルコード</h4>
+<pre>
+public class SelectDataSourceInterceptor implements MethodInterceptor {
+  private DataSourceFactory dataSourceFactory;
+  public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
+    this.dataSourceFactory = dataSourceFactory;
+  }
+
+  public Object invoke(MethodInvocation invocation) throws Throwable {
+    String currentName = dataSourceFactory.getSelectableDataSourceName();
+    try {
+      String dataSourceName = getDataSourceName();
+      <b>dataSourceFactory.setSelectableDataSourceName(dataSourceName)</b>;
+      return invocation.proceed();
+    } finally {
+      proxy.setDataSourceName(currentName);
+  }
+
+  public String getDataSourceName() {
+    //ユーザの種類に応じた<b>データソース名のプレフィックス</b>を返す。
+  }
+}
+</pre>
+<p>
+<code>DataSourceFactory</code>クラスの<code>setSelectableDataSourceName</code>メソッドにはデータソース名のプレフィックスを渡してください。
+この例では、hoge や foo がデータソース名のプレフィックスになります。
+</p>
+<p>
+データソースを実際に利用する箇所では、単一のデータソースを扱う場合と変わらない方法でデータソースを利用できます。
+</p>
 
 <!-- document end -->
 <!-- don't edit start --></td>
