@@ -25,19 +25,17 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.seasar.extension.jdbc.gen.GenCommand;
 import org.seasar.extension.jdbc.gen.util.BeanUtil;
 import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
  * コンストラクタで受け取る文字列が表すクラスを新しいクラスローダーを使って呼び出すタスクです。
  * <p>
- * コンストラクタで受け取る文字列はコマンドクラスと呼びます。コマンドクラスは次の規約に従う必要があります。
- * </p>
- * <li>publicなクラスである
- * <li>executeという名前のメソッドをもつ
- * <li>executeメソッドは、pulibcで、引数を持たず、非スタティックである
+ * コンストラクタで受け取る文字列はコマンドクラスと呼びます。コマンドクラスは{@link GenCommand}を実装している必要があります。
  * 
  * <p>
  * このタスクに設定されたプロパティはコマンドクラスのインスタンスにコピーされます。
@@ -46,6 +44,9 @@ import org.seasar.framework.util.MethodUtil;
  * @author taedium
  */
 public abstract class AbstractGenTask extends Task {
+
+    /** コマンドクラスのインタフェースの名前 */
+    protected static String COMMAND_INTERFACE_NAME = "org.seasar.extension.jdbc.gen.GenCommand";
 
     /** このタスクから実行するコマンドクラスの名前 */
     protected String commandClassName;
@@ -153,10 +154,17 @@ public abstract class AbstractGenTask extends Task {
      */
     protected void execute(Class<?> clazz, Object command,
             ClassLoader classLoader) {
-        Method method = ClassUtil.getMethod(clazz, "execute", null);
+        Class<?> commandClass = ClassLoaderUtil.loadClass(classLoader,
+                COMMAND_INTERFACE_NAME);
+        if (!commandClass.isAssignableFrom(clazz)) {
+            throw new BuildException("class '" + clazz.getName()
+                    + "' must implement '" + COMMAND_INTERFACE_NAME
+                    + "' interface.");
+        }
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
         try {
+            Method method = ClassUtil.getMethod(clazz, "execute", null);
             MethodUtil.invoke(method, command, null);
         } finally {
             Thread.currentThread().setContextClassLoader(original);

@@ -13,26 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
-
-import org.seasar.extension.jdbc.gen.model.EntityBaseModel;
-import org.seasar.extension.jdbc.gen.model.EntityDesc;
+package org.seasar.extension.jdbc.gen.model;
 
 /**
- * {@link  EntityBaseModel}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface EntityBaseModelFactory {
+public class EntityConditionModel extends AbstractEntityModel {
 
-    /**
-     * エンティティ基底クラスのモデルを返します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     * @param className
-     *            エンティティ基底クラス名
-     * @return エンティティ基底クラスのモデル
-     */
-    EntityBaseModel getEntityBaseModel(EntityDesc entityDesc, String className);
 }

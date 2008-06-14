@@ -15,85 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author taedium
  * 
  */
-public class EntityModel {
-
-    protected String packageName;
-
-    protected Set<String> importPackageNameSet = new TreeSet<String>();
-
-    protected String className;
-
-    protected String shortClassName;
-
-    protected String baseClassName;
-
-    protected String shortBaseClassName;
-
-    protected EntityDesc entityDesc;
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getShortClassName() {
-        return shortClassName;
-    }
-
-    public void setShortClassName(String shortClassName) {
-        this.shortClassName = shortClassName;
-    }
-
-    public String getBaseClassName() {
-        return baseClassName;
-    }
-
-    public void setBaseClassName(String baseClassName) {
-        this.baseClassName = baseClassName;
-    }
-
-    public String getShortBaseClassName() {
-        return shortBaseClassName;
-    }
-
-    public void setShortBaseClassName(String shortBaseClassName) {
-        this.shortBaseClassName = shortBaseClassName;
-    }
-
-    public Set<String> getImportPackageNameSet() {
-        return importPackageNameSet;
-    }
-
-    public void addImportPackageName(String name) {
-        if (!importPackageNameSet.contains(name)) {
-            importPackageNameSet.add(name);
-        }
-    }
-
-    public EntityDesc getEntityDesc() {
-        return entityDesc;
-    }
-
-    public void setEntityDesc(EntityDesc entityDesc) {
-        this.entityDesc = entityDesc;
-    }
-
+public class EntityModel extends AbstractEntityModel {
 }

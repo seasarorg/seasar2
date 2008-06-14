@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.generator;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -62,7 +64,7 @@ public class GeneratorImpl implements Generator {
         if (!overwrite && exists(context.getFile())) {
             return;
         }
-        makeDirsIfNotExists(context.getDir());
+        mkdirs(context.getDir());
         Writer writer = openWriter(context);
         try {
             Template template = ConfigurationUtil.getTemplate(configuration,
@@ -87,15 +89,13 @@ public class GeneratorImpl implements Generator {
     }
 
     /**
-     * {@code dir}が存在しない場合に作成します。
+     * ディレクトリを生成します。
      * 
      * @param dir
      *            ディレクトリ
      */
-    protected void makeDirsIfNotExists(File dir) {
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+    protected void mkdirs(File dir) {
+        dir.mkdirs();
     }
 
     /**
@@ -106,8 +106,10 @@ public class GeneratorImpl implements Generator {
      * @return
      */
     protected Writer openWriter(GenerationContext context) {
-        return new OutputStreamWriter(FileOutputStreamUtil.create(context
-                .getFile()), Charset.forName(context.getEncoding()));
+        Charset charset = Charset.forName(context.getEncoding());
+        FileOutputStream fos = FileOutputStreamUtil.create(context.getFile());
+        OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
+        return new BufferedWriter(osw);
     }
 
 }

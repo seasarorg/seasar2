@@ -15,23 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen.factory;
 
-import javax.persistence.Entity;
-
-import org.seasar.extension.jdbc.gen.EntityModelFactory;
+import org.seasar.extension.jdbc.gen.EntityConditionModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityConditionModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
-import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * {@link EntityModelFactory}の実装クラスです。
+ * {@link EntityConditionModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
-public class EntityModelFactoryImpl implements EntityModelFactory {
+public class EntityConditionModelFactoryImpl implements
+        EntityConditionModelFactory {
 
-    public EntityModel getEntityModel(EntityDesc entityDesc, String className,
-            String baseClassName) {
-        EntityModel model = new EntityModel();
+    public EntityConditionModel getEntityConditionModel(EntityDesc entityDesc,
+            String className, String baseClassName) {
+        EntityConditionModel model = new EntityConditionModel();
         model.setClassName(className);
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
         model.setPackageName(elements[0]);
@@ -49,12 +48,12 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      * インポートするパッケージ名を処理します。
      * 
      * @param model
-     *            エンティティクラスのモデル
+     *            エンティティ条件クラスのモデル
      * @param entityDesc
      *            エンティティ記述
      */
-    protected void doImportPackageNames(EntityModel model, EntityDesc entityDesc) {
-        model.addImportPackageName(Entity.class.getName());
+    protected void doImportPackageNames(EntityConditionModel model,
+            EntityDesc entityDesc) {
         model.addImportPackageName(model.getBaseClassName());
     }
 }

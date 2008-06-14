@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.model;
 
 import javax.persistence.TemporalType;
 
+import org.seasar.framework.util.ClassUtil;
+
 /**
  * エンティティの属性記述です。
  * 
@@ -26,9 +28,6 @@ public class AttributeDesc {
 
     /** 名前 */
     protected String name;
-
-    /** カラムの名前 */
-    protected String columnName;
 
     /** 属性のクラス */
     protected Class<?> attributeClass;
@@ -47,6 +46,12 @@ public class AttributeDesc {
 
     /** {@code LOB}であれば{@code true} */
     protected boolean lob;
+
+    /** カラムの名前 */
+    protected String columnName;
+
+    /** {@code null}可能ならば{@code true} */
+    protected boolean nullable;
 
     /**
      * インスタンスを構築します。
@@ -74,25 +79,6 @@ public class AttributeDesc {
     }
 
     /**
-     * カラムの名前を返します。
-     * 
-     * @return カラムの名前
-     */
-    public String getColumnName() {
-        return columnName;
-    }
-
-    /**
-     * カラムの名前を設定します。
-     * 
-     * @param columnName
-     *            カラムの名前
-     */
-    public void setColumnName(String columnName) {
-        this.columnName = columnName;
-    }
-
-    /**
      * 属性のクラスを返します。
      * 
      * @return 属性のクラス
@@ -109,6 +95,15 @@ public class AttributeDesc {
      */
     public void setAttributeClass(Class<?> attributeClass) {
         this.attributeClass = attributeClass;
+    }
+
+    /**
+     * 属性のクラスがプリミティブ型の場合に、参照型に変換して返します。
+     * 
+     * @return 属性のクラスに対応する参照型
+     */
+    public Class<?> getAttributeClassAsRefType() {
+        return ClassUtil.getWrapperClassIfPrimitive(attributeClass);
     }
 
     /**
@@ -204,6 +199,44 @@ public class AttributeDesc {
      */
     public void setLob(boolean lob) {
         this.lob = lob;
+    }
+
+    /**
+     * カラムの名前を返します。
+     * 
+     * @return カラムの名前
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * カラムの名前を設定します。
+     * 
+     * @param columnName
+     *            カラムの名前
+     */
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+    /**
+     * {@code null}可能の場合{@code true}を返します。
+     * 
+     * @return {@code null}可能の場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isNullable() {
+        return nullable;
+    }
+
+    /**
+     * {@code null}可能の場合{@code true}を設定します。
+     * 
+     * @param nullable
+     *            {@code null}可能の場合{@code true}
+     */
+    public void setNullable(boolean nullable) {
+        this.nullable = nullable;
     }
 
 }

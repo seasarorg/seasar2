@@ -69,13 +69,16 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     /** diconファイル */
     protected String diconFile;
 
+    /** ルートパッケージ名 */
+    protected String rootPackageName;
+
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName;
 
     /** エンティティ基底クラスのパッケージ名 */
     protected String entityBasePackageName;
 
-    /** エンティティ基底クラスのプレフィックス */
+    /** エンティティ基底クラス名のプレフィックス */
     protected String entityBaseClassNamePrefix;
 
     /** 生成するJavaファイルの出力先ディレクトリ */
@@ -124,7 +127,7 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     protected EntityDescFactory entityDescFactory;
 
     /** ジェネレータ */
-    protected Generator ｇenerator;
+    protected Generator generator;
 
     /** {@link EntityModel}のファクトリ */
     protected EntityModelFactory entityModelFactory;
@@ -146,6 +149,16 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
      */
     public void setDiconFile(String diconFile) {
         this.diconFile = diconFile;
+    }
+
+    /**
+     * ルートパッケージ名を設定します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
     }
 
     /**
@@ -269,12 +282,7 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     }
 
     public void execute() {
-        preInit();
         init();
-        postInit();
-        if (logger.isDebugEnabled()) {
-            logProperties();
-        }
         try {
             List<DbTableMeta> tableMetaList = read();
             List<EntityDesc> entityDescList = convert(tableMetaList);
@@ -285,15 +293,27 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     }
 
     /**
-     * 初期化の前処理を行います。
-     */
-    protected void preInit() {
-    }
-
-    /**
      * 初期化します。
      */
     protected void init() {
+        setupDefaultProperties();
+        setupInternalProperties();
+        setupCollaborators();
+        if (logger.isDebugEnabled()) {
+            logExternalProperties();
+        }
+    }
+
+    /**
+     * デフォルトのプロパティを準備します。
+     */
+    protected void setupDefaultProperties() {
+    }
+
+    /**
+     * 内部的なプロパティを準備します。
+     */
+    protected void setupInternalProperties() {
         if (!SingletonS2ContainerFactory.hasContainer()) {
             initialized = true;
             SingletonS2ContainerFactory.setConfigPath(diconFile);
@@ -302,12 +322,12 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     }
 
     /**
-     * 初期化の後処理を行います。
+     * コレボレータを準備します。
      */
-    protected void postInit() {
+    protected void setupCollaborators() {
         schemaReader = createSchemaReader();
         entityDescFactory = createEntityDescFactory();
-        ｇenerator = createGenerator();
+        generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
         entityBaseModelFactory = createEntityBaseModelFactory();
     }
@@ -315,7 +335,7 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     /**
      * このインスタンスに設定可能なプロパティをログ出力します。
      */
-    protected void logProperties() {
+    protected void logExternalProperties() {
         Class<?> clazz = getClass();
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
         int propSize = beanDesc.getPropertyDescSize();
@@ -432,9 +452,9 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     protected void generate(List<EntityDesc> entityDescList) {
         for (EntityDesc entityDesc : entityDescList) {
             GenerationContext entityCtx = getEntityGenerationContext(entityDesc);
-            ｇenerator.generate(entityCtx, false);
+            generator.generate(entityCtx);
             GenerationContext entityBaseCtx = getEntityBaseGenerationContext(entityDesc);
-            ｇenerator.generate(entityBaseCtx);
+            generator.generate(entityBaseCtx, true);
         }
     }
 
@@ -446,8 +466,7 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
      * @return エンティティクラス用の{@link GenerationContext}
      */
     protected GenerationContext getEntityGenerationContext(EntityDesc entityDesc) {
-        String className = ClassUtil.concatName(entityPackageName, entityDesc
-                .getName());
+        String className = getEntityClassName(entityDesc.getName());
         String baseClassName = getEntityBaseClassName(entityDesc.getName());
         EntityModel model = entityModelFactory.getEntityModel(entityDesc,
                 className, baseClassName);
@@ -471,15 +490,30 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     }
 
     /**
+     * エンティティクラス名を返します。
+     * 
+     * @param entityName
+     *            エンティティ名
+     * @return エンティティクラス名
+     */
+    protected String getEntityClassName(String entityName) {
+        String packageName = ClassUtil.concatName(rootPackageName,
+                entityPackageName);
+        return ClassUtil.concatName(packageName, entityName);
+    }
+
+    /**
      * エンティティの基底クラス名を返します。
      * 
-     * @param entityClassName
-     *            エンティティのクラス名
+     * @param entityName
+     *            エンティティ名
      * @return エンティティの基底クラス名
      */
-    protected String getEntityBaseClassName(String entityClassName) {
-        return ClassUtil.concatName(entityBasePackageName,
-                entityBaseClassNamePrefix + entityClassName);
+    protected String getEntityBaseClassName(String entityName) {
+        String packageName = ClassUtil.concatName(rootPackageName,
+                entityBasePackageName);
+        String shortClassName = entityBaseClassNamePrefix + entityName;
+        return ClassUtil.concatName(packageName, shortClassName);
     }
 
     /**
@@ -496,10 +530,12 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     protected GenerationContext getGenerationContext(Object model,
             String className, String templateName) {
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
+        String packageName = elements[0];
+        String shortClassName = elements[1];
 
-        String packagePath = elements[0].replace('.', File.separatorChar);
-        File dir = new File(destDir, packagePath);
-        File file = new File(dir, elements[1] + ".java");
+        File dir = new File(destDir, packageName.replace('.',
+                File.separatorChar));
+        File file = new File(dir, shortClassName + ".java");
 
         GenerationContext context = new GenerationContext();
         context.setDir(dir);

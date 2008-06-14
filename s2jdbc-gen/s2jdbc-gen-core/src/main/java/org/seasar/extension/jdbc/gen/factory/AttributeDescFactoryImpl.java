@@ -58,13 +58,14 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     public AttributeDesc getAttributeDesc(DbColumnMeta columnMeta) {
         AttributeDesc attributeDesc = new AttributeDesc();
         doName(columnMeta, attributeDesc);
-        doColumnName(columnMeta, attributeDesc);
         doId(columnMeta, attributeDesc);
         doLob(columnMeta, attributeDesc);
         doAttributeClass(columnMeta, attributeDesc);
         doTemporalType(columnMeta, attributeDesc);
         doTransient(columnMeta, attributeDesc);
         doVersion(columnMeta, attributeDesc);
+        doColumnName(columnMeta, attributeDesc);
+        doNullable(columnMeta, attributeDesc);
         return attributeDesc;
     }
 
@@ -79,19 +80,6 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     protected void doName(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
         attributeDesc.setName(persistenceConvention
                 .fromColumnNameToPropertyName(columnMeta.getName()));
-    }
-
-    /**
-     * カラムの名前を処理します。
-     * 
-     * @param columnMeta
-     *            カラムメタ情報
-     * @param attributeDesc
-     *            属性記述
-     */
-    protected void doColumnName(DbColumnMeta columnMeta,
-            AttributeDesc attributeDesc) {
-        attributeDesc.setColumnName(columnMeta.getName());
     }
 
     /**
@@ -173,5 +161,31 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         if (versionColumn.equalsIgnoreCase(columnMeta.getName())) {
             attributeDesc.setVersion(true);
         }
+    }
+
+    /**
+     * カラムの名前を処理します。
+     * 
+     * @param columnMeta
+     *            カラムメタ情報
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doColumnName(DbColumnMeta columnMeta,
+            AttributeDesc attributeDesc) {
+        attributeDesc.setColumnName(columnMeta.getName());
+    }
+
+    /**
+     * NULL制約を処理します。
+     * 
+     * @param columnMeta
+     *            カラムメタ情報
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doNullable(DbColumnMeta columnMeta,
+            AttributeDesc attributeDesc) {
+        attributeDesc.setNullable(columnMeta.isNullable());
     }
 }

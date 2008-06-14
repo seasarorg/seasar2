@@ -15,15 +15,27 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
+import org.seasar.extension.jdbc.gen.model.EntityModel;
 
 /**
- * @author taedium
+ * {@link EntityModel}のファクトリです。
  * 
+ * @author taedium
  */
 public interface EntityModelFactory {
 
+    /**
+     * エンティティクラスのモデルを返します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     * @param className
+     *            エンティティクラス名
+     * @param baseClassName
+     *            エンティティ基底クラス名
+     * @return エンティティクラスのモデル
+     */
     EntityModel getEntityModel(EntityDesc entityDesc, String className,
             String baseClassName);
 }

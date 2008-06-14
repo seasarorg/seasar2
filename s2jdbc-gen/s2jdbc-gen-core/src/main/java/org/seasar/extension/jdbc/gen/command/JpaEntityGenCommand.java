@@ -66,12 +66,9 @@ public class JpaEntityGenCommand extends AbstractEntityGenCommand {
         this.dialectName = dialectName;
     }
 
-    /**
-     * デフォルト値を設定します。
-     */
     @Override
-    protected void preInit() {
-        super.preInit();
+    protected void setupDefaultProperties() {
+        super.setupDefaultProperties();
 
         if (diconFile == null) {
             diconFile = DICON_FILE;
@@ -81,6 +78,9 @@ public class JpaEntityGenCommand extends AbstractEntityGenCommand {
         }
         if (dialectName == null) {
             dialectName = DIALECT_NAME;
+        }
+        if (rootPackageName == null) {
+            rootPackageName = ROOT_PACKAGE_NAME;
         }
         if (entityPackageName == null) {
             entityPackageName = ENTITY_PACKAGE_NAME;
@@ -120,12 +120,9 @@ public class JpaEntityGenCommand extends AbstractEntityGenCommand {
         }
     }
 
-    /**
-     * 初期化します。
-     */
     @Override
-    protected void init() {
-        super.init();
+    protected void setupInternalProperties() {
+        super.setupInternalProperties();
 
         dataSource = SingletonS2Container.getComponent(dataSourceName);
         persistenceConvention = new PersistenceConventionImpl();
@@ -141,6 +138,9 @@ public class JpaEntityGenCommand extends AbstractEntityGenCommand {
 
         /** エンティティ基底クラス名のプレフィックス */
         public static String ENTITY_BASE_CLASS_NAME_PREFIX = "Abstract";
+
+        /** ルートパッケージ名 */
+        public static String ROOT_PACKAGE_NAME = "";
 
         /** エンティティパッケージ名 */
         public static String ENTITY_PACKAGE_NAME = "entity";

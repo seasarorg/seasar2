@@ -26,6 +26,9 @@ public abstract class AbstractEntityGenTask extends AbstractGenTask {
     /** diconファイル */
     protected String diconFile;
 
+    /** ルートパッケージ名 */
+    protected String rootPackageName;
+
     /** エンティティパッケージ名 */
     protected String entityPackageName;
 
@@ -89,6 +92,25 @@ public abstract class AbstractEntityGenTask extends AbstractGenTask {
      */
     public void setDiconFile(String diconFile) {
         this.diconFile = diconFile;
+    }
+
+    /**
+     * ルートパッケージ名を返します。
+     * 
+     * @return ルートパッケージ名
+     */
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    /**
+     * ルートパッケージ名を設定します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
     }
 
     /**

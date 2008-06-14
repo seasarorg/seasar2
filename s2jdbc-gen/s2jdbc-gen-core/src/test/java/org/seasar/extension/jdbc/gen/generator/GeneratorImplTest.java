@@ -24,9 +24,13 @@ import javax.persistence.TemporalType;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.factory.EntityBaseModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.factory.EntityConditionBaseModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.factory.EntityConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.factory.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.AttributeDesc;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModel;
+import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModel;
+import org.seasar.extension.jdbc.gen.model.EntityConditionModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.util.ClassUtil;
@@ -253,6 +257,146 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
+    public void testGenerate_s2jdbcEntityCondition() throws Exception {
+        File file = ResourceUtil.getResourceAsFile("templates");
+        Configuration configuration = new Configuration();
+        configuration.setObjectWrapper(new DefaultObjectWrapper());
+        configuration.setDirectoryForTemplateLoading(file);
+        GeneratorImpl generator = new GeneratorImplStub(configuration);
+
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setAttributeClass(int.class);
+
+        AttributeDesc name = new AttributeDesc();
+        name.setName("name");
+        name.setAttributeClass(String.class);
+
+        AttributeDesc lob = new AttributeDesc();
+        lob.setName("lob");
+        lob.setLob(true);
+        lob.setAttributeClass(byte[].class);
+
+        AttributeDesc date = new AttributeDesc();
+        date.setName("date");
+        date.setTemporalType(TemporalType.DATE);
+        date.setAttributeClass(java.util.Date.class);
+        date.setNullable(true);
+
+        AttributeDesc temp = new AttributeDesc();
+        temp.setName("temp");
+        temp.setTransient(true);
+        temp.setAttributeClass(String.class);
+        temp.setNullable(true);
+
+        AttributeDesc version = new AttributeDesc();
+        version.setName("version");
+        version.setVersion(true);
+        version.setAttributeClass(Integer.class);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setName("Foo");
+        entityDesc.addAttribute(id);
+        entityDesc.addAttribute(name);
+        entityDesc.addAttribute(lob);
+        entityDesc.addAttribute(date);
+        entityDesc.addAttribute(temp);
+        entityDesc.addAttribute(version);
+
+        EntityConditionModelFactoryImpl factory = new EntityConditionModelFactoryImpl();
+        EntityConditionModel model = factory.getEntityConditionModel(
+                entityDesc, "hoge.FooCondition", "bar.AbstractFooCondition");
+
+        GenerationContext context = new GenerationContext();
+        context.setDir(new File("dir"));
+        context.setFile(new File("file"));
+        context.setEncoding("UTF-8");
+        context.setModel(model);
+        context.setTemplateName("s2jdbc-entityCondition.ftl");
+
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/")
+                + "_s2jdbc-entityCondition.txt";
+        assertEquals(TextUtil.readUTF8(path), writer.toString());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGenerate_s2jdbcEntityConditionBase() throws Exception {
+        File file = ResourceUtil.getResourceAsFile("templates");
+        Configuration configuration = new Configuration();
+        configuration.setObjectWrapper(new DefaultObjectWrapper());
+        configuration.setDirectoryForTemplateLoading(file);
+        GeneratorImpl generator = new GeneratorImplStub(configuration);
+
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setAttributeClass(int.class);
+
+        AttributeDesc name = new AttributeDesc();
+        name.setName("name");
+        name.setAttributeClass(String.class);
+
+        AttributeDesc lob = new AttributeDesc();
+        lob.setName("lob");
+        lob.setLob(true);
+        lob.setAttributeClass(byte[].class);
+
+        AttributeDesc date = new AttributeDesc();
+        date.setName("date");
+        date.setTemporalType(TemporalType.DATE);
+        date.setAttributeClass(java.util.Date.class);
+        date.setNullable(true);
+
+        AttributeDesc temp = new AttributeDesc();
+        temp.setName("temp");
+        temp.setTransient(true);
+        temp.setAttributeClass(String.class);
+        temp.setNullable(true);
+
+        AttributeDesc version = new AttributeDesc();
+        version.setName("version");
+        version.setVersion(true);
+        version.setAttributeClass(Integer.class);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setName("Foo");
+        entityDesc.addAttribute(id);
+        entityDesc.addAttribute(name);
+        entityDesc.addAttribute(lob);
+        entityDesc.addAttribute(date);
+        entityDesc.addAttribute(temp);
+        entityDesc.addAttribute(version);
+
+        EntityConditionBaseModelFactoryImpl factory = new EntityConditionBaseModelFactoryImpl();
+        EntityConditionBaseModel model = factory.getEntityConditionBaseModel(
+                entityDesc, "bar.AbstractFooCondition");
+
+        GenerationContext context = new GenerationContext();
+        context.setDir(new File("dir"));
+        context.setFile(new File("file"));
+        context.setEncoding("UTF-8");
+        context.setModel(model);
+        context.setTemplateName("s2jdbc-entityConditionBase.ftl");
+
+        generator.generate(context);
+        System.out.println(writer);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_s2jdbc-entityConditionBase.txt";
+        assertEquals(TextUtil.readUTF8(path), writer.toString());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testGenerate_jpaEntity() throws Exception {
         File file = ResourceUtil.getResourceAsFile("templates");
         Configuration configuration = new Configuration();
@@ -404,7 +548,7 @@ public class GeneratorImplTest {
         }
 
         @Override
-        protected void makeDirsIfNotExists(File dir) {
+        protected void mkdirs(File dir) {
         }
 
         @Override

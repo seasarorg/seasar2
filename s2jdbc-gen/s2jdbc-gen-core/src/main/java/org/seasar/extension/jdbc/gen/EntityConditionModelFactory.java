@@ -15,24 +15,27 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.model.EntityBaseModel;
+import org.seasar.extension.jdbc.gen.model.EntityConditionModel;
 import org.seasar.extension.jdbc.gen.model.EntityDesc;
 
 /**
- * {@link  EntityBaseModel}のファクトリです。
+ * {@link EntityConditionModel}のファクトリです。
  * 
  * @author taedium
  */
-public interface EntityBaseModelFactory {
+public interface EntityConditionModelFactory {
 
     /**
-     * エンティティ基底クラスのモデルを返します。
+     * エンティティ条件クラスのモデルを返します。
      * 
      * @param entityDesc
      *            エンティティ記述
      * @param className
-     *            エンティティ基底クラス名
-     * @return エンティティ基底クラスのモデル
+     *            エンティティ条件クラス名
+     * @param baseClassName
+     *            エンティティ条件基底クラス名
+     * @return エンティティ条件クラスのモデル
      */
-    EntityBaseModel getEntityBaseModel(EntityDesc entityDesc, String className);
+    EntityConditionModel getEntityConditionModel(EntityDesc entityDesc,
+            String className, String baseClassName);
 }

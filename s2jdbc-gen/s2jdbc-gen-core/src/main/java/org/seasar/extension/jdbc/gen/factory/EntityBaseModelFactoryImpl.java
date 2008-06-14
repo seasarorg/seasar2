@@ -31,7 +31,7 @@ import org.seasar.extension.jdbc.gen.model.EntityDesc;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * {@link EntityBaseModel}のファクトリです。
+ * {@link EntityBaseModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
@@ -39,14 +39,14 @@ public class EntityBaseModelFactoryImpl implements EntityBaseModelFactory {
 
     public EntityBaseModel getEntityBaseModel(EntityDesc entityDesc,
             String className) {
-        EntityBaseModel code = new EntityBaseModel();
-        code.setClassName(className);
+        EntityBaseModel model = new EntityBaseModel();
+        model.setClassName(className);
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        code.setPackageName(elements[0]);
-        code.setShortClassName(elements[1]);
-        code.setEntityDesc(entityDesc);
-        doImportPackageNames(code, entityDesc);
-        return code;
+        model.setPackageName(elements[0]);
+        model.setShortClassName(elements[1]);
+        model.setEntityDesc(entityDesc);
+        doImportPackageNames(model, entityDesc);
+        return model;
     }
 
     /**

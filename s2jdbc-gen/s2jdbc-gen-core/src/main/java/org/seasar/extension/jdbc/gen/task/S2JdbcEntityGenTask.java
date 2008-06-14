@@ -28,6 +28,30 @@ public class S2JdbcEntityGenTask extends AbstractEntityGenTask {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName;
 
+    /** エンティティ条件クラスのパッケージ名 */
+    protected String entityConditionPackageName;
+
+    /** エンティティ条件基底クラスのパッケージ名 */
+    protected String entityConditionBasePackageName;
+
+    /** エンティティ条件クラス名のサフィックス */
+    protected String entityConditionClassNameSuffix;
+
+    /** エンティティ条件基底クラス名のプレフィックス */
+    protected String entityConditionBaseClassNamePrefix;
+
+    /** エンティティ条件基底クラス名のサフィックス */
+    protected String entityConditionBaseClassNameSuffix;
+
+    /** エンティティ条件クラスのテンプレート名 */
+    protected String entityConditionTemplateName;
+
+    /** エンティティ条件基底クラスのテンプレート名 */
+    protected String entityConditionBaseTemplateName;
+
+    /** 条件クラスを生成する場合{@code true} */
+    protected Boolean generateCondition;
+
     /**
      * インスタンスを構築します。
      */
@@ -62,6 +86,155 @@ public class S2JdbcEntityGenTask extends AbstractEntityGenTask {
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
+    }
+
+    /**
+     * エンティティ条件クラスのパッケージ名を返します。
+     * 
+     * @return エンティティ条件クラスのパッケージ名
+     */
+    public String getEntityConditionPackageName() {
+        return entityConditionPackageName;
+    }
+
+    /**
+     * エンティティ条件クラスのパッケージ名を設定します。
+     * 
+     * @param entityConditionPackageName
+     *            エンティティ条件クラスのパッケージ名
+     */
+    public void setEntityConditionPackageName(String entityConditionPackageName) {
+        this.entityConditionPackageName = entityConditionPackageName;
+    }
+
+    /**
+     * エンティティ条件基底クラスのパッケージ名を返します。
+     * 
+     * @return エンティティ条件基底クラスのパッケージ名
+     */
+    public String getEntityConditionBasePackageName() {
+        return entityConditionBasePackageName;
+    }
+
+    /**
+     * エンティティ条件基底クラスのパッケージ名
+     * 
+     * @param entityConditionBasePackageName
+     *            エンティティ条件基底クラスのパッケージ名
+     */
+    public void setEntityConditionBasePackageName(
+            String entityConditionBasePackageName) {
+        this.entityConditionBasePackageName = entityConditionBasePackageName;
+    }
+
+    /**
+     * エンティティ条件クラス名のサフィックスを設定します。
+     * 
+     * @param entityConditionClassNameSuffix
+     *            エンティティ条件クラス名のサフィックス
+     */
+    public void setEntityConditionClassNameSuffix(
+            String entityConditionClassNameSuffix) {
+        this.entityConditionClassNameSuffix = entityConditionClassNameSuffix;
+    }
+
+    /**
+     * エンティティ条件基底クラス名のプレフィックスを返します。
+     * 
+     * @return エンティティ条件基底クラス名のプレフィックス
+     */
+    public String getEntityConditionBaseClassNamePrefix() {
+        return entityConditionBaseClassNamePrefix;
+    }
+
+    /**
+     * エンティティ条件基底クラス名のプレフィックスを設定します。
+     * 
+     * @param entityConditionBaseClassNamePrefix
+     *            エンティティ条件基底クラス名のプレフィックス
+     */
+    public void setEntityConditionBaseClassNamePrefix(
+            String entityConditionBaseClassNamePrefix) {
+        this.entityConditionBaseClassNamePrefix = entityConditionBaseClassNamePrefix;
+    }
+
+    /**
+     * エンティティ条件基底クラス名のサフィックスを返します。
+     * 
+     * @return エンティティ条件基底クラス名のサフィックス
+     */
+    public String getEntityConditionBaseClassNameSuffix() {
+        return entityConditionBaseClassNameSuffix;
+    }
+
+    /**
+     * エンティティ条件基底クラス名のサフィックスを設定します。
+     * 
+     * @param entityConditionBaseClassNameSuffix
+     *            エンティティ条件基底クラス名のサフィックス
+     */
+    public void setEntityConditionBaseClassNameSuffix(
+            String entityConditionBaseClassNameSuffix) {
+        this.entityConditionBaseClassNameSuffix = entityConditionBaseClassNameSuffix;
+    }
+
+    /**
+     * エンティティ条件クラスのテンプレート名を設定します。
+     * 
+     * @return エンティティ条件クラスのテンプレート名
+     */
+    public String getEntityConditionTemplateName() {
+        return entityConditionTemplateName;
+    }
+
+    /**
+     * エンティティ条件クラスのテンプレート名を設定します。
+     * 
+     * @param entityConditionTemplateName
+     *            エンティティ条件クラスのテンプレート名
+     */
+    public void setEntityConditionTemplateName(
+            String entityConditionTemplateName) {
+        this.entityConditionTemplateName = entityConditionTemplateName;
+    }
+
+    /**
+     * エンティティ条件基底クラスのテンプレート名を設定します。
+     * 
+     * @return エンティティ条件基底クラスのテンプレート名
+     */
+    public String getEntityConditionBaseTemplateName() {
+        return entityConditionBaseTemplateName;
+    }
+
+    /**
+     * エンティティ条件基底クラスのテンプレート名を設定します。
+     * 
+     * @param entityConditionBaseTemplateName
+     *            エンティティ条件基底クラスのテンプレート名
+     */
+    public void setEntityConditionBaseTemplateName(
+            String entityConditionBaseTemplateName) {
+        this.entityConditionBaseTemplateName = entityConditionBaseTemplateName;
+    }
+
+    /**
+     * エンティティ条件クラスを生成する場合{@code true}、生成しない場合{@code false}を返します。
+     * 
+     * @return エンティティ条件クラスを生成する場合{@code true}、生成しない場合{@code false}
+     */
+    public Boolean isGenerateCondition() {
+        return generateCondition;
+    }
+
+    /**
+     * エンティティ条件クラスを生成する場合{@code true}、生成しない場合{@code false}を設定します。
+     * 
+     * @param generateCondition
+     *            エンティティ条件クラスを生成する場合{@code true}、生成しない場合{@code false}
+     */
+    public void setGenerateCondition(Boolean generateCondition) {
+        this.generateCondition = generateCondition;
     }
 
 }

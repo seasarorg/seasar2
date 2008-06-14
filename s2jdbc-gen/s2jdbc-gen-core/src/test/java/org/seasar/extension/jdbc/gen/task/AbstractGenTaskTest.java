@@ -23,6 +23,7 @@ import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.GenCommand;
 import org.seasar.framework.exception.IORuntimeException;
 
 import static org.junit.Assert.*;
@@ -98,7 +99,7 @@ public class AbstractGenTaskTest {
     /**
      * 
      */
-    public static class Hoge {
+    public static class Hoge implements GenCommand {
 
         /**
          * 

@@ -1,0 +1,6 @@
+package hoge;
+
+import bar.AbstractFooCondition;
+
+public class FooCondition extends AbstractFooCondition {
+}
