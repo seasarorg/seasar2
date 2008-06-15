@@ -23,16 +23,16 @@ import javax.persistence.TemporalType;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.factory.EntityBaseModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.factory.EntityConditionBaseModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.factory.EntityConditionModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.factory.EntityModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.AttributeDesc;
+import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModel;
 import org.seasar.extension.jdbc.gen.model.EntityConditionModel;
-import org.seasar.extension.jdbc.gen.model.EntityDesc;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
+import org.seasar.extension.jdbc.gen.model.factory.EntityBaseModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.factory.EntityConditionBaseModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.factory.EntityConditionModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.factory.EntityModelFactoryImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
@@ -385,8 +385,6 @@ public class GeneratorImplTest {
         context.setTemplateName("s2jdbc-entityConditionBase.ftl");
 
         generator.generate(context);
-        System.out.println(writer);
-
         String path = getClass().getName().replace(".", "/")
                 + "_s2jdbc-entityConditionBase.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
@@ -521,7 +519,6 @@ public class GeneratorImplTest {
         context.setTemplateName("jpa-entityBase.ftl");
 
         generator.generate(context);
-        System.out.println(writer);
         String path = getClass().getName().replace(".", "/")
                 + "_jpa-entityBase.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());

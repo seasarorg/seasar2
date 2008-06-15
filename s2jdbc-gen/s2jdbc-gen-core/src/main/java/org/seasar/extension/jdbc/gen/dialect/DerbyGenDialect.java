@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import javax.persistence.GenerationType;
 
 /**
  * Derbyの方言を扱うクラスです。
@@ -26,4 +27,8 @@ public class DerbyGenDialect extends StandardGenDialect {
     public DerbyGenDialect() {
     }
 
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
 }

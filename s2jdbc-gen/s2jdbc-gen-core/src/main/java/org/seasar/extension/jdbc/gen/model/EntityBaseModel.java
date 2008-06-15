@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.model;
 
 
+
 /**
  * @author taedium
  * 

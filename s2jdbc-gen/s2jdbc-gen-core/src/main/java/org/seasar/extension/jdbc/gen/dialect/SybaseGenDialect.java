@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import javax.persistence.GenerationType;
 
 /**
  * Sybaseの方言を扱うクラスです。
@@ -26,4 +27,8 @@ public class SybaseGenDialect extends StandardGenDialect {
     public SybaseGenDialect() {
     }
 
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
 }

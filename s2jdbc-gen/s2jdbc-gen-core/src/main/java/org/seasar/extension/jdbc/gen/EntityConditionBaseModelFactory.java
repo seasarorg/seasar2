@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModel;
-import org.seasar.extension.jdbc.gen.model.EntityDesc;
 
 /**
  * {@link EntityConditionBaseModel}のファクトリです。

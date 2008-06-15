@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import javax.persistence.GenerationType;
 
 /**
  * Interbaseの方言を扱うクラスです。
@@ -26,4 +27,8 @@ public class InterbaseGenDialect extends StandardGenDialect {
     public InterbaseGenDialect() {
     }
 
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.SEQUENCE;
+    }
 }

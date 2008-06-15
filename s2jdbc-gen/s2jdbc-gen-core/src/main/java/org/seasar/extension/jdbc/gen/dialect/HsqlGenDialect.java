@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import javax.persistence.GenerationType;
 
 /**
  * HSQLDBの方言を扱うクラスです。
@@ -29,5 +30,10 @@ public class HsqlGenDialect extends StandardGenDialect {
     @Override
     public String getDefaultSchemaName(String userName) {
         return null;
+    }
+
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
     }
 }

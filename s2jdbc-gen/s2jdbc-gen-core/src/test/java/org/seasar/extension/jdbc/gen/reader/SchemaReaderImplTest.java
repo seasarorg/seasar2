@@ -26,7 +26,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.model.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
 

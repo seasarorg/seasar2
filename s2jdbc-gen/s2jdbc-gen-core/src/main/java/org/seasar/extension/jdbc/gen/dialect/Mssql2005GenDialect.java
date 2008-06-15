@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-
 /**
  * MS SQL Server 2005の方言を扱うクラスです。
  * 

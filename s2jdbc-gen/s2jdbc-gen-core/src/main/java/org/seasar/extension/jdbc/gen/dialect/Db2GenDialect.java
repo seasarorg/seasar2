@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import javax.persistence.GenerationType;
 
 /**
  * DB2の方言を扱うクラスです。
@@ -26,4 +27,8 @@ public class Db2GenDialect extends StandardGenDialect {
     public Db2GenDialect() {
     }
 
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
 }

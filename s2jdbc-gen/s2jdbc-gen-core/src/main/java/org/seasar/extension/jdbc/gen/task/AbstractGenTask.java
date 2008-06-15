@@ -33,10 +33,7 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * コンストラクタで受け取る文字列が表すクラスを新しいクラスローダーを使って呼び出すタスクです。
- * <p>
- * コンストラクタで受け取る文字列はコマンドクラスと呼びます。コマンドクラスは{@link GenCommand}を実装している必要があります。
- * 
+ * コンストラクタで受け取る文字列があらわすコマンドクラスを新しいクラスローダーを使って呼び出すタスクです。
  * <p>
  * このタスクに設定されたプロパティはコマンドクラスのインスタンスにコピーされます。
  * </p>
@@ -56,6 +53,9 @@ public abstract class AbstractGenTask extends Task {
 
     /**
      * 指定されたクラス名でインスタンスを構築します。
+     * <p>
+     * {@code commandClassName}に指定するクラスは{@link GenCommand}を実装している必要があります。
+     * </p>
      * 
      * @param commandClassName
      *            このタスクから処理が委譲されるクラスの名前です。

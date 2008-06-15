@@ -22,6 +22,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -144,6 +145,10 @@ public class StandardGenDialect implements GenDialect {
 
     public SqlType getSqlType(int sqlType) {
         return sqlTypeMap.get(sqlType);
+    }
+
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.TABLE;
     }
 
     public static enum StandardSqlType implements SqlType {

@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import javax.persistence.GenerationType;
 
 /**
  * MS SQL Serverの方言を扱うクラスです。
@@ -26,4 +27,8 @@ public class MssqlGenDialect extends StandardGenDialect {
     public MssqlGenDialect() {
     }
 
+    @Override
+    public GenerationType getDefaultGenerationType() {
+        return GenerationType.IDENTITY;
+    }
 }

@@ -29,8 +29,8 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SchemaReader;
-import org.seasar.extension.jdbc.gen.model.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.model.DbTableMeta;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;

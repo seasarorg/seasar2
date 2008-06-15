@@ -15,9 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
-
-import org.seasar.extension.jdbc.DbmsDialect;
 
 /**
  * RDBMSごとの方言を扱うインタフェースです。
@@ -80,5 +79,7 @@ public interface GenDialect {
     Class<?> getJavaType(int sqlType, String typeName, boolean nullable);
 
     SqlType getSqlType(int sqlType);
+
+    GenerationType getDefaultGenerationType();
 
 }

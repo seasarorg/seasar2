@@ -19,9 +19,10 @@ import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.seasar.extension.jdbc.gen.desc.EntityDesc;
+
 /**
  * @author taedium
- * 
  */
 public abstract class AbstractEntityModel {
 
