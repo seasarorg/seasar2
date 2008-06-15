@@ -22,8 +22,8 @@ import javax.persistence.Column;
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
+import org.seasar.extension.jdbc.gen.DataType;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
@@ -99,10 +99,10 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         if (!StringUtil.isEmpty(column.columnDefinition())) {
             definition = column.columnDefinition();
         } else {
-            int jdbcSqlType = propertyMeta.getValueType().getSqlType();
-            SqlType sqlType = dialect.getSqlType(jdbcSqlType);
-            definition = sqlType.toText(column.length(), column.precision(),
-                    column.scale());
+            int sqlType = propertyMeta.getValueType().getSqlType();
+            DataType dataType = dialect.getDataType(sqlType);
+            definition = dataType.getDefinition(column.length(), column
+                    .precision(), column.scale());
         }
         columnDesc.setDefinition(definition);
     }

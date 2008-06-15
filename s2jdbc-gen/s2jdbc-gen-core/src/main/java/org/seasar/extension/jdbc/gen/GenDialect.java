@@ -78,8 +78,20 @@ public interface GenDialect {
      */
     Class<?> getJavaType(int sqlType, String typeName, boolean nullable);
 
-    SqlType getSqlType(int sqlType);
+    /**
+     * データ型を返します。
+     * 
+     * @param sqlType
+     *            JDBCのSQL型
+     * @return データ型
+     */
+    DataType getDataType(int sqlType);
 
+    /**
+     * デフォルトの{@link GenerationType}を返します。
+     * 
+     * @return デフォルトの{@link GenerationType}
+     */
     GenerationType getDefaultGenerationType();
 
 }
