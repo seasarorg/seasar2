@@ -15,69 +15,33 @@
  */
 package org.seasar.extension.jdbc.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.OneToMany;
 
 /**
  * @author higa
  * 
  */
 @Entity
-public class Emp {
+public class Dept {
 
     /**
      * 
      */
     @Id
-    public Integer empno;
-
-    /**
-     * 
-     */
-    public String ename;
-
-    /**
-     * 
-     */
-    public String job;
-
-    /**
-     * 
-     */
-    public Integer mgr;
-
-    /**
-     * 
-     */
-    @Temporal(TemporalType.DATE)
-    public Date hiredate;
-
-    /**
-     * 
-     */
-    public BigDecimal sal;
-
-    /**
-     * 
-     */
-    public BigDecimal comm;
-
-    /**
-     * 
-     */
     public Integer deptno;
 
     /**
      * 
      */
-    @ManyToOne
-    @JoinColumn(name = "deptno", referencedColumnName = "deptno")
-    public Dept dept;
+    public String dname;
+
+    /**
+     * 
+     */
+    @OneToMany(mappedBy = "dept")
+    public List<Emp> empList;
 }
