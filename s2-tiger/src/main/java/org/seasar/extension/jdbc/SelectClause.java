@@ -76,9 +76,8 @@ public class SelectClause {
         if (sql.length() > 0) {
             sql.append(", ");
         }
-        sql.append(tableAlias);
-        sql.append(".");
-        sql.append(columnName);
+        sql.append(tableAlias).append('.').append(columnName).append(' ')
+                .append(tableAlias).append(columnName);
     }
 
     /**
