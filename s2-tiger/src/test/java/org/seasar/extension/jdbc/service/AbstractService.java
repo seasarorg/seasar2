@@ -20,5 +20,5 @@ package org.seasar.extension.jdbc.service;
  * @param <T2>
  * 
  */
-public class AbstractService2<T2> extends S2AbstractService<T2> {
+public class AbstractService<T2> extends S2AbstractService<T2> {
 }

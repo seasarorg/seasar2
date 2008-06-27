@@ -21,5 +21,5 @@ import org.seasar.extension.jdbc.entity.Emp;
  * @author higa
  * 
  */
-public class EmpService extends AbstractService2<Emp> {
+public class EmpService extends AbstractService<Emp> {
 }
