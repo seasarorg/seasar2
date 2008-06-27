@@ -29,12 +29,7 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.GenericUtil;
 
 /**
- * @author li0934
- * 
- * @param <T>
- */
-/**
- * Daoのベースです。
+ * サービスを作るベースクラスです。
  * 
  * @author higa
  * @param <T>
