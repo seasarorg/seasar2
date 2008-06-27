@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.service;
 
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -25,6 +26,7 @@ import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlFileUpdate;
+import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.GenericUtil;
 
@@ -90,6 +92,48 @@ public abstract class S2AbstractService<T> {
      */
     public AutoSelect<T> select() {
         return jdbcManager.from(entityClass);
+    }
+
+    /**
+     * すべてのエンティティを検索します。
+     * 
+     * @return すべてのエンティティ
+     */
+    public List<T> findAll() {
+        return select().getResultList();
+    }
+
+    /**
+     * 条件付で検索します。
+     * 
+     * @param conditions
+     *            条件
+     * 
+     * @return エンティティのリスト
+     * @see AutoSelect#where(Map)
+     */
+    public List<T> findByCondition(BeanMap conditions) {
+        return select().where(conditions).getResultList();
+    }
+
+    /**
+     * 識別子でエンティティを検索します。
+     * 
+     * @param idProperties
+     *            識別子の配列
+     * @return すべてのエンティティ
+     */
+    public T findById(Object... idProperties) {
+        return select().id(idProperties).getSingleResult();
+    }
+
+    /**
+     * 件数を返します。
+     * 
+     * @return 件数
+     */
+    public long getCount() {
+        return select().getCount();
     }
 
     /**
