@@ -21,7 +21,7 @@ import org.seasar.extension.unit.S2TestCase;
  * @author higa
  * 
  */
-public class AbsServiceTest extends S2TestCase {
+public class S2AbstractServiceTest extends S2TestCase {
 
     private EmpService empDao;
 

@@ -36,7 +36,7 @@ import org.seasar.framework.util.tiger.GenericUtil;
  *            エンティティの型
  * 
  */
-public abstract class AbstractService<T> {
+public abstract class S2AbstractService<T> {
 
     /**
      * JDBCマネージャです。
@@ -59,11 +59,11 @@ public abstract class AbstractService<T> {
      * 
      */
     @SuppressWarnings("unchecked")
-    public AbstractService() {
+    public S2AbstractService() {
         Map<TypeVariable<?>, Type> map = GenericUtil
                 .getTypeVariableMap(getClass());
         for (Class<?> c = getClass(); c != Object.class; c = c.getSuperclass()) {
-            if (c.getSuperclass() == AbstractService.class) {
+            if (c.getSuperclass() == S2AbstractService.class) {
                 Type type = c.getGenericSuperclass();
                 Type[] arrays = GenericUtil.getGenericParameter(type);
                 setEntityClass((Class<T>) GenericUtil.getActualClass(arrays[0],
@@ -79,7 +79,7 @@ public abstract class AbstractService<T> {
      * @param entityClass
      *            エンティティのクラス
      */
-    public AbstractService(Class<T> entityClass) {
+    public S2AbstractService(Class<T> entityClass) {
         setEntityClass(entityClass);
     }
 
