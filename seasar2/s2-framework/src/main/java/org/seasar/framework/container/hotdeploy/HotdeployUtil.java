@@ -160,10 +160,8 @@ public final class HotdeployUtil {
                         .toByteArray());
                 final ObjectInputStream ois = new ObjectInputStream(bais);
                 return ois.readObject();
-            } catch (final IOException e) {
-                throw new IORuntimeException(e);
-            } catch (final ClassNotFoundException e) {
-                throw new ClassNotFoundRuntimeException(e);
+            } catch (final Throwable t) {
+                return value;
             }
         }
 
