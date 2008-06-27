@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - サービスの作り方</title>
+	</properties>
+	<body>
+		<section name="サービスの作り方">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#S2AbstractService">S2AbstractService</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#複数のデータソース">複数のデータソース</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+
+		<section name="S2AbstractService">
+			<p>
+				エンティティに対する操作を格納するクラスをサービスと呼びます。
+				ビジネスロジックは、エンティティかサービスに定義します。
+			</p>
+			<p>
+				ものとして扱うことが自然なものはエンティティに割り当て、
+				ものとして扱うことが不自然なものはサービスに割り当てます。
+				例えば、データアクセスロジックは機能中心なので、サービスに割り当てます。
+				計算して求められるような導出プロパティは、エンティティに持たせます。
+			</p>
+			<p>
+				サービスは基本的にエンティティと一対一で割り当てるのを推奨します。
+				ルールが明快なので、どのロジックがどこにあるのかが分かりやすいためです。
+				ロジックが探しやすければ、似たようなロジックを知らず(探せず)に
+				実装してしまう危険も少なくなります。
+			</p>
+			<p>例えば、Employeeに対するサービスは、次のようになります。</p>
+			<source><![CDATA[
+public EmployeeService extends S2AbstractService<Employee> {
+    ...
+}
+]]></source>
+			<p>プロジェクトごとに共通のサービスクラスを作る場合は、次のようになります。</p>
+			<source><![CDATA[
+public abstract AbstractService<T> extends S2AbstractService<T> {
+    ...
+}
+
+public EmployeeService extends AbstractService<Employee> {
+    ...
+}
+]]></source>
+		</section>
+		
+		<section name="複数のデータソース">
+			<p>
+				複数のデータソースに接続する方法を説明します。
+				ここでは、OracleとDB2に接続する例を取り上げます。
+			</p>
+			<p>
+				<a href="s2jdbc_other.html#%E8%A4%87%E6%95%B0%E3%81%AE%E3%83%87%E3%83%BC%E3%82%BF%E3%82%BD%E3%83%BC%E3%82%B9">ここ</a>
+				を参考にして、diconファイルを設定します。
+			</p>
+			<p>
+				oracleJdbcManagerとdb2JdbcManagerを定義したとすると
+				次のようにOracleとDB2用にサービスクラスを作成します。
+				@ResourceでそれぞれのJdbcManagerを指定するところがポイントです。
+			</p>
+			<source><![CDATA[
+public abstract AbstractOracleService<T> extends S2AbstractService<T> {
+    
+    @Resource(name = "oracleJdbcManager");
+    public void setJdbcManager(JdbcManager jdbcManager) {
+        this.jdbcManager = jdbcManager;
+    }
+    ...
+}
+
+public abstract AbstractDb2Service<T> extends S2AbstractService<T> {
+    
+    @Resource(name = "db2JdbcManager");
+    public void setJdbcManager(JdbcManager jdbcManager) {
+        this.jdbcManager = jdbcManager;
+    }
+    ...
+}
+]]></source>
+		</section>
+	</body>
+</document>

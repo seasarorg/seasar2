@@ -286,6 +286,27 @@
 				</li>
 				<li>
 					<p>
+						<a href="s2jdbc_service.html">サービスの作り方</a>
+					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="s2jdbc_service.html#S2AbstractService">
+									S2AbstractService
+								</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="s2jdbc_service.html#複数のデータソース">
+									複数のデータソース
+								</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
 						<a href="s2jdbc_other.html">その他の機能</a>
 					</p>
 					<ul>

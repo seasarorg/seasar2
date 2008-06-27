@@ -54,6 +54,7 @@
           <item name="SQLによる操作" href="s2jdbc_manager_sql.html"/>
           <item name="SQLファイルによる操作" href="s2jdbc_manager_sqlfile.html"/>
         </item>
+        <item name="サービスの作り方" href="s2jdbc_service.html"/>
         <item name="その他の機能" href="s2jdbc_other.html"/>
       </item>
 
