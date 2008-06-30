@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc;
 
+import java.util.Map;
+
+import org.seasar.framework.util.tiger.CollectionsUtil;
+
 /**
  * select句を組み立てるクラスです。
  * 
@@ -29,9 +33,14 @@ public class SelectClause {
     protected StringBuilder sql;
 
     /**
-     * SELECT項目のエイリアスに使う序数です。
+     * カラム名のエイリアスに使う序数です。
      */
-    protected int aliases;
+    protected int aliasIndex;
+
+    /**
+     * 修飾されたカラム名とSELECT句のエイリアス名とのマッピングです。
+     */
+    protected Map<String, String> columnAliases = CollectionsUtil.newHashMap(64);
 
     /**
      * {@link SelectClause}を作成します。
@@ -81,8 +90,10 @@ public class SelectClause {
         if (sql.length() > 0) {
             sql.append(", ");
         }
-        sql.append(tableAlias).append('.').append(columnName).append(" S")
-                .append(++aliases).append('_');
+        String qname = tableAlias + '.' + columnName;
+        String columnAlias = "C" + (++aliasIndex) + "_";
+        columnAliases.put(qname, columnAlias);
+        sql.append(qname).append(" as ").append(columnAlias);
     }
 
     /**
@@ -98,6 +109,30 @@ public class SelectClause {
             sql.append(", ");
         }
         sql.append(selectItem);
+    }
+
+    /**
+     * カラム名に対応するエイリアス名を返します。
+     * 
+     * @param tableAlias
+     *            テーブル別名
+     * @param columnName
+     *            カラム名
+     * @return カラム名に対応するエイリアス名
+     */
+    public String getColumnAlias(String tableAlias, String columnName) {
+        return getColumnAlias(tableAlias + '.' + columnName);
+    }
+
+    /**
+     * カラム名に対応するエイリアス名を返します。
+     * 
+     * @param qname
+     *            テーブル別名で修飾されたカラム名
+     * @return カラム名に対応するエイリアス名
+     */
+    public String getColumnAlias(String qname) {
+        return columnAliases.get(qname);
     }
 
 }

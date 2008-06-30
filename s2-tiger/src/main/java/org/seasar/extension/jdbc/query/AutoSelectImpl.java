@@ -612,7 +612,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * 関連名をベースとプロパティに分離します。
      * </p>
      * <p>
-     * <code>aaa.bbb.ccc</code>ならベースが<code>aaa.bbb</code>、プロパティが<code>ccc</code>になります。
+     * <code>aaa.bbb.ccc</code>ならベースが<code>aaa.bbb</code>、プロパティが<code>ccc</code>
+     * になります。
      * </p>
      * 
      * @param name
@@ -1085,7 +1086,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         if (StringUtil.isEmpty(orderBy)) {
             return;
         }
-        orderByClause.addSql(convertCriteria(orderBy));
+        orderByClause.addSql(convertCriteria(orderBy, true));
     }
 
     /**
@@ -1096,6 +1097,19 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * @return カラム名で記述されたクライテリア
      */
     protected String convertCriteria(String str) {
+        return convertCriteria(str, false);
+    }
+
+    /**
+     * プロパティ名で記述されたクライテリアをカラム名に変換します。
+     * 
+     * @param str
+     *            クライテリア
+     * @param convertAlias
+     *            カラム名をエイリアスに置換する場合は<code>true</code>
+     * @return カラム名で記述されたクライテリア
+     */
+    protected String convertCriteria(String str, boolean convertAlias) {
         if (StringUtil.isEmpty(str)) {
             return str;
         }
@@ -1112,7 +1126,14 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                     sb.append(token);
                 } else {
                     PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
-                    sb.append(tableAlias + "." + pm.getColumnMeta().getName());
+                    String itemName = tableAlias + "." + pm.getColumnMeta().getName();
+                    if (convertAlias) {
+                        String alias = selectClause.getColumnAlias(itemName);
+                        if (!StringUtil.isEmpty(alias)) {
+                            itemName = alias;
+                        }
+                    }
+                    sb.append(itemName);
                 }
             } else {
                 sb.append(token);

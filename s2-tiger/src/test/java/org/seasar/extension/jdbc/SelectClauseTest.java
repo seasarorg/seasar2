@@ -29,9 +29,12 @@ public class SelectClauseTest extends TestCase {
     public void testAddSql() {
         SelectClause selectClause = new SelectClause();
         selectClause.addSql("T1_", "AAA_ID");
-        assertEquals("T1_.AAA_ID S1_", selectClause.toSql());
+        assertEquals("T1_.AAA_ID as C1_", selectClause.toSql());
+        assertEquals("C1_", selectClause.getColumnAlias("T1_", "AAA_ID"));
         selectClause.addSql("T1_", "AAA_NAME");
-        assertEquals("T1_.AAA_ID S1_, T1_.AAA_NAME S2_", selectClause.toSql());
+        assertEquals("T1_.AAA_ID as C1_, T1_.AAA_NAME as C2_", selectClause.toSql());
+        assertEquals("C1_", selectClause.getColumnAlias("T1_", "AAA_ID"));
+        assertEquals("C2_", selectClause.getColumnAlias("T1_", "AAA_NAME"));
     }
 
     /**
@@ -52,7 +55,7 @@ public class SelectClauseTest extends TestCase {
         SelectClause selectClause = new SelectClause();
         assertEquals(0, selectClause.getLength());
         selectClause.addSql("T1_", "AAA_ID");
-        assertEquals("T1_.AAA_ID S1_".length(), selectClause.getLength());
+        assertEquals("T1_.AAA_ID as C1_".length(), selectClause.getLength());
     }
 
 }
