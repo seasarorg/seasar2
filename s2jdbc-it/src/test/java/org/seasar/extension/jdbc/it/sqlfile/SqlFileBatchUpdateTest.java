@@ -158,7 +158,7 @@ public class SqlFileBatchUpdateTest {
                 + "_EntityExistsException_update.sql";
         MyDto3 dto = new MyDto3();
         dto.departmentId = 1;
-        dto.departmentId2 = 2;
+        dto.departmentId2 = 4;
         try {
             jdbcManager.updateBatchBySqlFile(path, dto).execute();
             fail();

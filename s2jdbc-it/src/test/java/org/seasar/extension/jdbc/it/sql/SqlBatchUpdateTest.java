@@ -108,7 +108,7 @@ public class SqlBatchUpdateTest {
         try {
             jdbcManager
                 .updateBatchBySql(sql, int.class, int.class)
-                .params(1, 2)
+                .params(1, 4)
                 .execute();
             fail();
         } catch (EntityExistsException e) {
