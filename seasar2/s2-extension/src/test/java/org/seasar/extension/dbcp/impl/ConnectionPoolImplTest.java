@@ -18,6 +18,7 @@ package org.seasar.extension.dbcp.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.XAConnection;
 import javax.transaction.Synchronization;
 import javax.transaction.TransactionManager;
 
@@ -77,7 +78,8 @@ public class ConnectionPoolImplTest extends S2TestCase {
         pool_.checkIn(con);
         ConnectionWrapper con2 = pool_.checkOut();
         pool_.checkIn(con2);
-        assertSame("1", con, con2);
+        assertSame(con.getXAConnection(), con2.getXAConnection());
+        assertSame(con.getPhysicalConnection(), con2.getPhysicalConnection());
     }
 
     /**
@@ -114,7 +116,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals(1, pool_.getTxActivePoolSize());
         assertEquals(0, pool_.getFreePoolSize());
         tm_.commit();
-        assertFalse(con.isClosed());
+        assertTrue(con.isClosed());
+        assertNull(((ConnectionWrapperImpl)con).getXAConnection());
+        assertNull(((ConnectionWrapperImpl)con).getPhysicalConnection());
         assertEquals(0, pool_.getTxActivePoolSize());
         assertEquals(1, pool_.getFreePoolSize());
     }
@@ -362,22 +366,26 @@ public class ConnectionPoolImplTest extends S2TestCase {
         ((ConnectionPoolImpl) pool_).setTimeout(600 * 1000);
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(2);
         ConnectionWrapper con1 = pool_.checkOut();
+        XAConnection xaCon1 = con1.getXAConnection();
         pool_.checkIn(con1);
         Thread.sleep(200);
         ConnectionWrapper con2 = pool_.checkOut();
-        assertSame(con1, con2);
+        XAConnection xaCon2 = con2.getXAConnection();
+        assertSame(xaCon1, xaCon2);
         pool_.checkIn(con2);
         ((ConnectionPoolImpl) pool_)
                 .setValidationQuery("select * from hogehoge");
         con2 = pool_.checkOut();
-        assertSame(con1, con2);
+        xaCon2 = con2.getXAConnection();
+        assertSame(xaCon1, xaCon2);
         ConnectionWrapper con3 = pool_.checkOut();
         pool_.checkIn(con3);
         pool_.checkIn(con2);
         Thread.sleep(200);
         con2 = pool_.checkOut();
+        xaCon2 = con2.getXAConnection();
         assertNotNull(con2);
-        assertNotSame(con1, con2);
+        assertNotSame(xaCon1, xaCon2);
         pool_.checkIn(con2);
     }
 

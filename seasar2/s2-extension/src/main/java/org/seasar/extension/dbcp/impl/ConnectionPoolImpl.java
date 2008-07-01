@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.dbcp.impl;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.XAConnection;
 import javax.sql.XADataSource;
 import javax.transaction.Status;
 import javax.transaction.Synchronization;
@@ -35,6 +37,7 @@ import org.seasar.extension.timer.TimeoutManager;
 import org.seasar.extension.timer.TimeoutTarget;
 import org.seasar.extension.timer.TimeoutTask;
 import org.seasar.framework.exception.SIllegalStateException;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.SLinkedList;
 import org.seasar.framework.util.StringUtil;
@@ -389,8 +392,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     private ConnectionWrapper createConnection(Transaction tx)
             throws SQLException {
-        ConnectionWrapper con = new ConnectionWrapperImpl(xaDataSource
-                .getXAConnection(), this, tx);
+        XAConnection xaConnection = xaDataSource.getXAConnection();
+        Connection connection = xaConnection.getConnection();
+        ConnectionWrapper con = new ConnectionWrapperImpl(xaConnection,
+                connection, this, tx);
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0006", null);
         }
@@ -419,16 +424,23 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     public synchronized void checkIn(ConnectionWrapper connection) {
         activePool.remove(connection);
-        connection.cleanup();
         checkInFreePool(connection);
     }
 
-    private void checkInFreePool(ConnectionWrapper connection) {
+    private void checkInFreePool(ConnectionWrapper con) {
         if (getMaxPoolSize() > 0) {
-            freePool.addLast(new FreeItem(connection));
-            notify();
+            try {
+                ConnectionWrapper newCon = new ConnectionWrapperImpl(con
+                        .getXAConnection(), con.getPhysicalConnection(), this,
+                        null);
+                con.cleanup();
+                freePool.addLast(new FreeItem(newCon));
+                notify();
+            } catch (SQLException e) {
+                throw new SQLRuntimeException(e);
+            }
         } else {
-            connection.closeReally();
+            con.closeReally();
         }
     }
 

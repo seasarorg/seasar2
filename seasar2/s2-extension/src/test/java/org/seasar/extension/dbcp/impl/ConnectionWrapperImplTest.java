@@ -52,7 +52,7 @@ public class ConnectionWrapperImplTest extends S2TestCase {
      */
     public void testCloseReallyWithTransaction() throws Exception {
         MockXAConnection xaCon = new MockXAConnection();
-        ConnectionWrapperImpl wrapper = new ConnectionWrapperImpl(xaCon,
+        ConnectionWrapperImpl wrapper = new ConnectionWrapperImpl(xaCon,xaCon.getConnection(),
                 dummyPool_, null);
         MockConnection con = (MockConnection) wrapper.getPhysicalConnection();
         wrapper.setAutoCommit(false);

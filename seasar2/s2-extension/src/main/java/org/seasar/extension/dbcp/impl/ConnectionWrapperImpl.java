@@ -63,6 +63,8 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
      * 
      * @param xaConnection
      *            XAコネクション
+     * @param physicalConnection
+     *            物理コネクション
      * @param connectionPool
      *            コネクションプール
      * @param tx
@@ -71,11 +73,11 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
      *             SQL例外が発生した場合
      */
     public ConnectionWrapperImpl(final XAConnection xaConnection,
+            final Connection physicalConnection,
             final ConnectionPool connectionPool, final Transaction tx)
             throws SQLException {
-
         xaConnection_ = xaConnection;
-        physicalConnection_ = xaConnection.getConnection();
+        physicalConnection_ = physicalConnection;
         xaResource_ = new XAResourceWrapperImpl(xaConnection.getXAResource(),
                 this);
         connectionPool_ = connectionPool;
@@ -101,6 +103,8 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
 
     public void cleanup() {
         closed_ = true;
+        xaConnection_ = null;
+        physicalConnection_ = null;
     }
 
     public void closeReally() {

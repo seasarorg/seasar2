@@ -42,6 +42,7 @@
 	<component name="con" class="org.seasar.extension.dbcp.impl.ConnectionWrapperImpl"
 		autoBinding="constructor">
 		<arg>xads.XAConnection</arg>
+		<arg>xads.XAConnection.connection</arg>
 		<arg>dummyPool</arg>
 		<arg>null</arg>
 	</component>
