@@ -17,8 +17,20 @@ package org.seasar.extension.jdbc.service;
 
 /**
  * @author higa
- * @param <T2>
- * 
+ * @param <ENTITY> エンティティの型
+ * @param <ID> 主キーの型
  */
-public class AbstractService<T2> extends S2AbstractService<T2> {
+public class AbstractService<ENTITY, ID> extends S2AbstractService<ENTITY> {
+
+    /**
+     * 識別子でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @return エンティティ
+     */
+    public ENTITY findById(ID id) {
+        return select().id(id).getSingleResult();
+    }
+
 }

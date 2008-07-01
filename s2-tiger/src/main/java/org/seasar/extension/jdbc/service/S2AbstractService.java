@@ -117,17 +117,6 @@ public abstract class S2AbstractService<T> {
     }
 
     /**
-     * 識別子でエンティティを検索します。
-     * 
-     * @param idProperties
-     *            識別子の配列
-     * @return すべてのエンティティ
-     */
-    public T findById(Object... idProperties) {
-        return select().id(idProperties).getSingleResult();
-    }
-
-    /**
      * 件数を返します。
      * 
      * @return 件数
