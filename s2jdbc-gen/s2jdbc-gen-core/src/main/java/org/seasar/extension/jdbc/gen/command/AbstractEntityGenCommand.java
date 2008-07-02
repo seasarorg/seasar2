@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
+import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.EntityBaseModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
@@ -35,11 +36,10 @@ import org.seasar.extension.jdbc.gen.GenCommand;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
-import org.seasar.extension.jdbc.gen.SchemaReader;
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
-import org.seasar.extension.jdbc.gen.meta.SchemaReaderImpl;
+import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
@@ -121,7 +121,7 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     protected PersistenceConvention persistenceConvention;
 
     /** スキーマのリーダ */
-    protected SchemaReader schemaReader;
+    protected DbTableMetaReader dbTableMetaReader;
 
     /** {@link EntityDesc}のファクトリ */
     protected EntityDescFactory entityDescFactory;
@@ -325,7 +325,7 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
      * コレボレータを準備します。
      */
     protected void setupCollaborators() {
-        schemaReader = createSchemaReader();
+        dbTableMetaReader = createSchemaReader();
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
@@ -350,12 +350,13 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     }
 
     /**
-     * {@link SchemaReader}の実装を作成します。
+     * {@link DbTableMetaReader}の実装を作成します。
      * 
-     * @return {@link SchemaReader}の実装
+     * @return {@link DbTableMetaReader}の実装
      */
-    protected SchemaReader createSchemaReader() {
-        return new SchemaReaderImpl(dataSource, dialect);
+    protected DbTableMetaReader createSchemaReader() {
+        return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
+                tableNamePattern);
     }
 
     /**
@@ -419,12 +420,12 @@ public abstract class AbstractEntityGenCommand implements GenCommand {
     }
 
     /**
-     * 読み込みます。
+     * テーブルメタデータを読み込みます。
      * 
-     * @return 読み込まれたテーブル記述のリスト
+     * @return テーブルメタデータのリスト
      */
     protected List<DbTableMeta> read() {
-        return schemaReader.read(schemaName, tableNamePattern);
+        return dbTableMetaReader.read();
     }
 
     /**

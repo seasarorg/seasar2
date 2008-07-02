@@ -35,7 +35,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntitiesReaderImplTest {
+public class EntityMetaReaderImplTest {
 
     private java.io.File rootDir;
 
@@ -64,7 +64,7 @@ public class EntitiesReaderImplTest {
 
     @Test
     public void testRead() throws Exception {
-        EntitiesReaderImpl reader = new EntitiesReaderImpl(rootDir,
+        EntityMetaReaderImpl reader = new EntityMetaReaderImpl(rootDir,
                 packageName, "A.*", entityMetaFactory);
         List<EntityMeta> list = reader.read();
         assertEquals(2, list.size());

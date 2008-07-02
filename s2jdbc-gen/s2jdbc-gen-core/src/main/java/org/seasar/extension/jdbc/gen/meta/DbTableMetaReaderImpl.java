@@ -29,8 +29,8 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
+import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SchemaReader;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
@@ -42,13 +42,17 @@ import org.seasar.framework.util.ResultSetUtil;
  * 
  * @author taedium
  */
-public class SchemaReaderImpl implements SchemaReader {
+public class DbTableMetaReaderImpl implements DbTableMetaReader {
 
     /** データソース */
     protected DataSource dataSource;
 
     /** 方言 */
     protected GenDialect dialect;
+
+    protected String schemaName;
+
+    protected String tableNamePattern;
 
     /**
      * インスタンスを構築します。
@@ -57,17 +61,33 @@ public class SchemaReaderImpl implements SchemaReader {
      *            データソース
      * @param dialect
      *            方言
+     * @param schemaName
+     *            スキーマ名、デフォルトのスキーマ名を表す場合は{@code null}
+     * @param tableNamePattern
+     *            正規表現で表されたテーブル名のパターン
      */
-    public SchemaReaderImpl(DataSource dataSource, GenDialect dialect) {
+    public DbTableMetaReaderImpl(DataSource dataSource, GenDialect dialect,
+            String schemaName, String tableNamePattern) {
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource");
+        }
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        if (tableNamePattern == null) {
+            throw new NullPointerException(tableNamePattern);
+        }
         this.dataSource = dataSource;
         this.dialect = dialect;
+        this.schemaName = schemaName;
+        this.tableNamePattern = tableNamePattern;
     }
 
-    public List<DbTableMeta> read(String schemaName, String tableNamePattern) {
+    public List<DbTableMeta> read() {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
-            schemaName = schemaName != null ? schemaName
+            String schemaName = this.schemaName != null ? this.schemaName
                     : getDefaultSchemaName(metaData);
             List<String> tableNames = getTableNameList(metaData, schemaName);
 

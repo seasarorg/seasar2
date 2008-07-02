@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.task;
 
-import org.seasar.extension.jdbc.gen.command.GenSchemaCommand;
+import org.seasar.extension.jdbc.gen.command.DdlGenCommand;
 
 /**
  * データベースのスキーマを作成するタスクです。
@@ -28,7 +28,7 @@ public class GenSchemaTask extends AbstractGenTask {
      * インスタンスを構築します。
      */
     public GenSchemaTask() {
-        this(GenSchemaCommand.class.getName());
+        this(DdlGenCommand.class.getName());
     }
 
     /**

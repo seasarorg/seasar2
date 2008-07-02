@@ -17,22 +17,17 @@ package org.seasar.extension.jdbc.gen;
 
 import java.util.List;
 
-
 /**
- * スキーマを読み取るインタフェースです。
+ * {@link DbTableMeta データベースのテーブルメタデータ}を読み取るインタフェースです。
  * 
  * @author taedium
  */
-public interface SchemaReader {
+public interface DbTableMetaReader {
 
     /**
-     * スキーマを読みデータベースのテーブル記述を返します。
+     * データベースのテーブルメタデータを読み取ります。
      * 
-     * @param schemaName
-     *            スキーマ名
-     * @param tableNamePattern
-     *            正規表現で表されたテーブル名のパターン
-     * @return テーブル記述
+     * @return テーブルメタデータのリスト
      */
-    List<DbTableMeta> read(String schemaName, String tableNamePattern);
+    List<DbTableMeta> read();
 }

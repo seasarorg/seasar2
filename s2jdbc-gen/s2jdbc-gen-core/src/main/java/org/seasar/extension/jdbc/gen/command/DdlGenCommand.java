@@ -15,11 +15,16 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import org.seasar.extension.jdbc.gen.GenCommand;
 
 /**
  * @author taedium
- *
+ * 
  */
-public class GenSchemaCommand {
+public class DdlGenCommand implements GenCommand {
+
+    public void execute() {
+        // TODO Auto-generated method stub
+    }
 
 }

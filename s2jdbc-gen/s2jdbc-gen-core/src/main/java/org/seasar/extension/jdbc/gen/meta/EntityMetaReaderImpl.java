@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
-import org.seasar.extension.jdbc.gen.EntitiesReader;
+import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
@@ -33,7 +33,7 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
  * @author taedium
  * 
  */
-public class EntitiesReaderImpl implements EntitiesReader {
+public class EntityMetaReaderImpl implements EntityMetaReader {
 
     protected File rootDir;
 
@@ -43,7 +43,7 @@ public class EntitiesReaderImpl implements EntitiesReader {
 
     protected EntityMetaFactory entityMetaFactory;
 
-    public EntitiesReaderImpl(File rootDir, String packageName,
+    public EntityMetaReaderImpl(File rootDir, String packageName,
             String shortClassNamePattern, EntityMetaFactory entityMetaFactory) {
         if (rootDir == null) {
             throw new NullPointerException("rootDir");

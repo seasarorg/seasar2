@@ -23,11 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.meta.SchemaReaderImpl;
+import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
 
@@ -37,18 +36,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class SchemaReaderImplTest {
-
-    private SchemaReaderImpl reader;
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        reader = new SchemaReaderImpl(null, new StandardGenDialect());
-    }
+public class DbTableMetaReaderImplTest {
 
     /**
      * 
@@ -81,6 +69,9 @@ public class SchemaReaderImplTest {
             }
 
         };
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), "schema",
+                "table");
         Set<String> list = reader.getPrimaryKeySet(metaData, "schema", "table");
         assertEquals(2, list.size());
         assertTrue(list.contains("pk1"));
@@ -133,6 +124,9 @@ public class SchemaReaderImplTest {
             }
         };
 
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), "schema",
+                "table");
         List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
                 "schemaName", "tableName");
         assertEquals(2, list.size());
@@ -183,6 +177,9 @@ public class SchemaReaderImplTest {
             }
         };
 
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), "schema",
+                "table");
         List<String> list = reader.getTableNameList(metaData, "schemaName");
         assertEquals(2, list.size());
         assertEquals("table1", list.get(0));
@@ -196,6 +193,8 @@ public class SchemaReaderImplTest {
     @Test
     public void testFilterTableNames() throws Exception {
         List<String> tables = Arrays.asList("AAA", "BBB", "abc");
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), "schema", "A.*");
         List<String> list = reader.filterTableNames(tables, "A.*");
         assertEquals(2, list.size());
         assertEquals("AAA", list.get(0));

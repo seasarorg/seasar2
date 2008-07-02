@@ -23,7 +23,7 @@ import org.seasar.extension.jdbc.EntityMeta;
  * @author taedium
  * 
  */
-public interface EntitiesReader {
+public interface EntityMetaReader {
 
     public List<EntityMeta> read();
 }
