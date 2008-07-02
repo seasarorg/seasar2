@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.service;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.SqlFileUpdate;
+import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.framework.beans.util.BeanMap;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.GenericUtil;
@@ -172,6 +174,38 @@ public abstract class S2AbstractService<T> {
     public <T2> SqlFileSelect<T2> selectBySqlFile(Class<T2> baseClass,
             String path) {
         return jdbcManager.selectBySqlFile(baseClass, sqlFilePathPrefix + path);
+    }
+
+    /**
+     * SQLファイル検索を返します。
+     * 
+     * @param <T2>
+     *            戻り値のJavaBeansの型
+     * @param baseClass
+     *            戻り値のJavaBeansのクラス
+     * @param path
+     *            エンティティのディレクトリ部分を含まないSQLファイルのパス
+     * @param parameter
+     *            <p>
+     *            パラメータ。
+     *            </p>
+     *            <p>
+     *            パラメータが1つしかない場合は、値を直接指定します。 パラメータが複数ある場合は、JavaBeansを作って、
+     *            プロパティ名をSQLファイルのバインド変数名とあわせます。
+     *            JavaBeansはpublicフィールドで定義することもできます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            </p>
+     *            <p>
+     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            </p>
+     * @return SQLファイル検索
+     */
+    public <T2> SqlFileSelect<T2> selectBySqlFile(Class<T2> baseClass,
+            String path, Object parameter) {
+        return jdbcManager.selectBySqlFile(baseClass, sqlFilePathPrefix + path,
+                parameter);
     }
 
     /**
