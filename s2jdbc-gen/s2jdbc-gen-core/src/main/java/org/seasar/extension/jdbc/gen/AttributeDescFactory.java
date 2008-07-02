@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
-import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 
 /**
  * {@link AttributeDesc}のファクトリです。

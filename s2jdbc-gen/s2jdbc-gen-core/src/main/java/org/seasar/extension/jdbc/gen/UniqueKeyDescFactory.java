@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc.gen;
 
 import javax.persistence.UniqueConstraint;
 
-import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
-import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 
 /**
  * @author taedium

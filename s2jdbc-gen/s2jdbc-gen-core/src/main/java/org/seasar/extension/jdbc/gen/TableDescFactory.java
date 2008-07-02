@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.desc.TableDesc;
 
 /**
  * {@link TableDesc}のファクトリです。

@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen;
 
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 
 /**
  * スキーマを読み取るインタフェースです。

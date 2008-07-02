@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen;
 
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 
 /**
  * {@link ColumnDesc}のファクトリです。

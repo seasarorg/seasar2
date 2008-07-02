@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
 import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
@@ -26,5 +25,5 @@ import org.seasar.extension.jdbc.EntityMeta;
  */
 public interface EntitiesReader {
 
-    public List<EntityMeta> read(File location, String classNamePattern);
+    public List<EntityMeta> read();
 }
