@@ -17,14 +17,11 @@ package org.seasar.framework.container.hotdeploy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
-import org.seasar.framework.exception.ClassNotFoundRuntimeException;
-import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 
