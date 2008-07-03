@@ -2,7 +2,7 @@
 	<tstamp>
 		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
 	</tstamp>
-	<property name="newVersion" value="2.4.26-SNAPSHOT" />
+	<property name="newVersion" value="2.4.26" />
 
 	<target name="update-pom">
 		<replaceregexp
@@ -20,13 +20,13 @@
 	</target>
 
 	<target name="make-reference">
-        <ant antfile="build.xml" dir="src/docbook" target="build"/>
-	    <mkdir dir="target/site/ja/reference"/>
-	    <copy todir="target/site/ja/reference">
-	      <fileset dir="target/docbook/reference">
-	        <exclude name="tmp/**"/>
-	      </fileset>
-	    </copy>
+		<ant antfile="build.xml" dir="src/docbook" target="build" />
+		<mkdir dir="target/site/ja/reference" />
+		<copy todir="target/site/ja/reference">
+			<fileset dir="target/docbook/reference">
+				<exclude name="tmp/**" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="fix-site">

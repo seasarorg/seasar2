@@ -45,6 +45,15 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2008/07/03</dt>
+				<dd>
+					<div>
+						Seasar2 2.4.26 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#c5d6536b">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#q651a401">移行ガイド</a>)
+					</div>
+				</dd>
 				<dt>2008/04/18</dt>
 				<dd>
 					<div>
