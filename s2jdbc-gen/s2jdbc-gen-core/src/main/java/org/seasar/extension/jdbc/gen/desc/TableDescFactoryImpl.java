@@ -30,6 +30,8 @@ import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
+import org.seasar.extension.jdbc.gen.SequenceDesc;
+import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
@@ -42,13 +44,12 @@ import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
  */
 public class TableDescFactoryImpl implements TableDescFactory {
 
-    /** デフォルトの{@link Table}を取得可能にするためのクラス */
     @Table
-    protected static class Helper {
+    private static class Util {
     }
 
     /** デフォルトのテーブル */
-    protected static Table DEFAULT_TABLE = Helper.class
+    protected static Table DEFAULT_TABLE = Util.class
             .getAnnotation(Table.class);
 
     /** テーブルの完全修飾名をキー、テーブル記述を値とするマップ */
@@ -67,6 +68,9 @@ public class TableDescFactoryImpl implements TableDescFactory {
     /** 一意キー記述のファクトリ */
     protected UniqueKeyDescFactory uniqueKeyDescFactory;
 
+    /** シーケンス記述のファクトリ */
+    protected SequenceDescFactory sequenceDescFactory;
+
     /**
      * インスタンスを構築します。
      * 
@@ -78,15 +82,34 @@ public class TableDescFactoryImpl implements TableDescFactory {
      *            外部キー記述のファクトリ
      * @param uniqueKeyDescFactory
      *            一意キー記述のファクトリ
+     * @param sequenceDescFactory
+     *            シーケンス記述のファクトリ
      */
     public TableDescFactoryImpl(ColumnDescFactory columnDescFactory,
             PrimaryKeyDescFactory primaryKeyDescFactory,
             ForeignKeyDescFactory foreignKeyDescFactory,
-            UniqueKeyDescFactory uniqueKeyDescFactory) {
+            UniqueKeyDescFactory uniqueKeyDescFactory,
+            SequenceDescFactory sequenceDescFactory) {
+        if (columnDescFactory == null) {
+            throw new NullPointerException("columnDescFactory");
+        }
+        if (primaryKeyDescFactory == null) {
+            throw new NullPointerException("primaryKeyDescFactory");
+        }
+        if (foreignKeyDescFactory == null) {
+            throw new NullPointerException("foreignKeyDescFactory");
+        }
+        if (uniqueKeyDescFactory == null) {
+            throw new NullPointerException("uniqueKeyDescFactory");
+        }
+        if (sequenceDescFactory == null) {
+            throw new NullPointerException("sequenceDescFactory");
+        }
         this.columnDescFactory = columnDescFactory;
         this.primaryKeyDescFactory = primaryKeyDescFactory;
         this.foreignKeyDescFactory = foreignKeyDescFactory;
         this.uniqueKeyDescFactory = uniqueKeyDescFactory;
+        this.sequenceDescFactory = sequenceDescFactory;
     }
 
     public TableDesc getTableDesc(EntityMeta entityMeta) {
@@ -116,6 +139,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
         doPrimaryKeyDesc(entityMeta, tableDesc, table);
         doForeignKeyDesc(entityMeta, tableDesc, table);
         doUniqueKeyDesc(entityMeta, tableDesc, table);
+        doSequenceDesc(entityMeta, tableDesc, table);
         return tableDesc;
     }
 
@@ -224,6 +248,27 @@ public class TableDescFactoryImpl implements TableDescFactory {
                     .getCompositeUniqueKey(uc);
             if (uniqueKeyDesc != null) {
                 tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
+            }
+        }
+    }
+
+    /**
+     * シーケンス記述を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param tableDesc
+     *            テーブル記述
+     * @param table
+     *            テーブル
+     */
+    protected void doSequenceDesc(EntityMeta entityMeta, TableDesc tableDesc,
+            Table table) {
+        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
+            SequenceDesc sequenceDesc = sequenceDescFactory.getSequenceDesc(
+                    entityMeta, propertyMeta);
+            if (sequenceDesc != null) {
+                tableDesc.addSequenceDesc(sequenceDesc);
             }
         }
     }

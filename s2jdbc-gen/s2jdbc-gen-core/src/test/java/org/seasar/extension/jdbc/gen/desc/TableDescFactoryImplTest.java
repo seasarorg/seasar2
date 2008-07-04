@@ -16,6 +16,8 @@
 package org.seasar.extension.jdbc.gen.desc;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -27,11 +29,6 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
-import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.TableDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -73,7 +70,8 @@ public class TableDescFactoryImplTest {
         ForeignKeyDescFactoryImpl fkdf = new ForeignKeyDescFactoryImpl(
                 entityMetaFactory);
         UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl();
-        tableDescFactory = new TableDescFactoryImpl(cdf, pkdf, fkdf, ukdf);
+        SequenceDescFactoryImpl sdf = new SequenceDescFactoryImpl(dialect);
+        tableDescFactory = new TableDescFactoryImpl(cdf, pkdf, fkdf, ukdf, sdf);
     }
 
     @Test
@@ -121,11 +119,19 @@ public class TableDescFactoryImplTest {
         assertEquals(1, tableDesc.getUniqueKeyDescList().size());
     }
 
+    @Test
+    public void testSequenceDescList() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
+        assertEquals(1, tableDesc.getSequenceDescList().size());
+    }
+
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "AAA", uniqueConstraints = { @UniqueConstraint(columnNames = { "BBB_ID" }) })
     public static class Aaa {
 
         @Id
+        @GeneratedValue(strategy = GenerationType.SEQUENCE)
         public Integer id;
 
         public Integer bbbId;

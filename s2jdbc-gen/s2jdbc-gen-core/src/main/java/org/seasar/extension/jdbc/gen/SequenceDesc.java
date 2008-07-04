@@ -15,11 +15,66 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
  * @author taedium
- *
+ * 
  */
 public class SequenceDesc {
+
+    protected String sequenceName;
+
+    protected int initialValue;
+
+    protected int allocationSize;
+
+    public String getSequenceName() {
+        return sequenceName;
+    }
+
+    public void setSequenceName(String name) {
+        this.sequenceName = name;
+    }
+
+    public int getInitialValue() {
+        return initialValue;
+    }
+
+    public void setInitialValue(int initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    public int getAllocationSize() {
+        return allocationSize;
+    }
+
+    public void setAllocationSize(int allocationSize) {
+        this.allocationSize = allocationSize;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((sequenceName == null) ? 0 : sequenceName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final SequenceDesc other = (SequenceDesc) obj;
+        if (sequenceName == null) {
+            if (other.sequenceName != null)
+                return false;
+        } else if (!sequenceName.equals(other.sequenceName))
+            return false;
+        return true;
+    }
 
 }

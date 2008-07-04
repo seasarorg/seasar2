@@ -44,8 +44,11 @@ public class TableDesc {
     /** 外部キー記述のリスト */
     protected List<ForeignKeyDesc> foreigneKeyDescList = new ArrayList<ForeignKeyDesc>();
 
-    /** 一意記述のリスト */
+    /** 一意キー記述のリスト */
     protected List<UniqueKeyDesc> uniqueKeyDescList = new ArrayList<UniqueKeyDesc>();
+
+    /** シーケンス記述のリスト */
+    protected List<SequenceDesc> sequenceDesclist = new ArrayList<SequenceDesc>();
 
     /**
      * カタログ名を返す。
@@ -183,6 +186,27 @@ public class TableDesc {
     public void addUniqueKeyDesc(UniqueKeyDesc uniqueKeyDesc) {
         if (!uniqueKeyDescList.contains(uniqueKeyDesc)) {
             uniqueKeyDescList.add(uniqueKeyDesc);
+        }
+    }
+
+    /**
+     * シーケンス記述のリストを返します。
+     * 
+     * @return シーケンス記述のリスト
+     */
+    public List<SequenceDesc> getSequenceDescList() {
+        return Collections.unmodifiableList(sequenceDesclist);
+    }
+
+    /**
+     * シーケンス記述を追加します。
+     * 
+     * @param sequenceDesc
+     *            シーケンス記述
+     */
+    public void addSequenceDesc(SequenceDesc sequenceDesc) {
+        if (!sequenceDesclist.contains(sequenceDesc)) {
+            sequenceDesclist.add(sequenceDesc);
         }
     }
 
