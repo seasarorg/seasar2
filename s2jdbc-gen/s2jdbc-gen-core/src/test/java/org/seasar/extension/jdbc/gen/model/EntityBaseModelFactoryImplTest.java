@@ -22,9 +22,7 @@ import javax.persistence.TemporalType;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
 
 import static org.junit.Assert.*;
 

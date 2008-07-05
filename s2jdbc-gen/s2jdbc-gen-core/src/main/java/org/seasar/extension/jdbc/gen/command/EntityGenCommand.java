@@ -24,18 +24,14 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.Command;
+import org.seasar.extension.jdbc.gen.ConditionBaseModelFactory;
+import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.DbTableMetaReader;
-import org.seasar.extension.jdbc.gen.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.EntityBaseModelFactory;
-import org.seasar.extension.jdbc.gen.EntityConditionBaseModel;
-import org.seasar.extension.jdbc.gen.EntityConditionBaseModelFactory;
-import org.seasar.extension.jdbc.gen.EntityConditionModel;
-import org.seasar.extension.jdbc.gen.EntityConditionModelFactory;
+import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityDescFactory;
-import org.seasar.extension.jdbc.gen.EntityModel;
-import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
@@ -47,6 +43,7 @@ import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityConditionModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -149,10 +146,10 @@ public class EntityGenCommand extends AbstractCommand {
     protected EntityBaseModelFactory entityBaseModelFactory;
 
     /** {@link EntityCondition}のファクトリ */
-    protected EntityConditionModelFactory entityConditionModelFactory;
+    protected ConditionModelFactory conditionModelFactory;
 
     /** {@link EntityConditionBase}のファクトリ */
-    protected EntityConditionBaseModelFactory entityConditionBaseModelFactory;
+    protected ConditionBaseModelFactory conditionBaseModelFactory;
 
     /**
      * インスタンスを構築します。
@@ -328,8 +325,8 @@ public class EntityGenCommand extends AbstractCommand {
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
         entityBaseModelFactory = createEntityBaseModelFactory();
-        entityConditionModelFactory = createEntityConditionModelFactory();
-        entityConditionBaseModelFactory = createEntityConditionBaseModelFactory();
+        conditionModelFactory = createEntityConditionModelFactory();
+        conditionBaseModelFactory = createEntityConditionBaseModelFactory();
 
     }
 
@@ -378,7 +375,7 @@ public class EntityGenCommand extends AbstractCommand {
      * 
      * @return {@link EntityConditionModel}のファクトリ
      */
-    protected EntityConditionModelFactory createEntityConditionModelFactory() {
+    protected ConditionModelFactory createEntityConditionModelFactory() {
         return new EntityConditionModelFactoryImpl();
     }
 
@@ -387,7 +384,7 @@ public class EntityGenCommand extends AbstractCommand {
      * 
      * @return {@link EntityConditionBaseModel}のファクトリ
      */
-    protected EntityConditionBaseModelFactory createEntityConditionBaseModelFactory() {
+    protected ConditionBaseModelFactory createEntityConditionBaseModelFactory() {
         return new EntityConditionBaseModelFactoryImpl();
     }
 
@@ -436,7 +433,7 @@ public class EntityGenCommand extends AbstractCommand {
     protected GenerationContext getEntityGenerationContext(EntityDesc entityDesc) {
         String className = getEntityClassName(entityDesc.getName());
         String baseClassName = getEntityBaseClassName(entityDesc.getName());
-        EntityModel model = entityModelFactory.getEntityModel(entityDesc,
+        Object model = entityModelFactory.getEntityModel(entityDesc,
                 className, baseClassName);
 
         return getGenerationContext(model, className, entityTemplateName, false);
@@ -452,7 +449,7 @@ public class EntityGenCommand extends AbstractCommand {
     protected GenerationContext getEntityBaseGenerationContext(
             EntityDesc entityDesc) {
         String className = getEntityBaseClassName(entityDesc.getName());
-        EntityBaseModel model = entityBaseModelFactory.getEntityBaseModel(
+        Object model = entityBaseModelFactory.getEntityBaseModel(
                 entityDesc, className);
         return getGenerationContext(model, className, entityBaseTemplateName,
                 true);
@@ -497,8 +494,8 @@ public class EntityGenCommand extends AbstractCommand {
         String className = getEntityConditionClassName(entityDesc.getName());
         String baseClassName = getEntityConditionBaseClassName(entityDesc
                 .getName());
-        EntityConditionModel model = entityConditionModelFactory
-                .getEntityConditionModel(entityDesc, className, baseClassName);
+        Object model = conditionModelFactory.getConditionModel(entityDesc,
+                className, baseClassName);
 
         return getGenerationContext(model, className, conditionTemplateName,
                 false);
@@ -514,8 +511,8 @@ public class EntityGenCommand extends AbstractCommand {
     protected GenerationContext getEntityConditionBaseGenerationContext(
             EntityDesc entityDesc) {
         String className = getEntityConditionBaseClassName(entityDesc.getName());
-        EntityConditionBaseModel model = entityConditionBaseModelFactory
-                .getEntityConditionBaseModel(entityDesc, className);
+        Object model = conditionBaseModelFactory
+                .getConditionBaseModel(entityDesc, className);
 
         return getGenerationContext(model, className,
                 conditionBaseTemplateName, true);

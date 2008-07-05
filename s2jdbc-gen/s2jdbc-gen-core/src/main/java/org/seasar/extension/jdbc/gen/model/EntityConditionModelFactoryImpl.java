@@ -15,22 +15,20 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import org.seasar.extension.jdbc.gen.EntityConditionModel;
-import org.seasar.extension.jdbc.gen.EntityConditionModelFactory;
+import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * {@link EntityConditionModelFactory}の実装クラスです。
+ * {@link ConditionModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
-public class EntityConditionModelFactoryImpl implements
-        EntityConditionModelFactory {
+public class EntityConditionModelFactoryImpl implements ConditionModelFactory {
 
-    public EntityConditionModel getEntityConditionModel(EntityDesc entityDesc,
+    public ConditionModel getConditionModel(EntityDesc entityDesc,
             String className, String baseClassName) {
-        EntityConditionModel model = new EntityConditionModel();
+        ConditionModel model = new ConditionModel();
         model.setClassName(className);
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
         model.setPackageName(elements[0]);
@@ -52,7 +50,7 @@ public class EntityConditionModelFactoryImpl implements
      * @param entityDesc
      *            エンティティ記述
      */
-    protected void doImportPackageNames(EntityConditionModel model,
+    protected void doImportPackageNames(ConditionModel model,
             EntityDesc entityDesc) {
         model.addImportPackageName(model.getBaseClassName());
     }

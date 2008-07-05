@@ -25,7 +25,6 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.EntityBaseModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.framework.util.ClassUtil;

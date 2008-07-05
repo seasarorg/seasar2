@@ -16,9 +16,20 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * {@link EntityConditionBaseModel}のファクトリです。
  * 
+ * @author taedium
  */
-public class EntityConditionModel extends AbstractEntityModel {
+public interface ConditionBaseModelFactory {
 
+    /**
+     * エンティティ条件基底クラスのモデルを返します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     * @param className
+     *            エンティティ条件基底クラス名
+     * @return エンティティ条件基底クラスのモデル
+     */
+    Object getConditionBaseModel(EntityDesc entityDesc, String className);
 }

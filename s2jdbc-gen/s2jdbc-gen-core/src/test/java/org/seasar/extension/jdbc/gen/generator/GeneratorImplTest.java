@@ -28,11 +28,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.EntityBaseModel;
-import org.seasar.extension.jdbc.gen.EntityConditionBaseModel;
-import org.seasar.extension.jdbc.gen.EntityConditionModel;
 import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.extension.jdbc.gen.EntityModel;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
@@ -45,7 +41,6 @@ import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.SchemaModel;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -145,7 +140,7 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(version);
 
         EntityModelFactoryImpl factory = new EntityModelFactoryImpl();
-        EntityModel model = factory.getEntityModel(entityDesc, "hoge.Foo",
+        Object model = factory.getEntityModel(entityDesc, "hoge.Foo",
                 "bar.AbstractFoo");
 
         GenerationContext context = new GenerationContext();
@@ -205,7 +200,7 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(version);
 
         EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        EntityBaseModel model = factory.getEntityBaseModel(entityDesc,
+        Object model = factory.getEntityBaseModel(entityDesc,
                 "bar.AbstractFoo");
 
         GenerationContext context = new GenerationContext();
@@ -243,7 +238,7 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(id2);
 
         EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        EntityBaseModel model = factory.getEntityBaseModel(entityDesc,
+        Object model = factory.getEntityBaseModel(entityDesc,
                 "bar.AbstractFoo");
 
         GenerationContext context = new GenerationContext();
@@ -306,8 +301,8 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(version);
 
         EntityConditionModelFactoryImpl factory = new EntityConditionModelFactoryImpl();
-        EntityConditionModel model = factory.getEntityConditionModel(
-                entityDesc, "hoge.FooCondition", "bar.AbstractFooCondition");
+        Object model = factory.getConditionModel(entityDesc,
+                "hoge.FooCondition", "bar.AbstractFooCondition");
 
         GenerationContext context = new GenerationContext();
         context.setDir(new File("dir"));
@@ -368,8 +363,8 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(version);
 
         EntityConditionBaseModelFactoryImpl factory = new EntityConditionBaseModelFactoryImpl();
-        EntityConditionBaseModel model = factory.getEntityConditionBaseModel(
-                entityDesc, "bar.AbstractFooCondition");
+        Object model = factory.getConditionBaseModel(entityDesc,
+                "bar.AbstractFooCondition");
 
         GenerationContext context = new GenerationContext();
         context.setDir(new File("dir"));
@@ -414,7 +409,7 @@ public class GeneratorImplTest {
 
         SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
                 new StandardGenDialect());
-        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+        Object model = factory.getSchemaModel(Arrays.asList(tableDesc,
                 tableDesc2));
 
         {
@@ -466,7 +461,7 @@ public class GeneratorImplTest {
 
         SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
                 new HsqlGenDialect());
-        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+        Object model = factory.getSchemaModel(Arrays.asList(tableDesc,
                 tableDesc2));
 
         {
@@ -588,7 +583,7 @@ public class GeneratorImplTest {
 
         SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
                 new HsqlGenDialect());
-        SchemaModel model = factory.getSchemaModel(tableDescList);
+        Object model = factory.getSchemaModel(tableDescList);
 
         {
             GenerationContext context = new GenerationContext();

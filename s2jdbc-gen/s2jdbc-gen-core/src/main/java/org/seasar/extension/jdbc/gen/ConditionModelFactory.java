@@ -15,13 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
  * {@link EntityConditionModel}のファクトリです。
  * 
  * @author taedium
  */
-public interface EntityConditionModelFactory {
+public interface ConditionModelFactory {
 
     /**
      * エンティティ条件クラスのモデルを返します。
@@ -34,6 +33,6 @@ public interface EntityConditionModelFactory {
      *            エンティティ条件基底クラス名
      * @return エンティティ条件クラスのモデル
      */
-    EntityConditionModel getEntityConditionModel(EntityDesc entityDesc,
-            String className, String baseClassName);
+    Object getConditionModel(EntityDesc entityDesc, String className,
+            String baseClassName);
 }

@@ -23,8 +23,6 @@ import javax.persistence.TemporalType;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.extension.jdbc.gen.EntityModel;
-import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 
 import static org.junit.Assert.*;
 
@@ -80,8 +78,8 @@ public class EntityModelFactoryImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
-                "aaa.bbb.ccc.AbstractHoge");
+        EntityModel model = factory.getEntityModel(entityDesc,
+                "aaa.bbb.Hoge", "aaa.bbb.ccc.AbstractHoge");
         assertEquals("aaa.bbb", model.getPackageName());
         assertEquals("aaa.bbb.Hoge", model.getClassName());
         assertEquals("Hoge", model.getShortClassName());

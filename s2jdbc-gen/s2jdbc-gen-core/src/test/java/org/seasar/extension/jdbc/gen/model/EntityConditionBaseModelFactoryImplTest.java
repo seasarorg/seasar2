@@ -22,9 +22,7 @@ import javax.persistence.TemporalType;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.EntityConditionBaseModel;
 import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModelFactoryImpl;
 
 import static org.junit.Assert.*;
 
@@ -82,8 +80,8 @@ public class EntityConditionBaseModelFactoryImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityConditionBaseModel model = factory.getEntityConditionBaseModel(
-                entityDesc, "aaa.bbb.ccc.AbstractHogeCondition");
+        ConditionBaseModel model = factory.getConditionBaseModel(entityDesc,
+                "aaa.bbb.ccc.AbstractHogeCondition");
         assertEquals("aaa.bbb.ccc", model.getPackageName());
         assertEquals("aaa.bbb.ccc.AbstractHogeCondition", model.getClassName());
         assertEquals("AbstractHogeCondition", model.getShortClassName());

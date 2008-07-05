@@ -16,8 +16,7 @@
 package org.seasar.extension.jdbc.gen.model;
 
 import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.EntityConditionBaseModel;
-import org.seasar.extension.jdbc.gen.EntityConditionBaseModelFactory;
+import org.seasar.extension.jdbc.gen.ConditionBaseModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
@@ -28,16 +27,16 @@ import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * {@link EntityConditionBaseModelFactory}の実装クラスです。
+ * {@link ConditionBaseModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
 public class EntityConditionBaseModelFactoryImpl implements
-        EntityConditionBaseModelFactory {
+        ConditionBaseModelFactory {
 
-    public EntityConditionBaseModel getEntityConditionBaseModel(
-            EntityDesc entityDesc, String className) {
-        EntityConditionBaseModel model = new EntityConditionBaseModel();
+    public ConditionBaseModel getConditionBaseModel(EntityDesc entityDesc,
+            String className) {
+        ConditionBaseModel model = new ConditionBaseModel();
         model.setClassName(className);
         String[] elements = ClassUtil.splitPackageAndShortClassName(className);
         model.setPackageName(elements[0]);
@@ -58,7 +57,7 @@ public class EntityConditionBaseModelFactoryImpl implements
      * @param entityDesc
      *            エンティティ記述
      */
-    protected void doImportPackageNames(EntityConditionBaseModel model,
+    protected void doImportPackageNames(ConditionBaseModel model,
             EntityDesc entityDesc) {
         model.addImportPackageName(ComplexWhere.class.getName());
         model.addImportPackageName(AbstractEntityCondition.class.getName());
