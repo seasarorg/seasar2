@@ -13,31 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.task;
+package org.seasar.extension.jdbc.gen.exception;
 
-import org.seasar.extension.jdbc.gen.command.DdlGenCommand;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * データベースのスキーマを作成するタスクです。
- * 
  * @author taedium
+ * 
  */
-public class GenSchemaTask extends AbstractGenTask {
+public class RequiredPropertyNullRuntimeException extends SRuntimeException {
 
-    /**
-     * インスタンスを構築します。
-     */
-    public GenSchemaTask() {
-        this(DdlGenCommand.class.getName());
+    private static final long serialVersionUID = 1L;
+
+    protected String propertyName;
+
+    public RequiredPropertyNullRuntimeException(String propertyName) {
+        super("ES2JDBCGen0001", new Object[] { propertyName });
+        this.propertyName = propertyName;
     }
 
-    /**
-     * インスタンスを構築します。
-     * 
-     * @param commandClassName
-     *            コマンドクラス名
-     */
-    public GenSchemaTask(String commandClassName) {
-        super(commandClassName);
+    public String getPropertyName() {
+        return propertyName;
     }
+
 }

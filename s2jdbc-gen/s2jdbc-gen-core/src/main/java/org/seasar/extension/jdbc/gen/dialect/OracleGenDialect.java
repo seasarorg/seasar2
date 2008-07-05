@@ -57,6 +57,17 @@ public class OracleGenDialect extends StandardGenDialect {
         return GenerationType.SEQUENCE;
     }
 
+    @Override
+    public boolean supprtsSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceDefinitionFragment(String dataType, int initValue,
+            int allocationSize) {
+        return "increment by " + allocationSize + " start with " + initValue;
+    }
+
     /**
      * Oracle用の{@link DataType}の実装です。
      * 

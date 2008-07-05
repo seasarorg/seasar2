@@ -84,6 +84,7 @@ public class SequenceDescFactoryImplTest {
         assertEquals("aaa", sequenceDesc.getSequenceName());
         assertEquals(10, sequenceDesc.getInitialValue());
         assertEquals(20, sequenceDesc.getAllocationSize());
+        assertEquals("number(10,0)", sequenceDesc.getDataType());
     }
 
     @Test
@@ -101,6 +102,7 @@ public class SequenceDescFactoryImplTest {
         assertEquals("HOGE_AUTO_ID", sequenceDesc.getSequenceName());
         assertEquals(1, sequenceDesc.getInitialValue());
         assertEquals(50, sequenceDesc.getAllocationSize());
+        assertEquals("number(10,0)", sequenceDesc.getDataType());
     }
 
     @Test

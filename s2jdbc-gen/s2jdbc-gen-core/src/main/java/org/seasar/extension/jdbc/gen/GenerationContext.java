@@ -39,6 +39,8 @@ public class GenerationContext {
     /** テンプレート名 */
     protected String templateName;
 
+    protected boolean overwrite;
+
     /**
      * エンコーディングを返します。
      * 
@@ -132,6 +134,25 @@ public class GenerationContext {
      */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
+    }
+
+    /**
+     * 上書きする場合は{@code true}、しない場合は{@code false}を返します。
+     * 
+     * @return 上書きする場合は{@code true}、しない場合は{@code false}
+     */
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    /**
+     * 上書きする場合は{@code true}、しない場合は{@code false}を設定します。
+     * 
+     * @param overwrite
+     *            上書きする場合は{@code true}、しない場合は{@code false}
+     */
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
     }
 
 }

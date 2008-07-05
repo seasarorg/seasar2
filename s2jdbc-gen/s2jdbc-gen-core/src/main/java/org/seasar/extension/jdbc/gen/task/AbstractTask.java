@@ -25,7 +25,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.seasar.extension.jdbc.gen.GenCommand;
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.util.BeanUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.ClassLoaderUtil;
@@ -40,10 +41,10 @@ import org.seasar.framework.util.MethodUtil;
  * 
  * @author taedium
  */
-public abstract class AbstractGenTask extends Task {
+public abstract class AbstractTask extends Task {
 
     /** コマンドクラスのインタフェースの名前 */
-    protected static String COMMAND_INTERFACE_NAME = "org.seasar.extension.jdbc.gen.GenCommand";
+    protected static String COMMAND_INTERFACE_NAME = "org.seasar.extension.jdbc.gen.Command";
 
     /** このタスクから実行するコマンドクラスの名前 */
     protected String commandClassName;
@@ -51,34 +52,102 @@ public abstract class AbstractGenTask extends Task {
     /** クラスパス */
     protected Path classpath;
 
+    /** diconファイル */
+    protected String diconFile;
+
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName;
+
+    /** ルートパッケージ名 */
+    protected String rootPackageName;
+
+    /** エンティティクラスのパッケージ名 */
+    protected String entityPackageName;
+
+    /** テンプレートファイルを格納するディレクトリ */
+    protected File templateDir;
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding;
+
     /**
      * 指定されたクラス名でインスタンスを構築します。
      * <p>
-     * {@code commandClassName}に指定するクラスは{@link GenCommand}を実装している必要があります。
+     * {@code commandClassName}に指定するクラスは{@link Command}を実装している必要があります。
      * </p>
      * 
      * @param commandClassName
      *            このタスクから処理が委譲されるクラスの名前です。
      */
-    public AbstractGenTask(String commandClassName) {
+    public AbstractTask(String commandClassName) {
         if (commandClassName == null) {
             throw new NullPointerException(commandClassName);
         }
         this.commandClassName = commandClassName;
     }
 
+    public String getDiconFile() {
+        return diconFile;
+    }
+
+    public void setDiconFile(String diconFile) {
+        this.diconFile = diconFile;
+    }
+
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
+    }
+
+    public String getEntityPackageName() {
+        return entityPackageName;
+    }
+
+    public void setEntityPackageName(String entityPackageName) {
+        this.entityPackageName = entityPackageName;
+    }
+
+    public File getTemplateDir() {
+        return templateDir;
+    }
+
+    public void setTemplateDir(File templateDir) {
+        this.templateDir = templateDir;
+    }
+
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        this.templateFileEncoding = templateFileEncoding;
+    }
+
     @Override
     public void execute() throws BuildException {
+        URL[] urls = toURLs(classpath.list());
+        ClassLoader classLoader = createClassLoader(urls);
+        Object command = createCommand(classLoader);
+        copyProperties(this, command);
+        executeCommand(classLoader, command);
+    }
+
+    protected void validate() {
         if (classpath == null) {
             throw new BuildException("classpath is not specified for '"
                     + getTaskName() + "' task");
         }
-        URL[] urls = toURLs(classpath.list());
-        ClassLoader cl = createClassLoader(urls);
-        Class<?> clazz = loadClass(commandClassName, cl);
-        Object command = ClassUtil.newInstance(clazz);
-        copy(this, command);
-        execute(clazz, command, cl);
     }
 
     /**
@@ -112,19 +181,26 @@ public abstract class AbstractGenTask extends Task {
     }
 
     /**
-     * 指定されたクラスローダーでクラスをロードします。
+     * 指定されたクラスローダーでコマンドのインスタンスを生成します。
      * 
-     * @param className
-     *            クラス名
      * @param classLoader
      *            クラスローダー
-     * @return ロードされたクラス
+     * @return コマンドのインスタンス
      */
-    protected Class<?> loadClass(String className, ClassLoader classLoader) {
+    protected Object createCommand(ClassLoader classLoader) {
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
         try {
-            return ClassUtil.forName(className);
+            Class<?> clazz = ClassLoaderUtil.loadClass(classLoader,
+                    commandClassName);
+            Class<?> commandInterface = ClassLoaderUtil.loadClass(classLoader,
+                    COMMAND_INTERFACE_NAME);
+            if (!commandInterface.isAssignableFrom(clazz)) {
+                throw new BuildException("class '" + clazz.getName()
+                        + "' must implement '" + COMMAND_INTERFACE_NAME
+                        + "' interface.");
+            }
+            return ClassUtil.newInstance(clazz);
         } finally {
             Thread.currentThread().setContextClassLoader(original);
         }
@@ -138,7 +214,7 @@ public abstract class AbstractGenTask extends Task {
      * @param dest
      *            コピー先
      */
-    protected void copy(Object src, Object dest) {
+    protected void copyProperties(Object src, Object dest) {
         BeanUtil.copy(this, dest);
     }
 
@@ -152,19 +228,12 @@ public abstract class AbstractGenTask extends Task {
      * @param classLoader
      *            コマンドを実行するクラスローダー
      */
-    protected void execute(Class<?> clazz, Object command,
-            ClassLoader classLoader) {
-        Class<?> commandClass = ClassLoaderUtil.loadClass(classLoader,
-                COMMAND_INTERFACE_NAME);
-        if (!commandClass.isAssignableFrom(clazz)) {
-            throw new BuildException("class '" + clazz.getName()
-                    + "' must implement '" + COMMAND_INTERFACE_NAME
-                    + "' interface.");
-        }
+    protected void executeCommand(ClassLoader classLoader, Object command) {
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
         try {
-            Method method = ClassUtil.getMethod(clazz, "execute", null);
+            Method method = ClassUtil.getMethod(command.getClass(), "execute",
+                    null);
             MethodUtil.invoke(method, command, null);
         } finally {
             Thread.currentThread().setContextClassLoader(original);

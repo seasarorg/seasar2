@@ -18,21 +18,35 @@ package org.seasar.extension.jdbc.gen.generator;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.TemporalType;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
+import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.EntityBaseModel;
 import org.seasar.extension.jdbc.gen.EntityConditionBaseModel;
 import org.seasar.extension.jdbc.gen.EntityConditionModel;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityModel;
+import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
+import org.seasar.extension.jdbc.gen.SequenceDesc;
+import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
+import org.seasar.extension.jdbc.gen.dialect.HsqlGenDialect;
+import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.SchemaModel;
+import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
@@ -47,7 +61,19 @@ import static org.junit.Assert.*;
  */
 public class GeneratorImplTest {
 
-    private Writer writer = new StringWriter();
+    private GeneratorImpl generator;
+
+    private Writer writer;
+
+    @Before
+    public void before() throws Exception {
+        File file = ResourceUtil.getResourceAsFile("templates");
+        Configuration configuration = new Configuration();
+        configuration.setObjectWrapper(new DefaultObjectWrapper());
+        configuration.setDirectoryForTemplateLoading(file);
+        generator = new GeneratorImplStub(configuration);
+        writer = new StringWriter();
+    }
 
     /**
      * 
@@ -79,13 +105,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_s2jdbcEntity() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
-
+    public void testGenerate_entity() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -133,11 +153,10 @@ public class GeneratorImplTest {
         context.setFile(new File("file"));
         context.setEncoding("UTF-8");
         context.setModel(model);
-        context.setTemplateName("s2jdbc-entity.ftl");
+        context.setTemplateName("entity.ftl");
 
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/")
-                + "_s2jdbc-entity.txt";
+        String path = getClass().getName().replace(".", "/") + "_entity.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
@@ -146,13 +165,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_s2jdbcEntityBase() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
-
+    public void testGenerate_entityBase() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -200,11 +213,11 @@ public class GeneratorImplTest {
         context.setFile(new File("file"));
         context.setEncoding("UTF-8");
         context.setModel(model);
-        context.setTemplateName("s2jdbc-entityBase.ftl");
+        context.setTemplateName("entity-base.ftl");
 
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
-                + "_s2jdbc-entityBase.txt";
+                + "_entity-base.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
@@ -213,13 +226,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_s2jdbcEntityBase_compositeId() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
-
+    public void testGenerate_entityBase_compositeId() throws Exception {
         AttributeDesc id1 = new AttributeDesc();
         id1.setName("id1");
         id1.setId(true);
@@ -244,11 +251,11 @@ public class GeneratorImplTest {
         context.setFile(new File("file"));
         context.setEncoding("UTF-8");
         context.setModel(model);
-        context.setTemplateName("s2jdbc-entityBase.ftl");
+        context.setTemplateName("entity-base.ftl");
 
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
-                + "_s2jdbc-entityBase_compositeId.txt";
+                + "_entity-base_compositeId.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
@@ -257,13 +264,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_s2jdbcEntityCondition() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
-
+    public void testGenerate_condition() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -313,11 +314,10 @@ public class GeneratorImplTest {
         context.setFile(new File("file"));
         context.setEncoding("UTF-8");
         context.setModel(model);
-        context.setTemplateName("s2jdbc-entityCondition.ftl");
+        context.setTemplateName("condition.ftl");
 
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/")
-                + "_s2jdbc-entityCondition.txt";
+        String path = getClass().getName().replace(".", "/") + "_condition.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
@@ -326,13 +326,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_s2jdbcEntityConditionBase() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
-
+    public void testGenerate_entityConditionBase() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -382,146 +376,245 @@ public class GeneratorImplTest {
         context.setFile(new File("file"));
         context.setEncoding("UTF-8");
         context.setModel(model);
-        context.setTemplateName("s2jdbc-entityConditionBase.ftl");
+        context.setTemplateName("condition-base.ftl");
 
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
-                + "_s2jdbc-entityConditionBase.txt";
+                + "_condition-base.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testGenerate_jpaEntity() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
+    public void testGenerate_table() throws Exception {
+        ColumnDesc no = new ColumnDesc();
+        no.setName("no");
+        no.setDefinition("integer");
+        no.setNullable(false);
+        no.setUnique(true);
 
-        AttributeDesc id = new AttributeDesc();
-        id.setName("id");
-        id.setId(true);
-        id.setAttributeClass(int.class);
-
-        AttributeDesc name = new AttributeDesc();
+        ColumnDesc name = new ColumnDesc();
         name.setName("name");
-        name.setAttributeClass(String.class);
+        name.setDefinition("varchar");
+        name.setNullable(true);
+        name.setUnique(false);
 
-        AttributeDesc lob = new AttributeDesc();
-        lob.setName("lob");
-        lob.setLob(true);
-        lob.setAttributeClass(byte[].class);
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
+        tableDesc.addColumnDesc(no);
+        tableDesc.addColumnDesc(name);
 
-        AttributeDesc date = new AttributeDesc();
-        date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
+        TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.setCatalogName("AAA");
+        tableDesc2.setSchemaName("BBB");
+        tableDesc2.setName("FOO");
+        tableDesc2.addColumnDesc(no);
+        tableDesc2.addColumnDesc(name);
 
-        AttributeDesc temp = new AttributeDesc();
-        temp.setName("temp");
-        temp.setTransient(true);
-        temp.setAttributeClass(String.class);
+        SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
+                new StandardGenDialect());
+        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+                tableDesc2));
 
-        AttributeDesc version = new AttributeDesc();
-        version.setName("version");
-        version.setVersion(true);
-        version.setAttributeClass(Integer.class);
-
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
-
-        EntityModelFactoryImpl factory = new EntityModelFactoryImpl();
-        EntityModel model = factory.getEntityModel(entityDesc, "hoge.Foo",
-                "bar.AbstractFoo");
-
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("jpa-entity.ftl");
-
-        generator.generate(context);
-        String path = getClass().getName().replace(".", "/")
-                + "_jpa-entity.txt";
-        assertEquals(TextUtil.readUTF8(path), writer.toString());
+        {
+            GenerationContext context = new GenerationContext();
+            context.setDir(new File("dir"));
+            context.setFile(new File("file"));
+            context.setEncoding("UTF-8");
+            context.setModel(model);
+            context.setTemplateName("create-table.ftl");
+            generator.generate(context);
+            String path = getClass().getName().replace(".", "/")
+                    + "_create-table.txt";
+            assertEquals(TextUtil.readUTF8(path), writer.toString());
+        }
+        writer = new StringWriter();
+        {
+            GenerationContext context = new GenerationContext();
+            context.setDir(new File("dir"));
+            context.setFile(new File("file"));
+            context.setEncoding("UTF-8");
+            context.setModel(model);
+            context.setTemplateName("drop-table.ftl");
+            generator.generate(context);
+            String path = getClass().getName().replace(".", "/")
+                    + "_drop-table.txt";
+            assertEquals(TextUtil.readUTF8(path), writer.toString());
+        }
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testGenerate_jpaEntityBase() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
+    public void testGenerate_sequence() throws Exception {
+        SequenceDesc sequenceDesc = new SequenceDesc();
+        sequenceDesc.setSequenceName("HOGE");
+        sequenceDesc.setInitialValue(1);
+        sequenceDesc.setAllocationSize(50);
+        sequenceDesc.setDataType("integer");
 
-        AttributeDesc id = new AttributeDesc();
-        id.setName("id");
-        id.setId(true);
-        id.setAttributeClass(int.class);
+        SequenceDesc sequenceDesc2 = new SequenceDesc();
+        sequenceDesc2.setSequenceName("FOO");
+        sequenceDesc2.setInitialValue(10);
+        sequenceDesc2.setAllocationSize(20);
+        sequenceDesc2.setDataType("integer");
 
-        AttributeDesc name = new AttributeDesc();
-        name.setName("name");
-        name.setAttributeClass(String.class);
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.addSequenceDesc(sequenceDesc);
 
-        AttributeDesc lob = new AttributeDesc();
-        lob.setName("lob");
-        lob.setLob(true);
-        lob.setAttributeClass(byte[].class);
+        TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        AttributeDesc date = new AttributeDesc();
-        date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
+        SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
+                new HsqlGenDialect());
+        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+                tableDesc2));
 
-        AttributeDesc temp = new AttributeDesc();
-        temp.setName("temp");
-        temp.setTransient(true);
-        temp.setAttributeClass(String.class);
+        {
+            GenerationContext context = new GenerationContext();
+            context.setDir(new File("dir"));
+            context.setFile(new File("file"));
+            context.setEncoding("UTF-8");
+            context.setModel(model);
+            context.setTemplateName("create-sequence.ftl");
+            generator.generate(context);
+            String path = getClass().getName().replace(".", "/")
+                    + "_create-sequence.txt";
+            assertEquals(TextUtil.readUTF8(path), writer.toString());
+        }
+        writer = new StringWriter();
+        {
+            GenerationContext context = new GenerationContext();
+            context.setDir(new File("dir"));
+            context.setFile(new File("file"));
+            context.setEncoding("UTF-8");
+            context.setModel(model);
+            context.setTemplateName("drop-sequence.ftl");
+            generator.generate(context);
+            String path = getClass().getName().replace(".", "/")
+                    + "_drop-sequence.txt";
+            assertEquals(TextUtil.readUTF8(path), writer.toString());
+        }
+    }
 
-        AttributeDesc version = new AttributeDesc();
-        version.setName("version");
-        version.setVersion(true);
-        version.setAttributeClass(Integer.class);
+    @Test
+    public void testGenerate_constraint() throws Exception {
+        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
+        {
+            PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+            primaryKeyDesc.addColumnName("PK1");
+            primaryKeyDesc.addColumnName("PK2");
 
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
+            UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
+            uniqueKeyDesc.addColumnName("UK1-1");
+            uniqueKeyDesc.addColumnName("UK1-2");
 
-        EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        EntityBaseModel model = factory.getEntityBaseModel(entityDesc,
-                "bar.AbstractFoo");
+            UniqueKeyDesc uniqueKeyDesc2 = new UniqueKeyDesc();
+            uniqueKeyDesc2.addColumnName("UK2-1");
+            uniqueKeyDesc2.addColumnName("UK2-2");
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("jpa-entityBase.ftl");
+            ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
+            foreignKeyDesc.addColumnName("FK1-1");
+            foreignKeyDesc.addColumnName("FK1-2");
+            foreignKeyDesc.setReferencedCatalogName("CCC");
+            foreignKeyDesc.setReferencedSchemaName("DDD");
+            foreignKeyDesc.setReferencedTableName("FOO");
+            foreignKeyDesc.addReferencedColumnName("REF1-1");
+            foreignKeyDesc.addReferencedColumnName("REF1-2");
 
-        generator.generate(context);
-        String path = getClass().getName().replace(".", "/")
-                + "_jpa-entityBase.txt";
-        assertEquals(TextUtil.readUTF8(path), writer.toString());
+            ForeignKeyDesc foreignKeyDesc2 = new ForeignKeyDesc();
+            foreignKeyDesc2.addColumnName("FK2-1");
+            foreignKeyDesc2.addColumnName("FK2-2");
+            foreignKeyDesc2.setReferencedCatalogName("EEE");
+            foreignKeyDesc2.setReferencedSchemaName("FFF");
+            foreignKeyDesc2.setReferencedTableName("BAR");
+            foreignKeyDesc2.addReferencedColumnName("REF2-1");
+            foreignKeyDesc2.addReferencedColumnName("REF2-2");
+
+            TableDesc tableDesc = new TableDesc();
+            tableDesc.setCatalogName("AAA");
+            tableDesc.setSchemaName("BBB");
+            tableDesc.setName("HOGE");
+            tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
+            tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
+            tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
+            tableDesc.addForeignKeyDesc(foreignKeyDesc);
+            tableDesc.addForeignKeyDesc(foreignKeyDesc2);
+
+            tableDescList.add(tableDesc);
+        }
+        {
+            PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+            primaryKeyDesc.addColumnName("PK1");
+            primaryKeyDesc.addColumnName("PK2");
+
+            UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
+            uniqueKeyDesc.addColumnName("UK1-1");
+            uniqueKeyDesc.addColumnName("UK1-2");
+
+            UniqueKeyDesc uniqueKeyDesc2 = new UniqueKeyDesc();
+            uniqueKeyDesc2.addColumnName("UK2-1");
+            uniqueKeyDesc2.addColumnName("UK2-2");
+
+            ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
+            foreignKeyDesc.addColumnName("FK1-1");
+            foreignKeyDesc.addColumnName("FK1-2");
+            foreignKeyDesc.setReferencedCatalogName("CCC");
+            foreignKeyDesc.setReferencedSchemaName("DDD");
+            foreignKeyDesc.setReferencedTableName("FOO");
+            foreignKeyDesc.addReferencedColumnName("REF1-1");
+            foreignKeyDesc.addReferencedColumnName("REF1-2");
+
+            ForeignKeyDesc foreignKeyDesc2 = new ForeignKeyDesc();
+            foreignKeyDesc2.addColumnName("FK2-1");
+            foreignKeyDesc2.addColumnName("FK2-2");
+            foreignKeyDesc2.setReferencedCatalogName("EEE");
+            foreignKeyDesc2.setReferencedSchemaName("FFF");
+            foreignKeyDesc2.setReferencedTableName("BAR");
+            foreignKeyDesc2.addReferencedColumnName("REF2-1");
+            foreignKeyDesc2.addReferencedColumnName("REF2-2");
+
+            TableDesc tableDesc = new TableDesc();
+            tableDesc.setCatalogName("AAA");
+            tableDesc.setSchemaName("BBB");
+            tableDesc.setName("FOO");
+            tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
+            tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
+            tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
+            tableDesc.addForeignKeyDesc(foreignKeyDesc);
+            tableDesc.addForeignKeyDesc(foreignKeyDesc2);
+
+            tableDescList.add(tableDesc);
+        }
+
+        SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
+                new HsqlGenDialect());
+        SchemaModel model = factory.getSchemaModel(tableDescList);
+
+        {
+            GenerationContext context = new GenerationContext();
+            context.setDir(new File("dir"));
+            context.setFile(new File("file"));
+            context.setEncoding("UTF-8");
+            context.setModel(model);
+            context.setTemplateName("create-constraint.ftl");
+            generator.generate(context);
+            String path = getClass().getName().replace(".", "/")
+                    + "_create-constraint.txt";
+            assertEquals(TextUtil.readUTF8(path), writer.toString());
+        }
+        writer = new StringWriter();
+        {
+            GenerationContext context = new GenerationContext();
+            context.setDir(new File("dir"));
+            context.setFile(new File("file"));
+            context.setEncoding("UTF-8");
+            context.setModel(model);
+            context.setTemplateName("drop-constraint.ftl");
+            generator.generate(context);
+            String path = getClass().getName().replace(".", "/")
+                    + "_drop-constraint.txt";
+            assertEquals(TextUtil.readUTF8(path), writer.toString());
+        }
     }
 
     /**

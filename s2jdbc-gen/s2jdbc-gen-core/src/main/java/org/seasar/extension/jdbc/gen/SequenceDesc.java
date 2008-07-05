@@ -27,6 +27,8 @@ public class SequenceDesc {
 
     protected int allocationSize;
 
+    protected String dataType;
+
     public String getSequenceName() {
         return sequenceName;
     }
@@ -49,6 +51,14 @@ public class SequenceDesc {
 
     public void setAllocationSize(int allocationSize) {
         this.allocationSize = allocationSize;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     @Override

@@ -94,4 +94,13 @@ public interface GenDialect {
      */
     GenerationType getDefaultGenerationType();
 
+    String getOpenQuote();
+
+    String getCloseQuote();
+
+    boolean supprtsSequence();
+
+    String getSequenceDefinitionFragment(String dataType, int initValue,
+            int allocationSize);
+
 }

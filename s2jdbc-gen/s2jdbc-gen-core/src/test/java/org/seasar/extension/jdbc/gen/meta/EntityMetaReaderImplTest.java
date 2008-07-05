@@ -65,8 +65,8 @@ public class EntityMetaReaderImplTest {
     @Test
     public void testRead() throws Exception {
         EntityMetaReaderImpl reader = new EntityMetaReaderImpl(rootDir,
-                packageName, "A.*", entityMetaFactory);
+                packageName, entityMetaFactory);
         List<EntityMeta> list = reader.read();
-        assertEquals(2, list.size());
+        assertEquals(3, list.size());
     }
 }

@@ -67,6 +67,7 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
             sequenceDesc.setSequenceName(sequenceName);
             sequenceDesc.setInitialValue(generator.initialValue());
             sequenceDesc.setAllocationSize(generator.allocationSize());
+            sequenceDesc.setDataType(getDataType(propertyMeta));
             return sequenceDesc;
         }
         return null;
@@ -88,5 +89,10 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
         }
         return entityMeta.getTableMeta().getName() + "_"
                 + propertyMeta.getColumnMeta().getName();
+    }
+
+    protected String getDataType(PropertyMeta propertyMeta) {
+        int sqlType = propertyMeta.getValueType().getSqlType();
+        return dialect.getDataType(sqlType).getDefinition(0, 20, 0);
     }
 }

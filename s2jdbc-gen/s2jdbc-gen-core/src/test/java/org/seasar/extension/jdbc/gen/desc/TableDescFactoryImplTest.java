@@ -67,11 +67,11 @@ public class TableDescFactoryImplTest {
         GenDialect dialect = new StandardGenDialect();
         ColumnDescFactoryImpl cdf = new ColumnDescFactoryImpl(dialect);
         PrimaryKeyDescFactoryImpl pkdf = new PrimaryKeyDescFactoryImpl(dialect);
+        UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl();
         ForeignKeyDescFactoryImpl fkdf = new ForeignKeyDescFactoryImpl(
                 entityMetaFactory);
-        UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl();
         SequenceDescFactoryImpl sdf = new SequenceDescFactoryImpl(dialect);
-        tableDescFactory = new TableDescFactoryImpl(cdf, pkdf, fkdf, ukdf, sdf);
+        tableDescFactory = new TableDescFactoryImpl(cdf, pkdf, ukdf, fkdf, sdf);
     }
 
     @Test
@@ -109,7 +109,7 @@ public class TableDescFactoryImplTest {
     public void testForeignKeyDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
-        assertEquals(1, tableDesc.getForeigneKeyDescList().size());
+        assertEquals(1, tableDesc.getForeignKeyDescList().size());
     }
 
     @Test

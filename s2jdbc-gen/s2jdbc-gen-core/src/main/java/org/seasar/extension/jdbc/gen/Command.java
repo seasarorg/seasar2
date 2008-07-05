@@ -13,27 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.exception;
-
-import org.seasar.framework.exception.SRuntimeException;
-
-import freemarker.template.TemplateException;
+package org.seasar.extension.jdbc.gen;
 
 /**
- * <code>TemplateException</code>をラップする例外です。
+ * 生成を実行するコマンドを表すインタフェースです。
  * 
  * @author taedium
  */
-public class TemplateRuntimeException extends SRuntimeException {
-
-    private static final long serialVersionUID = 1L;
+public interface Command {
 
     /**
-     * {@link TemplateRuntimeException}を生成します。
-     * 
-     * @param cause
+     * 実行します。
      */
-    public TemplateRuntimeException(TemplateException cause) {
-        super("ES2JDBCGen0002", new Object[] { cause }, cause);
-    }
+    void execute();
+
 }

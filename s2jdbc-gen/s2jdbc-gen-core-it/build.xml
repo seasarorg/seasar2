@@ -1,4 +1,4 @@
-<project name="s2jdbc-gen-core-it" default="s2jdbc-entity-gen" basedir=".">
+<project name="s2jdbc-gen-core-it" default="generate-entity" basedir=".">
 
 	<path id="classpath">
 		<fileset dir="lib"/>
@@ -8,18 +8,17 @@
 	
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
 
-	<target name="s2jdbc-entity-gen" >
-		<s2jdbc-entity-gen
-			tableNamePattern="A.*" 
+	<target name="generate-entity" >
+		<gen-entity
 			classpathref="classpath"
 		/>
 	</target>
 
-	<target name="jpa-entity-gen" >
-		<jpa-entity-gen 
-			tableNamePattern="A.*" 
+	<target name="generate-ddl" >
+		<gen-ddl 
+			classpathRootDir="build/classes"
 			classpathref="classpath"
 		/>
 	</target>
-	
+
 </project>

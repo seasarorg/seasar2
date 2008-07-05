@@ -78,17 +78,17 @@ public class TableDescFactoryImpl implements TableDescFactory {
      *            カラム記述のファクトリ
      * @param primaryKeyDescFactory
      *            主キー記述のファクトリ
-     * @param foreignKeyDescFactory
-     *            外部キー記述のファクトリ
      * @param uniqueKeyDescFactory
      *            一意キー記述のファクトリ
+     * @param foreignKeyDescFactory
+     *            外部キー記述のファクトリ
      * @param sequenceDescFactory
      *            シーケンス記述のファクトリ
      */
     public TableDescFactoryImpl(ColumnDescFactory columnDescFactory,
             PrimaryKeyDescFactory primaryKeyDescFactory,
-            ForeignKeyDescFactory foreignKeyDescFactory,
             UniqueKeyDescFactory uniqueKeyDescFactory,
+            ForeignKeyDescFactory foreignKeyDescFactory,
             SequenceDescFactory sequenceDescFactory) {
         if (columnDescFactory == null) {
             throw new NullPointerException("columnDescFactory");
@@ -96,19 +96,19 @@ public class TableDescFactoryImpl implements TableDescFactory {
         if (primaryKeyDescFactory == null) {
             throw new NullPointerException("primaryKeyDescFactory");
         }
-        if (foreignKeyDescFactory == null) {
-            throw new NullPointerException("foreignKeyDescFactory");
-        }
         if (uniqueKeyDescFactory == null) {
             throw new NullPointerException("uniqueKeyDescFactory");
+        }
+        if (foreignKeyDescFactory == null) {
+            throw new NullPointerException("foreignKeyDescFactory");
         }
         if (sequenceDescFactory == null) {
             throw new NullPointerException("sequenceDescFactory");
         }
         this.columnDescFactory = columnDescFactory;
         this.primaryKeyDescFactory = primaryKeyDescFactory;
-        this.foreignKeyDescFactory = foreignKeyDescFactory;
         this.uniqueKeyDescFactory = uniqueKeyDescFactory;
+        this.foreignKeyDescFactory = foreignKeyDescFactory;
         this.sequenceDescFactory = sequenceDescFactory;
     }
 
@@ -219,7 +219,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
             ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
                     .getForeignKeyDesc(propertyMeta);
             if (foreignKeyDesc != null) {
-                tableDesc.addForeigneKeyDesc(foreignKeyDesc);
+                tableDesc.addForeignKeyDesc(foreignKeyDesc);
             }
         }
     }

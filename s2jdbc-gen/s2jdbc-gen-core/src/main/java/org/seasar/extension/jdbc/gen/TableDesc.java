@@ -42,7 +42,7 @@ public class TableDesc {
     protected PrimaryKeyDesc primaryKeyDesc;
 
     /** 外部キー記述のリスト */
-    protected List<ForeignKeyDesc> foreigneKeyDescList = new ArrayList<ForeignKeyDesc>();
+    protected List<ForeignKeyDesc> foreignKeyDescList = new ArrayList<ForeignKeyDesc>();
 
     /** 一意キー記述のリスト */
     protected List<UniqueKeyDesc> uniqueKeyDescList = new ArrayList<UniqueKeyDesc>();
@@ -152,19 +152,19 @@ public class TableDesc {
      * 
      * @return 外部キー記述
      */
-    public List<ForeignKeyDesc> getForeigneKeyDescList() {
-        return Collections.unmodifiableList(foreigneKeyDescList);
+    public List<ForeignKeyDesc> getForeignKeyDescList() {
+        return Collections.unmodifiableList(foreignKeyDescList);
     }
 
     /**
      * 外部キー記述を追加します。
      * 
-     * @param foreigneKeyDesc
+     * @param foreignKeyDesc
      *            外部キー記述
      */
-    public void addForeigneKeyDesc(ForeignKeyDesc foreigneKeyDesc) {
-        if (!foreigneKeyDescList.contains(foreigneKeyDesc)) {
-            foreigneKeyDescList.add(foreigneKeyDesc);
+    public void addForeignKeyDesc(ForeignKeyDesc foreignKeyDesc) {
+        if (!foreignKeyDescList.contains(foreignKeyDesc)) {
+            foreignKeyDescList.add(foreignKeyDesc);
         }
     }
 

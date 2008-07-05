@@ -13,18 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.exception;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * 生成を実行するコマンドを表すインタフェースです。
- * 
  * @author taedium
+ * 
  */
-public interface GenCommand {
+public class RequiredPropertyNullRuntimeExceptionTest {
 
-    /**
-     * 実行します。
-     */
-    void execute();
-
+    @Test
+    public void test() throws Exception {
+        RequiredPropertyNullRuntimeException e = new RequiredPropertyNullRuntimeException(
+                "hoge");
+        System.out.println(e.getMessage());
+        assertEquals("hoge", e.getPropertyName());
+    }
 }

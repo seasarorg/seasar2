@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.meta;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import javax.persistence.Entity;
 
@@ -39,27 +38,21 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
 
     protected String packageName;
 
-    protected Pattern shortClassNamePattern;
-
     protected EntityMetaFactory entityMetaFactory;
 
     public EntityMetaReaderImpl(File rootDir, String packageName,
-            String shortClassNamePattern, EntityMetaFactory entityMetaFactory) {
+            EntityMetaFactory entityMetaFactory) {
         if (rootDir == null) {
             throw new NullPointerException("rootDir");
         }
         if (packageName == null) {
             throw new NullPointerException("packageName");
         }
-        if (shortClassNamePattern == null) {
-            throw new NullPointerException("shortClassNamePattern");
-        }
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
         this.rootDir = rootDir;
         this.packageName = packageName;
-        this.shortClassNamePattern = Pattern.compile(shortClassNamePattern);
         this.entityMetaFactory = entityMetaFactory;
     }
 
@@ -71,9 +64,6 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
 
             public void processClass(String packageName, String shortClassName) {
                 if (!packageName.startsWith(packageNamePrefix)) {
-                    return;
-                }
-                if (!shortClassNamePattern.matcher(shortClassName).matches()) {
                     return;
                 }
                 String className = ClassUtil.concatName(packageName,

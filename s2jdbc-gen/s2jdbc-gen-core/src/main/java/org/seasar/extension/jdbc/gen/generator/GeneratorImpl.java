@@ -57,11 +57,7 @@ public class GeneratorImpl implements Generator {
     }
 
     public void generate(GenerationContext context) {
-        generate(context, false);
-    }
-
-    public void generate(GenerationContext context, boolean overwrite) {
-        if (!overwrite && exists(context.getFile())) {
+        if (!context.isOverwrite() && exists(context.getFile())) {
             return;
         }
         mkdirs(context.getDir());

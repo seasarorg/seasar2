@@ -26,15 +26,39 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class AbstractEntityGenCommandTest {
+public class EntityGenCommandTest {
+
+    /**
+     * 
+     */
+    @Test
+    public void testGetEntityConditionClassName() {
+        EntityGenCommand command = new EntityGenCommand();
+        command.setRootPackageName("aaa");
+        command.setConditionPackageName("bbb");
+        command.setConditionClassNameSuffix("$");
+        String name = command.getEntityConditionClassName("Hoge");
+        assertEquals("aaa.bbb.Hoge$", name);
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testGetEntityConditionBaseClassName() {
+        EntityGenCommand command = new EntityGenCommand();
+        command.setRootPackageName("aaa");
+        command.setConditionBasePackageName("bbb");
+        String name = command.getEntityConditionBaseClassName("Hoge");
+        assertEquals("aaa.bbb.AbstractHogeCondition", name);
+    }
 
     /**
      * 
      */
     @Test
     public void testGetEntityClassName() {
-        AbstractEntityGenCommand command = new AbstractEntityGenCommand() {
-        };
+        EntityGenCommand command = new EntityGenCommand();
         command.setRootPackageName("aaa");
         command.setEntityPackageName("bbb");
         String name = command.getEntityClassName("Hoge");
@@ -46,11 +70,10 @@ public class AbstractEntityGenCommandTest {
      */
     @Test
     public void testGetEntityBaseClassName() {
-        AbstractEntityGenCommand command = new AbstractEntityGenCommand() {
-        };
+        EntityGenCommand command = new EntityGenCommand();
         command.setRootPackageName("aaa");
         command.setEntityBasePackageName("bbb");
-        command.setEntityBaseClassNamePrefix("_");
+        command.setBaseClassNamePrefix("_");
         String name = command.getEntityBaseClassName("Hoge");
         assertEquals("aaa.bbb._Hoge", name);
     }
@@ -60,13 +83,12 @@ public class AbstractEntityGenCommandTest {
      */
     @Test
     public void testGetGenerationContext() {
-        AbstractEntityGenCommand command = new AbstractEntityGenCommand() {
-        };
+        EntityGenCommand command = new EntityGenCommand();
         command.setDestDir(new File("hoge/foo"));
         command.setJavaFileEncoding("Shift_JIS");
         Object model = new Object();
         GenerationContext context = command.getGenerationContext(model,
-                "aaa.bbb.Hoge", "ccc.ftl");
+                "aaa.bbb.Hoge", "ccc.ftl", false);
         assertNotNull(context);
         assertEquals(new File("hoge/foo/aaa/bbb"), context.getDir());
         assertEquals(new File("hoge/foo/aaa/bbb/Hoge.java"), context.getFile());

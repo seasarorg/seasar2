@@ -31,4 +31,15 @@ public class MssqlGenDialect extends StandardGenDialect {
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }
+
+    @Override
+    public String getOpenQuote() {
+        return "[";
+    }
+
+    @Override
+    public String getCloseQuote() {
+        return "]";
+    }
+
 }

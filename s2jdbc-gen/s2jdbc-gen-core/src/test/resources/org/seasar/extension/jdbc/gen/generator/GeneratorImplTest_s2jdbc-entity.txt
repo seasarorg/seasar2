@@ -1,8 +1,0 @@
-package hoge;
-
-import bar.AbstractFoo;
-import javax.persistence.Entity;
-
-@Entity
-public class Foo extends AbstractFoo {
-}

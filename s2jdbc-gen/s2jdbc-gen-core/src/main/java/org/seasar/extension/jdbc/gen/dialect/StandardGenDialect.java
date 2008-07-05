@@ -152,6 +152,23 @@ public class StandardGenDialect implements GenDialect {
         return GenerationType.TABLE;
     }
 
+    public String getOpenQuote() {
+        return "\"";
+    }
+
+    public String getCloseQuote() {
+        return "\"";
+    }
+
+    public boolean supprtsSequence() {
+        return false;
+    }
+
+    public String getSequenceDefinitionFragment(String dataType, int initValue,
+            int allocationSize) {
+        throw new UnsupportedOperationException("getSequenceDefinitionFragment");
+    }
+
     /**
      * 標準的な{@link DataType}の実装クラスです。
      * 

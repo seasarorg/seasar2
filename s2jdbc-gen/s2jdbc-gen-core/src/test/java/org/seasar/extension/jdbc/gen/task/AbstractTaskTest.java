@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.task;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -23,7 +22,7 @@ import java.net.URL;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenCommand;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.framework.exception.IORuntimeException;
 
 import static org.junit.Assert.*;
@@ -32,11 +31,11 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class AbstractGenTaskTest {
+public class AbstractTaskTest {
 
     private String commandClassName;
 
-    private AbstractGenTask task;
+    private AbstractTask task;
 
     private ClassLoader classLoader;
 
@@ -47,17 +46,9 @@ public class AbstractGenTaskTest {
     @Before
     public void setUp() throws Exception {
         commandClassName = getClass().getName() + "$Hoge";
-        task = new AbstractGenTaskStub(commandClassName);
-
-        String classpath = System.getProperty("java.class.path");
-        String pathSeparator = System.getProperty("path.separator");
-        String[] paths = classpath.split("\\" + pathSeparator);
-        URL[] urls = new URL[paths.length];
-        for (int i = 0; i < paths.length; i++) {
-            urls[i] = new File(paths[i]).toURL();
-        }
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        classLoader = new ChildFirstClassLoader(cl);
+        task = new AbstractTaskStub(commandClassName);
+        classLoader = new ChildFirstClassLoader(Thread.currentThread()
+                .getContextClassLoader());
     }
 
     /**
@@ -75,10 +66,10 @@ public class AbstractGenTaskTest {
      * @throws Exception
      */
     @Test
-    public void testLoadClass() throws Exception {
-        Class<?> clazz = task.loadClass(getClass().getName() + "$Hoge",
-                classLoader);
-        assertEquals(classLoader, clazz.getClassLoader());
+    public void testCreateCommand() throws Exception {
+        Object command = task.createCommand(classLoader);
+        assertNotNull(command);
+        assertEquals(classLoader, command.getClass().getClassLoader());
     }
 
     /**
@@ -86,12 +77,12 @@ public class AbstractGenTaskTest {
      * @throws Exception
      */
     @Test
-    public void testExecute() throws Exception {
+    public void testExecuteCommand() throws Exception {
         Class<?> clazz = Class.forName(commandClassName, true, classLoader);
-        Object hoge = clazz.newInstance();
-        task.execute(clazz, hoge, classLoader);
+        Object command = clazz.newInstance();
+        task.executeCommand(classLoader, command);
         Field field = clazz.getField("foo");
-        Object foo = field.get(hoge);
+        Object foo = field.get(command);
         assertNotNull(foo);
         assertEquals(classLoader, foo.getClass().getClassLoader());
     }
@@ -99,7 +90,7 @@ public class AbstractGenTaskTest {
     /**
      * 
      */
-    public static class Hoge implements GenCommand {
+    public static class Hoge implements Command {
 
         /**
          * 
@@ -168,13 +159,13 @@ public class AbstractGenTaskTest {
      * @author taedium
      * 
      */
-    public static class AbstractGenTaskStub extends AbstractGenTask {
+    public static class AbstractTaskStub extends AbstractTask {
 
         /**
          * 
          * @param commandClassName
          */
-        public AbstractGenTaskStub(String commandClassName) {
+        public AbstractTaskStub(String commandClassName) {
             super(commandClassName);
         }
     }

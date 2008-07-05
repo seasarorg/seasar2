@@ -15,25 +15,20 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
-import org.seasar.framework.exception.SRuntimeException;
+import org.junit.Test;
 
 import freemarker.template.TemplateException;
 
 /**
- * <code>TemplateException</code>をラップする例外です。
- * 
  * @author taedium
+ * 
  */
-public class TemplateRuntimeException extends SRuntimeException {
+public class TemplateRuntimeExceptionTest {
 
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * {@link TemplateRuntimeException}を生成します。
-     * 
-     * @param cause
-     */
-    public TemplateRuntimeException(TemplateException cause) {
-        super("ES2JDBCGen0002", new Object[] { cause }, cause);
+    @Test
+    public void test() throws Exception {
+        TemplateRuntimeException e = new TemplateRuntimeException(
+                new TemplateException(null));
+        System.out.println(e.getMessage());
     }
 }

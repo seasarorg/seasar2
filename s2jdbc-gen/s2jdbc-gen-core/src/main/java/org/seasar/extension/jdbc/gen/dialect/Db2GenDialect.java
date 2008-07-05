@@ -31,4 +31,16 @@ public class Db2GenDialect extends StandardGenDialect {
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }
+
+    @Override
+    public boolean supprtsSequence() {
+        return true;
+    }
+
+    @Override
+    public String getSequenceDefinitionFragment(String dataType, int initValue,
+            int allocationSize) {
+        return "as " + dataType + " start with " + allocationSize
+                + " increment by " + initValue;
+    }
 }
