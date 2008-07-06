@@ -72,7 +72,7 @@ public EmployeeService extends AbstractService<Employee> {
 			<source><![CDATA[
 public abstract AbstractOracleService<T> extends S2AbstractService<T> {
     
-    @Resource(name = "oracleJdbcManager");
+    @Resource(name = "oracleJdbcManager")
     public void setJdbcManager(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
     }
@@ -81,7 +81,7 @@ public abstract AbstractOracleService<T> extends S2AbstractService<T> {
 
 public abstract AbstractDb2Service<T> extends S2AbstractService<T> {
     
-    @Resource(name = "db2JdbcManager");
+    @Resource(name = "db2JdbcManager")
     public void setJdbcManager(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
     }
