@@ -15,20 +15,31 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.EntityDesc;
+import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
+import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
 import static org.junit.Assert.*;
 
@@ -38,7 +49,26 @@ import static org.junit.Assert.*;
  */
 public class ConditionModelFactoryImplTest {
 
-    private ConditionModelFactoryImpl factory = new ConditionModelFactoryImpl();
+    private EntityMetaFactoryImpl entityMetaFactory;
+
+    private ConditionModelFactoryImpl conditionModelfactory;
+
+    @Before
+    public void setUp() throws Exception {
+        PersistenceConvention pc = new PersistenceConventionImpl();
+        ColumnMetaFactoryImpl cmf = new ColumnMetaFactoryImpl();
+        cmf.setPersistenceConvention(pc);
+        PropertyMetaFactoryImpl propertyMetaFactory = new PropertyMetaFactoryImpl();
+        propertyMetaFactory.setPersistenceConvention(pc);
+        propertyMetaFactory.setColumnMetaFactory(cmf);
+        TableMetaFactoryImpl tmf = new TableMetaFactoryImpl();
+        tmf.setPersistenceConvention(pc);
+        entityMetaFactory = new EntityMetaFactoryImpl();
+        entityMetaFactory.setPersistenceConvention(pc);
+        entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
+        entityMetaFactory.setTableMetaFactory(tmf);
+        conditionModelfactory = new ConditionModelFactoryImpl();
+    }
 
     /**
      * 
@@ -46,45 +76,10 @@ public class ConditionModelFactoryImplTest {
      */
     @Test
     public void testGetConditionModel() throws Exception {
-        AttributeDesc id = new AttributeDesc();
-        id.setName("id");
-        id.setId(true);
-        id.setAttributeClass(int.class);
-        id.setNullable(false);
-
-        AttributeDesc name = new AttributeDesc();
-        name.setName("name");
-        name.setAttributeClass(String.class);
-        name.setNullable(false);
-
-        AttributeDesc nullableName = new AttributeDesc();
-        nullableName.setName("nullableName");
-        nullableName.setAttributeClass(String.class);
-        nullableName.setNullable(true);
-
-        AttributeDesc date = new AttributeDesc();
-        date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
-        date.setNullable(false);
-
-        AttributeDesc nullableDate = new AttributeDesc();
-        nullableDate.setName("nullableDate");
-        nullableDate.setTemporalType(TemporalType.DATE);
-        nullableDate.setAttributeClass(java.util.Date.class);
-        nullableDate.setNullable(true);
-
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(nullableName);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(nullableDate);
-
-        ConditionModel model = factory.getConditionModel(entityDesc,
-                "aaa.bbb.HogeCondition");
-        assertEquals("aaa.bbb.HogeCondition", model.getClassName());
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        ConditionModel model = conditionModelfactory.getConditionModel(
+                entityMeta, "aaa.bbb.AaaCondition");
+        assertEquals("aaa.bbb.AaaCondition", model.getClassName());
         assertEquals(AbstractEntityCondition.class.getName(), model
                 .getBaseClassName());
         Set<String> set = model.getImportPackageNameSet();
@@ -98,5 +93,26 @@ public class ConditionModelFactoryImplTest {
                 .next());
         assertEquals(NullableCondition.class.getName(), iterator.next());
         assertEquals(NullableStringCondition.class.getName(), iterator.next());
+    }
+
+    @Entity
+    public static class Aaa {
+
+        @Id
+        @Column(nullable = false)
+        protected Integer id;
+
+        @Column(nullable = false)
+        protected String name;
+
+        @Column(nullable = true)
+        protected String nullableName;
+
+        @Temporal(TemporalType.DATE)
+        @Column(nullable = false)
+        protected Date date;
+
+        @Temporal(TemporalType.DATE)
+        protected Date nullableDate;
     }
 }

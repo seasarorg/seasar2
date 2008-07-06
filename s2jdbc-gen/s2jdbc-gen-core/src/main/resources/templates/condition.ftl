@@ -13,23 +13,25 @@ public class ${getShortClassName(className)} extends
     public ${getShortClassName(className)}(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
-<#list entityDesc.attributeDescList as attr>
+<#assign lastIndex = entityMeta.propertyMetaSize - 1>
+<#list 0..lastIndex as i>
+  <#assign prop = entityMeta.getPropertyMeta(i)>
 
-  <#if attr.getAttributeClass().getName() == "java.lang.String">
-    <#if attr.isNullable()>
-    public NullableStringCondition<${getShortClassName(className)}> ${attr.name} =
-        new NullableStringCondition<${getShortClassName(className)}>("${attr.name}", this);
+  <#if prop.getPropertyClass().getName() == "java.lang.String">
+    <#if isNullable(prop)>
+    public NullableStringCondition<${getShortClassName(className)}> ${prop.name} =
+        new NullableStringCondition<${getShortClassName(className)}>("${prop.name}", this);
     <#else>
-    public NotNullableStringCondition<${getShortClassName(className)}> ${attr.name} =
-        new NotNullableStringCondition<${getShortClassName(className)}>("${attr.name}", this);
+    public NotNullableStringCondition<${getShortClassName(className)}> ${prop.name} =
+        new NotNullableStringCondition<${getShortClassName(className)}>("${prop.name}", this);
     </#if>
   <#else>
-    <#if attr.isNullable()>
-    public NullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(attr)}> ${attr.name} =
-        new NullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(attr)}>("${attr.name}", this);
+    <#if isNullable(prop)>
+    public NullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}> ${prop.name} =
+        new NullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}>("${prop.name}", this);
     <#else>
-    public NotNullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(attr)}> ${attr.name} =
-        new NotNullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(attr)}>("${attr.name}", this);
+    public NotNullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}> ${prop.name} =
+        new NotNullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}>("${prop.name}", this);
     </#if>
   </#if>
 </#list>

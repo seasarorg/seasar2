@@ -21,12 +21,21 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.EntityDesc;
@@ -41,6 +50,12 @@ import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
+import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
@@ -58,7 +73,7 @@ public class GeneratorImplTest {
     private Writer writer;
 
     @Before
-    public void before() throws Exception {
+    public void setUp() throws Exception {
         File dir = ResourceUtil.getResourceAsFile("templates");
         generator = new GeneratorImplStub("UTF-8", dir);
         writer = new StringWriter();
@@ -215,48 +230,22 @@ public class GeneratorImplTest {
      */
     @Test
     public void testGenerate_condition() throws Exception {
-        AttributeDesc id = new AttributeDesc();
-        id.setName("id");
-        id.setId(true);
-        id.setAttributeClass(int.class);
+        PersistenceConvention pc = new PersistenceConventionImpl();
+        ColumnMetaFactoryImpl cmf = new ColumnMetaFactoryImpl();
+        cmf.setPersistenceConvention(pc);
+        PropertyMetaFactoryImpl propertyMetaFactory = new PropertyMetaFactoryImpl();
+        propertyMetaFactory.setPersistenceConvention(pc);
+        propertyMetaFactory.setColumnMetaFactory(cmf);
+        TableMetaFactoryImpl tmf = new TableMetaFactoryImpl();
+        tmf.setPersistenceConvention(pc);
+        EntityMetaFactoryImpl entityMetaFactory = new EntityMetaFactoryImpl();
+        entityMetaFactory.setPersistenceConvention(pc);
+        entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
+        entityMetaFactory.setTableMetaFactory(tmf);
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Foo.class);
 
-        AttributeDesc name = new AttributeDesc();
-        name.setName("name");
-        name.setAttributeClass(String.class);
-
-        AttributeDesc lob = new AttributeDesc();
-        lob.setName("lob");
-        lob.setLob(true);
-        lob.setAttributeClass(byte[].class);
-
-        AttributeDesc date = new AttributeDesc();
-        date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
-        date.setNullable(true);
-
-        AttributeDesc temp = new AttributeDesc();
-        temp.setName("temp");
-        temp.setTransient(true);
-        temp.setAttributeClass(String.class);
-        temp.setNullable(true);
-
-        AttributeDesc version = new AttributeDesc();
-        version.setName("version");
-        version.setVersion(true);
-        version.setAttributeClass(Integer.class);
-
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
-
-        ConditionModelFactoryImpl factory = new ConditionModelFactoryImpl();
-        Object model = factory.getConditionModel(entityDesc,
+        ConditionModelFactoryImpl conditionModelfactory = new ConditionModelFactoryImpl();
+        Object model = conditionModelfactory.getConditionModel(entityMeta,
                 "hoge.FooCondition");
 
         GenerationContext context = new GenerationContext(model,
@@ -534,5 +523,30 @@ public class GeneratorImplTest {
         public String getName() {
             return name;
         }
+    }
+
+    @Entity
+    public static class Foo {
+
+        @Id
+        @Column(nullable = false)
+        public Integer id;
+
+        @Column(nullable = false)
+        public String name;
+
+        @Lob
+        @Column(nullable = false)
+        public byte[] lob;
+
+        @Temporal(TemporalType.DATE)
+        public Date date;
+
+        @Transient
+        public String temp;
+
+        @Version
+        @Column(nullable = false)
+        public Integer version;
     }
 }

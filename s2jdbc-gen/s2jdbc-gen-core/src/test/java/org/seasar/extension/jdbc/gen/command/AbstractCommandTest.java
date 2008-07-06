@@ -31,12 +31,12 @@ import static org.junit.Assert.*;
 public class AbstractCommandTest {
 
     @Before
-    public void before() throws Exception {
+    public void setUp() throws Exception {
         SingletonS2ContainerFactory.destroy();
     }
 
     @After
-    public void after() throws Exception {
+    public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();
     }
 

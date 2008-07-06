@@ -15,8 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import javax.persistence.Column;
+
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.AttributeDesc;
+import org.seasar.extension.jdbc.PropertyMeta;
 
 import static org.junit.Assert.*;
 
@@ -25,6 +27,9 @@ import static org.junit.Assert.*;
  * 
  */
 public class ConditionModelTest {
+
+    @Column(nullable = false)
+    private int property;
 
     @Test
     public void testGetPackageName() throws Exception {
@@ -40,12 +45,21 @@ public class ConditionModelTest {
         assertEquals("String", name);
     }
 
+    @Test
     public void testGetWrapperShortClassName() throws Exception {
         ConditionModel model = new ConditionModel();
-        AttributeDesc attributeDesc = new AttributeDesc();
-        attributeDesc.setAttributeClass(int.class);
-        String name = model.getWrapperShortClassName(attributeDesc);
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setField(getClass().getDeclaredField("property"));
+        String name = model.getWrapperShortClassName(propertyMeta);
         assertEquals("Integer", name);
+    }
+
+    @Test
+    public void testIsNullable() throws Exception {
+        ConditionModel model = new ConditionModel();
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setField(getClass().getDeclaredField("property"));
+        assertFalse(model.isNullable(propertyMeta));
     }
 
 }

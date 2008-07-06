@@ -37,12 +37,12 @@ import static org.junit.Assert.*;
 public class DdlGenCommandTest {
 
     @Before
-    public void before() throws Exception {
+    public void setUp() throws Exception {
         SingletonS2ContainerFactory.destroy();
     }
 
     @After
-    public void after() throws Exception {
+    public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();
     }
 
@@ -72,13 +72,13 @@ public class DdlGenCommandTest {
         assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createGenerator());
         assertNotNull(command.createSchemaModelFactory());
-        assertNotNull(command.createGenerator());
         assertNotNull(command.createTableDescFactory());
         GenerationContext context = command.createGenerationContext(
                 new Object(), "aaa.ddl", "ccc.ftl", true);
         assertNotNull(context);
     }
 
+    @Test
     public void testBindableProperty() throws Exception {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(DdlGenCommand.class);
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {

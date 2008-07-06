@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import org.seasar.extension.jdbc.EntityMeta;
+
 /**
  * 条件クラスのモデルのファクトリです。
  * 
@@ -25,11 +27,11 @@ public interface ConditionModelFactory {
     /**
      * 条件クラスのモデルを返します。
      * 
-     * @param entityDesc
-     *            エンティティ記述
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param className
      *            条件クラス名
      * @return 条件クラスのモデル
      */
-    Object getConditionModel(EntityDesc entityDesc, String className);
+    Object getConditionModel(EntityMeta entityMeta, String className);
 }

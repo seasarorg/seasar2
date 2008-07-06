@@ -59,25 +59,9 @@ public class EntityGenCommand extends AbstractCommand {
     @BindableProperty
     protected String javaFileEncoding = "UTF-8";
 
-    /** 条件クラス名のサフィックス */
-    @BindableProperty
-    protected String conditionClassNameSuffix = "Condition";
-
-    /** 条件クラスのパッケージ名 */
-    @BindableProperty
-    protected String conditionPackageName = "condition";
-
     /** エンティティクラスのテンプレート名 */
     @BindableProperty
     protected String entityTemplateName = "entity.ftl";
-
-    /** 条件クラスのテンプレート名 */
-    @BindableProperty
-    protected String conditionTemplateName = "condition.ftl";
-
-    /** 条件クラスを生成する場合{@link Boolean#TRUE } */
-    @BindableProperty
-    protected Boolean generateConditionClass = Boolean.TRUE;
 
     /** スキーマ名 */
     @BindableProperty
@@ -182,46 +166,6 @@ public class EntityGenCommand extends AbstractCommand {
     }
 
     /**
-     * 条件クラスのパッケージ名を設定します。
-     * 
-     * @param conditionPackageName
-     *            条件クラスのパッケージ名
-     */
-    public void setConditionPackageName(String conditionPackageName) {
-        this.conditionPackageName = conditionPackageName;
-    }
-
-    /**
-     * 条件クラス名のサフィックスを設定します。
-     * 
-     * @param conditionClassNameSuffix
-     *            条件クラス名のサフィックス
-     */
-    public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
-        this.conditionClassNameSuffix = conditionClassNameSuffix;
-    }
-
-    /**
-     * 条件クラスのテンプレート名を設定します。
-     * 
-     * @param conditionTemplateName
-     *            条件クラスのテンプレート名
-     */
-    public void setConditionTemplateName(String conditionTemplateName) {
-        this.conditionTemplateName = conditionTemplateName;
-    }
-
-    /**
-     * エンティティ条件クラスを生成する場合{@code true}、生成しない場合{@code false}を設定します。
-     * 
-     * @param generateConditionClass
-     *            エンティティ条件クラスを生成する場合{@code true}、生成しない場合{@code false}
-     */
-    public void setGenerateConditionClass(Boolean generateConditionClass) {
-        this.generateConditionClass = generateConditionClass;
-    }
-
-    /**
      * 初期化します。
      */
     @Override
@@ -310,9 +254,6 @@ public class EntityGenCommand extends AbstractCommand {
     protected void generate(List<EntityDesc> entityDescList) {
         for (EntityDesc entityDesc : entityDescList) {
             generateEntity(entityDesc);
-            if (generateConditionClass) {
-                generateCondition(entityDesc);
-            }
         }
     }
 
@@ -330,24 +271,6 @@ public class EntityGenCommand extends AbstractCommand {
         Object model = entityModelFactory.getEntityModel(entityDesc, className);
         GenerationContext context = createGenerationContext(model, className,
                 entityTemplateName, false);
-        generator.generate(context);
-    }
-
-    /**
-     * 条件クラスのJavaファイルを生成します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     */
-    protected void generateCondition(EntityDesc entityDesc) {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                conditionPackageName);
-        String shortClassName = entityDesc.getName() + conditionClassNameSuffix;
-        String className = ClassUtil.concatName(packageName, shortClassName);
-        Object model = conditionModelFactory.getConditionModel(entityDesc,
-                className);
-        GenerationContext context = createGenerationContext(model, className,
-                conditionTemplateName, false);
         generator.generate(context);
     }
 

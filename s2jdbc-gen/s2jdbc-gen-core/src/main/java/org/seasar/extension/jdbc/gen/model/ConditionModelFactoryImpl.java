@@ -15,9 +15,13 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import org.seasar.extension.jdbc.gen.AttributeDesc;
+import java.lang.reflect.Field;
+
+import javax.persistence.Column;
+
+import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ConditionModelFactory;
-import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
@@ -25,6 +29,7 @@ import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * {@link ConditionModelFactory}の実装クラスです。
@@ -33,13 +38,19 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
-    public ConditionModel getConditionModel(EntityDesc entityDesc,
+    /** デフォルトのカラム */
+    @Column
+    protected static final Column DEFAULT_COLUMN = ReflectionUtil
+            .getDeclaredField(ConditionModelFactoryImpl.class, "DEFAULT_COLUMN")
+            .getAnnotation(Column.class);
+
+    public ConditionModel getConditionModel(EntityMeta entityMeta,
             String className) {
         ConditionModel model = new ConditionModel();
         model.setClassName(className);
         model.setBaseClassName(AbstractEntityCondition.class.getName());
-        model.setEntityDesc(entityDesc);
-        doImportPackageNames(model, entityDesc);
+        model.setEntityMeta(entityMeta);
+        doImportPackageNames(model, entityMeta);
         return model;
     }
 
@@ -48,33 +59,42 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      * 
      * @param model
      *            エンティティ条件クラスのモデル
-     * @param entityDesc
-     *            エンティティ記述
+     * @param entityMeta
+     *            エンティティ
      */
     protected void doImportPackageNames(ConditionModel model,
-            EntityDesc entityDesc) {
+            EntityMeta entityMeta) {
         model.addImportPackageName(ComplexWhere.class.getName());
         model.addImportPackageName(AbstractEntityCondition.class.getName());
-        for (AttributeDesc attr : entityDesc.getAttributeDescList()) {
+        for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
+            PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
+            Column column = getColumn(propertyMeta);
+            Class<?> propertyClass = propertyMeta.getPropertyClass();
             Class<?> conditionClass = null;
-            if (attr.isNullable()) {
-                if (attr.getAttributeClass() == String.class) {
+            if (column.nullable()) {
+                if (propertyClass == String.class) {
                     conditionClass = NullableStringCondition.class;
                 } else {
                     conditionClass = NullableCondition.class;
                 }
             } else {
-                if (attr.getAttributeClass() == String.class) {
+                if (propertyClass == String.class) {
                     conditionClass = NotNullableStringCondition.class;
                 } else {
                     conditionClass = NotNullableCondition.class;
                 }
             }
             model.addImportPackageName(conditionClass.getName());
-            String name = ClassUtil.getPackageName(attr.getAttributeClass());
+            String name = ClassUtil.getPackageName(propertyClass);
             if (name != null && !"java.lang".equals(name)) {
-                model.addImportPackageName(attr.getAttributeClass().getName());
+                model.addImportPackageName(propertyClass.getName());
             }
         }
+    }
+
+    protected Column getColumn(PropertyMeta propertyMeta) {
+        Field field = propertyMeta.getField();
+        Column column = field.getAnnotation(Column.class);
+        return column != null ? column : DEFAULT_COLUMN;
     }
 }

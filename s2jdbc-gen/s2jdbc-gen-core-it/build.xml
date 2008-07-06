@@ -14,6 +14,13 @@
 		/>
 	</target>
 
+	<target name="generate-condition" >
+		<gen-condition
+			classpathRootDir="build/classes"
+			classpathref="classpath"
+		/>
+	</target>
+			
 	<target name="generate-ddl" >
 		<gen-ddl 
 			classpathRootDir="build/classes"

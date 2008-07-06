@@ -32,20 +32,8 @@ public class EntityGenTask extends AbstractTask {
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding;
 
-    /** 条件クラス名のサフィックス */
-    protected String conditionClassNameSuffix;
-
-    /** 条件クラスのパッケージ名 */
-    protected String conditionPackageName;
-
     /** エンティティクラスのテンプレート名 */
     protected String entityTemplateName;
-
-    /** 条件クラスのテンプレート名 */
-    protected String conditionTemplateName;
-
-    /** 条件クラスを生成する場合{@link Boolean#TRUE } */
-    protected Boolean generateConditionClass;
 
     /** スキーマ名 */
     protected String schemaName;
@@ -89,44 +77,12 @@ public class EntityGenTask extends AbstractTask {
         this.javaFileEncoding = javaFileEncoding;
     }
 
-    public String getConditionClassNameSuffix() {
-        return conditionClassNameSuffix;
-    }
-
-    public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
-        this.conditionClassNameSuffix = conditionClassNameSuffix;
-    }
-
-    public String getConditionPackageName() {
-        return conditionPackageName;
-    }
-
-    public void setConditionPackageName(String conditionPackageName) {
-        this.conditionPackageName = conditionPackageName;
-    }
-
     public String getEntityTemplateName() {
         return entityTemplateName;
     }
 
     public void setEntityTemplateName(String entityTemplateName) {
         this.entityTemplateName = entityTemplateName;
-    }
-
-    public String getConditionTemplateName() {
-        return conditionTemplateName;
-    }
-
-    public void setConditionTemplateName(String conditionTemplateName) {
-        this.conditionTemplateName = conditionTemplateName;
-    }
-
-    public Boolean getGenerateConditionClass() {
-        return generateConditionClass;
-    }
-
-    public void setGenerateConditionClass(Boolean generateConditionClass) {
-        this.generateConditionClass = generateConditionClass;
     }
 
     public String getSchemaName() {
