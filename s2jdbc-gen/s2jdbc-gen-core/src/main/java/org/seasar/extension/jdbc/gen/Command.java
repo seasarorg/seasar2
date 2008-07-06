@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * 生成を実行するコマンドを表すインタフェースです。
+ * コマンドを表すインタフェースです。
  * 
  * @author taedium
  */

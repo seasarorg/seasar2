@@ -23,16 +23,13 @@ package org.seasar.extension.jdbc.gen;
 public interface ConditionModelFactory {
 
     /**
-     * エンティティ条件クラスのモデルを返します。
+     * 条件クラスのモデルを返します。
      * 
      * @param entityDesc
      *            エンティティ記述
      * @param className
-     *            エンティティ条件クラス名
-     * @param baseClassName
-     *            エンティティ条件基底クラス名
-     * @return エンティティ条件クラスのモデル
+     *            条件クラス名
+     * @return 条件クラスのモデル
      */
-    Object getConditionModel(EntityDesc entityDesc, String className,
-            String baseClassName);
+    Object getConditionModel(EntityDesc entityDesc, String className);
 }

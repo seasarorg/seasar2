@@ -1,11 +1,13 @@
-package bar;
+package hoge;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.Table;
 
-@MappedSuperclass
-public abstract class AbstractFoo {
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo {
 
     @Id
     @Column(precision = 10, scale = 0, nullable = false)

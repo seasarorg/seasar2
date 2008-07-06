@@ -23,6 +23,12 @@ import javax.persistence.TemporalType;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.EntityDesc;
+import org.seasar.extension.jdbc.where.ComplexWhere;
+import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
+import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
+import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
+import org.seasar.extension.jdbc.where.condition.NullableCondition;
+import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 
 import static org.junit.Assert.*;
 
@@ -44,51 +50,53 @@ public class ConditionModelFactoryImplTest {
         id.setName("id");
         id.setId(true);
         id.setAttributeClass(int.class);
+        id.setNullable(false);
 
         AttributeDesc name = new AttributeDesc();
         name.setName("name");
         name.setAttributeClass(String.class);
+        name.setNullable(false);
 
-        AttributeDesc lob = new AttributeDesc();
-        lob.setName("lob");
-        lob.setLob(true);
-        lob.setAttributeClass(byte[].class);
+        AttributeDesc nullableName = new AttributeDesc();
+        nullableName.setName("nullableName");
+        nullableName.setAttributeClass(String.class);
+        nullableName.setNullable(true);
 
         AttributeDesc date = new AttributeDesc();
         date.setName("date");
         date.setTemporalType(TemporalType.DATE);
         date.setAttributeClass(java.util.Date.class);
+        date.setNullable(false);
 
-        AttributeDesc temp = new AttributeDesc();
-        temp.setName("temp");
-        temp.setTransient(true);
-        temp.setAttributeClass(String.class);
-
-        AttributeDesc version = new AttributeDesc();
-        version.setName("version");
-        version.setVersion(true);
-        version.setAttributeClass(Integer.class);
+        AttributeDesc nullableDate = new AttributeDesc();
+        nullableDate.setName("nullableDate");
+        nullableDate.setTemporalType(TemporalType.DATE);
+        nullableDate.setAttributeClass(java.util.Date.class);
+        nullableDate.setNullable(true);
 
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setName("Foo");
         entityDesc.addAttribute(id);
         entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
+        entityDesc.addAttribute(nullableName);
         entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
+        entityDesc.addAttribute(nullableDate);
 
         ConditionModel model = factory.getConditionModel(entityDesc,
-                "aaa.bbb.HogeCondition", "aaa.bbb.ccc.AbstractHogeCondition");
-        assertEquals("aaa.bbb", model.getPackageName());
+                "aaa.bbb.HogeCondition");
         assertEquals("aaa.bbb.HogeCondition", model.getClassName());
-        assertEquals("HogeCondition", model.getShortClassName());
-        assertEquals("aaa.bbb.ccc.AbstractHogeCondition", model
+        assertEquals(AbstractEntityCondition.class.getName(), model
                 .getBaseClassName());
-        assertEquals("AbstractHogeCondition", model.getShortBaseClassName());
         Set<String> set = model.getImportPackageNameSet();
-        assertEquals(1, set.size());
+        assertEquals(7, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals("aaa.bbb.ccc.AbstractHogeCondition", iterator.next());
+        assertEquals("java.util.Date", iterator.next());
+        assertEquals(ComplexWhere.class.getName(), iterator.next());
+        assertEquals(AbstractEntityCondition.class.getName(), iterator.next());
+        assertEquals(NotNullableCondition.class.getName(), iterator.next());
+        assertEquals(NotNullableStringCondition.class.getName(), iterator
+                .next());
+        assertEquals(NullableCondition.class.getName(), iterator.next());
+        assertEquals(NullableStringCondition.class.getName(), iterator.next());
     }
 }

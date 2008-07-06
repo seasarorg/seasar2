@@ -38,9 +38,7 @@ import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.model.ConditionBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
 import org.seasar.framework.util.ClassUtil;
@@ -90,63 +88,6 @@ public class GeneratorImplTest {
      */
     @Test
     public void testGenerate_entity() throws Exception {
-        AttributeDesc id = new AttributeDesc();
-        id.setName("id");
-        id.setId(true);
-        id.setAttributeClass(int.class);
-
-        AttributeDesc name = new AttributeDesc();
-        name.setName("name");
-        name.setAttributeClass(String.class);
-
-        AttributeDesc lob = new AttributeDesc();
-        lob.setName("lob");
-        lob.setLob(true);
-        lob.setAttributeClass(byte[].class);
-
-        AttributeDesc date = new AttributeDesc();
-        date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
-
-        AttributeDesc temp = new AttributeDesc();
-        temp.setName("temp");
-        temp.setTransient(true);
-        temp.setAttributeClass(String.class);
-
-        AttributeDesc version = new AttributeDesc();
-        version.setName("version");
-        version.setVersion(true);
-        version.setAttributeClass(Integer.class);
-
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setSchemaName("BBB");
-        entityDesc.setTableName("FOO");
-        entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
-
-        EntityModelFactoryImpl factory = new EntityModelFactoryImpl();
-        Object model = factory.getEntityModel(entityDesc, "hoge.Foo",
-                "bar.AbstractFoo");
-
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "entity.ftl", "UTF-8", false);
-        generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_entity.txt";
-        assertEquals(TextUtil.readUTF8(path), writer.toString());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGenerate_entityBase() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -205,6 +146,8 @@ public class GeneratorImplTest {
         version.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
         entityDesc.setName("Foo");
         entityDesc.addAttribute(id);
         entityDesc.addAttribute(name);
@@ -214,16 +157,13 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        Object model = factory
-                .getEntityBaseModel(entityDesc, "bar.AbstractFoo");
+        EntityModelFactoryImpl factory = new EntityModelFactoryImpl();
+        Object model = factory.getEntityModel(entityDesc, "hoge.Foo");
 
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "entity-base.ftl", "UTF-8",
-                false);
+                new File("dir"), new File("file"), "entity.ftl", "UTF-8", false);
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/")
-                + "_entity-base.txt";
+        String path = getClass().getName().replace(".", "/") + "_entity.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
@@ -232,7 +172,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_entityBase_compositeId() throws Exception {
+    public void testGenerate_entity_compositeId() throws Exception {
         AttributeDesc id1 = new AttributeDesc();
         id1.setName("id1");
         id1.setId(true);
@@ -252,20 +192,20 @@ public class GeneratorImplTest {
         id2.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
         entityDesc.setName("Foo");
         entityDesc.addAttribute(id1);
         entityDesc.addAttribute(id2);
 
-        EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        Object model = factory
-                .getEntityBaseModel(entityDesc, "bar.AbstractFoo");
+        EntityModelFactoryImpl factory = new EntityModelFactoryImpl();
+        Object model = factory.getEntityModel(entityDesc, "hoge.Foo");
 
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "entity-base.ftl", "UTF-8",
-                false);
+                new File("dir"), new File("file"), "entity.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
-                + "_entity-base_compositeId.txt";
+                + "_entity_compositeId.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 
@@ -317,72 +257,13 @@ public class GeneratorImplTest {
 
         ConditionModelFactoryImpl factory = new ConditionModelFactoryImpl();
         Object model = factory.getConditionModel(entityDesc,
-                "hoge.FooCondition", "bar.AbstractFooCondition");
+                "hoge.FooCondition");
 
         GenerationContext context = new GenerationContext(model,
                 new File("dir"), new File("file"), "condition.ftl", "UTF-8",
                 false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_condition.txt";
-        assertEquals(TextUtil.readUTF8(path), writer.toString());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGenerate_conditionBase() throws Exception {
-        AttributeDesc id = new AttributeDesc();
-        id.setName("id");
-        id.setId(true);
-        id.setAttributeClass(int.class);
-
-        AttributeDesc name = new AttributeDesc();
-        name.setName("name");
-        name.setAttributeClass(String.class);
-
-        AttributeDesc lob = new AttributeDesc();
-        lob.setName("lob");
-        lob.setLob(true);
-        lob.setAttributeClass(byte[].class);
-
-        AttributeDesc date = new AttributeDesc();
-        date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
-        date.setNullable(true);
-
-        AttributeDesc temp = new AttributeDesc();
-        temp.setName("temp");
-        temp.setTransient(true);
-        temp.setAttributeClass(String.class);
-        temp.setNullable(true);
-
-        AttributeDesc version = new AttributeDesc();
-        version.setName("version");
-        version.setVersion(true);
-        version.setAttributeClass(Integer.class);
-
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
-
-        ConditionBaseModelFactoryImpl factory = new ConditionBaseModelFactoryImpl();
-        Object model = factory.getConditionBaseModel(entityDesc,
-                "bar.AbstractFooCondition");
-
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "condition-base.ftl",
-                "UTF-8", false);
-        generator.generate(context);
-        String path = getClass().getName().replace(".", "/")
-                + "_condition-base.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
     }
 

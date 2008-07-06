@@ -30,10 +30,7 @@ public interface EntityModelFactory {
      *            エンティティ記述
      * @param className
      *            エンティティクラス名
-     * @param baseClassName
-     *            エンティティ基底クラス名
      * @return エンティティクラスのモデル
      */
-    Object getEntityModel(EntityDesc entityDesc, String className,
-            String baseClassName);
+    Object getEntityModel(EntityDesc entityDesc, String className);
 }

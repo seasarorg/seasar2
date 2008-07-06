@@ -15,11 +15,21 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
+import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityModelFactory;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link EntityModelFactory}の実装クラスです。
@@ -28,11 +38,9 @@ import org.seasar.extension.jdbc.gen.EntityModelFactory;
  */
 public class EntityModelFactoryImpl implements EntityModelFactory {
 
-    public EntityModel getEntityModel(EntityDesc entityDesc, String className,
-            String baseClassName) {
+    public EntityModel getEntityModel(EntityDesc entityDesc, String className) {
         EntityModel model = new EntityModel();
         model.setClassName(className);
-        model.setBaseClassName(baseClassName);
         model.setEntityDesc(entityDesc);
         if (entityDesc.getCatalogName() != null
                 || entityDesc.getSchemaName() != null) {
@@ -55,6 +63,33 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         if (model.isTableQualified()) {
             model.addImportPackageName(Table.class.getName());
         }
-        model.addImportPackageName(model.getBaseClassName());
+        for (AttributeDesc attr : entityDesc.getAttributeDescList()) {
+            if (attr.isId()) {
+                model.addImportPackageName(Id.class.getName());
+                if (!entityDesc.hasCompositeId()) {
+                    model.addImportPackageName(GeneratedValue.class.getName());
+                }
+            }
+            if (attr.isLob()) {
+                model.addImportPackageName(Lob.class.getName());
+            }
+            if (attr.getTemporalType() != null) {
+                model.addImportPackageName(Temporal.class.getName());
+                model.addImportPackageName(TemporalType.class.getName());
+            }
+            if (attr.isTransient()) {
+                model.addImportPackageName(Transient.class.getName());
+            } else {
+                model.addImportPackageName(Column.class.getName());
+            }
+            if (attr.isVersion()) {
+                model.addImportPackageName(Version.class.getName());
+            }
+
+            String name = ClassUtil.getPackageName(attr.getAttributeClass());
+            if (name != null && !"java.lang".equals(name)) {
+                model.addImportPackageName(attr.getAttributeClass().getName());
+            }
+        }
     }
 }

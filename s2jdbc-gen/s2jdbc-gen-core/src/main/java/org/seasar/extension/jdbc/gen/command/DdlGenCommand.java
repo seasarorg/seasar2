@@ -220,33 +220,47 @@ public class DdlGenCommand extends AbstractCommand {
         for (EntityMeta entityMeta : entityMetaList) {
             tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
         }
+        generate(tableDescList);
     }
 
     protected void generate(List<TableDesc> tableDescList) {
         Object model = schemaModelFactory.getSchemaModel(tableDescList);
-        GenerationContext createTableCtx = getGenerationContext(model,
-                createTableDdlName, createTableTemplateName);
-        GenerationContext dropTableCtx = getGenerationContext(model,
-                dropTableDdlName, createTableTemplateName);
-        GenerationContext createConstraintCtx = getGenerationContext(model,
-                createConstraintDdlName, createConstraintTemplateName);
-        GenerationContext dropConstraintCtx = getGenerationContext(model,
-                dropConstraintDdlName, dropConstraintTemplateName);
-        GenerationContext createSequenceCtx = getGenerationContext(model,
-                createSequenceDdlName, createSequenceTemplateName);
-        GenerationContext dropSequenceCtx = getGenerationContext(model,
-                dropSequenceDdlName, dropSequenceTemplateName);
+        generateTable(model);
+        generateConstraint(model);
+        generateSequence(model);
+    }
+
+    protected void generateTable(Object model) {
+        GenerationContext createTableCtx = createGenerationContext(model,
+                createTableDdlName, createTableTemplateName, true);
+        GenerationContext dropTableCtx = createGenerationContext(model,
+                dropTableDdlName, createTableTemplateName, true);
         generator.generate(createTableCtx);
         generator.generate(dropTableCtx);
+    }
+
+    protected void generateConstraint(Object model) {
+        GenerationContext createConstraintCtx = createGenerationContext(model,
+                createConstraintDdlName, createConstraintTemplateName, true);
+        GenerationContext dropConstraintCtx = createGenerationContext(model,
+                dropConstraintDdlName, dropConstraintTemplateName, true);
         generator.generate(createConstraintCtx);
         generator.generate(dropConstraintCtx);
+    }
+
+    protected void generateSequence(Object model) {
+        GenerationContext createSequenceCtx = createGenerationContext(model,
+                createSequenceDdlName, createSequenceTemplateName, true);
+        GenerationContext dropSequenceCtx = createGenerationContext(model,
+                dropSequenceDdlName, dropSequenceTemplateName, true);
         generator.generate(createSequenceCtx);
         generator.generate(dropSequenceCtx);
     }
 
-    protected GenerationContext getGenerationContext(Object model,
-            String ddlName, String templateName) {
+    protected GenerationContext createGenerationContext(Object model,
+            String ddlName, String templateName, boolean overwrite) {
         return new GenerationContext(model, destDir,
-                new File(destDir, ddlName), templateName, ddlFileEncoding, true);
+                new File(destDir, ddlName), templateName, ddlFileEncoding,
+                overwrite);
     }
 }

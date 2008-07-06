@@ -15,10 +15,20 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
@@ -78,18 +88,22 @@ public class EntityModelFactoryImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
-                "aaa.bbb.ccc.AbstractHoge");
-        assertEquals("aaa.bbb", model.getPackageName());
+        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
         assertEquals("aaa.bbb.Hoge", model.getClassName());
-        assertEquals("Hoge", model.getShortClassName());
-        assertEquals("aaa.bbb.ccc.AbstractHoge", model.getBaseClassName());
-        assertEquals("AbstractHoge", model.getShortBaseClassName());
+        assertNull(model.getBaseClassName());
         Set<String> set = model.getImportPackageNameSet();
-        assertEquals(2, set.size());
+        assertEquals(10, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals("aaa.bbb.ccc.AbstractHoge", iterator.next());
-        assertEquals("javax.persistence.Entity", iterator.next());
+        assertEquals(Date.class.getName(), iterator.next());
+        assertEquals(Column.class.getName(), iterator.next());
+        assertEquals(Entity.class.getName(), iterator.next());
+        assertEquals(GeneratedValue.class.getName(), iterator.next());
+        assertEquals(Id.class.getName(), iterator.next());
+        assertEquals(Lob.class.getName(), iterator.next());
+        assertEquals(Temporal.class.getName(), iterator.next());
+        assertEquals(TemporalType.class.getName(), iterator.next());
+        assertEquals(Transient.class.getName(), iterator.next());
+        assertEquals(Version.class.getName(), iterator.next());
     }
 
     @Test
@@ -99,14 +113,12 @@ public class EntityModelFactoryImplTest {
         entityDesc.setSchemaName("BBB");
         entityDesc.setName("Foo");
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
-                "aaa.bbb.ccc.AbstractHoge");
+        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
         Set<String> set = model.getImportPackageNameSet();
-        assertEquals(3, set.size());
+        assertEquals(2, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals("aaa.bbb.ccc.AbstractHoge", iterator.next());
-        assertEquals("javax.persistence.Entity", iterator.next());
-        assertEquals("javax.persistence.Table", iterator.next());
+        assertEquals(Entity.class.getName(), iterator.next());
+        assertEquals(Table.class.getName(), iterator.next());
     }
 
     @Test
@@ -114,12 +126,10 @@ public class EntityModelFactoryImplTest {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setName("Foo");
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
-                "aaa.bbb.ccc.AbstractHoge");
+        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
         Set<String> set = model.getImportPackageNameSet();
-        assertEquals(2, set.size());
+        assertEquals(1, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals("aaa.bbb.ccc.AbstractHoge", iterator.next());
-        assertEquals("javax.persistence.Entity", iterator.next());
+        assertEquals(Entity.class.getName(), iterator.next());
     }
 }

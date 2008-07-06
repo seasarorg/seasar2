@@ -32,32 +32,17 @@ public class EntityGenTask extends AbstractTask {
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding;
 
-    /** 基底クラス名のプレフィックス */
-    protected String baseClassNamePrefix;
-
     /** 条件クラス名のサフィックス */
     protected String conditionClassNameSuffix;
-
-    /** エンティティ基底クラスのパッケージ名 */
-    protected String entityBasePackageName;
 
     /** 条件クラスのパッケージ名 */
     protected String conditionPackageName;
 
-    /** 条件基底クラスのパッケージ名 */
-    protected String conditionBasePackageName;
-
     /** エンティティクラスのテンプレート名 */
     protected String entityTemplateName;
 
-    /** エンティティ基底クラスのテンプレート名 */
-    protected String entityBaseTemplateName;
-
     /** 条件クラスのテンプレート名 */
     protected String conditionTemplateName;
-
-    /** 条件基底クラスのテンプレート名 */
-    protected String conditionBaseTemplateName;
 
     /** 条件クラスを生成する場合{@link Boolean#TRUE } */
     protected Boolean generateConditionClass;
@@ -104,28 +89,12 @@ public class EntityGenTask extends AbstractTask {
         this.javaFileEncoding = javaFileEncoding;
     }
 
-    public String getBaseClassNamePrefix() {
-        return baseClassNamePrefix;
-    }
-
-    public void setBaseClassNamePrefix(String baseClassNamePrefix) {
-        this.baseClassNamePrefix = baseClassNamePrefix;
-    }
-
     public String getConditionClassNameSuffix() {
         return conditionClassNameSuffix;
     }
 
     public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
         this.conditionClassNameSuffix = conditionClassNameSuffix;
-    }
-
-    public String getEntityBasePackageName() {
-        return entityBasePackageName;
-    }
-
-    public void setEntityBasePackageName(String entityBasePackageName) {
-        this.entityBasePackageName = entityBasePackageName;
     }
 
     public String getConditionPackageName() {
@@ -136,14 +105,6 @@ public class EntityGenTask extends AbstractTask {
         this.conditionPackageName = conditionPackageName;
     }
 
-    public String getConditionBasePackageName() {
-        return conditionBasePackageName;
-    }
-
-    public void setConditionBasePackageName(String conditionBasePackageName) {
-        this.conditionBasePackageName = conditionBasePackageName;
-    }
-
     public String getEntityTemplateName() {
         return entityTemplateName;
     }
@@ -152,28 +113,12 @@ public class EntityGenTask extends AbstractTask {
         this.entityTemplateName = entityTemplateName;
     }
 
-    public String getEntityBaseTemplateName() {
-        return entityBaseTemplateName;
-    }
-
-    public void setEntityBaseTemplateName(String entityBaseTemplateName) {
-        this.entityBaseTemplateName = entityBaseTemplateName;
-    }
-
     public String getConditionTemplateName() {
         return conditionTemplateName;
     }
 
     public void setConditionTemplateName(String conditionTemplateName) {
         this.conditionTemplateName = conditionTemplateName;
-    }
-
-    public String getConditionBaseTemplateName() {
-        return conditionBaseTemplateName;
-    }
-
-    public void setConditionBaseTemplateName(String conditionBaseTemplateName) {
-        this.conditionBaseTemplateName = conditionBaseTemplateName;
     }
 
     public Boolean getGenerateConditionClass() {
