@@ -18,10 +18,18 @@ package org.seasar.extension.jdbc.gen;
 import java.util.List;
 
 /**
- * @author taedium
+ * スキーマのモデルのファクトリです。
  * 
+ * @author taedium
  */
 public interface SchemaModelFactory {
 
+    /**
+     * スキーマのモデルを返します。
+     * 
+     * @param tableDesclist
+     *            テーブル記述のリスト
+     * @return スキーマのモデル
+     */
     Object getSchemaModel(List<TableDesc> tableDesclist);
 }

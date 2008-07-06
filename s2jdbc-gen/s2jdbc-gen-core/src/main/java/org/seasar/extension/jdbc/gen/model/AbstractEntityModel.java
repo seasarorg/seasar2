@@ -20,6 +20,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.seasar.extension.jdbc.gen.EntityDesc;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author taedium
@@ -27,27 +28,13 @@ import org.seasar.extension.jdbc.gen.EntityDesc;
  */
 public abstract class AbstractEntityModel {
 
-    protected String packageName;
-
     protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
 
     protected String className;
 
-    protected String shortClassName;
-
     protected String baseClassName;
 
-    protected String shortBaseClassName;
-
     protected EntityDesc entityDesc;
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
 
     public String getClassName() {
         return className;
@@ -57,28 +44,12 @@ public abstract class AbstractEntityModel {
         this.className = className;
     }
 
-    public String getShortClassName() {
-        return shortClassName;
-    }
-
-    public void setShortClassName(String shortClassName) {
-        this.shortClassName = shortClassName;
-    }
-
     public String getBaseClassName() {
         return baseClassName;
     }
 
     public void setBaseClassName(String baseClassName) {
         this.baseClassName = baseClassName;
-    }
-
-    public String getShortBaseClassName() {
-        return shortBaseClassName;
-    }
-
-    public void setShortBaseClassName(String shortBaseClassName) {
-        this.shortBaseClassName = shortBaseClassName;
     }
 
     public SortedSet<String> getImportPackageNameSet() {
@@ -98,4 +69,17 @@ public abstract class AbstractEntityModel {
     public void setEntityDesc(EntityDesc entityDesc) {
         this.entityDesc = entityDesc;
     }
+
+    public String getPackageName() {
+        return ClassUtil.splitPackageAndShortClassName(className)[0];
+    }
+
+    public String getShortClassName() {
+        return ClassUtil.splitPackageAndShortClassName(className)[1];
+    }
+
+    public String getShortBaseClassName() {
+        return ClassUtil.splitPackageAndShortClassName(baseClassName)[1];
+    }
+
 }

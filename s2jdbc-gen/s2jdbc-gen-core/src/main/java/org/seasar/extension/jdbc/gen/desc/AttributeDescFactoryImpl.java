@@ -64,8 +64,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         doTemporalType(columnMeta, attributeDesc);
         doTransient(columnMeta, attributeDesc);
         doVersion(columnMeta, attributeDesc);
-        doColumnName(columnMeta, attributeDesc);
-        doNullable(columnMeta, attributeDesc);
+        doColumn(columnMeta, attributeDesc);
         return attributeDesc;
     }
 
@@ -171,21 +170,12 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * @param attributeDesc
      *            属性記述
      */
-    protected void doColumnName(DbColumnMeta columnMeta,
-            AttributeDesc attributeDesc) {
+    protected void doColumn(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
         attributeDesc.setColumnName(columnMeta.getName());
-    }
-
-    /**
-     * NULL制約を処理します。
-     * 
-     * @param columnMeta
-     *            カラムメタ情報
-     * @param attributeDesc
-     *            属性記述
-     */
-    protected void doNullable(DbColumnMeta columnMeta,
-            AttributeDesc attributeDesc) {
+        attributeDesc.setLength(columnMeta.getLength());
+        attributeDesc.setPrecision(columnMeta.getLength());
+        attributeDesc.setScale(columnMeta.getScale());
         attributeDesc.setNullable(columnMeta.isNullable());
     }
+
 }

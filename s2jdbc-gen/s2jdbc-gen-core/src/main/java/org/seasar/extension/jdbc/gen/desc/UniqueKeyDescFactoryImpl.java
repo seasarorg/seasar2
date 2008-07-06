@@ -34,7 +34,7 @@ public class UniqueKeyDescFactoryImpl implements UniqueKeyDescFactory {
     public UniqueKeyDescFactoryImpl() {
     }
 
-    public UniqueKeyDesc getCompositeUniqueKey(UniqueConstraint uniqueConstraint) {
+    public UniqueKeyDesc getCompositeUniqueKeyDesc(UniqueConstraint uniqueConstraint) {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         for (String columnName : uniqueConstraint.columnNames()) {
             uniqueKeyDesc.addColumnName(columnName);
@@ -45,7 +45,7 @@ public class UniqueKeyDescFactoryImpl implements UniqueKeyDescFactory {
         return uniqueKeyDesc;
     }
 
-    public UniqueKeyDesc getSingleUniqueKey(ColumnDesc columnDesc) {
+    public UniqueKeyDesc getSingleUniqueKeyDesc(ColumnDesc columnDesc) {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         if (columnDesc.isUnique()) {
             uniqueKeyDesc.addColumnName(columnDesc.getName());

@@ -29,7 +29,13 @@ public class EntityDesc {
     /** 名前 */
     protected String name;
 
-    /** テーブルの名前 */
+    /** カタログ名 */
+    protected String catalogName;
+
+    /** スキーマ名 */
+    protected String schemaName;
+
+    /** テーブル名 */
     protected String tableName;
 
     /** 複合識別子をもつならば{@code true} */
@@ -67,19 +73,57 @@ public class EntityDesc {
     }
 
     /**
-     * テーブルの名前を返します。
+     * カタログ名を返します。
      * 
-     * @return テーブルの名前
+     * @return カタログ名
+     */
+    public String getCatalogName() {
+        return catalogName;
+    }
+
+    /**
+     * カタログ名を設定します。
+     * 
+     * @param catalogName
+     *            カタログ名
+     */
+    public void setCatalogName(String catalogName) {
+        this.catalogName = catalogName;
+    }
+
+    /**
+     * スキーマ名を返します
+     * 
+     * @return スキーマ名
+     */
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    /**
+     * スキーマ名を設定します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     */
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
+
+    /**
+     * テーブル名を返します。
+     * 
+     * @return テーブル名
      */
     public String getTableName() {
         return tableName;
     }
 
     /**
-     * テーブルの名前を設定します。
+     * テーブル名を設定します。
      * 
      * @param tableName
-     *            テーブルの名前
+     *            テーブル名
      */
     public void setTableName(String tableName) {
         this.tableName = tableName;

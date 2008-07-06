@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -40,9 +41,6 @@ public class EntityBaseModelFactoryImpl implements EntityBaseModelFactory {
             String className) {
         EntityBaseModel model = new EntityBaseModel();
         model.setClassName(className);
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        model.setPackageName(elements[0]);
-        model.setShortClassName(elements[1]);
         model.setEntityDesc(entityDesc);
         doImportPackageNames(model, entityDesc);
         return model;
@@ -75,6 +73,8 @@ public class EntityBaseModelFactoryImpl implements EntityBaseModelFactory {
             }
             if (attr.isTransient()) {
                 model.addImportPackageName(Transient.class.getName());
+            } else {
+                model.addImportPackageName(Column.class.getName());
             }
             if (attr.isVersion()) {
                 model.addImportPackageName(Version.class.getName());

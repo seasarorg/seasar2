@@ -78,13 +78,44 @@ public class EntityModelFactoryImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityModel model = factory.getEntityModel(entityDesc,
-                "aaa.bbb.Hoge", "aaa.bbb.ccc.AbstractHoge");
+        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
+                "aaa.bbb.ccc.AbstractHoge");
         assertEquals("aaa.bbb", model.getPackageName());
         assertEquals("aaa.bbb.Hoge", model.getClassName());
         assertEquals("Hoge", model.getShortClassName());
         assertEquals("aaa.bbb.ccc.AbstractHoge", model.getBaseClassName());
         assertEquals("AbstractHoge", model.getShortBaseClassName());
+        Set<String> set = model.getImportPackageNameSet();
+        assertEquals(2, set.size());
+        Iterator<String> iterator = set.iterator();
+        assertEquals("aaa.bbb.ccc.AbstractHoge", iterator.next());
+        assertEquals("javax.persistence.Entity", iterator.next());
+    }
+
+    @Test
+    public void testGetEntityModel_tableQualified() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setName("Foo");
+
+        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
+                "aaa.bbb.ccc.AbstractHoge");
+        Set<String> set = model.getImportPackageNameSet();
+        assertEquals(3, set.size());
+        Iterator<String> iterator = set.iterator();
+        assertEquals("aaa.bbb.ccc.AbstractHoge", iterator.next());
+        assertEquals("javax.persistence.Entity", iterator.next());
+        assertEquals("javax.persistence.Table", iterator.next());
+    }
+
+    @Test
+    public void testGetEntityModel_tableNotQualified() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setName("Foo");
+
+        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge",
+                "aaa.bbb.ccc.AbstractHoge");
         Set<String> set = model.getImportPackageNameSet();
         assertEquals(2, set.size());
         Iterator<String> iterator = set.iterator();

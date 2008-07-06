@@ -33,7 +33,7 @@ public class Db2GenDialect extends StandardGenDialect {
     }
 
     @Override
-    public boolean supprtsSequence() {
+    public boolean supportsSequence() {
         return true;
     }
 

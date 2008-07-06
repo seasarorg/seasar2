@@ -26,6 +26,9 @@ public abstract class ${shortClassName} {
   <#if attr.version>
     @Version
   </#if>
+  <#if !attr.transient>
+    @Column(<#if isLengthAvailable(attr)>length = ${attr.length}, </#if><#if isPrecisionAvailable(attr)>precision = ${attr.precision}, scale = ${attr.scale}, </#if>nullable = ${attr.nullable?string})
+  </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>
 }

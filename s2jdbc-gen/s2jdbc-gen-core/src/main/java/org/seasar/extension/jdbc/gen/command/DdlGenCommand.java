@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.command;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
@@ -44,13 +43,9 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.util.ClassUtil;
-
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 
 /**
  * @author taedium
@@ -215,51 +210,43 @@ public class DdlGenCommand extends AbstractCommand {
     }
 
     protected Generator createGenerator() {
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
-        ConfigurationUtil.setDirectoryForTemplateLoading(configuration,
-                templateDir);
-        return new GeneratorImpl(configuration);
+        return new GeneratorImpl(templateFileEncoding, templateDir);
     }
 
+    @Override
     protected void doExecute() {
         List<EntityMeta> entityMetaList = entityMetaReader.read();
         List<TableDesc> tableDescList = new ArrayList<TableDesc>();
         for (EntityMeta entityMeta : entityMetaList) {
             tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
         }
+    }
+
+    protected void generate(List<TableDesc> tableDescList) {
         Object model = schemaModelFactory.getSchemaModel(tableDescList);
         GenerationContext createTableCtx = getGenerationContext(model,
                 createTableDdlName, createTableTemplateName);
-        GenerationContext createConstraintCtx = getGenerationContext(model,
-                createConstraintDdlName, createConstraintTemplateName);
-        GenerationContext createSequenceCtx = getGenerationContext(model,
-                createSequenceDdlName, createSequenceTemplateName);
         GenerationContext dropTableCtx = getGenerationContext(model,
                 dropTableDdlName, createTableTemplateName);
+        GenerationContext createConstraintCtx = getGenerationContext(model,
+                createConstraintDdlName, createConstraintTemplateName);
         GenerationContext dropConstraintCtx = getGenerationContext(model,
                 dropConstraintDdlName, dropConstraintTemplateName);
+        GenerationContext createSequenceCtx = getGenerationContext(model,
+                createSequenceDdlName, createSequenceTemplateName);
         GenerationContext dropSequenceCtx = getGenerationContext(model,
                 dropSequenceDdlName, dropSequenceTemplateName);
         generator.generate(createTableCtx);
-        generator.generate(createConstraintCtx);
-        generator.generate(createSequenceCtx);
         generator.generate(dropTableCtx);
+        generator.generate(createConstraintCtx);
         generator.generate(dropConstraintCtx);
+        generator.generate(createSequenceCtx);
         generator.generate(dropSequenceCtx);
     }
 
     protected GenerationContext getGenerationContext(Object model,
             String ddlName, String templateName) {
-        GenerationContext context = new GenerationContext();
-        context.setDir(destDir);
-        context.setFile(new File(destDir, ddlName));
-        context.setEncoding(ddlFileEncoding);
-        context.setModel(model);
-        context.setTemplateName(templateName);
-        context.setOverwrite(true);
-        return context;
+        return new GenerationContext(model, destDir,
+                new File(destDir, ddlName), templateName, ddlFileEncoding, true);
     }
-
 }

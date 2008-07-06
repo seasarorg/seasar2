@@ -2,7 +2,9 @@ package hoge;
 
 import bar.AbstractFoo;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
+@Table(schema = "BBB")
 public class Foo extends AbstractFoo {
 }

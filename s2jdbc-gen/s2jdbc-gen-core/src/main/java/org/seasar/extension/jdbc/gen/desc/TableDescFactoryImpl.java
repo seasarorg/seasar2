@@ -238,14 +238,14 @@ public class TableDescFactoryImpl implements TableDescFactory {
             Table table) {
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
             UniqueKeyDesc uniqueKeyDesc = uniqueKeyDescFactory
-                    .getSingleUniqueKey(columnDesc);
+                    .getSingleUniqueKeyDesc(columnDesc);
             if (uniqueKeyDesc != null) {
                 tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
             }
         }
         for (UniqueConstraint uc : table.uniqueConstraints()) {
             UniqueKeyDesc uniqueKeyDesc = uniqueKeyDescFactory
-                    .getCompositeUniqueKey(uc);
+                    .getCompositeUniqueKeyDesc(uc);
             if (uniqueKeyDesc != null) {
                 tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
             }

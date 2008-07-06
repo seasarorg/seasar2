@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.command;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.sql.DataSource;
 
@@ -29,9 +28,9 @@ import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.EntityBaseModelFactory;
-import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
@@ -40,19 +39,14 @@ import org.seasar.extension.jdbc.gen.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionBaseModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.EntityConditionModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.ClassUtil;
-
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 
 /**
  * S2JDBC用エンティティのJavaファイルを生成する{@link Command}の実装クラスです。
@@ -95,11 +89,11 @@ public class EntityGenCommand extends AbstractCommand {
 
     /** エンティティ基底クラスのテンプレート名 */
     @BindableProperty
-    protected String entityBaseTemplateName = "entity-base.ftl";;
+    protected String entityBaseTemplateName = "entity-base.ftl";
 
     /** 条件クラスのテンプレート名 */
     @BindableProperty
-    protected String conditionTemplateName = "condition.ftl";;
+    protected String conditionTemplateName = "condition.ftl";
 
     /** 条件基底クラスのテンプレート名 */
     @BindableProperty
@@ -139,16 +133,16 @@ public class EntityGenCommand extends AbstractCommand {
     /** ジェネレータ */
     protected Generator generator;
 
-    /** {@link EntityModel}のファクトリ */
+    /** エンティティクラスのモデルのファクトリ */
     protected EntityModelFactory entityModelFactory;
 
-    /** {@link EntityBaseModel}のファクトリ */
+    /** エンティティ基底クラスのモデルのファクトリ */
     protected EntityBaseModelFactory entityBaseModelFactory;
 
-    /** {@link EntityCondition}のファクトリ */
+    /** 条件クラスのモデルのファクトリ */
     protected ConditionModelFactory conditionModelFactory;
 
-    /** {@link EntityConditionBase}のファクトリ */
+    /** 条件基底クラスのモデルのファクトリ */
     protected ConditionBaseModelFactory conditionBaseModelFactory;
 
     /**
@@ -371,21 +365,21 @@ public class EntityGenCommand extends AbstractCommand {
     }
 
     /**
-     * {@link EntityConditionModel}のファクトリを作成します。
+     * {@link ConditionModelFactory}の実装を作成します。
      * 
-     * @return {@link EntityConditionModel}のファクトリ
+     * @return {@link ConditionModelFactory}の実装
      */
     protected ConditionModelFactory createEntityConditionModelFactory() {
-        return new EntityConditionModelFactoryImpl();
+        return new ConditionModelFactoryImpl();
     }
 
     /**
-     * {@link EntityConditionBaseModel}のファクトリを作成します。
+     * {@link ConditionBaseModelFactory}の実装を作成します。
      * 
-     * @return {@link EntityConditionBaseModel}のファクトリ
+     * @return {@link ConditionBaseModelFactory}の実装
      */
     protected ConditionBaseModelFactory createEntityConditionBaseModelFactory() {
-        return new EntityConditionBaseModelFactoryImpl();
+        return new ConditionBaseModelFactoryImpl();
     }
 
     /**
@@ -394,65 +388,125 @@ public class EntityGenCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        Configuration cfg = new Configuration();
-        cfg.setObjectWrapper(new DefaultObjectWrapper());
-        cfg.setEncoding(Locale.getDefault(), templateFileEncoding);
-        ConfigurationUtil.setDirectoryForTemplateLoading(cfg, templateDir);
-        return new GeneratorImpl(cfg);
+        return new GeneratorImpl(templateFileEncoding, templateDir);
     }
 
-    public void doExecute() {
+    @Override
+    protected void doExecute() {
         List<DbTableMeta> tableMetaList = dbTableMetaReader.read();
         List<EntityDesc> entityDescList = new ArrayList<EntityDesc>();
         for (DbTableMeta tableMeta : tableMetaList) {
             EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
             entityDescList.add(entityDesc);
         }
+        generate(entityDescList);
+    }
+
+    /**
+     * エンティティクラスのJavaファイルを生成します。
+     * 
+     * @param entityDescList
+     *            エンティティ記述のリスト
+     */
+    protected void generate(List<EntityDesc> entityDescList) {
         for (EntityDesc entityDesc : entityDescList) {
-            GenerationContext entityCtx = getEntityGenerationContext(entityDesc);
-            generator.generate(entityCtx);
-            GenerationContext entityBaseCtx = getEntityBaseGenerationContext(entityDesc);
-            generator.generate(entityBaseCtx);
-            if (!generateConditionClass) {
-                continue;
+            generateEntity(entityDesc);
+            generateEntityBase(entityDesc);
+            if (generateConditionClass) {
+                generateCondition(entityDesc);
+                generateConditionBase(entityDesc);
             }
-            GenerationContext conditionCtx = getEntityConditionGenerationContext(entityDesc);
-            generator.generate(conditionCtx);
-            GenerationContext conditionBaseCtx = getEntityConditionBaseGenerationContext(entityDesc);
-            generator.generate(conditionBaseCtx);
         }
     }
 
     /**
-     * エンティティクラス用の{@link GenerationContext}を返します。
+     * エンティティクラスのJavaファイルを生成します。
      * 
      * @param entityDesc
      *            エンティティ記述
-     * @return エンティティクラス用の{@link GenerationContext}
      */
-    protected GenerationContext getEntityGenerationContext(EntityDesc entityDesc) {
+    protected void generateEntity(EntityDesc entityDesc) {
         String className = getEntityClassName(entityDesc.getName());
         String baseClassName = getEntityBaseClassName(entityDesc.getName());
-        Object model = entityModelFactory.getEntityModel(entityDesc,
-                className, baseClassName);
-
-        return getGenerationContext(model, className, entityTemplateName, false);
+        Object model = entityModelFactory.getEntityModel(entityDesc, className,
+                baseClassName);
+        GenerationContext context = getGenerationContext(model, className,
+                entityTemplateName, false);
+        generator.generate(context);
     }
 
     /**
-     * エンティティの基底クラス用の{@link GenerationContext}を返します。
+     * エンティティ基底クラスのJavaファイルを生成します。
      * 
      * @param entityDesc
      *            エンティティ記述
-     * @return エンティティ用の{@link GenerationContext}
      */
-    protected GenerationContext getEntityBaseGenerationContext(
-            EntityDesc entityDesc) {
+    protected void generateEntityBase(EntityDesc entityDesc) {
         String className = getEntityBaseClassName(entityDesc.getName());
-        Object model = entityBaseModelFactory.getEntityBaseModel(
+        Object model = entityBaseModelFactory.getEntityBaseModel(entityDesc,
+                className);
+        GenerationContext context = getGenerationContext(model, className,
+                entityBaseTemplateName, true);
+        generator.generate(context);
+    }
+
+    /**
+     * 条件クラスのJavaファイルを生成します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void generateCondition(EntityDesc entityDesc) {
+        String className = getEntityConditionClassName(entityDesc.getName());
+        String baseClassName = getEntityConditionBaseClassName(entityDesc
+                .getName());
+        Object model = conditionModelFactory.getConditionModel(entityDesc,
+                className, baseClassName);
+        GenerationContext context = getGenerationContext(model, className,
+                conditionTemplateName, false);
+        generator.generate(context);
+    }
+
+    /**
+     * 条件基底クラスのJavaファイルを生成します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void generateConditionBase(EntityDesc entityDesc) {
+        String className = getEntityConditionBaseClassName(entityDesc.getName());
+        Object model = conditionBaseModelFactory.getConditionBaseModel(
                 entityDesc, className);
-        return getGenerationContext(model, className, entityBaseTemplateName,
-                true);
+        GenerationContext context = getGenerationContext(model, className,
+                conditionBaseTemplateName, true);
+        generator.generate(context);
+    }
+
+    /**
+     * {@link GenerationContext}を返します。
+     * 
+     * @param model
+     *            モデル
+     * @param className
+     *            クラス名
+     * @param templateName
+     *            テンプレート名
+     * @param overwrite
+     *            ファイルを上書きする場合 {@code true}
+     * @return {@link GenerationContext}
+     */
+    protected GenerationContext getGenerationContext(Object model,
+            String className, String templateName, boolean overwrite) {
+        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
+        String packageName = elements[0];
+        String shortClassName = elements[1];
+
+        File dir = new File(destDir, packageName.replace('.',
+                File.separatorChar));
+        File file = new File(dir, shortClassName + ".java");
+
+        return new GenerationContext(model, dir, file, templateName,
+                javaFileEncoding, overwrite);
     }
 
     /**
@@ -469,11 +523,11 @@ public class EntityGenCommand extends AbstractCommand {
     }
 
     /**
-     * エンティティの基底クラス名を返します。
+     * エンティティ基底クラス名を返します。
      * 
      * @param entityName
      *            エンティティ名
-     * @return エンティティの基底クラス名
+     * @return エンティティ基底クラス名
      */
     protected String getEntityBaseClassName(String entityName) {
         String packageName = ClassUtil.concatName(rootPackageName,
@@ -483,47 +537,11 @@ public class EntityGenCommand extends AbstractCommand {
     }
 
     /**
-     * エンティティ条件クラス用の{@link GenerationContext}を返します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     * @return エンティティ条件クラス用の{@link GenerationContext}
-     */
-    protected GenerationContext getEntityConditionGenerationContext(
-            EntityDesc entityDesc) {
-        String className = getEntityConditionClassName(entityDesc.getName());
-        String baseClassName = getEntityConditionBaseClassName(entityDesc
-                .getName());
-        Object model = conditionModelFactory.getConditionModel(entityDesc,
-                className, baseClassName);
-
-        return getGenerationContext(model, className, conditionTemplateName,
-                false);
-    }
-
-    /**
-     * エンティティ条件基底クラス用の{@link GenerationContext}を返します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     * @return エンティティ条件基底クラス用の{@link GenerationContext}
-     */
-    protected GenerationContext getEntityConditionBaseGenerationContext(
-            EntityDesc entityDesc) {
-        String className = getEntityConditionBaseClassName(entityDesc.getName());
-        Object model = conditionBaseModelFactory
-                .getConditionBaseModel(entityDesc, className);
-
-        return getGenerationContext(model, className,
-                conditionBaseTemplateName, true);
-    }
-
-    /**
-     * エンティティ条件クラス名を返します。
+     * 条件クラス名を返します。
      * 
      * @param entityName
      *            エンティティ名
-     * @return エンティティ条件クラス名
+     * @return 条件クラス名
      */
     protected String getEntityConditionClassName(String entityName) {
         String packageName = ClassUtil.concatName(rootPackageName,
@@ -533,11 +551,11 @@ public class EntityGenCommand extends AbstractCommand {
     }
 
     /**
-     * エンティティ条件の基底クラス名を返します。
+     * 条件基底クラス名を返します。
      * 
      * @param entityName
      *            エンティティ名
-     * @return エンティティ条件の基底クラス名
+     * @return 条件基底クラス名
      */
     protected String getEntityConditionBaseClassName(String entityName) {
         String packageName = ClassUtil.concatName(rootPackageName,
@@ -545,37 +563,6 @@ public class EntityGenCommand extends AbstractCommand {
         String shortClassName = baseClassNamePrefix + entityName
                 + conditionClassNameSuffix;
         return ClassUtil.concatName(packageName, shortClassName);
-    }
-
-    /**
-     * {@link GenerationContext}を返します。
-     * 
-     * @param model
-     *            モデル
-     * @param className
-     *            クラス名
-     * @param templateName
-     *            テンプレート名
-     * @return {@link GenerationContext}
-     */
-    protected GenerationContext getGenerationContext(Object model,
-            String className, String templateName, boolean overwrite) {
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        String packageName = elements[0];
-        String shortClassName = elements[1];
-
-        File dir = new File(destDir, packageName.replace('.',
-                File.separatorChar));
-        File file = new File(dir, shortClassName + ".java");
-
-        GenerationContext context = new GenerationContext();
-        context.setDir(dir);
-        context.setFile(file);
-        context.setEncoding(javaFileEncoding);
-        context.setModel(model);
-        context.setTemplateName(templateName);
-        context.setOverwrite(overwrite);
-        return context;
     }
 
 }

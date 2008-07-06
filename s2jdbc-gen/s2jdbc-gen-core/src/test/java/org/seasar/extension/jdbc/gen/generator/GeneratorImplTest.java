@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.generator;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,17 +38,15 @@ import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.model.ConditionBaseModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityBaseModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.EntityConditionBaseModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.EntityConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
 
-import freemarker.template.Configuration;
-import freemarker.template.DefaultObjectWrapper;
 import static org.junit.Assert.*;
 
 /**
@@ -62,11 +61,8 @@ public class GeneratorImplTest {
 
     @Before
     public void before() throws Exception {
-        File file = ResourceUtil.getResourceAsFile("templates");
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        generator = new GeneratorImplStub(configuration);
+        File dir = ResourceUtil.getResourceAsFile("templates");
+        generator = new GeneratorImplStub("UTF-8", dir);
         writer = new StringWriter();
     }
 
@@ -77,20 +73,13 @@ public class GeneratorImplTest {
     @Test
     public void testGenerate() throws Exception {
         String packageName = ClassUtil.getPackageName(getClass());
-        File file = ResourceUtil.getResourceAsFile(packageName
-                .replace('.', '/'));
-        Configuration configuration = new Configuration();
-        configuration.setObjectWrapper(new DefaultObjectWrapper());
-        configuration.setDirectoryForTemplateLoading(file);
-        GeneratorImpl generator = new GeneratorImplStub(configuration);
+        File dir = ResourceUtil
+                .getResourceAsFile(packageName.replace('.', '/'));
+        GeneratorImpl generator = new GeneratorImplStub("UTF-8", dir);
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(new MyModel("hoge"));
-        context.setTemplateName(getClass().getSimpleName() + "_hoge.ftl");
-
+        GenerationContext context = new GenerationContext(new MyModel("hoge"),
+                new File("dir"), new File("file"), getClass().getSimpleName()
+                        + "_hoge.ftl", "UTF-8", false);
         generator.generate(context);
         assertEquals("hoge", writer.toString());
     }
@@ -131,6 +120,8 @@ public class GeneratorImplTest {
         version.setAttributeClass(Integer.class);
 
         EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
         entityDesc.addAttribute(id);
         entityDesc.addAttribute(name);
@@ -143,13 +134,8 @@ public class GeneratorImplTest {
         Object model = factory.getEntityModel(entityDesc, "hoge.Foo",
                 "bar.AbstractFoo");
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("entity.ftl");
-
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "entity.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_entity.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
@@ -165,51 +151,76 @@ public class GeneratorImplTest {
         id.setName("id");
         id.setId(true);
         id.setAttributeClass(int.class);
+        id.setColumnName("ID");
+        id.setPrecision(10);
+        id.setScale(0);
+        id.setNullable(false);
 
         AttributeDesc name = new AttributeDesc();
         name.setName("name");
         name.setAttributeClass(String.class);
+        name.setColumnName("NAME");
+        name.setLength(20);
+        name.setNullable(false);
+
+        AttributeDesc sal = new AttributeDesc();
+        sal.setName("sal");
+        sal.setAttributeClass(BigDecimal.class);
+        sal.setColumnName("SAL");
+        sal.setPrecision(15);
+        sal.setScale(5);
+        sal.setNullable(false);
 
         AttributeDesc lob = new AttributeDesc();
         lob.setName("lob");
         lob.setLob(true);
         lob.setAttributeClass(byte[].class);
+        lob.setColumnName("LOB");
+        lob.setLength(10);
+        lob.setNullable(true);
 
         AttributeDesc date = new AttributeDesc();
         date.setName("date");
         date.setTemporalType(TemporalType.DATE);
         date.setAttributeClass(java.util.Date.class);
+        date.setColumnName("DATE");
+        date.setLength(10);
+        date.setNullable(true);
 
         AttributeDesc temp = new AttributeDesc();
         temp.setName("temp");
         temp.setTransient(true);
         temp.setAttributeClass(String.class);
+        temp.setColumnName("TEMP");
+        temp.setLength(10);
+        temp.setNullable(false);
 
         AttributeDesc version = new AttributeDesc();
         version.setName("version");
         version.setVersion(true);
         version.setAttributeClass(Integer.class);
+        version.setColumnName("VERSION");
+        version.setPrecision(10);
+        version.setScale(0);
+        version.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setName("Foo");
         entityDesc.addAttribute(id);
         entityDesc.addAttribute(name);
+        entityDesc.addAttribute(sal);
         entityDesc.addAttribute(lob);
         entityDesc.addAttribute(date);
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
         EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        Object model = factory.getEntityBaseModel(entityDesc,
-                "bar.AbstractFoo");
+        Object model = factory
+                .getEntityBaseModel(entityDesc, "bar.AbstractFoo");
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("entity-base.ftl");
-
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "entity-base.ftl", "UTF-8",
+                false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_entity-base.txt";
@@ -226,11 +237,19 @@ public class GeneratorImplTest {
         id1.setName("id1");
         id1.setId(true);
         id1.setAttributeClass(int.class);
+        id1.setColumnName("ID1");
+        id1.setPrecision(10);
+        id1.setScale(0);
+        id1.setNullable(false);
 
         AttributeDesc id2 = new AttributeDesc();
         id2.setName("id2");
         id2.setId(true);
         id2.setAttributeClass(int.class);
+        id2.setColumnName("ID");
+        id2.setPrecision(20);
+        id2.setScale(0);
+        id2.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setName("Foo");
@@ -238,16 +257,12 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(id2);
 
         EntityBaseModelFactoryImpl factory = new EntityBaseModelFactoryImpl();
-        Object model = factory.getEntityBaseModel(entityDesc,
-                "bar.AbstractFoo");
+        Object model = factory
+                .getEntityBaseModel(entityDesc, "bar.AbstractFoo");
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("entity-base.ftl");
-
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "entity-base.ftl", "UTF-8",
+                false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_entity-base_compositeId.txt";
@@ -300,17 +315,13 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityConditionModelFactoryImpl factory = new EntityConditionModelFactoryImpl();
+        ConditionModelFactoryImpl factory = new ConditionModelFactoryImpl();
         Object model = factory.getConditionModel(entityDesc,
                 "hoge.FooCondition", "bar.AbstractFooCondition");
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("condition.ftl");
-
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "condition.ftl", "UTF-8",
+                false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_condition.txt";
         assertEquals(TextUtil.readUTF8(path), writer.toString());
@@ -321,7 +332,7 @@ public class GeneratorImplTest {
      * @throws Exception
      */
     @Test
-    public void testGenerate_entityConditionBase() throws Exception {
+    public void testGenerate_conditionBase() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
@@ -362,17 +373,13 @@ public class GeneratorImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityConditionBaseModelFactoryImpl factory = new EntityConditionBaseModelFactoryImpl();
+        ConditionBaseModelFactoryImpl factory = new ConditionBaseModelFactoryImpl();
         Object model = factory.getConditionBaseModel(entityDesc,
                 "bar.AbstractFooCondition");
 
-        GenerationContext context = new GenerationContext();
-        context.setDir(new File("dir"));
-        context.setFile(new File("file"));
-        context.setEncoding("UTF-8");
-        context.setModel(model);
-        context.setTemplateName("condition-base.ftl");
-
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "condition-base.ftl",
+                "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_condition-base.txt";
@@ -413,12 +420,9 @@ public class GeneratorImplTest {
                 tableDesc2));
 
         {
-            GenerationContext context = new GenerationContext();
-            context.setDir(new File("dir"));
-            context.setFile(new File("file"));
-            context.setEncoding("UTF-8");
-            context.setModel(model);
-            context.setTemplateName("create-table.ftl");
+            GenerationContext context = new GenerationContext(model, new File(
+                    "dir"), new File("file"), "create-table.ftl", "UTF-8",
+                    false);
             generator.generate(context);
             String path = getClass().getName().replace(".", "/")
                     + "_create-table.txt";
@@ -426,12 +430,8 @@ public class GeneratorImplTest {
         }
         writer = new StringWriter();
         {
-            GenerationContext context = new GenerationContext();
-            context.setDir(new File("dir"));
-            context.setFile(new File("file"));
-            context.setEncoding("UTF-8");
-            context.setModel(model);
-            context.setTemplateName("drop-table.ftl");
+            GenerationContext context = new GenerationContext(model, new File(
+                    "dir"), new File("file"), "drop-table.ftl", "UTF-8", false);
             generator.generate(context);
             String path = getClass().getName().replace(".", "/")
                     + "_drop-table.txt";
@@ -465,12 +465,9 @@ public class GeneratorImplTest {
                 tableDesc2));
 
         {
-            GenerationContext context = new GenerationContext();
-            context.setDir(new File("dir"));
-            context.setFile(new File("file"));
-            context.setEncoding("UTF-8");
-            context.setModel(model);
-            context.setTemplateName("create-sequence.ftl");
+            GenerationContext context = new GenerationContext(model, new File(
+                    "dir"), new File("file"), "create-sequence.ftl", "UTF-8",
+                    false);
             generator.generate(context);
             String path = getClass().getName().replace(".", "/")
                     + "_create-sequence.txt";
@@ -478,12 +475,9 @@ public class GeneratorImplTest {
         }
         writer = new StringWriter();
         {
-            GenerationContext context = new GenerationContext();
-            context.setDir(new File("dir"));
-            context.setFile(new File("file"));
-            context.setEncoding("UTF-8");
-            context.setModel(model);
-            context.setTemplateName("drop-sequence.ftl");
+            GenerationContext context = new GenerationContext(model, new File(
+                    "dir"), new File("file"), "drop-sequence.ftl", "UTF-8",
+                    false);
             generator.generate(context);
             String path = getClass().getName().replace(".", "/")
                     + "_drop-sequence.txt";
@@ -586,12 +580,9 @@ public class GeneratorImplTest {
         Object model = factory.getSchemaModel(tableDescList);
 
         {
-            GenerationContext context = new GenerationContext();
-            context.setDir(new File("dir"));
-            context.setFile(new File("file"));
-            context.setEncoding("UTF-8");
-            context.setModel(model);
-            context.setTemplateName("create-constraint.ftl");
+            GenerationContext context = new GenerationContext(model, new File(
+                    "dir"), new File("file"), "create-constraint.ftl", "UTF-8",
+                    false);
             generator.generate(context);
             String path = getClass().getName().replace(".", "/")
                     + "_create-constraint.txt";
@@ -599,12 +590,9 @@ public class GeneratorImplTest {
         }
         writer = new StringWriter();
         {
-            GenerationContext context = new GenerationContext();
-            context.setDir(new File("dir"));
-            context.setFile(new File("file"));
-            context.setEncoding("UTF-8");
-            context.setModel(model);
-            context.setTemplateName("drop-constraint.ftl");
+            GenerationContext context = new GenerationContext(model, new File(
+                    "dir"), new File("file"), "drop-constraint.ftl", "UTF-8",
+                    false);
             generator.generate(context);
             String path = getClass().getName().replace(".", "/")
                     + "_drop-constraint.txt";
@@ -623,8 +611,8 @@ public class GeneratorImplTest {
          * 
          * @param configuration
          */
-        public GeneratorImplStub(Configuration configuration) {
-            super(configuration);
+        public GeneratorImplStub(String templateFielEncoding, File templateDir) {
+            super(templateFielEncoding, templateDir);
         }
 
         @Override

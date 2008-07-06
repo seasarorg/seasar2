@@ -16,47 +16,96 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * シーケンス記述です。
  * 
+ * @author taedium
  */
 public class SequenceDesc {
 
+    /** シーケンス名 */
     protected String sequenceName;
 
+    /** 初期値 */
     protected int initialValue;
 
+    /** 割り当てサイズ */
     protected int allocationSize;
 
+    /** データタイプ */
     protected String dataType;
 
+    /**
+     * シーケンス名を返します。
+     * 
+     * @return シーケンス名
+     */
     public String getSequenceName() {
         return sequenceName;
     }
 
-    public void setSequenceName(String name) {
-        this.sequenceName = name;
+    /**
+     * シーケンス記述を設定します。
+     * 
+     * @param sequenceName
+     *            シーケンス名
+     */
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
     }
 
+    /**
+     * 初期値を返します。
+     * 
+     * @return 初期値を設定します。
+     */
     public int getInitialValue() {
         return initialValue;
     }
 
+    /**
+     * 初期値を設定します。
+     * 
+     * @param initialValue
+     *            初期値
+     */
     public void setInitialValue(int initialValue) {
         this.initialValue = initialValue;
     }
 
+    /**
+     * 割り当てサイズを返します。
+     * 
+     * @return 割り当てサイズ
+     */
     public int getAllocationSize() {
         return allocationSize;
     }
 
+    /**
+     * 割り当てサイズを設定します。
+     * 
+     * @param allocationSize
+     *            割り当てサイズ
+     */
     public void setAllocationSize(int allocationSize) {
         this.allocationSize = allocationSize;
     }
 
+    /**
+     * データタイプを返します。
+     * 
+     * @return データタイプ
+     */
     public String getDataType() {
         return dataType;
     }
 
+    /**
+     * データタイプを設定します。
+     * 
+     * @param dataType
+     *            データタイプ
+     */
     public void setDataType(String dataType) {
         this.dataType = dataType;
     }

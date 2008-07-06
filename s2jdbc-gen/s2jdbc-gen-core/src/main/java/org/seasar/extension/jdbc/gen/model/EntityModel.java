@@ -15,10 +15,19 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-
 /**
  * @author taedium
  * 
  */
 public class EntityModel extends AbstractEntityModel {
+
+    protected boolean tableQualified;
+
+    public boolean isTableQualified() {
+        return tableQualified;
+    }
+
+    public void setTableQualified(boolean tableQualified) {
+        this.tableQualified = tableQualified;
+    }
 }

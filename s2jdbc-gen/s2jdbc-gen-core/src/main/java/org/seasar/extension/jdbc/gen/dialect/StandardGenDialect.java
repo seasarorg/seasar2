@@ -160,7 +160,7 @@ public class StandardGenDialect implements GenDialect {
         return "\"";
     }
 
-    public boolean supprtsSequence() {
+    public boolean supportsSequence() {
         return false;
     }
 

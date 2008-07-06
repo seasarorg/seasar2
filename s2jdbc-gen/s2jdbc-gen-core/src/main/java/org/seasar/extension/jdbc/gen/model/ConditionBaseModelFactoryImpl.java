@@ -31,19 +31,13 @@ import org.seasar.framework.util.ClassUtil;
  * 
  * @author taedium
  */
-public class EntityConditionBaseModelFactoryImpl implements
-        ConditionBaseModelFactory {
+public class ConditionBaseModelFactoryImpl implements ConditionBaseModelFactory {
 
     public ConditionBaseModel getConditionBaseModel(EntityDesc entityDesc,
             String className) {
         ConditionBaseModel model = new ConditionBaseModel();
         model.setClassName(className);
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        model.setPackageName(elements[0]);
-        model.setShortClassName(elements[1]);
         model.setBaseClassName(AbstractEntityCondition.class.getName());
-        model.setShortBaseClassName(AbstractEntityCondition.class
-                .getSimpleName());
         model.setEntityDesc(entityDesc);
         doImportPackageNames(model, entityDesc);
         return model;

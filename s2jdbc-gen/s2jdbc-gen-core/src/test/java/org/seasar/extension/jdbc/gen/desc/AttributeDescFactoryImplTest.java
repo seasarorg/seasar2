@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -130,23 +129,17 @@ public class AttributeDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testColumnName() throws Exception {
+    public void testColumn() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("HOGE");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
-        assertEquals("HOGE", attributeDesc.getColumnName());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testNullable() throws Exception {
-        DbColumnMeta columnMeta = new DbColumnMeta();
-        columnMeta.setName("hoge");
+        columnMeta.setLength(10);
+        columnMeta.setScale(5);
         columnMeta.setNullable(true);
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        assertEquals("HOGE", attributeDesc.getColumnName());
+        assertEquals(10, attributeDesc.getLength());
+        assertEquals(10, attributeDesc.getPrecision());
+        assertEquals(5, attributeDesc.getScale());
         assertTrue(attributeDesc.isNullable());
     }
 

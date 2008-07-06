@@ -94,12 +94,41 @@ public interface GenDialect {
      */
     GenerationType getDefaultGenerationType();
 
+    /**
+     * 開始を表すクォートを返します。
+     * 
+     * @return 開始を表すクォート
+     */
     String getOpenQuote();
 
+    /**
+     * 終了を表すクォートを返します。
+     * 
+     * @return 終了を表すクォート
+     */
     String getCloseQuote();
 
-    boolean supprtsSequence();
+    /**
+     * シーケンスをサポートする場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return シーケンスをサポートする場合{@code true}、しない場合{@code false}
+     */
+    boolean supportsSequence();
 
+    /**
+     * シーケンス定義の断片を返します。
+     * <p>
+     * この断片は create sequence 以降に続きます。
+     * </p>
+     * 
+     * @param dataType
+     *            データタイプ
+     * @param initValue
+     *            初期値
+     * @param allocationSize
+     *            割り当てサイズ
+     * @return
+     */
     String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize);
 

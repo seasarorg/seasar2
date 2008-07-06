@@ -42,7 +42,7 @@ public abstract class AbstractCommand implements Command {
     /** ロガー */
     protected static Logger logger = Logger.getLogger(AbstractCommand.class);
 
-    /** diconファイル */
+    /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
     @BindableProperty
     protected String diconFile = "s2jdbc.dicon";
 

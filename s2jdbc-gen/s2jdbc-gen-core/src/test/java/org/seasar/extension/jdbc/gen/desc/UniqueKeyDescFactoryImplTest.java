@@ -40,33 +40,33 @@ public class UniqueKeyDescFactoryImplTest {
     }
 
     @Test
-    public void testGetCompositeUniqueKey() throws Exception {
+    public void testGetCompositeUniqueKeyDesc() throws Exception {
         UniqueConstraint[] uniqueConstraints = Aaa.class.getAnnotation(
                 Table.class).uniqueConstraints();
 
         UniqueKeyDesc uniqueKeyDesc = factory
-                .getCompositeUniqueKey(uniqueConstraints[0]);
+                .getCompositeUniqueKeyDesc(uniqueConstraints[0]);
         assertNotNull(uniqueKeyDesc);
         assertEquals(2, uniqueKeyDesc.getColumnNameList().size());
         assertEquals("aaa", uniqueKeyDesc.getColumnNameList().get(0));
         assertEquals("bbb", uniqueKeyDesc.getColumnNameList().get(1));
 
-        uniqueKeyDesc = factory.getCompositeUniqueKey(uniqueConstraints[1]);
+        uniqueKeyDesc = factory.getCompositeUniqueKeyDesc(uniqueConstraints[1]);
         assertNull(uniqueKeyDesc);
     }
 
     @Test
-    public void testGetSingleUniqueKey() throws Exception {
+    public void testGetSingleUniqueKeyDesc() throws Exception {
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName("aaa");
         columnDesc.setUnique(true);
-        UniqueKeyDesc uniqueKeyDesc = factory.getSingleUniqueKey(columnDesc);
+        UniqueKeyDesc uniqueKeyDesc = factory.getSingleUniqueKeyDesc(columnDesc);
         assertNotNull(uniqueKeyDesc);
         assertEquals(1, uniqueKeyDesc.getColumnNameList().size());
         assertEquals("aaa", uniqueKeyDesc.getColumnNameList().get(0));
 
         columnDesc.setUnique(false);
-        uniqueKeyDesc = factory.getSingleUniqueKey(columnDesc);
+        uniqueKeyDesc = factory.getSingleUniqueKeyDesc(columnDesc);
         assertNull(uniqueKeyDesc);
     }
 

@@ -15,10 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.gen.model.EntityModel;
 
 /**
- * {@link EntityModel}のファクトリです。
+ * エンティティクラスのモデルのファクトリです。
  * 
  * @author taedium
  */

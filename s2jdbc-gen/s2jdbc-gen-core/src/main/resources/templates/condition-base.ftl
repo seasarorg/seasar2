@@ -25,11 +25,11 @@ public abstract class ${shortClassName} extends
     </#if>
   <#else>
     <#if attr.isNullable()>
-    public NullableCondition<${shortClassName}, ${attr.getAttributeClassAsRefType().getSimpleName()}> ${attr.name} =
-        new NullableCondition<${shortClassName}, ${attr.getAttributeClassAsRefType().getSimpleName()}>("${attr.name}", this);
+    public NullableCondition<${shortClassName}, ${getSimpleClassName(attr)}> ${attr.name} =
+        new NullableCondition<${shortClassName}, ${getSimpleClassName(attr)}>("${attr.name}", this);
     <#else>
-    public NotNullableCondition<${shortClassName}, ${attr.getAttributeClassAsRefType().getSimpleName()}> ${attr.name} =
-        new NotNullableCondition<${shortClassName}, ${attr.getAttributeClassAsRefType().getSimpleName()}>("${attr.name}", this);
+    public NotNullableCondition<${shortClassName}, ${getSimpleClassName(attr)}> ${attr.name} =
+        new NotNullableCondition<${shortClassName}, ${getSimpleClassName(attr)}>("${attr.name}", this);
     </#if>
   </#if>
 </#list>

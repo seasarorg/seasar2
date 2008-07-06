@@ -30,16 +30,16 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntityConditionModelFactoryImplTest {
+public class ConditionModelFactoryImplTest {
 
-    private EntityConditionModelFactoryImpl factory = new EntityConditionModelFactoryImpl();
+    private ConditionModelFactoryImpl factory = new ConditionModelFactoryImpl();
 
     /**
      * 
      * @throws Exception
      */
     @Test
-    public void testGetEntityConditionModel() throws Exception {
+    public void testGetConditionModel() throws Exception {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);

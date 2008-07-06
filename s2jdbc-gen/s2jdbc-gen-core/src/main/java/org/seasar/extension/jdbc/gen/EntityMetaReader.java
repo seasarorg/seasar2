@@ -20,10 +20,16 @@ import java.util.List;
 import org.seasar.extension.jdbc.EntityMeta;
 
 /**
- * @author taedium
+ * {@link EntityMeta エンティティメタデータ}を読み取るインタフェースです。
  * 
+ * @author taedium
  */
 public interface EntityMetaReader {
 
+    /**
+     * エンティティメタデータを読み取ります。
+     * 
+     * @return エンティティメタデータ
+     */
     public List<EntityMeta> read();
 }

@@ -21,8 +21,6 @@ import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.desc.AttributeDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
@@ -67,10 +65,14 @@ public class EntityDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testTableName() throws Exception {
+    public void testTable() throws Exception {
         DbTableMeta dbTableMeta = new DbTableMeta();
+        dbTableMeta.setCatalogName("AAA");
+        dbTableMeta.setSchemaName("BBB");
         dbTableMeta.setName("HOGE");
         EntityDesc entityDesc = factory.getEntityDesc(dbTableMeta);
+        assertEquals("AAA", entityDesc.getCatalogName());
+        assertEquals("BBB", entityDesc.getSchemaName());
         assertEquals("HOGE", entityDesc.getTableName());
     }
 

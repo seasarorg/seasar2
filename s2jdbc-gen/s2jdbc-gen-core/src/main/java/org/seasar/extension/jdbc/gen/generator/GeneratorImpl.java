@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Locale;
 
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
@@ -31,6 +32,7 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
 /**
@@ -47,13 +49,30 @@ public class GeneratorImpl implements Generator {
     protected Configuration configuration;
 
     /**
-     * インスタンスを生成します。
+     * インスタンスを構築します。
      * 
      * @param configuration
      *            FreeMarkerの設定
      */
     public GeneratorImpl(Configuration configuration) {
         this.configuration = configuration;
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param templateFileEncoding
+     *            テンプレートファイルのエンコーディング
+     * @param templateDir
+     *            テンプレートファイルが格納されたディレクトリ
+     */
+    public GeneratorImpl(String templateFileEncoding, File templateDir) {
+        this.configuration = new Configuration();
+        configuration.setObjectWrapper(new DefaultObjectWrapper());
+        configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
+        configuration.setNumberFormat("0.#####");
+        ConfigurationUtil.setDirectoryForTemplateLoading(configuration,
+                templateDir);
     }
 
     public void generate(GenerationContext context) {

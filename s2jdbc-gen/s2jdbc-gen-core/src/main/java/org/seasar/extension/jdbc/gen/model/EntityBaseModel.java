@@ -15,10 +15,26 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import org.seasar.extension.jdbc.gen.AttributeDesc;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author taedium
  * 
  */
 public class EntityBaseModel extends AbstractEntityModel {
+
+    public boolean isLengthAvailable(AttributeDesc attributeDesc) {
+        return !isNumber(attributeDesc) && attributeDesc.getLength() > 0;
+    }
+
+    public boolean isPrecisionAvailable(AttributeDesc attributeDesc) {
+        return isNumber(attributeDesc) && attributeDesc.getPrecision() > 0;
+    }
+
+    protected boolean isNumber(AttributeDesc attributeDesc) {
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                .getAttributeClass());
+        return Number.class.isAssignableFrom(clazz);
+    }
 }

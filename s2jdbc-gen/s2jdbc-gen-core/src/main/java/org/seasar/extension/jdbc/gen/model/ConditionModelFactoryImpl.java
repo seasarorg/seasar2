@@ -17,26 +17,19 @@ package org.seasar.extension.jdbc.gen.model;
 
 import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link ConditionModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
-public class EntityConditionModelFactoryImpl implements ConditionModelFactory {
+public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
     public ConditionModel getConditionModel(EntityDesc entityDesc,
             String className, String baseClassName) {
         ConditionModel model = new ConditionModel();
         model.setClassName(className);
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        model.setPackageName(elements[0]);
-        model.setShortClassName(elements[1]);
         model.setBaseClassName(baseClassName);
-        String[] elements2 = ClassUtil
-                .splitPackageAndShortClassName(baseClassName);
-        model.setShortBaseClassName(elements2[1]);
         model.setEntityDesc(entityDesc);
         doImportPackageNames(model, entityDesc);
         return model;

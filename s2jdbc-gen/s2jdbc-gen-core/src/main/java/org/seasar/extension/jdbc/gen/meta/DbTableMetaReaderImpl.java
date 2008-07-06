@@ -50,8 +50,10 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** スキーマ名 */
     protected String schemaName;
 
+    /** 正規表現で表されたテーブル名のパターン */
     protected String tableNamePattern;
 
     /**
@@ -89,29 +91,22 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
             String schemaName = this.schemaName != null ? this.schemaName
                     : getDefaultSchemaName(metaData);
-            List<String> tableNames = getTableNameList(metaData, schemaName);
-
-            List<DbTableMeta> result = new ArrayList<DbTableMeta>();
-            for (String tableName : filterTableNames(tableNames,
-                    tableNamePattern)) {
-                if (!dialect.isUserTable(tableName)) {
-                    continue;
-                }
-                DbTableMeta tableMeta = new DbTableMeta();
-                tableMeta.setName(tableName);
-
-                Set<String> primaryKeys = getPrimaryKeySet(metaData,
-                        schemaName, tableName);
-                for (DbColumnMeta cm : getDbColumnMetaList(metaData,
-                        schemaName, tableName)) {
+            List<DbTableMeta> dbTableMetaList = getDbTableMetaList(metaData,
+                    schemaName);
+            List<DbTableMeta> filteredDbTableMetaList = filterDbTableMetaList(
+                    dbTableMetaList, tableNamePattern);
+            for (DbTableMeta tm : filteredDbTableMetaList) {
+                Set<String> primaryKeys = getPrimaryKeySet(metaData, tm
+                        .getCatalogName(), tm.getSchemaName(), tm.getName());
+                for (DbColumnMeta cm : getDbColumnMetaList(metaData, tm
+                        .getCatalogName(), tm.getSchemaName(), tm.getName())) {
                     if (primaryKeys.contains(cm.getName())) {
                         cm.setPrimaryKey(true);
                     }
-                    tableMeta.addColumnMeta(cm);
+                    tm.addColumnMeta(cm);
                 }
-                result.add(tableMeta);
             }
-            return result;
+            return filteredDbTableMetaList;
         } finally {
             ConnectionUtil.close(con);
         }
@@ -130,23 +125,27 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     }
 
     /**
-     * テーブル名のセットを返します。
+     * テーブルメタデータのリストを返します。
      * 
      * @param metaData
      *            メタデータ
      * @param schemaName
      *            スキーマ名
-     * @return テーブル名のセット
+     * @return テーブルメタデータのリスト
      */
-    protected List<String> getTableNameList(DatabaseMetaData metaData,
+    protected List<DbTableMeta> getDbTableMetaList(DatabaseMetaData metaData,
             String schemaName) {
-        List<String> result = new ArrayList<String>();
+        List<DbTableMeta> result = new ArrayList<DbTableMeta>();
         try {
             ResultSet rs = metaData.getTables(null, schemaName, null,
                     new String[] { "TABLE" });
             try {
                 while (rs.next()) {
-                    result.add(rs.getString(3));
+                    DbTableMeta dbTableMeta = new DbTableMeta();
+                    dbTableMeta.setCatalogName(rs.getString(1));
+                    dbTableMeta.setSchemaName(rs.getString(2));
+                    dbTableMeta.setName(rs.getString(3));
+                    result.add(dbTableMeta);
                 }
                 return result;
             } finally {
@@ -158,31 +157,35 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     }
 
     /**
-     * テーブル名をフィルタリングします。
+     * テーブルメタデータをフィルタリングします。
      * 
-     * @param tableNames
-     *            テーブル名のリスト
+     * @param dbTableMetaList
+     *            テーブルメタデータのリスト
      * @param tableNamePattern
      *            テーブル名のパターン
-     * @return フィルタリングされたテーブル名の新しいリスト
+     * @return フィルタリングされたテーブルメタデータのリスト
      */
-    protected List<String> filterTableNames(List<String> tableNames,
-            String tableNamePattern) {
-        List<String> result = new ArrayList<String>();
+    protected List<DbTableMeta> filterDbTableMetaList(
+            List<DbTableMeta> dbTableMetaList, String tableNamePattern) {
+        List<DbTableMeta> result = new ArrayList<DbTableMeta>();
         Pattern p = Pattern.compile(tableNamePattern, Pattern.CASE_INSENSITIVE);
-        for (String name : tableNames) {
-            if (p.matcher(name).matches()) {
-                result.add(name);
+        for (DbTableMeta dbTableMeta : dbTableMetaList) {
+            if (p.matcher(dbTableMeta.getName()).matches()) {
+                if (dialect.isUserTable(dbTableMeta.getName())) {
+                    result.add(dbTableMeta);
+                }
             }
         }
         return result;
     }
 
     /**
-     * カラム記述のリストを返します。
+     * カラムメタデータのリストを返します。
      * 
      * @param metaData
      *            メタデータ
+     * @param catalogName
+     *            カタログ名
      * @param schemaName
      *            スキーマ名
      * @param tableName
@@ -190,11 +193,11 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * @return カラムメタデータのリスト
      */
     protected List<DbColumnMeta> getDbColumnMetaList(DatabaseMetaData metaData,
-            String schemaName, String tableName) {
+            String catalogName, String schemaName, String tableName) {
         List<DbColumnMeta> result = new ArrayList<DbColumnMeta>();
         try {
-            ResultSet rs = metaData.getColumns(null, schemaName, tableName,
-                    null);
+            ResultSet rs = metaData.getColumns(catalogName, schemaName,
+                    tableName, null);
             try {
                 while (rs.next()) {
                     DbColumnMeta columnDesc = new DbColumnMeta();
@@ -220,6 +223,8 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * 
      * @param metaData
      *            メタデータ
+     * @param catalogName
+     *            カタログ名
      * @param schemaName
      *            スキーマ名
      * @param tableName
@@ -227,10 +232,11 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * @return 主キーのセット
      */
     protected Set<String> getPrimaryKeySet(DatabaseMetaData metaData,
-            String schemaName, String tableName) {
+            String catalogName, String schemaName, String tableName) {
         Set<String> result = new HashSet<String>();
         try {
-            ResultSet rs = metaData.getPrimaryKeys(null, schemaName, tableName);
+            ResultSet rs = metaData.getPrimaryKeys(catalogName, schemaName,
+                    tableName);
             try {
                 while (rs.next()) {
                     result.add(rs.getString(4));

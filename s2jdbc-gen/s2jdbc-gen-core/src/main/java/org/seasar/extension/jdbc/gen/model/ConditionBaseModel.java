@@ -15,10 +15,18 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import org.seasar.extension.jdbc.gen.AttributeDesc;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author taedium
  * 
  */
 public class ConditionBaseModel extends AbstractEntityModel {
+
+    public String getSimpleClassName(AttributeDesc attributeDesc) {
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                .getAttributeClass());
+        return clazz.getSimpleName();
+    }
 }

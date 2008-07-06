@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * {@link EntityConditionModel}のファクトリです。
+ * 条件クラスのモデルのファクトリです。
  * 
  * @author taedium
  */

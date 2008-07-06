@@ -19,11 +19,21 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
- * @author taedium
+ * {@link SequenceDesc}のファクトリです。
  * 
+ * @author taedium
  */
 public interface SequenceDescFactory {
 
+    /**
+     * シーケンス記述を返します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return シーケンス記述
+     */
     SequenceDesc getSequenceDesc(EntityMeta entityMeta,
             PropertyMeta propertyMeta);
 }

@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc.gen;
 
 import javax.persistence.TemporalType;
 
-import org.seasar.framework.util.ClassUtil;
-
 /**
  * エンティティの属性記述です。
  * 
@@ -49,6 +47,15 @@ public class AttributeDesc {
 
     /** カラムの名前 */
     protected String columnName;
+
+    /** 長さ */
+    protected int length;
+
+    /** 精度 */
+    protected int precision;
+
+    /** スケール */
+    protected int scale;
 
     /** {@code null}可能ならば{@code true} */
     protected boolean nullable;
@@ -95,15 +102,6 @@ public class AttributeDesc {
      */
     public void setAttributeClass(Class<?> attributeClass) {
         this.attributeClass = attributeClass;
-    }
-
-    /**
-     * 属性のクラスがプリミティブ型の場合に、参照型に変換して返します。
-     * 
-     * @return 属性のクラスに対応する参照型
-     */
-    public Class<?> getAttributeClassAsRefType() {
-        return ClassUtil.getWrapperClassIfPrimitive(attributeClass);
     }
 
     /**
@@ -218,6 +216,63 @@ public class AttributeDesc {
      */
     public void setColumnName(String columnName) {
         this.columnName = columnName;
+    }
+
+    /**
+     * 長さを返します。
+     * 
+     * @return 長さ
+     */
+    public int getLength() {
+        return length;
+    }
+
+    /**
+     * 長さを設定します。
+     * 
+     * @param length
+     *            長さ
+     */
+    public void setLength(int length) {
+        this.length = length;
+    }
+
+    /**
+     * 精度を返します。
+     * 
+     * @return 精度
+     */
+    public int getPrecision() {
+        return precision;
+    }
+
+    /**
+     * 精度を設定します。
+     * 
+     * @param precision
+     *            精度
+     */
+    public void setPrecision(int precision) {
+        this.precision = precision;
+    }
+
+    /**
+     * スケールを返します。
+     * 
+     * @return スケール
+     */
+    public int getScale() {
+        return scale;
+    }
+
+    /**
+     * スケールを設定します。
+     * 
+     * @param scale
+     *            スケール
+     */
+    public void setScale(int scale) {
+        this.scale = scale;
     }
 
     /**

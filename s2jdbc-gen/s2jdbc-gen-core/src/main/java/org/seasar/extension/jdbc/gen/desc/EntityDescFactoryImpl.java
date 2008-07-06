@@ -53,7 +53,7 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
     public EntityDesc getEntityDesc(DbTableMeta tableMeta) {
         EntityDesc entityDesc = new EntityDesc();
         doName(tableMeta, entityDesc);
-        doTableName(tableMeta, entityDesc);
+        doTable(tableMeta, entityDesc);
         for (DbColumnMeta columnMeta : tableMeta.getColumnMetaList()) {
             AttributeDesc attributeDesc = attributeDescFactory
                     .getAttributeDesc(columnMeta);
@@ -83,7 +83,9 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      * @param entityDesc
      *            エンティティ記述
      */
-    public void doTableName(DbTableMeta tableMeta, EntityDesc entityDesc) {
+    public void doTable(DbTableMeta tableMeta, EntityDesc entityDesc) {
+        entityDesc.setCatalogName(tableMeta.getCatalogName());
+        entityDesc.setSchemaName(tableMeta.getSchemaName());
         entityDesc.setTableName(tableMeta.getName());
     }
 }

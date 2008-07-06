@@ -26,14 +26,55 @@ import java.util.List;
  */
 public class DbTableMeta {
 
+    /** カタログ名 */
+    protected String catalogName;
+
+    /** スキーマ名 */
+    protected String schemaName;
+
     /** 名前 */
     protected String name;
 
-    /** スキーマ名 */
-    protected String schema;
-
     /** カラムのメタデータのリスト */
     protected List<DbColumnMeta> columnMetaList = new ArrayList<DbColumnMeta>();
+
+    /**
+     * カタログ名を返します。
+     * 
+     * @return カタログ名
+     */
+    public String getCatalogName() {
+        return catalogName;
+    }
+
+    /**
+     * カタログ名を設定します。
+     * 
+     * @param catalogName
+     *            カタログ名
+     */
+    public void setCatalogName(String catalogName) {
+        this.catalogName = catalogName;
+    }
+
+    /**
+     * スキーマ名を返します
+     * 
+     * @return スキーマ名
+     */
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    /**
+     * スキーマ名を設定します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     */
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
 
     /**
      * 名前を返します。
@@ -52,25 +93,6 @@ public class DbTableMeta {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * スキーマ名を返します
-     * 
-     * @return スキーマ名
-     */
-    public String getSchema() {
-        return schema;
-    }
-
-    /**
-     * スキーマ名を設定します。
-     * 
-     * @param schema
-     *            スキーマ名
-     */
-    public void setSchema(String schema) {
-        this.schema = schema;
     }
 
     /**

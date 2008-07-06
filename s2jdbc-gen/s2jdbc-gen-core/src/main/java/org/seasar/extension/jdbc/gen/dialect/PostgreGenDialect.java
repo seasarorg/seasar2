@@ -33,7 +33,7 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public boolean supprtsSequence() {
+    public boolean supportsSequence() {
         return true;
     }
 

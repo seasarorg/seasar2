@@ -16,10 +16,10 @@
 package org.seasar.extension.jdbc.gen.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.framework.util.ClassUtil;
+import org.seasar.extension.jdbc.gen.EntityModelFactory;
 
 /**
  * {@link EntityModelFactory}の実装クラスです。
@@ -28,18 +28,16 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class EntityModelFactoryImpl implements EntityModelFactory {
 
-    public EntityModel getEntityModel(EntityDesc entityDesc,
-            String className, String baseClassName) {
+    public EntityModel getEntityModel(EntityDesc entityDesc, String className,
+            String baseClassName) {
         EntityModel model = new EntityModel();
         model.setClassName(className);
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        model.setPackageName(elements[0]);
-        model.setShortClassName(elements[1]);
         model.setBaseClassName(baseClassName);
-        String[] elements2 = ClassUtil
-                .splitPackageAndShortClassName(baseClassName);
-        model.setShortBaseClassName(elements2[1]);
         model.setEntityDesc(entityDesc);
+        if (entityDesc.getCatalogName() != null
+                || entityDesc.getSchemaName() != null) {
+            model.setTableQualified(true);
+        }
         doImportPackageNames(model, entityDesc);
         return model;
     }
@@ -52,9 +50,11 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      * @param entityDesc
      *            エンティティ記述
      */
-    protected void doImportPackageNames(EntityModel model,
-            EntityDesc entityDesc) {
+    protected void doImportPackageNames(EntityModel model, EntityDesc entityDesc) {
         model.addImportPackageName(Entity.class.getName());
+        if (model.isTableQualified()) {
+            model.addImportPackageName(Table.class.getName());
+        }
         model.addImportPackageName(model.getBaseClassName());
     }
 }

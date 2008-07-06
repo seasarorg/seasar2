@@ -84,9 +84,10 @@ public class EntityBaseModelFactoryImplTest {
         assertEquals("aaa.bbb.ccc.AbstractHoge", model.getClassName());
         assertEquals("AbstractHoge", model.getShortClassName());
         Set<String> set = model.getImportPackageNameSet();
-        assertEquals(9, set.size());
+        assertEquals(10, set.size());
         Iterator<String> iterator = set.iterator();
         assertEquals("java.util.Date", iterator.next());
+        assertEquals("javax.persistence.Column", iterator.next());
         assertEquals("javax.persistence.GeneratedValue", iterator.next());
         assertEquals("javax.persistence.Id", iterator.next());
         assertEquals("javax.persistence.Lob", iterator.next());

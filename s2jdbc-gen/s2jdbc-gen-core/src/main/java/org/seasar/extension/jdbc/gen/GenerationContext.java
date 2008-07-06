@@ -24,13 +24,10 @@ import java.io.File;
  */
 public class GenerationContext {
 
-    /** エンコーディング */
-    protected String encoding;
-
     /** データモデル */
     protected Object model;
 
-    /** 生成するファイルのディレクトリ */
+    /** 生成するファイルの出力先ディレクトリ */
     protected File dir;
 
     /** 生成するファイル */
@@ -39,7 +36,50 @@ public class GenerationContext {
     /** テンプレート名 */
     protected String templateName;
 
+    /** エンコーディング */
+    protected String encoding;
+
+    /** 上書きする場合{@code true} */
     protected boolean overwrite;
+
+    /**
+     * @param model
+     *            データモデル
+     * @param dir
+     *            生成するファイルの出力先ディレクトリ
+     * @param file
+     *            生成するファイル
+     * @param templateName
+     *            テンプレート名
+     * @param encoding
+     *            生成するファイルのエンコーディング
+     * @param overwrite
+     *            上書きする場合{@code true}、しない場合{@code false}
+     */
+    public GenerationContext(Object model, File dir, File file,
+            String templateName, String encoding, boolean overwrite) {
+        if (model == null) {
+            throw new NullPointerException("model");
+        }
+        if (dir == null) {
+            throw new NullPointerException("dir");
+        }
+        if (file == null) {
+            throw new NullPointerException("file");
+        }
+        if (templateName == null) {
+            throw new NullPointerException("templateName");
+        }
+        if (encoding == null) {
+            throw new NullPointerException("encoding");
+        }
+        this.model = model;
+        this.dir = dir;
+        this.file = file;
+        this.templateName = templateName;
+        this.encoding = encoding;
+        this.overwrite = overwrite;
+    }
 
     /**
      * エンコーディングを返します。
@@ -48,16 +88,6 @@ public class GenerationContext {
      */
     public String getEncoding() {
         return encoding;
-    }
-
-    /**
-     * エンコーディングを設定します。
-     * 
-     * @param encoding
-     *            エンコーディング
-     */
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
     }
 
     /**
@@ -70,32 +100,12 @@ public class GenerationContext {
     }
 
     /**
-     * データモデルを設定します。
-     * 
-     * @param model
-     *            データモデル
-     */
-    public void setModel(Object model) {
-        this.model = model;
-    }
-
-    /**
      * 生成するファイルのディレクトリを返します。
      * 
      * @return 生成するファイルのディレクトリ
      */
     public File getDir() {
         return dir;
-    }
-
-    /**
-     * 生成するファイルのディレクトリを設定します。
-     * 
-     * @param dir
-     *            生成するファイルのディレクトリ
-     */
-    public void setDir(File dir) {
-        this.dir = dir;
     }
 
     /**
@@ -108,16 +118,6 @@ public class GenerationContext {
     }
 
     /**
-     * 生成するファイルを設定します。
-     * 
-     * @param file
-     *            生成するファイル
-     */
-    public void setFile(File file) {
-        this.file = file;
-    }
-
-    /**
      * テンプレート名を返します。
      * 
      * @return テンプレート名
@@ -127,32 +127,12 @@ public class GenerationContext {
     }
 
     /**
-     * テンプレート名を設定します。
-     * 
-     * @param templateName
-     *            テンプレート名
-     */
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    /**
      * 上書きする場合は{@code true}、しない場合は{@code false}を返します。
      * 
      * @return 上書きする場合は{@code true}、しない場合は{@code false}
      */
     public boolean isOverwrite() {
         return overwrite;
-    }
-
-    /**
-     * 上書きする場合は{@code true}、しない場合は{@code false}を設定します。
-     * 
-     * @param overwrite
-     *            上書きする場合は{@code true}、しない場合は{@code false}
-     */
-    public void setOverwrite(boolean overwrite) {
-        this.overwrite = overwrite;
     }
 
 }

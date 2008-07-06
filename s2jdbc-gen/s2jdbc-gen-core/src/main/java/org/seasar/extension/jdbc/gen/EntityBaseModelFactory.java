@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * {@link  EntityBaseModel}のファクトリです。
+ * エンティティ基底クラスのモデルのファクトリです。
  * 
  * @author taedium
  */
