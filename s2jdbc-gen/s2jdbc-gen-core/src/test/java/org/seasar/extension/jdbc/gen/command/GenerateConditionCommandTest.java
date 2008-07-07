@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DdlGenCommandTest {
+public class GenerateConditionCommandTest {
 
     @Before
     public void setUp() throws Exception {
@@ -52,7 +52,7 @@ public class DdlGenCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        DdlGenCommand command = new DdlGenCommand();
+        GenerateConditionCommand command = new GenerateConditionCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
         command.setClasspathRootDir(new File("dir"));
         command.validate();
@@ -64,15 +64,14 @@ public class DdlGenCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        DdlGenCommand command = new DdlGenCommand();
+        GenerateConditionCommand command = new GenerateConditionCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
         command.setClasspathRootDir(new File("dir"));
         command.validate();
         command.init();
         assertNotNull(command.createEntityMetaReader());
+        assertNotNull(command.createConditionModelFactory());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createSchemaModelFactory());
-        assertNotNull(command.createTableDescFactory());
         GenerationContext context = command.createGenerationContext(
                 new Object(), "aaa.ddl", "ccc.ftl", true);
         assertNotNull(context);
@@ -80,7 +79,8 @@ public class DdlGenCommandTest {
 
     @Test
     public void testBindableProperty() throws Exception {
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(DdlGenCommand.class);
+        BeanDesc beanDesc = BeanDescFactory
+                .getBeanDesc(GenerateConditionCommand.class);
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             if (!propertyDesc.hasWriteMethod()) {

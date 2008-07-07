@@ -13,23 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.task;
 
-import java.util.List;
+import org.seasar.extension.jdbc.gen.command.UpdateVersionCommand;
 
 /**
- * スキーマのモデルのファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface SchemaModelFactory {
+public class UpdateVersionTask extends AbstractTask {
 
     /**
-     * スキーマのモデルを返します。
-     * 
-     * @param tableDesclist
-     *            テーブル記述のリスト
-     * @return スキーマのモデル
+     * インスタンスを構築します。
      */
-    SchemaModel getSchemaModel(List<TableDesc> tableDesclist);
+    public UpdateVersionTask() {
+        this(UpdateVersionCommand.class.getName());
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param commandClassName
+     *            コマンドクラス名
+     */
+    public UpdateVersionTask(String commandClassName) {
+        super(commandClassName);
+    }
 }

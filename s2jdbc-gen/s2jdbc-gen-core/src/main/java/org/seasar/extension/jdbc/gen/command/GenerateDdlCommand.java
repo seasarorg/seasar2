@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
+import org.seasar.extension.jdbc.gen.SchemaModel;
 import org.seasar.extension.jdbc.gen.SchemaModelFactory;
 import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.TableDesc;
@@ -51,34 +52,34 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class DdlGenCommand extends AbstractCommand {
+public class GenerateDdlCommand extends AbstractCommand {
 
     @BindableProperty(required = true)
     protected File classpathRootDir;
 
     @BindableProperty
-    protected File destDir = new File("ddl");
+    protected File destDir = new File("sql");
 
     @BindableProperty
-    protected String ddlFileEncoding = "UTF-8";
+    protected String sqlFileEncoding = "UTF-8";
 
     @BindableProperty
-    protected String createTableDdlName = "create-table.ddl";
+    protected String createTableSqlFileName = "create-table.sql";
 
     @BindableProperty
-    protected String createConstraintDdlName = "create-constraint.ddl";
+    protected String createConstraintSqlFileName = "create-constraint.sql";
 
     @BindableProperty
-    protected String createSequenceDdlName = "create-sequence.ddl";;
+    protected String createSequenceSqlFileName = "create-sequence.sql";
 
     @BindableProperty
-    protected String dropTableDdlName = "drop-table.ddl";;
+    protected String dropTableSqlFileName = "drop-table.sql";
 
     @BindableProperty
-    protected String dropConstraintDdlName = "drop-constraint.ddl";;
+    protected String dropConstraintSqlFileName = "drop-constraint.sql";;
 
     @BindableProperty
-    protected String dropSequenceDdlName = "drop-sequence.ddl";
+    protected String dropSequenceSqlFileName = "drop-sequence.sql";
 
     @BindableProperty
     protected String createTableTemplateName = "create-table.ftl";
@@ -110,7 +111,7 @@ public class DdlGenCommand extends AbstractCommand {
 
     protected Generator generator;
 
-    public DdlGenCommand() {
+    public GenerateDdlCommand() {
     }
 
     public void setClasspathRootDir(File classpathRootDir) {
@@ -121,32 +122,33 @@ public class DdlGenCommand extends AbstractCommand {
         this.destDir = destDir;
     }
 
-    public void setDdlFileEncoding(String ddlFileEncoding) {
-        this.ddlFileEncoding = ddlFileEncoding;
+    public void setSqlFileEncoding(String sqlFileEncoding) {
+        this.sqlFileEncoding = sqlFileEncoding;
     }
 
-    public void setCreateTableDdlName(String createTableDdlName) {
-        this.createTableDdlName = createTableDdlName;
+    public void setCreateTableSqlFileName(String createTableSqlFileName) {
+        this.createTableSqlFileName = createTableSqlFileName;
     }
 
-    public void setCreateConstraintDdlName(String createConstraintDdlName) {
-        this.createConstraintDdlName = createConstraintDdlName;
+    public void setCreateConstraintSqlFileName(
+            String createConstraintSqlFileName) {
+        this.createConstraintSqlFileName = createConstraintSqlFileName;
     }
 
-    public void setCreateSequenceDdlName(String createSequenceDdlName) {
-        this.createSequenceDdlName = createSequenceDdlName;
+    public void setCreateSequenceSqlFileName(String createSequenceSqlFileName) {
+        this.createSequenceSqlFileName = createSequenceSqlFileName;
     }
 
-    public void setDropTableDdlName(String dropTableDdlName) {
-        this.dropTableDdlName = dropTableDdlName;
+    public void setDropTableSqlFileName(String dropTableSqlFileName) {
+        this.dropTableSqlFileName = dropTableSqlFileName;
     }
 
-    public void setDropConstraintDdlName(String dropConstraintDdlName) {
-        this.dropConstraintDdlName = dropConstraintDdlName;
+    public void setDropConstraintSqlFileName(String dropConstraintSqlFileName) {
+        this.dropConstraintSqlFileName = dropConstraintSqlFileName;
     }
 
-    public void setDropSequenceDdlName(String dropSequenceDdlName) {
-        this.dropSequenceDdlName = dropSequenceDdlName;
+    public void setDropSequenceSqlFileName(String dropSequenceSqlFileName) {
+        this.dropSequenceSqlFileName = dropSequenceSqlFileName;
     }
 
     public void setCreateTableTemplateName(String createTableTemplateName) {
@@ -224,43 +226,42 @@ public class DdlGenCommand extends AbstractCommand {
     }
 
     protected void generate(List<TableDesc> tableDescList) {
-        Object model = schemaModelFactory.getSchemaModel(tableDescList);
+        SchemaModel model = schemaModelFactory.getSchemaModel(tableDescList);
         generateTable(model);
         generateConstraint(model);
         generateSequence(model);
     }
 
-    protected void generateTable(Object model) {
+    protected void generateTable(SchemaModel model) {
         GenerationContext createTableCtx = createGenerationContext(model,
-                createTableDdlName, createTableTemplateName, true);
+                createTableSqlFileName, createTableTemplateName, true);
         GenerationContext dropTableCtx = createGenerationContext(model,
-                dropTableDdlName, createTableTemplateName, true);
+                dropTableSqlFileName, createTableTemplateName, true);
         generator.generate(createTableCtx);
         generator.generate(dropTableCtx);
     }
 
-    protected void generateConstraint(Object model) {
+    protected void generateConstraint(SchemaModel model) {
         GenerationContext createConstraintCtx = createGenerationContext(model,
-                createConstraintDdlName, createConstraintTemplateName, true);
+                createConstraintSqlFileName, createConstraintTemplateName, true);
         GenerationContext dropConstraintCtx = createGenerationContext(model,
-                dropConstraintDdlName, dropConstraintTemplateName, true);
+                dropConstraintSqlFileName, dropConstraintTemplateName, true);
         generator.generate(createConstraintCtx);
         generator.generate(dropConstraintCtx);
     }
 
-    protected void generateSequence(Object model) {
+    protected void generateSequence(SchemaModel model) {
         GenerationContext createSequenceCtx = createGenerationContext(model,
-                createSequenceDdlName, createSequenceTemplateName, true);
+                createSequenceSqlFileName, createSequenceTemplateName, true);
         GenerationContext dropSequenceCtx = createGenerationContext(model,
-                dropSequenceDdlName, dropSequenceTemplateName, true);
+                dropSequenceSqlFileName, dropSequenceTemplateName, true);
         generator.generate(createSequenceCtx);
         generator.generate(dropSequenceCtx);
     }
 
     protected GenerationContext createGenerationContext(Object model,
-            String ddlName, String templateName, boolean overwrite) {
-        return new GenerationContext(model, destDir,
-                new File(destDir, ddlName), templateName, ddlFileEncoding,
-                overwrite);
+            String SqlFileName, String templateName, boolean overwrite) {
+        return new GenerationContext(model, destDir, new File(destDir,
+                SqlFileName), templateName, sqlFileEncoding, overwrite);
     }
 }

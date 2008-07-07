@@ -17,14 +17,14 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.command.EntityGenCommand;
+import org.seasar.extension.jdbc.gen.command.GenerateEntityCommand;
 
 /**
  * S2JDBC用のエンティティを生成するタスクです。
  * 
  * @author taedium
  */
-public class EntityGenTask extends AbstractTask {
+public class GenerateEntityTask extends AbstractTask {
 
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File destDir;
@@ -47,8 +47,8 @@ public class EntityGenTask extends AbstractTask {
     /**
      * インスタンスを構築します。
      */
-    public EntityGenTask() {
-        this(EntityGenCommand.class.getName());
+    public GenerateEntityTask() {
+        this(GenerateEntityCommand.class.getName());
     }
 
     /**
@@ -57,7 +57,7 @@ public class EntityGenTask extends AbstractTask {
      * @param commandClassName
      *            コマンドクラス名
      */
-    public EntityGenTask(String commandClassName) {
+    public GenerateEntityTask(String commandClassName) {
         super(commandClassName);
     }
 

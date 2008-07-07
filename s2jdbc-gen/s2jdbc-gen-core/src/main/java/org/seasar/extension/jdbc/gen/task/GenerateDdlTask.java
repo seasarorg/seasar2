@@ -18,32 +18,32 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
-import org.seasar.extension.jdbc.gen.command.DdlGenCommand;
+import org.seasar.extension.jdbc.gen.command.GenerateDdlCommand;
 
 /**
  * データベースのスキーマを作成するタスクです。
  * 
  * @author taedium
  */
-public class DdlGenTask extends AbstractTask {
+public class GenerateDdlTask extends AbstractTask {
 
     protected File classpathRootDir;
 
     protected File destDir;
 
-    protected String ddlFileEncoding;
+    protected String sqlFileEncoding;
 
-    protected String createTableDdlName;
+    protected String createTableSqlFileName;
 
-    protected String createConstraintDdlName;
+    protected String createConstraintSqlFileName;
 
-    protected String createSequenceDdlName;
+    protected String createSequenceSqlFileName;
 
-    protected String dropTableDdlName;
+    protected String dropTableSqlFileName;
 
-    protected String dropConstraintDdlName;
+    protected String dropConstraintSqlFileName;
 
-    protected String dropSequenceDdlName;
+    protected String dropSequenceSqlFileName;
 
     protected String createTableTemplateName;
 
@@ -60,8 +60,8 @@ public class DdlGenTask extends AbstractTask {
     /**
      * インスタンスを構築します。
      */
-    public DdlGenTask() {
-        this(DdlGenCommand.class.getName());
+    public GenerateDdlTask() {
+        this(GenerateDdlCommand.class.getName());
     }
 
     /**
@@ -70,7 +70,7 @@ public class DdlGenTask extends AbstractTask {
      * @param commandClassName
      *            コマンドクラス名
      */
-    public DdlGenTask(String commandClassName) {
+    public GenerateDdlTask(String commandClassName) {
         super(commandClassName);
     }
 
@@ -90,60 +90,61 @@ public class DdlGenTask extends AbstractTask {
         this.destDir = destDir;
     }
 
-    public String getDdlFileEncoding() {
-        return ddlFileEncoding;
+    public String getSqlFileEncoding() {
+        return sqlFileEncoding;
     }
 
-    public void setDdlFileEncoding(String ddlFileEncoding) {
-        this.ddlFileEncoding = ddlFileEncoding;
+    public void setSqlFileEncoding(String sqlFileEncoding) {
+        this.sqlFileEncoding = sqlFileEncoding;
     }
 
-    public String getCreateTableDdlName() {
-        return createTableDdlName;
+    public String getCreateTableSqlFileName() {
+        return createTableSqlFileName;
     }
 
-    public void setCreateTableDdlName(String createTableDdlName) {
-        this.createTableDdlName = createTableDdlName;
+    public void setCreateTableSqlFileName(String createTableSqlFileName) {
+        this.createTableSqlFileName = createTableSqlFileName;
     }
 
-    public String getCreateConstraintDdlName() {
-        return createConstraintDdlName;
+    public String getCreateConstraintSqlFileName() {
+        return createConstraintSqlFileName;
     }
 
-    public void setCreateConstraintDdlName(String createConstraintDdlName) {
-        this.createConstraintDdlName = createConstraintDdlName;
+    public void setCreateConstraintSqlFileName(
+            String createConstraintSqlFileName) {
+        this.createConstraintSqlFileName = createConstraintSqlFileName;
     }
 
-    public String getCreateSequenceDdlName() {
-        return createSequenceDdlName;
+    public String getCreateSequenceSqlFileName() {
+        return createSequenceSqlFileName;
     }
 
-    public void setCreateSequenceDdlName(String createSequenceDdlName) {
-        this.createSequenceDdlName = createSequenceDdlName;
+    public void setCreateSequenceSqlFileName(String createSequenceSqlFileName) {
+        this.createSequenceSqlFileName = createSequenceSqlFileName;
     }
 
-    public String getDropTableDdlName() {
-        return dropTableDdlName;
+    public String getDropTableSqlFileName() {
+        return dropTableSqlFileName;
     }
 
-    public void setDropTableDdlName(String dropTableDdlName) {
-        this.dropTableDdlName = dropTableDdlName;
+    public void setDropTableSqlFileName(String dropTableSqlFileName) {
+        this.dropTableSqlFileName = dropTableSqlFileName;
     }
 
-    public String getDropConstraintDdlName() {
-        return dropConstraintDdlName;
+    public String getDropConstraintSqlFileName() {
+        return dropConstraintSqlFileName;
     }
 
-    public void setDropConstraintDdlName(String dropConstraintDdlName) {
-        this.dropConstraintDdlName = dropConstraintDdlName;
+    public void setDropConstraintSqlFileName(String dropConstraintSqlFileName) {
+        this.dropConstraintSqlFileName = dropConstraintSqlFileName;
     }
 
-    public String getDropSequenceDdlName() {
-        return dropSequenceDdlName;
+    public String getDropSequenceSqlFileName() {
+        return dropSequenceSqlFileName;
     }
 
-    public void setDropSequenceDdlName(String dropSequenceDdlName) {
-        this.dropSequenceDdlName = dropSequenceDdlName;
+    public void setDropSequenceSqlFileName(String dropSequenceSqlFileName) {
+        this.dropSequenceSqlFileName = dropSequenceSqlFileName;
     }
 
     public String getCreateTableTemplateName() {

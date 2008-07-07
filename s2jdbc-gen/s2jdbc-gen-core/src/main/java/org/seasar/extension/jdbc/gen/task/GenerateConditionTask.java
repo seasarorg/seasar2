@@ -18,14 +18,14 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.apache.tools.ant.BuildException;
-import org.seasar.extension.jdbc.gen.command.ConditionGenCommand;
+import org.seasar.extension.jdbc.gen.command.GenerateConditionCommand;
 
 /**
  * S2JDBC用のエンティティを生成するタスクです。
  * 
  * @author taedium
  */
-public class ConditionGenTask extends AbstractTask {
+public class GenerateConditionTask extends AbstractTask {
 
     protected File classpathRootDir;
 
@@ -47,8 +47,8 @@ public class ConditionGenTask extends AbstractTask {
     /**
      * インスタンスを構築します。
      */
-    public ConditionGenTask() {
-        this(ConditionGenCommand.class.getName());
+    public GenerateConditionTask() {
+        this(GenerateConditionCommand.class.getName());
     }
 
     /**
@@ -57,7 +57,7 @@ public class ConditionGenTask extends AbstractTask {
      * @param commandClassName
      *            コマンドクラス名
      */
-    public ConditionGenTask(String commandClassName) {
+    public GenerateConditionTask(String commandClassName) {
         super(commandClassName);
     }
 

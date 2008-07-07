@@ -40,7 +40,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class ConditionGenCommand extends AbstractCommand {
+public class GenerateConditionCommand extends AbstractCommand {
 
     @BindableProperty(required = true)
     protected File classpathRootDir;
@@ -81,7 +81,7 @@ public class ConditionGenCommand extends AbstractCommand {
     /**
      * インスタンスを構築します。
      */
-    public ConditionGenCommand() {
+    public GenerateConditionCommand() {
     }
 
     public void setClasspathRootDir(File classpathRootDir) {

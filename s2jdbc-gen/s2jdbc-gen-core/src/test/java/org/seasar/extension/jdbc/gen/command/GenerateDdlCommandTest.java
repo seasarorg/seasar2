@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
 import org.junit.After;
@@ -33,7 +34,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntityGenCommandTest {
+public class GenerateDdlCommandTest {
 
     @Before
     public void setUp() throws Exception {
@@ -51,8 +52,9 @@ public class EntityGenCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        EntityGenCommand command = new EntityGenCommand();
+        GenerateDdlCommand command = new GenerateDdlCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
+        command.setClasspathRootDir(new File("dir"));
         command.validate();
     }
 
@@ -62,21 +64,23 @@ public class EntityGenCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        EntityGenCommand command = new EntityGenCommand();
+        GenerateDdlCommand command = new GenerateDdlCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
+        command.setClasspathRootDir(new File("dir"));
+        command.validate();
         command.init();
-        assertNotNull(command.createEntityDescFactory());
-        assertNotNull(command.createEntityModelFactory());
+        assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createSchemaReader());
+        assertNotNull(command.createSchemaModelFactory());
+        assertNotNull(command.createTableDescFactory());
         GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa.bbb.Hoge", "ccc.ftl", true);
+                new Object(), "aaa.ddl", "ccc.ftl", true);
         assertNotNull(context);
     }
 
     @Test
     public void testBindableProperty() throws Exception {
-        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(EntityGenCommand.class);
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(GenerateDdlCommand.class);
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             if (!propertyDesc.hasWriteMethod()) {

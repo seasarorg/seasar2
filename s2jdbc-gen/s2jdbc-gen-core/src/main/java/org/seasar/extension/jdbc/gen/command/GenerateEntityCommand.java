@@ -48,7 +48,7 @@ import org.seasar.framework.util.ClassUtil;
  * 
  * @author taedium
  */
-public class EntityGenCommand extends AbstractCommand {
+public class GenerateEntityCommand extends AbstractCommand {
 
     /** 生成するJavaファイルの出力先ディレクトリ */
     @BindableProperty
@@ -98,7 +98,7 @@ public class EntityGenCommand extends AbstractCommand {
     /**
      * インスタンスを構築します。
      */
-    public EntityGenCommand() {
+    public GenerateEntityCommand() {
     }
 
     /**

@@ -30,7 +30,6 @@ public class AnnotationUtil {
     protected static class TableAnnotated {
     }
 
-    @Column
     protected static Table DEFAULT_TABLE = TableAnnotated.class
             .getAnnotation(Table.class);
 

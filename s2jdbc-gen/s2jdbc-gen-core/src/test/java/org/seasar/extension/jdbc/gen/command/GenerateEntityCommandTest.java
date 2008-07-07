@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
 import org.junit.After;
@@ -34,7 +33,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ConditionGenCommandTest {
+public class GenerateEntityCommandTest {
 
     @Before
     public void setUp() throws Exception {
@@ -52,9 +51,8 @@ public class ConditionGenCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        ConditionGenCommand command = new ConditionGenCommand();
+        GenerateEntityCommand command = new GenerateEntityCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
-        command.setClasspathRootDir(new File("dir"));
         command.validate();
     }
 
@@ -64,23 +62,21 @@ public class ConditionGenCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        ConditionGenCommand command = new ConditionGenCommand();
+        GenerateEntityCommand command = new GenerateEntityCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
-        command.setClasspathRootDir(new File("dir"));
-        command.validate();
         command.init();
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createConditionModelFactory());
+        assertNotNull(command.createEntityDescFactory());
+        assertNotNull(command.createEntityModelFactory());
         assertNotNull(command.createGenerator());
+        assertNotNull(command.createSchemaReader());
         GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa.ddl", "ccc.ftl", true);
+                new Object(), "aaa.bbb.Hoge", "ccc.ftl", true);
         assertNotNull(context);
     }
 
     @Test
     public void testBindableProperty() throws Exception {
-        BeanDesc beanDesc = BeanDescFactory
-                .getBeanDesc(ConditionGenCommand.class);
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(GenerateEntityCommand.class);
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             if (!propertyDesc.hasWriteMethod()) {
