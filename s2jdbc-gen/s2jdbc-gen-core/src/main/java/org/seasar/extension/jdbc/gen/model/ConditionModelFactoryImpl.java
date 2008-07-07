@@ -54,8 +54,9 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
             String className) {
         ConditionModel conditionModel = new ConditionModel();
         conditionModel.setClassName(className);
-        conditionModel
-                .setBaseClassName(AbstractEntityCondition.class.getName());
+        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
+        conditionModel.setPackageName(elements[0]);
+        conditionModel.setShortClassName(elements[1]);
         conditionModel.setEntityMeta(entityMeta);
         for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);

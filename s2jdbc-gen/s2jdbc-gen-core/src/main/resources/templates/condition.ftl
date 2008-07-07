@@ -1,27 +1,22 @@
-package ${getPackageName(className)};
+package ${packageName};
 
-<#list importPackageNameSet as packageName>
-import ${packageName};
+<#list importPackageNameSet as importPackageName>
+import ${importPackageName};
 </#list>
 
-public class ${getShortClassName(className)} extends
-        ${getShortClassName(baseClassName)}<${getShortClassName(className)}> {
+public class ${shortClassName} extends
+        AbstractEntityCondition<${shortClassName}> {
 
-    public ${getShortClassName(className)}() {
+    public ${shortClassName}() {
     }
 
-    public ${getShortClassName(className)}(String prefix, ComplexWhere where) {
+    public ${shortClassName}(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
 <#list conditionAttributeModelList as attr>
 
-  <#if attr.attributeClass.name == "java.lang.String">
-    public ${attr.conditionClass.simpleName}<${getShortClassName(className)}> ${attr.name} =
-        new ${attr.conditionClass.simpleName}<${getShortClassName(className)}>("${attr.name}", this);
-  <#else>
-    public ${attr.conditionClass.simpleName}<${getShortClassName(className)}, ${attr.attributeClass.simpleName}> ${attr.name} =
-        new ${attr.conditionClass.simpleName}<${getShortClassName(className)}, ${attr.attributeClass.simpleName}>("${attr.name}", this);
-  </#if>
+    public ${attr.conditionClass.simpleName}<${shortClassName}<#if attr.parameterized>, ${attr.attributeClass.simpleName}</#if>> ${attr.name} =
+        new ${attr.conditionClass.simpleName}<${shortClassName}<#if attr.parameterized>, ${attr.attributeClass.simpleName}</#if>>("${attr.name}", this);
 </#list>
 <#list conditionMethodModelList as method>
 

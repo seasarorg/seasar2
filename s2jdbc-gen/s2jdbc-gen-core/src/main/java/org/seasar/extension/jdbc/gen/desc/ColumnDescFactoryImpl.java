@@ -25,8 +25,8 @@ import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.DataType;
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * {@link ColumnDescFactory}の実装クラスです。
@@ -34,12 +34,6 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * @author taedium
  */
 public class ColumnDescFactoryImpl implements ColumnDescFactory {
-
-    /** デフォルトのカラム */
-    @Column
-    protected static final Column DEFAULT_COLUMN = ReflectionUtil
-            .getDeclaredField(ColumnDescFactoryImpl.class, "DEFAULT_COLUMN")
-            .getAnnotation(Column.class);
 
     /** 方言 */
     protected GenDialect dialect;
@@ -119,7 +113,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doNullable(PropertyMeta propertyMeta, ColumnDesc columnDesc,
             Column column) {
-        if (column != DEFAULT_COLUMN) {
+        if (column != AnnotationUtil.getDefaultColumn()) {
             columnDesc.setNullable(column.nullable());
         } else {
             Class<?> clazz = propertyMeta.getField().getType();
@@ -152,7 +146,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     protected Column getColumn(PropertyMeta propertyMeta) {
         Field field = propertyMeta.getField();
         Column column = field.getAnnotation(Column.class);
-        return column != null ? column : DEFAULT_COLUMN;
+        return column != null ? column : AnnotationUtil.getDefaultColumn();
     }
 
 }

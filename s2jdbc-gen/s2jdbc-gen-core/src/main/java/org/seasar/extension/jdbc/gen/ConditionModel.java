@@ -15,19 +15,13 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import javax.persistence.Column;
-
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
@@ -35,15 +29,11 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class ConditionModel {
 
-    /** デフォルトのカラム */
-    @Column
-    protected static final Column DEFAULT_COLUMN = ReflectionUtil
-            .getDeclaredField(ConditionModel.class, "DEFAULT_COLUMN")
-            .getAnnotation(Column.class);
-
     protected String className;
 
-    protected String baseClassName;
+    protected String packageName;
+
+    protected String shortClassName;
 
     protected EntityMeta entityMeta;
 
@@ -61,12 +51,20 @@ public class ConditionModel {
         this.className = className;
     }
 
-    public String getBaseClassName() {
-        return baseClassName;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setBaseClassName(String baseClassName) {
-        this.baseClassName = baseClassName;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getShortClassName() {
+        return shortClassName;
+    }
+
+    public void setShortClassName(String shortClassName) {
+        this.shortClassName = shortClassName;
     }
 
     public SortedSet<String> getImportPackageNameSet() {
@@ -74,9 +72,7 @@ public class ConditionModel {
     }
 
     public void addImportPackageName(String name) {
-        if (!importPackageNameSet.contains(name)) {
-            importPackageNameSet.add(name);
-        }
+        importPackageNameSet.add(name);
     }
 
     public List<ConditionAttributeModel> getConditionAttributeModelList() {
@@ -105,34 +101,4 @@ public class ConditionModel {
         this.entityMeta = entityMeta;
     }
 
-    public String getPackageName(String className) {
-        if (className == null) {
-            return null;
-        }
-        return ClassUtil.splitPackageAndShortClassName(className)[0];
-    }
-
-    public String getShortClassName(String className) {
-        if (className == null) {
-            return null;
-        }
-        return ClassUtil.splitPackageAndShortClassName(className)[1];
-    }
-
-    public String getWrapperShortClassName(PropertyMeta propertyMeta) {
-        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(propertyMeta
-                .getPropertyClass());
-        return clazz.getSimpleName();
-    }
-
-    public boolean isNullable(PropertyMeta propertyMeta) {
-        Column column = getColumn(propertyMeta);
-        return column.nullable();
-    }
-
-    protected Column getColumn(PropertyMeta propertyMeta) {
-        Field field = propertyMeta.getField();
-        Column column = field.getAnnotation(Column.class);
-        return column != null ? column : DEFAULT_COLUMN;
-    }
 }

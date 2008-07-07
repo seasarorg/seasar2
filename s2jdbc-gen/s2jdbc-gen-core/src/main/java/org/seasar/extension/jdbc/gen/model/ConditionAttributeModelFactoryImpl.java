@@ -38,29 +38,26 @@ public class ConditionAttributeModelFactoryImpl implements
 
     public ConditionAttributeModel getConditionAttributeModel(
             PropertyMeta propertyMeta) {
-        ConditionAttributeModel model = new ConditionAttributeModel();
-        model.setName(propertyMeta.getName());
-        Class<?> clazz = propertyMeta.getPropertyClass();
-        model.setAttributeClass(ClassUtil.getWrapperClassIfPrimitive(clazz));
+        ConditionAttributeModel attributeModel = new ConditionAttributeModel();
+        attributeModel.setName(propertyMeta.getName());
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(propertyMeta
+                .getPropertyClass());
+        attributeModel.setAttributeClass(clazz);
         Field field = propertyMeta.getField();
         Column column = field.getAnnotation(Column.class);
         if (column == null) {
             column = AnnotationUtil.getDefaultColumn();
         }
+        Class<?> conditionClass = null;
         if (clazz == String.class) {
-            if (column.nullable()) {
-                model.setConditionClass(NullableStringCondition.class);
-            } else {
-                model.setConditionClass(NotNullableStringCondition.class);
-            }
+            conditionClass = column.nullable() ? NullableStringCondition.class
+                    : NotNullableStringCondition.class;
         } else {
-            if (column.nullable()) {
-                model.setConditionClass(NullableCondition.class);
-            } else {
-                model.setConditionClass(NotNullableCondition.class);
-            }
+            conditionClass = column.nullable() ? NullableCondition.class
+                    : NotNullableCondition.class;
+            attributeModel.setParameterized(true);
         }
-        return model;
+        attributeModel.setConditionClass(conditionClass);
+        return attributeModel;
     }
-
 }

@@ -36,6 +36,7 @@ import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 
 /**
  * {@link TableDescFactory}の実装クラスです。
@@ -43,14 +44,6 @@ import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
  * @author taedium
  */
 public class TableDescFactoryImpl implements TableDescFactory {
-
-    @Table
-    private static class Util {
-    }
-
-    /** デフォルトのテーブル */
-    protected static Table DEFAULT_TABLE = Util.class
-            .getAnnotation(Table.class);
 
     /** テーブルの完全修飾名をキー、テーブル記述を値とするマップ */
     protected ConcurrentMap<String, TableDesc> tableDescMap = new ConcurrentHashMap<String, TableDesc>(
@@ -283,7 +276,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
     protected Table getTable(EntityMeta entityMeta) {
         Class<?> clazz = entityMeta.getEntityClass();
         Table table = clazz.getAnnotation(Table.class);
-        return table != null ? table : DEFAULT_TABLE;
+        return table != null ? table : AnnotationUtil.getDefaultTable();
     }
 
 }

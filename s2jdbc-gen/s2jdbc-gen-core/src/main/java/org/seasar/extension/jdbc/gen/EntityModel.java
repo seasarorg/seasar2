@@ -31,7 +31,9 @@ public class EntityModel {
 
     protected String className;
 
-    protected String baseClassName;
+    protected String packageName;
+
+    protected String shortClassName;
 
     protected EntityDesc entityDesc;
 
@@ -45,12 +47,20 @@ public class EntityModel {
         this.className = className;
     }
 
-    public String getBaseClassName() {
-        return baseClassName;
+    public String getPackageName() {
+        return packageName;
     }
 
-    public void setBaseClassName(String baseClassName) {
-        this.baseClassName = baseClassName;
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getShortClassName() {
+        return shortClassName;
+    }
+
+    public void setShortClassName(String shortClassName) {
+        this.shortClassName = shortClassName;
     }
 
     public SortedSet<String> getImportPackageNameSet() {
@@ -58,9 +68,7 @@ public class EntityModel {
     }
 
     public void addImportPackageName(String name) {
-        if (!importPackageNameSet.contains(name)) {
-            importPackageNameSet.add(name);
-        }
+        importPackageNameSet.add(name);
     }
 
     public EntityDesc getEntityDesc() {
@@ -77,20 +85,6 @@ public class EntityModel {
 
     public void setTableQualified(boolean tableQualified) {
         this.tableQualified = tableQualified;
-    }
-
-    public String getPackageName(String className) {
-        if (className == null) {
-            return null;
-        }
-        return ClassUtil.splitPackageAndShortClassName(className)[0];
-    }
-
-    public String getShortClassName(String className) {
-        if (className == null) {
-            return null;
-        }
-        return ClassUtil.splitPackageAndShortClassName(className)[1];
     }
 
     public boolean isLengthAvailable(AttributeDesc attributeDesc) {

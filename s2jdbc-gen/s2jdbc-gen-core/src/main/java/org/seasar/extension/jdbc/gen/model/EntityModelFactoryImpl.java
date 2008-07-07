@@ -42,6 +42,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     public EntityModel getEntityModel(EntityDesc entityDesc, String className) {
         EntityModel model = new EntityModel();
         model.setClassName(className);
+        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
+        model.setPackageName(elements[0]);
+        model.setShortClassName(elements[1]);
         model.setEntityDesc(entityDesc);
         if (entityDesc.getCatalogName() != null
                 || entityDesc.getSchemaName() != null) {

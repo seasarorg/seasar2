@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
  * @author taedium
  * 
@@ -28,9 +27,7 @@ public class ConditionAttributeModel {
 
     protected Class<?> conditionClass;
 
-    protected boolean string;
-
-    protected boolean nullable;
+    protected boolean parameterized;
 
     public String getName() {
         return name;
@@ -54,6 +51,14 @@ public class ConditionAttributeModel {
 
     public void setConditionClass(Class<?> conditionClass) {
         this.conditionClass = conditionClass;
+    }
+
+    public boolean isParameterized() {
+        return parameterized;
+    }
+
+    public void setParameterized(boolean parameterized) {
+        this.parameterized = parameterized;
     }
 
 }

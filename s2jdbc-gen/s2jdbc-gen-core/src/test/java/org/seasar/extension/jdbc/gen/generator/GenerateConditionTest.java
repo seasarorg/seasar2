@@ -13,35 +13,38 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.model;
+package org.seasar.extension.jdbc.gen.generator;
 
+import java.io.File;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.ConditionModel;
+import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
-import org.seasar.extension.jdbc.where.ComplexWhere;
-import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
-import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
-import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
-import org.seasar.extension.jdbc.where.condition.NullableCondition;
-import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
-import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
+import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
 
@@ -49,15 +52,17 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ConditionModelFactoryImplTest {
+public class GenerateConditionTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
     private ConditionModelFactoryImpl conditionModelfactory;
 
+    private GeneratorImplStub generator;
+
     @Before
     public void setUp() throws Exception {
-        PersistenceConvention pc = new PersistenceConventionImpl();
+        PersistenceConventionImpl pc = new PersistenceConventionImpl();
         ColumnMetaFactoryImpl cmf = new ColumnMetaFactoryImpl();
         cmf.setPersistenceConvention(pc);
         PropertyMetaFactoryImpl propertyMetaFactory = new PropertyMetaFactoryImpl();
@@ -73,69 +78,78 @@ public class ConditionModelFactoryImplTest {
         ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
                 "Condition");
         conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf);
+        generator = new GeneratorImplStub("UTF-8", ResourceUtil
+                .getResourceAsFile("templates"));
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testGetConditionModel() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+    public void testManyToOne() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Foo.class);
         ConditionModel model = conditionModelfactory.getConditionModel(
-                entityMeta, "aaa.bbb.AaaCondition");
-        assertEquals("aaa.bbb.AaaCondition", model.getClassName());
-        assertEquals("aaa.bbb", model.getPackageName());
-        assertEquals("AaaCondition", model.getShortClassName());
-        assertNotNull(model.getEntityMeta());
-        assertEquals(6, model.getConditionAttributeModelList().size());
-        assertEquals(1, model.getConditionMethodModelList().size());
+                entityMeta, "hoge.condition.FooCondition");
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "condition.ftl", "UTF-8",
+                false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/") + "_ManyToOne.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
 
-        Set<String> set = model.getImportPackageNameSet();
-        assertEquals(7, set.size());
-        Iterator<String> iterator = set.iterator();
-        assertEquals("java.util.Date", iterator.next());
-        assertEquals(ComplexWhere.class.getName(), iterator.next());
-        assertEquals(AbstractEntityCondition.class.getName(), iterator.next());
-        assertEquals(NotNullableCondition.class.getName(), iterator.next());
-        assertEquals(NotNullableStringCondition.class.getName(), iterator
-                .next());
-        assertEquals(NullableCondition.class.getName(), iterator.next());
-        assertEquals(NullableStringCondition.class.getName(), iterator.next());
+    @Test
+    public void testOneToOne() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bar.class);
+        ConditionModel model = conditionModelfactory.getConditionModel(
+                entityMeta, "hoge.condition.BarCondition");
+        GenerationContext context = new GenerationContext(model,
+                new File("dir"), new File("file"), "condition.ftl", "UTF-8",
+                false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/") + "_OneToMany.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
     @Entity
-    public static class Aaa {
+    public static class Foo {
 
         @Id
         @Column(nullable = false)
-        protected Integer id;
+        public Integer id;
 
         @Column(nullable = false)
-        protected String name;
+        public String name;
 
-        @Column(nullable = true)
-        protected String nullableName;
-
-        @Temporal(TemporalType.DATE)
+        @Lob
         @Column(nullable = false)
-        protected Date date;
+        public byte[] lob;
 
         @Temporal(TemporalType.DATE)
-        protected Date nullableDate;
+        public Date date;
 
-        @Column
-        protected Integer bbbId;
+        @Transient
+        public String temp;
+
+        @Version
+        @Column(nullable = false)
+        public Integer version;
+
+        @Column(nullable = false)
+        public Integer barId;
 
         @ManyToOne
-        protected Bbb bbb;
+        public Bar bar;
     }
 
     @Entity
-    public static class Bbb {
+    public static class Bar {
 
         @Id
         @Column(nullable = false)
-        protected Integer id;
+        public Integer id;
+
+        @Column(nullable = true)
+        public String name;
+
+        @OneToMany(mappedBy = "bar")
+        public List<Foo> foos;
     }
 }

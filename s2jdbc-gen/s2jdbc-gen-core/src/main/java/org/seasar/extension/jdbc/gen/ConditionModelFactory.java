@@ -33,5 +33,5 @@ public interface ConditionModelFactory {
      *            条件クラス名
      * @return 条件クラスのモデル
      */
-    Object getConditionModel(EntityMeta entityMeta, String className);
+    ConditionModel getConditionModel(EntityMeta entityMeta, String className);
 }

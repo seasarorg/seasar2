@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.EntityModel;
 import org.seasar.extension.jdbc.gen.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
@@ -253,7 +254,8 @@ public class EntityGenCommand extends AbstractCommand {
                 entityPackageName);
         String className = ClassUtil.concatName(packageName, entityDesc
                 .getName());
-        Object model = entityModelFactory.getEntityModel(entityDesc, className);
+        EntityModel model = entityModelFactory.getEntityModel(entityDesc,
+                className);
         GenerationContext context = createGenerationContext(model, className,
                 entityTemplateName, false);
         generator.generate(context);

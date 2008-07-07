@@ -1,0 +1,2 @@
+create table "AAA"."BBB"."HOGE" ("no" integer not null, "name" varchar);
+create table "AAA"."BBB"."FOO" ("no" integer not null, "name" varchar);

@@ -42,5 +42,6 @@ public class ConditionAttributeModelFactoryImplTest {
         assertEquals("property", model.getName());
         assertEquals(String.class, model.getAttributeClass());
         assertEquals(NullableStringCondition.class, model.getConditionClass());
+        assertFalse(model.isParameterized());
     }
 }

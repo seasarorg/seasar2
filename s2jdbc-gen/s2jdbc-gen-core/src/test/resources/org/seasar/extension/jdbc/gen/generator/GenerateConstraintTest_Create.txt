@@ -1,15 +1,10 @@
 --Primary Key
 alter table "AAA"."BBB"."HOGE" add constraint "HOGE_PK" primary key ("PK1", "PK2");
-alter table "AAA"."BBB"."FOO" add constraint "FOO_PK" primary key ("PK1", "PK2");
 
 --Unique Key
 alter table "AAA"."BBB"."HOGE" add constraint "HOGE_UK1" unique ("UK1-1", "UK1-2");
 alter table "AAA"."BBB"."HOGE" add constraint "HOGE_UK2" unique ("UK2-1", "UK2-2");
-alter table "AAA"."BBB"."FOO" add constraint "FOO_UK1" unique ("UK1-1", "UK1-2");
-alter table "AAA"."BBB"."FOO" add constraint "FOO_UK2" unique ("UK2-1", "UK2-2");
 
 --Foreign Key
 alter table "AAA"."BBB"."HOGE" add constraint "HOGE_FK1" foreign key ("FK1-1", "FK1-2") references "CCC"."DDD"."FOO" ("REF1-1", "REF1-2");
 alter table "AAA"."BBB"."HOGE" add constraint "HOGE_FK2" foreign key ("FK2-1", "FK2-2") references "EEE"."FFF"."BAR" ("REF2-1", "REF2-2");
-alter table "AAA"."BBB"."FOO" add constraint "FOO_FK1" foreign key ("FK1-1", "FK1-2") references "CCC"."DDD"."FOO" ("REF1-1", "REF1-2");
-alter table "AAA"."BBB"."FOO" add constraint "FOO_FK2" foreign key ("FK2-1", "FK2-2") references "EEE"."FFF"."BAR" ("REF2-1", "REF2-2");

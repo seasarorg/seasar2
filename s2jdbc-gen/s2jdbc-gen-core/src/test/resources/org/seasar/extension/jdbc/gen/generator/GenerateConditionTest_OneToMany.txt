@@ -1,0 +1,27 @@
+package hoge.condition;
+
+import org.seasar.extension.jdbc.where.ComplexWhere;
+import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
+import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
+import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
+
+public class BarCondition extends
+        AbstractEntityCondition<BarCondition> {
+
+    public BarCondition() {
+    }
+
+    public BarCondition(String prefix, ComplexWhere where) {
+        super(prefix, where);
+    }
+
+    public NotNullableCondition<BarCondition, Integer> id =
+        new NotNullableCondition<BarCondition, Integer>("id", this);
+
+    public NullableStringCondition<BarCondition> name =
+        new NullableStringCondition<BarCondition>("name", this);
+
+    public FooCondition foos() {
+        return new FooCondition(prefix + "foos.", where);
+    } 
+}

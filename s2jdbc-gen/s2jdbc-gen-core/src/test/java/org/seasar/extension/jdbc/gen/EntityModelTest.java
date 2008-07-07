@@ -15,10 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.junit.Test;
-import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.EntityModel;
-
 import static org.junit.Assert.*;
 
 /**
@@ -26,20 +22,6 @@ import static org.junit.Assert.*;
  * 
  */
 public class EntityModelTest {
-
-    @Test
-    public void testGetPackageName() throws Exception {
-        EntityModel model = new EntityModel();
-        String name = model.getPackageName(String.class.getName());
-        assertEquals("java.lang", name);
-    }
-
-    @Test
-    public void testGetShortClassName() throws Exception {
-        EntityModel model = new EntityModel();
-        String name = model.getShortClassName(String.class.getName());
-        assertEquals("String", name);
-    }
 
     public void testIsLengthAvailable() throws Exception {
         EntityModel model = new EntityModel();

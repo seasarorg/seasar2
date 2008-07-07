@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
  * エンティティクラスのモデルのファクトリです。
  * 
@@ -32,5 +31,5 @@ public interface EntityModelFactory {
      *            エンティティクラス名
      * @return エンティティクラスのモデル
      */
-    Object getEntityModel(EntityDesc entityDesc, String className);
+    EntityModel getEntityModel(EntityDesc entityDesc, String className);
 }

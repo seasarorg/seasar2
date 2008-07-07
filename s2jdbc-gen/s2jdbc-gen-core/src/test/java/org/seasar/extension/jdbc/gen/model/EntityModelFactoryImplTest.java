@@ -91,7 +91,11 @@ public class EntityModelFactoryImplTest {
 
         EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
         assertEquals("aaa.bbb.Hoge", model.getClassName());
-        assertNull(model.getBaseClassName());
+        assertEquals("aaa.bbb", model.getPackageName());
+        assertEquals("Hoge", model.getShortClassName());
+        assertNotNull(model.getEntityDesc());
+        assertFalse(model.isTableQualified());
+
         Set<String> set = model.getImportPackageNameSet();
         assertEquals(10, set.size());
         Iterator<String> iterator = set.iterator();
@@ -115,6 +119,7 @@ public class EntityModelFactoryImplTest {
         entityDesc.setName("Foo");
 
         EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
+        assertTrue(model.isTableQualified());
         Set<String> set = model.getImportPackageNameSet();
         assertEquals(2, set.size());
         Iterator<String> iterator = set.iterator();
@@ -128,6 +133,7 @@ public class EntityModelFactoryImplTest {
         entityDesc.setName("Foo");
 
         EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
+        assertFalse(model.isTableQualified());
         Set<String> set = model.getImportPackageNameSet();
         assertEquals(1, set.size());
         Iterator<String> iterator = set.iterator();

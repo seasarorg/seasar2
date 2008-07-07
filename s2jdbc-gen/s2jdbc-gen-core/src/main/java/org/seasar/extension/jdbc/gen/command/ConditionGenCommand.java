@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
+import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -204,8 +205,8 @@ public class ConditionGenCommand extends AbstractCommand {
                 conditionPackageName);
         String shortClassName = entityMeta.getName() + conditionClassNameSuffix;
         String className = ClassUtil.concatName(packageName, shortClassName);
-        Object model = conditionModelFactory.getConditionModel(entityMeta,
-                className);
+        ConditionModel model = conditionModelFactory.getConditionModel(
+                entityMeta, className);
         GenerationContext context = createGenerationContext(model, className,
                 conditionTemplateName, true);
         generator.generate(context);

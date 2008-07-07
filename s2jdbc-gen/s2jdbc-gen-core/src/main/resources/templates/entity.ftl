@@ -1,14 +1,14 @@
-package ${getPackageName(className)};
+package ${packageName};
 
-<#list importPackageNameSet as packageName>
-import ${packageName};
+<#list importPackageNameSet as importPackageName>
+import ${importPackageName};
 </#list>
 
 @Entity
 <#if tableQualified>
 @Table(<#if entityDesc.catalogName??>catalog = "${entityDesc.catalogName}"</#if><#if entityDesc.schemaName??><#if entityDesc.catalogName??>, </#if>schema = "${entityDesc.schemaName}"</#if>)
 </#if>
-public class ${getShortClassName(className)} {
+public class ${shortClassName} {
 <#list entityDesc.attributeDescList as attr>
 
   <#if attr.id>

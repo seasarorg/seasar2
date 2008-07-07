@@ -1,8 +1,0 @@
-create table "AAA"."BBB"."HOGE" (
-  "no" integer unique not null,
-  "name" varchar
-);
-create table "AAA"."BBB"."FOO" (
-  "no" integer unique not null,
-  "name" varchar
-);
