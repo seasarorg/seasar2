@@ -28,6 +28,7 @@ import javax.persistence.TemporalType;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -67,7 +68,10 @@ public class ConditionModelFactoryImplTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        conditionModelfactory = new ConditionModelFactoryImpl();
+        ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
+        ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
+                "Condition");
+        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf);
     }
 
     /**

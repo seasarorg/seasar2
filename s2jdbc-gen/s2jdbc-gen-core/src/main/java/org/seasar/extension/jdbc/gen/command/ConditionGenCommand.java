@@ -28,6 +28,8 @@ import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -163,7 +165,11 @@ public class ConditionGenCommand extends AbstractCommand {
      * @return {@link ConditionModelFactory}の実装
      */
     protected ConditionModelFactory createConditionModelFactory() {
-        return new ConditionModelFactoryImpl();
+        ConditionAttributeModelFactoryImpl attributeModelFactory = new ConditionAttributeModelFactoryImpl();
+        ConditionMethodModelFactoryImpl methodModelFactory = new ConditionMethodModelFactoryImpl(
+                conditionClassNameSuffix);
+        return new ConditionModelFactoryImpl(attributeModelFactory,
+                methodModelFactory);
     }
 
     /**

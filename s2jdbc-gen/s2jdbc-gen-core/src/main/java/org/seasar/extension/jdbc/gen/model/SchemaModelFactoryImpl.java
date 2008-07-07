@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.model;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.SchemaModel;
 import org.seasar.extension.jdbc.gen.SchemaModelFactory;
 import org.seasar.extension.jdbc.gen.TableDesc;
 

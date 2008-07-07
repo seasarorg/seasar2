@@ -13,26 +13,20 @@ public class ${getShortClassName(className)} extends
     public ${getShortClassName(className)}(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
-<#assign lastIndex = entityMeta.propertyMetaSize - 1>
-<#list 0..lastIndex as i>
-  <#assign prop = entityMeta.getPropertyMeta(i)>
+<#list conditionAttributeModelList as attr>
 
-  <#if prop.getPropertyClass().getName() == "java.lang.String">
-    <#if isNullable(prop)>
-    public NullableStringCondition<${getShortClassName(className)}> ${prop.name} =
-        new NullableStringCondition<${getShortClassName(className)}>("${prop.name}", this);
-    <#else>
-    public NotNullableStringCondition<${getShortClassName(className)}> ${prop.name} =
-        new NotNullableStringCondition<${getShortClassName(className)}>("${prop.name}", this);
-    </#if>
+  <#if attr.attributeClass.name == "java.lang.String">
+    public ${attr.conditionClass.simpleName}<${getShortClassName(className)}> ${attr.name} =
+        new ${attr.conditionClass.simpleName}<${getShortClassName(className)}>("${attr.name}", this);
   <#else>
-    <#if isNullable(prop)>
-    public NullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}> ${prop.name} =
-        new NullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}>("${prop.name}", this);
-    <#else>
-    public NotNullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}> ${prop.name} =
-        new NotNullableCondition<${getShortClassName(className)}, ${getWrapperShortClassName(prop)}>("${prop.name}", this);
-    </#if>
+    public ${attr.conditionClass.simpleName}<${getShortClassName(className)}, ${attr.attributeClass.simpleName}> ${attr.name} =
+        new ${attr.conditionClass.simpleName}<${getShortClassName(className)}, ${attr.attributeClass.simpleName}>("${attr.name}", this);
   </#if>
+</#list>
+<#list conditionMethodModelList as method>
+
+    public ${method.returnShortClassName} ${method.name}() {
+        return new ${method.returnShortClassName}(prefix + "${method.name}.", where);
+    } 
 </#list>
 }

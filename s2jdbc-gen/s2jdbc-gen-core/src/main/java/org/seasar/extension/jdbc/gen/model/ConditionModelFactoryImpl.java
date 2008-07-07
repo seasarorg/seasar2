@@ -15,21 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.lang.reflect.Field;
-
-import javax.persistence.Column;
-
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.gen.ConditionAttributeModel;
+import org.seasar.extension.jdbc.gen.ConditionAttributeModelFactory;
+import org.seasar.extension.jdbc.gen.ConditionMethodModel;
+import org.seasar.extension.jdbc.gen.ConditionMethodModelFactory;
+import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
-import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
-import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
-import org.seasar.extension.jdbc.where.condition.NullableCondition;
-import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * {@link ConditionModelFactory}の実装クラスです。
@@ -38,20 +34,56 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
-    /** デフォルトのカラム */
-    @Column
-    protected static final Column DEFAULT_COLUMN = ReflectionUtil
-            .getDeclaredField(ConditionModelFactoryImpl.class, "DEFAULT_COLUMN")
-            .getAnnotation(Column.class);
+    protected ConditionAttributeModelFactory conditionAttributeModelFactory;
+
+    protected ConditionMethodModelFactory conditionMethodModelFactory;
+
+    /**
+     * @param conditionAttributeModelFactory
+     * @param conditionMethodModelFactory
+     */
+    public ConditionModelFactoryImpl(
+            ConditionAttributeModelFactory conditionAttributeModelFactory,
+            ConditionMethodModelFactory conditionMethodModelFactory) {
+        super();
+        this.conditionAttributeModelFactory = conditionAttributeModelFactory;
+        this.conditionMethodModelFactory = conditionMethodModelFactory;
+    }
 
     public ConditionModel getConditionModel(EntityMeta entityMeta,
             String className) {
-        ConditionModel model = new ConditionModel();
-        model.setClassName(className);
-        model.setBaseClassName(AbstractEntityCondition.class.getName());
-        model.setEntityMeta(entityMeta);
-        doImportPackageNames(model, entityMeta);
-        return model;
+        ConditionModel conditionModel = new ConditionModel();
+        conditionModel.setClassName(className);
+        conditionModel
+                .setBaseClassName(AbstractEntityCondition.class.getName());
+        conditionModel.setEntityMeta(entityMeta);
+        for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
+            PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
+            if (propertyMeta.isTransient()) {
+                continue;
+            }
+            if (propertyMeta.isRelationship()) {
+                doConditionMethodModel(conditionModel, propertyMeta);
+            } else {
+                doConditionAttributeModel(conditionModel, propertyMeta);
+            }
+        }
+        doImportPackageNames(conditionModel, entityMeta);
+        return conditionModel;
+    }
+
+    protected void doConditionAttributeModel(ConditionModel conditionModel,
+            PropertyMeta propertyMeta) {
+        ConditionAttributeModel attributeModel = conditionAttributeModelFactory
+                .getConditionAttributeModel(propertyMeta);
+        conditionModel.addConditionAttributeModel(attributeModel);
+    }
+
+    protected void doConditionMethodModel(ConditionModel conditionModel,
+            PropertyMeta propertyMeta) {
+        ConditionMethodModel methodModel = conditionMethodModelFactory
+                .getConditionMethodModel(propertyMeta);
+        conditionModel.addConditionMethodModel(methodModel);
     }
 
     /**
@@ -62,39 +94,25 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      * @param entityMeta
      *            エンティティ
      */
-    protected void doImportPackageNames(ConditionModel model,
+    protected void doImportPackageNames(ConditionModel conditionModel,
             EntityMeta entityMeta) {
-        model.addImportPackageName(ComplexWhere.class.getName());
-        model.addImportPackageName(AbstractEntityCondition.class.getName());
-        for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
-            PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
-            Column column = getColumn(propertyMeta);
-            Class<?> propertyClass = propertyMeta.getPropertyClass();
-            Class<?> conditionClass = null;
-            if (column.nullable()) {
-                if (propertyClass == String.class) {
-                    conditionClass = NullableStringCondition.class;
-                } else {
-                    conditionClass = NullableCondition.class;
-                }
-            } else {
-                if (propertyClass == String.class) {
-                    conditionClass = NotNullableStringCondition.class;
-                } else {
-                    conditionClass = NotNullableCondition.class;
-                }
-            }
-            model.addImportPackageName(conditionClass.getName());
-            String name = ClassUtil.getPackageName(propertyClass);
-            if (name != null && !"java.lang".equals(name)) {
-                model.addImportPackageName(propertyClass.getName());
-            }
+        addImportPackageName(conditionModel, ComplexWhere.class);
+        addImportPackageName(conditionModel, AbstractEntityCondition.class);
+        for (ConditionAttributeModel attributeModel : conditionModel
+                .getConditionAttributeModelList()) {
+            addImportPackageName(conditionModel, attributeModel
+                    .getAttributeClass());
+            addImportPackageName(conditionModel, attributeModel
+                    .getConditionClass());
         }
     }
 
-    protected Column getColumn(PropertyMeta propertyMeta) {
-        Field field = propertyMeta.getField();
-        Column column = field.getAnnotation(Column.class);
-        return column != null ? column : DEFAULT_COLUMN;
+    protected void addImportPackageName(ConditionModel conditionModel,
+            Class<?> clazz) {
+        String pakcageName = ClassUtil.getPackageName(clazz);
+        if (pakcageName != null && !"java.lang".equals(pakcageName)) {
+            conditionModel.addImportPackageName(clazz.getName());
+        }
     }
+
 }

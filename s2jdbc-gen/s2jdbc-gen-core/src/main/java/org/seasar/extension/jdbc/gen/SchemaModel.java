@@ -13,16 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.model;
+package org.seasar.extension.jdbc.gen;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SequenceDesc;
-import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.framework.util.StringUtil;
 
 /**

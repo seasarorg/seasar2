@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.model;
+package org.seasar.extension.jdbc.gen;
 
 import javax.persistence.Column;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.gen.ConditionModel;
 
 import static org.junit.Assert.*;
 

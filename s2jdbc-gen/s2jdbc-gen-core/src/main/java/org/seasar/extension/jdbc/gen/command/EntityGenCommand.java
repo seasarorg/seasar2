@@ -23,7 +23,6 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.EntityDesc;
@@ -37,7 +36,6 @@ import org.seasar.extension.jdbc.gen.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -95,9 +93,6 @@ public class EntityGenCommand extends AbstractCommand {
 
     /** エンティティクラスのモデルのファクトリ */
     protected EntityModelFactory entityModelFactory;
-
-    /** 条件クラスのモデルのファクトリ */
-    protected ConditionModelFactory conditionModelFactory;
 
     /**
      * インスタンスを構築します。
@@ -182,7 +177,6 @@ public class EntityGenCommand extends AbstractCommand {
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
-        conditionModelFactory = createConditionModelFactory();
     }
 
     /**
@@ -214,15 +208,6 @@ public class EntityGenCommand extends AbstractCommand {
      */
     protected EntityModelFactory createEntityModelFactory() {
         return new EntityModelFactoryImpl();
-    }
-
-    /**
-     * {@link ConditionModelFactory}の実装を作成します。
-     * 
-     * @return {@link ConditionModelFactory}の実装
-     */
-    protected ConditionModelFactory createConditionModelFactory() {
-        return new ConditionModelFactoryImpl();
     }
 
     /**

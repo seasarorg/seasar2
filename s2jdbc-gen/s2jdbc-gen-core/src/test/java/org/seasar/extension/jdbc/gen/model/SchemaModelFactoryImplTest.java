@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.SchemaModel;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 

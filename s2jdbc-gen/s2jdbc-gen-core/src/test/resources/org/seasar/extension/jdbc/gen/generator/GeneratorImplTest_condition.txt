@@ -6,7 +6,6 @@ import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
-import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 
 public class FooCondition extends
         AbstractEntityCondition<FooCondition> {
@@ -30,9 +29,13 @@ public class FooCondition extends
     public NullableCondition<FooCondition, Date> date =
         new NullableCondition<FooCondition, Date>("date", this);
 
-    public NullableStringCondition<FooCondition> temp =
-        new NullableStringCondition<FooCondition>("temp", this);
-
     public NotNullableCondition<FooCondition, Integer> version =
         new NotNullableCondition<FooCondition, Integer>("version", this);
+
+    public NotNullableCondition<FooCondition, Integer> barId =
+        new NotNullableCondition<FooCondition, Integer>("barId", this);
+
+    public BarCondition bar() {
+        return new BarCondition(prefix + "bar.", where);
+    } 
 }

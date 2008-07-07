@@ -28,6 +28,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -47,6 +48,8 @@ import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
@@ -244,7 +247,11 @@ public class GeneratorImplTest {
         entityMetaFactory.setTableMetaFactory(tmf);
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Foo.class);
 
-        ConditionModelFactoryImpl conditionModelfactory = new ConditionModelFactoryImpl();
+        ConditionAttributeModelFactoryImpl attributeModelFactory = new ConditionAttributeModelFactoryImpl();
+        ConditionMethodModelFactoryImpl methodModelFactory = new ConditionMethodModelFactoryImpl(
+                "Condition");
+        ConditionModelFactoryImpl conditionModelfactory = new ConditionModelFactoryImpl(
+                attributeModelFactory, methodModelFactory);
         Object model = conditionModelfactory.getConditionModel(entityMeta,
                 "hoge.FooCondition");
 
@@ -548,5 +555,19 @@ public class GeneratorImplTest {
         @Version
         @Column(nullable = false)
         public Integer version;
+
+        @Column(nullable = false)
+        public Integer barId;
+
+        @ManyToOne
+        public Bar bar;
+    }
+
+    @Entity
+    public static class Bar {
+
+        @Id
+        @Column(nullable = false)
+        public Integer id;
     }
 }

@@ -65,7 +65,6 @@ public class EntityGenCommandTest {
         EntityGenCommand command = new EntityGenCommand();
         command.setDiconFile("s2jdbc-gen-core-test.dicon");
         command.init();
-        assertNotNull(command.createConditionModelFactory());
         assertNotNull(command.createEntityDescFactory());
         assertNotNull(command.createEntityModelFactory());
         assertNotNull(command.createGenerator());

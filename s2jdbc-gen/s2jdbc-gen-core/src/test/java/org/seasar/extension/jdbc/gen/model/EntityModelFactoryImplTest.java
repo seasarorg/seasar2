@@ -33,6 +33,7 @@ import javax.persistence.Version;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.EntityDesc;
+import org.seasar.extension.jdbc.gen.EntityModel;
 
 import static org.junit.Assert.*;
 

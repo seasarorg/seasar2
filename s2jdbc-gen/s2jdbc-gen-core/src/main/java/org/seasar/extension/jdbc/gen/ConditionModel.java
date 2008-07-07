@@ -13,10 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.model;
+package org.seasar.extension.jdbc.gen;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -39,13 +41,17 @@ public class ConditionModel {
             .getDeclaredField(ConditionModel.class, "DEFAULT_COLUMN")
             .getAnnotation(Column.class);
 
-    protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
-
     protected String className;
 
     protected String baseClassName;
 
     protected EntityMeta entityMeta;
+
+    protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
+
+    protected List<ConditionAttributeModel> conditionAttributeModelList = new ArrayList<ConditionAttributeModel>();
+
+    protected List<ConditionMethodModel> conditionMethodModelList = new ArrayList<ConditionMethodModel>();
 
     public String getClassName() {
         return className;
@@ -71,6 +77,24 @@ public class ConditionModel {
         if (!importPackageNameSet.contains(name)) {
             importPackageNameSet.add(name);
         }
+    }
+
+    public List<ConditionAttributeModel> getConditionAttributeModelList() {
+        return Collections.unmodifiableList(conditionAttributeModelList);
+    }
+
+    public void addConditionAttributeModel(
+            ConditionAttributeModel conditionAttributeModel) {
+        conditionAttributeModelList.add(conditionAttributeModel);
+    }
+
+    public List<ConditionMethodModel> getConditionMethodModelList() {
+        return Collections.unmodifiableList(conditionMethodModelList);
+    }
+
+    public void addConditionMethodModel(
+            ConditionMethodModel conditionMethodModel) {
+        conditionMethodModelList.add(conditionMethodModel);
     }
 
     public EntityMeta getEntityMeta() {
