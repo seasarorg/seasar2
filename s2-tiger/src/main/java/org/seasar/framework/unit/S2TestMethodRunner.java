@@ -466,11 +466,15 @@ public class S2TestMethodRunner {
     protected void bindFields() throws Throwable {
         for (Class<?> clazz = testClass; clazz != Object.class; clazz = clazz
                 .getSuperclass()) {
-
             final Field[] fields = clazz.getDeclaredFields();
             for (int i = 0; i < fields.length; ++i) {
                 bindField(fields[i]);
             }
+        }
+        List<Method> postBindFieldsMethods = introspector
+                .getPostBindFieldsMethods(testClass);
+        for (Method m : postBindFieldsMethods) {
+            m.invoke(test);
         }
     }
 
@@ -724,8 +728,16 @@ public class S2TestMethodRunner {
 
     /**
      * フィールドとコンポーネントのバインディングを解除します。
+     * 
+     * @throws Throwable
+     * 
      */
-    protected void unbindFields() {
+    protected void unbindFields() throws Throwable {
+        List<Method> preUnbindFieldsMethods = introspector
+                .getPreUnbindFieldsMethods(testClass);
+        for (Method m : preUnbindFieldsMethods) {
+            m.invoke(test);
+        }
         for (final Field field : boundFields) {
             try {
                 field.set(test, null);

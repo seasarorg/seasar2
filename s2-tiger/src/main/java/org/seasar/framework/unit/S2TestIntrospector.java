@@ -181,6 +181,23 @@ public interface S2TestIntrospector {
     List<Method> getAfterMethods(Class<?> clazz);
 
     /**
+     * すべてのテストケース共通のバインドフィールド直後のメソッドのリストを返します。
+     * 
+     * @param clazz
+     *            テストクラス
+     * @return バインドフィールドメソッド
+     */
+    public List<Method> getPostBindFieldsMethods(final Class<?> clazz);
+
+    /**
+     * すべてのテストケース共通のアンバインドフィールド直前のメソッドのリストを返します。
+     * 
+     * @param clazz
+     * @return
+     */
+    public List<Method> getPreUnbindFieldsMethods(final Class<?> clazz);
+
+    /**
      * テストケース個別の初期化メソッドを返します。
      * 
      * @param clazz

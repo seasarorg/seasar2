@@ -58,6 +58,12 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     /** テストケース個別にモックの振る舞いを記録するメソッドの名前のプレフィックス */
     protected String recordMethodName = "record";
 
+    /** テストクラスのバインドフィールド直後のメソッドの名前 */
+    protected String postBindFieldsMethodName = "postBindFields";
+
+    /** テストクラスのアンバインドフィールド直前のメソッドの名前 */
+    protected String preUnbindFieldsMethodName = "preUnbindFields";
+
     /**
      * 初期化メソッド
      */
@@ -65,6 +71,8 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     public void init() {
         addNonTestAnnotation(beforeAnnotation);
         addNonTestAnnotation(afterAnnotation);
+        addNonTestAnnotation(postBindFieldsAnnotation);
+        addNonTestAnnotation(preUnbindFieldsAnnotation);
         if (beforeMethodName != null) {
             addNonTestMethodNamePattern(beforeMethodName + ".*");
         }
@@ -73,6 +81,12 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
         }
         if (recordMethodName != null) {
             addNonTestMethodNamePattern(recordMethodName + ".+");
+        }
+        if (postBindFieldsMethodName != null) {
+            addNonTestMethodNamePattern(postBindFieldsMethodName);
+        }
+        if (preUnbindFieldsMethodName != null) {
+            addNonTestMethodNamePattern(preUnbindFieldsMethodName);
         }
     }
 
@@ -188,6 +202,30 @@ public class ConventionTestIntrospector extends AnnotationTestIntrospector {
     public List<Method> getAfterMethods(final Class<?> clazz) {
         final List<Method> methods = super.getAfterMethods(clazz);
         final Method method = getMethod(clazz, afterMethodName);
+        if (method != null) {
+            if (hasValidNonStaticSignature(method) && !methods.contains(method)) {
+                methods.add(method);
+            }
+        }
+        return methods;
+    }
+
+    @Override
+    public List<Method> getPostBindFieldsMethods(Class<?> clazz) {
+        final List<Method> methods = super.getPostBindFieldsMethods(clazz);
+        final Method method = getMethod(clazz, postBindFieldsMethodName);
+        if (method != null) {
+            if (hasValidNonStaticSignature(method) && !methods.contains(method)) {
+                methods.add(method);
+            }
+        }
+        return methods;
+    }
+
+    @Override
+    public List<Method> getPreUnbindFieldsMethods(Class<?> clazz) {
+        final List<Method> methods = super.getPreUnbindFieldsMethods(clazz);
+        final Method method = getMethod(clazz, preUnbindFieldsMethodName);
         if (method != null) {
             if (hasValidNonStaticSignature(method) && !methods.contains(method)) {
                 methods.add(method);

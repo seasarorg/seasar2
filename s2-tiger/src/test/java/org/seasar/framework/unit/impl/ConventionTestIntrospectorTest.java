@@ -24,6 +24,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.annotation.PostBindFields;
+import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
@@ -270,6 +272,38 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    public void testSuperclassAfterBindFieldsMethods() throws Exception {
+        introspector = new ConventionTestIntrospector();
+        introspector.init();
+        List<Method> methods = introspector
+                .getPostBindFieldsMethods(Hoge.class);
+        assertEquals(2, methods.size());
+        Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "kkk");
+        assertEquals(method, methods.get(0));
+        method = ReflectionUtil
+                .getDeclaredMethod(Hoge.class, "afterBindFields");
+        assertEquals(method, methods.get(1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSuperclassBeforeUnbindFieldsMethods() throws Exception {
+        introspector = new ConventionTestIntrospector();
+        introspector.init();
+        List<Method> methods = introspector
+                .getPreUnbindFieldsMethods(Hoge.class);
+        assertEquals(2, methods.size());
+        Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "lll");
+        assertEquals(method, methods.get(0));
+        method = ReflectionUtil.getDeclaredMethod(Hoge.class,
+                "beforeUnbindFields");
+        assertEquals(method, methods.get(1));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void setUpCustomize() throws Exception {
         include("ConventionTestIntrospectorTest.dicon");
     }
@@ -420,12 +454,43 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         public static void jjj() {
         }
 
+        /**
+         * 
+         */
+        @PostBindFields
+        public void kkk() {
+
+        }
+
+        /**
+         * 
+         */
+        public void afterBindFields() {
+
+        }
+
+        /**
+         * 
+         */
+        @PreUnbindFields
+        public void lll() {
+
+        }
+
+        /**
+         * 
+         */
+        public void beforeUnbindFields() {
+
+        }
+
     }
 
     /**
      * 
      */
     public static class Foo {
+
         /**
          * 
          */
@@ -498,6 +563,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
      * 
      */
     public static class Bar extends Foo {
+
         /**
          * 
          */
@@ -509,6 +575,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
      * 
      */
     public static class Baz {
+
         /**
          * 
          */

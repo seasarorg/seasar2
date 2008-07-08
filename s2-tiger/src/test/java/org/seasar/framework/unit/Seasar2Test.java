@@ -63,6 +63,8 @@ import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
+import org.seasar.framework.unit.annotation.PostBindFields;
+import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.RegisterNamingConvention;
 import org.seasar.framework.unit.annotation.RootDicon;
@@ -189,6 +191,8 @@ public class Seasar2Test extends TestCase {
     @RunWith(Seasar2.class)
     public static class AnnotationTest {
 
+        private Hello hello;
+
         /**
          * 
          */
@@ -237,6 +241,24 @@ public class Seasar2Test extends TestCase {
         public void fff() {
             log = "f";
         }
+
+        /**
+         * 
+         */
+        @PostBindFields
+        public void ggg() {
+            assertNotNull(hello);
+            log += "g";
+        }
+
+        /**
+         * 
+         */
+        @PreUnbindFields
+        public void hhh() {
+            assertNotNull(hello);
+            log += "h";
+        }
     }
 
     /**
@@ -247,7 +269,7 @@ public class Seasar2Test extends TestCase {
         Result result = core.run(AnnotationTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
-        assertEquals("acedb", log);
+        assertEquals("acgehdb", log);
     }
 
     /**
@@ -283,6 +305,8 @@ public class Seasar2Test extends TestCase {
      */
     @RunWith(Seasar2.class)
     public static class ConventionTest {
+
+        private Hello hello;
 
         /**
          * 
@@ -326,6 +350,22 @@ public class Seasar2Test extends TestCase {
         public void bbb() {
             log = "f";
         }
+
+        /**
+         * 
+         */
+        public void postBindFields() {
+            assertNotNull(hello);
+            log += "g";
+        }
+
+        /**
+         * 
+         */
+        public void preUnbindFields() {
+            assertNotNull(hello);
+            log += "h";
+        }
     }
 
     /**
@@ -336,7 +376,7 @@ public class Seasar2Test extends TestCase {
         Result result = core.run(ConventionTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
-        assertEquals("acedb", log);
+        assertEquals("acgehdb", log);
     }
 
     /**

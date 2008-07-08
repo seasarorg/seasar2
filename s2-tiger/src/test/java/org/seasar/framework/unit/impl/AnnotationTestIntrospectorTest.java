@@ -28,6 +28,8 @@ import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.framework.unit.InternalTestContext;
+import org.seasar.framework.unit.annotation.PostBindFields;
+import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
@@ -97,6 +99,34 @@ public class AnnotationTestIntrospectorTest extends EasyMockTestCase {
         assertTrue(methods.contains(method));
         method = ReflectionUtil.getDeclaredMethod(Hoge.class, "hhh");
         assertTrue(methods.contains(method));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testAfterBindFieldsMethods() throws Exception {
+        List<Method> methods = introspector
+                .getPostBindFieldsMethods(Hoge.class);
+        assertEquals(1, methods.size());
+        Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "lll");
+        assertTrue(methods.contains(method));
+        method = ReflectionUtil
+                .getDeclaredMethod(Hoge.class, "afterBindFields");
+        assertFalse(methods.contains(method));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testBeforeUnbindFieldsMethods() throws Exception {
+        List<Method> methods = introspector
+                .getPreUnbindFieldsMethods(Hoge.class);
+        assertEquals(1, methods.size());
+        Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "mmm");
+        assertTrue(methods.contains(method));
+        method = ReflectionUtil.getDeclaredMethod(Hoge.class,
+                "beforeUnbindFields");
+        assertFalse(methods.contains(method));
     }
 
     /**
@@ -346,6 +376,37 @@ public class AnnotationTestIntrospectorTest extends EasyMockTestCase {
          */
         public void after() {
         }
+
+        /**
+         * 
+         */
+        @PostBindFields
+        public void lll() {
+
+        }
+
+        /**
+         * 
+         */
+        public void afterBindFields() {
+
+        }
+
+        /**
+         * 
+         */
+        @PreUnbindFields
+        public void mmm() {
+
+        }
+
+        /**
+         * 
+         */
+        public void beforeUnbindFields() {
+
+        }
+
     }
 
     /**

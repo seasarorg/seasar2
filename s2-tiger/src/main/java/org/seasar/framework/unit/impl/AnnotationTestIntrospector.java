@@ -38,6 +38,8 @@ import org.seasar.framework.unit.InternalTestContext;
 import org.seasar.framework.unit.S2TestIntrospector;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
+import org.seasar.framework.unit.annotation.PostBindFields;
+import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.RegisterNamingConvention;
 import org.seasar.framework.unit.annotation.RootDicon;
@@ -65,6 +67,12 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
 
     /** 全テストケースに共通の解放メソッドに注釈可能なアノテーションクラス */
     protected Class<? extends Annotation> afterAnnotation = After.class;
+
+    /** テストクラスのバインドフィールド直後のメソッドに注釈可能なアノテーションクラス */
+    protected Class<? extends Annotation> postBindFieldsAnnotation = PostBindFields.class;
+
+    /** テストクラスのアンバインドフィールド直前のメソッドメソッドに注釈可能なアノテーションクラス */
+    protected Class<? extends Annotation> preUnbindFieldsAnnotation = PreUnbindFields.class;
 
     /** テストケースを無視する処理が有効かどうかを表すフラグ。デフォルトは<code>true</code> */
     protected boolean enableIgnore = true;
@@ -117,6 +125,28 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
     }
 
     /**
+     * テストクラスのバインドフィールド直後のメソッドに注釈可能なアノテーションクラスを設定します。
+     * 
+     * @param postBindFieldsAnnotation
+     *            アノテーションクラス
+     */
+    public void setPostBindFieldsAnnotation(
+            Class<? extends Annotation> postBindFieldsAnnotation) {
+        this.postBindFieldsAnnotation = postBindFieldsAnnotation;
+    }
+
+    /**
+     * テストクラスのアンバインドフィールド直前のメソッドに注釈可能なアノテーションクラスを設定します。
+     * 
+     * @param preUnbindFieldsAnnotation
+     *            アノテーションクラス
+     */
+    public void setPreUnbindFieldsAnnotation(
+            Class<? extends Annotation> preUnbindFieldsAnnotation) {
+        this.preUnbindFieldsAnnotation = preUnbindFieldsAnnotation;
+    }
+
+    /**
      * テストケースを無視する処理を有効とするかどうかを設定します。
      * 
      * @param enableIgnore
@@ -142,6 +172,14 @@ public class AnnotationTestIntrospector implements S2TestIntrospector {
 
     public List<Method> getAfterClassMethods(final Class<?> clazz) {
         return getAnnotatedMethods(clazz, afterClassAnnotation);
+    }
+
+    public List<Method> getPostBindFieldsMethods(final Class<?> clazz) {
+        return getAnnotatedMethods(clazz, postBindFieldsAnnotation);
+    }
+
+    public List<Method> getPreUnbindFieldsMethods(final Class<?> clazz) {
+        return getAnnotatedMethods(clazz, preUnbindFieldsAnnotation);
     }
 
     public List<Method> getBeforeMethods(final Class<?> clazz) {
