@@ -28,12 +28,12 @@ import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.AspectDef;
 import org.seasar.framework.unit.EasyMockTestCase;
 import org.seasar.framework.unit.InternalTestContext;
-import org.seasar.framework.unit.annotation.PostBindFields;
-import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
 import org.seasar.framework.unit.annotation.Mocks;
+import org.seasar.framework.unit.annotation.PostBindFields;
+import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.unit.annotation.Prerequisite;
 import org.seasar.framework.unit.annotation.RootDicon;
 import org.seasar.framework.unit.annotation.TxBehavior;
@@ -104,28 +104,27 @@ public class AnnotationTestIntrospectorTest extends EasyMockTestCase {
     /**
      * @throws Exception
      */
-    public void testAfterBindFieldsMethods() throws Exception {
+    public void testPostBindFieldsMethods() throws Exception {
         List<Method> methods = introspector
                 .getPostBindFieldsMethods(Hoge.class);
         assertEquals(1, methods.size());
         Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "lll");
         assertTrue(methods.contains(method));
-        method = ReflectionUtil
-                .getDeclaredMethod(Hoge.class, "afterBindFields");
+        method = ReflectionUtil.getDeclaredMethod(Hoge.class, "postBindFields");
         assertFalse(methods.contains(method));
     }
 
     /**
      * @throws Exception
      */
-    public void testBeforeUnbindFieldsMethods() throws Exception {
+    public void testPreUnbindFieldsMethods() throws Exception {
         List<Method> methods = introspector
                 .getPreUnbindFieldsMethods(Hoge.class);
         assertEquals(1, methods.size());
         Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "mmm");
         assertTrue(methods.contains(method));
-        method = ReflectionUtil.getDeclaredMethod(Hoge.class,
-                "beforeUnbindFields");
+        method = ReflectionUtil
+                .getDeclaredMethod(Hoge.class, "preUnbindFields");
         assertFalse(methods.contains(method));
     }
 
@@ -388,7 +387,7 @@ public class AnnotationTestIntrospectorTest extends EasyMockTestCase {
         /**
          * 
          */
-        public void afterBindFields() {
+        public void postBindFields() {
 
         }
 
@@ -403,7 +402,7 @@ public class AnnotationTestIntrospectorTest extends EasyMockTestCase {
         /**
          * 
          */
-        public void beforeUnbindFields() {
+        public void preUnbindFields() {
 
         }
 
