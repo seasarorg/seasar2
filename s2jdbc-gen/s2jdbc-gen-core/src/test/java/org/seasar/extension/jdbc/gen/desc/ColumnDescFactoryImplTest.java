@@ -27,7 +27,6 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -201,6 +200,11 @@ public class ColumnDescFactoryImplTest {
         ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
         assertNotNull(columnDesc);
         assertTrue(columnDesc.isUnique());
+    }
+
+    @Test
+    public void testGetColumnDesc_withStringArg() {
+        assertNotNull(columnDescFactory.getColumnDesc("HOGE"));
     }
 
     @Entity

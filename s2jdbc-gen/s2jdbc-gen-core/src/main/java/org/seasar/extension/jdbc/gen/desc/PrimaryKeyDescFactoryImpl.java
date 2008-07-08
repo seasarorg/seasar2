@@ -56,6 +56,12 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
         return primaryKeyDesc;
     }
 
+    public PrimaryKeyDesc getPrimaryKeyDesc(String columnName) {
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        primaryKeyDesc.addColumnName(columnName);
+        return primaryKeyDesc;
+    }
+
     /**
      * カラムの名前を処理します。
      * 

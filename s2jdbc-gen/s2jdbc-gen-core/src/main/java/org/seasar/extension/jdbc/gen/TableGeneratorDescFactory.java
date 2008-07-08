@@ -15,24 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.PropertyMeta;
-
 /**
- * {@link ColumnDesc}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface ColumnDescFactory {
+public interface TableGeneratorDescFactory {
 
-    /**
-     * カラム記述を返します。
-     * 
-     * @param propertyMeta
-     *            プロパティメタデータ
-     * @return カラム記述
-     */
-    ColumnDesc getColumnDesc(PropertyMeta propertyMeta);
-
-    ColumnDesc getColumnDesc(String columnName);
-
+    TableGeneratorDesc getTableGeneratorDesc();
 }

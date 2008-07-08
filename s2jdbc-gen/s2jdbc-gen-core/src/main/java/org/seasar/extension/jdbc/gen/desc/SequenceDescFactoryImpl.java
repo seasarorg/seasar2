@@ -25,21 +25,14 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.SequenceDescFactory;
+import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
  * 
  */
 public class SequenceDescFactoryImpl implements SequenceDescFactory {
-
-    /** デフォルトのシーケンスジェネレータ */
-    @SequenceGenerator(name = "default")
-    protected static final SequenceGenerator DEFAULT_SEQUENCE_GENERATOR = ReflectionUtil
-            .getDeclaredField(SequenceDescFactoryImpl.class,
-                    "DEFAULT_SEQUENCE_GENERATOR").getAnnotation(
-                    SequenceGenerator.class);
 
     protected GenDialect dialect;
 
@@ -77,8 +70,8 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
         Field field = propertyMeta.getField();
         SequenceGenerator sequenceGenerator = field
                 .getAnnotation(SequenceGenerator.class);
-        return sequenceGenerator != null ? sequenceGenerator
-                : DEFAULT_SEQUENCE_GENERATOR;
+        return sequenceGenerator != null ? sequenceGenerator : AnnotationUtil
+                .getDefaultSequenceGenerator();
     }
 
     protected String getSequenceName(EntityMeta entityMeta,

@@ -16,7 +16,9 @@
 package org.seasar.extension.jdbc.gen.util;
 
 import javax.persistence.Column;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
@@ -37,6 +39,17 @@ public class AnnotationUtil {
     protected static Column DEFAULT_COLUMN = ReflectionUtil.getDeclaredField(
             AnnotationUtil.class, "DEFAULT_COLUMN").getAnnotation(Column.class);
 
+    @SequenceGenerator(name = "default")
+    protected static final SequenceGenerator DEFAULT_SEQUENCE_GENERATOR = ReflectionUtil
+            .getDeclaredField(AnnotationUtil.class,
+                    "DEFAULT_SEQUENCE_GENERATOR").getAnnotation(
+                    SequenceGenerator.class);
+
+    @TableGenerator(name = "default")
+    protected static final TableGenerator DEFAULT_TABLE_GENERATOR = ReflectionUtil
+            .getDeclaredField(AnnotationUtil.class, "DEFAULT_TABLE_GENERATOR")
+            .getAnnotation(TableGenerator.class);
+
     private AnnotationUtil() {
     }
 
@@ -46,5 +59,13 @@ public class AnnotationUtil {
 
     public static Column getDefaultColumn() {
         return DEFAULT_COLUMN;
+    }
+
+    public static SequenceGenerator getDefaultSequenceGenerator() {
+        return DEFAULT_SEQUENCE_GENERATOR;
+    }
+
+    public static TableGenerator getDefaultTableGenerator() {
+        return DEFAULT_TABLE_GENERATOR;
     }
 }

@@ -34,4 +34,14 @@ public class AnnotationUtilTest {
     public void testGetDefaultColumn() throws Exception {
         assertNotNull(AnnotationUtil.getDefaultColumn());
     }
+
+    @Test
+    public void testGetDefaultSequenceGenerator() throws Exception {
+        assertNotNull(AnnotationUtil.getDefaultSequenceGenerator());
+    }
+
+    @Test
+    public void testGetDefaultTableGenerator() throws Exception {
+        assertNotNull(AnnotationUtil.getDefaultTableGenerator());
+    }
 }

@@ -61,6 +61,12 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         return columnDesc;
     }
 
+    public ColumnDesc getColumnDesc(String columnName) {
+        ColumnDesc columnDesc = new ColumnDesc();
+        columnDesc.setName(columnName);
+        return columnDesc;
+    }
+
     /**
      * 名前を処理します。
      * 

@@ -24,7 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
-import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -136,6 +135,11 @@ public class PrimaryKeyDescFactoryImplTest {
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
                 .getPrimaryKeyDesc(entityMeta);
         assertNull(primaryKeyDesc);
+    }
+
+    @Test
+    public void testGetPrimaryKeyDesc_withStringArg() {
+        assertNotNull(primaryKeyDescFactory.getPrimaryKeyDesc("HOGE"));
     }
 
     @Entity

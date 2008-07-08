@@ -33,4 +33,6 @@ public interface PrimaryKeyDescFactory {
      */
     PrimaryKeyDesc getPrimaryKeyDesc(EntityMeta entityMeta);
 
+    PrimaryKeyDesc getPrimaryKeyDesc(String columnName);
+
 }
