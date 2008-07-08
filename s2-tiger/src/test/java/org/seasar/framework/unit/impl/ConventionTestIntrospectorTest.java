@@ -272,7 +272,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testSuperclassAfterBindFieldsMethods() throws Exception {
+    public void testSuperclassPostBindFieldsMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector
@@ -280,15 +280,14 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(2, methods.size());
         Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "kkk");
         assertEquals(method, methods.get(0));
-        method = ReflectionUtil
-                .getDeclaredMethod(Hoge.class, "afterBindFields");
+        method = ReflectionUtil.getDeclaredMethod(Hoge.class, "postBindFields");
         assertEquals(method, methods.get(1));
     }
 
     /**
      * @throws Exception
      */
-    public void testSuperclassBeforeUnbindFieldsMethods() throws Exception {
+    public void testSuperclassPreUnbindFieldsMethods() throws Exception {
         introspector = new ConventionTestIntrospector();
         introspector.init();
         List<Method> methods = introspector
@@ -296,8 +295,8 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         assertEquals(2, methods.size());
         Method method = ReflectionUtil.getDeclaredMethod(Hoge.class, "lll");
         assertEquals(method, methods.get(0));
-        method = ReflectionUtil.getDeclaredMethod(Hoge.class,
-                "beforeUnbindFields");
+        method = ReflectionUtil
+                .getDeclaredMethod(Hoge.class, "preUnbindFields");
         assertEquals(method, methods.get(1));
     }
 
@@ -465,7 +464,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         /**
          * 
          */
-        public void afterBindFields() {
+        public void postBindFields() {
 
         }
 
@@ -480,7 +479,7 @@ public class ConventionTestIntrospectorTest extends S2TestCase {
         /**
          * 
          */
-        public void beforeUnbindFields() {
+        public void preUnbindFields() {
 
         }
 
