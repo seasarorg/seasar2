@@ -22,6 +22,8 @@ package org.seasar.extension.jdbc.gen;
  */
 public class SequenceDesc {
 
+    protected final Key key = new Key();
+
     /** シーケンス名 */
     protected String sequenceName;
 
@@ -51,6 +53,7 @@ public class SequenceDesc {
      */
     public void setSequenceName(String sequenceName) {
         this.sequenceName = sequenceName;
+        key.setSequenceName(sequenceName);
     }
 
     /**
@@ -112,28 +115,62 @@ public class SequenceDesc {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((sequenceName == null) ? 0 : sequenceName.hashCode());
-        return result;
+        return key.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final SequenceDesc other = (SequenceDesc) obj;
-        if (sequenceName == null) {
-            if (other.sequenceName != null)
+        return key.equals(other.key);
+    }
+
+    protected static class Key {
+
+        protected String sequenceName;
+
+        public void setSequenceName(String sequenceName) {
+            this.sequenceName = sequenceName.toLowerCase();
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result
+                    + ((sequenceName == null) ? 0 : sequenceName.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
                 return false;
-        } else if (!sequenceName.equals(other.sequenceName))
-            return false;
-        return true;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Key other = (Key) obj;
+            if (sequenceName == null) {
+                if (other.sequenceName != null) {
+                    return false;
+                }
+            } else if (!sequenceName.equals(other.sequenceName)) {
+                return false;
+            }
+            return true;
+        }
     }
 
 }

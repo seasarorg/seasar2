@@ -28,6 +28,8 @@ import javax.persistence.GenerationType;
  */
 public class PrimaryKeyDesc {
 
+    protected final Key key = new Key();
+
     /** {@link GenerationType#IDENTITY}で識別子が生成される場合{@code true} */
     protected boolean identity;
 
@@ -70,32 +72,67 @@ public class PrimaryKeyDesc {
      */
     public void addColumnName(String columnName) {
         columnNameList.add(columnName);
+        key.addColumnName(columnName);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((columnNameList == null) ? 0 : columnNameList.hashCode());
-        return result;
+        return key.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final PrimaryKeyDesc other = (PrimaryKeyDesc) obj;
-        if (columnNameList == null) {
-            if (other.columnNameList != null)
-                return false;
-        } else if (!columnNameList.equals(other.columnNameList))
-            return false;
-        return true;
+        return key.equals(other.key);
     }
 
+    protected static class Key {
+
+        protected List<String> columnNameList = new ArrayList<String>();
+
+        protected void addColumnName(String columnName) {
+            columnNameList.add(columnName.toLowerCase());
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime
+                    * result
+                    + ((columnNameList == null) ? 0 : columnNameList.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Key other = (Key) obj;
+            if (columnNameList == null) {
+                if (other.columnNameList != null) {
+                    return false;
+                }
+            } else if (!columnNameList.equals(other.columnNameList)) {
+                return false;
+            }
+            return true;
+        }
+    }
 }

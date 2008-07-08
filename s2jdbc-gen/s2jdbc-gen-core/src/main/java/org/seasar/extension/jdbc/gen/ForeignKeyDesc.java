@@ -26,6 +26,8 @@ import java.util.List;
  */
 public class ForeignKeyDesc {
 
+    protected final Key key = new Key();
+
     /** カラム名のリスト */
     protected List<String> columnNameList = new ArrayList<String>();
 
@@ -58,6 +60,7 @@ public class ForeignKeyDesc {
      */
     public void addColumnName(String columnName) {
         columnNameList.add(columnName);
+        key.addColumnName(columnName);
     }
 
     /**
@@ -77,6 +80,7 @@ public class ForeignKeyDesc {
      */
     public void setReferencedCatalogName(String referencedCatalogName) {
         this.referencedCatalogName = referencedCatalogName;
+        key.setReferencedCatalogName(referencedCatalogName);
     }
 
     /**
@@ -96,6 +100,7 @@ public class ForeignKeyDesc {
      */
     public void setReferencedSchemaName(String referencedSchemaName) {
         this.referencedSchemaName = referencedSchemaName;
+        key.setReferencedSchemaName(referencedSchemaName);
     }
 
     /**
@@ -115,6 +120,7 @@ public class ForeignKeyDesc {
      */
     public void setReferencedTableName(String referencedTableName) {
         this.referencedTableName = referencedTableName;
+        key.setReferencedTableName(referencedTableName);
     }
 
     /**
@@ -134,69 +140,144 @@ public class ForeignKeyDesc {
      */
     public void addReferencedColumnName(String referencedColumnName) {
         referencedColumnNameList.add(referencedColumnName);
+        key.addtReferencedColumnName(referencedColumnName);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((columnNameList == null) ? 0 : columnNameList.hashCode());
-        result = prime
-                * result
-                + ((referencedCatalogName == null) ? 0 : referencedCatalogName
-                        .hashCode());
-        result = prime
-                * result
-                + ((referencedColumnNameList == null) ? 0
-                        : referencedColumnNameList.hashCode());
-        result = prime
-                * result
-                + ((referencedSchemaName == null) ? 0 : referencedSchemaName
-                        .hashCode());
-        result = prime
-                * result
-                + ((referencedTableName == null) ? 0 : referencedTableName
-                        .hashCode());
-        return result;
+        return key.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        final ForeignKeyDesc other = (ForeignKeyDesc) obj;
-        if (columnNameList == null) {
-            if (other.columnNameList != null)
+        }
+        ForeignKeyDesc other = (ForeignKeyDesc) obj;
+        return key.equals(other.key);
+    }
+
+    protected static class Key {
+
+        /** カラム名のリスト */
+        protected List<String> columnNameList = new ArrayList<String>();
+
+        /** 参照されるテーブルのカタログ名 */
+        protected String referencedCatalogName;
+
+        /** 参照されるテーブルのスキーマ名 */
+        protected String referencedSchemaName;
+
+        /** 参照されるテーブル名 */
+        protected String referencedTableName;
+
+        /** 参照されるカラム名のリスト */
+        protected List<String> referencedColumnNameList = new ArrayList<String>();
+
+        protected void addColumnName(String columnName) {
+            this.columnNameList.add(columnName.toLowerCase());
+        }
+
+        protected void setReferencedCatalogName(String referencedCatalogName) {
+            this.referencedCatalogName = referencedCatalogName.toLowerCase();
+        }
+
+        protected void setReferencedSchemaName(String referencedSchemaName) {
+            this.referencedSchemaName = referencedSchemaName.toLowerCase();
+        }
+
+        protected void setReferencedTableName(String referencedTableName) {
+            this.referencedTableName = referencedTableName.toLowerCase();
+        }
+
+        protected void addtReferencedColumnName(String referencedColumnName) {
+            this.referencedColumnNameList.add(referencedColumnName
+                    .toLowerCase());
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime
+                    * result
+                    + ((columnNameList == null) ? 0 : columnNameList.hashCode());
+            result = prime
+                    * result
+                    + ((referencedCatalogName == null) ? 0
+                            : referencedCatalogName.hashCode());
+            result = prime
+                    * result
+                    + ((referencedSchemaName == null) ? 0
+                            : referencedSchemaName.hashCode());
+            result = prime
+                    * result
+                    + ((referencedTableName == null) ? 0 : referencedTableName
+                            .hashCode());
+            result = prime
+                    * result
+                    + ((referencedColumnNameList == null) ? 0
+                            : referencedColumnNameList.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
                 return false;
-        } else if (!columnNameList.equals(other.columnNameList))
-            return false;
-        if (referencedCatalogName == null) {
-            if (other.referencedCatalogName != null)
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
-        } else if (!referencedCatalogName.equals(other.referencedCatalogName))
-            return false;
-        if (referencedColumnNameList == null) {
-            if (other.referencedColumnNameList != null)
+            }
+            final Key other = (Key) obj;
+            if (columnNameList == null) {
+                if (other.columnNameList != null) {
+                    return false;
+                }
+            } else if (!columnNameList.equals(other.columnNameList)) {
                 return false;
-        } else if (!referencedColumnNameList
-                .equals(other.referencedColumnNameList))
-            return false;
-        if (referencedSchemaName == null) {
-            if (other.referencedSchemaName != null)
+            }
+            if (referencedCatalogName == null) {
+                if (other.referencedCatalogName != null) {
+                    return false;
+                }
+            } else if (!referencedCatalogName
+                    .equals(other.referencedCatalogName)) {
                 return false;
-        } else if (!referencedSchemaName.equals(other.referencedSchemaName))
-            return false;
-        if (referencedTableName == null) {
-            if (other.referencedTableName != null)
+            }
+            if (referencedSchemaName == null) {
+                if (other.referencedSchemaName != null) {
+                    return false;
+                }
+            } else if (!referencedSchemaName.equals(other.referencedSchemaName)) {
                 return false;
-        } else if (!referencedTableName.equals(other.referencedTableName))
-            return false;
-        return true;
+            }
+            if (referencedTableName == null) {
+                if (other.referencedTableName != null) {
+                    return false;
+                }
+            } else if (!referencedTableName.equals(other.referencedTableName)) {
+                return false;
+            }
+            if (referencedColumnNameList == null) {
+                if (other.referencedColumnNameList != null) {
+                    return false;
+                }
+            } else if (!referencedColumnNameList
+                    .equals(other.referencedColumnNameList)) {
+                return false;
+            }
+            return true;
+        }
     }
 
 }

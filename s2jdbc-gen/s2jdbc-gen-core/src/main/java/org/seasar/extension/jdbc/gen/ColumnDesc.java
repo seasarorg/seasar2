@@ -22,6 +22,8 @@ package org.seasar.extension.jdbc.gen;
  */
 public class ColumnDesc {
 
+    protected final Key key = new Key();
+
     /** 名前 */
     protected String name;
 
@@ -51,6 +53,7 @@ public class ColumnDesc {
      */
     public void setName(String name) {
         this.name = name;
+        key.setName(name);
     }
 
     /**
@@ -112,27 +115,60 @@ public class ColumnDesc {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
+        return key.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
-        final ColumnDesc other = (ColumnDesc) obj;
-        if (name == null) {
-            if (other.name != null)
+        }
+        ColumnDesc other = (ColumnDesc) obj;
+        return key.equals(other.key);
+    }
+
+    protected static class Key {
+
+        private String name;
+
+        public void setName(String name) {
+            this.name = name.toLowerCase();
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
                 return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Key other = (Key) obj;
+            if (name == null) {
+                if (other.name != null)
+                    return false;
+            } else if (!name.equals(other.name)) {
+                return false;
+            }
+            return true;
+        }
     }
 
 }

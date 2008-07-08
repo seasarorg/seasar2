@@ -26,6 +26,8 @@ import java.util.List;
  */
 public class TableDesc {
 
+    protected final Key key = new Key();
+
     /** カタログ名 */
     protected String catalogName;
 
@@ -67,6 +69,7 @@ public class TableDesc {
      */
     public void setCatalogName(String catalogName) {
         this.catalogName = catalogName;
+        key.setCatalogName(catalogName);
     }
 
     /**
@@ -86,6 +89,7 @@ public class TableDesc {
      */
     public void setSchemaName(String schemaName) {
         this.schemaName = schemaName;
+        key.setSchemaName(schemaName);
     }
 
     /**
@@ -105,6 +109,7 @@ public class TableDesc {
      */
     public void setName(String name) {
         this.name = name;
+        key.setName(name);
     }
 
     /**
@@ -212,41 +217,94 @@ public class TableDesc {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result
-                + ((catalogName == null) ? 0 : catalogName.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result
-                + ((schemaName == null) ? 0 : schemaName.hashCode());
-        return result;
+        return key.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final TableDesc other = (TableDesc) obj;
-        if (catalogName == null) {
-            if (other.catalogName != null)
+        return key.equals(other.key);
+    }
+
+    protected static class Key {
+
+        /** カタログ名 */
+        protected String catalogName;
+
+        /** スキーマ名 */
+        protected String schemaName;
+
+        /** 名前 */
+        protected String name;
+
+        public void setCatalogName(String catalogName) {
+            this.catalogName = catalogName.toLowerCase();
+        }
+
+        public void setSchemaName(String schemaName) {
+            this.schemaName = schemaName.toLowerCase();
+        }
+
+        public void setName(String name) {
+            this.name = name.toLowerCase();
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result
+                    + ((catalogName == null) ? 0 : catalogName.hashCode());
+            result = prime * result
+                    + ((schemaName == null) ? 0 : schemaName.hashCode());
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
                 return false;
-        } else if (!catalogName.equals(other.catalogName))
-            return false;
-        if (name == null) {
-            if (other.name != null)
+            }
+            if (getClass() != obj.getClass()) {
                 return false;
-        } else if (!name.equals(other.name))
-            return false;
-        if (schemaName == null) {
-            if (other.schemaName != null)
+            }
+            final Key other = (Key) obj;
+            if (catalogName == null) {
+                if (other.catalogName != null) {
+                    return false;
+                }
+            } else if (!catalogName.equals(other.catalogName)) {
                 return false;
-        } else if (!schemaName.equals(other.schemaName))
-            return false;
-        return true;
+            }
+            if (name == null) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
+                return false;
+            }
+            if (schemaName == null) {
+                if (other.schemaName != null) {
+                    return false;
+                }
+            } else if (!schemaName.equals(other.schemaName)) {
+                return false;
+            }
+            return true;
+        }
     }
 
 }
