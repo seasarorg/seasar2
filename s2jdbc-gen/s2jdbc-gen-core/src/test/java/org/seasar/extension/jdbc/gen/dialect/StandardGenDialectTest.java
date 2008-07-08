@@ -36,8 +36,8 @@ public class StandardGenDialectTest {
      */
     @Test
     public void testDataType_char() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.CHAR);
-        assertEquals("char(10)", sqlType.getDefinition(10, 0, 0));
+        DataType dataType = dialect.getDataType(Types.CHAR);
+        assertEquals("char(10)", dataType.getDefinition(10, 0, 0));
     }
 
     /**
@@ -46,8 +46,8 @@ public class StandardGenDialectTest {
      */
     @Test
     public void testDataType_varbinary() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.VARBINARY);
-        assertEquals("varbinary(10)", sqlType.getDefinition(10, 0, 0));
+        DataType dataType = dialect.getDataType(Types.VARBINARY);
+        assertEquals("varbinary(10)", dataType.getDefinition(10, 0, 0));
     }
 
     /**
@@ -55,8 +55,8 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     public void testDataType_varchar() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.VARCHAR);
-        assertEquals("varchar(10)", sqlType.getDefinition(10, 0, 0));
+        DataType dataType = dialect.getDataType(Types.VARCHAR);
+        assertEquals("varchar(10)", dataType.getDefinition(10, 0, 0));
     }
 
 }

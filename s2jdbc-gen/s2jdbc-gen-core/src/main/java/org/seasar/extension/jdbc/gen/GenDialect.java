@@ -70,13 +70,9 @@ public interface GenDialect {
      * 
      * @param sqlType
      *            SQL型
-     * @param typeName
-     *            型名
-     * @param nullable
-     *            NULLが可能であれば{@code true}
      * @return Javaの型
      */
-    Class<?> getJavaType(int sqlType, String typeName, boolean nullable);
+    JavaType getJavaType(int sqlType);
 
     /**
      * データ型を返します。

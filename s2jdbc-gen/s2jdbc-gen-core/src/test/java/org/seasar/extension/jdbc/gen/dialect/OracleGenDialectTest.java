@@ -15,10 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.DataType;
+import org.seasar.extension.jdbc.gen.JavaType;
 
 import static org.junit.Assert.*;
 
@@ -36,8 +38,8 @@ public class OracleGenDialectTest {
      */
     @Test
     public void testDataType_decimal() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.DECIMAL);
-        assertEquals("number(10,5)", sqlType.getDefinition(0, 10, 5));
+        DataType dataType = dialect.getDataType(Types.DECIMAL);
+        assertEquals("number(10,5)", dataType.getDefinition(0, 10, 5));
     }
 
     /**
@@ -46,8 +48,8 @@ public class OracleGenDialectTest {
      */
     @Test
     public void testDataType_numeric() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.NUMERIC);
-        assertEquals("number(10,5)", sqlType.getDefinition(0, 10, 5));
+        DataType dataType = dialect.getDataType(Types.NUMERIC);
+        assertEquals("number(10,5)", dataType.getDefinition(0, 10, 5));
     }
 
     /**
@@ -56,9 +58,9 @@ public class OracleGenDialectTest {
      */
     @Test
     public void testDataType_varbinary() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.VARBINARY);
-        assertEquals("row(2000)", sqlType.getDefinition(2000, 0, 0));
-        assertEquals("long row", sqlType.getDefinition(2001, 0, 0));
+        DataType dataType = dialect.getDataType(Types.VARBINARY);
+        assertEquals("row(2000)", dataType.getDefinition(2000, 0, 0));
+        assertEquals("long row", dataType.getDefinition(2001, 0, 0));
     }
 
     /**
@@ -67,9 +69,17 @@ public class OracleGenDialectTest {
      */
     @Test
     public void testDataType_varchar() throws Exception {
-        DataType sqlType = dialect.getDataType(Types.VARCHAR);
-        assertEquals("varchar2(4000)", sqlType.getDefinition(4000, 0, 0));
-        assertEquals("long", sqlType.getDefinition(4001, 0, 0));
+        DataType dataType = dialect.getDataType(Types.VARCHAR);
+        assertEquals("varchar2(4000)", dataType.getDefinition(4000, 0, 0));
+        assertEquals("long", dataType.getDefinition(4001, 0, 0));
     }
 
+    @Test
+    public void testJavaType_decimal() throws Exception {
+        JavaType javaType = dialect.getJavaType(Types.DECIMAL);
+        assertEquals(Integer.class, javaType.getJavaClass(8, 0, "NUMBER", false));
+        assertEquals(BigDecimal.class, javaType.getJavaClass(8, 2, "NUMBER", false));
+        assertEquals(BigDecimal.class, javaType
+                .getJavaClass(11, 0, "NUMBER", false));
+    }
 }

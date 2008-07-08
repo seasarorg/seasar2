@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -93,6 +94,13 @@ public class EntityModel {
 
     public boolean isPrecisionAvailable(AttributeDesc attributeDesc) {
         return isNumber(attributeDesc) && attributeDesc.getPrecision() > 0;
+    }
+
+    public boolean isScaleAvailable(AttributeDesc attributeDesc) {
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                .getAttributeClass());
+        return clazz == BigDecimal.class || clazz == Float.class
+                || clazz == Double.class;
     }
 
     protected boolean isNumber(AttributeDesc attributeDesc) {

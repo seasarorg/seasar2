@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.DataType;
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.JavaType;
 
 /**
  * 標準的な方言をあつかうクラスです。
@@ -35,46 +36,46 @@ import org.seasar.extension.jdbc.gen.GenDialect;
  */
 public class StandardGenDialect implements GenDialect {
 
-    /** SQL型をキー、Javaクラスを値とするマップ */
-    protected Map<Integer, Class<?>> javaTypeMap = new HashMap<Integer, Class<?>>();
+    /** SQL型をキー、@{JavaType Java型}を値とするマップ */
+    protected Map<Integer, JavaType> javaTypeMap = new HashMap<Integer, JavaType>();
 
-    /** SQL型をキー、データ型を値とするマップ */
+    /** SQL型をキー、@{DataType データ型}を値とするマップ */
     protected Map<Integer, DataType> dataTypeMap = new HashMap<Integer, DataType>();
 
     /**
      * インスタンスを構築します。
      */
     public StandardGenDialect() {
-        javaTypeMap.put(Types.ARRAY, Object.class);
-        javaTypeMap.put(Types.BIGINT, Long.class);
-        javaTypeMap.put(Types.BINARY, byte[].class);
-        javaTypeMap.put(Types.BIT, Object.class);
-        javaTypeMap.put(Types.BLOB, byte[].class);
-        javaTypeMap.put(Types.BOOLEAN, Boolean.class);
-        javaTypeMap.put(Types.CHAR, String.class);
-        javaTypeMap.put(Types.CLOB, String.class);
-        javaTypeMap.put(Types.DATALINK, Object.class);
-        javaTypeMap.put(Types.DATE, Date.class);
-        javaTypeMap.put(Types.DECIMAL, BigDecimal.class);
-        javaTypeMap.put(Types.DISTINCT, Object.class);
-        javaTypeMap.put(Types.DOUBLE, Double.class);
-        javaTypeMap.put(Types.FLOAT, Float.class);
-        javaTypeMap.put(Types.INTEGER, Integer.class);
-        javaTypeMap.put(Types.JAVA_OBJECT, Object.class);
-        javaTypeMap.put(Types.LONGVARBINARY, byte[].class);
-        javaTypeMap.put(Types.LONGVARCHAR, String.class);
-        javaTypeMap.put(Types.NULL, Object.class);
-        javaTypeMap.put(Types.NUMERIC, BigDecimal.class);
-        javaTypeMap.put(Types.OTHER, Object.class);
-        javaTypeMap.put(Types.REAL, Float.class);
-        javaTypeMap.put(Types.REF, Object.class);
-        javaTypeMap.put(Types.SMALLINT, Short.class);
-        javaTypeMap.put(Types.STRUCT, Object.class);
-        javaTypeMap.put(Types.TIME, Date.class);
-        javaTypeMap.put(Types.TIMESTAMP, Date.class);
-        javaTypeMap.put(Types.TINYINT, Short.class);
-        javaTypeMap.put(Types.VARBINARY, byte[].class);
-        javaTypeMap.put(Types.VARCHAR, String.class);
+        javaTypeMap.put(Types.ARRAY, StandardJavaType.ARRAY);
+        javaTypeMap.put(Types.BIGINT, StandardJavaType.BIGINT);
+        javaTypeMap.put(Types.BINARY, StandardJavaType.BINARY);
+        javaTypeMap.put(Types.BIT, StandardJavaType.BIT);
+        javaTypeMap.put(Types.BLOB, StandardJavaType.BLOB);
+        javaTypeMap.put(Types.BOOLEAN, StandardJavaType.BOOLEAN);
+        javaTypeMap.put(Types.CHAR, StandardJavaType.CHAR);
+        javaTypeMap.put(Types.CLOB, StandardJavaType.CLOB);
+        javaTypeMap.put(Types.DATALINK, StandardJavaType.DATALINK);
+        javaTypeMap.put(Types.DATE, StandardJavaType.DATE);
+        javaTypeMap.put(Types.DECIMAL, StandardJavaType.DECIMAL);
+        javaTypeMap.put(Types.DISTINCT, StandardJavaType.DISTINCT);
+        javaTypeMap.put(Types.DOUBLE, StandardJavaType.DOUBLE);
+        javaTypeMap.put(Types.FLOAT, StandardJavaType.FLOAT);
+        javaTypeMap.put(Types.INTEGER, StandardJavaType.INTEGER);
+        javaTypeMap.put(Types.JAVA_OBJECT, StandardJavaType.JAVA_OBJECT);
+        javaTypeMap.put(Types.LONGVARBINARY, StandardJavaType.LONGVARBINARY);
+        javaTypeMap.put(Types.LONGVARCHAR, StandardJavaType.LONGVARCHAR);
+        javaTypeMap.put(Types.NULL, StandardJavaType.NULL);
+        javaTypeMap.put(Types.NUMERIC, StandardJavaType.NUMERIC);
+        javaTypeMap.put(Types.OTHER, StandardJavaType.OTHER);
+        javaTypeMap.put(Types.REAL, StandardJavaType.REAL);
+        javaTypeMap.put(Types.REF, StandardJavaType.REF);
+        javaTypeMap.put(Types.SMALLINT, StandardJavaType.SMALLINT);
+        javaTypeMap.put(Types.STRUCT, StandardJavaType.STRUCT);
+        javaTypeMap.put(Types.TIME, StandardJavaType.TIME);
+        javaTypeMap.put(Types.TIMESTAMP, StandardJavaType.TIMESTAMP);
+        javaTypeMap.put(Types.TINYINT, StandardJavaType.TINYINT);
+        javaTypeMap.put(Types.VARBINARY, StandardJavaType.VARBINARY);
+        javaTypeMap.put(Types.VARCHAR, StandardJavaType.VARCHAR);
 
         dataTypeMap.put(Types.ARRAY, StandardDataType.ARRAY);
         dataTypeMap.put(Types.BIGINT, StandardDataType.BIGINT);
@@ -106,7 +107,6 @@ public class StandardGenDialect implements GenDialect {
         dataTypeMap.put(Types.TINYINT, StandardDataType.TINYINT);
         dataTypeMap.put(Types.VARBINARY, StandardDataType.VARBINARY);
         dataTypeMap.put(Types.VARCHAR, StandardDataType.VARCHAR);
-
     }
 
     public boolean isUserTable(String tableName) {
@@ -140,7 +140,7 @@ public class StandardGenDialect implements GenDialect {
         return userName;
     }
 
-    public Class<?> getJavaType(int sqlType, String typeName, boolean nullable) {
+    public JavaType getJavaType(int sqlType) {
         return javaTypeMap.get(sqlType);
     }
 
@@ -167,6 +167,81 @@ public class StandardGenDialect implements GenDialect {
     public String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize) {
         throw new UnsupportedOperationException("getSequenceDefinitionFragment");
+    }
+
+    public static class StandardJavaType implements JavaType {
+
+        private static JavaType ARRAY = new StandardJavaType(Object.class);
+
+        private static JavaType BIGINT = new StandardJavaType(Long.class);
+
+        private static JavaType BINARY = new StandardJavaType(byte[].class);
+
+        private static JavaType BIT = new StandardJavaType(Object.class);
+
+        private static JavaType BLOB = new StandardJavaType(byte[].class);
+
+        private static JavaType BOOLEAN = new StandardJavaType(Boolean.class);
+
+        private static JavaType CHAR = new StandardJavaType(String.class);
+
+        private static JavaType CLOB = new StandardJavaType(String.class);
+
+        private static JavaType DATALINK = new StandardJavaType(Object.class);
+
+        private static JavaType DATE = new StandardJavaType(Date.class);
+
+        private static JavaType DECIMAL = new StandardJavaType(BigDecimal.class);
+
+        private static JavaType DISTINCT = new StandardJavaType(Object.class);
+
+        private static JavaType DOUBLE = new StandardJavaType(Double.class);
+
+        private static JavaType FLOAT = new StandardJavaType(Float.class);
+
+        private static JavaType INTEGER = new StandardJavaType(Integer.class);
+
+        private static JavaType JAVA_OBJECT = new StandardJavaType(Object.class);
+
+        private static JavaType LONGVARBINARY = new StandardJavaType(
+                byte[].class);
+
+        private static JavaType LONGVARCHAR = new StandardJavaType(String.class);
+
+        private static JavaType NULL = new StandardJavaType(Object.class);
+
+        private static JavaType NUMERIC = new StandardJavaType(BigDecimal.class);
+
+        private static JavaType OTHER = new StandardJavaType(Object.class);
+
+        private static JavaType REAL = new StandardJavaType(Float.class);
+
+        private static JavaType REF = new StandardJavaType(Object.class);
+
+        private static JavaType SMALLINT = new StandardJavaType(Short.class);
+
+        private static JavaType STRUCT = new StandardJavaType(Object.class);
+
+        private static JavaType TIME = new StandardJavaType(Date.class);
+
+        private static JavaType TIMESTAMP = new StandardJavaType(Date.class);
+
+        private static JavaType TINYINT = new StandardJavaType(Short.class);
+
+        private static JavaType VARBINARY = new StandardJavaType(byte[].class);
+
+        private static JavaType VARCHAR = new StandardJavaType(String.class);
+
+        protected Class<?> clazz;
+
+        protected StandardJavaType(Class<?> clazz) {
+            this.clazz = clazz;
+        }
+
+        public Class<?> getJavaClass(int length, int scale, String typeName,
+                boolean nullable) {
+            return clazz;
+        }
     }
 
     /**

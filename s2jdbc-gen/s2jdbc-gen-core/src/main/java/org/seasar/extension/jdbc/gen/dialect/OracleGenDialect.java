@@ -15,11 +15,13 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.gen.DataType;
+import org.seasar.extension.jdbc.gen.JavaType;
 
 /**
  * Oracleの方言を扱うクラスです。
@@ -33,6 +35,8 @@ public class OracleGenDialect extends StandardGenDialect {
      */
     public OracleGenDialect() {
         super();
+        javaTypeMap.put(Types.DECIMAL, OracleJavaType.DECIMAL);
+
         dataTypeMap.put(Types.BIT, OracleDataType.BIT);
         dataTypeMap.put(Types.BIGINT, OracleDataType.BIGINT);
         dataTypeMap.put(Types.CHAR, OracleDataType.CHAR);
@@ -66,6 +70,31 @@ public class OracleGenDialect extends StandardGenDialect {
     public String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize) {
         return "increment by " + allocationSize + " start with " + initValue;
+    }
+
+    public static class OracleJavaType extends StandardJavaType {
+
+        private static JavaType DECIMAL = new OracleJavaType(BigDecimal.class) {
+
+            @Override
+            public Class<?> getJavaClass(int length, int scale, String typeName,
+                    boolean nullable) {
+                if (scale > 0 || length > 10) {
+                    return clazz;
+                }
+                return Integer.class;
+            }
+        };
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param clazz
+         *            クラス
+         */
+        protected OracleJavaType(Class<?> clazz) {
+            super(clazz);
+        }
     }
 
     /**

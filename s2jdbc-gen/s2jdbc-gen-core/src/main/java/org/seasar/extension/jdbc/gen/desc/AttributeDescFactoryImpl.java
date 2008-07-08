@@ -19,6 +19,7 @@ import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.JavaType;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
@@ -103,8 +104,9 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      */
     protected void doAttributeClass(DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        Class<?> clazz = dialect.getJavaType(columnMeta.getSqlType(),
-                columnMeta.getTypeName(), columnMeta.isNullable());
+        JavaType javaType = dialect.getJavaType(columnMeta.getSqlType());
+        Class<?> clazz = javaType.getJavaClass(columnMeta.getLength(), columnMeta
+                .getScale(), columnMeta.getTypeName(), columnMeta.isNullable());
         attributeDesc.setAttributeClass(clazz);
     }
 

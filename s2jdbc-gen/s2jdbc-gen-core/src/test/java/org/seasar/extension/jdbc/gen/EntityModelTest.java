@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.math.BigDecimal;
+
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -23,6 +27,7 @@ import static org.junit.Assert.*;
  */
 public class EntityModelTest {
 
+    @Test
     public void testIsLengthAvailable() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();
@@ -31,6 +36,7 @@ public class EntityModelTest {
         assertTrue(model.isLengthAvailable(attributeDesc));
     }
 
+    @Test
     public void testIsLengthAvailable_zeroLength() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();
@@ -39,6 +45,7 @@ public class EntityModelTest {
         assertFalse(model.isLengthAvailable(attributeDesc));
     }
 
+    @Test
     public void testIsLengthAvailable_numberType() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();
@@ -47,6 +54,7 @@ public class EntityModelTest {
         assertFalse(model.isLengthAvailable(attributeDesc));
     }
 
+    @Test
     public void testIsPrecisionAvailable() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();
@@ -55,20 +63,30 @@ public class EntityModelTest {
         assertFalse(model.isLengthAvailable(attributeDesc));
     }
 
+    @Test
     public void testIsPrecisionAvailable_zeroPrecision() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();
         attributeDesc.setAttributeClass(int.class);
         attributeDesc.setPrecision(0);
-        assertFalse(model.isLengthAvailable(attributeDesc));
+        assertFalse(model.isPrecisionAvailable(attributeDesc));
     }
 
+    @Test
     public void testIsPrecisionAvailable_notNumberType() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();
         attributeDesc.setAttributeClass(String.class);
         attributeDesc.setPrecision(10);
-        assertFalse(model.isLengthAvailable(attributeDesc));
+        assertFalse(model.isPrecisionAvailable(attributeDesc));
+    }
+
+    public void testIsScaleAvailable() throws Exception {
+        EntityModel model = new EntityModel();
+        AttributeDesc attributeDesc = new AttributeDesc();
+        attributeDesc.setAttributeClass(BigDecimal.class);
+        assertFalse(model.isScaleAvailable(attributeDesc));
+
     }
 
 }

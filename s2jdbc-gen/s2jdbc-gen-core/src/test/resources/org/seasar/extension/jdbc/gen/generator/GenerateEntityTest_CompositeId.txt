@@ -10,10 +10,10 @@ import javax.persistence.Table;
 public class Foo {
 
     @Id
-    @Column(precision = 10, scale = 0, nullable = false)
+    @Column(precision = 10, nullable = false)
     public int id1;
 
     @Id
-    @Column(precision = 20, scale = 0, nullable = false)
+    @Column(precision = 20, nullable = false)
     public int id2;
 }

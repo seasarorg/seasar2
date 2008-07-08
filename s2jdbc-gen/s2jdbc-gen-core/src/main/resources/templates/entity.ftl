@@ -30,7 +30,7 @@ public class ${shortClassName} {
     @Version
   </#if>
   <#if !attr.transient>
-    @Column(<#if isLengthAvailable(attr)>length = ${attr.length}, </#if><#if isPrecisionAvailable(attr)>precision = ${attr.precision}, scale = ${attr.scale}, </#if>nullable = ${attr.nullable?string})
+    @Column(<#if isLengthAvailable(attr)>length = ${attr.length}, </#if><#if isPrecisionAvailable(attr)>precision = ${attr.precision}, </#if><#if isScaleAvailable(attr)>scale = ${attr.scale}, </#if>nullable = ${attr.nullable?string})
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>

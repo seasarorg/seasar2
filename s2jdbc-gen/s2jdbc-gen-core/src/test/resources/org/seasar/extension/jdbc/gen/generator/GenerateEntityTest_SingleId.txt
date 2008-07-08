@@ -19,7 +19,7 @@ public class Foo {
 
     @Id
     @GeneratedValue
-    @Column(precision = 10, scale = 0, nullable = false)
+    @Column(precision = 10, nullable = false)
     public int id;
 
     @Column(length = 20, nullable = false)
@@ -40,6 +40,6 @@ public class Foo {
     public String temp;
 
     @Version
-    @Column(precision = 10, scale = 0, nullable = false)
+    @Column(precision = 10, nullable = false)
     public Integer version;
 }
