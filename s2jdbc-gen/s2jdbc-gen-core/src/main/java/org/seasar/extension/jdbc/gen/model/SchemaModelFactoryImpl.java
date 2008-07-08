@@ -20,6 +20,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SchemaModel;
 import org.seasar.extension.jdbc.gen.SchemaModelFactory;
+import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 
 /**
@@ -45,6 +46,9 @@ public class SchemaModelFactoryImpl implements SchemaModelFactory {
         model.setDialect(dialect);
         for (TableDesc tableDesc : tableDescList) {
             model.addTableDesc(tableDesc);
+            for (SequenceDesc sequenceDesc : tableDesc.getSequenceDescList()) {
+                model.addSequenceDesc(sequenceDesc);
+            }
         }
         return model;
     }

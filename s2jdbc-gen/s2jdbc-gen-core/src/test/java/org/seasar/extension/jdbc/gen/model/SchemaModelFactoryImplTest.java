@@ -15,11 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.SchemaModel;
+import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 
@@ -36,13 +36,46 @@ public class SchemaModelFactoryImplTest {
 
     @Test
     public void testGetSchemaModel() throws Exception {
-        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
-        tableDescList.add(new TableDesc());
-        tableDescList.add(new TableDesc());
-        SchemaModel model = factory.getSchemaModel(tableDescList);
+        SequenceDesc sequenceDesc = new SequenceDesc();
+        sequenceDesc.setSequenceName("HOGE");
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setName("AAA");
+        tableDesc.addSequenceDesc(sequenceDesc);
+
+        SequenceDesc sequenceDesc2 = new SequenceDesc();
+        sequenceDesc2.setSequenceName("FOO");
+        TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.setName("BBB");
+        tableDesc2.addSequenceDesc(sequenceDesc2);
+
+        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+                tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());
+        assertEquals(2, model.getSequenceDescList().size());
+    }
+
+    @Test
+    public void testGetSchemaModel_diplicatedSequenceDesc() throws Exception {
+        SequenceDesc sequenceDesc = new SequenceDesc();
+        sequenceDesc.setSequenceName("HOGE");
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setName("AAA");
+        tableDesc.addSequenceDesc(sequenceDesc);
+
+        SequenceDesc sequenceDesc2 = new SequenceDesc();
+        sequenceDesc2.setSequenceName("HOGE");
+        TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.setName("BBB");
+        tableDesc2.addSequenceDesc(sequenceDesc2);
+
+        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+                tableDesc2));
+        assertNotNull(model);
+        assertNotNull(model.getDialect());
+        assertEquals(2, model.getTableDescList().size());
+        assertEquals(1, model.getSequenceDescList().size());
     }
 
 }

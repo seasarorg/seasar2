@@ -31,6 +31,8 @@ public class SchemaModel {
 
     protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
 
+    protected List<SequenceDesc> sequenceDescList = new ArrayList<SequenceDesc>();
+
     public GenDialect getDialect() {
         return dialect;
     }
@@ -40,11 +42,25 @@ public class SchemaModel {
     }
 
     public void addTableDesc(TableDesc tableDesc) {
+        if (tableDescList.contains(tableDesc)) {
+            return;
+        }
         tableDescList.add(tableDesc);
     }
 
     public List<TableDesc> getTableDescList() {
         return Collections.unmodifiableList(tableDescList);
+    }
+
+    public void addSequenceDesc(SequenceDesc sequenceDesc) {
+        if (sequenceDescList.contains(sequenceDesc)) {
+            return;
+        }
+        sequenceDescList.add(sequenceDesc);
+    }
+
+    public List<SequenceDesc> getSequenceDescList() {
+        return Collections.unmodifiableList(sequenceDescList);
     }
 
     public String getBeginQuote() {
