@@ -100,7 +100,11 @@ public class PrimaryKeyDesc {
         protected List<String> columnNameList = new ArrayList<String>();
 
         protected void addColumnName(String columnName) {
-            columnNameList.add(columnName.toLowerCase());
+            if (columnName != null) {
+                columnNameList.add(columnName.toLowerCase());
+            } else {
+                columnNameList.add(null);
+            }
         }
 
         @Override

@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
+import org.seasar.extension.jdbc.gen.IdTableDescFactory;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
 import org.seasar.extension.jdbc.gen.SchemaModel;
 import org.seasar.extension.jdbc.gen.SchemaModelFactory;
@@ -36,6 +37,7 @@ import org.seasar.extension.jdbc.gen.TableDescFactory;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.IdTableDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.SequenceDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactoryImpl;
@@ -203,8 +205,10 @@ public class GenerateDdlCommand extends AbstractCommand {
         ForeignKeyDescFactory fkFactory = new ForeignKeyDescFactoryImpl(
                 entityMetaFactory);
         SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
+        IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
+                colFactory, pkFactory, ukFactory);
         return new TableDescFactoryImpl(colFactory, pkFactory, ukFactory,
-                fkFactory, seqFactory);
+                fkFactory, seqFactory, idTabFactory);
     }
 
     protected SchemaModelFactory createSchemaModelFactory() {

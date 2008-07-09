@@ -138,7 +138,9 @@ public class SequenceDesc {
         protected String sequenceName;
 
         public void setSequenceName(String sequenceName) {
-            this.sequenceName = sequenceName.toLowerCase();
+            if (sequenceName != null) {
+                this.sequenceName = sequenceName.toLowerCase();
+            }
         }
 
         @Override

@@ -52,6 +52,8 @@ public class TableDesc {
     /** シーケンス記述のリスト */
     protected List<SequenceDesc> sequenceDesclist = new ArrayList<SequenceDesc>();
 
+    protected List<TableDesc> idTableDescList = new ArrayList<TableDesc>();
+
     /**
      * カタログ名を返す。
      * 
@@ -215,6 +217,25 @@ public class TableDesc {
         }
     }
 
+    public List<TableDesc> getIdTableDescList() {
+        return Collections.unmodifiableList(idTableDescList);
+    }
+
+    public void addIdTableDesc(TableDesc idTableDesc) {
+        idTableDescList.add(idTableDesc);
+    }
+
+    public String getFullName() {
+        StringBuilder buf = new StringBuilder();
+        if (catalogName != null) {
+            buf.append(catalogName).append(".");
+        }
+        if (schemaName != null) {
+            buf.append(schemaName).append(".");
+        }
+        return buf.append(name).toString();
+    }
+
     @Override
     public int hashCode() {
         return key.hashCode();
@@ -247,15 +268,21 @@ public class TableDesc {
         protected String name;
 
         public void setCatalogName(String catalogName) {
-            this.catalogName = catalogName.toLowerCase();
+            if (catalogName != null) {
+                this.catalogName = catalogName.toLowerCase();
+            }
         }
 
         public void setSchemaName(String schemaName) {
-            this.schemaName = schemaName.toLowerCase();
+            if (schemaName != null) {
+                this.schemaName = schemaName.toLowerCase();
+            }
         }
 
         public void setName(String name) {
-            this.name = name.toLowerCase();
+            if (name != null) {
+                this.name = name.toLowerCase();
+            }
         }
 
         @Override

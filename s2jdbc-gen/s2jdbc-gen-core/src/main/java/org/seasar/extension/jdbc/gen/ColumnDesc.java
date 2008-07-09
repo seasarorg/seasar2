@@ -138,7 +138,9 @@ public class ColumnDesc {
         private String name;
 
         public void setName(String name) {
-            this.name = name.toLowerCase();
+            if (name != null) {
+                this.name = name.toLowerCase();
+            }
         }
 
         @Override

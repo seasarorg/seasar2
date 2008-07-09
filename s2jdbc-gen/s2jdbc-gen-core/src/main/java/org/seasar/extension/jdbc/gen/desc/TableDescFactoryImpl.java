@@ -15,13 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.desc;
 
-import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.persistence.GenerationType;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
 
 import org.seasar.extension.jdbc.EntityMeta;
@@ -31,7 +28,7 @@ import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
-import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.IdTableDescFactory;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
@@ -68,6 +65,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
     /** シーケンス記述のファクトリ */
     protected SequenceDescFactory sequenceDescFactory;
 
+    protected IdTableDescFactory idTableDescFactory;
+
     /**
      * インスタンスを構築します。
      * 
@@ -86,7 +85,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
             PrimaryKeyDescFactory primaryKeyDescFactory,
             UniqueKeyDescFactory uniqueKeyDescFactory,
             ForeignKeyDescFactory foreignKeyDescFactory,
-            SequenceDescFactory sequenceDescFactory) {
+            SequenceDescFactory sequenceDescFactory,
+            IdTableDescFactory idTableDescFactory) {
         if (columnDescFactory == null) {
             throw new NullPointerException("columnDescFactory");
         }
@@ -102,21 +102,25 @@ public class TableDescFactoryImpl implements TableDescFactory {
         if (sequenceDescFactory == null) {
             throw new NullPointerException("sequenceDescFactory");
         }
+        if (idTableDescFactory == null) {
+            throw new NullPointerException("idTableDescFactory");
+        }
         this.columnDescFactory = columnDescFactory;
         this.primaryKeyDescFactory = primaryKeyDescFactory;
         this.uniqueKeyDescFactory = uniqueKeyDescFactory;
         this.foreignKeyDescFactory = foreignKeyDescFactory;
         this.sequenceDescFactory = sequenceDescFactory;
+        this.idTableDescFactory = idTableDescFactory;
     }
 
     public TableDesc getTableDesc(EntityMeta entityMeta) {
-        String tableFullName = entityMeta.getTableMeta().getFullName();
-        TableDesc tableDesc = tableDescMap.get(tableFullName);
+        String fullName = entityMeta.getTableMeta().getFullName().toLowerCase();
+        TableDesc tableDesc = tableDescMap.get(fullName);
         if (tableDesc != null) {
             return tableDesc;
         }
         tableDesc = createTableDesc(entityMeta);
-        tableDescMap.put(tableFullName, tableDesc);
+        tableDescMap.put(fullName, tableDesc);
         return tableDesc;
     }
 
@@ -270,42 +274,34 @@ public class TableDescFactoryImpl implements TableDescFactory {
         }
     }
 
-    protected GenDialect dialect;
-
     protected void doIdTableDesc(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            GenerationType generationType = propertyMeta.getGenerationType();
-            if (generationType == GenerationType.AUTO) {
-                generationType = dialect.getDefaultGenerationType();
+            TableDesc idTableDesc = idTableDescFactory.getTableDesc(entityMeta,
+                    propertyMeta);
+            if (idTableDesc == null) {
+                continue;
             }
-            if (generationType == GenerationType.TABLE) {
-                TableGenerator generator = getTableGenerator(propertyMeta);
-                TableDesc idTableDesc = new TableDesc();
-                idTableDesc.setCatalogName(generator.catalog());
-                idTableDesc.setSchemaName(generator.schema());
-                idTableDesc.setName(generator.table());
-                idTableDesc.setPrimaryKeyDesc(primaryKeyDescFactory
-                        .getPrimaryKeyDesc(generator.pkColumnName()));
-                idTableDesc.addColumnDesc(columnDescFactory
-                        .getColumnDesc(generator.valueColumnName()));
-                for (UniqueConstraint uc : generator.uniqueConstraints()) {
-                    UniqueKeyDesc uniqueKeyDesc = uniqueKeyDescFactory
-                            .getCompositeUniqueKeyDesc(uc);
-                    if (uniqueKeyDesc != null) {
-                        tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
-                    }
+            tableDesc.addIdTableDesc(idTableDesc);
+
+            String fullName = idTableDesc.getFullName().toLowerCase();
+            TableDesc cache = tableDescMap.get(fullName);
+            if (cache == null) {
+                tableDescMap.put(fullName, idTableDesc);
+            } else {
+                cache.setCatalogName(idTableDesc.getCatalogName());
+                cache.setSchemaName(idTableDesc.getSchemaName());
+                cache.setName(idTableDesc.getName());
+                cache.setPrimaryKeyDesc(idTableDesc.getPrimaryKeyDesc());
+                for (ColumnDesc columnDesc : idTableDesc.getColumnDescList()) {
+                    cache.addColumnDesc(columnDesc);
+                }
+                for (UniqueKeyDesc uniqueKeyDesc : idTableDesc
+                        .getUniqueKeyDescList()) {
+                    cache.addUniqueKeyDesc(uniqueKeyDesc);
                 }
             }
         }
-    }
-
-    protected TableGenerator getTableGenerator(PropertyMeta propertyMeta) {
-        Field field = propertyMeta.getField();
-        TableGenerator tableGenerator = field
-                .getAnnotation(TableGenerator.class);
-        return tableGenerator != null ? tableGenerator : AnnotationUtil
-                .getDefaultTableGenerator();
     }
 
     /**

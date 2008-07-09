@@ -181,24 +181,39 @@ public class ForeignKeyDesc {
         protected List<String> referencedColumnNameList = new ArrayList<String>();
 
         protected void addColumnName(String columnName) {
-            this.columnNameList.add(columnName.toLowerCase());
+            if (columnName != null) {
+                this.columnNameList.add(columnName.toLowerCase());
+            } else {
+                this.columnNameList.add(null);
+            }
         }
 
         protected void setReferencedCatalogName(String referencedCatalogName) {
-            this.referencedCatalogName = referencedCatalogName.toLowerCase();
+            if (referencedCatalogName != null) {
+                this.referencedCatalogName = referencedCatalogName
+                        .toLowerCase();
+            }
         }
 
         protected void setReferencedSchemaName(String referencedSchemaName) {
-            this.referencedSchemaName = referencedSchemaName.toLowerCase();
+            if (referencedSchemaName != null) {
+                this.referencedSchemaName = referencedSchemaName.toLowerCase();
+            }
         }
 
         protected void setReferencedTableName(String referencedTableName) {
-            this.referencedTableName = referencedTableName.toLowerCase();
+            if (referencedTableName != null) {
+                this.referencedTableName = referencedTableName.toLowerCase();
+            }
         }
 
         protected void addtReferencedColumnName(String referencedColumnName) {
-            this.referencedColumnNameList.add(referencedColumnName
-                    .toLowerCase());
+            if (referencedColumnName != null) {
+                this.referencedColumnNameList.add(referencedColumnName
+                        .toLowerCase());
+            } else {
+                this.referencedColumnNameList.add(null);
+            }
         }
 
         @Override

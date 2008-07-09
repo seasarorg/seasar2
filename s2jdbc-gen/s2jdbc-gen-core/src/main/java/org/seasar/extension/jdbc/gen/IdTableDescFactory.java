@@ -15,11 +15,14 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.PropertyMeta;
+
 /**
  * @author taedium
  * 
  */
-public interface TableGeneratorDescFactory {
+public interface IdTableDescFactory {
 
-    TableGeneratorDesc getTableGeneratorDesc();
+    TableDesc getTableDesc(EntityMeta entityMeta, PropertyMeta propertyMeta);
 }

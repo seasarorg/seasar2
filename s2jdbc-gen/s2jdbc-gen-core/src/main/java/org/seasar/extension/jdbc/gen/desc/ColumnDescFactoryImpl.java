@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.desc;
 
 import java.lang.reflect.Field;
+import java.sql.Types;
 
 import javax.persistence.Column;
 
@@ -64,6 +65,11 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     public ColumnDesc getColumnDesc(String columnName) {
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName(columnName);
+        Column column = AnnotationUtil.getDefaultColumn();
+        DataType dataType = dialect.getDataType(Types.VARCHAR);
+        columnDesc.setDefinition(dataType.getDefinition(column.length(), 0, 0));
+        columnDesc.setNullable(false);
+        columnDesc.setUnique(false);
         return columnDesc;
     }
 

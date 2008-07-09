@@ -57,7 +57,7 @@ public class SchemaModelFactoryImplTest {
     }
 
     @Test
-    public void testGetSchemaModel_diplicatedSequenceDesc() throws Exception {
+    public void testGetSchemaModel_duplicatedSequenceDesc() throws Exception {
         SequenceDesc sequenceDesc = new SequenceDesc();
         sequenceDesc.setSequenceName("HOGE");
         TableDesc tableDesc = new TableDesc();
@@ -78,4 +78,22 @@ public class SchemaModelFactoryImplTest {
         assertEquals(1, model.getSequenceDescList().size());
     }
 
+    @Test
+    public void testGetSchemaModel_idTableDesc() throws Exception {
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setName("AAA");
+
+        TableDesc idTableDesc = new TableDesc();
+        idTableDesc.setName("CCC");
+
+        TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.setName("BBB");
+        tableDesc2.addIdTableDesc(idTableDesc);
+
+        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+                tableDesc2));
+        assertNotNull(model);
+        assertNotNull(model.getDialect());
+        assertEquals(3, model.getTableDescList().size());
+    }
 }

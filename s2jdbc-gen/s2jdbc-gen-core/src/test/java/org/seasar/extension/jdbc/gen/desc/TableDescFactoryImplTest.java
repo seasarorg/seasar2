@@ -65,13 +65,19 @@ public class TableDescFactoryImplTest {
         entityMetaFactory.setTableMetaFactory(tmf);
 
         GenDialect dialect = new StandardGenDialect();
-        ColumnDescFactoryImpl cdf = new ColumnDescFactoryImpl(dialect);
-        PrimaryKeyDescFactoryImpl pkdf = new PrimaryKeyDescFactoryImpl(dialect);
-        UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl();
-        ForeignKeyDescFactoryImpl fkdf = new ForeignKeyDescFactoryImpl(
+        ColumnDescFactoryImpl colFactory = new ColumnDescFactoryImpl(dialect);
+        PrimaryKeyDescFactoryImpl pkFactory = new PrimaryKeyDescFactoryImpl(
+                dialect);
+        UniqueKeyDescFactoryImpl ukFactory = new UniqueKeyDescFactoryImpl();
+        ForeignKeyDescFactoryImpl fkFactory = new ForeignKeyDescFactoryImpl(
                 entityMetaFactory);
-        SequenceDescFactoryImpl sdf = new SequenceDescFactoryImpl(dialect);
-        tableDescFactory = new TableDescFactoryImpl(cdf, pkdf, ukdf, fkdf, sdf);
+        SequenceDescFactoryImpl seqFactory = new SequenceDescFactoryImpl(
+                dialect);
+        IdTableDescFactoryImpl idTabFactory = new IdTableDescFactoryImpl(
+                dialect, colFactory, pkFactory, ukFactory);
+
+        tableDescFactory = new TableDescFactoryImpl(colFactory, pkFactory,
+                ukFactory, fkFactory, seqFactory, idTabFactory);
     }
 
     @Test
@@ -126,6 +132,13 @@ public class TableDescFactoryImplTest {
         assertEquals(1, tableDesc.getSequenceDescList().size());
     }
 
+    @Test
+    public void testIdTableDescList() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
+        TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
+        assertEquals(1, tableDesc.getIdTableDescList().size());
+    }
+
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "AAA", uniqueConstraints = { @UniqueConstraint(columnNames = { "BBB_ID" }) })
     public static class Aaa {
@@ -148,4 +161,14 @@ public class TableDescFactoryImplTest {
         public Integer id;
 
     }
+
+    @Entity
+    public static class Ccc {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.TABLE)
+        public Integer id;
+
+    }
+
 }
