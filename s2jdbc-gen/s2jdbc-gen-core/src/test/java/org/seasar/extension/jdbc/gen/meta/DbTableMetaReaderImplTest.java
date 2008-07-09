@@ -154,7 +154,7 @@ public class DbTableMetaReaderImplTest {
      * @throws Exception
      */
     @Test
-    public void testGetTableMetaList() throws Exception {
+    public void testGetTableMetaList_schemaSpecified() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
@@ -190,6 +190,49 @@ public class DbTableMetaReaderImplTest {
         assertEquals("table1", list.get(0).getName());
         assertEquals("catalog2", list.get(1).getCatalogName());
         assertEquals("schemaName2", list.get(1).getSchemaName());
+        assertEquals("table2", list.get(1).getName());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetTableMetaList_schemaNotSpecified() throws Exception {
+        final MockResultSet resultSet = new MockResultSet();
+
+        ArrayMap rowData = new ArrayMap();
+        rowData.put("TABLE_CAT", "catalog1");
+        rowData.put("TABLE_SCHEM", "schemaName1");
+        rowData.put("TABLE_NAME", "table1");
+        resultSet.addRowData(rowData);
+
+        rowData = new ArrayMap();
+        rowData.put("TABLE_CAT", "catalog2");
+        rowData.put("TABLE_SCHEM", "schemaName2");
+        rowData.put("TABLE_NAME", "table2");
+        resultSet.addRowData(rowData);
+
+        MockDatabaseMetaData metaData = new MockDatabaseMetaData() {
+
+            @Override
+            public ResultSet getTables(String catalog, String schemaPattern,
+                    String tableNamePattern, String[] types)
+                    throws SQLException {
+                return resultSet;
+            }
+        };
+
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), null, "table");
+        List<DbTableMeta> list = reader.getDbTableMetaList(metaData,
+                "schemaName");
+        assertEquals(2, list.size());
+        assertEquals("catalog1", list.get(0).getCatalogName());
+        assertNull(list.get(0).getSchemaName());
+        assertEquals("table1", list.get(0).getName());
+        assertEquals("catalog2", list.get(1).getCatalogName());
+        assertNull(list.get(1).getSchemaName());
         assertEquals("table2", list.get(1).getName());
     }
 

@@ -56,6 +56,8 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     /** 正規表現で表されたテーブル名のパターン */
     protected String tableNamePattern;
 
+    protected boolean schemaSpecified;
+
     /**
      * インスタンスを構築します。
      * 
@@ -83,13 +85,14 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
         this.dialect = dialect;
         this.schemaName = schemaName;
         this.tableNamePattern = tableNamePattern;
+        schemaSpecified = schemaName != null;
     }
 
     public List<DbTableMeta> read() {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
-            String schemaName = this.schemaName != null ? this.schemaName
+            String schemaName = schemaSpecified ? this.schemaName
                     : getDefaultSchemaName(metaData);
             List<DbTableMeta> dbTableMetaList = getDbTableMetaList(metaData,
                     schemaName);
@@ -143,7 +146,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                 while (rs.next()) {
                     DbTableMeta dbTableMeta = new DbTableMeta();
                     dbTableMeta.setCatalogName(rs.getString(1));
-                    dbTableMeta.setSchemaName(rs.getString(2));
+                    if (schemaSpecified) {
+                        dbTableMeta.setSchemaName(rs.getString(2));
+                    }
                     dbTableMeta.setName(rs.getString(3));
                     result.add(dbTableMeta);
                 }
