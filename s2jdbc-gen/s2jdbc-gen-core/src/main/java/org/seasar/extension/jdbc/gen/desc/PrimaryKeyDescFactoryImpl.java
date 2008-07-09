@@ -20,7 +20,6 @@ import java.util.List;
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.ColumnMeta;
-import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
@@ -46,10 +45,11 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
         this.dialect = dialect;
     }
 
-    public PrimaryKeyDesc getPrimaryKeyDesc(EntityMeta entityMeta) {
+    public PrimaryKeyDesc getPrimaryKeyDesc(
+            List<PropertyMeta> idPropertyMetaList) {
         PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
-        doColumnName(entityMeta, primaryKeyDesc);
-        doIdentity(entityMeta, primaryKeyDesc);
+        doColumnName(idPropertyMetaList, primaryKeyDesc);
+        doIdentity(idPropertyMetaList, primaryKeyDesc);
         if (primaryKeyDesc.getColumnNameList().isEmpty()) {
             return null;
         }
@@ -70,9 +70,9 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
      * @param primaryKeyDesc
      *            主キー記述
      */
-    protected void doColumnName(EntityMeta entityMeta,
+    protected void doColumnName(List<PropertyMeta> idPropertyMetaList,
             PrimaryKeyDesc primaryKeyDesc) {
-        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
+        for (PropertyMeta propertyMeta : idPropertyMetaList) {
             ColumnMeta columnMeta = propertyMeta.getColumnMeta();
             primaryKeyDesc.addColumnName(columnMeta.getName());
         }
@@ -86,10 +86,8 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
      * @param primaryKeyDesc
      *            主キー記述
      */
-    protected void doIdentity(EntityMeta entityMeta,
+    protected void doIdentity(List<PropertyMeta> idPropertyMetaList,
             PrimaryKeyDesc primaryKeyDesc) {
-        List<PropertyMeta> idPropertyMetaList = entityMeta
-                .getIdPropertyMetaList();
         if (idPropertyMetaList.size() == 1) {
             PropertyMeta propertyMeta = idPropertyMetaList.get(0);
             GenerationType generationType = propertyMeta.getGenerationType();

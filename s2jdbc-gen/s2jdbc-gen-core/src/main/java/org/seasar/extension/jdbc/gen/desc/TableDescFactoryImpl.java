@@ -197,7 +197,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
     protected void doPrimaryKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         if (primaryKeyDesc != null) {
             tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
         }

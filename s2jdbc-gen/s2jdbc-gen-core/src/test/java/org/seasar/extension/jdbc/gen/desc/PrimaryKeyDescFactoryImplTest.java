@@ -66,7 +66,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testId_assigned() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
@@ -77,7 +77,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testId_identity() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
@@ -88,7 +88,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testId_sequence() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
@@ -99,7 +99,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testId_table() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
@@ -110,7 +110,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testId_auto() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
@@ -121,7 +121,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testCompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Fff.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(2, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID1", primaryKeyDesc.getColumnNameList().get(0));
@@ -133,7 +133,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testNoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ggg.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta);
+                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNull(primaryKeyDesc);
     }
 

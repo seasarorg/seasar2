@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import org.seasar.extension.jdbc.EntityMeta;
+import java.util.List;
+
+import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
  * {@link PrimaryKeyDesc}のファクトリです。
@@ -31,8 +33,6 @@ public interface PrimaryKeyDescFactory {
      *            エンティティメタデータ
      * @return 主キー記述
      */
-    PrimaryKeyDesc getPrimaryKeyDesc(EntityMeta entityMeta);
-
-    PrimaryKeyDesc getPrimaryKeyDesc(String columnName);
+    PrimaryKeyDesc getPrimaryKeyDesc(List<PropertyMeta> idPropertyMetaList);
 
 }

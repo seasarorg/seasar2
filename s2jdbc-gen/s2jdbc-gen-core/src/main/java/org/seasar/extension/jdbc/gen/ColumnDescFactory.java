@@ -33,6 +33,4 @@ public interface ColumnDescFactory {
      */
     ColumnDesc getColumnDesc(PropertyMeta propertyMeta);
 
-    ColumnDesc getColumnDesc(String columnName);
-
 }

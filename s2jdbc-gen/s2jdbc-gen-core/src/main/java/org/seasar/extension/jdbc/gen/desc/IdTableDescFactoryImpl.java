@@ -16,13 +16,15 @@
 package org.seasar.extension.jdbc.gen.desc;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.persistence.GenerationType;
 import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
 
+import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
@@ -35,7 +37,9 @@ import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
 import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
+import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * @author taedium
@@ -44,8 +48,6 @@ import org.seasar.framework.util.StringUtil;
 public class IdTableDescFactoryImpl implements IdTableDescFactory {
 
     protected GenDialect dialect;
-
-    protected EntityMetaFactory entityMetaFactory;
 
     protected PrimaryKeyDescFactory primaryKeyDescFactory;
 
@@ -90,9 +92,12 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         if (generationType == GenerationType.TABLE) {
             TableDesc tableDesc = new TableDesc();
             TableGenerator generator = getTableGenerator(propertyMeta);
+            PropertyMeta pkPropertyMeta = getPkPropertyMeta(generator);
+            PropertyMeta valuePropertyMeta = getValuePropertyMeta(generator);
             doName(entityMeta, tableDesc, generator);
-            doPrimaryKeyDesc(entityMeta, tableDesc, generator);
-            doValueColumnDesc(entityMeta, tableDesc, generator);
+            doPrimaryKeyDesc(pkPropertyMeta, tableDesc, generator);
+            doColumnDesc(Arrays.asList(pkPropertyMeta, valuePropertyMeta),
+                    tableDesc, generator);
             doUniqueKeyDesc(entityMeta, tableDesc, generator);
             return tableDesc;
         }
@@ -119,29 +124,20 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         tableDesc.setName(tableName);
     }
 
-    protected void doPrimaryKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
-            TableGenerator generator) {
-        String pkColumnName = generator.pkColumnName();
-        if (StringUtil.isEmpty(pkColumnName)) {
-            pkColumnName = TableIdGenerator.DEFAULT_PK_COLUMN_NAME;
-        }
+    protected void doPrimaryKeyDesc(PropertyMeta propertyMeta,
+            TableDesc tableDesc, TableGenerator generator) {
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(pkColumnName);
+                .getPrimaryKeyDesc(Arrays.asList(propertyMeta));
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
-
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(pkColumnName);
-        tableDesc.addColumnDesc(columnDesc);
     }
 
-    protected void doValueColumnDesc(EntityMeta entityMeta,
+    protected void doColumnDesc(List<PropertyMeta> propertyMetaList,
             TableDesc tableDesc, TableGenerator generator) {
-        String valueColumnName = generator.valueColumnName();
-        if (StringUtil.isEmpty(valueColumnName)) {
-            valueColumnName = TableIdGenerator.DEFAULT_VALUE_COLUMN_NAME;
+        for (PropertyMeta propertyMeta : propertyMetaList) {
+            ColumnDesc columnDesc = columnDescFactory
+                    .getColumnDesc(propertyMeta);
+            tableDesc.addColumnDesc(columnDesc);
         }
-        ColumnDesc columnDesc = columnDescFactory
-                .getColumnDesc(valueColumnName);
-        tableDesc.addColumnDesc(columnDesc);
     }
 
     protected void doUniqueKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
@@ -161,5 +157,35 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
                 .getAnnotation(TableGenerator.class);
         return tableGenerator != null ? tableGenerator : AnnotationUtil
                 .getDefaultTableGenerator();
+    }
+
+    protected PropertyMeta getPkPropertyMeta(TableGenerator generator) {
+        String pkColumnName = generator.pkColumnName();
+        if (StringUtil.isEmpty(pkColumnName)) {
+            pkColumnName = TableIdGenerator.DEFAULT_PK_COLUMN_NAME;
+        }
+        return createAdaptivePropertyMeta(pkColumnName);
+    }
+
+    protected PropertyMeta getValuePropertyMeta(TableGenerator generator) {
+        String valueColumnName = generator.valueColumnName();
+        if (StringUtil.isEmpty(valueColumnName)) {
+            valueColumnName = TableIdGenerator.DEFAULT_VALUE_COLUMN_NAME;
+        }
+        return createAdaptivePropertyMeta(valueColumnName);
+    }
+
+    protected PropertyMeta createAdaptivePropertyMeta(String columnName) {
+        ColumnMeta columnMeta = new ColumnMeta();
+        columnMeta.setName(columnName);
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setColumnMeta(columnMeta);
+        class Dummy {
+
+            public String field;
+        }
+        propertyMeta.setField(ReflectionUtil.getField(Dummy.class, "field"));
+        propertyMeta.setValueType(ValueTypes.STRING);
+        return propertyMeta;
     }
 }
