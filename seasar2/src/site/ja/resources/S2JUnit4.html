@@ -76,6 +76,8 @@
 <li><a href="#mockAnnotation"><code>@Mock</code></a></li>
 <li><a href="#mocksAnnotation"><code>@Mock</code>s</a></li>
 <li><a href="#easyMockAnnotation"><code>@EasyMock</code></a></li>
+<li><a href="#postBindFieldsAnnotation"><code>@PostBindFields</code></a></li>
+<li><a href="#preUnbindFieldsAnnotation"><code>@PreUnbindFields</code></a></li>
 <li><a href="#ognlVariable">OGNL式内で利用できる変数</a></li>
 </ul>
 </li>
@@ -243,6 +245,18 @@ public class EmployeeDaoImplTest {
 <td style="width: 140px">
     なし</td>
 <td>Xxxはテストメソッド名をあらわす。</td>
+</tr>
+<tr>
+<td style="width: 140px">個々のテストメソッドに対応するフィールドバインディング直後のメソッド</td>
+<td style="width: 140px"><code>postBindFields</code></td>
+<td style="width: 140px">@PostBindFields</td>
+<td>コンポーネントをテストクラスのフィールドにバインドした直後に実行される。</td>
+</tr>
+<tr>
+<td style="width: 140px">個々のテストメソッドに対応するフィールドアンバインディング直前のメソッド</td>
+<td style="width: 140px"><code>preUnbindFields</code></td>
+<td style="width: 140px">@PreUnbindFields</td>
+<td>テストクラスのフィールドをアンバインドする直前に実行される。</td>
 </tr>
 <tr>
 <td style="width: 140px">テストメソッド</td>
@@ -432,6 +446,30 @@ public void hoge() {
     <a name="easyMockAnnotation"><code>@EasyMock</code></a></h3>
 <p>
     EasyMockを利用したい場合に使用します。このアノテーションの使い方と説明については<a href="easyMock.html">EasyMockサポート</a>を参照してください。</p>
+<h3>
+    <a name="postBindFieldsAnnotation"><code>@PostBindFields</code></a>
+</h3>
+<p>
+	PostBindFieldsアノテーションを利用すると、コンポーネントとテストクラスのフィールドをバインディングした直後に指定のメソッドを実行することができます。また、アノテーションを利用しないでpostBindFieldsという名前のメソッドを定義しても同様に実現できます。
+</p>
+<pre>
+@PostBindFields
+public void hoge() {
+    ...
+}
+</pre>
+<h3>
+    <a name="preUnbindFieldsAnnotation"><code>@PreUnbindFields</code></a>
+</h3>
+<p>
+	preUnbindFieldsアノテーションを利用すると、テストクラスのフィールドをアンバインドする直前に指定のメソッドを実行することができます。また、アノテーションを利用しないでpreUnbindFieldsという名前のメソッドを定義しても同様に実現できます。
+</p>
+<pre>
+@preUnbindFields
+public void fuga() {
+    ...
+}
+</pre>
 <h3>
     <a name="ognlVariable">OGNL式内の定義済み変数</a></h3>
 <code>@Prerequisite</code>や<code>@Mock</code>で利用できるOGNL式では以下の変数を参照できます。
