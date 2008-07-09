@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -28,54 +27,32 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class AbstractCommandTest {
-
-    @Before
-    public void setUp() throws Exception {
-        SingletonS2ContainerFactory.destroy();
-    }
+public class S2ContainerFactorySupportTest {
 
     @After
     public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
     public void testInitAndDestroy() throws Exception {
-        AbstractCommand command = new AbstractCommand() {
-
-            protected void doExecute() {
-            }
-        };
-        command.setDiconFile("s2jdbc-gen-core-test.dicon");
-        assertFalse(SingletonS2ContainerFactory.hasContainer());
-        command.init();
+        S2ContainerFactorySupport support = new S2ContainerFactorySupport(
+                "s2jdbc-gen-core-test.dicon");
+        support.init();
         assertTrue(SingletonS2ContainerFactory.hasContainer());
-        command.destroy();
+        support.destory();
         assertFalse(SingletonS2ContainerFactory.hasContainer());
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testInitAndDestroy_containerAlreadyExists() throws Exception {
-        AbstractCommand command = new AbstractCommand() {
-
-            protected void doExecute() {
-            }
-        };
-        command.setDiconFile("s2jdbc-gen-core-test.dicon");
+    public void testInitAndDestroy_alreadyInitialized() throws Exception {
         S2Container container = new S2ContainerImpl();
         SingletonS2ContainerFactory.setContainer(container);
-        command.init();
+        S2ContainerFactorySupport support = new S2ContainerFactorySupport(
+                "s2jdbc-gen-core-test.dicon");
+        support.init();
         assertSame(container, SingletonS2ContainerFactory.getContainer());
-        command.destroy();
+        support.destory();
         assertSame(container, SingletonS2ContainerFactory.getContainer());
     }
 }

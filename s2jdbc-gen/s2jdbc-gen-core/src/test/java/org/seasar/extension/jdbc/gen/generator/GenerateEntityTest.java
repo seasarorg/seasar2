@@ -27,7 +27,6 @@ import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -45,8 +44,7 @@ public class GenerateEntityTest {
     @Before
     public void setUp() throws Exception {
         factory = new EntityModelFactoryImpl();
-        generator = new GeneratorImplStub("UTF-8", ResourceUtil
-                .getResourceAsFile("templates"));
+        generator = new GeneratorImplStub("UTF-8");
     }
 
     @Test
@@ -123,7 +121,8 @@ public class GenerateEntityTest {
         EntityModel model = factory.getEntityModel(entityDesc,
                 "hoge.entity.Foo");
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "entity.ftl", "UTF-8", false);
+                new File("dir"), new File("file"), "java/entity.ftl", "UTF-8",
+                false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_SingleId.txt";
@@ -164,7 +163,8 @@ public class GenerateEntityTest {
         EntityModel model = factory.getEntityModel(entityDesc,
                 "hoge.entity.Foo");
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "entity.ftl", "UTF-8", false);
+                new File("dir"), new File("file"), "java/entity.ftl", "UTF-8",
+                false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")

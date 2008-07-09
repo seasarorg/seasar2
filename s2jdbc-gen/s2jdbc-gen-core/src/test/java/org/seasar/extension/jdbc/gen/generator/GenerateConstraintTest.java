@@ -28,7 +28,6 @@ import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -45,8 +44,7 @@ public class GenerateConstraintTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new GeneratorImplStub("UTF-8", ResourceUtil
-                .getResourceAsFile("templates"));
+        generator = new GeneratorImplStub("UTF-8");
 
         PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
         primaryKeyDesc.addColumnName("PK1");
@@ -96,7 +94,7 @@ public class GenerateConstraintTest {
     @Test
     public void testCreate() throws Exception {
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "create-constraint.ftl",
+                new File("dir"), new File("file"), "sql/create-constraint.ftl",
                 "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
@@ -106,7 +104,7 @@ public class GenerateConstraintTest {
     @Test
     public void testDrop() throws Exception {
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "drop-constraint.ftl",
+                new File("dir"), new File("file"), "sql/drop-constraint.ftl",
                 "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Drop.txt";

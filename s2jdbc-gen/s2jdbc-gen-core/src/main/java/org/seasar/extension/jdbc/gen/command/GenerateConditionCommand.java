@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.gen.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
@@ -27,6 +28,7 @@ import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactoryImpl;
@@ -42,28 +44,42 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class GenerateConditionCommand extends AbstractCommand {
 
-    @BindableProperty(required = true)
     protected File classpathRootDir;
 
-    /** 生成するJavaファイルの出力先ディレクトリ */
-    @BindableProperty
-    protected File destDir = new File("src/main/java");
-
-    /** Javaファイルのエンコーディング */
-    @BindableProperty
-    protected String javaFileEncoding = "UTF-8";
-
     /** 条件クラス名のサフィックス */
-    @BindableProperty
     protected String conditionClassNameSuffix = "Condition";
 
     /** 条件クラスのパッケージ名 */
-    @BindableProperty
     protected String conditionPackageName = "condition";
 
     /** 条件クラスのテンプレート名 */
-    @BindableProperty
-    protected String conditionTemplateName = "condition.ftl";
+    protected String conditionTemplateFileName = "java/condition.ftl";
+
+    /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
+    protected String configPath = "s2jdbc.dicon";
+
+    /** エンティティパッケージ名 */
+    protected String entityPackageName = "entity";
+
+    /** 生成するJavaファイルの出力先ディレクトリ */
+    protected File javaFileDir = new File("src/main/java");
+
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding = "UTF-8";
+
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName = "jdbcManager";
+
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
+
+    /** テンプレートファイルを格納するディレクトリ */
+    protected File templateFileDir = null;
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
+    protected S2ContainerFactorySupport containerFactorySupport;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -84,66 +100,116 @@ public class GenerateConditionCommand extends AbstractCommand {
     public GenerateConditionCommand() {
     }
 
+    public File getClasspathRootDir() {
+        return classpathRootDir;
+    }
+
     public void setClasspathRootDir(File classpathRootDir) {
         this.classpathRootDir = classpathRootDir;
     }
 
-    /**
-     * 生成Javaファイル出力先ディレクトリを設定します。
-     * 
-     * @param destDir
-     *            生成Javaファイル出力先ディレクトリ
-     */
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
+    public String getConditionClassNameSuffix() {
+        return conditionClassNameSuffix;
     }
 
-    /**
-     * Javaコードのエンコーディングを設定します。
-     * 
-     * @param javaFileEncoding
-     *            Javaコードのエンコーディング
-     */
-    public void setJavaFileEncoding(String javaFileEncoding) {
-        this.javaFileEncoding = javaFileEncoding;
-    }
-
-    /**
-     * 条件クラスのパッケージ名を設定します。
-     * 
-     * @param conditionPackageName
-     *            条件クラスのパッケージ名
-     */
-    public void setConditionPackageName(String conditionPackageName) {
-        this.conditionPackageName = conditionPackageName;
-    }
-
-    /**
-     * 条件クラス名のサフィックスを設定します。
-     * 
-     * @param conditionClassNameSuffix
-     *            条件クラス名のサフィックス
-     */
     public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
         this.conditionClassNameSuffix = conditionClassNameSuffix;
     }
 
-    /**
-     * 条件クラスのテンプレート名を設定します。
-     * 
-     * @param conditionTemplateName
-     *            条件クラスのテンプレート名
-     */
-    public void setConditionTemplateName(String conditionTemplateName) {
-        this.conditionTemplateName = conditionTemplateName;
+    public String getConditionPackageName() {
+        return conditionPackageName;
+    }
+
+    public void setConditionPackageName(String conditionPackageName) {
+        this.conditionPackageName = conditionPackageName;
+    }
+
+    public String getConditionTemplateFileName() {
+        return conditionTemplateFileName;
+    }
+
+    public void setConditionTemplateFileName(String conditionTemplateFileName) {
+        this.conditionTemplateFileName = conditionTemplateFileName;
+    }
+
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
+    }
+
+    public String getEntityPackageName() {
+        return entityPackageName;
+    }
+
+    public void setEntityPackageName(String entityPackageName) {
+        this.entityPackageName = entityPackageName;
+    }
+
+    public File getJavaFileDir() {
+        return javaFileDir;
+    }
+
+    public void setJavaFileDir(File javaFileDir) {
+        this.javaFileDir = javaFileDir;
+    }
+
+    public String getJavaFileEncoding() {
+        return javaFileEncoding;
+    }
+
+    public void setJavaFileEncoding(String javaFileEncoding) {
+        this.javaFileEncoding = javaFileEncoding;
+    }
+
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
+    }
+
+    public File getTemplateFileDir() {
+        return templateFileDir;
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        this.templateFileDir = templateFileDir;
+    }
+
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        this.templateFileEncoding = templateFileEncoding;
+    }
+
+    @Override
+    protected void doValidate() {
+        if (classpathRootDir == null) {
+            throw new RequiredPropertyNullRuntimeException("classpathRootDir");
+        }
     }
 
     /**
      * 初期化します。
      */
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        containerFactorySupport = new S2ContainerFactorySupport(configPath);
+        containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
@@ -153,6 +219,19 @@ public class GenerateConditionCommand extends AbstractCommand {
         entityMetaReader = createEntityMetaReader();
         conditionModelFactory = createConditionModelFactory();
         generator = createGenerator();
+    }
+
+    @Override
+    protected void doExecute() {
+        List<EntityMeta> entityMetaList = entityMetaReader.read();
+        generate(entityMetaList);
+    }
+
+    @Override
+    protected void doDestroy() {
+        if (containerFactorySupport != null) {
+            containerFactorySupport.destory();
+        }
     }
 
     protected EntityMetaReader createEntityMetaReader() {
@@ -179,13 +258,7 @@ public class GenerateConditionCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateDir);
-    }
-
-    @Override
-    protected void doExecute() {
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        generate(entityMetaList);
+        return new GeneratorImpl(templateFileEncoding, templateFileDir);
     }
 
     /**
@@ -208,7 +281,7 @@ public class GenerateConditionCommand extends AbstractCommand {
         ConditionModel model = conditionModelFactory.getConditionModel(
                 entityMeta, className);
         GenerationContext context = createGenerationContext(model, className,
-                conditionTemplateName, true);
+                conditionTemplateFileName, true);
         generator.generate(context);
     }
 
@@ -231,7 +304,7 @@ public class GenerateConditionCommand extends AbstractCommand {
         String packageName = elements[0];
         String shortClassName = elements[1];
 
-        File dir = new File(destDir, packageName.replace('.',
+        File dir = new File(javaFileDir, packageName.replace('.',
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 

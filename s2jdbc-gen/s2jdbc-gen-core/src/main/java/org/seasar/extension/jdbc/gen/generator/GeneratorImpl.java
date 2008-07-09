@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.gen.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.gen.util.TemplateUtil;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;
+import org.seasar.framework.util.ResourceUtil;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
@@ -43,7 +44,9 @@ import freemarker.template.Template;
 public class GeneratorImpl implements Generator {
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(GeneratorImpl.class);
+    protected static Logger logger = Logger.getLogger(GeneratorImpl.class);
+
+    protected static String DEFAULT_TEMPLATE_DIR_NAME = "org/seasar/extension/jdbc/gen/generator/tempaltes";
 
     /** FreeMarkerの設定 */
     protected Configuration configuration;
@@ -55,6 +58,9 @@ public class GeneratorImpl implements Generator {
      *            FreeMarkerの設定
      */
     public GeneratorImpl(Configuration configuration) {
+        if (configuration == null) {
+            throw new NullPointerException("configuration");
+        }
         this.configuration = configuration;
     }
 
@@ -63,16 +69,23 @@ public class GeneratorImpl implements Generator {
      * 
      * @param templateFileEncoding
      *            テンプレートファイルのエンコーディング
-     * @param templateDir
+     * @param templateFileDir
      *            テンプレートファイルが格納されたディレクトリ
      */
-    public GeneratorImpl(String templateFileEncoding, File templateDir) {
+    public GeneratorImpl(String templateFileEncoding, File templateFileDir) {
+        if (templateFileEncoding == null) {
+            throw new NullPointerException("templateFileEncoding");
+        }
+        if (templateFileDir == null) {
+            templateFileDir = ResourceUtil
+                    .getResourceAsFile(DEFAULT_TEMPLATE_DIR_NAME);
+        }
         this.configuration = new Configuration();
         configuration.setObjectWrapper(new DefaultObjectWrapper());
         configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
         configuration.setNumberFormat("0.#####");
         ConfigurationUtil.setDirectoryForTemplateLoading(configuration,
-                templateDir);
+                templateFileDir);
     }
 
     public void generate(GenerationContext context) {

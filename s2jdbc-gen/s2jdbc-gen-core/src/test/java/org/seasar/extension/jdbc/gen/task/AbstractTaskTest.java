@@ -15,15 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.task;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.net.URL;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.framework.exception.IORuntimeException;
 
 import static org.junit.Assert.*;
 
@@ -33,33 +26,7 @@ import static org.junit.Assert.*;
  */
 public class AbstractTaskTest {
 
-    private String commandClassName;
-
-    private AbstractTask task;
-
-    private ClassLoader classLoader;
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-        commandClassName = getClass().getName() + "$Hoge";
-        task = new AbstractTaskStub(commandClassName);
-        classLoader = new ChildFirstClassLoader(Thread.currentThread()
-                .getContextClassLoader());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testToURLs() throws Exception {
-        URL[] urls = task.toURLs(new String[] { "a", "b", "c" });
-        assertEquals(3, urls.length);
-    }
+    private AbstractTask task = new AbstractTaskStub();
 
     /**
      * 
@@ -67,9 +34,10 @@ public class AbstractTaskTest {
      */
     @Test
     public void testCreateCommand() throws Exception {
-        Object command = task.createCommand(classLoader);
+        Command originalCommand = task.getCommand();
+        Object command = task.createCommand(originalCommand, Thread
+                .currentThread().getContextClassLoader());
         assertNotNull(command);
-        assertEquals(classLoader, command.getClass().getClassLoader());
     }
 
     /**
@@ -78,96 +46,43 @@ public class AbstractTaskTest {
      */
     @Test
     public void testExecuteCommand() throws Exception {
-        Class<?> clazz = Class.forName(commandClassName, true, classLoader);
-        Object command = clazz.newInstance();
-        task.executeCommand(classLoader, command);
-        Field field = clazz.getField("foo");
-        Object foo = field.get(command);
-        assertNotNull(foo);
-        assertEquals(classLoader, foo.getClass().getClassLoader());
+        HogeCommand command = (HogeCommand) task.getCommand();
+        task.executeCommand(Thread.currentThread().getContextClassLoader(),
+                command);
+        assertTrue(command.invoked);
     }
 
-    /**
-     * 
-     */
-    public static class Hoge implements Command {
+    /** */
+    public static class HogeCommand implements Command {
 
-        /**
-         * 
-         */
-        public Foo foo;
+        /** */
+        public boolean invoked;
 
-        /**
-         * 
-         */
+        /** */
         public void execute() {
-            foo = new Foo();
+            invoked = true;
         }
 
     }
 
-    /**
-     * 
-     */
-    public static class Foo {
-    }
-
-    /**
-     * 
-     */
-    public static class ChildFirstClassLoader extends ClassLoader {
-
-        /**
-         * 
-         * @param parent
-         */
-        public ChildFirstClassLoader(ClassLoader parent) {
-            super(parent);
-        }
-
-        /**
-         * 
-         */
-        @Override
-        protected synchronized Class<?> loadClass(String name, boolean resolve)
-                throws ClassNotFoundException {
-            if (!name.equals(Hoge.class.getName())
-                    && !name.equals(Foo.class.getName())) {
-                return super.loadClass(name, resolve);
-            }
-            InputStream is = getParent().getResourceAsStream(
-                    name.replace('.', '/') + ".class");
-            if (is == null) {
-                throw new ClassNotFoundException(name);
-            }
-            try {
-                byte[] bytes = new byte[is.available()];
-                is.read(bytes);
-                Class<?> clazz = defineClass(name, bytes, 0, bytes.length);
-                if (resolve) {
-                    resolveClass(clazz);
-                }
-                return clazz;
-            } catch (IOException e) {
-                throw new IORuntimeException(e);
-            }
-        }
-    }
-
-    /**
-     * 
-     * @author taedium
-     * 
-     */
+    /** */
     public static class AbstractTaskStub extends AbstractTask {
+
+        /** */
+        protected HogeCommand command = new HogeCommand();
 
         /**
          * 
          * @param commandClassName
          */
-        public AbstractTaskStub(String commandClassName) {
-            super(commandClassName);
+        public AbstractTaskStub() {
         }
+
+        @Override
+        protected Command getCommand() {
+            return command;
+        }
+
     }
 
 }

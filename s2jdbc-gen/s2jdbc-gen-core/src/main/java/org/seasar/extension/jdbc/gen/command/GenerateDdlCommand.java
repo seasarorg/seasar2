@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
@@ -43,6 +44,7 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
@@ -56,50 +58,55 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class GenerateDdlCommand extends AbstractCommand {
 
-    @BindableProperty(required = true)
     protected File classpathRootDir;
 
-    @BindableProperty
-    protected File destDir = new File("sql");
+    /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
+    protected String configPath = "s2jdbc.dicon";
 
-    @BindableProperty
-    protected String sqlFileEncoding = "UTF-8";
-
-    @BindableProperty
-    protected String createTableSqlFileName = "create-table.sql";
-
-    @BindableProperty
     protected String createConstraintSqlFileName = "create-constraint.sql";
 
-    @BindableProperty
+    protected String createConstraintTemplateFileName = "sql/create-constraint.ftl";
+
+    protected String createTableSqlFileName = "create-table.sql";
+
+    protected String createTableTemplateFileName = "sql/create-table.ftl";
+
     protected String createSequenceSqlFileName = "create-sequence.sql";
 
-    @BindableProperty
-    protected String dropTableSqlFileName = "drop-table.sql";
+    protected String createSequenceTemplateFileName = "sql/create-sequence.ftl";
 
-    @BindableProperty
     protected String dropConstraintSqlFileName = "drop-constraint.sql";;
 
-    @BindableProperty
+    protected String dropConstraintTemplateFileName = "sql/drop-constraint.ftl";
+
+    protected String dropTableSqlFileName = "drop-table.sql";
+
+    protected String dropTableTemplateFileName = "sql/drop-table.ftl";
+
     protected String dropSequenceSqlFileName = "drop-sequence.sql";
 
-    @BindableProperty
-    protected String createTableTemplateName = "create-table.ftl";
+    protected String dropSequenceTemplateFileName = "sql/drop-sequence.ftl";
 
-    @BindableProperty
-    protected String createConstraintTemplateName = "create-constraint.ftl";
+    /** エンティティパッケージ名 */
+    protected String entityPackageName = "entity";
 
-    @BindableProperty
-    protected String createSequenceTemplateName = "create-sequence.ftl";
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName = "jdbcManager";
 
-    @BindableProperty
-    protected String dropTableTemplateName = "drop-table.ftl";
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
 
-    @BindableProperty
-    protected String dropConstraintTemplateName = "drop-constraint.ftl";
+    protected File sqlFileDestDir = new File("sql");
 
-    @BindableProperty
-    protected String dropSequenceTemplateName = "drop-sequence.ftl";
+    protected String sqlFileEncoding = "UTF-8";
+
+    /** テンプレートファイルを格納するディレクトリ */
+    protected File templateFileDir = null;
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
+    protected S2ContainerFactorySupport containerFactorySupport;
 
     protected EntityMetaFactory entityMetaFactory;
 
@@ -116,20 +123,33 @@ public class GenerateDdlCommand extends AbstractCommand {
     public GenerateDdlCommand() {
     }
 
+    public File getClasspathRootDir() {
+        return classpathRootDir;
+    }
+
     public void setClasspathRootDir(File classpathRootDir) {
         this.classpathRootDir = classpathRootDir;
     }
 
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
+    public String getConfigPath() {
+        return configPath;
     }
 
-    public void setSqlFileEncoding(String sqlFileEncoding) {
-        this.sqlFileEncoding = sqlFileEncoding;
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
     }
 
-    public void setCreateTableSqlFileName(String createTableSqlFileName) {
-        this.createTableSqlFileName = createTableSqlFileName;
+    public String getCreateConstraintTemplateFileName() {
+        return createConstraintTemplateFileName;
+    }
+
+    public void setCreateConstraintTemplateFileName(
+            String createConstraintTemplateFileName) {
+        this.createConstraintTemplateFileName = createConstraintTemplateFileName;
+    }
+
+    public String getCreateConstraintSqlFileName() {
+        return createConstraintSqlFileName;
     }
 
     public void setCreateConstraintSqlFileName(
@@ -137,50 +157,157 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.createConstraintSqlFileName = createConstraintSqlFileName;
     }
 
+    public String getCreateTableSqlFileName() {
+        return createTableSqlFileName;
+    }
+
+    public void setCreateTableSqlFileName(String createTableSqlFileName) {
+        this.createTableSqlFileName = createTableSqlFileName;
+    }
+
+    public String getCreateTableTemplateFileName() {
+        return createTableTemplateFileName;
+    }
+
+    public void setCreateTableTemplateFileName(
+            String createTableTemplateFileName) {
+        this.createTableTemplateFileName = createTableTemplateFileName;
+    }
+
+    public String getCreateSequenceSqlFileName() {
+        return createSequenceSqlFileName;
+    }
+
     public void setCreateSequenceSqlFileName(String createSequenceSqlFileName) {
         this.createSequenceSqlFileName = createSequenceSqlFileName;
     }
 
-    public void setDropTableSqlFileName(String dropTableSqlFileName) {
-        this.dropTableSqlFileName = dropTableSqlFileName;
+    public String getCreateSequenceTemplateFileName() {
+        return createSequenceTemplateFileName;
+    }
+
+    public void setCreateSequenceTemplateFileName(
+            String createSequenceTemplateFileName) {
+        this.createSequenceTemplateFileName = createSequenceTemplateFileName;
+    }
+
+    public String getDropConstraintSqlFileName() {
+        return dropConstraintSqlFileName;
     }
 
     public void setDropConstraintSqlFileName(String dropConstraintSqlFileName) {
         this.dropConstraintSqlFileName = dropConstraintSqlFileName;
     }
 
+    public String getDropConstraintTemplateFileName() {
+        return dropConstraintTemplateFileName;
+    }
+
+    public void setDropConstraintTemplateFileName(
+            String dropConstraintTemplateFileName) {
+        this.dropConstraintTemplateFileName = dropConstraintTemplateFileName;
+    }
+
+    public String getDropTableSqlFileName() {
+        return dropTableSqlFileName;
+    }
+
+    public void setDropTableSqlFileName(String dropTableSqlFileName) {
+        this.dropTableSqlFileName = dropTableSqlFileName;
+    }
+
+    public String getDropTableTemplateFileName() {
+        return dropTableTemplateFileName;
+    }
+
+    public void setDropTableTemplateFileName(String dropTableTemplateFileName) {
+        this.dropTableTemplateFileName = dropTableTemplateFileName;
+    }
+
+    public String getDropSequenceSqlFileName() {
+        return dropSequenceSqlFileName;
+    }
+
     public void setDropSequenceSqlFileName(String dropSequenceSqlFileName) {
         this.dropSequenceSqlFileName = dropSequenceSqlFileName;
     }
 
-    public void setCreateTableTemplateName(String createTableTemplateName) {
-        this.createTableTemplateName = createTableTemplateName;
+    public String getDropSequenceTemplateFileName() {
+        return dropSequenceTemplateFileName;
     }
 
-    public void setCreateConstraintTemplateName(
-            String createConstraintTemplateName) {
-        this.createConstraintTemplateName = createConstraintTemplateName;
+    public void setDropSequenceTemplateFileName(
+            String dropSequenceTemplateFileName) {
+        this.dropSequenceTemplateFileName = dropSequenceTemplateFileName;
     }
 
-    public void setCreateSequenceTemplateName(String createSequenceTemplateName) {
-        this.createSequenceTemplateName = createSequenceTemplateName;
+    public String getEntityPackageName() {
+        return entityPackageName;
     }
 
-    public void setDropTableTemplateName(String dropTableTemplateName) {
-        this.dropTableTemplateName = dropTableTemplateName;
+    public void setEntityPackageName(String entityPackageName) {
+        this.entityPackageName = entityPackageName;
     }
 
-    public void setDropConstraintTemplateName(String dropConstraintTemplateName) {
-        this.dropConstraintTemplateName = dropConstraintTemplateName;
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
     }
 
-    public void setDropSequenceTemplateName(String dropSequenceTemplateName) {
-        this.dropSequenceTemplateName = dropSequenceTemplateName;
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
+    }
+
+    public File getSqlFileDestDir() {
+        return sqlFileDestDir;
+    }
+
+    public void setSqlFileDestDir(File sqlFileDestDir) {
+        this.sqlFileDestDir = sqlFileDestDir;
+    }
+
+    public String getSqlFileEncoding() {
+        return sqlFileEncoding;
+    }
+
+    public void setSqlFileEncoding(String sqlFileEncoding) {
+        this.sqlFileEncoding = sqlFileEncoding;
+    }
+
+    public File getTemplateFileDir() {
+        return templateFileDir;
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        this.templateFileDir = templateFileDir;
+    }
+
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        this.templateFileEncoding = templateFileEncoding;
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doValidate() {
+        if (classpathRootDir == null) {
+            throw new RequiredPropertyNullRuntimeException("classpathRootDir");
+        }
+    }
+
+    @Override
+    protected void doInit() {
+        containerFactorySupport = new S2ContainerFactorySupport(configPath);
+        containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
@@ -191,6 +318,23 @@ public class GenerateDdlCommand extends AbstractCommand {
         tableDescFactory = createTableDescFactory();
         schemaModelFactory = createSchemaModelFactory();
         generator = createGenerator();
+    }
+
+    @Override
+    protected void doExecute() {
+        List<EntityMeta> entityMetaList = entityMetaReader.read();
+        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
+        for (EntityMeta entityMeta : entityMetaList) {
+            tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
+        }
+        generate(tableDescList);
+    }
+
+    @Override
+    protected void doDestroy() {
+        if (containerFactorySupport != null) {
+            containerFactorySupport.destory();
+        }
     }
 
     protected EntityMetaReader createEntityMetaReader() {
@@ -216,17 +360,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateDir);
-    }
-
-    @Override
-    protected void doExecute() {
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
-        for (EntityMeta entityMeta : entityMetaList) {
-            tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
-        }
-        generate(tableDescList);
+        return new GeneratorImpl(templateFileEncoding, templateFileDir);
     }
 
     protected void generate(List<TableDesc> tableDescList) {
@@ -238,34 +372,36 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     protected void generateTable(SchemaModel model) {
         GenerationContext createTableCtx = createGenerationContext(model,
-                createTableSqlFileName, createTableTemplateName, true);
+                createTableSqlFileName, createTableTemplateFileName, true);
         GenerationContext dropTableCtx = createGenerationContext(model,
-                dropTableSqlFileName, createTableTemplateName, true);
+                dropTableSqlFileName, createTableTemplateFileName, true);
         generator.generate(createTableCtx);
         generator.generate(dropTableCtx);
     }
 
     protected void generateConstraint(SchemaModel model) {
         GenerationContext createConstraintCtx = createGenerationContext(model,
-                createConstraintSqlFileName, createConstraintTemplateName, true);
+                createConstraintSqlFileName, createConstraintTemplateFileName,
+                true);
         GenerationContext dropConstraintCtx = createGenerationContext(model,
-                dropConstraintSqlFileName, dropConstraintTemplateName, true);
+                dropConstraintSqlFileName, dropConstraintTemplateFileName, true);
         generator.generate(createConstraintCtx);
         generator.generate(dropConstraintCtx);
     }
 
     protected void generateSequence(SchemaModel model) {
         GenerationContext createSequenceCtx = createGenerationContext(model,
-                createSequenceSqlFileName, createSequenceTemplateName, true);
+                createSequenceSqlFileName, createSequenceTemplateFileName, true);
         GenerationContext dropSequenceCtx = createGenerationContext(model,
-                dropSequenceSqlFileName, dropSequenceTemplateName, true);
+                dropSequenceSqlFileName, dropSequenceTemplateFileName, true);
         generator.generate(createSequenceCtx);
         generator.generate(dropSequenceCtx);
     }
 
     protected GenerationContext createGenerationContext(Object model,
             String SqlFileName, String templateName, boolean overwrite) {
-        return new GenerationContext(model, destDir, new File(destDir,
-                SqlFileName), templateName, sqlFileEncoding, overwrite);
+        return new GenerationContext(model, sqlFileDestDir, new File(
+                sqlFileDestDir, SqlFileName), templateName, sqlFileEncoding,
+                overwrite);
     }
 }

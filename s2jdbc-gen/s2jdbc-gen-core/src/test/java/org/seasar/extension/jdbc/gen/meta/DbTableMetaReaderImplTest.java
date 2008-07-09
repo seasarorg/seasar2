@@ -130,7 +130,7 @@ public class DbTableMetaReaderImplTest {
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
                 "table");
         List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
-                "catalogName", "schemaName", "tableName");
+                "catalogName", "schemaName", "SchemaInfoTableName");
         assertEquals(2, list.size());
         DbColumnMeta columnMeta = list.get(0);
         assertEquals("column1", columnMeta.getName());

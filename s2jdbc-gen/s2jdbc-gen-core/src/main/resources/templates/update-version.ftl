@@ -1,1 +1,0 @@
-update ${tableName} set ${columnName} = ${version};

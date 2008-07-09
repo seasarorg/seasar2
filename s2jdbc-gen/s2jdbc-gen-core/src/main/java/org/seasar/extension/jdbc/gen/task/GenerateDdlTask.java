@@ -17,191 +17,203 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.apache.tools.ant.BuildException;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateDdlCommand;
 
 /**
- * データベースのスキーマを作成するタスクです。
  * 
  * @author taedium
  */
 public class GenerateDdlTask extends AbstractTask {
 
-    protected File classpathRootDir;
-
-    protected File destDir;
-
-    protected String sqlFileEncoding;
-
-    protected String createTableSqlFileName;
-
-    protected String createConstraintSqlFileName;
-
-    protected String createSequenceSqlFileName;
-
-    protected String dropTableSqlFileName;
-
-    protected String dropConstraintSqlFileName;
-
-    protected String dropSequenceSqlFileName;
-
-    protected String createTableTemplateName;
-
-    protected String createConstraintTemplateName;
-
-    protected String createSequenceTemplateName;
-
-    protected String dropTableTemplateName;
-
-    protected String dropConstraintTemplateName;
-
-    protected String dropSequenceTemplateName;
+    protected GenerateDdlCommand command = new GenerateDdlCommand();
 
     /**
      * インスタンスを構築します。
      */
     public GenerateDdlTask() {
-        this(GenerateDdlCommand.class.getName());
-    }
-
-    /**
-     * インスタンスを構築します。
-     * 
-     * @param commandClassName
-     *            コマンドクラス名
-     */
-    public GenerateDdlTask(String commandClassName) {
-        super(commandClassName);
     }
 
     public File getClasspathRootDir() {
-        return classpathRootDir;
+        return command.getClasspathRootDir();
     }
 
-    public void setClasspathRootDir(File classpathRootDir) {
-        this.classpathRootDir = classpathRootDir;
-    }
-
-    public File getDestDir() {
-        return destDir;
-    }
-
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
-    }
-
-    public String getSqlFileEncoding() {
-        return sqlFileEncoding;
-    }
-
-    public void setSqlFileEncoding(String sqlFileEncoding) {
-        this.sqlFileEncoding = sqlFileEncoding;
-    }
-
-    public String getCreateTableSqlFileName() {
-        return createTableSqlFileName;
-    }
-
-    public void setCreateTableSqlFileName(String createTableSqlFileName) {
-        this.createTableSqlFileName = createTableSqlFileName;
+    public String getConfigPath() {
+        return command.getConfigPath();
     }
 
     public String getCreateConstraintSqlFileName() {
-        return createConstraintSqlFileName;
+        return command.getCreateConstraintSqlFileName();
+    }
+
+    public String getCreateConstraintTemplateFileName() {
+        return command.getCreateConstraintTemplateFileName();
+    }
+
+    public String getCreateSequenceSqlFileName() {
+        return command.getCreateSequenceSqlFileName();
+    }
+
+    public String getCreateSequenceTemplateFileName() {
+        return command.getCreateSequenceTemplateFileName();
+    }
+
+    public String getCreateTableSqlFileName() {
+        return command.getCreateTableSqlFileName();
+    }
+
+    public String getCreateTableTemplateFileName() {
+        return command.getCreateTableTemplateFileName();
+    }
+
+    public String getDropConstraintSqlFileName() {
+        return command.getDropConstraintSqlFileName();
+    }
+
+    public String getDropConstraintTemplateFileName() {
+        return command.getDropConstraintTemplateFileName();
+    }
+
+    public String getDropSequenceSqlFileName() {
+        return command.getDropSequenceSqlFileName();
+    }
+
+    public String getDropSequenceTemplateFileName() {
+        return command.getDropSequenceTemplateFileName();
+    }
+
+    public String getDropTableSqlFileName() {
+        return command.getDropTableSqlFileName();
+    }
+
+    public String getDropTableTemplateFileName() {
+        return command.getDropTableTemplateFileName();
+    }
+
+    public String getEntityPackageName() {
+        return command.getEntityPackageName();
+    }
+
+    public String getJdbcManagerName() {
+        return command.getJdbcManagerName();
+    }
+
+    public String getRootPackageName() {
+        return command.getRootPackageName();
+    }
+
+    public File getSqlFileDestDir() {
+        return command.getSqlFileDestDir();
+    }
+
+    public String getSqlFileEncoding() {
+        return command.getSqlFileEncoding();
+    }
+
+    public File getTemplateFileDir() {
+        return command.getTemplateFileDir();
+    }
+
+    public String getTemplateFileEncoding() {
+        return command.getTemplateFileEncoding();
+    }
+
+    public void setClasspathRootDir(File classpathRootDir) {
+        command.setClasspathRootDir(classpathRootDir);
+    }
+
+    public void setConfigPath(String configPath) {
+        command.setConfigPath(configPath);
     }
 
     public void setCreateConstraintSqlFileName(
             String createConstraintSqlFileName) {
-        this.createConstraintSqlFileName = createConstraintSqlFileName;
+        command.setCreateConstraintSqlFileName(createConstraintSqlFileName);
     }
 
-    public String getCreateSequenceSqlFileName() {
-        return createSequenceSqlFileName;
+    public void setCreateConstraintTemplateFileName(
+            String createConstraintTemplateFileName) {
+        command
+                .setCreateConstraintTemplateFileName(createConstraintTemplateFileName);
     }
 
     public void setCreateSequenceSqlFileName(String createSequenceSqlFileName) {
-        this.createSequenceSqlFileName = createSequenceSqlFileName;
+        command.setCreateSequenceSqlFileName(createSequenceSqlFileName);
     }
 
-    public String getDropTableSqlFileName() {
-        return dropTableSqlFileName;
+    public void setCreateSequenceTemplateFileName(
+            String createSequenceTemplateFileName) {
+        command
+                .setCreateSequenceTemplateFileName(createSequenceTemplateFileName);
     }
 
-    public void setDropTableSqlFileName(String dropTableSqlFileName) {
-        this.dropTableSqlFileName = dropTableSqlFileName;
+    public void setCreateTableSqlFileName(String createTableSqlFileName) {
+        command.setCreateTableSqlFileName(createTableSqlFileName);
     }
 
-    public String getDropConstraintSqlFileName() {
-        return dropConstraintSqlFileName;
+    public void setCreateTableTemplateFileName(
+            String createTableTemplateFileName) {
+        command.setCreateTableTemplateFileName(createTableTemplateFileName);
     }
 
     public void setDropConstraintSqlFileName(String dropConstraintSqlFileName) {
-        this.dropConstraintSqlFileName = dropConstraintSqlFileName;
+        command.setDropConstraintSqlFileName(dropConstraintSqlFileName);
     }
 
-    public String getDropSequenceSqlFileName() {
-        return dropSequenceSqlFileName;
+    public void setDropConstraintTemplateFileName(
+            String dropConstraintTemplateFileName) {
+        command
+                .setDropConstraintTemplateFileName(dropConstraintTemplateFileName);
     }
 
     public void setDropSequenceSqlFileName(String dropSequenceSqlFileName) {
-        this.dropSequenceSqlFileName = dropSequenceSqlFileName;
+        command.setDropSequenceSqlFileName(dropSequenceSqlFileName);
     }
 
-    public String getCreateTableTemplateName() {
-        return createTableTemplateName;
+    public void setDropSequenceTemplateFileName(
+            String dropSequenceTemplateFileName) {
+        command.setDropSequenceTemplateFileName(dropSequenceTemplateFileName);
     }
 
-    public void setCreateTableTemplateName(String createTableTemplateName) {
-        this.createTableTemplateName = createTableTemplateName;
+    public void setDropTableSqlFileName(String dropTableSqlFileName) {
+        command.setDropTableSqlFileName(dropTableSqlFileName);
     }
 
-    public String getCreateConstraintTemplateName() {
-        return createConstraintTemplateName;
+    public void setDropTableTemplateFileName(String dropTableTemplateFileName) {
+        command.setDropTableTemplateFileName(dropTableTemplateFileName);
     }
 
-    public void setCreateConstraintTemplateName(
-            String createConstraintTemplateName) {
-        this.createConstraintTemplateName = createConstraintTemplateName;
+    public void setEntityPackageName(String entityPackageName) {
+        command.setEntityPackageName(entityPackageName);
     }
 
-    public String getCreateSequenceTemplateName() {
-        return createSequenceTemplateName;
+    public void setJdbcManagerName(String jdbcManagerName) {
+        command.setJdbcManagerName(jdbcManagerName);
     }
 
-    public void setCreateSequenceTemplateName(String createSequenceTemplateName) {
-        this.createSequenceTemplateName = createSequenceTemplateName;
+    public void setRootPackageName(String rootPackageName) {
+        command.setRootPackageName(rootPackageName);
     }
 
-    public String getDropTableTemplateName() {
-        return dropTableTemplateName;
+    public void setSqlFileDestDir(File sqlFileDestDir) {
+        command.setSqlFileDestDir(sqlFileDestDir);
     }
 
-    public void setDropTableTemplateName(String dropTableTemplateName) {
-        this.dropTableTemplateName = dropTableTemplateName;
+    public void setSqlFileEncoding(String sqlFileEncoding) {
+        command.setSqlFileEncoding(sqlFileEncoding);
     }
 
-    public String getDropConstraintTemplateName() {
-        return dropConstraintTemplateName;
+    public void setTemplateFileDir(File templateFileDir) {
+        command.setTemplateFileDir(templateFileDir);
     }
 
-    public void setDropConstraintTemplateName(String dropConstraintTemplateName) {
-        this.dropConstraintTemplateName = dropConstraintTemplateName;
-    }
-
-    public String getDropSequenceTemplateName() {
-        return dropSequenceTemplateName;
-    }
-
-    public void setDropSequenceTemplateName(String dropSequenceTemplateName) {
-        this.dropSequenceTemplateName = dropSequenceTemplateName;
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        command.setTemplateFileEncoding(templateFileEncoding);
     }
 
     @Override
-    protected void validate() {
-        super.validate();
-        if (classpathRootDir == null) {
-            throw new BuildException("classpathRootDir is not specified for '"
-                    + getTaskName() + "' task");
-        }
+    protected Command getCommand() {
+        return command;
     }
+
 }

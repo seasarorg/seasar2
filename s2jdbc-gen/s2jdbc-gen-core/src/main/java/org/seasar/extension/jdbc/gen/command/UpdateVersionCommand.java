@@ -30,42 +30,137 @@ import org.seasar.framework.util.TextUtil;
  */
 public class UpdateVersionCommand extends AbstractCommand {
 
-    protected File destDir = new File("sql");
+    protected String schemaInfoColumnName = "VERSION";
 
-    protected File versionFile = new File(destDir, "version.txt");
+    protected String schemaInfoTableName = "SCHEMA_INFO";
 
-    protected String versionTemplateName = "version.ftl";
-
-    protected String sqlFileName = "update-version.sql";
-
-    protected String sqlTemplateName = "update-version.ftl";
+    protected File sqlFileDestDir = new File("sql");
 
     protected String sqlFileEncoding = "UTF-8";
 
-    protected String tableName = "SCHEMA_INFO";
+    /** テンプレートファイルの格納ディレクトリ */
+    protected File templateFileDir = null;
 
-    protected String columnName = "VERSION";
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
+    protected String versionFileName = "version.txt";
+
+    protected String versionTemplateFileName = "txt/version.ftl";
+
+    protected String updateVersionSqlFileName = "update-version.sql";
+
+    protected String updateVersionTemplateFileName = "sql/update-version.ftl";
 
     protected Generator generator;
 
+    public UpdateVersionCommand() {
+    }
+
+    public String getSchemaInfoColumnName() {
+        return schemaInfoColumnName;
+    }
+
+    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
+        this.schemaInfoColumnName = schemaInfoColumnName;
+    }
+
+    public String getSchemaInfoTableName() {
+        return schemaInfoTableName;
+    }
+
+    public void setSchemaInfoTableName(String schemaInfoTableName) {
+        this.schemaInfoTableName = schemaInfoTableName;
+    }
+
+    public File getSqlFileDestDir() {
+        return sqlFileDestDir;
+    }
+
+    public void setSqlFileDestDir(File sqlFileDestDir) {
+        this.sqlFileDestDir = sqlFileDestDir;
+    }
+
+    public String getSqlFileEncoding() {
+        return sqlFileEncoding;
+    }
+
+    public void setSqlFileEncoding(String sqlFileEncoding) {
+        this.sqlFileEncoding = sqlFileEncoding;
+    }
+
+    public File getTemplateFileDir() {
+        return templateFileDir;
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        this.templateFileDir = templateFileDir;
+    }
+
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        this.templateFileEncoding = templateFileEncoding;
+    }
+
+    public String getVersionFileName() {
+        return versionFileName;
+    }
+
+    public void setVersionFileName(String versionFileName) {
+        this.versionFileName = versionFileName;
+    }
+
+    public String getVersionTemplateFileName() {
+        return versionTemplateFileName;
+    }
+
+    public void setVersionTemplateFileName(String versionTemplateFileName) {
+        this.versionTemplateFileName = versionTemplateFileName;
+    }
+
+    public String getUpdateVersionSqlFileName() {
+        return updateVersionSqlFileName;
+    }
+
+    public void setUpdateVersionSqlFileName(String updateVersionSqlFileName) {
+        this.updateVersionSqlFileName = updateVersionSqlFileName;
+    }
+
+    public String getUpdateVersionTemplateFileName() {
+        return updateVersionTemplateFileName;
+    }
+
+    public void setUpdateVersionTemplateFileName(
+            String updateVersionTemplateFileName) {
+        this.updateVersionTemplateFileName = updateVersionTemplateFileName;
+    }
+
     @Override
-    protected void init() {
-        super.init();
+    protected void doValidate() {
+    }
+
+    @Override
+    protected void doInit() {
         generator = createGenerator();
     }
 
-    protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateDir);
-    }
-
+    @Override
     protected void doExecute() {
         int currentVersion = readVersion();
         int nextVersion = currentVersion + 1;
-        generateUpdateSql(nextVersion);
+        generateUpdateVersionSql(nextVersion);
         generateVersion(nextVersion);
     }
 
+    @Override
+    protected void doDestroy() {
+    }
+
     protected int readVersion() {
+        File versionFile = new File(sqlFileDestDir, versionFileName);
         if (!versionFile.exists()) {
             return 0;
         }
@@ -73,23 +168,28 @@ public class UpdateVersionCommand extends AbstractCommand {
         return Integer.valueOf(value.trim());
     }
 
-    protected void generateVersion(int version) {
-        Map<String, Integer> model = new HashMap<String, Integer>();
+    protected Generator createGenerator() {
+        return new GeneratorImpl(templateFileEncoding, templateFileDir);
+    }
+
+    protected void generateUpdateVersionSql(int version) {
+        Map<String, Object> model = new HashMap<String, Object>();
         model.put("version", version);
-        GenerationContext context = new GenerationContext(model, versionFile
-                .getParentFile(), versionFile, versionTemplateName, "UTF-8",
-                true);
+        model.put("schemaInfoTableName", schemaInfoTableName);
+        model.put("schemaInfoColumnName", schemaInfoColumnName);
+        GenerationContext context = new GenerationContext(model,
+                sqlFileDestDir, new File(sqlFileDestDir,
+                        updateVersionSqlFileName),
+                updateVersionTemplateFileName, sqlFileEncoding, true);
         generator.generate(context);
     }
 
-    protected void generateUpdateSql(int version) {
-        Map<String, Object> model = new HashMap<String, Object>();
+    protected void generateVersion(int version) {
+        Map<String, Integer> model = new HashMap<String, Integer>();
         model.put("version", version);
-        model.put("tableName", tableName);
-        model.put("columnName", columnName);
-        GenerationContext context = new GenerationContext(model, destDir,
-                new File(destDir, sqlFileName), sqlTemplateName,
-                sqlFileEncoding, true);
+        GenerationContext context = new GenerationContext(model,
+                sqlFileDestDir, new File(sqlFileDestDir, versionFileName),
+                versionTemplateFileName, "UTF-8", true);
         generator.generate(context);
     }
 }

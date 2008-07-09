@@ -16,16 +16,11 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
-import java.lang.reflect.Field;
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.command.AbstractCommand.BindableProperty;
-import org.seasar.framework.beans.BeanDesc;
-import org.seasar.framework.beans.PropertyDesc;
-import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -35,11 +30,6 @@ import static org.junit.Assert.*;
  * 
  */
 public class GenerateConditionCommandTest {
-
-    @Before
-    public void setUp() throws Exception {
-        SingletonS2ContainerFactory.destroy();
-    }
 
     @After
     public void tearDown() throws Exception {
@@ -53,9 +43,12 @@ public class GenerateConditionCommandTest {
     @Test
     public void testValidate() throws Exception {
         GenerateConditionCommand command = new GenerateConditionCommand();
-        command.setDiconFile("s2jdbc-gen-core-test.dicon");
-        command.setClasspathRootDir(new File("dir"));
-        command.validate();
+        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        try {
+            command.validate();
+            fail();
+        } catch (RequiredPropertyNullRuntimeException expected) {
+        }
     }
 
     /**
@@ -65,7 +58,7 @@ public class GenerateConditionCommandTest {
     @Test
     public void testFactoryMethod() throws Exception {
         GenerateConditionCommand command = new GenerateConditionCommand();
-        command.setDiconFile("s2jdbc-gen-core-test.dicon");
+        command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathRootDir(new File("dir"));
         command.validate();
         command.init();
@@ -77,17 +70,4 @@ public class GenerateConditionCommandTest {
         assertNotNull(context);
     }
 
-    @Test
-    public void testBindableProperty() throws Exception {
-        BeanDesc beanDesc = BeanDescFactory
-                .getBeanDesc(GenerateConditionCommand.class);
-        for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
-            PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
-            if (!propertyDesc.hasWriteMethod()) {
-                continue;
-            }
-            Field field = propertyDesc.getField();
-            assertTrue(field.isAnnotationPresent(BindableProperty.class));
-        }
-    }
 }

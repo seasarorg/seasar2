@@ -15,6 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.task;
 
+import java.io.File;
+
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.UpdateVersionCommand;
 
 /**
@@ -23,20 +26,98 @@ import org.seasar.extension.jdbc.gen.command.UpdateVersionCommand;
  */
 public class UpdateVersionTask extends AbstractTask {
 
+    protected UpdateVersionCommand command = new UpdateVersionCommand();
+
     /**
      * インスタンスを構築します。
      */
     public UpdateVersionTask() {
-        this(UpdateVersionCommand.class.getName());
     }
 
-    /**
-     * インスタンスを構築します。
-     * 
-     * @param commandClassName
-     *            コマンドクラス名
-     */
-    public UpdateVersionTask(String commandClassName) {
-        super(commandClassName);
+    public String getSchemaInfoColumnName() {
+        return command.getSchemaInfoColumnName();
     }
+
+    public String getSchemaInfoTableName() {
+        return command.getSchemaInfoTableName();
+    }
+
+    public File getSqlFileDestDir() {
+        return command.getSqlFileDestDir();
+    }
+
+    public String getSqlFileEncoding() {
+        return command.getSqlFileEncoding();
+    }
+
+    public File getTemplateFileDir() {
+        return command.getTemplateFileDir();
+    }
+
+    public String getTemplateFileEncoding() {
+        return command.getTemplateFileEncoding();
+    }
+
+    public String getUpdateVersionSqlFileName() {
+        return command.getUpdateVersionSqlFileName();
+    }
+
+    public String getUpdateVersionTemplateFileName() {
+        return command.getUpdateVersionTemplateFileName();
+    }
+
+    public String getVersionFileName() {
+        return command.getVersionFileName();
+    }
+
+    public String getVersionTemplateFileName() {
+        return command.getVersionTemplateFileName();
+    }
+
+    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
+        command.setSchemaInfoColumnName(schemaInfoColumnName);
+    }
+
+    public void setSchemaInfoTableName(String schemaInfoTableName) {
+        command.setSchemaInfoTableName(schemaInfoTableName);
+    }
+
+    public void setSqlFileDestDir(File sqlFileDestDir) {
+        command.setSqlFileDestDir(sqlFileDestDir);
+    }
+
+    public void setSqlFileEncoding(String sqlFileEncoding) {
+        command.setSqlFileEncoding(sqlFileEncoding);
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        command.setTemplateFileDir(templateFileDir);
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        command.setTemplateFileEncoding(templateFileEncoding);
+    }
+
+    public void setUpdateVersionSqlFileName(String updateVersionSqlFileName) {
+        command.setUpdateVersionSqlFileName(updateVersionSqlFileName);
+    }
+
+    public void setUpdateVersionTemplateFileName(
+            String updateVersionTemplateFileName) {
+        command.setUpdateVersionTemplateFileName(updateVersionTemplateFileName);
+    }
+
+    public void setVersionFileName(String versionFileName) {
+        command.setVersionFileName(versionFileName);
+    }
+
+    public void setVersionTemplateFileName(String versionTemplateFileName) {
+        command.setVersionTemplateFileName(versionTemplateFileName);
+    }
+
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
+
 }

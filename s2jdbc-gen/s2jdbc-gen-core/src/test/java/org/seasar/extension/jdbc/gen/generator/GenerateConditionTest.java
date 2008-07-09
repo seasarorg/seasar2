@@ -43,7 +43,6 @@ import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -78,8 +77,7 @@ public class GenerateConditionTest {
         ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
                 "Condition");
         conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf);
-        generator = new GeneratorImplStub("UTF-8", ResourceUtil
-                .getResourceAsFile("templates"));
+        generator = new GeneratorImplStub("UTF-8");
     }
 
     @Test
@@ -88,8 +86,8 @@ public class GenerateConditionTest {
         ConditionModel model = conditionModelfactory.getConditionModel(
                 entityMeta, "hoge.condition.FooCondition");
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "condition.ftl", "UTF-8",
-                false);
+                new File("dir"), new File("file"), "java/condition.ftl",
+                "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_ManyToOne.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
@@ -101,8 +99,8 @@ public class GenerateConditionTest {
         ConditionModel model = conditionModelfactory.getConditionModel(
                 entityMeta, "hoge.condition.BarCondition");
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "condition.ftl", "UTF-8",
-                false);
+                new File("dir"), new File("file"), "java/condition.ftl",
+                "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_OneToMany.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

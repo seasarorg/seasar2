@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
@@ -50,29 +51,43 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class GenerateEntityCommand extends AbstractCommand {
 
-    /** 生成するJavaファイルの出力先ディレクトリ */
-    @BindableProperty
-    protected File destDir = new File("src/main/java");
+    /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
+    protected String configPath = "s2jdbc.dicon";
 
-    /** Javaファイルのエンコーディング */
-    @BindableProperty
-    protected String javaFileEncoding = "UTF-8";
+    /** エンティティパッケージ名 */
+    protected String entityPackageName = "entity";
 
     /** エンティティクラスのテンプレート名 */
-    @BindableProperty
-    protected String entityTemplateName = "entity.ftl";
+    protected String entityTemplateName = "java/entity.ftl";
+
+    /** 生成するJavaファイルの出力先ディレクトリ */
+    protected File javaFileDestDir = new File("src/main/java");
+
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding = "UTF-8";
+
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName = "jdbcManager";
+
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
 
     /** スキーマ名 */
-    @BindableProperty
     protected String schemaName;
 
+    /** テンプレートファイルを格納するディレクトリ */
+    protected File templateFileDir = null;
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
     /** Javaコードの生成の対象とするテーブル名の正規表現 */
-    @BindableProperty
     protected String tableNamePattern = ".*";
 
     /** バージョンカラムの名前 */
-    @BindableProperty
     protected String versionColumnName = "version";
+
+    protected S2ContainerFactorySupport containerFactorySupport;
 
     /** データソース */
     protected DataSource dataSource;
@@ -101,72 +116,113 @@ public class GenerateEntityCommand extends AbstractCommand {
     public GenerateEntityCommand() {
     }
 
-    /**
-     * エンティティクラスのテンプレート名を設定します。
-     * 
-     * @param entityTemplateName
-     *            エンティティクラスのテンプレート名
-     */
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
+    }
+
+    public String getEntityPackageName() {
+        return entityPackageName;
+    }
+
+    public void setEntityPackageName(String entityPackageName) {
+        this.entityPackageName = entityPackageName;
+    }
+
+    public String getEntityTemplateName() {
+        return entityTemplateName;
+    }
+
     public void setEntityTemplateName(String entityTemplateName) {
         this.entityTemplateName = entityTemplateName;
     }
 
-    /**
-     * 生成Javaファイル出力先ディレクトリを設定します。
-     * 
-     * @param destDir
-     *            生成Javaファイル出力先ディレクトリ
-     */
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
+    public File getJavaFileDestDir() {
+        return javaFileDestDir;
     }
 
-    /**
-     * Javaコードのエンコーディングを設定します。
-     * 
-     * @param javaFileEncoding
-     *            Javaコードのエンコーディング
-     */
+    public void setJavaFileDestDir(File javaFileDestDir) {
+        this.javaFileDestDir = javaFileDestDir;
+    }
+
+    public String getJavaFileEncoding() {
+        return javaFileEncoding;
+    }
+
     public void setJavaFileEncoding(String javaFileEncoding) {
         this.javaFileEncoding = javaFileEncoding;
     }
 
-    /**
-     * スキーマ名を設定します。
-     * 
-     * @param schemaName
-     *            スキーマ名
-     */
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
+    }
+
     public void setSchemaName(String schemaName) {
         this.schemaName = schemaName;
     }
 
-    /**
-     * 正規表現で表されたテーブル名のパターンを正規表現で設定します。
-     * 
-     * @param tableNamePattern
-     *            テーブル名のパターン
-     */
+    public File getTemplateFileDir() {
+        return templateFileDir;
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        this.templateFileDir = templateFileDir;
+    }
+
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        this.templateFileEncoding = templateFileEncoding;
+    }
+
+    public String getTableNamePattern() {
+        return tableNamePattern;
+    }
+
     public void setTableNamePattern(String tableNamePattern) {
         this.tableNamePattern = tableNamePattern;
     }
 
-    /**
-     * バージョン用カラム名を設定します。
-     * 
-     * @param versionColumnName
-     *            バージョン用カラム名を設定します。
-     */
+    public String getVersionColumnName() {
+        return versionColumnName;
+    }
+
     public void setVersionColumnName(String versionColumnName) {
         this.versionColumnName = versionColumnName;
+    }
+
+    @Override
+    protected void doValidate() {
     }
 
     /**
      * 初期化します。
      */
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        containerFactorySupport = new S2ContainerFactorySupport(configPath);
+        containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
@@ -178,6 +234,24 @@ public class GenerateEntityCommand extends AbstractCommand {
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
+    }
+
+    @Override
+    protected void doExecute() {
+        List<DbTableMeta> tableMetaList = dbTableMetaReader.read();
+        List<EntityDesc> entityDescList = new ArrayList<EntityDesc>();
+        for (DbTableMeta tableMeta : tableMetaList) {
+            EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
+            entityDescList.add(entityDesc);
+        }
+        generate(entityDescList);
+    }
+
+    @Override
+    protected void doDestroy() {
+        if (containerFactorySupport != null) {
+            containerFactorySupport.destory();
+        }
     }
 
     /**
@@ -217,18 +291,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateDir);
-    }
-
-    @Override
-    protected void doExecute() {
-        List<DbTableMeta> tableMetaList = dbTableMetaReader.read();
-        List<EntityDesc> entityDescList = new ArrayList<EntityDesc>();
-        for (DbTableMeta tableMeta : tableMetaList) {
-            EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
-            entityDescList.add(entityDesc);
-        }
-        generate(entityDescList);
+        return new GeneratorImpl(templateFileEncoding, templateFileDir);
     }
 
     /**
@@ -280,7 +343,7 @@ public class GenerateEntityCommand extends AbstractCommand {
         String packageName = elements[0];
         String shortClassName = elements[1];
 
-        File dir = new File(destDir, packageName.replace('.',
+        File dir = new File(javaFileDestDir, packageName.replace('.',
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 

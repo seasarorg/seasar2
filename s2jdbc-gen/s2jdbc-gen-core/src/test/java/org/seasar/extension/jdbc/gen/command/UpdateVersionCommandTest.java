@@ -15,10 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
-import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
 
@@ -26,12 +23,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateEntityCommandTest {
-
-    @After
-    public void tearDown() throws Exception {
-        SingletonS2ContainerFactory.destroy();
-    }
+public class UpdateVersionCommandTest {
 
     /**
      * 
@@ -39,8 +31,7 @@ public class GenerateEntityCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateEntityCommand command = new GenerateEntityCommand();
-        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        UpdateVersionCommand command = new UpdateVersionCommand();
         command.validate();
     }
 
@@ -50,16 +41,8 @@ public class GenerateEntityCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        GenerateEntityCommand command = new GenerateEntityCommand();
-        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        UpdateVersionCommand command = new UpdateVersionCommand();
         command.init();
-        assertNotNull(command.createEntityDescFactory());
-        assertNotNull(command.createEntityModelFactory());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createSchemaReader());
-        GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa.bbb.Hoge", "ccc.ftl", true);
-        assertNotNull(context);
     }
-
 }

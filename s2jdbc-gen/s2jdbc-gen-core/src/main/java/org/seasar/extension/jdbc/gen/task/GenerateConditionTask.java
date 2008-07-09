@@ -17,104 +17,119 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.apache.tools.ant.BuildException;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateConditionCommand;
 
 /**
- * S2JDBC用のエンティティを生成するタスクです。
  * 
  * @author taedium
  */
 public class GenerateConditionTask extends AbstractTask {
 
-    protected File classpathRootDir;
+    protected GenerateConditionCommand command = new GenerateConditionCommand();
 
-    /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File destDir = new File("src/main/java");
-
-    /** Javaファイルのエンコーディング */
-    protected String javaFileEncoding = "UTF-8";
-
-    /** 条件クラス名のサフィックス */
-    protected String conditionClassNameSuffix = "Condition";
-
-    /** 条件クラスのパッケージ名 */
-    protected String conditionPackageName = "condition";
-
-    /** 条件クラスのテンプレート名 */
-    protected String conditionTemplateName = "condition.ftl";
-
-    /**
-     * インスタンスを構築します。
-     */
     public GenerateConditionTask() {
-        this(GenerateConditionCommand.class.getName());
-    }
-
-    /**
-     * インスタンスを構築します。
-     * 
-     * @param commandClassName
-     *            コマンドクラス名
-     */
-    public GenerateConditionTask(String commandClassName) {
-        super(commandClassName);
     }
 
     public File getClasspathRootDir() {
-        return classpathRootDir;
-    }
-
-    public void setClasspathRootDir(File classpathRootDir) {
-        this.classpathRootDir = classpathRootDir;
-    }
-
-    public File getDestDir() {
-        return destDir;
-    }
-
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
-    }
-
-    public String getJavaFileEncoding() {
-        return javaFileEncoding;
-    }
-
-    public void setJavaFileEncoding(String javaFileEncoding) {
-        this.javaFileEncoding = javaFileEncoding;
+        return command.getClasspathRootDir();
     }
 
     public String getConditionClassNameSuffix() {
-        return conditionClassNameSuffix;
-    }
-
-    public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
-        this.conditionClassNameSuffix = conditionClassNameSuffix;
+        return command.getConditionClassNameSuffix();
     }
 
     public String getConditionPackageName() {
-        return conditionPackageName;
+        return command.getConditionPackageName();
+    }
+
+    public String getConditionTemplateFileName() {
+        return command.getConditionTemplateFileName();
+    }
+
+    public String getConfigPath() {
+        return command.getConfigPath();
+    }
+
+    public String getEntityPackageName() {
+        return command.getEntityPackageName();
+    }
+
+    public File getJavaFileDir() {
+        return command.getJavaFileDir();
+    }
+
+    public String getJavaFileEncoding() {
+        return command.getJavaFileEncoding();
+    }
+
+    public String getJdbcManagerName() {
+        return command.getJdbcManagerName();
+    }
+
+    public String getRootPackageName() {
+        return command.getRootPackageName();
+    }
+
+    public File getTemplateFileDir() {
+        return command.getTemplateFileDir();
+    }
+
+    public String getTemplateFileEncoding() {
+        return command.getTemplateFileEncoding();
+    }
+
+    public void setClasspathRootDir(File classpathRootDir) {
+        command.setClasspathRootDir(classpathRootDir);
+    }
+
+    public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
+        command.setConditionClassNameSuffix(conditionClassNameSuffix);
     }
 
     public void setConditionPackageName(String conditionPackageName) {
-        this.conditionPackageName = conditionPackageName;
+        command.setConditionPackageName(conditionPackageName);
     }
 
-    public String getConditionTemplateName() {
-        return conditionTemplateName;
+    public void setConditionTemplateFileName(String conditionTemplateFileName) {
+        command.setConditionTemplateFileName(conditionTemplateFileName);
     }
 
-    public void setConditionTemplateName(String conditionTemplateName) {
-        this.conditionTemplateName = conditionTemplateName;
+    public void setConfigPath(String configPath) {
+        command.setConfigPath(configPath);
+    }
+
+    public void setEntityPackageName(String entityPackageName) {
+        command.setEntityPackageName(entityPackageName);
+    }
+
+    public void setJavaFileDir(File javaFileDir) {
+        command.setJavaFileDir(javaFileDir);
+    }
+
+    public void setJavaFileEncoding(String javaFileEncoding) {
+        command.setJavaFileEncoding(javaFileEncoding);
+    }
+
+    public void setJdbcManagerName(String jdbcManagerName) {
+        command.setJdbcManagerName(jdbcManagerName);
+    }
+
+    public void setRootPackageName(String rootPackageName) {
+        command.setRootPackageName(rootPackageName);
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        command.setTemplateFileDir(templateFileDir);
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        command.setTemplateFileEncoding(templateFileEncoding);
     }
 
     @Override
-    protected void validate() {
-        super.validate();
-        if (classpathRootDir == null) {
-            throw new BuildException("classpathRootDir is not specified for '"
-                    + getTaskName() + "' task");
-        }
+    protected Command getCommand() {
+        return command;
     }
+
 }

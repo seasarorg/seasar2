@@ -29,6 +29,10 @@ public class GeneratorImplStub extends GeneratorImpl {
 
     protected Writer writer = new StringWriter();
 
+    public GeneratorImplStub(String templateFielEncoding) {
+        this(templateFielEncoding, null);
+    }
+
     public GeneratorImplStub(String templateFielEncoding, File templateDir) {
         super(templateFielEncoding, templateDir);
     }

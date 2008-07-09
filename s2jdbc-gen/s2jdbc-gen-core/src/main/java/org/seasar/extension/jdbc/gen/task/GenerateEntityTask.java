@@ -17,96 +17,122 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateEntityCommand;
 
 /**
- * S2JDBC用のエンティティを生成するタスクです。
  * 
  * @author taedium
  */
 public class GenerateEntityTask extends AbstractTask {
 
-    /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File destDir;
-
-    /** Javaファイルのエンコーディング */
-    protected String javaFileEncoding;
-
-    /** エンティティクラスのテンプレート名 */
-    protected String entityTemplateName;
-
-    /** スキーマ名 */
-    protected String schemaName;
-
-    /** Javaコードの生成の対象とするテーブル名の正規表現 */
-    protected String tableNamePattern;
-
-    /** バージョンカラムの名前 */
-    protected String versionColumnName;
+    protected GenerateEntityCommand command = new GenerateEntityCommand();
 
     /**
      * インスタンスを構築します。
      */
     public GenerateEntityTask() {
-        this(GenerateEntityCommand.class.getName());
     }
 
-    /**
-     * インスタンスを構築します。
-     * 
-     * @param commandClassName
-     *            コマンドクラス名
-     */
-    public GenerateEntityTask(String commandClassName) {
-        super(commandClassName);
+    public String getConfigPath() {
+        return command.getConfigPath();
     }
 
-    public File getDestDir() {
-        return destDir;
-    }
-
-    public void setDestDir(File destDir) {
-        this.destDir = destDir;
-    }
-
-    public String getJavaFileEncoding() {
-        return javaFileEncoding;
-    }
-
-    public void setJavaFileEncoding(String javaFileEncoding) {
-        this.javaFileEncoding = javaFileEncoding;
+    public String getEntityPackageName() {
+        return command.getEntityPackageName();
     }
 
     public String getEntityTemplateName() {
-        return entityTemplateName;
+        return command.getEntityTemplateName();
     }
 
-    public void setEntityTemplateName(String entityTemplateName) {
-        this.entityTemplateName = entityTemplateName;
+    public File getJavaFileDestDir() {
+        return command.getJavaFileDestDir();
+    }
+
+    public String getJavaFileEncoding() {
+        return command.getJavaFileEncoding();
+    }
+
+    public String getJdbcManagerName() {
+        return command.getJdbcManagerName();
+    }
+
+    public String getRootPackageName() {
+        return command.getRootPackageName();
     }
 
     public String getSchemaName() {
-        return schemaName;
-    }
-
-    public void setSchemaName(String schemaName) {
-        this.schemaName = schemaName;
+        return command.getSchemaName();
     }
 
     public String getTableNamePattern() {
-        return tableNamePattern;
+        return command.getTableNamePattern();
     }
 
-    public void setTableNamePattern(String tableNamePattern) {
-        this.tableNamePattern = tableNamePattern;
+    public File getTemplateFileDir() {
+        return command.getTemplateFileDir();
+    }
+
+    public String getTemplateFileEncoding() {
+        return command.getTemplateFileEncoding();
     }
 
     public String getVersionColumnName() {
-        return versionColumnName;
+        return command.getVersionColumnName();
+    }
+
+    public void setConfigPath(String configPath) {
+        command.setConfigPath(configPath);
+    }
+
+    public void setEntityPackageName(String entityPackageName) {
+        command.setEntityPackageName(entityPackageName);
+    }
+
+    public void setEntityTemplateName(String entityTemplateName) {
+        command.setEntityTemplateName(entityTemplateName);
+    }
+
+    public void setJavaFileDestDir(File javaFileDestDir) {
+        command.setJavaFileDestDir(javaFileDestDir);
+    }
+
+    public void setJavaFileEncoding(String javaFileEncoding) {
+        command.setJavaFileEncoding(javaFileEncoding);
+    }
+
+    public void setJdbcManagerName(String jdbcManagerName) {
+        command.setJdbcManagerName(jdbcManagerName);
+    }
+
+    public void setRootPackageName(String rootPackageName) {
+        command.setRootPackageName(rootPackageName);
+    }
+
+    public void setSchemaName(String schemaName) {
+        command.setSchemaName(schemaName);
+    }
+
+    public void setTableNamePattern(String tableNamePattern) {
+        command.setTableNamePattern(tableNamePattern);
+    }
+
+    public void setTemplateFileDir(File templateFileDir) {
+        command.setTemplateFileDir(templateFileDir);
+    }
+
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        command.setTemplateFileEncoding(templateFileEncoding);
     }
 
     public void setVersionColumnName(String versionColumnName) {
-        this.versionColumnName = versionColumnName;
+        command.setVersionColumnName(versionColumnName);
+    }
+
+    @Override
+    protected Command getCommand() {
+        return command;
     }
 
 }

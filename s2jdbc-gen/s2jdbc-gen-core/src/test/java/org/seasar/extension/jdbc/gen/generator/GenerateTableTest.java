@@ -26,7 +26,6 @@ import org.seasar.extension.jdbc.gen.SchemaModel;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
-import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -43,8 +42,7 @@ public class GenerateTableTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new GeneratorImplStub("UTF-8", ResourceUtil
-                .getResourceAsFile("templates"));
+        generator = new GeneratorImplStub("UTF-8");
 
         ColumnDesc no = new ColumnDesc();
         no.setName("no");
@@ -80,8 +78,8 @@ public class GenerateTableTest {
     @Test
     public void testCreate() throws Exception {
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "create-table.ftl", "UTF-8",
-                false);
+                new File("dir"), new File("file"), "sql/create-table.ftl",
+                "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
@@ -91,8 +89,8 @@ public class GenerateTableTest {
     @Test
     public void testDrop() throws Exception {
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "drop-table.ftl", "UTF-8",
-                false);
+                new File("dir"), new File("file"), "sql/drop-table.ftl",
+                "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_Drop.txt";
