@@ -15,9 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -26,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateEntityCommandTest {
+public class GenerateEntityTestCommandTest {
 
     @After
     public void tearDown() throws Exception {
@@ -39,9 +42,13 @@ public class GenerateEntityCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateEntityCommand command = new GenerateEntityCommand();
+        GenerateEntityTestCommand command = new GenerateEntityTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        command.validate();
+        try {
+            command.validate();
+            fail();
+        } catch (RequiredPropertyNullRuntimeException expected) {
+        }
     }
 
     /**
@@ -50,16 +57,16 @@ public class GenerateEntityCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        GenerateEntityCommand command = new GenerateEntityCommand();
+        GenerateEntityTestCommand command = new GenerateEntityTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        command.setClasspathRootDir(new File("dir"));
+        command.validate();
         command.init();
-        assertNotNull(command.createEntityDescFactory());
-        assertNotNull(command.createEntityModelFactory());
+        assertNotNull(command.createEntityMetaReader());
+        assertNotNull(command.createEntityTestModelFactory());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createDbTableMetaReader());
         GenerationContext context = command.createGenerationContext(
                 new Object(), "aaa", "bbb", true);
         assertNotNull(context);
     }
-
 }

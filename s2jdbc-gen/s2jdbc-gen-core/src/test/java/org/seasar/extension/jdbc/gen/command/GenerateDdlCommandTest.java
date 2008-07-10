@@ -67,7 +67,7 @@ public class GenerateDdlCommandTest {
         assertNotNull(command.createSchemaModelFactory());
         assertNotNull(command.createTableDescFactory());
         GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa.ddl", "ccc.ftl", true);
+                new Object(), "aaa", "bbb", true);
         assertNotNull(context);
     }
 

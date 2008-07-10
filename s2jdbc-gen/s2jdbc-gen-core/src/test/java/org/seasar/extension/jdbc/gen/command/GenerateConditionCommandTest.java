@@ -66,7 +66,7 @@ public class GenerateConditionCommandTest {
         assertNotNull(command.createConditionModelFactory());
         assertNotNull(command.createGenerator());
         GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa.ddl", "ccc.ftl", true);
+                new Object(), "aaa", "bbb", true);
         assertNotNull(context);
     }
 
