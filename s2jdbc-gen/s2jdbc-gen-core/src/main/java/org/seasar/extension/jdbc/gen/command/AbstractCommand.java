@@ -16,6 +16,10 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import org.seasar.extension.jdbc.gen.Command;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.log.Logger;
 
 /**
  * エンティティのを生成するコマンドの抽象クラスです。
@@ -24,6 +28,8 @@ import org.seasar.extension.jdbc.gen.Command;
  */
 public abstract class AbstractCommand implements Command {
 
+    protected static Logger logger = Logger.getLogger(AbstractCommand.class);
+
     /**
      * インスタンスを構築します。
      */
@@ -31,6 +37,7 @@ public abstract class AbstractCommand implements Command {
     }
 
     public final void execute() {
+        log();
         validate();
         init();
         try {
@@ -41,6 +48,19 @@ public abstract class AbstractCommand implements Command {
     }
 
     protected abstract void doExecute();
+
+    protected void log() {
+        logger.log("DS2JDBCGen0003", new Object[] { getClass().getName() });
+        BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
+        for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
+            PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
+            if (propertyDesc.hasWriteMethod()) {
+                logger.log("DS2JDBCGen0001", new Object[] {
+                        propertyDesc.getPropertyName(),
+                        propertyDesc.getValue(this) });
+            }
+        }
+    }
 
     protected final void validate() {
         doValidate();

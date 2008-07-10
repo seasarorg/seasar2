@@ -42,8 +42,8 @@ public class GenerateEntityTask extends AbstractTask {
         return command.getEntityPackageName();
     }
 
-    public String getEntityTemplateName() {
-        return command.getEntityTemplateName();
+    public String getEntityTemplateFileName() {
+        return command.getEntityTemplateFileName();
     }
 
     public File getJavaFileDestDir() {
@@ -90,8 +90,8 @@ public class GenerateEntityTask extends AbstractTask {
         command.setEntityPackageName(entityPackageName);
     }
 
-    public void setEntityTemplateName(String entityTemplateName) {
-        command.setEntityTemplateName(entityTemplateName);
+    public void setEntityTemplateFileName(String entityTemplateFileName) {
+        command.setEntityTemplateFileName(entityTemplateFileName);
     }
 
     public void setJavaFileDestDir(File javaFileDestDir) {

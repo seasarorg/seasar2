@@ -58,7 +58,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String entityPackageName = "entity";
 
     /** エンティティクラスのテンプレート名 */
-    protected String entityTemplateName = "java/entity.ftl";
+    protected String entityTemplateFileName = "java/entity.ftl";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File("src/main/java");
@@ -132,12 +132,12 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.entityPackageName = entityPackageName;
     }
 
-    public String getEntityTemplateName() {
-        return entityTemplateName;
+    public String getEntityTemplateFileName() {
+        return entityTemplateFileName;
     }
 
-    public void setEntityTemplateName(String entityTemplateName) {
-        this.entityTemplateName = entityTemplateName;
+    public void setEntityTemplateFileName(String entityTemplateFileName) {
+        this.entityTemplateFileName = entityTemplateFileName;
     }
 
     public File getJavaFileDestDir() {
@@ -320,7 +320,7 @@ public class GenerateEntityCommand extends AbstractCommand {
         EntityModel model = entityModelFactory.getEntityModel(entityDesc,
                 className);
         GenerationContext context = createGenerationContext(model, className,
-                entityTemplateName, false);
+                entityTemplateFileName, false);
         generator.generate(context);
     }
 
