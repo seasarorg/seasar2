@@ -230,7 +230,7 @@ public class GenerateEntityCommand extends AbstractCommand {
         persistenceConvention = jdbcManager.getPersistenceConvention();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
 
-        dbTableMetaReader = createSchemaReader();
+        dbTableMetaReader = createDbTableMetaReader();
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
@@ -259,7 +259,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      * 
      * @return {@link DbTableMetaReader}の実装
      */
-    protected DbTableMetaReader createSchemaReader() {
+    protected DbTableMetaReader createDbTableMetaReader() {
         return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
                 tableNamePattern);
     }

@@ -1,3 +1,3 @@
 <#list sequenceDescList as sequence>
-drop sequence ${quote(sequence.sequenceName)};
+drop sequence ${sequence.sequenceName};
 </#list>

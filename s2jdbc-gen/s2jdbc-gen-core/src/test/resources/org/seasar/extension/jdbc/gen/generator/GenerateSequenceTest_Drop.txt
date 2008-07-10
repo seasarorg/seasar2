@@ -1,2 +1,2 @@
-drop sequence "HOGE";
-drop sequence "FOO";
+drop sequence HOGE;
+drop sequence FOO;

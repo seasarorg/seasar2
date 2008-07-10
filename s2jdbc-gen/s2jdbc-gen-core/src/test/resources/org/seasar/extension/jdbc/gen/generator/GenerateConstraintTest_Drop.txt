@@ -1,10 +1,10 @@
 --Foreign Key
-alter table "AAA"."BBB"."HOGE" drop constraint "HOGE_FK1";
-alter table "AAA"."BBB"."HOGE" drop constraint "HOGE_FK2";
+alter table AAA.BBB.HOGE drop constraint HOGE_FK1;
+alter table AAA.BBB.HOGE drop constraint HOGE_FK2;
 
 --Unique Key
-alter table "AAA"."BBB"."HOGE" drop constraint "HOGE_UK1";
-alter table "AAA"."BBB"."HOGE" drop constraint "HOGE_UK2";
+alter table AAA.BBB.HOGE drop constraint HOGE_UK1;
+alter table AAA.BBB.HOGE drop constraint HOGE_UK2;
 
 --Primary Key
-alter table "AAA"."BBB"."HOGE" drop constraint "HOGE_PK";
+alter table AAA.BBB.HOGE drop constraint HOGE_PK;

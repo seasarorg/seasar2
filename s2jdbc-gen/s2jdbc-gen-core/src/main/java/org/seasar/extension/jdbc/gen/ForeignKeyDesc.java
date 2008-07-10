@@ -143,6 +143,17 @@ public class ForeignKeyDesc {
         key.addtReferencedColumnName(referencedColumnName);
     }
 
+    public String getReferencedFullTableName() {
+        StringBuilder buf = new StringBuilder();
+        if (referencedCatalogName != null) {
+            buf.append(referencedCatalogName).append(".");
+        }
+        if (referencedSchemaName != null) {
+            buf.append(referencedSchemaName).append(".");
+        }
+        return buf.append(referencedTableName).toString();
+    }
+
     @Override
     public int hashCode() {
         return key.hashCode();

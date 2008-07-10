@@ -56,7 +56,7 @@ public class GenerateEntityCommandTest {
         assertNotNull(command.createEntityDescFactory());
         assertNotNull(command.createEntityModelFactory());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createSchemaReader());
+        assertNotNull(command.createDbTableMetaReader());
         GenerationContext context = command.createGenerationContext(
                 new Object(), "aaa.bbb.Hoge", "ccc.ftl", true);
         assertNotNull(context);

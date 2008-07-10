@@ -31,14 +31,14 @@ public class ForeignKeyDescTest {
     public void testEquals() throws Exception {
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
         foreignKeyDesc.addColumnName("AAA");
-        foreignKeyDesc.setReferencedSchemaName("BBB");
+        foreignKeyDesc.setReferencedCatalogName("BBB");
         foreignKeyDesc.setReferencedSchemaName("CCC");
         foreignKeyDesc.setReferencedTableName("DDD");
         foreignKeyDesc.addReferencedColumnName("EEE");
 
         ForeignKeyDesc foreignKeyDesc2 = new ForeignKeyDesc();
         foreignKeyDesc2.addColumnName("aaa");
-        foreignKeyDesc2.setReferencedSchemaName("bbb");
+        foreignKeyDesc2.setReferencedCatalogName("bbb");
         foreignKeyDesc2.setReferencedSchemaName("ccc");
         foreignKeyDesc2.setReferencedTableName("ddd");
         foreignKeyDesc2.addReferencedColumnName("eee");
@@ -51,5 +51,16 @@ public class ForeignKeyDescTest {
         Assert.assertNotEquals(foreignKeyDesc, foreignKeyDesc3);
         Assert.assertNotEquals(foreignKeyDesc.hashCode(), foreignKeyDesc3
                 .hashCode());
+    }
+
+    @Test
+    public void testGetReferencedFullTableName() throws Exception {
+        ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
+        foreignKeyDesc.addColumnName("AAA");
+        foreignKeyDesc.setReferencedCatalogName("BBB");
+        foreignKeyDesc.setReferencedSchemaName("CCC");
+        foreignKeyDesc.setReferencedTableName("DDD");
+        foreignKeyDesc.addReferencedColumnName("EEE");
+        assertEquals("BBB.CCC.DDD", foreignKeyDesc.getReferencedFullTableName());
     }
 }

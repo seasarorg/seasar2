@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.seasar.framework.util.StringUtil;
-
 /**
  * @author taedium
  * 
@@ -63,49 +61,10 @@ public class SchemaModel {
         return Collections.unmodifiableList(sequenceDescList);
     }
 
-    public String getBeginQuote() {
-        return dialect.getOpenQuote();
-    }
-
-    public String getEndQuote() {
-        return dialect.getCloseQuote();
-    }
-
     public String getSequenceDefinitionFragment(SequenceDesc sequenceDesc) {
         return dialect.getSequenceDefinitionFragment(
                 sequenceDesc.getDataType(), sequenceDesc.getInitialValue(),
                 sequenceDesc.getAllocationSize());
     }
 
-    public String getQuotedTableName(TableDesc tableDesc) {
-        StringBuilder buf = new StringBuilder();
-        if (!StringUtil.isEmpty(tableDesc.getCatalogName())) {
-            buf.append(quote(tableDesc.getCatalogName()));
-            buf.append(".");
-        }
-        if (!StringUtil.isEmpty(tableDesc.getSchemaName())) {
-            buf.append(quote(tableDesc.getSchemaName()));
-            buf.append(".");
-        }
-        buf.append(quote(tableDesc.getName()));
-        return buf.toString();
-    }
-
-    public String getQuotedReferencedTableName(ForeignKeyDesc foreignKeyDesc) {
-        StringBuilder buf = new StringBuilder();
-        if (!StringUtil.isEmpty(foreignKeyDesc.getReferencedCatalogName())) {
-            buf.append(quote(foreignKeyDesc.getReferencedCatalogName()));
-            buf.append(".");
-        }
-        if (!StringUtil.isEmpty(foreignKeyDesc.getReferencedSchemaName())) {
-            buf.append(quote(foreignKeyDesc.getReferencedSchemaName()));
-            buf.append(".");
-        }
-        buf.append(quote(foreignKeyDesc.getReferencedTableName()));
-        return buf.toString();
-    }
-
-    public String quote(String value) {
-        return dialect.getOpenQuote() + value + dialect.getCloseQuote();
-    }
 }
