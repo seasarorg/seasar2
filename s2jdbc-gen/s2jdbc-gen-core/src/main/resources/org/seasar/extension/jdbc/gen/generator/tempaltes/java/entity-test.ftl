@@ -5,16 +5,20 @@ import ${importPackageName};
 </#list>
 
 public class ${shortClassName} extends S2TestCase {
-<#list entityDesc.attributeDescList as attr>
 
-    private JdbcManager jdbcManager;
+    private JdbcManager ${jdbcManagerName};
 
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
-        include(${configPath});
+        include("${configPath}");
     }
 
-    public void testMapping() throws Exception {
-        jdbcManager.from(${entityClassName}).id(<#list idValueList as value>value<#if value_has_next>, </if></#list>).execute();
+    public void testFindById() throws Exception {
+<#if idValueList?size == 0>
+        ${jdbcManagerName}.from(${shortEntityClassName}.class).getResultList();
+<#else>
+        ${jdbcManagerName}.from(${shortEntityClassName}.class).id(<#list idValueList as idValue>${idValue}<#if idValue_has_next>, </#if></#list>).getSingleResult();
+</#if>
     }
 }

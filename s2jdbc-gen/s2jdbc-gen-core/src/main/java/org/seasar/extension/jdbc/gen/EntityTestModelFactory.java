@@ -23,5 +23,5 @@ import org.seasar.extension.jdbc.EntityMeta;
  */
 public interface EntityTestModelFactory {
 
-    EntityTestModel getEntityTestModel(EntityMeta entityMeta, String className);
+    EntityTestModel getEntityTestModel(EntityMeta entityMeta);
 }

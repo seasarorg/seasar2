@@ -40,14 +40,6 @@ public class EntityModel {
 
     protected boolean tableQualified;
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     public String getPackageName() {
         return packageName;
     }

@@ -29,8 +29,6 @@ import org.seasar.extension.jdbc.EntityMeta;
  */
 public class ConditionModel {
 
-    protected String className;
-
     protected String packageName;
 
     protected String shortClassName;
@@ -42,14 +40,6 @@ public class ConditionModel {
     protected List<ConditionAttributeModel> conditionAttributeModelList = new ArrayList<ConditionAttributeModel>();
 
     protected List<ConditionMethodModel> conditionMethodModelList = new ArrayList<ConditionMethodModel>();
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
 
     public String getPackageName() {
         return packageName;

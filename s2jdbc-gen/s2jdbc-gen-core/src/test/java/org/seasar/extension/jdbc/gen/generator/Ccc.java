@@ -13,21 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.generator;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 /**
- * エンティティクラスのモデルのファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface EntityModelFactory {
+@Entity
+public class Ccc {
 
-    /**
-     * エンティティクラスのモデルを返します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     * @return エンティティクラスのモデル
-     */
-    EntityModel getEntityModel(EntityDesc entityDesc);
+    @Id
+    public String id1;
+
+    @Id
+    public BigDecimal id2;
 }

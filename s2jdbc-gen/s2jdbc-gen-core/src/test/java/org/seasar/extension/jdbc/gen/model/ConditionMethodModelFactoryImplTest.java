@@ -41,7 +41,7 @@ public class ConditionMethodModelFactoryImplTest {
         ConditionMethodModel model = factory
                 .getConditionMethodModel(propertyMeta);
         assertEquals("property", model.getName());
-        assertEquals("StringCondition", model.getReturnShortClassName());
+        assertEquals("StringCondition", model.getShortReturnClassName());
     }
 
 }

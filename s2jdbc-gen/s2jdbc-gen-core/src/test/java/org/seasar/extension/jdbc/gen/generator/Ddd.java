@@ -13,21 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.generator;
+
+import javax.persistence.Entity;
 
 /**
- * エンティティクラスのモデルのファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface EntityModelFactory {
+@Entity
+public class Ddd {
 
-    /**
-     * エンティティクラスのモデルを返します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     * @return エンティティクラスのモデル
-     */
-    EntityModel getEntityModel(EntityDesc entityDesc);
+    public String name;
 }

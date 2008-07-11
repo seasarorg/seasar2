@@ -39,12 +39,19 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class EntityModelFactoryImpl implements EntityModelFactory {
 
-    public EntityModel getEntityModel(EntityDesc entityDesc, String className) {
+    protected String packageName;
+
+    /**
+     * @param packageName
+     */
+    public EntityModelFactoryImpl(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public EntityModel getEntityModel(EntityDesc entityDesc) {
         EntityModel model = new EntityModel();
-        model.setClassName(className);
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        model.setPackageName(elements[0]);
-        model.setShortClassName(elements[1]);
+        model.setPackageName(packageName);
+        model.setShortClassName(entityDesc.getName());
         model.setEntityDesc(entityDesc);
         if (entityDesc.getCatalogName() != null
                 || entityDesc.getSchemaName() != null) {

@@ -7,35 +7,35 @@ import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
 
-public class FooCondition extends
-        AbstractEntityCondition<FooCondition> {
+public class AaaCondition extends
+        AbstractEntityCondition<AaaCondition> {
 
-    public FooCondition() {
+    public AaaCondition() {
     }
 
-    public FooCondition(String prefix, ComplexWhere where) {
+    public AaaCondition(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
 
-    public NotNullableCondition<FooCondition, Integer> id =
-        new NotNullableCondition<FooCondition, Integer>("id", this);
+    public NotNullableCondition<AaaCondition, Integer> id =
+        new NotNullableCondition<AaaCondition, Integer>("id", this);
 
-    public NotNullableStringCondition<FooCondition> name =
-        new NotNullableStringCondition<FooCondition>("name", this);
+    public NotNullableStringCondition<AaaCondition> name =
+        new NotNullableStringCondition<AaaCondition>("name", this);
 
-    public NotNullableCondition<FooCondition, byte[]> lob =
-        new NotNullableCondition<FooCondition, byte[]>("lob", this);
+    public NotNullableCondition<AaaCondition, byte[]> lob =
+        new NotNullableCondition<AaaCondition, byte[]>("lob", this);
 
-    public NullableCondition<FooCondition, Date> date =
-        new NullableCondition<FooCondition, Date>("date", this);
+    public NullableCondition<AaaCondition, Date> date =
+        new NullableCondition<AaaCondition, Date>("date", this);
 
-    public NotNullableCondition<FooCondition, Integer> version =
-        new NotNullableCondition<FooCondition, Integer>("version", this);
+    public NotNullableCondition<AaaCondition, Integer> version =
+        new NotNullableCondition<AaaCondition, Integer>("version", this);
 
-    public NotNullableCondition<FooCondition, Integer> barId =
-        new NotNullableCondition<FooCondition, Integer>("barId", this);
+    public NotNullableCondition<AaaCondition, Integer> bbbId =
+        new NotNullableCondition<AaaCondition, Integer>("bbbId", this);
 
-    public BarCondition bar() {
-        return new BarCondition(prefix + "bar.", where);
+    public BbbCondition bbb() {
+        return new BbbCondition(prefix + "bbb.", where);
     } 
 }

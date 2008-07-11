@@ -72,7 +72,8 @@ public class ConditionModelFactoryImplTest {
         ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
         ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
                 "Condition");
-        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf);
+        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf,
+                "aaa.bbb", "Condition");
     }
 
     /**
@@ -82,11 +83,11 @@ public class ConditionModelFactoryImplTest {
     @Test
     public void testGetConditionModel() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
-        ConditionModel model = conditionModelfactory.getConditionModel(
-                entityMeta, "aaa.bbb.AaaCondition");
-        assertEquals("aaa.bbb.AaaCondition", model.getClassName());
+        ConditionModel model = conditionModelfactory
+                .getConditionModel(entityMeta);
         assertEquals("aaa.bbb", model.getPackageName());
-        assertEquals("AaaCondition", model.getShortClassName());
+        assertEquals("ConditionModelFactoryImplTest$AaaCondition", model
+                .getShortClassName());
         assertNotNull(model.getEntityMeta());
         assertEquals(6, model.getConditionAttributeModelList().size());
         assertEquals(1, model.getConditionMethodModelList().size());

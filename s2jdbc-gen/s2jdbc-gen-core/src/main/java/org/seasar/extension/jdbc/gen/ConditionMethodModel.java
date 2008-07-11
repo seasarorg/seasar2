@@ -23,7 +23,7 @@ public class ConditionMethodModel {
 
     protected String name;
 
-    protected String returnShortClassName;
+    protected String shortReturnClassName;
 
     public String getName() {
         return name;
@@ -33,12 +33,19 @@ public class ConditionMethodModel {
         this.name = name;
     }
 
-    public String getReturnShortClassName() {
-        return returnShortClassName;
+    /**
+     * @return Returns the shortReturnClassName.
+     */
+    public String getShortReturnClassName() {
+        return shortReturnClassName;
     }
 
-    public void setReturnShortClassName(String returnShortClassName) {
-        this.returnShortClassName = returnShortClassName;
+    /**
+     * @param shortReturnClassName
+     *            The shortReturnClassName to set.
+     */
+    public void setShortReturnClassName(String shortReturnClassName) {
+        this.shortReturnClassName = shortReturnClassName;
     }
 
 }

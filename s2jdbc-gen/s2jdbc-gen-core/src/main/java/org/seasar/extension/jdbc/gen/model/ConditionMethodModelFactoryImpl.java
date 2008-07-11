@@ -40,9 +40,9 @@ public class ConditionMethodModelFactoryImpl implements
         ConditionMethodModel model = new ConditionMethodModel();
         model.setName(propertyMeta.getName());
         Class<?> relationshipClass = propertyMeta.getRelationshipClass();
-        String shortClassName = relationshipClass.getSimpleName()
+        String shortReturnClassName = relationshipClass.getSimpleName()
                 + conditionClassNameSuffix;
-        model.setReturnShortClassName(shortClassName);
+        model.setShortReturnClassName(shortReturnClassName);
         return model;
     }
 }

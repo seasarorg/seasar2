@@ -15,10 +15,107 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 /**
  * @author taedium
  * 
  */
-public interface EntityTestModel {
+public class EntityTestModel {
+
+    protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
+
+    protected List<String> idValueList = new ArrayList<String>();
+
+    protected String packageName;
+
+    protected String shortClassName;
+
+    protected String shortEntityClassName;
+
+    protected String configPath;
+
+    protected String jdbcManagerName;
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getShortClassName() {
+        return shortClassName;
+    }
+
+    public void setShortClassName(String shortClassName) {
+        this.shortClassName = shortClassName;
+    }
+
+    /**
+     * @return Returns the shortEntityClassName.
+     */
+    public String getShortEntityClassName() {
+        return shortEntityClassName;
+    }
+
+    /**
+     * @param shortEntityClassName
+     *            The shortEntityClassName to set.
+     */
+    public void setShortEntityClassName(String shortEntityClassName) {
+        this.shortEntityClassName = shortEntityClassName;
+    }
+
+    /**
+     * @return Returns the configPath.
+     */
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    /**
+     * @param configPath
+     *            The configPath to set.
+     */
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
+    }
+
+    /**
+     * @return Returns the jdbcManagerName.
+     */
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    /**
+     * @param jdbcManagerName
+     *            The jdbcManagerName to set.
+     */
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    public SortedSet<String> getImportPackageNameSet() {
+        return Collections.unmodifiableSortedSet(importPackageNameSet);
+    }
+
+    public void addImportPackageName(String name) {
+        importPackageNameSet.add(name);
+    }
+
+    public List<String> getIdValueList() {
+        return Collections.unmodifiableList(idValueList);
+    }
+
+    public void addIdValue(String idValue) {
+        idValueList.add(idValue);
+    }
 
 }

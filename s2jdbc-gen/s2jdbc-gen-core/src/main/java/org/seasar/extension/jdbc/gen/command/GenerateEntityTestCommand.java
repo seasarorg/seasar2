@@ -31,6 +31,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.util.ClassUtil;
@@ -46,7 +47,7 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
     protected String configPath = "s2jdbc.dicon";
 
-    /** 条件クラス名のサフィックス */
+    /** エンティティテストクラス名のサフィックス */
     protected String entityTestClassNameSuffix = "Test";
 
     /** エンティティパッケージ名 */
@@ -83,6 +84,155 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     protected EntityMetaReader entityMetaReader;
 
     protected EntityTestModelFactory entityTestModelFactory;
+
+    /**
+     * @return Returns the entityTestClassNameSuffix.
+     */
+    public String getEntityTestClassNameSuffix() {
+        return entityTestClassNameSuffix;
+    }
+
+    /**
+     * @param entityTestClassNameSuffix
+     *            The entityTestClassNameSuffix to set.
+     */
+    public void setEntityTestClassNameSuffix(String entityTestClassNameSuffix) {
+        this.entityTestClassNameSuffix = entityTestClassNameSuffix;
+    }
+
+    /**
+     * @return Returns the entityPackageName.
+     */
+    public String getEntityPackageName() {
+        return entityPackageName;
+    }
+
+    /**
+     * @param entityPackageName
+     *            The entityPackageName to set.
+     */
+    public void setEntityPackageName(String entityPackageName) {
+        this.entityPackageName = entityPackageName;
+    }
+
+    /**
+     * @return Returns the entityTestTemplateFileName.
+     */
+    public String getEntityTestTemplateFileName() {
+        return entityTestTemplateFileName;
+    }
+
+    /**
+     * @param entityTestTemplateFileName
+     *            The entityTestTemplateFileName to set.
+     */
+    public void setEntityTestTemplateFileName(String entityTestTemplateFileName) {
+        this.entityTestTemplateFileName = entityTestTemplateFileName;
+    }
+
+    /**
+     * @return Returns the javaTestFileDestDir.
+     */
+    public File getJavaTestFileDestDir() {
+        return javaTestFileDestDir;
+    }
+
+    /**
+     * @param javaTestFileDestDir
+     *            The javaTestFileDestDir to set.
+     */
+    public void setJavaTestFileDestDir(File javaTestFileDestDir) {
+        this.javaTestFileDestDir = javaTestFileDestDir;
+    }
+
+    /**
+     * @return Returns the javaFileEncoding.
+     */
+    public String getJavaFileEncoding() {
+        return javaFileEncoding;
+    }
+
+    /**
+     * @param javaFileEncoding
+     *            The javaFileEncoding to set.
+     */
+    public void setJavaFileEncoding(String javaFileEncoding) {
+        this.javaFileEncoding = javaFileEncoding;
+    }
+
+    /**
+     * @return Returns the jdbcManagerName.
+     */
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    /**
+     * @param jdbcManagerName
+     *            The jdbcManagerName to set.
+     */
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    /**
+     * @return Returns the rootPackageName.
+     */
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    /**
+     * @param rootPackageName
+     *            The rootPackageName to set.
+     */
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
+    }
+
+    /**
+     * @return Returns the templateFileDir.
+     */
+    public File getTemplateFileDir() {
+        return templateFileDir;
+    }
+
+    /**
+     * @param templateFileDir
+     *            The templateFileDir to set.
+     */
+    public void setTemplateFileDir(File templateFileDir) {
+        this.templateFileDir = templateFileDir;
+    }
+
+    /**
+     * @return Returns the templateFileEncoding.
+     */
+    public String getTemplateFileEncoding() {
+        return templateFileEncoding;
+    }
+
+    /**
+     * @param templateFileEncoding
+     *            The templateFileEncoding to set.
+     */
+    public void setTemplateFileEncoding(String templateFileEncoding) {
+        this.templateFileEncoding = templateFileEncoding;
+    }
+
+    /**
+     * @return Returns the classpathRootDir.
+     */
+    public File getClasspathRootDir() {
+        return classpathRootDir;
+    }
+
+    /**
+     * @return Returns the configPath.
+     */
+    public String getConfigPath() {
+        return configPath;
+    }
 
     /** ジェネレータ */
     protected Generator generator;
@@ -147,7 +297,10 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     }
 
     protected EntityTestModelFactory createEntityTestModelFactory() {
-        return null;
+        String packageName = ClassUtil.concatName(rootPackageName,
+                entityPackageName);
+        return new EntityTestModelFactoryImpl(configPath, jdbcManagerName,
+                packageName, entityTestClassNameSuffix);
     }
 
     /**
@@ -167,19 +320,14 @@ public class GenerateEntityTestCommand extends AbstractCommand {
      */
     protected void generate(List<EntityMeta> entityMetaList) {
         for (EntityMeta entityMeta : entityMetaList) {
-            generateCondition(entityMeta);
+            generateEntityTest(entityMeta);
         }
     }
 
-    protected void generateCondition(EntityMeta entityMeta) {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                entityPackageName);
-        String shortClassName = entityMeta.getName()
-                + entityTestClassNameSuffix;
-        String className = ClassUtil.concatName(packageName, shortClassName);
-        EntityTestModel model = entityTestModelFactory.getEntityTestModel(
-                entityMeta, className);
-        GenerationContext context = createGenerationContext(model, className,
+    protected void generateEntityTest(EntityMeta entityMeta) {
+        EntityTestModel entityTestModel = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
+        GenerationContext context = createGenerationContext(entityTestModel,
                 entityTestTemplateFileName, true);
         generator.generate(context);
     }
@@ -189,19 +337,16 @@ public class GenerateEntityTestCommand extends AbstractCommand {
      * 
      * @param model
      *            モデル
-     * @param className
-     *            クラス名
      * @param templateName
      *            テンプレート名
      * @param overwrite
      *            ファイルを上書きする場合 {@code true}
      * @return {@link GenerationContext}
      */
-    protected GenerationContext createGenerationContext(Object model,
-            String className, String templateName, boolean overwrite) {
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        String packageName = elements[0];
-        String shortClassName = elements[1];
+    protected GenerationContext createGenerationContext(EntityTestModel model,
+            String templateName, boolean overwrite) {
+        String packageName = model.getPackageName();
+        String shortClassName = model.getShortClassName();
 
         File dir = new File(javaTestFileDestDir, packageName.replace('.',
                 File.separatorChar));

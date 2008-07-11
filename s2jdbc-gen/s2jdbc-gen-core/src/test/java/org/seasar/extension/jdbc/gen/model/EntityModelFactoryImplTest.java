@@ -43,7 +43,8 @@ import static org.junit.Assert.*;
  */
 public class EntityModelFactoryImplTest {
 
-    private EntityModelFactoryImpl factory = new EntityModelFactoryImpl();
+    private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
+            "aaa.bbb");
 
     /**
      * 
@@ -89,10 +90,9 @@ public class EntityModelFactoryImplTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
-        assertEquals("aaa.bbb.Hoge", model.getClassName());
+        EntityModel model = factory.getEntityModel(entityDesc);
         assertEquals("aaa.bbb", model.getPackageName());
-        assertEquals("Hoge", model.getShortClassName());
+        assertEquals("Foo", model.getShortClassName());
         assertNotNull(model.getEntityDesc());
         assertFalse(model.isTableQualified());
 
@@ -118,7 +118,7 @@ public class EntityModelFactoryImplTest {
         entityDesc.setSchemaName("BBB");
         entityDesc.setName("Foo");
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
+        EntityModel model = factory.getEntityModel(entityDesc);
         assertTrue(model.isTableQualified());
         Set<String> set = model.getImportPackageNameSet();
         assertEquals(2, set.size());
@@ -132,7 +132,7 @@ public class EntityModelFactoryImplTest {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setName("Foo");
 
-        EntityModel model = factory.getEntityModel(entityDesc, "aaa.bbb.Hoge");
+        EntityModel model = factory.getEntityModel(entityDesc);
         assertFalse(model.isTableQualified());
         Set<String> set = model.getImportPackageNameSet();
         assertEquals(1, set.size());

@@ -43,7 +43,7 @@ public class GenerateEntityTest {
 
     @Before
     public void setUp() throws Exception {
-        factory = new EntityModelFactoryImpl();
+        factory = new EntityModelFactoryImpl("hoge.entity");
         generator = new GeneratorImplStub("UTF-8");
     }
 
@@ -118,8 +118,7 @@ public class GenerateEntityTest {
         entityDesc.addAttribute(temp);
         entityDesc.addAttribute(version);
 
-        EntityModel model = factory.getEntityModel(entityDesc,
-                "hoge.entity.Foo");
+        EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContext(model,
                 new File("dir"), new File("file"), "java/entity.ftl", "UTF-8",
                 false);
@@ -160,8 +159,7 @@ public class GenerateEntityTest {
         entityDesc.addAttribute(id1);
         entityDesc.addAttribute(id2);
 
-        EntityModel model = factory.getEntityModel(entityDesc,
-                "hoge.entity.Foo");
+        EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContext(model,
                 new File("dir"), new File("file"), "java/entity.ftl", "UTF-8",
                 false);

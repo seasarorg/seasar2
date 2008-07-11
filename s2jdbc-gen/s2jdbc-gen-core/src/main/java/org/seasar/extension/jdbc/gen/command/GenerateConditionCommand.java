@@ -248,8 +248,10 @@ public class GenerateConditionCommand extends AbstractCommand {
         ConditionAttributeModelFactoryImpl attributeModelFactory = new ConditionAttributeModelFactoryImpl();
         ConditionMethodModelFactoryImpl methodModelFactory = new ConditionMethodModelFactoryImpl(
                 conditionClassNameSuffix);
+        String packageName = ClassUtil.concatName(rootPackageName,
+                conditionPackageName);
         return new ConditionModelFactoryImpl(attributeModelFactory,
-                methodModelFactory);
+                methodModelFactory, packageName, conditionClassNameSuffix);
     }
 
     /**
@@ -274,13 +276,9 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     protected void generateCondition(EntityMeta entityMeta) {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                conditionPackageName);
-        String shortClassName = entityMeta.getName() + conditionClassNameSuffix;
-        String className = ClassUtil.concatName(packageName, shortClassName);
-        ConditionModel model = conditionModelFactory.getConditionModel(
-                entityMeta, className);
-        GenerationContext context = createGenerationContext(model, className,
+        ConditionModel model = conditionModelFactory
+                .getConditionModel(entityMeta);
+        GenerationContext context = createGenerationContext(model,
                 conditionTemplateFileName, true);
         generator.generate(context);
     }
@@ -290,19 +288,16 @@ public class GenerateConditionCommand extends AbstractCommand {
      * 
      * @param model
      *            モデル
-     * @param className
-     *            クラス名
      * @param templateName
      *            テンプレート名
      * @param overwrite
      *            ファイルを上書きする場合 {@code true}
      * @return {@link GenerationContext}
      */
-    protected GenerationContext createGenerationContext(Object model,
-            String className, String templateName, boolean overwrite) {
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        String packageName = elements[0];
-        String shortClassName = elements[1];
+    protected GenerationContext createGenerationContext(ConditionModel model,
+            String templateName, boolean overwrite) {
+        String packageName = model.getPackageName();
+        String shortClassName = model.getShortClassName();
 
         File dir = new File(javaFileDir, packageName.replace('.',
                 File.separatorChar));

@@ -282,7 +282,9 @@ public class GenerateEntityCommand extends AbstractCommand {
      * @return {@link EntityModelFactory}の実装
      */
     protected EntityModelFactory createEntityModelFactory() {
-        return new EntityModelFactoryImpl();
+        String packageName = ClassUtil.concatName(rootPackageName,
+                entityPackageName);
+        return new EntityModelFactoryImpl(packageName);
     }
 
     /**
@@ -313,13 +315,8 @@ public class GenerateEntityCommand extends AbstractCommand {
      *            エンティティ記述
      */
     protected void generateEntity(EntityDesc entityDesc) {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                entityPackageName);
-        String className = ClassUtil.concatName(packageName, entityDesc
-                .getName());
-        EntityModel model = entityModelFactory.getEntityModel(entityDesc,
-                className);
-        GenerationContext context = createGenerationContext(model, className,
+        EntityModel model = entityModelFactory.getEntityModel(entityDesc);
+        GenerationContext context = createGenerationContext(model,
                 entityTemplateFileName, false);
         generator.generate(context);
     }
@@ -329,19 +326,16 @@ public class GenerateEntityCommand extends AbstractCommand {
      * 
      * @param model
      *            モデル
-     * @param className
-     *            クラス名
      * @param templateName
      *            テンプレート名
      * @param overwrite
      *            ファイルを上書きする場合 {@code true}
      * @return {@link GenerationContext}
      */
-    protected GenerationContext createGenerationContext(Object model,
-            String className, String templateName, boolean overwrite) {
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        String packageName = elements[0];
-        String shortClassName = elements[1];
+    protected GenerationContext createGenerationContext(EntityModel model,
+            String templateName, boolean overwrite) {
+        String packageName = model.getPackageName();
+        String shortClassName = model.getShortClassName();
 
         File dir = new File(javaFileDestDir, packageName.replace('.',
                 File.separatorChar));

@@ -10,12 +10,22 @@
 
 	<target name="gen-entity" >
 		<gen-entity
+			rootPackageName="example"
+			classpathref="classpath"
+		/>
+	</target>
+
+	<target name="gen-entity-test" >
+		<gen-entity-test
+			rootPackageName="example"
+			classpathRootDir="build/classes"
 			classpathref="classpath"
 		/>
 	</target>
 
 	<target name="gen-condition" >
 		<gen-condition
+			rootPackageName="example"
 			classpathRootDir="build/classes"
 			classpathref="classpath"
 		/>
@@ -23,6 +33,7 @@
 			
 	<target name="gen-ddl" >
 		<gen-ddl 
+			rootPackageName="example"
 			classpathRootDir="build/classes"
 			classpathref="classpath"
 		/>

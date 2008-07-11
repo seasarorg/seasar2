@@ -1,0 +1,19 @@
+package hoge.entity;
+
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.unit.S2TestCase;
+
+public class DddTest extends S2TestCase {
+
+    private JdbcManager jdbcManager;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        include("s2jdbc.dicon");
+    }
+
+    public void testFindById() throws Exception {
+        jdbcManager.from(Ddd.class).getResultList();
+    }
+}

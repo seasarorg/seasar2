@@ -29,9 +29,7 @@ public interface ConditionModelFactory {
      * 
      * @param entityMeta
      *            エンティティメタデータ
-     * @param className
-     *            条件クラス名
      * @return 条件クラスのモデル
      */
-    ConditionModel getConditionModel(EntityMeta entityMeta, String className);
+    ConditionModel getConditionModel(EntityMeta entityMetae);
 }

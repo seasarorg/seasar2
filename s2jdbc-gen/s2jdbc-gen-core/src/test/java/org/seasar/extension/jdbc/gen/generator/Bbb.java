@@ -13,21 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.generator;
+
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
- * エンティティクラスのモデルのファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface EntityModelFactory {
+@Entity
+public class Bbb {
 
-    /**
-     * エンティティクラスのモデルを返します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     * @return エンティティクラスのモデル
-     */
-    EntityModel getEntityModel(EntityDesc entityDesc);
+    @Id
+    @Column(nullable = false)
+    public Integer id;
+
+    @Column(nullable = true)
+    public String name;
+
+    @OneToMany(mappedBy = "bbb")
+    public List<Aaa> aaas;
 }

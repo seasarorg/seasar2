@@ -1,0 +1,20 @@
+package hoge.entity;
+
+import java.math.BigDecimal;
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.unit.S2TestCase;
+
+public class CccTest extends S2TestCase {
+
+    private JdbcManager jdbcManager;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        include("s2jdbc.dicon");
+    }
+
+    public void testFindById() throws Exception {
+        jdbcManager.from(Ccc.class).id("aaa", new BigDecimal(1)).getSingleResult();
+    }
+}

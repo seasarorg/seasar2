@@ -20,11 +20,9 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.ConditionModel;
+import org.seasar.extension.jdbc.gen.EntityTestModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactoryImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -38,11 +36,11 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateConditionTest {
+public class GenerateEntityTestTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
-    private ConditionModelFactoryImpl conditionModelfactory;
+    private EntityTestModelFactoryImpl entityTestModelFactory;
 
     private GeneratorImplStub generator;
 
@@ -60,38 +58,45 @@ public class GenerateConditionTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
-        ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
-                "Condition");
-        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf,
-                "hoge.condition", "Condition");
+        entityTestModelFactory = new EntityTestModelFactoryImpl("s2jdbc.dicon",
+                "jdbcManager", "hoge.entity", "Test");
         generator = new GeneratorImplStub("UTF-8");
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testManyToOne() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
-        ConditionModel model = conditionModelfactory
-                .getConditionModel(entityMeta);
+    public void test_CompositeId() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
+        EntityTestModel model = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/condition.ftl",
+                new File("dir"), new File("file"), "java/entity-test.ftl",
                 "UTF-8", false);
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_ManyToOne.txt";
+
+        String path = getClass().getName().replace(".", "/")
+                + "_CompositeId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testOneToOne() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
-        ConditionModel model = conditionModelfactory
-                .getConditionModel(entityMeta);
+    public void test_NoId() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
+        EntityTestModel model = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/condition.ftl",
+                new File("dir"), new File("file"), "java/entity-test.ftl",
                 "UTF-8", false);
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_OneToMany.txt";
+
+        String path = getClass().getName().replace(".", "/") + "_NoId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
-
 }

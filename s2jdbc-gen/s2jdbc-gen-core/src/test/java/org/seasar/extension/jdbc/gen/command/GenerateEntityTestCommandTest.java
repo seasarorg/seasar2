@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.EntityTestModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -65,8 +66,11 @@ public class GenerateEntityTestCommandTest {
         assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createEntityTestModelFactory());
         assertNotNull(command.createGenerator());
+        EntityTestModel entityTestModel = new EntityTestModel();
+        entityTestModel.setPackageName("aaa");
+        entityTestModel.setShortClassName("bbb");
         GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa", "bbb", true);
+                entityTestModel, "ccc", true);
         assertNotNull(context);
     }
 }

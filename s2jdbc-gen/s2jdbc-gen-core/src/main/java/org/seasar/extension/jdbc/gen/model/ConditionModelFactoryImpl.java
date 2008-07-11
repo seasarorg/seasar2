@@ -38,25 +38,29 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
     protected ConditionMethodModelFactory conditionMethodModelFactory;
 
+    protected String packageName;
+
+    protected String conditionClassNameSuffix;
+
     /**
      * @param conditionAttributeModelFactory
      * @param conditionMethodModelFactory
      */
     public ConditionModelFactoryImpl(
             ConditionAttributeModelFactory conditionAttributeModelFactory,
-            ConditionMethodModelFactory conditionMethodModelFactory) {
-        super();
+            ConditionMethodModelFactory conditionMethodModelFactory,
+            String packageName, String conditionClassNameSuffix) {
         this.conditionAttributeModelFactory = conditionAttributeModelFactory;
         this.conditionMethodModelFactory = conditionMethodModelFactory;
+        this.packageName = packageName;
+        this.conditionClassNameSuffix = conditionClassNameSuffix;
     }
 
-    public ConditionModel getConditionModel(EntityMeta entityMeta,
-            String className) {
+    public ConditionModel getConditionModel(EntityMeta entityMeta) {
         ConditionModel conditionModel = new ConditionModel();
-        conditionModel.setClassName(className);
-        String[] elements = ClassUtil.splitPackageAndShortClassName(className);
-        conditionModel.setPackageName(elements[0]);
-        conditionModel.setShortClassName(elements[1]);
+        conditionModel.setPackageName(packageName);
+        conditionModel.setShortClassName(entityMeta.getName()
+                + conditionClassNameSuffix);
         conditionModel.setEntityMeta(entityMeta);
         for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);

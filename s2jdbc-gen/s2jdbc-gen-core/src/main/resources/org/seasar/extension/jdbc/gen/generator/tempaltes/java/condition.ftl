@@ -20,8 +20,8 @@ public class ${shortClassName} extends
 </#list>
 <#list conditionMethodModelList as method>
 
-    public ${method.returnShortClassName} ${method.name}() {
-        return new ${method.returnShortClassName}(prefix + "${method.name}.", where);
+    public ${method.shortReturnClassName} ${method.name}() {
+        return new ${method.shortReturnClassName}(prefix + "${method.name}.", where);
     } 
 </#list>
 }

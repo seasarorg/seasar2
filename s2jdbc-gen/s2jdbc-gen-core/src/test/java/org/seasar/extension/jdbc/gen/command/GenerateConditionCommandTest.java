@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -65,9 +66,11 @@ public class GenerateConditionCommandTest {
         assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createConditionModelFactory());
         assertNotNull(command.createGenerator());
+        ConditionModel conditionModel = new ConditionModel();
+        conditionModel.setPackageName("aaa");
+        conditionModel.setShortClassName("bbb");
         GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa", "bbb", true);
+                conditionModel, "ccc", true);
         assertNotNull(context);
     }
-
 }
