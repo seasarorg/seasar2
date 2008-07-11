@@ -98,6 +98,14 @@ public class GenerateDdlTask extends AbstractTask {
         return command.getJdbcManagerName();
     }
 
+    /**
+     * @return
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#isOverwrite()
+     */
+    public boolean isOverwrite() {
+        return command.isOverwrite();
+    }
+
     public String getRootPackageName() {
         return command.getRootPackageName();
     }
@@ -110,12 +118,12 @@ public class GenerateDdlTask extends AbstractTask {
         return command.getSqlFileEncoding();
     }
 
-    public File getTemplateFileDir() {
-        return command.getTemplateFileDir();
-    }
-
     public String getTemplateFileEncoding() {
         return command.getTemplateFileEncoding();
+    }
+
+    public File getTemplateFileSecondaryDir() {
+        return command.getTemplateFileSecondaryDir();
     }
 
     public void setClasspathRootDir(File classpathRootDir) {
@@ -191,6 +199,14 @@ public class GenerateDdlTask extends AbstractTask {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
+    /**
+     * @param overwrite
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setOverwrite(boolean)
+     */
+    public void setOverwrite(boolean overwrite) {
+        command.setOverwrite(overwrite);
+    }
+
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
@@ -203,12 +219,12 @@ public class GenerateDdlTask extends AbstractTask {
         command.setSqlFileEncoding(sqlFileEncoding);
     }
 
-    public void setTemplateFileDir(File templateFileDir) {
-        command.setTemplateFileDir(templateFileDir);
-    }
-
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
+    }
+
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
     }
 
     @Override

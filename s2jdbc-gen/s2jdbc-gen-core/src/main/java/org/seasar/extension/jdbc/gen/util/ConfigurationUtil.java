@@ -17,9 +17,14 @@ package org.seasar.extension.jdbc.gen.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.seasar.framework.exception.IORuntimeException;
 
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
@@ -38,16 +43,27 @@ public class ConfigurationUtil {
      * 
      * @param configuration
      *            {@link Configuration}
-     * @param dir
-     *            テンプレートファイルを格納するディレクトリ
+     * @param dirs
+     *            テンプレートファイルを格納するディレクトリの可変長配列
      */
-    public static void setDirectoryForTemplateLoading(
-            Configuration configuration, File dir) {
+    public static void setDirectoriesForTemplateLoading(
+            Configuration configuration, File... dirs) {
+        if (dirs == null) {
+            throw new NullPointerException("dirs");
+        }
+        List<FileTemplateLoader> loaderList = new ArrayList<FileTemplateLoader>();
         try {
-            configuration.setDirectoryForTemplateLoading(dir);
+            for (int i = 0; i < dirs.length; i++) {
+                if (dirs[i] != null) {
+                    loaderList.add(new FileTemplateLoader(dirs[i]));
+                }
+            }
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+        TemplateLoader loader = new MultiTemplateLoader(loaderList
+                .toArray(new FileTemplateLoader[loaderList.size()]));
+        configuration.setTemplateLoader(loader);
     }
 
     /**

@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.command;
 import org.junit.After;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.EntityModel;
-import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -61,9 +60,6 @@ public class GenerateEntityCommandTest {
         EntityModel entityModel = new EntityModel();
         entityModel.setPackageName("aaa");
         entityModel.setShortClassName("bbb");
-        GenerationContext context = command.createGenerationContext(
-                entityModel, "bbb", true);
-        assertNotNull(context);
+        assertNotNull(command.createGenerationContext(entityModel, "ccc"));
     }
-
 }

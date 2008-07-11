@@ -93,6 +93,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    protected boolean overwrite = true;
+
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
@@ -101,7 +103,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected String sqlFileEncoding = "UTF-8";
 
     /** テンプレートファイルを格納するディレクトリ */
-    protected File templateFileDir = null;
+    protected File templateFileSecondaryDir = null;
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -257,6 +259,21 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.jdbcManagerName = jdbcManagerName;
     }
 
+    /**
+     * @return Returns the overwrite.
+     */
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    /**
+     * @param overwrite
+     *            The overwrite to set.
+     */
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
     public String getRootPackageName() {
         return rootPackageName;
     }
@@ -281,20 +298,20 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.sqlFileEncoding = sqlFileEncoding;
     }
 
-    public File getTemplateFileDir() {
-        return templateFileDir;
-    }
-
-    public void setTemplateFileDir(File templateFileDir) {
-        this.templateFileDir = templateFileDir;
-    }
-
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
 
     public void setTemplateFileEncoding(String templateFileEncoding) {
         this.templateFileEncoding = templateFileEncoding;
+    }
+
+    public File getTemplateFileSecondaryDir() {
+        return templateFileSecondaryDir;
+    }
+
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        this.templateFileSecondaryDir = templateFileSecondaryDir;
     }
 
     @Override
@@ -360,7 +377,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileDir);
+        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
     }
 
     protected void generate(List<TableDesc> tableDescList) {
@@ -372,34 +389,33 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     protected void generateTable(SchemaModel model) {
         GenerationContext createTableCtx = createGenerationContext(model,
-                createTableSqlFileName, createTableTemplateFileName, true);
+                createTableSqlFileName, createTableTemplateFileName);
         GenerationContext dropTableCtx = createGenerationContext(model,
-                dropTableSqlFileName, createTableTemplateFileName, true);
+                dropTableSqlFileName, createTableTemplateFileName);
         generator.generate(createTableCtx);
         generator.generate(dropTableCtx);
     }
 
     protected void generateConstraint(SchemaModel model) {
         GenerationContext createConstraintCtx = createGenerationContext(model,
-                createConstraintSqlFileName, createConstraintTemplateFileName,
-                true);
+                createConstraintSqlFileName, createConstraintTemplateFileName);
         GenerationContext dropConstraintCtx = createGenerationContext(model,
-                dropConstraintSqlFileName, dropConstraintTemplateFileName, true);
+                dropConstraintSqlFileName, dropConstraintTemplateFileName);
         generator.generate(createConstraintCtx);
         generator.generate(dropConstraintCtx);
     }
 
     protected void generateSequence(SchemaModel model) {
         GenerationContext createSequenceCtx = createGenerationContext(model,
-                createSequenceSqlFileName, createSequenceTemplateFileName, true);
+                createSequenceSqlFileName, createSequenceTemplateFileName);
         GenerationContext dropSequenceCtx = createGenerationContext(model,
-                dropSequenceSqlFileName, dropSequenceTemplateFileName, true);
+                dropSequenceSqlFileName, dropSequenceTemplateFileName);
         generator.generate(createSequenceCtx);
         generator.generate(dropSequenceCtx);
     }
 
     protected GenerationContext createGenerationContext(Object model,
-            String SqlFileName, String templateName, boolean overwrite) {
+            String SqlFileName, String templateName) {
         return new GenerationContext(model, sqlFileDestDir, new File(
                 sqlFileDestDir, SqlFileName), templateName, sqlFileEncoding,
                 overwrite);

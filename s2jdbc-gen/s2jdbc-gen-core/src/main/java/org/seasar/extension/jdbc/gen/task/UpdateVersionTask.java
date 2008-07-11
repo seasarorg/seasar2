@@ -50,12 +50,12 @@ public class UpdateVersionTask extends AbstractTask {
         return command.getSqlFileEncoding();
     }
 
-    public File getTemplateFileDir() {
-        return command.getTemplateFileDir();
-    }
-
     public String getTemplateFileEncoding() {
         return command.getTemplateFileEncoding();
+    }
+
+    public File getTemplateFileSecondaryDir() {
+        return command.getTemplateFileSecondaryDir();
     }
 
     public String getUpdateVersionSqlFileName() {
@@ -90,12 +90,12 @@ public class UpdateVersionTask extends AbstractTask {
         command.setSqlFileEncoding(sqlFileEncoding);
     }
 
-    public void setTemplateFileDir(File templateFileDir) {
-        command.setTemplateFileDir(templateFileDir);
-    }
-
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
+    }
+
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
     }
 
     public void setUpdateVersionSqlFileName(String updateVersionSqlFileName) {

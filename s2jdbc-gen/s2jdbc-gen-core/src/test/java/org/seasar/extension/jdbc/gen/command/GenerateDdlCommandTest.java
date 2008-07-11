@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -66,9 +65,8 @@ public class GenerateDdlCommandTest {
         assertNotNull(command.createGenerator());
         assertNotNull(command.createSchemaModelFactory());
         assertNotNull(command.createTableDescFactory());
-        GenerationContext context = command.createGenerationContext(
-                new Object(), "aaa", "bbb", true);
-        assertNotNull(context);
+        assertNotNull(command.createGenerationContext(new Object(), "aaa",
+                "bbb"));
     }
 
 }

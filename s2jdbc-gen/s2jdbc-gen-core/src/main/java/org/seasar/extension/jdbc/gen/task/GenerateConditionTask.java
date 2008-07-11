@@ -67,16 +67,24 @@ public class GenerateConditionTask extends AbstractTask {
         return command.getJdbcManagerName();
     }
 
+    /**
+     * @return
+     * @see org.seasar.extension.jdbc.gen.command.GenerateConditionCommand#isOverwrite()
+     */
+    public boolean isOverwrite() {
+        return command.isOverwrite();
+    }
+
     public String getRootPackageName() {
         return command.getRootPackageName();
     }
 
-    public File getTemplateFileDir() {
-        return command.getTemplateFileDir();
-    }
-
     public String getTemplateFileEncoding() {
         return command.getTemplateFileEncoding();
+    }
+
+    public File getTemplateFileSecondaryDir() {
+        return command.getTemplateFileSecondaryDir();
     }
 
     public void setClasspathRootDir(File classpathRootDir) {
@@ -115,16 +123,24 @@ public class GenerateConditionTask extends AbstractTask {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
+    /**
+     * @param overwrite
+     * @see org.seasar.extension.jdbc.gen.command.GenerateConditionCommand#setOverwrite(boolean)
+     */
+    public void setOverwrite(boolean overwrite) {
+        command.setOverwrite(overwrite);
+    }
+
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
 
-    public void setTemplateFileDir(File templateFileDir) {
-        command.setTemplateFileDir(templateFileDir);
-    }
-
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
+    }
+
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
     }
 
     @Override

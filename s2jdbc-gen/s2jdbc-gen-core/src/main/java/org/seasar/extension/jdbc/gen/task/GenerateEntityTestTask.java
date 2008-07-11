@@ -94,6 +94,14 @@ public class GenerateEntityTestTask extends AbstractTask {
 
     /**
      * @return
+     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#isOverwrite()
+     */
+    public boolean isOverwrite() {
+        return command.isOverwrite();
+    }
+
+    /**
+     * @return
      * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#getRootPackageName()
      */
     public String getRootPackageName() {
@@ -102,18 +110,18 @@ public class GenerateEntityTestTask extends AbstractTask {
 
     /**
      * @return
-     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#getTemplateFileDir()
-     */
-    public File getTemplateFileDir() {
-        return command.getTemplateFileDir();
-    }
-
-    /**
-     * @return
      * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#getTemplateFileEncoding()
      */
     public String getTemplateFileEncoding() {
         return command.getTemplateFileEncoding();
+    }
+
+    /**
+     * @return
+     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#getTemplateFileSecondaryDir()
+     */
+    public File getTemplateFileSecondaryDir() {
+        return command.getTemplateFileSecondaryDir();
     }
 
     /**
@@ -181,6 +189,14 @@ public class GenerateEntityTestTask extends AbstractTask {
     }
 
     /**
+     * @param overwrite
+     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#setOverwrite(boolean)
+     */
+    public void setOverwrite(boolean overwrite) {
+        command.setOverwrite(overwrite);
+    }
+
+    /**
      * @param rootPackageName
      * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#setRootPackageName(java.lang.String)
      */
@@ -189,19 +205,19 @@ public class GenerateEntityTestTask extends AbstractTask {
     }
 
     /**
-     * @param templateFileDir
-     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#setTemplateFileDir(java.io.File)
-     */
-    public void setTemplateFileDir(File templateFileDir) {
-        command.setTemplateFileDir(templateFileDir);
-    }
-
-    /**
      * @param templateFileEncoding
      * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#setTemplateFileEncoding(java.lang.String)
      */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
+    }
+
+    /**
+     * @param templateFileSecondaryDir
+     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#setTemplateFileSecondaryDir(java.io.File)
+     */
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
     }
 
     @Override

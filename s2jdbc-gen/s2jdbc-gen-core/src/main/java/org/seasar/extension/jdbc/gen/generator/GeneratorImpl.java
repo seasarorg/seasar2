@@ -69,23 +69,23 @@ public class GeneratorImpl implements Generator {
      * 
      * @param templateFileEncoding
      *            テンプレートファイルのエンコーディング
-     * @param templateFileDir
-     *            テンプレートファイルが格納されたディレクトリ
+     * @param templateFileAlternativeDir
+     *            テンプレートファイルが格納されたディレクトリ。
+     *            テンプレートファイルがデフォルトのディレクトリからテンプレートファイルが見つからない場合、このディレクトリから探します。
      */
-    public GeneratorImpl(String templateFileEncoding, File templateFileDir) {
+    public GeneratorImpl(String templateFileEncoding,
+            File templateFileSecondaryDir) {
         if (templateFileEncoding == null) {
             throw new NullPointerException("templateFileEncoding");
-        }
-        if (templateFileDir == null) {
-            templateFileDir = ResourceUtil
-                    .getResourceAsFile(DEFAULT_TEMPLATE_DIR_NAME);
         }
         this.configuration = new Configuration();
         configuration.setObjectWrapper(new DefaultObjectWrapper());
         configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
         configuration.setNumberFormat("0.#####");
-        ConfigurationUtil.setDirectoryForTemplateLoading(configuration,
-                templateFileDir);
+        File defaultDir = ResourceUtil
+                .getResourceAsFile(DEFAULT_TEMPLATE_DIR_NAME);
+        ConfigurationUtil.setDirectoriesForTemplateLoading(configuration,
+                defaultDir, templateFileSecondaryDir);
     }
 
     public void generate(GenerationContext context) {

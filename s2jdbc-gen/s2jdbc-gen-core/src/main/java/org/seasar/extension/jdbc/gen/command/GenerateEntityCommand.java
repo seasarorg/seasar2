@@ -69,6 +69,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    protected boolean overwrite = false;
+
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
@@ -76,7 +78,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String schemaName;
 
     /** テンプレートファイルを格納するディレクトリ */
-    protected File templateFileDir = null;
+    protected File templateFileSecondaryDir = null;
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -164,6 +166,21 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.jdbcManagerName = jdbcManagerName;
     }
 
+    /**
+     * @return Returns the overwrite.
+     */
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    /**
+     * @param overwrite
+     *            The overwrite to set.
+     */
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
     public String getRootPackageName() {
         return rootPackageName;
     }
@@ -180,20 +197,20 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.schemaName = schemaName;
     }
 
-    public File getTemplateFileDir() {
-        return templateFileDir;
-    }
-
-    public void setTemplateFileDir(File templateFileDir) {
-        this.templateFileDir = templateFileDir;
-    }
-
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
 
     public void setTemplateFileEncoding(String templateFileEncoding) {
         this.templateFileEncoding = templateFileEncoding;
+    }
+
+    public File getTemplateFileSecondaryDir() {
+        return templateFileSecondaryDir;
+    }
+
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        this.templateFileSecondaryDir = templateFileSecondaryDir;
     }
 
     public String getTableNamePattern() {
@@ -293,7 +310,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileDir);
+        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
     }
 
     /**
@@ -317,7 +334,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected void generateEntity(EntityDesc entityDesc) {
         EntityModel model = entityModelFactory.getEntityModel(entityDesc);
         GenerationContext context = createGenerationContext(model,
-                entityTemplateFileName, false);
+                entityTemplateFileName);
         generator.generate(context);
     }
 
@@ -328,12 +345,10 @@ public class GenerateEntityCommand extends AbstractCommand {
      *            モデル
      * @param templateName
      *            テンプレート名
-     * @param overwrite
-     *            ファイルを上書きする場合 {@code true}
      * @return {@link GenerationContext}
      */
     protected GenerationContext createGenerationContext(EntityModel model,
-            String templateName, boolean overwrite) {
+            String templateName) {
         String packageName = model.getPackageName();
         String shortClassName = model.getShortClassName();
 

@@ -70,11 +70,13 @@ public class GenerateConditionCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    protected boolean overwrite = true;
+
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
     /** テンプレートファイルを格納するディレクトリ */
-    protected File templateFileDir = null;
+    protected File templateFileSecondaryDir = null;
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -172,6 +174,21 @@ public class GenerateConditionCommand extends AbstractCommand {
         this.jdbcManagerName = jdbcManagerName;
     }
 
+    /**
+     * @return Returns the overwrite.
+     */
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    /**
+     * @param overwrite
+     *            The overwrite to set.
+     */
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
     public String getRootPackageName() {
         return rootPackageName;
     }
@@ -180,20 +197,20 @@ public class GenerateConditionCommand extends AbstractCommand {
         this.rootPackageName = rootPackageName;
     }
 
-    public File getTemplateFileDir() {
-        return templateFileDir;
-    }
-
-    public void setTemplateFileDir(File templateFileDir) {
-        this.templateFileDir = templateFileDir;
-    }
-
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
 
     public void setTemplateFileEncoding(String templateFileEncoding) {
         this.templateFileEncoding = templateFileEncoding;
+    }
+
+    public File getTemplateFileSecondaryDir() {
+        return templateFileSecondaryDir;
+    }
+
+    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
+        this.templateFileSecondaryDir = templateFileSecondaryDir;
     }
 
     @Override
@@ -260,7 +277,7 @@ public class GenerateConditionCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileDir);
+        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
     }
 
     /**
@@ -279,7 +296,7 @@ public class GenerateConditionCommand extends AbstractCommand {
         ConditionModel model = conditionModelFactory
                 .getConditionModel(entityMeta);
         GenerationContext context = createGenerationContext(model,
-                conditionTemplateFileName, true);
+                conditionTemplateFileName);
         generator.generate(context);
     }
 
@@ -290,12 +307,10 @@ public class GenerateConditionCommand extends AbstractCommand {
      *            モデル
      * @param templateName
      *            テンプレート名
-     * @param overwrite
-     *            ファイルを上書きする場合 {@code true}
      * @return {@link GenerationContext}
      */
     protected GenerationContext createGenerationContext(ConditionModel model,
-            String templateName, boolean overwrite) {
+            String templateName) {
         String packageName = model.getPackageName();
         String shortClassName = model.getShortClassName();
 
