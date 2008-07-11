@@ -59,8 +59,8 @@ public class OracleGenDialectTest {
     @Test
     public void testDataType_varbinary() throws Exception {
         DataType dataType = dialect.getDataType(Types.VARBINARY);
-        assertEquals("row(2000)", dataType.getDefinition(2000, 0, 0));
-        assertEquals("long row", dataType.getDefinition(2001, 0, 0));
+        assertEquals("raw(2000)", dataType.getDefinition(2000, 0, 0));
+        assertEquals("long raw", dataType.getDefinition(2001, 0, 0));
     }
 
     /**
@@ -77,9 +77,11 @@ public class OracleGenDialectTest {
     @Test
     public void testJavaType_decimal() throws Exception {
         JavaType javaType = dialect.getJavaType(Types.DECIMAL);
-        assertEquals(Integer.class, javaType.getJavaClass(8, 0, "NUMBER", false));
-        assertEquals(BigDecimal.class, javaType.getJavaClass(8, 2, "NUMBER", false));
-        assertEquals(BigDecimal.class, javaType
-                .getJavaClass(11, 0, "NUMBER", false));
+        assertEquals(Integer.class, javaType
+                .getJavaClass(8, 0, "NUMBER", false));
+        assertEquals(BigDecimal.class, javaType.getJavaClass(8, 2, "NUMBER",
+                false));
+        assertEquals(BigDecimal.class, javaType.getJavaClass(11, 0, "NUMBER",
+                false));
     }
 }

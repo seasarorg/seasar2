@@ -63,7 +63,8 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         ClassTraversal.forEach(rootDir, new ClassHandler() {
 
             public void processClass(String packageName, String shortClassName) {
-                if (!packageName.startsWith(packageNamePrefix)) {
+                if (packageName != null
+                        && !packageName.startsWith(packageNamePrefix)) {
                     return;
                 }
                 String className = ClassUtil.concatName(packageName,

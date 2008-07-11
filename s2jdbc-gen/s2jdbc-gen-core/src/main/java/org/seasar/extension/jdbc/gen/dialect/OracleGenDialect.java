@@ -37,6 +37,7 @@ public class OracleGenDialect extends StandardGenDialect {
         super();
         javaTypeMap.put(Types.DECIMAL, OracleJavaType.DECIMAL);
 
+        dataTypeMap.put(Types.BINARY, OracleDataType.BINARY);
         dataTypeMap.put(Types.BIT, OracleDataType.BIT);
         dataTypeMap.put(Types.BIGINT, OracleDataType.BIGINT);
         dataTypeMap.put(Types.CHAR, OracleDataType.CHAR);
@@ -74,17 +75,20 @@ public class OracleGenDialect extends StandardGenDialect {
 
     public static class OracleJavaType extends StandardJavaType {
 
-        private static JavaType DECIMAL = new OracleJavaType(BigDecimal.class) {
+        private static JavaType DECIMAL = new OracleJavaType() {
 
             @Override
-            public Class<?> getJavaClass(int length, int scale, String typeName,
-                    boolean nullable) {
+            public Class<?> getJavaClass(int length, int scale,
+                    String typeName, boolean nullable) {
                 if (scale > 0 || length > 10) {
-                    return clazz;
+                    return BigDecimal.class;
                 }
                 return Integer.class;
             }
         };
+
+        protected OracleJavaType() {
+        }
 
         /**
          * インスタンスを構築します。
@@ -106,15 +110,23 @@ public class OracleGenDialect extends StandardGenDialect {
 
         private static DataType BIGINT = new OracleDataType("number(19,0)");
 
+        private static DataType BINARY = new OracleDataType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return VARBINARY.getDefinition(length, precision, scale);
+            }
+        };
+
         private static DataType BIT = new OracleDataType("number(1,0)");
 
         private static DataType CHAR = new OracleDataType("char(1 char)");
 
-        private static DataType DECIMAL = new OracleDataType("number(%d,%d)") {
+        private static DataType DECIMAL = new OracleDataType() {
 
             @Override
             public String getDefinition(int length, int presision, int scale) {
-                return format(definition, presision, scale);
+                return format("number(%d,%d)", presision, scale);
             }
         };
 
@@ -122,11 +134,11 @@ public class OracleGenDialect extends StandardGenDialect {
 
         private static DataType INTEGER = new OracleDataType("number(10,0)");
 
-        private static DataType NUMERIC = new OracleDataType("number(%d,%d)") {
+        private static DataType NUMERIC = new OracleDataType() {
 
             @Override
             public String getDefinition(int length, int presision, int scale) {
-                return format(definition, presision, scale);
+                return format("number(%d,%d)", presision, scale);
             }
         };
 
@@ -136,27 +148,30 @@ public class OracleGenDialect extends StandardGenDialect {
 
         private static DataType TINYINT = new OracleDataType("number(3,0)");
 
-        private static DataType VARBINARY = new OracleDataType("row(%d)") {
+        private static DataType VARBINARY = new OracleDataType() {
 
             @Override
-            public String getDefinition(int length, int presision, int scale) {
+            public String getDefinition(int length, int precision, int scale) {
                 if (length > 2000) {
-                    return "long row";
+                    return "long raw";
                 }
-                return format(definition, length);
+                return format("raw(%d)", length);
             }
         };
 
-        private static DataType VARCHAR = new OracleDataType("varchar2(%d)") {
+        private static DataType VARCHAR = new OracleDataType() {
 
             @Override
-            public String getDefinition(int length, int presision, int scale) {
+            public String getDefinition(int length, int precision, int scale) {
                 if (length > 4000) {
                     return "long";
                 }
-                return format(definition, length);
+                return format("varchar2(%d)", length);
             }
         };
+
+        protected OracleDataType() {
+        }
 
         /**
          * インスタンスを構築します。

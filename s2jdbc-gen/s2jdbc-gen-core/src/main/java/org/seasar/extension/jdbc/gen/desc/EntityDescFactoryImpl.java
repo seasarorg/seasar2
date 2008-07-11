@@ -36,6 +36,8 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
     /** 属性記述のファクトリ */
     protected AttributeDescFactory attributeDescFactory;
 
+    protected boolean schemaSpecified;
+
     /**
      * インスタンスを生成します。
      * 
@@ -45,9 +47,10 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      *            属性記述のファクトリ
      */
     public EntityDescFactoryImpl(PersistenceConvention persistenceConvention,
-            AttributeDescFactory attributeDescFactory) {
+            AttributeDescFactory attributeDescFactory, boolean schemaSpecified) {
         this.persistenceConvention = persistenceConvention;
         this.attributeDescFactory = attributeDescFactory;
+        this.schemaSpecified = schemaSpecified;
     }
 
     public EntityDesc getEntityDesc(DbTableMeta tableMeta) {
@@ -85,7 +88,9 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      */
     public void doTable(DbTableMeta tableMeta, EntityDesc entityDesc) {
         entityDesc.setCatalogName(tableMeta.getCatalogName());
-        entityDesc.setSchemaName(tableMeta.getSchemaName());
+        if (schemaSpecified) {
+            entityDesc.setSchemaName(tableMeta.getSchemaName());
+        }
         entityDesc.setTableName(tableMeta.getName());
     }
 }

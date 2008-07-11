@@ -45,7 +45,8 @@ public class EntityDescFactoryImplTest {
         GenDialect dialect = new StandardGenDialect();
         AttributeDescFactoryImpl attributeDescFactory = new AttributeDescFactoryImpl(
                 convention, dialect, "VERSION");
-        factory = new EntityDescFactoryImpl(convention, attributeDescFactory);
+        factory = new EntityDescFactoryImpl(convention, attributeDescFactory,
+                true);
     }
 
     /**

@@ -391,7 +391,7 @@ public class GenerateDdlCommand extends AbstractCommand {
         GenerationContext createTableCtx = createGenerationContext(model,
                 createTableSqlFileName, createTableTemplateFileName);
         GenerationContext dropTableCtx = createGenerationContext(model,
-                dropTableSqlFileName, createTableTemplateFileName);
+                dropTableSqlFileName, dropTableTemplateFileName);
         generator.generate(createTableCtx);
         generator.generate(dropTableCtx);
     }

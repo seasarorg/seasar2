@@ -290,7 +290,7 @@ public class GenerateEntityCommand extends AbstractCommand {
         AttributeDescFactory attributeDescFactory = new AttributeDescFactoryImpl(
                 persistenceConvention, dialect, versionColumnName);
         return new EntityDescFactoryImpl(persistenceConvention,
-                attributeDescFactory);
+                attributeDescFactory, schemaName != null);
     }
 
     /**

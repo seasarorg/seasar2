@@ -232,7 +232,11 @@ public class StandardGenDialect implements GenDialect {
 
         private static JavaType VARCHAR = new StandardJavaType(String.class);
 
-        protected Class<?> clazz;
+        private Class<?> clazz;
+
+        protected StandardJavaType() {
+            this.clazz = clazz;
+        }
 
         protected StandardJavaType(Class<?> clazz) {
             this.clazz = clazz;
@@ -240,6 +244,9 @@ public class StandardGenDialect implements GenDialect {
 
         public Class<?> getJavaClass(int length, int scale, String typeName,
                 boolean nullable) {
+            if (clazz == null) {
+                throw new IllegalStateException("clazz");
+            }
             return clazz;
         }
     }
@@ -263,10 +270,10 @@ public class StandardGenDialect implements GenDialect {
 
         private static DataType BOOLEAN = new StandardDataType("boolean");
 
-        private static DataType CHAR = new StandardDataType("char") {
+        private static DataType CHAR = new StandardDataType() {
 
             @Override
-            public String getDefinition(int length, int presision, int scale) {
+            public String getDefinition(int length, int precision, int scale) {
                 return format("char(%d)", length);
             }
         };
@@ -324,16 +331,19 @@ public class StandardGenDialect implements GenDialect {
             }
         };
 
-        private static DataType VARCHAR = new StandardDataType("varchar") {
+        private static DataType VARCHAR = new StandardDataType() {
 
             @Override
-            public String getDefinition(int length, int presision, int scale) {
+            public String getDefinition(int length, int precision, int scale) {
                 return format("varchar(%d)", length);
             }
         };
 
         /** 定義 */
-        protected String definition;
+        private String definition;
+
+        protected StandardDataType() {
+        }
 
         /**
          * インスタンスを構築します。
@@ -346,6 +356,9 @@ public class StandardGenDialect implements GenDialect {
         }
 
         public String getDefinition(int length, int presision, int scale) {
+            if (definition == null) {
+                throw new IllegalStateException("definition");
+            }
             return definition;
         }
 
