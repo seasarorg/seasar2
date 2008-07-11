@@ -8,14 +8,15 @@
 	
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
 
-	<target name="gen-entity" >
+	<target name="gen-entity">
 		<gen-entity
 			rootPackageName="example"
+			overwrite="true"
 			classpathref="classpath"
 		/>
 	</target>
 
-	<target name="gen-entity-test" >
+	<target name="gen-entity-test">
 		<gen-entity-test
 			rootPackageName="example"
 			classpathRootDir="build/classes"
@@ -23,7 +24,7 @@
 		/>
 	</target>
 
-	<target name="gen-condition" >
+	<target name="gen-condition">
 		<gen-condition
 			rootPackageName="example"
 			classpathRootDir="build/classes"
@@ -31,7 +32,7 @@
 		/>
 	</target>
 			
-	<target name="gen-ddl" >
+	<target name="gen-ddl">
 		<gen-ddl 
 			rootPackageName="example"
 			classpathRootDir="build/classes"
