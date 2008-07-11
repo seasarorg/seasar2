@@ -122,8 +122,8 @@ public class GenerateDdlTask extends AbstractTask {
         return command.getTemplateFileEncoding();
     }
 
-    public File getTemplateFileSecondaryDir() {
-        return command.getTemplateFileSecondaryDir();
+    public File getTemplateFilePrimaryDir() {
+        return command.getTemplateFilePrimaryDir();
     }
 
     public void setClasspathRootDir(File classpathRootDir) {
@@ -223,8 +223,8 @@ public class GenerateDdlTask extends AbstractTask {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
-    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
-        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
+    public void setTemplateFileSecondaryDir(File templateFilePrimaryDir) {
+        command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 
     @Override

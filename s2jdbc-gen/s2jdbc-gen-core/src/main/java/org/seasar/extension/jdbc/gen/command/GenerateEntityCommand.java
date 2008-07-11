@@ -77,11 +77,11 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** スキーマ名 */
     protected String schemaName;
 
-    /** テンプレートファイルを格納するディレクトリ */
-    protected File templateFileSecondaryDir = null;
-
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
+
+    /** テンプレートファイルを格納するディレクトリ */
+    protected File templateFilePrimaryDir = null;
 
     /** Javaコードの生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";
@@ -205,12 +205,12 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.templateFileEncoding = templateFileEncoding;
     }
 
-    public File getTemplateFileSecondaryDir() {
-        return templateFileSecondaryDir;
+    public File getTemplateFilePrimaryDir() {
+        return templateFilePrimaryDir;
     }
 
-    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
-        this.templateFileSecondaryDir = templateFileSecondaryDir;
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
+        this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
     public String getTableNamePattern() {
@@ -310,7 +310,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
+        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
     /**

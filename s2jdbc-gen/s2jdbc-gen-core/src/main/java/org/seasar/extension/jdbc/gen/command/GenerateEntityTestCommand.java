@@ -74,7 +74,7 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     protected String templateFileEncoding = "UTF-8";
 
     /** テンプレートファイルを格納するディレクトリ */
-    protected File templateFileSecondaryDir = null;
+    protected File templateFilePrimaryDir = null;
 
     protected S2ContainerFactorySupport containerFactorySupport;
 
@@ -225,16 +225,16 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     /**
      * @return Returns the templateFileDir.
      */
-    public File getTemplateFileSecondaryDir() {
-        return templateFileSecondaryDir;
+    public File getTemplateFilePrimaryDir() {
+        return templateFilePrimaryDir;
     }
 
     /**
      * @param templateFileDir
      *            The templateFileDir to set.
      */
-    public void setTemplateFileSecondaryDir(File templateFileDir) {
-        this.templateFileSecondaryDir = templateFileDir;
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
+        this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
     /**
@@ -326,7 +326,7 @@ public class GenerateEntityTestCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
+        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
     /**

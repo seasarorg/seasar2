@@ -102,11 +102,11 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     protected String sqlFileEncoding = "UTF-8";
 
-    /** テンプレートファイルを格納するディレクトリ */
-    protected File templateFileSecondaryDir = null;
-
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
+
+    /** テンプレートファイルを格納するディレクトリ */
+    protected File templateFilePrimaryDir = null;
 
     protected S2ContainerFactorySupport containerFactorySupport;
 
@@ -306,12 +306,12 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.templateFileEncoding = templateFileEncoding;
     }
 
-    public File getTemplateFileSecondaryDir() {
-        return templateFileSecondaryDir;
+    public File getTemplateFilePrimaryDir() {
+        return templateFilePrimaryDir;
     }
 
-    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
-        this.templateFileSecondaryDir = templateFileSecondaryDir;
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
+        this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
     @Override
@@ -377,7 +377,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
+        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
     protected void generate(List<TableDesc> tableDescList) {

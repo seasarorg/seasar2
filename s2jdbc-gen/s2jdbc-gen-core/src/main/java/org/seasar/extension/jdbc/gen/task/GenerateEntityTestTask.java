@@ -120,8 +120,8 @@ public class GenerateEntityTestTask extends AbstractTask {
      * @return
      * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#getTemplateFileSecondaryDir()
      */
-    public File getTemplateFileSecondaryDir() {
-        return command.getTemplateFileSecondaryDir();
+    public File getTemplateFilePrimaryDir() {
+        return command.getTemplateFilePrimaryDir();
     }
 
     /**
@@ -216,8 +216,8 @@ public class GenerateEntityTestTask extends AbstractTask {
      * @param templateFileSecondaryDir
      * @see org.seasar.extension.jdbc.gen.command.GenerateEntityTestCommand#setTemplateFileSecondaryDir(java.io.File)
      */
-    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
-        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
+        command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 
     @Override

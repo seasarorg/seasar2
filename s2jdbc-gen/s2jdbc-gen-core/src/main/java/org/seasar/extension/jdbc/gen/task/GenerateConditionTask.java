@@ -83,8 +83,8 @@ public class GenerateConditionTask extends AbstractTask {
         return command.getTemplateFileEncoding();
     }
 
-    public File getTemplateFileSecondaryDir() {
-        return command.getTemplateFileSecondaryDir();
+    public File getTemplateFilePrimaryDir() {
+        return command.getTemplateFilePrimaryDir();
     }
 
     public void setClasspathRootDir(File classpathRootDir) {
@@ -139,8 +139,8 @@ public class GenerateConditionTask extends AbstractTask {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
-    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
-        command.setTemplateFileSecondaryDir(templateFileSecondaryDir);
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
+        command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 
     @Override

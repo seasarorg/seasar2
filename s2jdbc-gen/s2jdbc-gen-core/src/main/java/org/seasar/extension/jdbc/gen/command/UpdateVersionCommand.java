@@ -42,7 +42,7 @@ public class UpdateVersionCommand extends AbstractCommand {
     protected String templateFileEncoding = "UTF-8";
 
     /** テンプレートファイルの格納ディレクトリ */
-    protected File templateFileSecondaryDir = null;
+    protected File templateFilePrimaryDir = null;
 
     protected String versionFileName = "version.txt";
 
@@ -97,12 +97,12 @@ public class UpdateVersionCommand extends AbstractCommand {
         this.templateFileEncoding = templateFileEncoding;
     }
 
-    public File getTemplateFileSecondaryDir() {
-        return templateFileSecondaryDir;
+    public File getTemplateFilePrimaryDir() {
+        return templateFilePrimaryDir;
     }
 
-    public void setTemplateFileSecondaryDir(File templateFileSecondaryDir) {
-        this.templateFileSecondaryDir = templateFileSecondaryDir;
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
+        this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
     public String getVersionFileName() {
@@ -169,7 +169,7 @@ public class UpdateVersionCommand extends AbstractCommand {
     }
 
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFileSecondaryDir);
+        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
     protected void generateUpdateVersionSql(int version) {
