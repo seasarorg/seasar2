@@ -13,28 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.dialect;
-
-import javax.persistence.GenerationType;
+package org.seasar.extension.jdbc.gen;
 
 /**
- * Sybaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class SybaseGenDialect extends StandardGenDialect {
+public interface SqlExecutor {
 
-    public SybaseGenDialect() {
-    }
-
-    @Override
-    public GenerationType getDefaultGenerationType() {
-        return GenerationType.IDENTITY;
-    }
-
-    @Override
-    public String getBlockDelimiter() {
-        return "GO";
-    }
-
+    void execute(SqlExecutionContext context);
 }

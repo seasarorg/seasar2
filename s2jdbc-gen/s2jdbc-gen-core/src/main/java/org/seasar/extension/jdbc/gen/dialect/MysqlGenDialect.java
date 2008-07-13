@@ -31,4 +31,10 @@ public class MysqlGenDialect extends StandardGenDialect {
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }
+
+    @Override
+    public String getBlockDelimiter() {
+        return "/";
+    }
+
 }

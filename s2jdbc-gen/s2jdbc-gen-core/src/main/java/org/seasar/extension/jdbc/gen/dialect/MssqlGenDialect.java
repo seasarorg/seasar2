@@ -42,4 +42,9 @@ public class MssqlGenDialect extends StandardGenDialect {
         return "]";
     }
 
+    @Override
+    public String getBlockDelimiter() {
+        return "GO";
+    }
+
 }

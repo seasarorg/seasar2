@@ -73,6 +73,11 @@ public class OracleGenDialect extends StandardGenDialect {
         return "increment by " + allocationSize + " start with " + initValue;
     }
 
+    @Override
+    public String getBlockDelimiter() {
+        return "/";
+    }
+
     public static class OracleJavaType extends StandardJavaType {
 
         private static JavaType DECIMAL = new OracleJavaType() {

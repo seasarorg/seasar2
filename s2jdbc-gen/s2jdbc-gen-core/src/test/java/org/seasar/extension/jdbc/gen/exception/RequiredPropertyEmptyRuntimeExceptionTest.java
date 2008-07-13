@@ -13,28 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.dialect;
+package org.seasar.extension.jdbc.gen.exception;
 
-import javax.persistence.GenerationType;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Sybaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class SybaseGenDialect extends StandardGenDialect {
+public class RequiredPropertyEmptyRuntimeExceptionTest {
 
-    public SybaseGenDialect() {
+    @Test
+    public void test() throws Exception {
+        RequiredPropertyEmptyRuntimeException e = new RequiredPropertyEmptyRuntimeException(
+                "hoge");
+        System.out.println(e.getMessage());
+        assertEquals("hoge", e.getPropertyName());
     }
-
-    @Override
-    public GenerationType getDefaultGenerationType() {
-        return GenerationType.IDENTITY;
-    }
-
-    @Override
-    public String getBlockDelimiter() {
-        return "GO";
-    }
-
 }

@@ -13,28 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.dialect;
+package org.seasar.extension.jdbc.gen.sql;
 
-import javax.persistence.GenerationType;
+import java.io.File;
+
+import org.junit.Test;
+import org.seasar.framework.mock.sql.MockConnection;
 
 /**
- * Sybaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class SybaseGenDialect extends StandardGenDialect {
+public class SqlExecutorImplTest {
 
-    public SybaseGenDialect() {
-    }
-
-    @Override
-    public GenerationType getDefaultGenerationType() {
-        return GenerationType.IDENTITY;
-    }
-
-    @Override
-    public String getBlockDelimiter() {
-        return "GO";
+    @Test
+    public void testExecute() {
+        SqlExecutorImpl executor = new SqlExecutorImpl(true);
+        MockConnection connection = new MockConnection();
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(
+                connection);
+        context.setSql("aaa");
+        context.setSqlFile(new File("sqlFile"));
+        executor.execute(context);
     }
 
 }

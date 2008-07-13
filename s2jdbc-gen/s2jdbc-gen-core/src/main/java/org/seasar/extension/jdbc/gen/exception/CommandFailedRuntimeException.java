@@ -13,28 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.dialect;
+package org.seasar.extension.jdbc.gen.exception;
 
-import javax.persistence.GenerationType;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * Sybaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class SybaseGenDialect extends StandardGenDialect {
+public class CommandFailedRuntimeException extends SRuntimeException {
 
-    public SybaseGenDialect() {
+    private static final long serialVersionUID = 1L;
+
+    protected String commandClassName;
+
+    public CommandFailedRuntimeException(Throwable cause,
+            String commandClassName) {
+        super("ES2JDBCGen0005", new Object[] { commandClassName, cause }, cause);
+        this.commandClassName = commandClassName;
     }
 
-    @Override
-    public GenerationType getDefaultGenerationType() {
-        return GenerationType.IDENTITY;
-    }
-
-    @Override
-    public String getBlockDelimiter() {
-        return "GO";
+    /**
+     * @return Returns the commandClassName.
+     */
+    public String getCommandClassName() {
+        return commandClassName;
     }
 
 }

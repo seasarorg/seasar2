@@ -13,28 +13,44 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.dialect;
-
-import javax.persistence.GenerationType;
+package org.seasar.extension.jdbc.gen;
 
 /**
- * Sybaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class SybaseGenDialect extends StandardGenDialect {
+public interface SqlScriptTokenizer {
 
-    public SybaseGenDialect() {
+    enum TokenType {
+        /** */
+        QUOTE,
+        /** */
+        LINE_COMMENT,
+        /** */
+        START_OF_BLOCK_COMMENT,
+        /** */
+        BLOCK_COMMENT,
+        /** */
+        END_OF_BLOCK_COMMENT,
+        /** */
+        STATEMENT_DELIMITER,
+        /** */
+        BLOCK_DELIMITER,
+        /** */
+        SQL,
+        /** */
+        SQL_STATEMENT,
+        /** */
+        SQL_BLOCK,
+        /** */
+        END_OF_FRAGMENT,
+        /** */
+        END_OF_FILE
     }
 
-    @Override
-    public GenerationType getDefaultGenerationType() {
-        return GenerationType.IDENTITY;
-    }
+    void addFragment(String fragment);
 
-    @Override
-    public String getBlockDelimiter() {
-        return "GO";
-    }
+    TokenType nextToken();
 
+    String getToken();
 }

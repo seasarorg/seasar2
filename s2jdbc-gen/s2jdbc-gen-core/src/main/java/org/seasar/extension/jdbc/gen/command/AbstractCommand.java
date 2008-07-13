@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import org.seasar.extension.jdbc.gen.Command;
+import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -42,12 +43,14 @@ public abstract class AbstractCommand implements Command {
         init();
         try {
             doExecute();
+        } catch (Throwable t) {
+            throw new CommandFailedRuntimeException(t, getClass().getName());
         } finally {
             destroy();
         }
     }
 
-    protected abstract void doExecute();
+    protected abstract void doExecute() throws Throwable;
 
     protected void log() {
         logger.log("DS2JDBCGen0003", new Object[] { getClass().getName() });

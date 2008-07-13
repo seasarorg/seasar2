@@ -169,6 +169,10 @@ public class StandardGenDialect implements GenDialect {
         throw new UnsupportedOperationException("getSequenceDefinitionFragment");
     }
 
+    public String getBlockDelimiter() {
+        return null;
+    }
+
     public static class StandardJavaType implements JavaType {
 
         private static JavaType ARRAY = new StandardJavaType(Object.class);

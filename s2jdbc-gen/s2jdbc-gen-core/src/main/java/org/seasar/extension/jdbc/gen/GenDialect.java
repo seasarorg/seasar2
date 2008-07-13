@@ -128,4 +128,6 @@ public interface GenDialect {
     String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize);
 
+    String getBlockDelimiter();
+
 }
