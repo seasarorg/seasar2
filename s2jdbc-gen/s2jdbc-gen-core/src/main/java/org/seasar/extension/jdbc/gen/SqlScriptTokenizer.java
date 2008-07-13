@@ -37,11 +37,9 @@ public interface SqlScriptTokenizer {
         /** */
         BLOCK_DELIMITER,
         /** */
-        SQL,
+        WORD,
         /** */
-        SQL_STATEMENT,
-        /** */
-        SQL_BLOCK,
+        OTHER,
         /** */
         END_OF_FRAGMENT,
         /** */
@@ -53,4 +51,6 @@ public interface SqlScriptTokenizer {
     TokenType nextToken();
 
     String getToken();
+
+    boolean isInSqlBlock();
 }

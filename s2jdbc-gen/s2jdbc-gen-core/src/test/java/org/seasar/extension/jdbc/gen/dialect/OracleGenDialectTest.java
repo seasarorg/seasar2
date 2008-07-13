@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.Arrays;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.DataType;
@@ -83,5 +84,14 @@ public class OracleGenDialectTest {
                 false));
         assertEquals(BigDecimal.class, javaType.getJavaClass(11, 0, "NUMBER",
                 false));
+    }
+
+    @Test
+    public void testIsSqlBlockStartWords() throws Exception {
+        assertTrue(dialect.isSqlBlockStartWords(Arrays.asList("create", "or",
+                "replace", "procedure")));
+        assertFalse(dialect.isSqlBlockStartWords(Arrays.asList("drop",
+                "procedure")));
+        assertTrue(dialect.isSqlBlockStartWords(Arrays.asList("begin")));
     }
 }

@@ -77,41 +77,44 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             if (reader == null) {
                 reader = createBufferedReader();
             }
-            StringBuilder buf = new StringBuilder();
-            boolean spaceRequired = false;
+            SqlBuffer buffer = new SqlBuffer();
+
             outerLoop: for (String line = reader.readLine();; line = reader
                     .readLine()) {
                 tokenizer.addFragment(line);
+                buffer.appendSpaceIfNecessary();
+
                 innerLoop: for (;;) {
                     TokenType tokenType = tokenizer.nextToken();
                     String token = tokenizer.getToken();
-
                     switch (tokenType) {
-                    case SQL:
+                    case WORD:
+                    case OTHER:
                     case QUOTE:
-                        if (spaceRequired) {
-                            buf.append(" ");
-                        }
-                        spaceRequired = true;
-                        buf.append(token);
-                        break;
-                    case START_OF_BLOCK_COMMENT:
-                    case BLOCK_COMMENT:
-                    case END_OF_BLOCK_COMMENT:
-                    case LINE_COMMENT:
+                        buffer.append(token);
                         break;
                     case END_OF_FRAGMENT:
                         break innerLoop;
                     case STATEMENT_DELIMITER:
+                        if (tokenizer.isInSqlBlock()) {
+                            buffer.append(token);
+                            break;
+                        }
+                        break outerLoop;
                     case BLOCK_DELIMITER:
+                        if (buffer.isEmpty()) {
+                            break innerLoop;
+                        }
                         break outerLoop;
                     case END_OF_FILE:
                         endOfFile = true;
                         break outerLoop;
+                    default:
+                        break;
                     }
                 }
             }
-            return buf.toString();
+            return (endOfFile && buffer.isEmpty()) ? null : buffer.toSql();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
@@ -126,5 +129,32 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         InputStream is = FileInputStreamUtil.create(sqlFile);
         return new BufferedReader(InputStreamReaderUtil.create(is,
                 sqlFileEncoding));
+    }
+
+    protected static class SqlBuffer {
+
+        protected StringBuilder buf = new StringBuilder(300);
+
+        protected void append(String s) {
+            buf.append(s);
+        }
+
+        protected void appendSpaceIfNecessary() {
+            if (buf.length() > 0) {
+                char lastChar = buf.charAt(buf.length() - 1);
+                if (!Character.isWhitespace(lastChar)) {
+                    buf.append(' ');
+                }
+            }
+        }
+
+        protected boolean isEmpty() {
+            return buf.toString().trim().length() == 0;
+        }
+
+        protected String toSql() {
+            return buf.toString().trim();
+        }
+
     }
 }

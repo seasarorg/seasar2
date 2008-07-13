@@ -22,6 +22,7 @@ import java.io.StringReader;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.SqlScriptReader;
+import org.seasar.extension.jdbc.gen.dialect.MssqlGenDialect;
 
 import static org.junit.Assert.*;
 
@@ -29,12 +30,22 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class SqlScriptReaderTest {
+public class SqlScriptReaderImplTest {
+
+    /**
+     * 
+     */
+    private void setUp() {
+        // TODO Auto-generated method stub
+
+    }
 
     @Test
     public void testReadSql() throws Exception {
+        SqlScriptTokenizerImpl tokenizer = new SqlScriptTokenizerImpl(
+                new MssqlGenDialect(), ';');
         SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
-                "UTF-8", new SqlScriptTokenizerImpl(';', "go")) {
+                "UTF-8", tokenizer) {
 
             @Override
             protected BufferedReader createBufferedReader() throws IOException {

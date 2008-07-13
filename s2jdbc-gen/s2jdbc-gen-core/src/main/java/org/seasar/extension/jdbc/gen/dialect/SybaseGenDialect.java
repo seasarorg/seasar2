@@ -33,8 +33,8 @@ public class SybaseGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getBlockDelimiter() {
-        return "GO";
+    public String getSqlBlockDelimiter() {
+        return "go";
     }
 
 }

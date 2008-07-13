@@ -255,8 +255,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     protected SqlScriptTokenizer createScriptTokenizer() {
-        return new SqlScriptTokenizerImpl(delimiter, dialect
-                .getBlockDelimiter());
+        return new SqlScriptTokenizerImpl(dialect, delimiter);
     }
 
     protected SqlExecutionContext createSqlExecutionContext() {

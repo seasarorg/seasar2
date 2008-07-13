@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.util.Arrays;
+
 import javax.persistence.GenerationType;
 
 /**
@@ -25,6 +27,10 @@ import javax.persistence.GenerationType;
 public class MssqlGenDialect extends StandardGenDialect {
 
     public MssqlGenDialect() {
+        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("declare"));
+        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -43,8 +49,8 @@ public class MssqlGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getBlockDelimiter() {
-        return "GO";
+    public String getSqlBlockDelimiter() {
+        return "go";
     }
 
 }

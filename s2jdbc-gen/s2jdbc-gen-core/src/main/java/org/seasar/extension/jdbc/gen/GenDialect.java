@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.util.List;
+
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
@@ -128,6 +130,8 @@ public interface GenDialect {
     String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize);
 
-    String getBlockDelimiter();
+    String getSqlBlockDelimiter();
+
+    boolean isSqlBlockStartWords(List<String> words);
 
 }

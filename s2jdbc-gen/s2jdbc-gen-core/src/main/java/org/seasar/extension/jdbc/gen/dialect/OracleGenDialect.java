@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.Arrays;
 
 import javax.persistence.GenerationType;
 
@@ -50,6 +51,15 @@ public class OracleGenDialect extends StandardGenDialect {
         dataTypeMap.put(Types.TINYINT, OracleDataType.TINYINT);
         dataTypeMap.put(Types.VARBINARY, OracleDataType.VARBINARY);
         dataTypeMap.put(Types.VARCHAR, OracleDataType.VARCHAR);
+
+        sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
+                "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
+                "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("declare"));
+        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -74,7 +84,7 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getBlockDelimiter() {
+    public String getSqlBlockDelimiter() {
         return "/";
     }
 

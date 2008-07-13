@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
 
 import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
@@ -25,9 +29,9 @@ import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
  */
 public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
-    protected char statementDelimiter;
+    protected GenDialect dialect;
 
-    protected String blockDelimiter;
+    protected char statementDelimiter;
 
     protected String fragment;
 
@@ -41,15 +45,17 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
     protected TokenType type;
 
-    protected boolean blockCommentOpened;
+    protected boolean commentBlockStarted;
 
-    /**
-     * @param statementDelimiter
-     * @param blockDelimiter
-     */
-    public SqlScriptTokenizerImpl(char statementDelimiter, String blockDelimiter) {
+    protected SqlBlockContext sqlBlockContext;
+
+    public SqlScriptTokenizerImpl(GenDialect dialect, char statementDelimiter) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        this.dialect = dialect;
         this.statementDelimiter = statementDelimiter;
-        this.blockDelimiter = blockDelimiter;
+        sqlBlockContext = new SqlBlockContext(dialect);
         type = END_OF_FRAGMENT;
     }
 
@@ -66,9 +72,10 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         pos = 0;
         nextPos = 0;
 
-        if (blockCommentOpened) {
+        if (commentBlockStarted) {
             type = BLOCK_COMMENT;
-        } else if (fragment.trim().equalsIgnoreCase(blockDelimiter)) {
+        } else if (fragment.trim().equalsIgnoreCase(
+                dialect.getSqlBlockDelimiter())) {
             type = BLOCK_DELIMITER;
             nextPos = length;
         } else {
@@ -81,10 +88,6 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
             char c = fragment.charAt(index);
             if (c == '\'') {
                 type = QUOTE;
-                pos = index;
-                nextPos = index + 1;
-            } else if (c == statementDelimiter) {
-                type = STATEMENT_DELIMITER;
                 pos = index;
                 nextPos = index + 1;
             } else {
@@ -100,14 +103,10 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
                         pos = index;
                         nextPos = index + 2;
                     } else {
-                        type = SQL;
-                        pos = index;
-                        nextPos = index + 1;
+                        peekChar(index, c);
                     }
                 } else {
-                    type = SQL;
-                    pos = index;
-                    nextPos = index + 1;
+                    peekChar(index, c);
                 }
             }
         } else {
@@ -115,6 +114,18 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
             pos = length;
             nextPos = length;
         }
+    }
+
+    protected void peekChar(int index, char c) {
+        if (c == statementDelimiter) {
+            type = STATEMENT_DELIMITER;
+        } else if (isOther(c)) {
+            type = OTHER;
+        } else {
+            type = WORD;
+        }
+        pos = index;
+        nextPos = index + 1;
     }
 
     public TokenType nextToken() {
@@ -130,10 +141,14 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         case BLOCK_DELIMITER:
             token = fragment;
             type = END_OF_FRAGMENT;
+            sqlBlockContext.clear();
             return BLOCK_DELIMITER;
         case STATEMENT_DELIMITER:
             token = fragment.substring(pos, nextPos);
             peek(nextPos);
+            if (!sqlBlockContext.isInBlock()) {
+                sqlBlockContext.clear();
+            }
             return STATEMENT_DELIMITER;
         case LINE_COMMENT:
             token = fragment.substring(pos, length);
@@ -152,7 +167,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
                 if (nextIndex < length) {
                     char c2 = fragment.charAt(nextIndex);
                     if (c == '*' && c2 == '/') {
-                        blockCommentOpened = false;
+                        commentBlockStarted = false;
                         token = fragment.substring(pos, i);
                         type = END_OF_BLOCK_COMMENT;
                         pos = i;
@@ -161,7 +176,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
                     }
                 }
             }
-            blockCommentOpened = true;
+            commentBlockStarted = true;
             token = fragment.substring(pos, length);
             type = END_OF_FRAGMENT;
             return BLOCK_COMMENT;
@@ -188,19 +203,66 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
             token = fragment.substring(pos, length);
             type = END_OF_FRAGMENT;
             return QUOTE;
-        case SQL:
-            int startPos = pos;
-            for (; type == SQL && pos < length; peek(nextPos)) {
+        case WORD:
+            int wordStartPos = pos;
+            for (; type == WORD && pos < length; peek(nextPos)) {
             }
-            token = fragment.substring(startPos, pos);
-            return SQL;
+            token = fragment.substring(wordStartPos, pos);
+            sqlBlockContext.addWord(token);
+            return WORD;
+        case OTHER:
+            int otherStartPos = pos;
+            for (; type == OTHER && pos < length; peek(nextPos)) {
+            }
+            token = fragment.substring(otherStartPos, pos);
+            return OTHER;
         }
 
         throw new IllegalStateException(type.name());
     }
 
+    protected boolean isOther(char c) {
+        return Character.isWhitespace(c) || c == '=' || c == '?' || c == '<'
+                || c == '>' || c == '(' || c == ')' || c == '!' || c == '*'
+                || c == '-' || c == ',';
+    }
+
     public String getToken() {
         return token;
+    }
+
+    public boolean isInSqlBlock() {
+        return sqlBlockContext.isInBlock();
+    }
+
+    protected static class SqlBlockContext {
+
+        protected List<String> wordList = new ArrayList<String>();
+
+        protected GenDialect dialect;
+
+        protected boolean inBlock;
+
+        protected SqlBlockContext(GenDialect dialect) {
+            this.dialect = dialect;
+        }
+
+        protected void addWord(String word) {
+            wordList.add(word.toLowerCase());
+        }
+
+        protected boolean isInBlock() {
+            if (inBlock) {
+                return true;
+            }
+            inBlock = dialect.isSqlBlockStartWords(wordList);
+            return inBlock;
+        }
+
+        protected void clear() {
+            wordList.clear();
+            inBlock = false;
+        }
     }
 
 }

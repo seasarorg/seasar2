@@ -17,9 +17,11 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.GenerationType;
@@ -41,6 +43,8 @@ public class StandardGenDialect implements GenDialect {
 
     /** SQL型をキー、@{DataType データ型}を値とするマップ */
     protected Map<Integer, DataType> dataTypeMap = new HashMap<Integer, DataType>();
+
+    protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
 
     /**
      * インスタンスを構築します。
@@ -169,8 +173,29 @@ public class StandardGenDialect implements GenDialect {
         throw new UnsupportedOperationException("getSequenceDefinitionFragment");
     }
 
-    public String getBlockDelimiter() {
+    public String getSqlBlockDelimiter() {
         return null;
+    }
+
+    public boolean isSqlBlockStartWords(List<String> words) {
+        boolean equals = false;
+        for (List<String> startWords : sqlBlockStartWordsList) {
+            if (startWords.size() > words.size()) {
+                continue;
+            }
+            for (int i = 0; i < startWords.size(); i++) {
+                String word1 = startWords.get(i);
+                String word2 = words.get(i);
+                equals = word1.equalsIgnoreCase(word2);
+                if (!equals) {
+                    break;
+                }
+            }
+            if (equals) {
+                return true;
+            }
+        }
+        return equals;
     }
 
     public static class StandardJavaType implements JavaType {

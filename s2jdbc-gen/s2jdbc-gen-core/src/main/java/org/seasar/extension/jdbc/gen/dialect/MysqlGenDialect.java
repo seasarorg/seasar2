@@ -33,7 +33,7 @@ public class MysqlGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getBlockDelimiter() {
+    public String getSqlBlockDelimiter() {
         return "/";
     }
 
