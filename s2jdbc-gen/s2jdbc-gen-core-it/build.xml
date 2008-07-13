@@ -8,6 +8,17 @@
 	
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
 
+	<target name="exec-sql">
+		<exec-sql
+			haltOnError="false"
+			delimiter=";"
+			classpathref="classpath">
+			<fileset dir="sql">
+				 <filename name="create_oracle.sql"/>
+			</fileset>
+		</exec-sql>
+	</target>
+	
 	<target name="gen-entity">
 		<gen-entity
 			rootPackageName="example"
