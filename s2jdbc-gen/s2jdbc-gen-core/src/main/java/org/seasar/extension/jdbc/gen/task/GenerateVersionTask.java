@@ -18,20 +18,20 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.command.UpdateVersionCommand;
+import org.seasar.extension.jdbc.gen.command.GenerateVersionCommand;
 
 /**
  * @author taedium
  * 
  */
-public class UpdateVersionTask extends AbstractTask {
+public class GenerateVersionTask extends AbstractTask {
 
-    protected UpdateVersionCommand command = new UpdateVersionCommand();
+    protected GenerateVersionCommand command = new GenerateVersionCommand();
 
     /**
      * インスタンスを構築します。
      */
-    public UpdateVersionTask() {
+    public GenerateVersionTask() {
     }
 
     public String getSchemaInfoColumnName() {

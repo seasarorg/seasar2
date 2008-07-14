@@ -36,6 +36,7 @@ import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -43,6 +44,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class GenerateConditionCommand extends AbstractCommand {
+
+    protected static Logger logger = Logger
+            .getLogger(GenerateConditionCommand.class);
 
     protected File classpathRootDir;
 
@@ -320,5 +324,9 @@ public class GenerateConditionCommand extends AbstractCommand {
 
         return new GenerationContext(model, dir, file, templateName,
                 javaFileEncoding, overwrite);
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 }

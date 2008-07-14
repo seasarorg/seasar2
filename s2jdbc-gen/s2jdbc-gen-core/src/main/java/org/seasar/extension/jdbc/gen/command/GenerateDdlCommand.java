@@ -50,6 +50,7 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -57,6 +58,8 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class GenerateDdlCommand extends AbstractCommand {
+
+    protected static Logger logger = Logger.getLogger(GenerateDdlCommand.class);
 
     protected File classpathRootDir;
 
@@ -97,6 +100,10 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
+
+    protected String schemaInfoColumnName = "VERSION";
+
+    protected String schemaInfoTableName = "SCHEMA_INFO";
 
     protected File sqlFileDestDir = new File("sql");
 
@@ -419,5 +426,9 @@ public class GenerateDdlCommand extends AbstractCommand {
         return new GenerationContext(model, sqlFileDestDir, new File(
                 sqlFileDestDir, SqlFileName), templateName, sqlFileEncoding,
                 overwrite);
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 }

@@ -38,6 +38,7 @@ import org.seasar.extension.jdbc.gen.sql.SqlScriptTokenizerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -189,7 +190,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     @Override
-    protected void doExecute() throws Throwable {
+    protected void doExecute() {
         LinkedList<SqlFailedException> exceptionList = new LinkedList<SqlFailedException>();
         try {
             userTransaction.begin();
@@ -211,7 +212,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
             } catch (Throwable th) {
                 logger.log(th);
             }
-            throw t;
+            throw new SRuntimeException("ES2JDBCGen0002", new Object[] { t }, t);
         } finally {
             if (!exceptionList.isEmpty()) {
                 for (SqlFailedException e : exceptionList) {
@@ -261,6 +262,10 @@ public class ExecuteSqlCommand extends AbstractCommand {
     protected SqlExecutionContext createSqlExecutionContext() {
         return new SqlExecutionContextImpl(DataSourceUtil
                 .getConnection(dataSource));
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 
 }

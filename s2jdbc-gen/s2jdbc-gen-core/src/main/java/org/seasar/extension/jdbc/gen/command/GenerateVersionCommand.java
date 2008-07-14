@@ -21,14 +21,20 @@ import java.util.Map;
 
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
+import org.seasar.extension.jdbc.gen.exception.IllegalVersionValueRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
+import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
 
 /**
  * @author taedium
  * 
  */
-public class UpdateVersionCommand extends AbstractCommand {
+public class GenerateVersionCommand extends AbstractCommand {
+
+    protected static Logger logger = Logger
+            .getLogger(GenerateVersionCommand.class);
 
     protected String schemaInfoColumnName = "VERSION";
 
@@ -54,7 +60,7 @@ public class UpdateVersionCommand extends AbstractCommand {
 
     protected Generator generator;
 
-    public UpdateVersionCommand() {
+    public GenerateVersionCommand() {
     }
 
     public String getSchemaInfoColumnName() {
@@ -153,6 +159,8 @@ public class UpdateVersionCommand extends AbstractCommand {
         int nextVersion = currentVersion + 1;
         generateUpdateVersionSql(nextVersion);
         generateVersion(nextVersion);
+        logger.log("DS2JDBCGen0004", new Object[] { currentVersion,
+                nextVersion, updateVersionSqlFileName });
     }
 
     @Override
@@ -165,7 +173,10 @@ public class UpdateVersionCommand extends AbstractCommand {
             return 0;
         }
         String value = TextUtil.readUTF8(versionFile);
-        return Integer.valueOf(value.trim());
+        if (StringUtil.isNumber(value)) {
+            return Integer.valueOf(value.trim());
+        }
+        throw new IllegalVersionValueRuntimeException(versionFileName, value);
     }
 
     protected Generator createGenerator() {
@@ -191,5 +202,9 @@ public class UpdateVersionCommand extends AbstractCommand {
                 sqlFileDestDir, new File(sqlFileDestDir, versionFileName),
                 versionTemplateFileName, "UTF-8", true);
         generator.generate(context);
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 }

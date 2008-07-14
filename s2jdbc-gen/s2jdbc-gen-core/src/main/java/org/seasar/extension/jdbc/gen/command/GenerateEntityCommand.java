@@ -42,6 +42,7 @@ import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -50,6 +51,9 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  */
 public class GenerateEntityCommand extends AbstractCommand {
+
+    protected static Logger logger = Logger
+            .getLogger(GenerateEntityCommand.class);
 
     /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
     protected String configPath = "s2jdbc.dicon";
@@ -358,6 +362,10 @@ public class GenerateEntityCommand extends AbstractCommand {
 
         return new GenerationContext(model, dir, file, templateName,
                 javaFileEncoding, overwrite);
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 
 }

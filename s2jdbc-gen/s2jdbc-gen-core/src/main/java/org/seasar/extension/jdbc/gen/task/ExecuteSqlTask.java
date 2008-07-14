@@ -18,8 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 import java.util.List;
 
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.FileList;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand;
 
@@ -30,6 +29,16 @@ import org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand;
 public class ExecuteSqlTask extends AbstractTask {
 
     protected ExecuteSqlCommand command = new ExecuteSqlCommand();
+
+    protected FileList fileList;
+
+    public void addConfiguredFileList(FileList fileList) {
+        File dir = fileList.getDir(getProject());
+        for (String fileName : fileList.getFiles(getProject())) {
+            File file = new File(dir, fileName);
+            command.getSqlFileList().add(file);
+        }
+    }
 
     /**
      * @return
@@ -118,17 +127,6 @@ public class ExecuteSqlTask extends AbstractTask {
     public void setSqlFileEncoding(String sqlFileEncoding) {
         command.setSqlFileEncoding(sqlFileEncoding);
     }
-
-    public void addConfiguredFileSet(FileSet fileSet) {
-        DirectoryScanner ds = fileSet.getDirectoryScanner(getProject());
-        File baseDir = ds.getBasedir();
-        for (String fileName : ds.getIncludedFiles()) {
-            File file = new File(baseDir, fileName);
-            command.getSqlFileList().add(file);
-        }
-    }
-
-    protected FileSet fileSet;
 
     @Override
     protected Command getCommand() {

@@ -29,8 +29,6 @@ import org.seasar.framework.log.Logger;
  */
 public abstract class AbstractCommand implements Command {
 
-    protected static Logger logger = Logger.getLogger(AbstractCommand.class);
-
     /**
      * インスタンスを構築します。
      */
@@ -50,17 +48,19 @@ public abstract class AbstractCommand implements Command {
         }
     }
 
-    protected abstract void doExecute() throws Throwable;
+    protected abstract void doExecute();
 
     protected void log() {
-        logger.log("DS2JDBCGen0003", new Object[] { getClass().getName() });
+        getLogger()
+                .log("DS2JDBCGen0003", new Object[] { getClass().getName() });
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);
             if (propertyDesc.hasWriteMethod()) {
-                logger.log("DS2JDBCGen0001", new Object[] {
-                        propertyDesc.getPropertyName(),
-                        propertyDesc.getValue(this) });
+                getLogger().log(
+                        "DS2JDBCGen0001",
+                        new Object[] { propertyDesc.getPropertyName(),
+                                propertyDesc.getValue(this) });
             }
         }
     }
@@ -89,4 +89,5 @@ public abstract class AbstractCommand implements Command {
 
     protected abstract void doDestroy();
 
+    protected abstract Logger getLogger();
 }

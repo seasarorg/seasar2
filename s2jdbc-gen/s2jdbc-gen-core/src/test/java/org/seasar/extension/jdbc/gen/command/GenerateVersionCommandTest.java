@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class UpdateVersionCommandTest {
+public class GenerateVersionCommandTest {
 
     /**
      * 
@@ -31,7 +31,7 @@ public class UpdateVersionCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        UpdateVersionCommand command = new UpdateVersionCommand();
+        GenerateVersionCommand command = new GenerateVersionCommand();
         command.validate();
     }
 
@@ -41,7 +41,7 @@ public class UpdateVersionCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        UpdateVersionCommand command = new UpdateVersionCommand();
+        GenerateVersionCommand command = new GenerateVersionCommand();
         command.init();
         assertNotNull(command.createGenerator());
     }

@@ -35,7 +35,7 @@ public class AnnotationUtil {
     protected static Table DEFAULT_TABLE = TableAnnotated.class
             .getAnnotation(Table.class);
 
-    @Column
+    @Column(length = 255, precision = 19, scale = 2)
     protected static Column DEFAULT_COLUMN = ReflectionUtil.getDeclaredField(
             AnnotationUtil.class, "DEFAULT_COLUMN").getAnnotation(Column.class);
 

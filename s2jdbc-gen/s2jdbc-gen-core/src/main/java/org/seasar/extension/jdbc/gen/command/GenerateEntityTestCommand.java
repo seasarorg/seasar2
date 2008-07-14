@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.EntityTestModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -41,6 +42,9 @@ import org.seasar.framework.util.ClassUtil;
  * 
  */
 public class GenerateEntityTestCommand extends AbstractCommand {
+
+    protected static Logger logger = Logger
+            .getLogger(GenerateEntityTestCommand.class);
 
     protected File classpathRootDir;
 
@@ -369,5 +373,9 @@ public class GenerateEntityTestCommand extends AbstractCommand {
 
         return new GenerationContext(model, dir, file, templateName,
                 javaFileEncoding, overwrite);
+    }
+
+    protected Logger getLogger() {
+        return logger;
     }
 }

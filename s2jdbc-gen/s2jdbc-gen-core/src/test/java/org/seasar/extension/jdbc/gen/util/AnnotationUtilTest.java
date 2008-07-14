@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.util;
 
+import javax.persistence.Column;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -32,7 +34,11 @@ public class AnnotationUtilTest {
 
     @Test
     public void testGetDefaultColumn() throws Exception {
-        assertNotNull(AnnotationUtil.getDefaultColumn());
+        Column column = AnnotationUtil.getDefaultColumn();
+        assertNotNull(column);
+        assertEquals(255, column.length());
+        assertEquals(19, column.precision());
+        assertEquals(2, column.scale());
     }
 
     @Test
