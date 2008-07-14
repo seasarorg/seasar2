@@ -202,11 +202,6 @@ public class ColumnDescFactoryImplTest {
         assertTrue(columnDesc.isUnique());
     }
 
-    @Test
-    public void testGetColumnDesc_withStringArg() {
-        assertNotNull(columnDescFactory.getColumnDesc("HOGE"));
-    }
-
     @Entity
     public static class Aaa {
     }

@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.desc;
 
 import java.lang.reflect.Field;
-import java.sql.Types;
 
 import javax.persistence.Column;
 
@@ -24,8 +23,8 @@ import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
-import org.seasar.extension.jdbc.gen.DataType;
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.GenDialect.DbType;
 import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -62,17 +61,6 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         return columnDesc;
     }
 
-    public ColumnDesc getColumnDesc(String columnName) {
-        ColumnDesc columnDesc = new ColumnDesc();
-        columnDesc.setName(columnName);
-        Column column = AnnotationUtil.getDefaultColumn();
-        DataType dataType = dialect.getDataType(Types.VARCHAR);
-        columnDesc.setDefinition(dataType.getDefinition(column.length(), 0, 0));
-        columnDesc.setNullable(false);
-        columnDesc.setUnique(false);
-        return columnDesc;
-    }
-
     /**
      * 名前を処理します。
      * 
@@ -106,8 +94,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
             definition = column.columnDefinition();
         } else {
             int sqlType = propertyMeta.getValueType().getSqlType();
-            DataType dataType = dialect.getDataType(sqlType);
-            definition = dataType.getDefinition(column.length(), column
+            DbType dbType = dialect.getDbType(sqlType);
+            definition = dbType.getDefinition(column.length(), column
                     .precision(), column.scale());
         }
         columnDesc.setDefinition(definition);

@@ -86,6 +86,6 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
 
     protected String getDataType(PropertyMeta propertyMeta) {
         int sqlType = propertyMeta.getValueType().getSqlType();
-        return dialect.getDataType(sqlType).getDefinition(0, 20, 0);
+        return dialect.getDbType(sqlType).getDefinition(0, 20, 0);
     }
 }

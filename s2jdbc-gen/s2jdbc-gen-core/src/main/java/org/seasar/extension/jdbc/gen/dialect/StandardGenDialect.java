@@ -27,9 +27,7 @@ import java.util.Map;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
-import org.seasar.extension.jdbc.gen.DataType;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.JavaType;
 
 /**
  * 標準的な方言をあつかうクラスです。
@@ -41,8 +39,8 @@ public class StandardGenDialect implements GenDialect {
     /** SQL型をキー、@{JavaType Java型}を値とするマップ */
     protected Map<Integer, JavaType> javaTypeMap = new HashMap<Integer, JavaType>();
 
-    /** SQL型をキー、@{DataType データ型}を値とするマップ */
-    protected Map<Integer, DataType> dataTypeMap = new HashMap<Integer, DataType>();
+    /** SQL型をキー、@{DbType データ型}を値とするマップ */
+    protected Map<Integer, DbType> dataTypeMap = new HashMap<Integer, DbType>();
 
     protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
 
@@ -81,36 +79,36 @@ public class StandardGenDialect implements GenDialect {
         javaTypeMap.put(Types.VARBINARY, StandardJavaType.VARBINARY);
         javaTypeMap.put(Types.VARCHAR, StandardJavaType.VARCHAR);
 
-        dataTypeMap.put(Types.ARRAY, StandardDataType.ARRAY);
-        dataTypeMap.put(Types.BIGINT, StandardDataType.BIGINT);
-        dataTypeMap.put(Types.BINARY, StandardDataType.BINARY);
-        dataTypeMap.put(Types.BIT, StandardDataType.BIT);
-        dataTypeMap.put(Types.BLOB, StandardDataType.BLOB);
-        dataTypeMap.put(Types.BOOLEAN, StandardDataType.BOOLEAN);
-        dataTypeMap.put(Types.CHAR, StandardDataType.CHAR);
-        dataTypeMap.put(Types.CLOB, StandardDataType.CLOB);
-        dataTypeMap.put(Types.DATALINK, StandardDataType.DATALINK);
-        dataTypeMap.put(Types.DATE, StandardDataType.DATE);
-        dataTypeMap.put(Types.DECIMAL, StandardDataType.DECIMAL);
-        dataTypeMap.put(Types.DISTINCT, StandardDataType.DISTINCT);
-        dataTypeMap.put(Types.DOUBLE, StandardDataType.DOUBLE);
-        dataTypeMap.put(Types.FLOAT, StandardDataType.FLOAT);
-        dataTypeMap.put(Types.INTEGER, StandardDataType.INTEGER);
-        dataTypeMap.put(Types.JAVA_OBJECT, StandardDataType.JAVA_OBJECT);
-        dataTypeMap.put(Types.LONGVARBINARY, StandardDataType.LONGVARBYNARY);
-        dataTypeMap.put(Types.LONGVARCHAR, StandardDataType.LONGVARCHAR);
-        dataTypeMap.put(Types.NULL, StandardDataType.NULL);
-        dataTypeMap.put(Types.NUMERIC, StandardDataType.NUMERIC);
-        dataTypeMap.put(Types.OTHER, StandardDataType.OTHER);
-        dataTypeMap.put(Types.REAL, StandardDataType.REAL);
-        dataTypeMap.put(Types.REF, StandardDataType.REF);
-        dataTypeMap.put(Types.SMALLINT, StandardDataType.SMALLINT);
-        dataTypeMap.put(Types.STRUCT, StandardDataType.STRUCT);
-        dataTypeMap.put(Types.TIME, StandardDataType.TIME);
-        dataTypeMap.put(Types.TIMESTAMP, StandardDataType.TIMESTAMP);
-        dataTypeMap.put(Types.TINYINT, StandardDataType.TINYINT);
-        dataTypeMap.put(Types.VARBINARY, StandardDataType.VARBINARY);
-        dataTypeMap.put(Types.VARCHAR, StandardDataType.VARCHAR);
+        dataTypeMap.put(Types.ARRAY, StandardDbType.ARRAY);
+        dataTypeMap.put(Types.BIGINT, StandardDbType.BIGINT);
+        dataTypeMap.put(Types.BINARY, StandardDbType.BINARY);
+        dataTypeMap.put(Types.BIT, StandardDbType.BIT);
+        dataTypeMap.put(Types.BLOB, StandardDbType.BLOB);
+        dataTypeMap.put(Types.BOOLEAN, StandardDbType.BOOLEAN);
+        dataTypeMap.put(Types.CHAR, StandardDbType.CHAR);
+        dataTypeMap.put(Types.CLOB, StandardDbType.CLOB);
+        dataTypeMap.put(Types.DATALINK, StandardDbType.DATALINK);
+        dataTypeMap.put(Types.DATE, StandardDbType.DATE);
+        dataTypeMap.put(Types.DECIMAL, StandardDbType.DECIMAL);
+        dataTypeMap.put(Types.DISTINCT, StandardDbType.DISTINCT);
+        dataTypeMap.put(Types.DOUBLE, StandardDbType.DOUBLE);
+        dataTypeMap.put(Types.FLOAT, StandardDbType.FLOAT);
+        dataTypeMap.put(Types.INTEGER, StandardDbType.INTEGER);
+        dataTypeMap.put(Types.JAVA_OBJECT, StandardDbType.JAVA_OBJECT);
+        dataTypeMap.put(Types.LONGVARBINARY, StandardDbType.LONGVARBYNARY);
+        dataTypeMap.put(Types.LONGVARCHAR, StandardDbType.LONGVARCHAR);
+        dataTypeMap.put(Types.NULL, StandardDbType.NULL);
+        dataTypeMap.put(Types.NUMERIC, StandardDbType.NUMERIC);
+        dataTypeMap.put(Types.OTHER, StandardDbType.OTHER);
+        dataTypeMap.put(Types.REAL, StandardDbType.REAL);
+        dataTypeMap.put(Types.REF, StandardDbType.REF);
+        dataTypeMap.put(Types.SMALLINT, StandardDbType.SMALLINT);
+        dataTypeMap.put(Types.STRUCT, StandardDbType.STRUCT);
+        dataTypeMap.put(Types.TIME, StandardDbType.TIME);
+        dataTypeMap.put(Types.TIMESTAMP, StandardDbType.TIMESTAMP);
+        dataTypeMap.put(Types.TINYINT, StandardDbType.TINYINT);
+        dataTypeMap.put(Types.VARBINARY, StandardDbType.VARBINARY);
+        dataTypeMap.put(Types.VARCHAR, StandardDbType.VARCHAR);
     }
 
     public boolean isUserTable(String tableName) {
@@ -148,7 +146,7 @@ public class StandardGenDialect implements GenDialect {
         return javaTypeMap.get(sqlType);
     }
 
-    public DataType getDataType(int sqlType) {
+    public DbType getDbType(int sqlType) {
         return dataTypeMap.get(sqlType);
     }
 
@@ -281,25 +279,25 @@ public class StandardGenDialect implements GenDialect {
     }
 
     /**
-     * 標準的な{@link DataType}の実装クラスです。
+     * 標準的な{@link DbType}の実装クラスです。
      * 
      * @author taedium
      */
-    public static class StandardDataType implements DataType {
+    public static class StandardDbType implements DbType {
 
-        private static DataType ARRAY = new StandardDataType("array");
+        private static DbType ARRAY = new StandardDbType("array");
 
-        private static DataType BIGINT = new StandardDataType("bigint");
+        private static DbType BIGINT = new StandardDbType("bigint");
 
-        private static DataType BIT = new StandardDataType("bit");
+        private static DbType BIT = new StandardDbType("bit");
 
-        private static DataType BINARY = new StandardDataType("binary");
+        private static DbType BINARY = new StandardDbType("binary");
 
-        private static DataType BLOB = new StandardDataType("blob");
+        private static DbType BLOB = new StandardDbType("blob");
 
-        private static DataType BOOLEAN = new StandardDataType("boolean");
+        private static DbType BOOLEAN = new StandardDbType("boolean");
 
-        private static DataType CHAR = new StandardDataType() {
+        private static DbType CHAR = new StandardDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
@@ -307,52 +305,52 @@ public class StandardGenDialect implements GenDialect {
             }
         };
 
-        private static DataType CLOB = new StandardDataType("clob");
+        private static DbType CLOB = new StandardDbType("clob");
 
-        private static DataType DATE = new StandardDataType("date");
+        private static DbType DATE = new StandardDbType("date");
 
-        private static DataType DATALINK = new StandardDataType("datalink");
+        private static DbType DATALINK = new StandardDbType("datalink");
 
-        private static DataType DECIMAL = new StandardDataType("decimal");
+        private static DbType DECIMAL = new StandardDbType("decimal");
 
-        private static DataType DISTINCT = new StandardDataType("distinct");
+        private static DbType DISTINCT = new StandardDbType("distinct");
 
-        private static DataType DOUBLE = new StandardDataType("double");
+        private static DbType DOUBLE = new StandardDbType("double");
 
-        private static DataType FLOAT = new StandardDataType("float");
+        private static DbType FLOAT = new StandardDbType("float");
 
-        private static DataType INTEGER = new StandardDataType("integer");
+        private static DbType INTEGER = new StandardDbType("integer");
 
-        private static DataType JAVA_OBJECT = new StandardDataType(
+        private static DbType JAVA_OBJECT = new StandardDbType(
                 "java_object");
 
-        private static DataType LONGVARBYNARY = new StandardDataType(
+        private static DbType LONGVARBYNARY = new StandardDbType(
                 "longvarbynary");
 
-        private static DataType LONGVARCHAR = new StandardDataType(
+        private static DbType LONGVARCHAR = new StandardDbType(
                 "longvarchar");
 
-        private static DataType NULL = new StandardDataType("null");
+        private static DbType NULL = new StandardDbType("null");
 
-        private static DataType NUMERIC = new StandardDataType("numeric");
+        private static DbType NUMERIC = new StandardDbType("numeric");
 
-        private static DataType OTHER = new StandardDataType("other");
+        private static DbType OTHER = new StandardDbType("other");
 
-        private static DataType REAL = new StandardDataType("real");
+        private static DbType REAL = new StandardDbType("real");
 
-        private static DataType REF = new StandardDataType("ref");
+        private static DbType REF = new StandardDbType("ref");
 
-        private static DataType SMALLINT = new StandardDataType("smallint");
+        private static DbType SMALLINT = new StandardDbType("smallint");
 
-        private static DataType STRUCT = new StandardDataType("struct");
+        private static DbType STRUCT = new StandardDbType("struct");
 
-        private static DataType TIME = new StandardDataType("time");
+        private static DbType TIME = new StandardDbType("time");
 
-        private static DataType TIMESTAMP = new StandardDataType("timestamp");
+        private static DbType TIMESTAMP = new StandardDbType("timestamp");
 
-        private static DataType TINYINT = new StandardDataType("tinyint");
+        private static DbType TINYINT = new StandardDbType("tinyint");
 
-        private static DataType VARBINARY = new StandardDataType("varbinary") {
+        private static DbType VARBINARY = new StandardDbType("varbinary") {
 
             @Override
             public String getDefinition(int length, int presision, int scale) {
@@ -360,7 +358,7 @@ public class StandardGenDialect implements GenDialect {
             }
         };
 
-        private static DataType VARCHAR = new StandardDataType() {
+        private static DbType VARCHAR = new StandardDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
@@ -371,7 +369,7 @@ public class StandardGenDialect implements GenDialect {
         /** 定義 */
         private String definition;
 
-        protected StandardDataType() {
+        protected StandardDbType() {
         }
 
         /**
@@ -380,7 +378,7 @@ public class StandardGenDialect implements GenDialect {
          * @param definition
          *            定義
          */
-        protected StandardDataType(String definition) {
+        protected StandardDbType(String definition) {
             this.definition = definition;
         }
 

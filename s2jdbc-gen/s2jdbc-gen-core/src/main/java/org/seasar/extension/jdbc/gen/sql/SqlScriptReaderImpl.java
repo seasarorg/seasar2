@@ -51,8 +51,6 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
 
     protected BufferedReader reader;
 
-    protected SqlBuilder builder;
-
     protected boolean endOfFile;
 
     /**
@@ -88,7 +86,7 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             if (reader == null) {
                 reader = createBufferedReader();
             }
-            builder = new SqlBuilder();
+            SqlBuilder builder = new SqlBuilder();
             readLineLoop: for (;;) {
                 tokenizer.addLine(reader.readLine());
                 builder.notifyLineChanged();

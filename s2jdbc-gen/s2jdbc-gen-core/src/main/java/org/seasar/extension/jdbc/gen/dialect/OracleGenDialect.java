@@ -21,9 +21,6 @@ import java.util.Arrays;
 
 import javax.persistence.GenerationType;
 
-import org.seasar.extension.jdbc.gen.DataType;
-import org.seasar.extension.jdbc.gen.JavaType;
-
 /**
  * Oracleの方言を扱うクラスです。
  * 
@@ -38,19 +35,19 @@ public class OracleGenDialect extends StandardGenDialect {
         super();
         javaTypeMap.put(Types.DECIMAL, OracleJavaType.DECIMAL);
 
-        dataTypeMap.put(Types.BINARY, OracleDataType.BINARY);
-        dataTypeMap.put(Types.BIT, OracleDataType.BIT);
-        dataTypeMap.put(Types.BIGINT, OracleDataType.BIGINT);
-        dataTypeMap.put(Types.CHAR, OracleDataType.CHAR);
-        dataTypeMap.put(Types.DECIMAL, OracleDataType.DECIMAL);
-        dataTypeMap.put(Types.DOUBLE, OracleDataType.DOUBLE);
-        dataTypeMap.put(Types.INTEGER, OracleDataType.INTEGER);
-        dataTypeMap.put(Types.NUMERIC, OracleDataType.NUMERIC);
-        dataTypeMap.put(Types.SMALLINT, OracleDataType.SMALLINT);
-        dataTypeMap.put(Types.TIME, OracleDataType.TIME);
-        dataTypeMap.put(Types.TINYINT, OracleDataType.TINYINT);
-        dataTypeMap.put(Types.VARBINARY, OracleDataType.VARBINARY);
-        dataTypeMap.put(Types.VARCHAR, OracleDataType.VARCHAR);
+        dataTypeMap.put(Types.BINARY, OracleDbType.BINARY);
+        dataTypeMap.put(Types.BIT, OracleDbType.BIT);
+        dataTypeMap.put(Types.BIGINT, OracleDbType.BIGINT);
+        dataTypeMap.put(Types.CHAR, OracleDbType.CHAR);
+        dataTypeMap.put(Types.DECIMAL, OracleDbType.DECIMAL);
+        dataTypeMap.put(Types.DOUBLE, OracleDbType.DOUBLE);
+        dataTypeMap.put(Types.INTEGER, OracleDbType.INTEGER);
+        dataTypeMap.put(Types.NUMERIC, OracleDbType.NUMERIC);
+        dataTypeMap.put(Types.SMALLINT, OracleDbType.SMALLINT);
+        dataTypeMap.put(Types.TIME, OracleDbType.TIME);
+        dataTypeMap.put(Types.TINYINT, OracleDbType.TINYINT);
+        dataTypeMap.put(Types.VARBINARY, OracleDbType.VARBINARY);
+        dataTypeMap.put(Types.VARCHAR, OracleDbType.VARCHAR);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
                 "procedure"));
@@ -117,15 +114,15 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Oracle用の{@link DataType}の実装です。
+     * Oracle用の{@link DbType}の実装です。
      * 
      * @author taedium
      */
-    public static class OracleDataType extends StandardDataType {
+    public static class OracleDbType extends StandardDbType {
 
-        private static DataType BIGINT = new OracleDataType("number(19,0)");
+        private static DbType BIGINT = new OracleDbType("number(19,0)");
 
-        private static DataType BINARY = new OracleDataType() {
+        private static DbType BINARY = new OracleDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
@@ -133,23 +130,11 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
-        private static DataType BIT = new OracleDataType("number(1,0)");
+        private static DbType BIT = new OracleDbType("number(1,0)");
 
-        private static DataType CHAR = new OracleDataType("char(1 char)");
+        private static DbType CHAR = new OracleDbType("char(1 char)");
 
-        private static DataType DECIMAL = new OracleDataType() {
-
-            @Override
-            public String getDefinition(int length, int presision, int scale) {
-                return format("number(%d,%d)", presision, scale);
-            }
-        };
-
-        private static DataType DOUBLE = new OracleDataType("double precision");
-
-        private static DataType INTEGER = new OracleDataType("number(10,0)");
-
-        private static DataType NUMERIC = new OracleDataType() {
+        private static DbType DECIMAL = new OracleDbType() {
 
             @Override
             public String getDefinition(int length, int presision, int scale) {
@@ -157,13 +142,25 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
-        private static DataType SMALLINT = new OracleDataType("number(5,0)");
+        private static DbType DOUBLE = new OracleDbType("double precision");
 
-        private static DataType TIME = new OracleDataType("date");
+        private static DbType INTEGER = new OracleDbType("number(10,0)");
 
-        private static DataType TINYINT = new OracleDataType("number(3,0)");
+        private static DbType NUMERIC = new OracleDbType() {
 
-        private static DataType VARBINARY = new OracleDataType() {
+            @Override
+            public String getDefinition(int length, int presision, int scale) {
+                return format("number(%d,%d)", presision, scale);
+            }
+        };
+
+        private static DbType SMALLINT = new OracleDbType("number(5,0)");
+
+        private static DbType TIME = new OracleDbType("date");
+
+        private static DbType TINYINT = new OracleDbType("number(3,0)");
+
+        private static DbType VARBINARY = new OracleDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
@@ -174,7 +171,7 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
-        private static DataType VARCHAR = new OracleDataType() {
+        private static DbType VARCHAR = new OracleDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
@@ -185,7 +182,7 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
-        protected OracleDataType() {
+        protected OracleDbType() {
         }
 
         /**
@@ -194,7 +191,7 @@ public class OracleGenDialect extends StandardGenDialect {
          * @param definition
          *            定義
          */
-        protected OracleDataType(String definition) {
+        protected OracleDbType(String definition) {
             super(definition);
         }
     }

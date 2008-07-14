@@ -20,8 +20,8 @@ import java.sql.Types;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DataType;
-import org.seasar.extension.jdbc.gen.JavaType;
+import org.seasar.extension.jdbc.gen.GenDialect.DbType;
+import org.seasar.extension.jdbc.gen.GenDialect.JavaType;
 
 import static org.junit.Assert.*;
 
@@ -38,9 +38,9 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDataType_decimal() throws Exception {
-        DataType dataType = dialect.getDataType(Types.DECIMAL);
-        assertEquals("number(10,5)", dataType.getDefinition(0, 10, 5));
+    public void testDbType_decimal() throws Exception {
+        DbType dbType = dialect.getDbType(Types.DECIMAL);
+        assertEquals("number(10,5)", dbType.getDefinition(0, 10, 5));
     }
 
     /**
@@ -48,9 +48,9 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDataType_numeric() throws Exception {
-        DataType dataType = dialect.getDataType(Types.NUMERIC);
-        assertEquals("number(10,5)", dataType.getDefinition(0, 10, 5));
+    public void testDbType_numeric() throws Exception {
+        DbType dbType = dialect.getDbType(Types.NUMERIC);
+        assertEquals("number(10,5)", dbType.getDefinition(0, 10, 5));
     }
 
     /**
@@ -58,10 +58,10 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDataType_varbinary() throws Exception {
-        DataType dataType = dialect.getDataType(Types.VARBINARY);
-        assertEquals("raw(2000)", dataType.getDefinition(2000, 0, 0));
-        assertEquals("long raw", dataType.getDefinition(2001, 0, 0));
+    public void testDbType_varbinary() throws Exception {
+        DbType dbType = dialect.getDbType(Types.VARBINARY);
+        assertEquals("raw(2000)", dbType.getDefinition(2000, 0, 0));
+        assertEquals("long raw", dbType.getDefinition(2001, 0, 0));
     }
 
     /**
@@ -69,10 +69,10 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDataType_varchar() throws Exception {
-        DataType dataType = dialect.getDataType(Types.VARCHAR);
-        assertEquals("varchar2(4000)", dataType.getDefinition(4000, 0, 0));
-        assertEquals("long", dataType.getDefinition(4001, 0, 0));
+    public void testDbType_varchar() throws Exception {
+        DbType dbType = dialect.getDbType(Types.VARCHAR);
+        assertEquals("varchar2(4000)", dbType.getDefinition(4000, 0, 0));
+        assertEquals("long", dbType.getDefinition(4001, 0, 0));
     }
 
     @Test

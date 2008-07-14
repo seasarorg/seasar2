@@ -83,7 +83,7 @@ public interface GenDialect {
      *            JDBCのSQL型
      * @return データ型
      */
-    DataType getDataType(int sqlType);
+    DbType getDbType(int sqlType);
 
     /**
      * デフォルトの{@link GenerationType}を返します。
@@ -134,4 +134,49 @@ public interface GenDialect {
 
     boolean isSqlBlockStartWords(List<String> words);
 
+    /**
+     * JDBCのSQL型に対応するJavaのクラスをあらわします。
+     * 
+     * @author taedium
+     */
+    interface JavaType {
+
+        /**
+         * クラスを返します。
+         * 
+         * @param length
+         *            長さ
+         * @param scale
+         *            スケール
+         * @param typeName
+         *            データベースのデータ型名
+         * @param nullable
+         *            {@code null}可能ならば{@code true}
+         * @return
+         */
+        Class<?> getJavaClass(int length, int scale, String typeName,
+                boolean nullable);
+    }
+
+    /**
+     * JDBCのSQL型に対応するデータベースのデータ型をあらわします。
+     * 
+     * @author taedium
+     */
+    public interface DbType {
+
+        /**
+         * 定義を返します。
+         * 
+         * @param length
+         *            長さ
+         * @param precision
+         *            精度
+         * @param scale
+         *            スケール
+         * @return 定義
+         */
+        String getDefinition(int length, int precision, int scale);
+
+    }
 }
