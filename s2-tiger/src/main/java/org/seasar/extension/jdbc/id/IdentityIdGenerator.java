@@ -89,7 +89,11 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
     protected long getGeneratedId(final Statement statement) {
         try {
             final ResultSet rs = statement.getGeneratedKeys();
-            return getGeneratedId(rs);
+            try {
+                return getGeneratedId(rs);
+            } finally {
+                ResultSetUtil.close(rs);
+            }
         } catch (final SQLException e) {
             throw new IdGenerationFailedRuntimeException(entityMeta.getName(),
                     propertyMeta.getName(), e);
