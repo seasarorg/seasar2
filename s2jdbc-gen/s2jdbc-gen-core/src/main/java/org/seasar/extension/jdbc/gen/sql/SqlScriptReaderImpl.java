@@ -19,7 +19,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlScriptReader;
 import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
 import org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType;
@@ -44,7 +47,11 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
 
     protected SqlScriptTokenizer tokenizer;
 
+    protected GenDialect dialect;
+
     protected BufferedReader reader;
+
+    protected SqlBuilder builder;
 
     protected boolean endOfFile;
 
@@ -54,7 +61,7 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
      * @param tokenizer
      */
     public SqlScriptReaderImpl(File sqlFile, String sqlFileEncoding,
-            SqlScriptTokenizer tokenizer) {
+            SqlScriptTokenizer tokenizer, GenDialect dialect) {
         if (sqlFile == null) {
             throw new NullPointerException("sqlFile");
         }
@@ -64,9 +71,13 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         if (tokenizer == null) {
             throw new NullPointerException("tokenizer");
         }
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         this.sqlFile = sqlFile;
         this.sqlFileEncoding = sqlFileEncoding;
         this.tokenizer = tokenizer;
+        this.dialect = dialect;
     }
 
     public String readSql() {
@@ -77,44 +88,24 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             if (reader == null) {
                 reader = createBufferedReader();
             }
-            SqlBuffer buffer = new SqlBuffer();
-
-            outerLoop: for (String line = reader.readLine();; line = reader
-                    .readLine()) {
-                tokenizer.addFragment(line);
-                buffer.appendSpaceIfNecessary();
-
-                innerLoop: for (;;) {
-                    TokenType tokenType = tokenizer.nextToken();
-                    String token = tokenizer.getToken();
-                    switch (tokenType) {
-                    case WORD:
-                    case OTHER:
-                    case QUOTE:
-                        buffer.append(token);
-                        break;
-                    case END_OF_FRAGMENT:
-                        break innerLoop;
-                    case STATEMENT_DELIMITER:
-                        if (tokenizer.isInSqlBlock()) {
-                            buffer.append(token);
-                            break;
-                        }
-                        break outerLoop;
-                    case BLOCK_DELIMITER:
-                        if (buffer.isEmpty()) {
-                            break innerLoop;
-                        }
-                        break outerLoop;
-                    case END_OF_FILE:
-                        endOfFile = true;
-                        break outerLoop;
-                    default:
-                        break;
+            builder = new SqlBuilder();
+            readLineLoop: for (;;) {
+                tokenizer.addLine(reader.readLine());
+                builder.notifyLineChanged();
+                nextTokenLoop: for (;;) {
+                    builder.set(tokenizer.nextToken(), tokenizer.getToken());
+                    builder.build();
+                    if (builder.isTokenRequired()) {
+                        continue;
+                    } else if (builder.isLineRequired()) {
+                        break nextTokenLoop;
+                    } else if (builder.isCompleted()) {
+                        break readLineLoop;
                     }
+                    throw new IllegalStateException("builder");
                 }
             }
-            return (endOfFile && buffer.isEmpty()) ? null : buffer.toSql();
+            return builder.getSql();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
@@ -131,30 +122,172 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
                 sqlFileEncoding));
     }
 
-    protected static class SqlBuffer {
+    protected class SqlBuilder {
+
+        protected TokenType tokenType;
+
+        protected String token;
+
+        protected boolean tokenRequired;
+
+        protected boolean lineRequired;
+
+        protected boolean completed;
 
         protected StringBuilder buf = new StringBuilder(300);
 
-        protected void append(String s) {
-            buf.append(s);
+        protected List<String> wordList = new ArrayList<String>();
+
+        protected boolean inSqlBlock;
+
+        protected boolean delimited;
+
+        protected boolean lineChanged;
+
+        protected SqlBuilder() {
         }
 
-        protected void appendSpaceIfNecessary() {
+        protected void set(TokenType tokenType, String token) {
+            this.tokenType = tokenType;
+            this.token = token;
+            setTokenRequired(true);
+        }
+
+        protected void build() {
+            switch (tokenType) {
+            case WORD:
+                wordList.add(token);
+                append(token);
+                setTokenRequired(true);
+                break;
+            case QUOTE:
+            case OTHER:
+                append(token);
+                setTokenRequired(true);
+                break;
+            case END_OF_LINE:
+                if (delimited) {
+                    setCompleted(true);
+                } else {
+                    setLineRequired(true);
+                }
+                break;
+            case STATEMENT_DELIMITER:
+                if (isInSqlBlock()) {
+                    append(token);
+                } else {
+                    delimited = true;
+                }
+                setTokenRequired(true);
+                break;
+            case BLOCK_DELIMITER:
+                if (isEmpty()) {
+                    setLineRequired(true);
+                } else {
+                    setCompleted(true);
+                }
+                break;
+            case END_OF_FILE:
+                endOfFile = true;
+                setCompleted(true);
+                break;
+            default:
+                setTokenRequired(true);
+                break;
+            }
+        }
+
+        /**
+         * @return Returns the tokenRequired.
+         */
+        protected boolean isTokenRequired() {
+            return tokenRequired;
+        }
+
+        /**
+         * @param tokenRequired
+         *            The tokenRequired to set.
+         */
+        protected void setTokenRequired(boolean tokenRequired) {
+            this.tokenRequired = tokenRequired;
+            lineRequired = false;
+            completed = false;
+        }
+
+        /**
+         * @return Returns the lineRequired.
+         */
+        protected boolean isLineRequired() {
+            return lineRequired;
+        }
+
+        /**
+         * @param lineRequired
+         *            The lineRequired to set.
+         */
+        protected void setLineRequired(boolean lineRequired) {
+            this.lineRequired = lineRequired;
+            tokenRequired = false;
+            completed = false;
+        }
+
+        /**
+         * @return Returns the built.
+         */
+        protected boolean isCompleted() {
+            return completed;
+        }
+
+        /**
+         * @param completed
+         *            The built to set.
+         */
+        protected void setCompleted(boolean completed) {
+            this.completed = completed;
+            tokenRequired = false;
+            lineRequired = false;
+        }
+
+        protected void append(String s) {
+            if (!delimited) {
+                appendWhitespaceIfNecessary();
+                buf.append(s);
+            }
+        }
+
+        protected void appendWhitespaceIfNecessary() {
+            if (!lineChanged) {
+                return;
+            }
             if (buf.length() > 0) {
                 char lastChar = buf.charAt(buf.length() - 1);
                 if (!Character.isWhitespace(lastChar)) {
                     buf.append(' ');
                 }
             }
+            lineChanged = false;
+        }
+
+        protected void notifyLineChanged() {
+            lineChanged = true;
+        }
+
+        protected boolean isInSqlBlock() {
+            if (inSqlBlock) {
+                return true;
+            }
+            inSqlBlock = dialect.isSqlBlockStartWords(wordList);
+            return inSqlBlock;
         }
 
         protected boolean isEmpty() {
             return buf.toString().trim().length() == 0;
         }
 
-        protected String toSql() {
-            return buf.toString().trim();
+        protected String getSql() {
+            String sql = buf.toString().trim();
+            return endOfFile && sql.length() == 0 ? null : sql;
         }
-
     }
+
 }

@@ -251,7 +251,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     protected SqlScriptReader createSqlScriptReader(File sqlFile) {
         return new SqlScriptReaderImpl(sqlFile, sqlFileEncoding,
-                sqlScriptTokenizer);
+                sqlScriptTokenizer, dialect);
     }
 
     protected SqlScriptTokenizer createScriptTokenizer() {

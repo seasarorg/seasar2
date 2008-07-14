@@ -41,16 +41,15 @@ public interface SqlScriptTokenizer {
         /** */
         OTHER,
         /** */
-        END_OF_FRAGMENT,
+        END_OF_LINE,
         /** */
         END_OF_FILE
     }
 
-    void addFragment(String fragment);
+    void addLine(String fragment);
 
     TokenType nextToken();
 
     String getToken();
 
-    boolean isInSqlBlock();
 }

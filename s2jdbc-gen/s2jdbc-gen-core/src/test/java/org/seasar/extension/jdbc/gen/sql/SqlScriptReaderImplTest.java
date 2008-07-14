@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.SqlScriptReader;
 import org.seasar.extension.jdbc.gen.dialect.MssqlGenDialect;
@@ -32,20 +33,20 @@ import static org.junit.Assert.*;
  */
 public class SqlScriptReaderImplTest {
 
-    /**
-     * 
-     */
-    private void setUp() {
-        // TODO Auto-generated method stub
+    private SqlScriptTokenizerImpl tokenizer;
 
+    private MssqlGenDialect dialect;
+
+    @Before
+    public void setUp() {
+        dialect = new MssqlGenDialect();
+        tokenizer = new SqlScriptTokenizerImpl(dialect, ';');
     }
 
     @Test
-    public void testReadSql() throws Exception {
-        SqlScriptTokenizerImpl tokenizer = new SqlScriptTokenizerImpl(
-                new MssqlGenDialect(), ';');
+    public void testReadSql_delimiter() throws Exception {
         SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
-                "UTF-8", tokenizer) {
+                "UTF-8", tokenizer, dialect) {
 
             @Override
             protected BufferedReader createBufferedReader() throws IOException {
@@ -64,4 +65,60 @@ public class SqlScriptReaderImplTest {
         assertEquals("ccc ddd", reader.readSql());
         assertNull(reader.readSql());
     }
+
+    @Test
+    public void testReadSql_sqlBlock() throws Exception {
+        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+                "UTF-8", tokenizer, dialect) {
+
+            @Override
+            protected BufferedReader createBufferedReader() throws IOException {
+                StringBuilder buf = new StringBuilder();
+                buf.append("begin aaa; end\n");
+                buf.append("go\n");
+                StringReader reader = new StringReader(buf.toString());
+                return new BufferedReader(reader);
+            }
+        };
+        assertEquals("begin aaa; end", reader.readSql());
+        assertNull(reader.readSql());
+    }
+
+    @Test
+    public void testReadSql_notSqlBlock() throws Exception {
+        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+                "UTF-8", tokenizer, dialect) {
+
+            @Override
+            protected BufferedReader createBufferedReader() throws IOException {
+                StringBuilder buf = new StringBuilder();
+                buf.append("start aaa; end\n");
+                buf.append("go\n");
+                StringReader reader = new StringReader(buf.toString());
+                return new BufferedReader(reader);
+            }
+        };
+        assertEquals("start aaa", reader.readSql());
+        assertNull(reader.readSql());
+    }
+
+    @Test
+    public void testReadSql_commentBlock() throws Exception {
+        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+                "UTF-8", tokenizer, dialect) {
+
+            @Override
+            protected BufferedReader createBufferedReader() throws IOException {
+                StringBuilder buf = new StringBuilder();
+                buf.append("select 1 ; /* aaa\n");
+                buf.append("aaa */ select 2;");
+                StringReader reader = new StringReader(buf.toString());
+                return new BufferedReader(reader);
+            }
+        };
+        assertEquals("select 1", reader.readSql());
+        assertEquals("select 2", reader.readSql());
+        assertNull(reader.readSql());
+    }
+
 }

@@ -37,24 +37,24 @@ public class SqlScriptTokenizerImplTest {
 
     @Test
     public void testGetToken_endOfFragment() {
-        tokenizer.addFragment("aaa");
+        tokenizer.addLine("aaa");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
     }
 
     @Test
     public void testGetToken_endOfFile() {
-        tokenizer.addFragment("aaa");
+        tokenizer.addLine("aaa");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
 
-        tokenizer.addFragment(null);
+        tokenizer.addLine(null);
         assertEquals(END_OF_FILE, tokenizer.nextToken());
         assertNull(tokenizer.getToken());
         assertEquals(END_OF_FILE, tokenizer.nextToken());
@@ -63,41 +63,41 @@ public class SqlScriptTokenizerImplTest {
 
     @Test
     public void testGetToken_lineComment() {
-        tokenizer.addFragment("aaa -- bbb /* ; ");
+        tokenizer.addLine("aaa -- bbb /* ; ");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
         assertEquals(OTHER, tokenizer.nextToken());
         assertEquals(" ", tokenizer.getToken());
         assertEquals(LINE_COMMENT, tokenizer.nextToken());
         assertEquals("-- bbb /* ; ", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_blockCommentInTwoFragments() {
-        tokenizer.addFragment("aaa/*b");
+        tokenizer.addLine("aaa/*b");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
         assertEquals(START_OF_BLOCK_COMMENT, tokenizer.nextToken());
         assertEquals("/*", tokenizer.getToken());
         assertEquals(BLOCK_COMMENT, tokenizer.nextToken());
         assertEquals("b", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
 
-        tokenizer.addFragment("bb*/ccc");
+        tokenizer.addLine("bb*/ccc");
         assertEquals(BLOCK_COMMENT, tokenizer.nextToken());
         assertEquals("bb", tokenizer.getToken());
         assertEquals(END_OF_BLOCK_COMMENT, tokenizer.nextToken());
         assertEquals("*/", tokenizer.getToken());
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("ccc", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_blockCommentsInOneFragment() {
-        tokenizer.addFragment("aaa/*bbb*/ccc/*ddd*/");
+        tokenizer.addLine("aaa/*bbb*/ccc/*ddd*/");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
         assertEquals(START_OF_BLOCK_COMMENT, tokenizer.nextToken());
@@ -114,12 +114,12 @@ public class SqlScriptTokenizerImplTest {
         assertEquals("ddd", tokenizer.getToken());
         assertEquals(END_OF_BLOCK_COMMENT, tokenizer.nextToken());
         assertEquals("*/", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_statementDelimiter() throws Exception {
-        tokenizer.addFragment("select * from aaa; ");
+        tokenizer.addLine("select * from aaa; ");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("select", tokenizer.getToken());
         assertEquals(OTHER, tokenizer.nextToken());
@@ -134,97 +134,56 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(";", tokenizer.getToken());
         assertEquals(OTHER, tokenizer.nextToken());
         assertEquals(" ", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_blockDelimiter() throws Exception {
-        tokenizer.addFragment("aaa go");
+        tokenizer.addLine("aaa go");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
         assertEquals(OTHER, tokenizer.nextToken());
         assertEquals(" ", tokenizer.getToken());
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("go", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
 
-        tokenizer.addFragment("/ ");
+        tokenizer.addLine("/ ");
         assertEquals(BLOCK_DELIMITER, tokenizer.nextToken());
         assertEquals("/ ", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_wordAndOther() throws Exception {
-        tokenizer.addFragment("select,");
+        tokenizer.addLine("select,");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("select", tokenizer.getToken());
         assertEquals(OTHER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
-        tokenizer.addFragment("bbb");
+        tokenizer.addLine("bbb");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("bbb", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_quote() throws Exception {
-        tokenizer.addFragment("'aaa'");
+        tokenizer.addLine("'aaa'");
         assertEquals(QUOTE, tokenizer.nextToken());
         assertEquals("'aaa'", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
     @Test
     public void testGetToken_quoteNotClosed() throws Exception {
-        tokenizer.addFragment("'aaa");
+        tokenizer.addLine("'aaa");
         assertEquals(QUOTE, tokenizer.nextToken());
         assertEquals("'aaa", tokenizer.getToken());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
-    @Test
-    public void test_sqlBlock() throws Exception {
-        tokenizer.addFragment("begin aaa; end;");
-        assertEquals(WORD, tokenizer.nextToken());
-        assertEquals("begin", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(OTHER, tokenizer.nextToken());
-        assertEquals(" ", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(WORD, tokenizer.nextToken());
-        assertEquals("aaa", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(STATEMENT_DELIMITER, tokenizer.nextToken());
-        assertEquals(";", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(OTHER, tokenizer.nextToken());
-        assertEquals(" ", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(WORD, tokenizer.nextToken());
-        assertEquals("end", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(STATEMENT_DELIMITER, tokenizer.nextToken());
-        assertEquals(";", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
-        assertEquals("", tokenizer.getToken());
-        assertTrue(tokenizer.isInSqlBlock());
-
-        tokenizer.addFragment("/");
-        assertEquals(BLOCK_DELIMITER, tokenizer.nextToken());
-        assertEquals("/", tokenizer.getToken());
-        assertFalse(tokenizer.isInSqlBlock());
-        assertEquals(END_OF_FRAGMENT, tokenizer.nextToken());
-        assertEquals("", tokenizer.getToken());
-
-        tokenizer.addFragment("aaa;");
-        assertEquals(WORD, tokenizer.nextToken());
-        assertEquals("aaa", tokenizer.getToken());
-        assertEquals(STATEMENT_DELIMITER, tokenizer.nextToken());
-        assertEquals(";", tokenizer.getToken());
-    }
 }
