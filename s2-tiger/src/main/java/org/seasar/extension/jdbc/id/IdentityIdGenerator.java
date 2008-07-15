@@ -28,7 +28,6 @@ import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
-import org.seasar.framework.util.ResultSetUtil;
 
 /**
  * {@link GenerationType#IDENTITY}方式で識別子の値を自動生成するIDジェネレータです。
@@ -89,11 +88,7 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
     protected long getGeneratedId(final Statement statement) {
         try {
             final ResultSet rs = statement.getGeneratedKeys();
-            try {
-                return getGeneratedId(rs);
-            } finally {
-                ResultSetUtil.close(rs);
-            }
+            return getGeneratedId(rs);
         } catch (final SQLException e) {
             throw new IdGenerationFailedRuntimeException(entityMeta.getName(),
                     propertyMeta.getName(), e);
@@ -118,11 +113,7 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
         final PreparedStatement ps = jdbcManager.getJdbcContext()
                 .getPreparedStatement(sql);
         final ResultSet rs = PreparedStatementUtil.executeQuery(ps);
-        try {
-            return getGeneratedId(rs);
-        } finally {
-            ResultSetUtil.close(rs);
-        }
+        return getGeneratedId(rs);
     }
 
 }
