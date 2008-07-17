@@ -22,10 +22,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.SchemaModel;
+import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -38,7 +38,7 @@ public class GenerateTableTest {
 
     private GeneratorImplStub generator;
 
-    private SchemaModel model;
+    private DbModel model;
 
     @Before
     public void setUp() throws Exception {
@@ -70,8 +70,8 @@ public class GenerateTableTest {
         tableDesc2.addColumnDesc(no);
         tableDesc2.addColumnDesc(name);
 
-        SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
-                new StandardGenDialect());
+        DbModelFactoryImpl factory = new DbModelFactoryImpl(
+                new StandardGenDialect(), ';');
         model = factory.getSchemaModel(Arrays.asList(tableDesc, tableDesc2));
     }
 

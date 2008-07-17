@@ -63,7 +63,7 @@ public class GenerateDdlCommandTest {
         command.init();
         assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createSchemaModelFactory());
+        assertNotNull(command.createDbModelFactory());
         assertNotNull(command.createTableDescFactory());
         assertNotNull(command.createGenerationContext(new Object(), "aaa",
                 "bbb"));

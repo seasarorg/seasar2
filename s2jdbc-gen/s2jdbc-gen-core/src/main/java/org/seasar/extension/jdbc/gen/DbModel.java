@@ -23,9 +23,11 @@ import java.util.List;
  * @author taedium
  * 
  */
-public class SchemaModel {
+public class DbModel {
 
     protected GenDialect dialect;
+
+    protected char delimiter;
 
     protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
 
@@ -37,6 +39,21 @@ public class SchemaModel {
 
     public void setDialect(GenDialect dialect) {
         this.dialect = dialect;
+    }
+
+    /**
+     * @return Returns the delimiter.
+     */
+    public char getDelimiter() {
+        return delimiter;
+    }
+
+    /**
+     * @param delimiter
+     *            The delimiter to set.
+     */
+    public void setDelimiter(char delimiter) {
+        this.delimiter = delimiter;
     }
 
     public void addTableDesc(TableDesc tableDesc) {

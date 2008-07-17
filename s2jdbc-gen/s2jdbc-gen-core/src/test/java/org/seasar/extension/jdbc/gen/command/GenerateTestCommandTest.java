@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.EntityTestModel;
+import org.seasar.extension.jdbc.gen.TestModel;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateEntityTestCommandTest {
+public class GenerateTestCommandTest {
 
     @After
     public void tearDown() throws Exception {
@@ -42,7 +42,7 @@ public class GenerateEntityTestCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateEntityTestCommand command = new GenerateEntityTestCommand();
+        GenerateTestCommand command = new GenerateTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         try {
             command.validate();
@@ -57,17 +57,17 @@ public class GenerateEntityTestCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        GenerateEntityTestCommand command = new GenerateEntityTestCommand();
+        GenerateTestCommand command = new GenerateTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathRootDir(new File("dir"));
         command.validate();
         command.init();
         assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createEntityTestModelFactory());
+        assertNotNull(command.createTestModelFactory());
         assertNotNull(command.createGenerator());
-        EntityTestModel entityTestModel = new EntityTestModel();
-        entityTestModel.setPackageName("aaa");
-        entityTestModel.setShortClassName("bbb");
-        assertNotNull(command.createGenerationContext(entityTestModel, "ccc"));
+        TestModel testModel = new TestModel();
+        testModel.setPackageName("aaa");
+        testModel.setShortClassName("bbb");
+        assertNotNull(command.createGenerationContext(testModel, "ccc"));
     }
 }

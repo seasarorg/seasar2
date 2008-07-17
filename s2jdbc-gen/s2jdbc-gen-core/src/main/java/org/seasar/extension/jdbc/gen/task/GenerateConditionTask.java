@@ -31,62 +31,6 @@ public class GenerateConditionTask extends AbstractTask {
     public GenerateConditionTask() {
     }
 
-    public File getClasspathRootDir() {
-        return command.getClasspathRootDir();
-    }
-
-    public String getConditionClassNameSuffix() {
-        return command.getConditionClassNameSuffix();
-    }
-
-    public String getConditionPackageName() {
-        return command.getConditionPackageName();
-    }
-
-    public String getConditionTemplateFileName() {
-        return command.getConditionTemplateFileName();
-    }
-
-    public String getConfigPath() {
-        return command.getConfigPath();
-    }
-
-    public String getEntityPackageName() {
-        return command.getEntityPackageName();
-    }
-
-    public File getJavaFileDir() {
-        return command.getJavaFileDir();
-    }
-
-    public String getJavaFileEncoding() {
-        return command.getJavaFileEncoding();
-    }
-
-    public String getJdbcManagerName() {
-        return command.getJdbcManagerName();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.GenerateConditionCommand#isOverwrite()
-     */
-    public boolean isOverwrite() {
-        return command.isOverwrite();
-    }
-
-    public String getRootPackageName() {
-        return command.getRootPackageName();
-    }
-
-    public String getTemplateFileEncoding() {
-        return command.getTemplateFileEncoding();
-    }
-
-    public File getTemplateFilePrimaryDir() {
-        return command.getTemplateFilePrimaryDir();
-    }
-
     public void setClasspathRootDir(File classpathRootDir) {
         command.setClasspathRootDir(classpathRootDir);
     }

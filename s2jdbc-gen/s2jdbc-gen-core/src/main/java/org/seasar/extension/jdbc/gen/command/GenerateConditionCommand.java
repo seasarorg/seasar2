@@ -240,6 +240,9 @@ public class GenerateConditionCommand extends AbstractCommand {
         entityMetaReader = createEntityMetaReader();
         conditionModelFactory = createConditionModelFactory();
         generator = createGenerator();
+
+        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
+                .getName() });
     }
 
     @Override

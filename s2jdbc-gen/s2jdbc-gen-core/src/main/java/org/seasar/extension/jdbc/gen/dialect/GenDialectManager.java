@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.dialect.Db2390Dialect;
@@ -76,7 +76,7 @@ public class GenDialectManager {
 
     protected static StandardGenDialect STANDARD = new StandardGenDialect();
 
-    protected static Map<String, GenDialect> dialectMap = new HashMap<String, GenDialect>();
+    protected static Map<String, GenDialect> dialectMap = new ConcurrentHashMap<String, GenDialect>();
     static {
         dialectMap.put(Db2390Dialect.class.getName(), DB2_390);
         dialectMap.put(Db2400Dialect.class.getName(), DB2_400);
@@ -95,25 +95,6 @@ public class GenDialectManager {
         dialectMap.put(SybaseDialect.class.getName(), SYBASE);
     }
 
-    protected static Map<String, GenDialect> namedDialectMap = new HashMap<String, GenDialect>();
-    static {
-        namedDialectMap.put("db2390", DB2_390);
-        namedDialectMap.put("db2400", DB2_400);
-        namedDialectMap.put("db2", DB2);
-        namedDialectMap.put("derby", DERBY);
-        namedDialectMap.put("firebird", FIREBIRD);
-        namedDialectMap.put("h2", H2);
-        namedDialectMap.put("hsql", HSQL);
-        namedDialectMap.put("interbase", INTERBASE);
-        namedDialectMap.put("maxdb", MAXDB);
-        namedDialectMap.put("mssql2005", MSSQL_2005);
-        namedDialectMap.put("mysql", MYSQL);
-        namedDialectMap.put("oracle", ORACLE);
-        namedDialectMap.put("postgre", POSTGRE);
-        namedDialectMap.put("postgre", POSTGRE81);
-        namedDialectMap.put("sybase", SYBASE);
-    }
-
     private GenDialectManager() {
     }
 
@@ -128,19 +109,15 @@ public class GenDialectManager {
         return STANDARD;
     }
 
-    /**
-     * 名前に対応する{@code GenDialect}を返します。
-     * 
-     * @param dialectName
-     *            方言の名前
-     * @return {@code GenDialect}
-     */
-    public static GenDialect getGenDialect(String dialectName) {
-        GenDialect dialect = namedDialectMap.get(dialectName);
-        if (dialect != null) {
-            return dialect;
+    public static void registerGenDialect(DbmsDialect dbmsDialect,
+            GenDialect genDialect) {
+        if (dbmsDialect == null) {
+            throw new NullPointerException("dbmsDialect");
         }
-        return STANDARD;
+        if (dbmsDialect == null) {
+            throw new NullPointerException("genDialect");
+        }
+        dialectMap.put(dbmsDialect.getClass().getName(), genDialect);
     }
 
 }

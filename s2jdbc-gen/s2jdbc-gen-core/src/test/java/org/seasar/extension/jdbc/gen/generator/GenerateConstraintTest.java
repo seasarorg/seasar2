@@ -23,11 +23,11 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
-import org.seasar.extension.jdbc.gen.SchemaModel;
+import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -40,7 +40,7 @@ public class GenerateConstraintTest {
 
     private GeneratorImplStub generator;
 
-    private SchemaModel model;
+    private DbModel model;
 
     @Before
     public void setUp() throws Exception {
@@ -86,8 +86,8 @@ public class GenerateConstraintTest {
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 
-        SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
-                new StandardGenDialect());
+        DbModelFactoryImpl factory = new DbModelFactoryImpl(
+                new StandardGenDialect(), ';');
         model = factory.getSchemaModel(Arrays.asList(tableDesc));
     }
 

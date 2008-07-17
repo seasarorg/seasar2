@@ -1,3 +1,3 @@
 <#list tableDescList as table>
-drop table ${table.fullName};
+drop table ${table.fullName}${delimiter}
 </#list>

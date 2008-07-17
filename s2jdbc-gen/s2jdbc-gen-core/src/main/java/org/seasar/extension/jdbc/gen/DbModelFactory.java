@@ -22,7 +22,7 @@ import java.util.List;
  * 
  * @author taedium
  */
-public interface SchemaModelFactory {
+public interface DbModelFactory {
 
     /**
      * スキーマのモデルを返します。
@@ -31,5 +31,5 @@ public interface SchemaModelFactory {
      *            テーブル記述のリスト
      * @return スキーマのモデル
      */
-    SchemaModel getSchemaModel(List<TableDesc> tableDesclist);
+    DbModel getSchemaModel(List<TableDesc> tableDesclist);
 }

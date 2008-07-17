@@ -18,8 +18,8 @@ package org.seasar.extension.jdbc.gen.model;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SchemaModel;
-import org.seasar.extension.jdbc.gen.SchemaModelFactory;
+import org.seasar.extension.jdbc.gen.DbModel;
+import org.seasar.extension.jdbc.gen.DbModelFactory;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 
@@ -27,23 +27,27 @@ import org.seasar.extension.jdbc.gen.TableDesc;
  * @author taedium
  * 
  */
-public class SchemaModelFactoryImpl implements SchemaModelFactory {
+public class DbModelFactoryImpl implements DbModelFactory {
 
     protected GenDialect dialect;
+
+    protected char statementDelimiter;
 
     /**
      * @param dialect
      */
-    public SchemaModelFactoryImpl(GenDialect dialect) {
+    public DbModelFactoryImpl(GenDialect dialect, char statementDelimiter) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
         this.dialect = dialect;
+        this.statementDelimiter = statementDelimiter;
     }
 
-    public SchemaModel getSchemaModel(List<TableDesc> tableDescList) {
-        SchemaModel model = new SchemaModel();
+    public DbModel getSchemaModel(List<TableDesc> tableDescList) {
+        DbModel model = new DbModel();
         model.setDialect(dialect);
+        model.setDelimiter(statementDelimiter);
         for (TableDesc tableDesc : tableDescList) {
             model.addTableDesc(tableDesc);
             for (SequenceDesc sequenceDesc : tableDesc.getSequenceDescList()) {

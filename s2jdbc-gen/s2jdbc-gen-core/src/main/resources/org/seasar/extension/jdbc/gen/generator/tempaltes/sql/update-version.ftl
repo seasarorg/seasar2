@@ -1,1 +1,1 @@
-update ${schemaInfoTableName} set ${schemaInfoColumnName} = ${version};
+update ${schemaInfoTableName} set ${schemaInfoColumnName} = ${version}${delimiter}

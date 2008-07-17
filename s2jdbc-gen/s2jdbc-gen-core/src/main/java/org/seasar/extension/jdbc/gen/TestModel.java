@@ -25,7 +25,7 @@ import java.util.TreeSet;
  * @author taedium
  * 
  */
-public class EntityTestModel {
+public class TestModel {
 
     protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
 

@@ -34,62 +34,6 @@ public class GenerateEntityTask extends AbstractTask {
     public GenerateEntityTask() {
     }
 
-    public String getConfigPath() {
-        return command.getConfigPath();
-    }
-
-    public String getEntityPackageName() {
-        return command.getEntityPackageName();
-    }
-
-    public String getEntityTemplateFileName() {
-        return command.getEntityTemplateFileName();
-    }
-
-    public File getJavaFileDestDir() {
-        return command.getJavaFileDestDir();
-    }
-
-    public String getJavaFileEncoding() {
-        return command.getJavaFileEncoding();
-    }
-
-    public String getJdbcManagerName() {
-        return command.getJdbcManagerName();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityCommand#isOverwrite()
-     */
-    public boolean isOverwrite() {
-        return command.isOverwrite();
-    }
-
-    public String getRootPackageName() {
-        return command.getRootPackageName();
-    }
-
-    public String getSchemaName() {
-        return command.getSchemaName();
-    }
-
-    public String getTableNamePattern() {
-        return command.getTableNamePattern();
-    }
-
-    public String getTemplateFileEncoding() {
-        return command.getTemplateFileEncoding();
-    }
-
-    public File getTemplateFilePrimaryDir() {
-        return command.getTemplateFilePrimaryDir();
-    }
-
-    public String getVersionColumnName() {
-        return command.getVersionColumnName();
-    }
-
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }

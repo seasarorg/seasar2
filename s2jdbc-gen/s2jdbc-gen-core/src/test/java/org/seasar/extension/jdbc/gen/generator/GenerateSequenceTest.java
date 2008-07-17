@@ -21,11 +21,11 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.SchemaModel;
+import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.HsqlGenDialect;
-import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -38,7 +38,7 @@ public class GenerateSequenceTest {
 
     private GeneratorImplStub generator;
 
-    private SchemaModel model;
+    private DbModel model;
 
     @Before
     public void setUp() throws Exception {
@@ -62,8 +62,8 @@ public class GenerateSequenceTest {
         TableDesc tableDesc2 = new TableDesc();
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
-                new HsqlGenDialect());
+        DbModelFactoryImpl factory = new DbModelFactoryImpl(
+                new HsqlGenDialect(), ';');
         model = factory.getSchemaModel(Arrays.asList(tableDesc, tableDesc2));
     }
 

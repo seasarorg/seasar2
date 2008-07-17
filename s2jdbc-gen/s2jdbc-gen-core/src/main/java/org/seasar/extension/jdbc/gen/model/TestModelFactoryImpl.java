@@ -25,8 +25,8 @@ import java.util.Date;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.EntityTestModel;
-import org.seasar.extension.jdbc.gen.EntityTestModelFactory;
+import org.seasar.extension.jdbc.gen.TestModel;
+import org.seasar.extension.jdbc.gen.TestModelFactory;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.util.ClassUtil;
 
@@ -34,7 +34,7 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
+public class TestModelFactoryImpl implements TestModelFactory {
 
     protected String configPath;
 
@@ -42,54 +42,51 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
 
     protected String packageName;
 
-    protected String entityTestClassNameSuffix;
+    protected String ｔestClassNameSuffix;
 
     /**
      * @param configPath
-     * @param entityTestClassNameSuffix
+     * @param testClassNameSuffix
      * @param jdbcManagerName
      * @param packageName
      */
-    public EntityTestModelFactoryImpl(String configPath,
-            String jdbcManagerName, String packageName,
-            String entityTestClassNameSuffix) {
+    public TestModelFactoryImpl(String configPath, String jdbcManagerName,
+            String packageName, String ｔestClassNameSuffix) {
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
         this.packageName = packageName;
-        this.entityTestClassNameSuffix = entityTestClassNameSuffix;
+        this.ｔestClassNameSuffix = ｔestClassNameSuffix;
     }
 
-    public EntityTestModel getEntityTestModel(EntityMeta entityMeta) {
-        EntityTestModel entityTestModel = new EntityTestModel();
-        entityTestModel.setConfigPath(configPath);
-        entityTestModel.setJdbcManagerName(jdbcManagerName);
-        entityTestModel.setPackageName(packageName);
-        entityTestModel.setShortClassName(entityMeta.getName()
-                + entityTestClassNameSuffix);
-        entityTestModel.setShortEntityClassName(entityMeta.getName());
-        doImportPackageNames(entityMeta, entityTestModel);
-        doIdValue(entityMeta, entityTestModel);
-        return entityTestModel;
+    public TestModel getEntityTestModel(EntityMeta entityMeta) {
+        TestModel testModel = new TestModel();
+        testModel.setConfigPath(configPath);
+        testModel.setJdbcManagerName(jdbcManagerName);
+        testModel.setPackageName(packageName);
+        testModel.setShortClassName(entityMeta.getName() + ｔestClassNameSuffix);
+        testModel.setShortEntityClassName(entityMeta.getName());
+        doImportPackageNames(entityMeta, testModel);
+        doIdValue(entityMeta, testModel);
+        return testModel;
     }
 
     protected void doImportPackageNames(EntityMeta entityMeta,
-            EntityTestModel entityTestModel) {
-        entityTestModel.addImportPackageName(JdbcManager.class.getName());
-        entityTestModel.addImportPackageName(S2TestCase.class.getName());
+            TestModel testModel) {
+        testModel.addImportPackageName(JdbcManager.class.getName());
+        testModel.addImportPackageName(S2TestCase.class.getName());
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
             String name = ClassUtil.getPackageName(propertyClass);
             if (name != null && !"java.lang".equals(name)) {
-                entityTestModel.addImportPackageName(propertyClass.getName());
+                testModel.addImportPackageName(propertyClass.getName());
             }
         }
     }
 
-    protected void doIdValue(EntityMeta entityMeta,
-            EntityTestModel entityTestModel) {
+    protected void doIdValue(EntityMeta entityMeta, TestModel testModel) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
-            entityTestModel.addIdValue(getIdValue(propertyClass));
+            testModel.addIdValue(getIdValue(propertyClass));
         }
     }
 

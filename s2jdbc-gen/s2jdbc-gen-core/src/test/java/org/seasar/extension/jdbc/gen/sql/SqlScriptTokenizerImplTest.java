@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.sql;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.dialect.OracleGenDialect;
 
 import static org.junit.Assert.*;
 import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
@@ -32,11 +31,11 @@ public class SqlScriptTokenizerImplTest {
 
     @Before
     public void setUp() throws Exception {
-        tokenizer = new SqlScriptTokenizerImpl(new OracleGenDialect(), ';');
+        tokenizer = new SqlScriptTokenizerImpl(';', "/");
     }
 
     @Test
-    public void testGetToken_endOfFragment() {
+    public void testGetToken_endOfLine() {
         tokenizer.addLine("aaa");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
@@ -74,7 +73,7 @@ public class SqlScriptTokenizerImplTest {
     }
 
     @Test
-    public void testGetToken_blockCommentInTwoFragments() {
+    public void testGetToken_blockCommentInTwoLines() {
         tokenizer.addLine("aaa/*b");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
@@ -96,7 +95,7 @@ public class SqlScriptTokenizerImplTest {
     }
 
     @Test
-    public void testGetToken_blockCommentsInOneFragment() {
+    public void testGetToken_blockCommentsInOneLine() {
         tokenizer.addLine("aaa/*bbb*/ccc/*ddd*/");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());

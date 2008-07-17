@@ -30,62 +30,22 @@ public class ExecuteSqlTask extends AbstractTask {
 
     protected ExecuteSqlCommand command = new ExecuteSqlCommand();
 
-    protected FileList fileList;
+    protected FileList sqlFileList;
 
-    public void addConfiguredFileList(FileList fileList) {
-        File dir = fileList.getDir(getProject());
-        for (String fileName : fileList.getFiles(getProject())) {
+    public void addConfiguredSqlFileList(FileList sqlFileList) {
+        File dir = sqlFileList.getDir(getProject());
+        for (String fileName : sqlFileList.getFiles(getProject())) {
             File file = new File(dir, fileName);
             command.getSqlFileList().add(file);
         }
     }
 
     /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#getConfigPath()
+     * @param blockDelimiter
+     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setBlockDelimiter(java.lang.String)
      */
-    public String getConfigPath() {
-        return command.getConfigPath();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#getDelimiter()
-     */
-    public char getDelimiter() {
-        return command.getDelimiter();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#getJdbcManagerName()
-     */
-    public String getJdbcManagerName() {
-        return command.getJdbcManagerName();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#getSqlFileEncoding()
-     */
-    public String getSqlFileEncoding() {
-        return command.getSqlFileEncoding();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#getSqlFileList()
-     */
-    public List<File> getSqlFileList() {
-        return command.getSqlFileList();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#isHaltOnError()
-     */
-    public boolean isHaltOnError() {
-        return command.isHaltOnError();
+    public void setBlockDelimiter(String blockDelimiter) {
+        command.setBlockDelimiter(blockDelimiter);
     }
 
     /**
@@ -97,11 +57,11 @@ public class ExecuteSqlTask extends AbstractTask {
     }
 
     /**
-     * @param delimiter
+     * @param statementDelimiter
      * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setDelimiter(char)
      */
-    public void setDelimiter(char delimiter) {
-        command.setDelimiter(delimiter);
+    public void setStatementDelimiter(char statementDelimiter) {
+        command.setStatementDelimiter(statementDelimiter);
     }
 
     /**

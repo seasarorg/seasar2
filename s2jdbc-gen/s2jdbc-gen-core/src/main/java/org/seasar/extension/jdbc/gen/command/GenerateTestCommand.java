@@ -22,16 +22,16 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.EntityTestModel;
-import org.seasar.extension.jdbc.gen.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
+import org.seasar.extension.jdbc.gen.TestModel;
+import org.seasar.extension.jdbc.gen.TestModelFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.model.EntityTestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
@@ -41,27 +41,18 @@ import org.seasar.framework.util.ClassUtil;
  * @author taedium
  * 
  */
-public class GenerateEntityTestCommand extends AbstractCommand {
+public class GenerateTestCommand extends AbstractCommand {
 
     protected static Logger logger = Logger
-            .getLogger(GenerateEntityTestCommand.class);
+            .getLogger(GenerateTestCommand.class);
 
     protected File classpathRootDir;
 
     /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
     protected String configPath = "s2jdbc.dicon";
 
-    /** エンティティテストクラス名のサフィックス */
-    protected String entityTestClassNameSuffix = "Test";
-
     /** エンティティパッケージ名 */
     protected String entityPackageName = "entity";
-
-    /** エンティティクラスのテンプレート名 */
-    protected String entityTestTemplateFileName = "java/entity-test.ftl";
-
-    /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaTestFileDestDir = new File("src/test/java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
@@ -80,6 +71,15 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     /** テンプレートファイルを格納するディレクトリ */
     protected File templateFilePrimaryDir = null;
 
+    /** テストクラス名のサフィックス */
+    protected String testClassNameSuffix = "Test";
+
+    /** 生成するJavaファイルの出力先ディレクトリ */
+    protected File testJavaFileDestDir = new File("src/test/java");
+
+    /** テストクラスのテンプレート名 */
+    protected String testTemplateFileName = "java/test.ftl";
+
     protected S2ContainerFactorySupport containerFactorySupport;
 
     /** 方言 */
@@ -89,21 +89,21 @@ public class GenerateEntityTestCommand extends AbstractCommand {
 
     protected EntityMetaReader entityMetaReader;
 
-    protected EntityTestModelFactory entityTestModelFactory;
+    protected TestModelFactory testModelFactory;
 
     /**
-     * @return Returns the entityTestClassNameSuffix.
+     * @return Returns the testClassNameSuffix.
      */
-    public String getEntityTestClassNameSuffix() {
-        return entityTestClassNameSuffix;
+    public String getTestClassNameSuffix() {
+        return testClassNameSuffix;
     }
 
     /**
-     * @param entityTestClassNameSuffix
-     *            The entityTestClassNameSuffix to set.
+     * @param testClassNameSuffix
+     *            The testClassNameSuffix to set.
      */
-    public void setEntityTestClassNameSuffix(String entityTestClassNameSuffix) {
-        this.entityTestClassNameSuffix = entityTestClassNameSuffix;
+    public void setTestClassNameSuffix(String testClassNameSuffix) {
+        this.testClassNameSuffix = testClassNameSuffix;
     }
 
     /**
@@ -122,33 +122,33 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the entityTestTemplateFileName.
+     * @return Returns the testTemplateFileName.
      */
-    public String getEntityTestTemplateFileName() {
-        return entityTestTemplateFileName;
+    public String getTestTemplateFileName() {
+        return testTemplateFileName;
     }
 
     /**
-     * @param entityTestTemplateFileName
-     *            The entityTestTemplateFileName to set.
+     * @param testTemplateFileName
+     *            The testTemplateFileName to set.
      */
-    public void setEntityTestTemplateFileName(String entityTestTemplateFileName) {
-        this.entityTestTemplateFileName = entityTestTemplateFileName;
+    public void setTestTemplateFileName(String testTemplateFileName) {
+        this.testTemplateFileName = testTemplateFileName;
     }
 
     /**
-     * @return Returns the javaTestFileDestDir.
+     * @return Returns the testJavaFileDestDir.
      */
-    public File getJavaTestFileDestDir() {
-        return javaTestFileDestDir;
+    public File getTestJavaFileDestDir() {
+        return testJavaFileDestDir;
     }
 
     /**
-     * @param javaTestFileDestDir
-     *            The javaTestFileDestDir to set.
+     * @param testJavaFileDestDir
+     *            The testJavaFileDestDir to set.
      */
-    public void setJavaTestFileDestDir(File javaTestFileDestDir) {
-        this.javaTestFileDestDir = javaTestFileDestDir;
+    public void setTestJavaFileDestDir(File testJavaFileDestDir) {
+        this.testJavaFileDestDir = testJavaFileDestDir;
     }
 
     /**
@@ -295,8 +295,11 @@ public class GenerateEntityTestCommand extends AbstractCommand {
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
 
         entityMetaReader = createEntityMetaReader();
-        entityTestModelFactory = createEntityTestModelFactory();
+        testModelFactory = createTestModelFactory();
         generator = createGenerator();
+
+        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
+                .getName() });
     }
 
     @Override
@@ -317,11 +320,11 @@ public class GenerateEntityTestCommand extends AbstractCommand {
                 rootPackageName, entityPackageName), entityMetaFactory);
     }
 
-    protected EntityTestModelFactory createEntityTestModelFactory() {
+    protected TestModelFactory createTestModelFactory() {
         String packageName = ClassUtil.concatName(rootPackageName,
                 entityPackageName);
-        return new EntityTestModelFactoryImpl(configPath, jdbcManagerName,
-                packageName, entityTestClassNameSuffix);
+        return new TestModelFactoryImpl(configPath, jdbcManagerName,
+                packageName, testClassNameSuffix);
     }
 
     /**
@@ -346,10 +349,9 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     }
 
     protected void generateEntityTest(EntityMeta entityMeta) {
-        EntityTestModel entityTestModel = entityTestModelFactory
-                .getEntityTestModel(entityMeta);
-        GenerationContext context = createGenerationContext(entityTestModel,
-                entityTestTemplateFileName);
+        TestModel testModel = testModelFactory.getEntityTestModel(entityMeta);
+        GenerationContext context = createGenerationContext(testModel,
+                testTemplateFileName);
         generator.generate(context);
     }
 
@@ -362,12 +364,12 @@ public class GenerateEntityTestCommand extends AbstractCommand {
      *            テンプレート名
      * @return {@link GenerationContext}
      */
-    protected GenerationContext createGenerationContext(EntityTestModel model,
+    protected GenerationContext createGenerationContext(TestModel model,
             String templateName) {
         String packageName = model.getPackageName();
         String shortClassName = model.getShortClassName();
 
-        File dir = new File(javaTestFileDestDir, packageName.replace('.',
+        File dir = new File(testJavaFileDestDir, packageName.replace('.',
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 

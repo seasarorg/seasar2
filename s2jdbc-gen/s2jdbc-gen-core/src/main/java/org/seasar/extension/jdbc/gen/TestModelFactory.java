@@ -21,7 +21,7 @@ import org.seasar.extension.jdbc.EntityMeta;
  * @author taedium
  * 
  */
-public interface EntityTestModelFactory {
+public interface TestModelFactory {
 
-    EntityTestModel getEntityTestModel(EntityMeta entityMeta);
+    TestModel getEntityTestModel(EntityMeta entityMeta);
 }

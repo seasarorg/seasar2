@@ -255,6 +255,9 @@ public class GenerateEntityCommand extends AbstractCommand {
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
+
+        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
+                .getName() });
     }
 
     @Override

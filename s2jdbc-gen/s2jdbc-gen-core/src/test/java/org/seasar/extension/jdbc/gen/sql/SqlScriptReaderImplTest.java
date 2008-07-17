@@ -40,7 +40,7 @@ public class SqlScriptReaderImplTest {
     @Before
     public void setUp() {
         dialect = new MssqlGenDialect();
-        tokenizer = new SqlScriptTokenizerImpl(dialect, ';');
+        tokenizer = new SqlScriptTokenizerImpl(';', "go");
     }
 
     @Test

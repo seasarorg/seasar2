@@ -23,6 +23,8 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
+import org.seasar.extension.jdbc.gen.DbModel;
+import org.seasar.extension.jdbc.gen.DbModelFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -30,8 +32,6 @@ import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.IdTableDescFactory;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
-import org.seasar.extension.jdbc.gen.SchemaModel;
-import org.seasar.extension.jdbc.gen.SchemaModelFactory;
 import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
@@ -47,7 +47,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.model.SchemaModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
@@ -105,9 +105,11 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     protected String schemaInfoTableName = "SCHEMA_INFO";
 
-    protected File sqlFileDestDir = new File("sql");
+    protected File sqlFileDestDir = new File("db", "ddl");
 
     protected String sqlFileEncoding = "UTF-8";
+
+    protected char statementDelimiter = ';';
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -125,7 +127,7 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     protected TableDescFactory tableDescFactory;
 
-    protected SchemaModelFactory schemaModelFactory;
+    protected DbModelFactory dbModelFactory;
 
     protected Generator generator;
 
@@ -267,6 +269,21 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
+     * @return Returns the statementDelimiter.
+     */
+    public char getStatementDelimiter() {
+        return statementDelimiter;
+    }
+
+    /**
+     * @param statementDelimiter
+     *            The statementDelimiter to set.
+     */
+    public void setStatementDelimiter(char statementDelimiter) {
+        this.statementDelimiter = statementDelimiter;
+    }
+
+    /**
      * @return Returns the overwrite.
      */
     public boolean isOverwrite() {
@@ -340,8 +357,11 @@ public class GenerateDdlCommand extends AbstractCommand {
 
         entityMetaReader = createEntityMetaReader();
         tableDescFactory = createTableDescFactory();
-        schemaModelFactory = createSchemaModelFactory();
+        dbModelFactory = createDbModelFactory();
         generator = createGenerator();
+
+        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
+                .getName() });
     }
 
     @Override
@@ -379,8 +399,8 @@ public class GenerateDdlCommand extends AbstractCommand {
                 fkFactory, seqFactory, idTabFactory);
     }
 
-    protected SchemaModelFactory createSchemaModelFactory() {
-        return new SchemaModelFactoryImpl(dialect);
+    protected DbModelFactory createDbModelFactory() {
+        return new DbModelFactoryImpl(dialect, statementDelimiter);
     }
 
     protected Generator createGenerator() {
@@ -388,13 +408,13 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     protected void generate(List<TableDesc> tableDescList) {
-        SchemaModel model = schemaModelFactory.getSchemaModel(tableDescList);
+        DbModel model = dbModelFactory.getSchemaModel(tableDescList);
         generateTable(model);
         generateConstraint(model);
         generateSequence(model);
     }
 
-    protected void generateTable(SchemaModel model) {
+    protected void generateTable(DbModel model) {
         GenerationContext createTableCtx = createGenerationContext(model,
                 createTableSqlFileName, createTableTemplateFileName);
         GenerationContext dropTableCtx = createGenerationContext(model,
@@ -403,7 +423,7 @@ public class GenerateDdlCommand extends AbstractCommand {
         generator.generate(dropTableCtx);
     }
 
-    protected void generateConstraint(SchemaModel model) {
+    protected void generateConstraint(DbModel model) {
         GenerationContext createConstraintCtx = createGenerationContext(model,
                 createConstraintSqlFileName, createConstraintTemplateFileName);
         GenerationContext dropConstraintCtx = createGenerationContext(model,
@@ -412,7 +432,7 @@ public class GenerateDdlCommand extends AbstractCommand {
         generator.generate(dropConstraintCtx);
     }
 
-    protected void generateSequence(SchemaModel model) {
+    protected void generateSequence(DbModel model) {
         GenerationContext createSequenceCtx = createGenerationContext(model,
                 createSequenceSqlFileName, createSequenceTemplateFileName);
         GenerationContext dropSequenceCtx = createGenerationContext(model,

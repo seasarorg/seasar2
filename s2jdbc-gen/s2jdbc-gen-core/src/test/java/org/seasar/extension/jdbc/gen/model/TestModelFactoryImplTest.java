@@ -25,7 +25,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.EntityTestModel;
+import org.seasar.extension.jdbc.gen.TestModel;
 
 import static org.junit.Assert.*;
 
@@ -33,13 +33,13 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class EntityTestModelFactoryImplTest {
+public class TestModelFactoryImplTest {
 
-    private EntityTestModelFactoryImpl factory;
+    private TestModelFactoryImpl factory;
 
     @Before
     public void setUp() throws Exception {
-        factory = new EntityTestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
+        factory = new TestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
                 "hoge", "Test");
     }
 
@@ -47,14 +47,13 @@ public class EntityTestModelFactoryImplTest {
     public void testGetEntityTestModel() throws Exception {
         EntityMeta entityMeta = new EntityMeta();
         entityMeta.setName("Foo");
-        EntityTestModel entityTestModel = factory
-                .getEntityTestModel(entityMeta);
-        assertEquals("s2jdbc.dicon", entityTestModel.getConfigPath());
-        assertEquals("jdbcManager", entityTestModel.getJdbcManagerName());
-        assertEquals("hoge", entityTestModel.getPackageName());
-        assertEquals("FooTest", entityTestModel.getShortClassName());
-        assertEquals("Foo", entityTestModel.getShortEntityClassName());
-        assertEquals(2, entityTestModel.getImportPackageNameSet().size());
+        TestModel testModel = factory.getEntityTestModel(entityMeta);
+        assertEquals("s2jdbc.dicon", testModel.getConfigPath());
+        assertEquals("jdbcManager", testModel.getJdbcManagerName());
+        assertEquals("hoge", testModel.getPackageName());
+        assertEquals("FooTest", testModel.getShortClassName());
+        assertEquals("Foo", testModel.getShortEntityClassName());
+        assertEquals(2, testModel.getImportPackageNameSet().size());
     }
 
     @Test

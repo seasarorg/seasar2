@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.model;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.SchemaModel;
+import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
@@ -29,10 +29,10 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class SchemaModelFactoryImplTest {
+public class DbModelFactoryImplTest {
 
-    private SchemaModelFactoryImpl factory = new SchemaModelFactoryImpl(
-            new StandardGenDialect());
+    private DbModelFactoryImpl factory = new DbModelFactoryImpl(
+            new StandardGenDialect(), ';');
 
     @Test
     public void testGetSchemaModel() throws Exception {
@@ -48,7 +48,7 @@ public class SchemaModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+        DbModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
                 tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());
@@ -70,7 +70,7 @@ public class SchemaModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+        DbModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
                 tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());
@@ -90,7 +90,7 @@ public class SchemaModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addIdTableDesc(idTableDesc);
 
-        SchemaModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
+        DbModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
                 tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());

@@ -40,15 +40,19 @@ public class GenerateVersionCommand extends AbstractCommand {
 
     protected String schemaInfoTableName = "SCHEMA_INFO";
 
-    protected File sqlFileDestDir = new File("sql");
+    protected File sqlFileDestDir = new File("db", "dml");
 
     protected String sqlFileEncoding = "UTF-8";
+
+    protected char statementDelimiter = ';';
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
 
     /** テンプレートファイルの格納ディレクトリ */
     protected File templateFilePrimaryDir = null;
+
+    protected File versionFileDestDir = new File("db");
 
     protected String versionFileName = "version.txt";
 
@@ -95,6 +99,21 @@ public class GenerateVersionCommand extends AbstractCommand {
         this.sqlFileEncoding = sqlFileEncoding;
     }
 
+    /**
+     * @return Returns the statementDelimiter.
+     */
+    public char getStatementDelimiter() {
+        return statementDelimiter;
+    }
+
+    /**
+     * @param statementDelimiter
+     *            The statementDelimiter to set.
+     */
+    public void setStatementDelimiter(char statementDelimiter) {
+        this.statementDelimiter = statementDelimiter;
+    }
+
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
@@ -109,6 +128,21 @@ public class GenerateVersionCommand extends AbstractCommand {
 
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
+    }
+
+    /**
+     * @return Returns the versionFileDestDir.
+     */
+    public File getVersionFileDestDir() {
+        return versionFileDestDir;
+    }
+
+    /**
+     * @param versionFileDestDir
+     *            The versionFileDestDir to set.
+     */
+    public void setVersionFileDestDir(File versionFileDestDir) {
+        this.versionFileDestDir = versionFileDestDir;
     }
 
     public String getVersionFileName() {
@@ -168,7 +202,7 @@ public class GenerateVersionCommand extends AbstractCommand {
     }
 
     protected int readVersion() {
-        File versionFile = new File(sqlFileDestDir, versionFileName);
+        File versionFile = new File(versionFileDestDir, versionFileName);
         if (!versionFile.exists()) {
             return 0;
         }
@@ -188,6 +222,7 @@ public class GenerateVersionCommand extends AbstractCommand {
         model.put("version", version);
         model.put("schemaInfoTableName", schemaInfoTableName);
         model.put("schemaInfoColumnName", schemaInfoColumnName);
+        model.put("delimiter", statementDelimiter);
         GenerationContext context = new GenerationContext(model,
                 sqlFileDestDir, new File(sqlFileDestDir,
                         updateVersionSqlFileName),
@@ -199,7 +234,7 @@ public class GenerateVersionCommand extends AbstractCommand {
         Map<String, Integer> model = new HashMap<String, Integer>();
         model.put("version", version);
         GenerationContext context = new GenerationContext(model,
-                sqlFileDestDir, new File(sqlFileDestDir, versionFileName),
+                sqlFileDestDir, new File(versionFileDestDir, versionFileName),
                 versionTemplateFileName, "UTF-8", true);
         generator.generate(context);
     }

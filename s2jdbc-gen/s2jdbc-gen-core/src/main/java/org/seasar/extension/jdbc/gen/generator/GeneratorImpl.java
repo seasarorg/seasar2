@@ -88,7 +88,8 @@ public class GeneratorImpl implements Generator {
     }
 
     public void generate(GenerationContext context) {
-        if (!context.isOverwrite() && exists(context.getFile())) {
+        boolean exists = exists(context.getFile());
+        if (!context.isOverwrite() && exists) {
             return;
         }
         mkdirs(context.getDir());
@@ -97,8 +98,13 @@ public class GeneratorImpl implements Generator {
             Template template = ConfigurationUtil.getTemplate(configuration,
                     context.getTemplateName());
             TemplateUtil.process(template, context.getModel(), writer);
-            logger.log("DS2JDBCGen0002", new Object[] { context.getFile()
-                    .getPath() });
+            if (exists) {
+                logger.log("DS2JDBCGen0009", new Object[] { context.getFile()
+                        .getPath() });
+            } else {
+                logger.log("DS2JDBCGen0002", new Object[] { context.getFile()
+                        .getPath() });
+            }
         } finally {
             CloseableUtil.close(writer);
         }

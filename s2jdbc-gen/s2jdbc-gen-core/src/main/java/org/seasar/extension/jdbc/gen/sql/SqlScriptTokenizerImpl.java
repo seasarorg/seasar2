@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
 
 import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
@@ -26,9 +25,9 @@ import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
  */
 public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
-    protected GenDialect dialect;
-
     protected char statementDelimiter;
+
+    protected String blockDelimiter;
 
     protected String line;
 
@@ -44,12 +43,15 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
     protected boolean commentBlockStarted;
 
-    public SqlScriptTokenizerImpl(GenDialect dialect, char statementDelimiter) {
-        if (dialect == null) {
-            throw new NullPointerException("dialect");
+    public SqlScriptTokenizerImpl(char statementDelimiter, String blockDelimiter) {
+        if (isOther(statementDelimiter) || statementDelimiter == '\'') {
+            throw new IllegalArgumentException("statementDelimiter");
         }
-        this.dialect = dialect;
+        if (blockDelimiter == null) {
+            throw new NullPointerException("blockDelimiter");
+        }
         this.statementDelimiter = statementDelimiter;
+        this.blockDelimiter = blockDelimiter;
         type = END_OF_LINE;
     }
 
@@ -65,8 +67,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
         if (commentBlockStarted) {
             type = BLOCK_COMMENT;
-        } else if (line.trim().equalsIgnoreCase(
-                dialect.getSqlBlockDelimiter())) {
+        } else if (blockDelimiter.equalsIgnoreCase(line.trim())) {
             type = BLOCK_DELIMITER;
             nextPos = length;
         } else {
@@ -207,7 +208,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         throw new IllegalStateException(type.name());
     }
 
-    protected boolean isOther(char c) {
+    protected static boolean isOther(char c) {
         return Character.isWhitespace(c) || c == '=' || c == '?' || c == '<'
                 || c == '>' || c == '(' || c == ')' || c == '!' || c == '*'
                 || c == '-' || c == ',';

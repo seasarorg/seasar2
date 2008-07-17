@@ -49,9 +49,9 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     protected Logger logger = Logger.getLogger(ExecuteSqlCommand.class);
 
-    protected String configPath = "s2jdbc.dicon";
+    protected String blockDelimiter = null;
 
-    protected char delimiter = ';';
+    protected String configPath = "s2jdbc.dicon";
 
     protected boolean haltOnError = false;
 
@@ -60,6 +60,8 @@ public class ExecuteSqlCommand extends AbstractCommand {
     protected String sqlFileEncoding = "UTF-8";
 
     protected List<File> sqlFileList = new ArrayList<File>();
+
+    protected char statementDelimiter = ';';
 
     protected S2ContainerFactorySupport containerFactorySupport;
 
@@ -77,6 +79,21 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     /**
+     * @return Returns the blockDelimiter.
+     */
+    public String getBlockDelimiter() {
+        return blockDelimiter;
+    }
+
+    /**
+     * @param blockDelimiter
+     *            The blockDelimiter to set.
+     */
+    public void setBlockDelimiter(String blockDelimiter) {
+        this.blockDelimiter = blockDelimiter;
+    }
+
+    /**
      * @return Returns the configPath.
      */
     public String getConfigPath() {
@@ -89,21 +106,6 @@ public class ExecuteSqlCommand extends AbstractCommand {
      */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
-    }
-
-    /**
-     * @return Returns the delimiter.
-     */
-    public char getDelimiter() {
-        return delimiter;
-    }
-
-    /**
-     * @param delimiter
-     *            The delimiter to set.
-     */
-    public void setDelimiter(char delimiter) {
-        this.delimiter = delimiter;
     }
 
     /**
@@ -166,6 +168,21 @@ public class ExecuteSqlCommand extends AbstractCommand {
         this.sqlFileList = sqlFileList;
     }
 
+    /**
+     * @return Returns the statementDelimiter.
+     */
+    public char getStatementDelimiter() {
+        return statementDelimiter;
+    }
+
+    /**
+     * @param statementDelimiter
+     *            The statementDelimiter to set.
+     */
+    public void setStatementDelimiter(char statementDelimiter) {
+        this.statementDelimiter = statementDelimiter;
+    }
+
     @Override
     protected void doValidate() {
         if (sqlFileList.isEmpty()) {
@@ -187,6 +204,9 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
         sqlScriptTokenizer = createScriptTokenizer();
         sqlExecutor = createSqlExecutor();
+
+        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
+                .getName() });
     }
 
     @Override
@@ -256,7 +276,9 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     protected SqlScriptTokenizer createScriptTokenizer() {
-        return new SqlScriptTokenizerImpl(dialect, delimiter);
+        String blockDelimiter = this.blockDelimiter != null ? this.blockDelimiter
+                : dialect.getSqlBlockDelimiter();
+        return new SqlScriptTokenizerImpl(statementDelimiter, blockDelimiter);
     }
 
     protected SqlExecutionContext createSqlExecutionContext() {

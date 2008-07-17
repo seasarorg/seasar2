@@ -34,98 +34,6 @@ public class GenerateDdlTask extends AbstractTask {
     public GenerateDdlTask() {
     }
 
-    public File getClasspathRootDir() {
-        return command.getClasspathRootDir();
-    }
-
-    public String getConfigPath() {
-        return command.getConfigPath();
-    }
-
-    public String getCreateConstraintSqlFileName() {
-        return command.getCreateConstraintSqlFileName();
-    }
-
-    public String getCreateConstraintTemplateFileName() {
-        return command.getCreateConstraintTemplateFileName();
-    }
-
-    public String getCreateSequenceSqlFileName() {
-        return command.getCreateSequenceSqlFileName();
-    }
-
-    public String getCreateSequenceTemplateFileName() {
-        return command.getCreateSequenceTemplateFileName();
-    }
-
-    public String getCreateTableSqlFileName() {
-        return command.getCreateTableSqlFileName();
-    }
-
-    public String getCreateTableTemplateFileName() {
-        return command.getCreateTableTemplateFileName();
-    }
-
-    public String getDropConstraintSqlFileName() {
-        return command.getDropConstraintSqlFileName();
-    }
-
-    public String getDropConstraintTemplateFileName() {
-        return command.getDropConstraintTemplateFileName();
-    }
-
-    public String getDropSequenceSqlFileName() {
-        return command.getDropSequenceSqlFileName();
-    }
-
-    public String getDropSequenceTemplateFileName() {
-        return command.getDropSequenceTemplateFileName();
-    }
-
-    public String getDropTableSqlFileName() {
-        return command.getDropTableSqlFileName();
-    }
-
-    public String getDropTableTemplateFileName() {
-        return command.getDropTableTemplateFileName();
-    }
-
-    public String getEntityPackageName() {
-        return command.getEntityPackageName();
-    }
-
-    public String getJdbcManagerName() {
-        return command.getJdbcManagerName();
-    }
-
-    /**
-     * @return
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#isOverwrite()
-     */
-    public boolean isOverwrite() {
-        return command.isOverwrite();
-    }
-
-    public String getRootPackageName() {
-        return command.getRootPackageName();
-    }
-
-    public File getSqlFileDestDir() {
-        return command.getSqlFileDestDir();
-    }
-
-    public String getSqlFileEncoding() {
-        return command.getSqlFileEncoding();
-    }
-
-    public String getTemplateFileEncoding() {
-        return command.getTemplateFileEncoding();
-    }
-
-    public File getTemplateFilePrimaryDir() {
-        return command.getTemplateFilePrimaryDir();
-    }
-
     public void setClasspathRootDir(File classpathRootDir) {
         command.setClasspathRootDir(classpathRootDir);
     }
@@ -223,7 +131,19 @@ public class GenerateDdlTask extends AbstractTask {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
-    public void setTemplateFileSecondaryDir(File templateFilePrimaryDir) {
+    /**
+     * @param statementDelimiter
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setStatementDelimiter(char)
+     */
+    public void setStatementDelimiter(char statementDelimiter) {
+        command.setStatementDelimiter(statementDelimiter);
+    }
+
+    /**
+     * @param templateFilePrimaryDir
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setTemplateFilePrimaryDir(java.io.File)
+     */
+    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 

@@ -34,46 +34,6 @@ public class GenerateVersionTask extends AbstractTask {
     public GenerateVersionTask() {
     }
 
-    public String getSchemaInfoColumnName() {
-        return command.getSchemaInfoColumnName();
-    }
-
-    public String getSchemaInfoTableName() {
-        return command.getSchemaInfoTableName();
-    }
-
-    public File getSqlFileDestDir() {
-        return command.getSqlFileDestDir();
-    }
-
-    public String getSqlFileEncoding() {
-        return command.getSqlFileEncoding();
-    }
-
-    public String getTemplateFileEncoding() {
-        return command.getTemplateFileEncoding();
-    }
-
-    public File getTemplateFilePrimaryDir() {
-        return command.getTemplateFilePrimaryDir();
-    }
-
-    public String getUpdateVersionSqlFileName() {
-        return command.getUpdateVersionSqlFileName();
-    }
-
-    public String getUpdateVersionTemplateFileName() {
-        return command.getUpdateVersionTemplateFileName();
-    }
-
-    public String getVersionFileName() {
-        return command.getVersionFileName();
-    }
-
-    public String getVersionTemplateFileName() {
-        return command.getVersionTemplateFileName();
-    }
-
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         command.setSchemaInfoColumnName(schemaInfoColumnName);
     }
@@ -88,6 +48,14 @@ public class GenerateVersionTask extends AbstractTask {
 
     public void setSqlFileEncoding(String sqlFileEncoding) {
         command.setSqlFileEncoding(sqlFileEncoding);
+    }
+
+    /**
+     * @param statementDelimiter
+     * @see org.seasar.extension.jdbc.gen.command.GenerateVersionCommand#setStatementDelimiter(char)
+     */
+    public void setStatementDelimiter(char statementDelimiter) {
+        command.setStatementDelimiter(statementDelimiter);
     }
 
     public void setTemplateFileEncoding(String templateFileEncoding) {
@@ -105,6 +73,14 @@ public class GenerateVersionTask extends AbstractTask {
     public void setUpdateVersionTemplateFileName(
             String updateVersionTemplateFileName) {
         command.setUpdateVersionTemplateFileName(updateVersionTemplateFileName);
+    }
+
+    /**
+     * @param versionFileDestDir
+     * @see org.seasar.extension.jdbc.gen.command.GenerateVersionCommand#setVersionFileDestDir(java.io.File)
+     */
+    public void setVersionFileDestDir(File versionFileDestDir) {
+        command.setVersionFileDestDir(versionFileDestDir);
     }
 
     public void setVersionFileName(String versionFileName) {

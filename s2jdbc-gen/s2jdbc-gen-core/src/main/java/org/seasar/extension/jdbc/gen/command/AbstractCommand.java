@@ -36,23 +36,24 @@ public abstract class AbstractCommand implements Command {
     }
 
     public final void execute() {
-        log();
+        String commandClassName = getClass().getName();
+        getLogger().log("DS2JDBCGen0003", new Object[] { commandClassName });
+        logWritableProperties();
         validate();
         init();
         try {
             doExecute();
         } catch (Throwable t) {
-            throw new CommandFailedRuntimeException(t, getClass().getName());
+            throw new CommandFailedRuntimeException(t, commandClassName);
         } finally {
             destroy();
         }
+        getLogger().log("DS2JDBCGen0008", new Object[] { commandClassName });
     }
 
     protected abstract void doExecute();
 
-    protected void log() {
-        getLogger()
-                .log("DS2JDBCGen0003", new Object[] { getClass().getName() });
+    protected void logWritableProperties() {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(i);

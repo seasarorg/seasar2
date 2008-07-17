@@ -91,8 +91,7 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
                 tokenizer.addLine(reader.readLine());
                 builder.notifyLineChanged();
                 nextTokenLoop: for (;;) {
-                    builder.set(tokenizer.nextToken(), tokenizer.getToken());
-                    builder.build();
+                    builder.build(tokenizer.nextToken(), tokenizer.getToken());
                     if (builder.isTokenRequired()) {
                         continue;
                     } else if (builder.isLineRequired()) {
@@ -122,10 +121,6 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
 
     protected class SqlBuilder {
 
-        protected TokenType tokenType;
-
-        protected String token;
-
         protected boolean tokenRequired;
 
         protected boolean lineRequired;
@@ -145,22 +140,17 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         protected SqlBuilder() {
         }
 
-        protected void set(TokenType tokenType, String token) {
-            this.tokenType = tokenType;
-            this.token = token;
+        protected void build(TokenType tokenType, String token) {
             setTokenRequired(true);
-        }
-
-        protected void build() {
             switch (tokenType) {
             case WORD:
-                wordList.add(token);
-                append(token);
+                appendWord(token);
+                appendToken(token);
                 setTokenRequired(true);
                 break;
             case QUOTE:
             case OTHER:
-                append(token);
+                appendToken(token);
                 setTokenRequired(true);
                 break;
             case END_OF_LINE:
@@ -172,7 +162,7 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
                 break;
             case STATEMENT_DELIMITER:
                 if (isInSqlBlock()) {
-                    append(token);
+                    appendToken(token);
                 } else {
                     delimited = true;
                 }
@@ -246,10 +236,16 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             lineRequired = false;
         }
 
-        protected void append(String s) {
+        protected void appendWord(String word) {
+            if (!inSqlBlock) {
+                wordList.add(word);
+            }
+        }
+
+        protected void appendToken(String token) {
             if (!delimited) {
                 appendWhitespaceIfNecessary();
-                buf.append(s);
+                buf.append(token);
             }
         }
 
