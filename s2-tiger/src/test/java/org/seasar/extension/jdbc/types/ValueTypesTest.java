@@ -40,6 +40,18 @@ public class ValueTypesTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testInheritedEnum() throws Exception {
+        ValueType valueType = ValueTypes.getValueType(MyEnum2.ONE.getClass());
+        assertNotNull(valueType);
+        assertTrue(valueType instanceof EnumType);
+        EnumType enumType = (EnumType) valueType;
+        assertEquals(MyEnum2.ONE, enumType.toEnum("ONE"));
+        assertSame(valueType, ValueTypes.getValueType(MyEnum2.class));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testIsSimpleType() throws Exception {
         assertTrue(ValueTypes.isSimpleType(String.class));
         assertTrue(ValueTypes.isSimpleType(int.class));
@@ -55,5 +67,32 @@ public class ValueTypesTest extends TestCase {
          * 
          */
         TWO
+    }
+
+    /**
+     * @author koichik
+     */
+    private static enum MyEnum2 {
+        /**
+         * 
+         */
+        ONE {
+
+            @Override
+            public void f() {
+            }
+
+        },
+        /**
+         * 
+         */
+        TWO {
+
+            @Override
+            public void f() {
+            }
+        };
+
+        abstract void f();
     }
 }

@@ -21,18 +21,64 @@ package org.seasar.extension.jdbc.it.entity;
  */
 public enum JobType {
 
-    /** */
-    CLERK,
+    /**
+     * クラークです。
+     */
+    CLERK {
 
-    /** */
-    SALESMAN,
+        @Override
+        public int calculateBonus(int salary) {
+            return salary;
+        }
+    },
+    /**
+     * セールスマンです。
+     */
+    SALESMAN {
 
-    /** */
-    MANAGER,
+        @Override
+        public int calculateBonus(int salary) {
+            return salary * 2;
+        }
+    },
+    /**
+     * マネージャです。
+     */
+    MANAGER {
 
-    /** */
-    ANALYST,
+        @Override
+        public int calculateBonus(int salary) {
+            return salary * 3;
+        }
+    },
+    /**
+     * アナリストです。
+     */
+    ANALYST {
 
-    /** */
-    PRESIDENT
+        @Override
+        public int calculateBonus(int salary) {
+            return salary * 4;
+        }
+    },
+    /**
+     * プレシデントです。
+     */
+    PRESIDENT {
+
+        @Override
+        public int calculateBonus(int salary) {
+            return salary * 5;
+        }
+    };
+
+    /**
+     * ボーナスを計算します。
+     * 
+     * @param salary
+     *            給与
+     * @return ボーナス
+     */
+    public abstract int calculateBonus(int salary);
+
 }

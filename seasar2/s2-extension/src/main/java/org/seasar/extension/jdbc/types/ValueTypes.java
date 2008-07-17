@@ -251,15 +251,14 @@ public final class ValueTypes {
         registerValueType(Boolean.class, BOOLEAN);
         // registerValueType(Object.class, OBJECT);
         try {
-            isEnumMethod = Class.class.getMethod("isEnum", null);
-        } catch (Throwable ignore) {
-        }
-        try {
             Class clazz = Class
                     .forName("org.seasar.extension.jdbc.types.EnumType");
             enumTypeConstructor = clazz
                     .getConstructor(new Class[] { Class.class });
+            isEnumMethod = Class.class.getMethod("isEnum", null);
         } catch (Throwable ignore) {
+            enumTypeConstructor = null;
+            isEnumMethod = null;
         }
         initialize();
     }
@@ -356,9 +355,10 @@ public final class ValueTypes {
         if (valueType != null) {
             return valueType;
         }
-        valueType = createEnumValueType(clazz);
-        if (valueType != null) {
-            valueTypeCache.put(clazz.getName(), valueType);
+        Class normalizedEnumClass = normalizeEnum(clazz);
+        if (normalizedEnumClass != null) {
+            valueType = createEnumValueType(normalizedEnumClass);
+            valueTypeCache.put(normalizedEnumClass.getName(), valueType);
             return valueType;
         }
         valueType = createUserDefineValueType(clazz);
@@ -370,15 +370,21 @@ public final class ValueTypes {
         return null;
     }
 
-    private static ValueType createEnumValueType(Class clazz) {
-        if (enumTypeConstructor != null
-                && isEnumMethod != null
-                && MethodUtil.invoke(isEnumMethod, clazz, null).equals(
-                        Boolean.TRUE)) {
-            return (ValueType) ConstructorUtil.newInstance(enumTypeConstructor,
-                    new Class[] { clazz });
+    private static Class normalizeEnum(Class clazz) {
+        if (isEnumMethod == null) {
+            return null;
+        }
+        for (Class c = clazz; c != null; c = c.getSuperclass()) {
+            if (MethodUtil.invoke(isEnumMethod, c, null).equals(Boolean.TRUE)) {
+                return c;
+            }
         }
         return null;
+    }
+
+    private static ValueType createEnumValueType(Class clazz) {
+        return (ValueType) ConstructorUtil.newInstance(enumTypeConstructor,
+                new Class[] { clazz });
     }
 
     /**
