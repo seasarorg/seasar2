@@ -39,6 +39,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -459,7 +460,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected EntityModelFactory createEntityModelFactory() {
         String packageName = ClassUtil.concatName(rootPackageName,
                 entityPackageName);
-        return new EntityModelFactoryImpl(packageName);
+        return new EntityModelFactoryImpl(packageName,
+                new AttributeModelFactoryImpl());
     }
 
     /**

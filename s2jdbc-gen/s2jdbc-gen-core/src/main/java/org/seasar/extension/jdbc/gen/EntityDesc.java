@@ -130,10 +130,10 @@ public class EntityDesc {
     }
 
     /**
-     * 属性を追加します。
+     * 属性記述を追加します。
      * 
      * @param attributeDesc
-     *            属性
+     *            属性記述
      */
     public void addAttribute(AttributeDesc attributeDesc) {
         attributeDescList.add(attributeDesc);
@@ -146,18 +146,18 @@ public class EntityDesc {
     }
 
     /**
-     * 属性のリストを返します。
+     * 属性記述のリストを返します。
      * 
-     * @return 属性のリスト
+     * @return 属性記述のリスト
      */
     public List<AttributeDesc> getAttributeDescList() {
         return Collections.unmodifiableList(attributeDescList);
     }
 
     /**
-     * 識別子である属性のリストを返します。
+     * 識別子である属性記述のリストを返します。
      * 
-     * @return 識別子である属性のリスト
+     * @return 識別子である属性記述のリスト
      */
     public List<AttributeDesc> getIdAttributeDescList() {
         return Collections.unmodifiableList(idAttributeDescList);

@@ -57,7 +57,7 @@ public class AttributeDesc {
     /** スケール */
     protected int scale;
 
-    /** {@code null}可能の場合{@code true} */
+    /** NULL可能の場合{@code true} */
     protected boolean nullable;
 
     /**
@@ -276,19 +276,19 @@ public class AttributeDesc {
     }
 
     /**
-     * {@code null}可能の場合{@code true}を返します。
+     * NULL可能の場合{@code true}を返します。
      * 
-     * @return {@code null}可能の場合{@code true}、そうでない場合{@code false}
+     * @return NULL可能の場合{@code true}、そうでない場合{@code false}
      */
     public boolean isNullable() {
         return nullable;
     }
 
     /**
-     * {@code null}可能の場合{@code true}を設定します。
+     * NULL可能の場合{@code true}を設定します。
      * 
      * @param nullable
-     *            {@code null}可能の場合{@code true}
+     *            NULL可能の場合{@code true}
      */
     public void setNullable(boolean nullable) {
         this.nullable = nullable;

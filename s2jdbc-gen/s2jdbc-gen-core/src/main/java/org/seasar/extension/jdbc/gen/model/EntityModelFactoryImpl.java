@@ -27,6 +27,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.seasar.extension.jdbc.gen.AttributeDesc;
+import org.seasar.extension.jdbc.gen.AttributeModel;
+import org.seasar.extension.jdbc.gen.AttributeModelFactory;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityModel;
 import org.seasar.extension.jdbc.gen.EntityModelFactory;
@@ -42,68 +44,94 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** パッケージ名 */
     protected String packageName;
 
+    /** 属性モデルのファクトリ */
+    protected AttributeModelFactory attributeModelFactory;
+
     /**
      * インスタンスを構築しますｌ
      * 
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param attributeModelFactory
+     *            属性モデルのファクトリ
      */
-    public EntityModelFactoryImpl(String packageName) {
+    public EntityModelFactoryImpl(String packageName,
+            AttributeModelFactory attributeModelFactory) {
+        if (attributeModelFactory == null) {
+            throw new NullPointerException("attributeModelFactory");
+        }
         this.packageName = packageName;
+        this.attributeModelFactory = attributeModelFactory;
     }
 
     public EntityModel getEntityModel(EntityDesc entityDesc) {
-        EntityModel model = new EntityModel();
-        model.setPackageName(packageName);
-        model.setShortClassName(entityDesc.getName());
-        model.setEntityDesc(entityDesc);
-        if (entityDesc.getCatalogName() != null
-                || entityDesc.getSchemaName() != null) {
-            model.setTableQualified(true);
-        }
-        doImportPackageNames(model, entityDesc);
-        return model;
+        EntityModel entityModel = new EntityModel();
+        entityModel.setCatalogName(entityDesc.getCatalogName());
+        entityModel.setSchemaName(entityDesc.getSchemaName());
+        entityModel.setPackageName(packageName);
+        entityModel.setShortClassName(entityDesc.getName());
+        entityModel.setCompositeId(entityDesc.hasCompositeId());
+        doAttributeModel(entityModel, entityDesc);
+        doImportName(entityModel, entityDesc);
+        return entityModel;
     }
 
     /**
-     * インポートするパッケージ名を処理します。
+     * 属性モデルを処理します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void doAttributeModel(EntityModel entityModel,
+            EntityDesc entityDesc) {
+        for (AttributeDesc attributeDesc : entityDesc.getAttributeDescList()) {
+            AttributeModel attributeModel = attributeModelFactory
+                    .getAttributeModel(attributeDesc);
+            entityModel.addAttributeModel(attributeModel);
+        }
+    }
+
+    /**
+     * インポート名を処理します。
      * 
      * @param model
      *            エンティティクラスのモデル
      * @param entityDesc
      *            エンティティ記述
      */
-    protected void doImportPackageNames(EntityModel model, EntityDesc entityDesc) {
-        model.addImportPackageName(Entity.class.getName());
-        if (model.isTableQualified()) {
-            model.addImportPackageName(Table.class.getName());
+    protected void doImportName(EntityModel model, EntityDesc entityDesc) {
+        model.addImportName(Entity.class.getName());
+        if (model.getCatalogName() != null || model.getSchemaName() != null) {
+            model.addImportName(Table.class.getName());
         }
         for (AttributeDesc attr : entityDesc.getAttributeDescList()) {
             if (attr.isId()) {
-                model.addImportPackageName(Id.class.getName());
+                model.addImportName(Id.class.getName());
                 if (!entityDesc.hasCompositeId()) {
-                    model.addImportPackageName(GeneratedValue.class.getName());
+                    model.addImportName(GeneratedValue.class.getName());
                 }
             }
             if (attr.isLob()) {
-                model.addImportPackageName(Lob.class.getName());
+                model.addImportName(Lob.class.getName());
             }
             if (attr.getTemporalType() != null) {
-                model.addImportPackageName(Temporal.class.getName());
-                model.addImportPackageName(TemporalType.class.getName());
+                model.addImportName(Temporal.class.getName());
+                model.addImportName(TemporalType.class.getName());
             }
             if (attr.isTransient()) {
-                model.addImportPackageName(Transient.class.getName());
+                model.addImportName(Transient.class.getName());
             } else {
-                model.addImportPackageName(Column.class.getName());
+                model.addImportName(Column.class.getName());
             }
             if (attr.isVersion()) {
-                model.addImportPackageName(Version.class.getName());
+                model.addImportName(Version.class.getName());
             }
 
             String name = ClassUtil.getPackageName(attr.getAttributeClass());
             if (name != null && !"java.lang".equals(name)) {
-                model.addImportPackageName(attr.getAttributeClass().getName());
+                model.addImportName(attr.getAttributeClass().getName());
             }
         }
     }

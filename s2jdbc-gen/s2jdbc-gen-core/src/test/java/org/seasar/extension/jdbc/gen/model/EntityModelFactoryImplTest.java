@@ -24,7 +24,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -44,7 +43,7 @@ import static org.junit.Assert.*;
 public class EntityModelFactoryImplTest {
 
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
-            "aaa.bbb");
+            "aaa.bbb", new AttributeModelFactoryImpl());
 
     /**
      * 
@@ -93,10 +92,8 @@ public class EntityModelFactoryImplTest {
         EntityModel model = factory.getEntityModel(entityDesc);
         assertEquals("aaa.bbb", model.getPackageName());
         assertEquals("Foo", model.getShortClassName());
-        assertNotNull(model.getEntityDesc());
-        assertFalse(model.isTableQualified());
 
-        Set<String> set = model.getImportPackageNameSet();
+        Set<String> set = model.getImportNameSet();
         assertEquals(10, set.size());
         Iterator<String> iterator = set.iterator();
         assertEquals(Date.class.getName(), iterator.next());
@@ -111,40 +108,4 @@ public class EntityModelFactoryImplTest {
         assertEquals(Version.class.getName(), iterator.next());
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetEntityModel_tableQualified() throws Exception {
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setCatalogName("AAA");
-        entityDesc.setSchemaName("BBB");
-        entityDesc.setName("Foo");
-
-        EntityModel model = factory.getEntityModel(entityDesc);
-        assertTrue(model.isTableQualified());
-        Set<String> set = model.getImportPackageNameSet();
-        assertEquals(2, set.size());
-        Iterator<String> iterator = set.iterator();
-        assertEquals(Entity.class.getName(), iterator.next());
-        assertEquals(Table.class.getName(), iterator.next());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetEntityModel_tableNotQualified() throws Exception {
-        EntityDesc entityDesc = new EntityDesc();
-        entityDesc.setName("Foo");
-
-        EntityModel model = factory.getEntityModel(entityDesc);
-        assertFalse(model.isTableQualified());
-        Set<String> set = model.getImportPackageNameSet();
-        assertEquals(1, set.size());
-        Iterator<String> iterator = set.iterator();
-        assertEquals(Entity.class.getName(), iterator.next());
-    }
 }

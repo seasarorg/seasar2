@@ -15,12 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * エンティティクラスのモデルです。
@@ -29,8 +28,14 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class EntityModel {
 
-    /** インポートパッケージ名のソートされたセット */
-    protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
+    /** カタログ名 */
+    protected String catalogName;
+
+    /** スキーマ名 */
+    protected String schemaName;
+
+    /** インポート名のソートされたセット */
+    protected SortedSet<String> importNameSet = new TreeSet<String>();
 
     /** パッケージ名 */
     protected String packageName;
@@ -38,11 +43,49 @@ public class EntityModel {
     /** クラスの単純名 */
     protected String shortClassName;
 
-    /** エンティティ記述 */
-    protected EntityDesc entityDesc;
+    /** 複合識別子を持つ場合{@code true} */
+    protected boolean compositeId;
 
-    /** テーブルがカタログやスキーマで修飾されている場合{@code true} */
-    protected boolean tableQualified;
+    /** 属性モデルのリスト */
+    protected List<AttributeModel> attributeModelList = new ArrayList<AttributeModel>();
+
+    /**
+     * カタログ名を返します。
+     * 
+     * @return カタログ名
+     */
+    public String getCatalogName() {
+        return catalogName;
+    }
+
+    /**
+     * カタログ名を設定します。
+     * 
+     * @param catalogName
+     *            カタログ名
+     */
+    public void setCatalogName(String catalogName) {
+        this.catalogName = catalogName;
+    }
+
+    /**
+     * スキーマ名を返します。
+     * 
+     * @return スキーマ名
+     */
+    public String getSchemaName() {
+        return schemaName;
+    }
+
+    /**
+     * スキーマ名を設定します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     */
+    public void setSchemaName(String schemaName) {
+        this.schemaName = schemaName;
+    }
 
     /**
      * パッケージ名を返します。
@@ -83,108 +126,60 @@ public class EntityModel {
     }
 
     /**
-     * インポートパッケージ名のソートされたセットを返します。
+     * インポート名のソートされたセットを返します。
      * 
-     * @return インポートパッケージ名のソートされたセット
+     * @return インポート名のソートされたセット
      */
-    public SortedSet<String> getImportPackageNameSet() {
-        return Collections.unmodifiableSortedSet(importPackageNameSet);
+    public SortedSet<String> getImportNameSet() {
+        return Collections.unmodifiableSortedSet(importNameSet);
     }
 
     /**
-     * パッケージ名を追加します。
+     *インポート名を追加します。
      * 
      * @param name
-     *            パッケージ名
+     *            インポート名
      */
-    public void addImportPackageName(String name) {
-        importPackageNameSet.add(name);
+    public void addImportName(String name) {
+        importNameSet.add(name);
     }
 
     /**
-     * エンティティ記述を返します。
+     * 属性モデルを追加します。
      * 
-     * @return エンティティ記述
+     * @param attributeModel
+     *            属性モデル
      */
-    public EntityDesc getEntityDesc() {
-        return entityDesc;
+    public void addAttributeModel(AttributeModel attributeModel) {
+        attributeModelList.add(attributeModel);
     }
 
     /**
-     * エンティティ記述を設定します。
+     * 属性モデルを返します。
      * 
-     * @param entityDesc
-     *            エンティティ記述
+     * @return 属性モデル
      */
-    public void setEntityDesc(EntityDesc entityDesc) {
-        this.entityDesc = entityDesc;
+    public List<AttributeModel> getAttributeModelList() {
+        return Collections.unmodifiableList(attributeModelList);
     }
 
     /**
-     * テーブルがカタログやスキーマで修飾されている場合{@code true}を返します。
+     * 複合識別子を持つ場合{@code true}を返します。
      * 
-     * @return テーブルがカタログやスキーマで修飾されている場合{@code true}
+     * @return 複合識別子を持つ場合{@code true}
      */
-    public boolean isTableQualified() {
-        return tableQualified;
+    public boolean hasCompositeId() {
+        return compositeId;
     }
 
     /**
-     * テーブルがカタログやスキーマで修飾されている場合{@code true}を設定します。
+     * 複合識別子を持つ場合{@code true}を設定します。
      * 
-     * @param tableQualified
-     *            テーブルがカタログやスキーマで修飾されている場合{@code true}
+     * @param compositeId
+     *            複合識別子を持つ場合{@code true}
      */
-    public void setTableQualified(boolean tableQualified) {
-        this.tableQualified = tableQualified;
+    public void setCompositeId(boolean compositeId) {
+        this.compositeId = compositeId;
     }
 
-    /**
-     * 長さが有効の場合{@code true}を返します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @return 長さが有効の場合{@code true}を
-     */
-    public boolean isLengthAvailable(AttributeDesc attributeDesc) {
-        return !isNumber(attributeDesc) && attributeDesc.getLength() > 0;
-    }
-
-    /**
-     * 精度が有効の場合{@code true}を返します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @return 精度が有効の場合{@code true}
-     */
-    public boolean isPrecisionAvailable(AttributeDesc attributeDesc) {
-        return isNumber(attributeDesc) && attributeDesc.getPrecision() > 0;
-    }
-
-    /**
-     * スケールが有効の場合{@code true}を返します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @return スケールが有効の場合{@code true}
-     */
-    public boolean isScaleAvailable(AttributeDesc attributeDesc) {
-        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
-                .getAttributeClass());
-        return clazz == BigDecimal.class || clazz == Float.class
-                || clazz == Double.class;
-    }
-
-    /**
-     * 数値を表す場合{@code true}を返します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @return 数値を表す場合{@code true}
-     */
-    protected boolean isNumber(AttributeDesc attributeDesc) {
-        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
-                .getAttributeClass());
-        return Number.class.isAssignableFrom(clazz);
-    }
 }

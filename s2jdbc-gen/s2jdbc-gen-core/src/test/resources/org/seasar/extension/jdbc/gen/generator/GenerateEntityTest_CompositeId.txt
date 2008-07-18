@@ -5,14 +5,20 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
+    /** */
     @Id
     @Column(precision = 10, nullable = false)
     public int id1;
 
+    /** */
     @Id
     @Column(precision = 20, nullable = false)
     public int id2;

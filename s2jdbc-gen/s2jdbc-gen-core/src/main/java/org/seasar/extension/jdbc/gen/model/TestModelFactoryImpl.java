@@ -85,34 +85,33 @@ public class TestModelFactoryImpl implements TestModelFactory {
         testModel.setPackageName(packageName);
         testModel.setShortClassName(entityMeta.getName() + ｔestClassNameSuffix);
         testModel.setShortEntityClassName(entityMeta.getName());
-        doImportPackageNames(entityMeta, testModel);
+        doImportName(entityMeta, testModel);
         doIdValue(entityMeta, testModel);
         return testModel;
     }
 
     /**
-     * インポートするパッケージ名を処理します。
+     * インポート名を処理します。
      * 
      * @param entityMeta
      *            エンティティメタデータ
      * @param testModel
      *            テストモデル
      */
-    protected void doImportPackageNames(EntityMeta entityMeta,
-            TestModel testModel) {
-        testModel.addImportPackageName(JdbcManager.class.getName());
-        testModel.addImportPackageName(S2TestCase.class.getName());
+    protected void doImportName(EntityMeta entityMeta, TestModel testModel) {
+        testModel.addImportName(JdbcManager.class.getName());
+        testModel.addImportName(S2TestCase.class.getName());
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
             String name = ClassUtil.getPackageName(propertyClass);
             if (name != null && !"java.lang".equals(name)) {
-                testModel.addImportPackageName(propertyClass.getName());
+                testModel.addImportName(propertyClass.getName());
             }
         }
     }
 
     /**
-     * 識別子の値を処理します。
+     * 識別子の式を処理します。
      * 
      * @param entityMeta
      *            エンティティメタデータ
@@ -122,18 +121,18 @@ public class TestModelFactoryImpl implements TestModelFactory {
     protected void doIdValue(EntityMeta entityMeta, TestModel testModel) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
-            testModel.addIdValue(getIdValue(propertyClass));
+            testModel.addIdExpression(getIdExpression(propertyClass));
         }
     }
 
     /**
-     * 識別子の値を取得します。
+     * 識別子の式を取得します。
      * 
      * @param propertyClass
      *            プロパティのクラス
-     * @return 識別子の値
+     * @return 識別子の式
      */
-    protected String getIdValue(Class<?> propertyClass) {
+    protected String getIdExpression(Class<?> propertyClass) {
         Class<?> clazz = ClassUtil.getPrimitiveClassIfWrapper(propertyClass);
         if (clazz.isPrimitive()) {
             if (clazz == boolean.class) {

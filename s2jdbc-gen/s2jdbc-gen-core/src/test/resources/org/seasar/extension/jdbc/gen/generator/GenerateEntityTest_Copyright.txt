@@ -1,0 +1,16 @@
+/* 
+ * copyright
+ */
+package hoge.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo {
+}

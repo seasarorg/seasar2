@@ -104,7 +104,7 @@ public class ConditionAttributeModel {
      * パラメタ化されている場合{@code true}を設定します。
      * 
      * @param parameterized
-     *            　パラメタ化されている場合{@code true}
+     *            パラメタ化されている場合{@code true}
      */
     public void setParameterized(boolean parameterized) {
         this.parameterized = parameterized;

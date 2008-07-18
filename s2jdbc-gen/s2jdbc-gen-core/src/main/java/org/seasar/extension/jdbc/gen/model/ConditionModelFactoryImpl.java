@@ -82,7 +82,6 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
         conditionModel.setPackageName(packageName);
         conditionModel.setShortClassName(entityMeta.getName()
                 + conditionClassNameSuffix);
-        conditionModel.setEntityMeta(entityMeta);
         for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
             if (propertyMeta.isTransient()) {
@@ -94,7 +93,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
                 doConditionAttributeModel(conditionModel, propertyMeta);
             }
         }
-        doImportPackageNames(conditionModel, entityMeta);
+        doImportName(conditionModel, entityMeta);
         return conditionModel;
     }
 
@@ -129,39 +128,36 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
     }
 
     /**
-     * インポートするパッケージ名を処理します。
+     * インポート名を処理します。
      * 
      * @param conditionModel
      *            エンティティ条件クラスのモデル
      * @param entityMeta
-     *            エンティティ
+     *            エンティティメタデータ
      */
-    protected void doImportPackageNames(ConditionModel conditionModel,
+    protected void doImportName(ConditionModel conditionModel,
             EntityMeta entityMeta) {
-        addImportPackageName(conditionModel, ComplexWhere.class);
-        addImportPackageName(conditionModel, AbstractEntityCondition.class);
+        addImportName(conditionModel, ComplexWhere.class);
+        addImportName(conditionModel, AbstractEntityCondition.class);
         for (ConditionAttributeModel attributeModel : conditionModel
                 .getConditionAttributeModelList()) {
-            addImportPackageName(conditionModel, attributeModel
-                    .getAttributeClass());
-            addImportPackageName(conditionModel, attributeModel
-                    .getConditionClass());
+            addImportName(conditionModel, attributeModel.getAttributeClass());
+            addImportName(conditionModel, attributeModel.getConditionClass());
         }
     }
 
     /**
-     * インポートするパッケージ名を追加します。
+     * インポート名を追加します。
      * 
      * @param conditionModel
      *            条件クラスのモデル
      * @param clazz
      *            インポートするクラス
      */
-    protected void addImportPackageName(ConditionModel conditionModel,
-            Class<?> clazz) {
+    protected void addImportName(ConditionModel conditionModel, Class<?> clazz) {
         String pakcageName = ClassUtil.getPackageName(clazz);
         if (pakcageName != null && !"java.lang".equals(pakcageName)) {
-            conditionModel.addImportPackageName(clazz.getName());
+            conditionModel.addImportName(clazz.getName());
         }
     }
 

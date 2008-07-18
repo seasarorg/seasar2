@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.seasar.extension.jdbc.EntityMeta;
-
 /**
  * 条件クラスのモデルです。
  * 
@@ -36,11 +34,8 @@ public class ConditionModel {
     /** クラスの単純名 */
     protected String shortClassName;
 
-    /** エンティティメタデータ */
-    protected EntityMeta entityMeta;
-
-    /** インポートパッケージ名のソートされたセット */
-    protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
+    /** インポート名のソートされたセット */
+    protected SortedSet<String> importNameSet = new TreeSet<String>();
 
     /** 条件クラスの属性モデルのリスト */
     protected List<ConditionAttributeModel> conditionAttributeModelList = new ArrayList<ConditionAttributeModel>();
@@ -87,22 +82,22 @@ public class ConditionModel {
     }
 
     /**
-     * インポートパッケージ名のソートされたセットを返します。
+     * インポート名のソートされたセットを返します。
      * 
-     * @return インポートパッケージ名のソートされたセット
+     * @return インポート名のソートされたセット
      */
-    public SortedSet<String> getImportPackageNameSet() {
-        return Collections.unmodifiableSortedSet(importPackageNameSet);
+    public SortedSet<String> getImportNameSet() {
+        return Collections.unmodifiableSortedSet(importNameSet);
     }
 
     /**
-     * インポートパッケージ名を追加します。
+     * インポート名を追加します。
      * 
      * @param name
-     *            インポートパッケージ名
+     *            インポート名
      */
-    public void addImportPackageName(String name) {
-        importPackageNameSet.add(name);
+    public void addImportName(String name) {
+        importNameSet.add(name);
     }
 
     /**
@@ -143,25 +138,6 @@ public class ConditionModel {
     public void addConditionMethodModel(
             ConditionMethodModel conditionMethodModel) {
         conditionMethodModelList.add(conditionMethodModel);
-    }
-
-    /**
-     * エンティティメタデータを返します。
-     * 
-     * @return
-     */
-    public EntityMeta getEntityMeta() {
-        return entityMeta;
-    }
-
-    /**
-     * エンティティメタデータを設定します。
-     * 
-     * @param entityMeta
-     *            エンティティメタデータ
-     */
-    public void setEntityMeta(EntityMeta entityMeta) {
-        this.entityMeta = entityMeta;
     }
 
 }

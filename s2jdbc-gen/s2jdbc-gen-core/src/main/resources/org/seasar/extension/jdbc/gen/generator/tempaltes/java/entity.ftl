@@ -1,19 +1,27 @@
+<#include "/copyright.ftl">
+<#if packageName??>
 package ${packageName};
+</#if>
 
-<#list importPackageNameSet as importPackageName>
-import ${importPackageName};
+<#list importNameSet as importName>
+import ${importName};
 </#list>
 
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
 @Entity
-<#if tableQualified>
-@Table(<#if entityDesc.catalogName??>catalog = "${entityDesc.catalogName}"</#if><#if entityDesc.schemaName??><#if entityDesc.catalogName??>, </#if>schema = "${entityDesc.schemaName}"</#if>)
+<#if catalogName?? || schemaName??>
+@Table(<#if catalogName??>catalog = "${catalogName}"</#if><#if schemaName??><#if catalogName??>, </#if>schema = "${schemaName}"</#if>)
 </#if>
 public class ${shortClassName} {
-<#list entityDesc.attributeDescList as attr>
+<#list attributeModelList as attr>
 
+    /** */
   <#if attr.id>
     @Id
-    <#if !entityDesc.hasCompositeId()>
+    <#if !hasCompositeId()>
     @GeneratedValue
     </#if>
   </#if>
@@ -30,7 +38,7 @@ public class ${shortClassName} {
     @Version
   </#if>
   <#if !attr.transient>
-    @Column(<#if isLengthAvailable(attr)>length = ${attr.length}, </#if><#if isPrecisionAvailable(attr)>precision = ${attr.precision}, </#if><#if isScaleAvailable(attr)>scale = ${attr.scale}, </#if>nullable = ${attr.nullable?string})
+    @Column(<#if attr.lengthAvailable>length = ${attr.length}, </#if><#if attr.precisionAvailable>precision = ${attr.precision}, </#if><#if attr.scaleAvailable>scale = ${attr.scale}, </#if>nullable = ${attr.nullable?string})
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>

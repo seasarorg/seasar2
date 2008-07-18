@@ -26,7 +26,10 @@ import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.EntityDesc;
 import org.seasar.extension.jdbc.gen.EntityModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -47,7 +50,8 @@ public class GenerateEntityTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new EntityModelFactoryImpl("hoge.entity");
+        factory = new EntityModelFactoryImpl("hoge.entity",
+                new AttributeModelFactoryImpl());
         generator = new GeneratorImplStub("UTF-8");
     }
 
@@ -176,6 +180,30 @@ public class GenerateEntityTest {
 
         String path = getClass().getName().replace(".", "/")
                 + "_CompositeId.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCopyright() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setName("Foo");
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+        String packageName = ClassUtil.getPackageName(getClass());
+        File dir = ResourceUtil
+                .getResourceAsFile(packageName.replace('.', '/'));
+        GeneratorImplStub generator = new GeneratorImplStub("UTF-8", dir);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/") + "_Copyright.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 }

@@ -13,32 +13,43 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
+    /** */
     @Id
     @GeneratedValue
     @Column(precision = 10, nullable = false)
     public int id;
 
+    /** */
     @Column(length = 20, nullable = false)
     public String name;
 
+    /** */
     @Column(precision = 15, scale = 5, nullable = false)
     public BigDecimal sal;
 
+    /** */
     @Lob
     @Column(length = 10, nullable = true)
     public byte[] lob;
 
+    /** */
     @Temporal(TemporalType.DATE)
     @Column(length = 10, nullable = true)
     public Date date;
 
+    /** */
     @Transient
     public String temp;
 
+    /** */
     @Version
     @Column(precision = 10, nullable = false)
     public Integer version;

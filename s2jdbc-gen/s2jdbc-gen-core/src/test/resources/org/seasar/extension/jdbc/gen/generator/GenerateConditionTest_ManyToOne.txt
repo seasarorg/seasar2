@@ -7,34 +7,55 @@ import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
 
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
 public class AaaCondition extends
         AbstractEntityCondition<AaaCondition> {
 
+    /**
+     *
+     */
     public AaaCondition() {
     }
 
+    /**
+     * 
+     * @param prefix
+     * @param where
+     */
     public AaaCondition(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
 
+    /** */
     public NotNullableCondition<AaaCondition, Integer> id =
         new NotNullableCondition<AaaCondition, Integer>("id", this);
 
+    /** */
     public NotNullableStringCondition<AaaCondition> name =
         new NotNullableStringCondition<AaaCondition>("name", this);
 
+    /** */
     public NotNullableCondition<AaaCondition, byte[]> lob =
         new NotNullableCondition<AaaCondition, byte[]>("lob", this);
 
+    /** */
     public NullableCondition<AaaCondition, Date> date =
         new NullableCondition<AaaCondition, Date>("date", this);
 
+    /** */
     public NotNullableCondition<AaaCondition, Integer> version =
         new NotNullableCondition<AaaCondition, Integer>("version", this);
 
+    /** */
     public NotNullableCondition<AaaCondition, Integer> bbbId =
         new NotNullableCondition<AaaCondition, Integer>("bbbId", this);
 
+    /**
+     *
+     */
     public BbbCondition bbb() {
         return new BbbCondition(prefix + "bbb.", where);
     } 

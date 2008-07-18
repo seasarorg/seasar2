@@ -30,11 +30,11 @@ import org.seasar.extension.jdbc.JdbcManager;
  */
 public class TestModel {
 
-    /** インポートパッケージ名のソートされたセット */
-    protected SortedSet<String> importPackageNameSet = new TreeSet<String>();
+    /** インポート名のソートされたセット */
+    protected SortedSet<String> importNameSet = new TreeSet<String>();
 
-    /** 識別子の値のリスト */
-    protected List<String> idValueList = new ArrayList<String>();
+    /** 識別子の式のリスト */
+    protected List<String> idExpressionList = new ArrayList<String>();
 
     /** パッケージ名 */
     protected String packageName;
@@ -146,41 +146,41 @@ public class TestModel {
     }
 
     /**
-     * インポートパッケージ名のソートされたセットを返します。
+     * インポート名のソートされたセットを返します。
      * 
-     * @return インポートパッケージ名のソートされたセット
+     * @return インポート名のソートされたセット
      */
-    public SortedSet<String> getImportPackageNameSet() {
-        return Collections.unmodifiableSortedSet(importPackageNameSet);
+    public SortedSet<String> getImportNameSet() {
+        return Collections.unmodifiableSortedSet(importNameSet);
     }
 
     /**
-     * パッケージ名を追加します。
+     * インポート名を追加します。
      * 
      * @param name
-     *            パッケージ名
+     *            インポート名
      */
-    public void addImportPackageName(String name) {
-        importPackageNameSet.add(name);
+    public void addImportName(String name) {
+        importNameSet.add(name);
     }
 
     /**
-     * 識別子の値のリストを返します。
+     * 識別子の式のリストを返します。
      * 
-     * @return 識別子の値のリスト
+     * @return 識別子の式のリスト
      */
-    public List<String> getIdValueList() {
-        return Collections.unmodifiableList(idValueList);
+    public List<String> getIdExpressionList() {
+        return Collections.unmodifiableList(idExpressionList);
     }
 
     /**
-     * 識別子の値のリストを設定します。
+     * 識別子の式のリストを設定します。
      * 
-     * @param idValue
-     *            識別子の値のリスト
+     * @param idExpression
+     *            識別子の式のリスト
      */
-    public void addIdValue(String idValue) {
-        idValueList.add(idValue);
+    public void addIdExpression(String idExpression) {
+        idExpressionList.add(idExpression);
     }
 
 }

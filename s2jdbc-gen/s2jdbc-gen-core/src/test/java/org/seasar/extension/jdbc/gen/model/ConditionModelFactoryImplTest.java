@@ -92,11 +92,10 @@ public class ConditionModelFactoryImplTest {
         assertEquals("aaa.bbb", model.getPackageName());
         assertEquals("ConditionModelFactoryImplTest$AaaCondition", model
                 .getShortClassName());
-        assertNotNull(model.getEntityMeta());
         assertEquals(6, model.getConditionAttributeModelList().size());
         assertEquals(1, model.getConditionMethodModelList().size());
 
-        Set<String> set = model.getImportPackageNameSet();
+        Set<String> set = model.getImportNameSet();
         assertEquals(7, set.size());
         Iterator<String> iterator = set.iterator();
         assertEquals("java.util.Date", iterator.next());

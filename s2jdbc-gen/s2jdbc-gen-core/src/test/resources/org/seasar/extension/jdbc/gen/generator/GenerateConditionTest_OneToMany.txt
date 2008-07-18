@@ -5,22 +5,39 @@ import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
 public class BbbCondition extends
         AbstractEntityCondition<BbbCondition> {
 
+    /**
+     *
+     */
     public BbbCondition() {
     }
 
+    /**
+     * 
+     * @param prefix
+     * @param where
+     */
     public BbbCondition(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
 
+    /** */
     public NotNullableCondition<BbbCondition, Integer> id =
         new NotNullableCondition<BbbCondition, Integer>("id", this);
 
+    /** */
     public NullableStringCondition<BbbCondition> name =
         new NullableStringCondition<BbbCondition>("name", this);
 
+    /**
+     *
+     */
     public AaaCondition aaas() {
         return new AaaCondition(prefix + "aaas.", where);
     } 
