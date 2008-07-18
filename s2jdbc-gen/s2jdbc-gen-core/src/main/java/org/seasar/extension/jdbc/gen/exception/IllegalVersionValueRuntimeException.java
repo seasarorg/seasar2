@@ -18,17 +18,28 @@ package org.seasar.extension.jdbc.gen.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * バージョン番号の値が不正な場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class IllegalVersionValueRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /** バージョン番号を保持するファイル名 */
     protected String versionFileName;
 
+    /** 不正な値 */
     protected String illegalValue;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param versionFileName
+     *            バージョン番号を保持するファイル名
+     * @param illegalValue
+     *            不正な値
+     */
     public IllegalVersionValueRuntimeException(String versionFileName,
             String illegalValue) {
         super("ES2JDBCGen0006", new Object[] { versionFileName, illegalValue });
@@ -37,14 +48,18 @@ public class IllegalVersionValueRuntimeException extends SRuntimeException {
     }
 
     /**
-     * @return Returns the versionFileName.
+     * バージョン番号を保持するファイル名を返します。
+     * 
+     * @return バージョン番号を保持するファイル名
      */
     public String getVersionFileName() {
         return versionFileName;
     }
 
     /**
-     * @return Returns the illegalValue.
+     * 不正な値を返します。
+     * 
+     * @return 不正な値
      */
     public String getIllegalValue() {
         return illegalValue;

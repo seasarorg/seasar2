@@ -37,12 +37,19 @@ public class SqlScriptReaderImplTest {
 
     private MssqlGenDialect dialect;
 
+    /**
+     * 
+     */
     @Before
     public void setUp() {
         dialect = new MssqlGenDialect();
         tokenizer = new SqlScriptTokenizerImpl(';', "go");
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testReadSql_delimiter() throws Exception {
         SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
@@ -66,6 +73,10 @@ public class SqlScriptReaderImplTest {
         assertNull(reader.readSql());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testReadSql_sqlBlock() throws Exception {
         SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
@@ -84,6 +95,10 @@ public class SqlScriptReaderImplTest {
         assertNull(reader.readSql());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testReadSql_notSqlBlock() throws Exception {
         SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
@@ -102,6 +117,10 @@ public class SqlScriptReaderImplTest {
         assertNull(reader.readSql());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testReadSql_commentBlock() throws Exception {
         SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),

@@ -46,20 +46,28 @@ public class SequenceDescFactoryImplTest {
 
     private SequenceDescFactoryImpl sequenceDescFactoryImpl;
 
+    @SuppressWarnings("unused")
     @Id
     @SequenceGenerator(name = "generator", sequenceName = "aaa", initialValue = 10, allocationSize = 20)
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     private Integer sequenceId;
 
+    @SuppressWarnings("unused")
     @Id
     @GeneratedValue
     private Integer autoId;
 
+    @SuppressWarnings("unused")
     @Id
     private Integer assignId;
 
+    @SuppressWarnings("unused")
     private Integer nonId;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -72,6 +80,10 @@ public class SequenceDescFactoryImplTest {
                 new OracleGenDialect());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSequenceDesc_sequenceId() throws Exception {
         Field field = getClass().getDeclaredField("sequenceId");
@@ -87,6 +99,10 @@ public class SequenceDescFactoryImplTest {
         assertEquals("number(10,0)", sequenceDesc.getDataType());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSequenceDesc_autoId() throws Exception {
         Field field = getClass().getDeclaredField("autoId");
@@ -105,6 +121,10 @@ public class SequenceDescFactoryImplTest {
         assertEquals("number(10,0)", sequenceDesc.getDataType());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSequenceDesc_assignId() throws Exception {
         Field field = getClass().getDeclaredField("assignId");
@@ -116,6 +136,10 @@ public class SequenceDescFactoryImplTest {
         assertNull(sequenceDesc);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSequenceDesc_nonId() throws Exception {
         Field field = getClass().getDeclaredField("nonId");

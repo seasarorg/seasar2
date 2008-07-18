@@ -25,6 +25,10 @@ import static org.junit.Assert.*;
  */
 public class IllegalVersionValueRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         IllegalVersionValueRuntimeException e = new IllegalVersionValueRuntimeException(

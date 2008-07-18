@@ -18,19 +18,31 @@ package org.seasar.extension.jdbc.gen.command;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
- * @author taedium
+ * {@link SingletonS2ContainerFactory}の初期化と破棄をサポートするクラスです。
  * 
+ * @author taedium
  */
-public class S2ContainerFactorySupport {
+public class SingletonS2ContainerFactorySupport {
 
+    /** 設定ファイルのパス */
     protected String configPath;
 
-    public S2ContainerFactorySupport(String configPath) {
+    /** 初期化された場合{@code true} */
+    protected boolean initialized;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
+    public SingletonS2ContainerFactorySupport(String configPath) {
         this.configPath = configPath;
     }
 
-    protected boolean initialized;
-
+    /**
+     * 初期化します。
+     */
     public void init() {
         if (!SingletonS2ContainerFactory.hasContainer()) {
             initialized = true;
@@ -39,6 +51,9 @@ public class S2ContainerFactorySupport {
         }
     }
 
+    /**
+     * 破棄します。
+     */
     protected void destory() {
         if (initialized) {
             SingletonS2ContainerFactory.destroy();

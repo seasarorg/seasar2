@@ -15,15 +15,23 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
- * @author taedium
+ * SQLスクリプトのリーダです。
  * 
+ * @author taedium
  */
 public interface SqlScriptReader {
 
-    public abstract String readSql();
+    /**
+     * SQLを返します。
+     * 
+     * @return SQLを読み取れる場合はそのSQL、SQLを読み取れない場合は{@code null}
+     */
+    String readSql();
 
-    public abstract void close();
+    /**
+     * クローズします。
+     */
+    void close();
 
 }

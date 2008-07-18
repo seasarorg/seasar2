@@ -29,14 +29,22 @@ import static org.junit.Assert.*;
  */
 public class S2ContainerFactorySupportTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testInitAndDestroy() throws Exception {
-        S2ContainerFactorySupport support = new S2ContainerFactorySupport(
+        SingletonS2ContainerFactorySupport support = new SingletonS2ContainerFactorySupport(
                 "s2jdbc-gen-core-test.dicon");
         support.init();
         assertTrue(SingletonS2ContainerFactory.hasContainer());
@@ -44,11 +52,15 @@ public class S2ContainerFactorySupportTest {
         assertFalse(SingletonS2ContainerFactory.hasContainer());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testInitAndDestroy_alreadyInitialized() throws Exception {
         S2Container container = new S2ContainerImpl();
         SingletonS2ContainerFactory.setContainer(container);
-        S2ContainerFactorySupport support = new S2ContainerFactorySupport(
+        SingletonS2ContainerFactorySupport support = new SingletonS2ContainerFactorySupport(
                 "s2jdbc-gen-core-test.dicon");
         support.init();
         assertSame(container, SingletonS2ContainerFactory.getContainer());

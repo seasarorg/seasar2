@@ -27,12 +27,16 @@ import static org.junit.Assert.*;
  */
 public class SqlFailedExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         SQLException cause = new SQLException();
         SqlFailedException e = new SqlFailedException(cause, "aaa", "bbb");
         assertSame(cause, e.getCause());
-        assertEquals("aaa", e.getFileName());
+        assertEquals("aaa", e.getFilePath());
         assertEquals("bbb", e.getSql());
     }
 }

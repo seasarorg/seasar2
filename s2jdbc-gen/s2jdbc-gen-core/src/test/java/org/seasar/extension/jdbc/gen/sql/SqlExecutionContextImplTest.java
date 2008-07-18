@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
-import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.framework.mock.sql.MockConnection;
 
 import static org.junit.Assert.*;
@@ -32,12 +31,14 @@ import static org.junit.Assert.*;
  */
 public class SqlExecutionContextImplTest {
 
-    protected boolean invoked;
-
+    /**
+     * 
+     */
     @Test
     public void testGetStatement() {
         MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn);
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
+                false);
         Statement statement = context.getStatement();
         assertNotNull(statement);
         assertSame(statement, context.getStatement());
@@ -46,10 +47,14 @@ public class SqlExecutionContextImplTest {
         assertNotSame(statement, context.getStatement());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testAddException() {
         MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn);
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
+                false);
         assertTrue(context.getExceptionList().isEmpty());
         SqlFailedException exception = new SqlFailedException(
                 new SQLException(), "aaa", "bbb");
@@ -58,11 +63,33 @@ public class SqlExecutionContextImplTest {
         assertEquals(1, list.size());
     }
 
+    /**
+     * 
+     */
+    @Test
+    public void testAddException_haltOnError() {
+        MockConnection conn = new MockConnection();
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
+                true);
+        assertTrue(context.getExceptionList().isEmpty());
+        SqlFailedException exception = new SqlFailedException(
+                new SQLException(), "aaa", "bbb");
+        try {
+            context.addException(exception);
+            fail();
+        } catch (SqlFailedException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
     @Test
     public void testDestroy() {
         MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn);
-        context.getStatement();
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
+                false);
+        assertNotNull(context.getStatement());
         assertNotNull(context.connection);
         assertNotNull(context.statement);
         context.destroy();

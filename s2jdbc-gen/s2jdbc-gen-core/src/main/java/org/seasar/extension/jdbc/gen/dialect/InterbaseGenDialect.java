@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class InterbaseGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public InterbaseGenDialect() {
     }
 

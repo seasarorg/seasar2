@@ -18,10 +18,18 @@ package org.seasar.extension.jdbc.gen;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
- * @author taedium
+ * {@link ConditionMethodModel 条件クラスのメソッドモデル}のファクトリです。
  * 
+ * @author taedium
  */
 public interface ConditionMethodModelFactory {
 
+    /**
+     * 条件クラスのメソッドモデルを返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return 条件クラスのメソッドモデル
+     */
     ConditionMethodModel getConditionMethodModel(PropertyMeta propertyMeta);
 }

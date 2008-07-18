@@ -55,6 +55,10 @@ public class ConditionModelFactoryImplTest {
 
     private ConditionModelFactoryImpl conditionModelfactory;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -105,36 +109,46 @@ public class ConditionModelFactoryImplTest {
         assertEquals(NullableStringCondition.class.getName(), iterator.next());
     }
 
+    /** */
     @Entity
     public static class Aaa {
 
+        /** */
         @Id
         @Column(nullable = false)
         protected Integer id;
 
+        /** */
         @Column(nullable = false)
         protected String name;
 
+        /** */
         @Column(nullable = true)
         protected String nullableName;
 
+        /** */
         @Temporal(TemporalType.DATE)
         @Column(nullable = false)
         protected Date date;
 
+        /** */
         @Temporal(TemporalType.DATE)
         protected Date nullableDate;
 
+        /** */
         @Column
         protected Integer bbbId;
 
+        /** */
         @ManyToOne
         protected Bbb bbb;
     }
 
+    /** */
     @Entity
     public static class Bbb {
 
+        /** */
         @Id
         @Column(nullable = false)
         protected Integer id;

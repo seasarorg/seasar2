@@ -22,6 +22,9 @@ package org.seasar.extension.jdbc.gen.dialect;
  */
 public class Mssql2005GenDialect extends MssqlGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public Mssql2005GenDialect() {
     }
 

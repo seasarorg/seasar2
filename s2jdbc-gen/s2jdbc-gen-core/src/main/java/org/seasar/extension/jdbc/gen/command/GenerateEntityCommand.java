@@ -36,29 +36,41 @@ import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * S2JDBC用エンティティのJavaファイルを生成する{@link Command}の実装クラスです。
+ * エンティティクラスのJavaファイルを生成する{@link Command}の実装クラスです。
+ * <p>
+ * このコマンドは、データベースのメタデータからエンティティクラスのJavaファイルを生成します。
+ * </p>
+ * <p>
+ * テーブル1つにつき、1つのエンティティクラスのJavaファイルを生成します。
+ * </p>
+ * <p>
+ * 主キーやカラムのNOT NULL制約は認識してJavaコードに反映しますが、一意キーや外部キーは認識しません。
+ * </p>
  * 
  * @author taedium
  */
 public class GenerateEntityCommand extends AbstractCommand {
 
+    /** ロガー */
     protected static Logger logger = Logger
             .getLogger(GenerateEntityCommand.class);
 
-    /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
+    /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
 
-    /** エンティティパッケージ名 */
+    /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
 
     /** エンティティクラスのテンプレート名 */
@@ -73,6 +85,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
 
     /** ルートパッケージ名 */
@@ -84,16 +97,17 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
 
-    /** テンプレートファイルを格納するディレクトリ */
+    /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
 
-    /** Javaコードの生成の対象とするテーブル名の正規表現 */
+    /** Javaコード生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";
 
     /** バージョンカラムの名前 */
     protected String versionColumnName = "version";
 
-    protected S2ContainerFactorySupport containerFactorySupport;
+    /** {@link SingletonS2ContainerFactory}のサポート */
+    protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
     /** データソース */
     protected DataSource dataSource;
@@ -104,16 +118,16 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
-    /** スキーマのリーダ */
+    /** テーブルメタデータのリーダ */
     protected DbTableMetaReader dbTableMetaReader;
 
-    /** {@link EntityDesc}のファクトリ */
+    /** エンティティ記述のファクトリ */
     protected EntityDescFactory entityDescFactory;
 
     /** ジェネレータ */
     protected Generator generator;
 
-    /** エンティティクラスのモデルのファクトリ */
+    /** エンティティのモデルのファクトリ */
     protected EntityModelFactory entityModelFactory;
 
     /**
@@ -122,113 +136,249 @@ public class GenerateEntityCommand extends AbstractCommand {
     public GenerateEntityCommand() {
     }
 
+    /**
+     * 設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
+     */
     public String getConfigPath() {
         return configPath;
     }
 
+    /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
     }
 
+    /**
+     * エンティティクラスのパッケージ名を返します。
+     * 
+     * @return エンティティクラスのパッケージ名
+     */
     public String getEntityPackageName() {
         return entityPackageName;
     }
 
+    /**
+     * エンティティクラスのパッケージ名を設定します。
+     * 
+     * @param entityPackageName
+     *            エンティティクラスのパッケージ名
+     */
     public void setEntityPackageName(String entityPackageName) {
         this.entityPackageName = entityPackageName;
     }
 
+    /**
+     * エンティティクラスのテンプレート名を返します。
+     * 
+     * @return エンティティクラスのテンプレート名
+     */
     public String getEntityTemplateFileName() {
         return entityTemplateFileName;
     }
 
+    /**
+     * エンティティクラスのテンプレート名を設定します。
+     * 
+     * @param entityTemplateFileName
+     *            エンティティクラスのテンプレート名
+     */
     public void setEntityTemplateFileName(String entityTemplateFileName) {
         this.entityTemplateFileName = entityTemplateFileName;
     }
 
+    /**
+     * 生成するJavaファイルの出力先ディレクトリを返します。
+     * 
+     * @return 生成するJavaファイルの出力先ディレクトリ
+     */
     public File getJavaFileDestDir() {
         return javaFileDestDir;
     }
 
+    /**
+     * 生成するJavaファイルの出力先ディレクトリを設定します。
+     * 
+     * @param javaFileDestDir
+     *            生成するJavaファイルの出力先ディレクトリ
+     */
     public void setJavaFileDestDir(File javaFileDestDir) {
         this.javaFileDestDir = javaFileDestDir;
     }
 
+    /**
+     * Javaファイルのエンコーディングを返します。
+     * 
+     * @return Javaファイルのエンコーディング
+     */
     public String getJavaFileEncoding() {
         return javaFileEncoding;
     }
 
+    /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
+     * @param javaFileEncoding
+     *            Javaファイルのエンコーディング
+     */
     public void setJavaFileEncoding(String javaFileEncoding) {
         this.javaFileEncoding = javaFileEncoding;
     }
 
+    /**
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
+     */
     public String getJdbcManagerName() {
         return jdbcManagerName;
     }
 
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
-     * @return Returns the overwrite.
+     * 上書きをする場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return 上書きをする場合{@code true}、しない場合{@code false}
      */
     public boolean isOverwrite() {
         return overwrite;
     }
 
     /**
+     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param overwrite
-     *            The overwrite to set.
+     *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         this.overwrite = overwrite;
     }
 
+    /**
+     * ルートパッケージ名を返します。
+     * 
+     * @return ルートパッケージ名
+     */
     public String getRootPackageName() {
         return rootPackageName;
     }
 
+    /**
+     * ルートパッケージ名を設定します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
     public void setRootPackageName(String rootPackageName) {
         this.rootPackageName = rootPackageName;
     }
 
+    /**
+     * スキーマ名を返します。
+     * 
+     * @return スキーマ名
+     */
     public String getSchemaName() {
         return schemaName;
     }
 
+    /**
+     * スキーマ名を設定します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     */
     public void setSchemaName(String schemaName) {
         this.schemaName = schemaName;
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを返します。
+     * 
+     * @return テンプレートファイルのエンコーディング
+     */
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
+     * @param templateFileEncoding
+     *            テンプレートファイルのエンコーディング
+     */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         this.templateFileEncoding = templateFileEncoding;
     }
 
+    /**
+     * テンプレートファイルを格納するプライマリディレクトリを返します。
+     * 
+     * @return テンプレートファイルを格納するプライマリディレクトリ
+     */
     public File getTemplateFilePrimaryDir() {
         return templateFilePrimaryDir;
     }
 
+    /**
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルを格納するプライマリディレクトリ
+     */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
+    /**
+     * Javaコード生成の対象とするテーブル名の正規表現を返します。
+     * 
+     * @return Javaコード生成の対象とするテーブル名の正規表現
+     */
     public String getTableNamePattern() {
         return tableNamePattern;
     }
 
+    /**
+     * Javaコード生成の対象とするテーブル名の正規表現を設定します。
+     * 
+     * @param tableNamePattern
+     *            Javaコード生成の対象とするテーブル名の正規表現
+     */
     public void setTableNamePattern(String tableNamePattern) {
         this.tableNamePattern = tableNamePattern;
     }
 
+    /**
+     * バージョンカラムの名前を返します。
+     * 
+     * @return バージョンカラムの名前
+     */
     public String getVersionColumnName() {
         return versionColumnName;
     }
 
+    /**
+     * バージョンカラムの名前を設定します。
+     * 
+     * @param versionColumnName
+     *            バージョンカラムの名前
+     */
     public void setVersionColumnName(String versionColumnName) {
         this.versionColumnName = versionColumnName;
     }
@@ -242,7 +392,8 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        containerFactorySupport = new S2ContainerFactorySupport(configPath);
+        containerFactorySupport = new SingletonS2ContainerFactorySupport(
+                configPath);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
@@ -321,7 +472,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     }
 
     /**
-     * エンティティクラスのJavaファイルを生成します。
+     * 生成します。
      * 
      * @param entityDescList
      *            エンティティ記述のリスト
@@ -346,13 +497,13 @@ public class GenerateEntityCommand extends AbstractCommand {
     }
 
     /**
-     * {@link GenerationContext}を返します。
+     * {@link GenerationContext}の実装を作成します。
      * 
      * @param model
      *            モデル
      * @param templateName
      *            テンプレート名
-     * @return {@link GenerationContext}
+     * @return {@link GenerationContext}の実装
      */
     protected GenerationContext createGenerationContext(EntityModel model,
             String templateName) {
@@ -363,10 +514,11 @@ public class GenerateEntityCommand extends AbstractCommand {
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 
-        return new GenerationContext(model, dir, file, templateName,
+        return new GenerationContextImpl(model, dir, file, templateName,
                 javaFileEncoding, overwrite);
     }
 
+    @Override
     protected Logger getLogger() {
         return logger;
     }

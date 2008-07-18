@@ -26,10 +26,12 @@ import javax.persistence.Id;
 @Entity
 public class Ccc {
 
+    /** */
     @Id
     @Column(name = "hogehoge")
     public Integer Id1;
 
+    /** */
     @Id
     @Column(name = "foofoo")
     public Integer Id2;

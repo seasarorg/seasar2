@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class TableDesc {
 
+    /** キー */
     protected final Key key = new Key();
 
     /** カタログ名 */
@@ -52,6 +53,7 @@ public class TableDesc {
     /** シーケンス記述のリスト */
     protected List<SequenceDesc> sequenceDesclist = new ArrayList<SequenceDesc>();
 
+    /** 識別子を生成するテーブル記述のリスト */
     protected List<TableDesc> idTableDescList = new ArrayList<TableDesc>();
 
     /**
@@ -217,14 +219,30 @@ public class TableDesc {
         }
     }
 
+    /**
+     * 識別子を生成するテーブル記述のリストを返します。
+     * 
+     * @return 識別子を生成するテーブル記述のリスト
+     */
     public List<TableDesc> getIdTableDescList() {
         return Collections.unmodifiableList(idTableDescList);
     }
 
+    /**
+     * 識別子を生成するテーブル記述を追加します。
+     * 
+     * @param idTableDesc
+     *            識別子を生成するテーブル記述
+     */
     public void addIdTableDesc(TableDesc idTableDesc) {
         idTableDescList.add(idTableDesc);
     }
 
+    /**
+     * テーブルの完全な名前を返します。
+     * 
+     * @return テーブルの完全な名前
+     */
     public String getFullName() {
         StringBuilder buf = new StringBuilder();
         if (catalogName != null) {
@@ -256,6 +274,11 @@ public class TableDesc {
         return key.equals(other.key);
     }
 
+    /**
+     * キーです。
+     * 
+     * @author taedium
+     */
     protected static class Key {
 
         /** カタログ名 */
@@ -267,18 +290,36 @@ public class TableDesc {
         /** 名前 */
         protected String name;
 
+        /**
+         * カタログ名を設定します。
+         * 
+         * @param catalogName
+         *            カタログ名
+         */
         public void setCatalogName(String catalogName) {
             if (catalogName != null) {
                 this.catalogName = catalogName.toLowerCase();
             }
         }
 
+        /**
+         * スキーマ名を設定します。
+         * 
+         * @param schemaName
+         *            スキーマ名
+         */
         public void setSchemaName(String schemaName) {
             if (schemaName != null) {
                 this.schemaName = schemaName.toLowerCase();
             }
         }
 
+        /**
+         * 名前を設定します。
+         * 
+         * @param name
+         *            名前
+         */
         public void setName(String name) {
             if (name != null) {
                 this.name = name.toLowerCase();

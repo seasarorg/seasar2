@@ -43,8 +43,11 @@ public class EntityMetaReaderImplTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
+    /**
+     * 
+     */
     @Before
-    public void before() {
+    public void setUp() {
         rootDir = ResourceUtil.getBuildDir(getClass());
         packageName = ClassUtil.splitPackageAndShortClassName(getClass()
                 .getName())[0];
@@ -62,6 +65,10 @@ public class EntityMetaReaderImplTest {
         entityMetaFactory.setTableMetaFactory(tmf);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testRead() throws Exception {
         EntityMetaReaderImpl reader = new EntityMetaReaderImpl(rootDir,

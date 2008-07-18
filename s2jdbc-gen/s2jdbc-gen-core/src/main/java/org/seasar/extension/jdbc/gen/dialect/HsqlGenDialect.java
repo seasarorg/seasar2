@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class HsqlGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public HsqlGenDialect() {
     }
 

@@ -17,8 +17,10 @@ package org.seasar.extension.jdbc.gen.sql;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,34 +31,45 @@ import org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.FileInputStreamUtil;
-import org.seasar.framework.util.InputStreamReaderUtil;
 
 /**
- * @author taedium
+ * {@link SqlScriptReader}の実装クラスです。
  * 
+ * @author taedium
  */
 public class SqlScriptReaderImpl implements SqlScriptReader {
 
+    /** ロガー */
     protected static Logger logger = Logger
             .getLogger(SqlScriptReaderImpl.class);
 
+    /** SQLファイル */
     protected File sqlFile;
 
+    /** SQLファイルのエンコーディング */
     protected String sqlFileEncoding;
 
+    /** トークナイザ */
     protected SqlScriptTokenizer tokenizer;
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** リーダ */
     protected BufferedReader reader;
 
+    /** ファイルの最後まで達した場合に{@code true} */
     protected boolean endOfFile;
 
     /**
      * @param sqlFile
+     *            SQLファイル
      * @param sqlFileEncoding
+     *            SQLファイルのエンコーディング
      * @param tokenizer
+     *            トークナイザ
+     * @param dialect
+     *            方言
      */
     public SqlScriptReaderImpl(File sqlFile, String sqlFileEncoding,
             SqlScriptTokenizer tokenizer, GenDialect dialect) {
@@ -112,34 +125,63 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         CloseableUtil.close(reader);
     }
 
+    /**
+     * {@link #sqlFile}に対する{@link BufferedReader}を作成します。
+     * 
+     * @return {@link BufferedReader}
+     * @throws IOException
+     */
     protected BufferedReader createBufferedReader() throws IOException {
         logger.log("DS2JDBCGen0006", new Object[] { sqlFile.getName() });
-        InputStream is = FileInputStreamUtil.create(sqlFile);
-        return new BufferedReader(InputStreamReaderUtil.create(is,
-                sqlFileEncoding));
+        InputStream is = new FileInputStream(sqlFile);
+        return new BufferedReader(new InputStreamReader(is, sqlFileEncoding));
     }
 
+    /**
+     * SQLのビルダです。
+     * 
+     * @author taedium
+     */
     protected class SqlBuilder {
 
+        /** 次のトークンが必要な場合{@code true} */
         protected boolean tokenRequired;
 
+        /** 次の行が必要な場合{@code true} */
         protected boolean lineRequired;
 
+        /** SQLの組み立てが完了した場合{@code true} */
         protected boolean completed;
 
+        /** SQLの文字列を保持するバッファ */
         protected StringBuilder buf = new StringBuilder(300);
 
+        /** SQLのキーワードを管理するリスト */
         protected List<String> wordList = new ArrayList<String>();
 
+        /** SQLブロックの内側を組み立てている場合{@code true} */
         protected boolean inSqlBlock;
 
+        /** SQLの区切り文字に到達したい場合{@code true} */
         protected boolean delimited;
 
+        /** 行が変更された場合{@code true} */
         protected boolean lineChanged;
 
+        /**
+         * インスタンスを構築します
+         */
         protected SqlBuilder() {
         }
 
+        /**
+         * SQL文を組み立てます。
+         * 
+         * @param tokenType
+         *            トークンのタイプ
+         * @param token
+         *            トークン
+         */
         protected void build(TokenType tokenType, String token) {
             setTokenRequired(true);
             switch (tokenType) {
@@ -169,7 +211,7 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
                 setTokenRequired(true);
                 break;
             case BLOCK_DELIMITER:
-                if (isEmpty()) {
+                if (isSqlEmpty()) {
                     setLineRequired(true);
                 } else {
                     setCompleted(true);
@@ -186,15 +228,19 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         }
 
         /**
-         * @return Returns the tokenRequired.
+         * 次のトークンが必要な場合{@code true}を返します。
+         * 
+         * @return 次のトークンが必要な場合{@code true}
          */
         protected boolean isTokenRequired() {
             return tokenRequired;
         }
 
         /**
+         * 次のトークンが必要な場合{@code true}を設定します。
+         * 
          * @param tokenRequired
-         *            The tokenRequired to set.
+         *            次のトークンが必要な場合{@code true}
          */
         protected void setTokenRequired(boolean tokenRequired) {
             this.tokenRequired = tokenRequired;
@@ -203,15 +249,19 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         }
 
         /**
-         * @return Returns the lineRequired.
+         * 次の行が必要な場合{@code true}を返します。
+         * 
+         * @return 次の行が必要な場合{@code true}
          */
         protected boolean isLineRequired() {
             return lineRequired;
         }
 
         /**
+         * 次の行が必要な場合{@code true}を設定します。
+         * 
          * @param lineRequired
-         *            The lineRequired to set.
+         *            次の行が必要な場合{@code true}
          */
         protected void setLineRequired(boolean lineRequired) {
             this.lineRequired = lineRequired;
@@ -220,15 +270,19 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
         }
 
         /**
-         * @return Returns the built.
+         * SQLの組み立てが完了した場合{@code true}を返します。
+         * 
+         * @return SQLの組み立てが完了した場合{@code true}
          */
         protected boolean isCompleted() {
             return completed;
         }
 
         /**
+         * SQLの組み立てが完了した場合{@code true}を設定します。
+         * 
          * @param completed
-         *            The built to set.
+         *            SQLの組み立てが完了した場合{@code true}
          */
         protected void setCompleted(boolean completed) {
             this.completed = completed;
@@ -236,12 +290,24 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             lineRequired = false;
         }
 
+        /**
+         * 単語を追加します。
+         * 
+         * @param word
+         *            単語
+         */
         protected void appendWord(String word) {
             if (!inSqlBlock) {
                 wordList.add(word);
             }
         }
 
+        /**
+         * トークンを追加します。
+         * 
+         * @param token
+         *            トークン
+         */
         protected void appendToken(String token) {
             if (!delimited) {
                 appendWhitespaceIfNecessary();
@@ -249,6 +315,9 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             }
         }
 
+        /**
+         * 必要ならば空白を追加します。
+         */
         protected void appendWhitespaceIfNecessary() {
             if (!lineChanged) {
                 return;
@@ -262,10 +331,18 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             lineChanged = false;
         }
 
+        /**
+         * 行が変更されたことを通知します。
+         */
         protected void notifyLineChanged() {
             lineChanged = true;
         }
 
+        /**
+         * SQLブロックの内側を組み立てている場合{@code true}を返します。
+         * 
+         * @return SQLブロックの内側を組み立てている場合{@code true}
+         */
         protected boolean isInSqlBlock() {
             if (inSqlBlock) {
                 return true;
@@ -274,11 +351,25 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
             return inSqlBlock;
         }
 
-        protected boolean isEmpty() {
+        /**
+         * SQLが空の場合{@code true}を返します。
+         * 
+         * @return SQLが空の場合{@code true}
+         */
+        protected boolean isSqlEmpty() {
             return buf.toString().trim().length() == 0;
         }
 
+        /**
+         * SQLを返します。
+         * 
+         * @return
+         */
         protected String getSql() {
+            if (!completed) {
+                throw new IllegalStateException("completed");
+            }
+
             String sql = buf.toString().trim();
             return endOfFile && sql.length() == 0 ? null : sql;
         }

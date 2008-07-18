@@ -77,7 +77,7 @@ public interface GenDialect {
     JavaType getJavaType(int sqlType);
 
     /**
-     * データ型を返します。
+     * データベースの型を返します。
      * 
      * @param sqlType
      *            JDBCのSQL型
@@ -130,8 +130,20 @@ public interface GenDialect {
     String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize);
 
+    /**
+     * SQLブロックの区切り文字を返します。
+     * 
+     * @return SQLブロックの区切り文字
+     */
     String getSqlBlockDelimiter();
 
+    /**
+     * SQLブロックの開始を示す単語の場合{@code true}を返します。
+     * 
+     * @param words
+     *            単語のリスト
+     * @return SQLブロックの開始を示す単語の場合{@code true}
+     */
     boolean isSqlBlockStartWords(List<String> words);
 
     /**

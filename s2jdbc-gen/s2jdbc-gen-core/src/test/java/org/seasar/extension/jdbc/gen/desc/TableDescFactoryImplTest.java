@@ -49,6 +49,10 @@ public class TableDescFactoryImplTest {
 
     private TableDescFactory tableDescFactory;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -80,6 +84,10 @@ public class TableDescFactoryImplTest {
                 ukFactory, fkFactory, seqFactory, idTabFactory);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetTableDesc() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -88,6 +96,10 @@ public class TableDescFactoryImplTest {
         assertSame(tableDesc, tableDescFactory.getTableDesc(entityMeta));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testName() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -97,6 +109,10 @@ public class TableDescFactoryImplTest {
         assertEquals("AAA", tableDesc.getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testColumnDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -104,6 +120,10 @@ public class TableDescFactoryImplTest {
         assertEquals(2, tableDesc.getColumnDescList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testPrimaryKeyDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -111,6 +131,10 @@ public class TableDescFactoryImplTest {
         assertNotNull(tableDesc.getPrimaryKeyDesc());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testForeignKeyDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -118,6 +142,10 @@ public class TableDescFactoryImplTest {
         assertEquals(1, tableDesc.getForeignKeyDescList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testUniqueKeyDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -125,6 +153,10 @@ public class TableDescFactoryImplTest {
         assertEquals(1, tableDesc.getUniqueKeyDescList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testSequenceDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -132,6 +164,10 @@ public class TableDescFactoryImplTest {
         assertEquals(1, tableDesc.getSequenceDescList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIdTableDescList() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
@@ -139,32 +175,40 @@ public class TableDescFactoryImplTest {
         assertEquals(1, tableDesc.getIdTableDescList().size());
     }
 
+    /** */
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "AAA", uniqueConstraints = { @UniqueConstraint(columnNames = { "BBB_ID" }) })
     public static class Aaa {
 
+        /** */
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
         public Integer id;
 
+        /** */
         public Integer bbbId;
 
+        /** */
         @ManyToOne
         public Bbb bbb;
     }
 
+    /** */
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "BBB")
     public static class Bbb {
 
+        /** */
         @Id
         public Integer id;
 
     }
 
+    /** */
     @Entity
     public static class Ccc {
 
+        /** */
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)
         public Integer id;

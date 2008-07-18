@@ -27,10 +27,12 @@ import javax.persistence.Id;
 @Entity
 public class Ggg {
 
+    /** */
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     public Integer id;
 
+    /** */
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     public Integer id2;

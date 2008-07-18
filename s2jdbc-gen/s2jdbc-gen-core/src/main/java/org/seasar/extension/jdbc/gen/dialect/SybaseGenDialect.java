@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class SybaseGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public SybaseGenDialect() {
     }
 

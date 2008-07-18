@@ -16,33 +16,51 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * 条件クラスのメソッドモデルです。
  * 
+ * @author taedium
  */
 public class ConditionMethodModel {
 
+    /** 名前 */
     protected String name;
 
+    /** 戻り値のクラスの単純名 */
     protected String shortReturnClassName;
 
+    /**
+     * 名前を返します
+     * 
+     * @return 名前
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
+     */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the shortReturnClassName.
+     * 戻り値のクラスの単純名を返します。
+     * 
+     * @return 戻り値のクラスの単純名
      */
     public String getShortReturnClassName() {
         return shortReturnClassName;
     }
 
     /**
+     * 戻り値のクラスの単純名を設定します。
+     * 
      * @param shortReturnClassName
-     *            The shortReturnClassName to set.
+     *            戻り値のクラスの単純名
      */
     public void setShortReturnClassName(String shortReturnClassName) {
         this.shortReturnClassName = shortReturnClassName;

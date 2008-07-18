@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
-import java.util.List;
 
 import org.apache.tools.ant.types.FileList;
 import org.seasar.extension.jdbc.gen.Command;
@@ -86,6 +85,14 @@ public class ExecuteSqlTask extends AbstractTask {
      */
     public void setSqlFileEncoding(String sqlFileEncoding) {
         command.setSqlFileEncoding(sqlFileEncoding);
+    }
+
+    /**
+     * @param transactional
+     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setTransactional(boolean)
+     */
+    public void setTransactional(boolean transactional) {
+        command.setTransactional(transactional);
     }
 
     @Override

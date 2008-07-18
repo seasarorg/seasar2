@@ -34,27 +34,35 @@ import javax.persistence.UniqueConstraint;
         "ccc" }) })
 public class Aaa {
 
+    /** */
     @Id
     public Integer id;
 
+    /** */
     public Integer bbbId;
 
+    /** */
     @ManyToOne
     public Bbb bbb;
 
+    /** */
     @Column(name = "bar")
     public Integer bbb2Id;
 
+    /** */
     @ManyToOne
     @JoinColumn(name = "bar")
     public Bbb bbb2;
 
+    /** */
     @Column(name = "hoge")
     public Integer cccId1;
 
+    /** */
     @Column(name = "foo")
     public Integer cccId2;
 
+    /** */
     @OneToOne
     @JoinColumns( {
             @JoinColumn(name = "hoge", referencedColumnName = "hogehoge"),

@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class EntityModelTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsLengthAvailable() throws Exception {
         EntityModel model = new EntityModel();
@@ -36,6 +40,10 @@ public class EntityModelTest {
         assertTrue(model.isLengthAvailable(attributeDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsLengthAvailable_zeroLength() throws Exception {
         EntityModel model = new EntityModel();
@@ -45,6 +53,10 @@ public class EntityModelTest {
         assertFalse(model.isLengthAvailable(attributeDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsLengthAvailable_numberType() throws Exception {
         EntityModel model = new EntityModel();
@@ -54,6 +66,10 @@ public class EntityModelTest {
         assertFalse(model.isLengthAvailable(attributeDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsPrecisionAvailable() throws Exception {
         EntityModel model = new EntityModel();
@@ -63,6 +79,10 @@ public class EntityModelTest {
         assertFalse(model.isLengthAvailable(attributeDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsPrecisionAvailable_zeroPrecision() throws Exception {
         EntityModel model = new EntityModel();
@@ -72,6 +92,10 @@ public class EntityModelTest {
         assertFalse(model.isPrecisionAvailable(attributeDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsPrecisionAvailable_notNumberType() throws Exception {
         EntityModel model = new EntityModel();
@@ -81,6 +105,10 @@ public class EntityModelTest {
         assertFalse(model.isPrecisionAvailable(attributeDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     public void testIsScaleAvailable() throws Exception {
         EntityModel model = new EntityModel();
         AttributeDesc attributeDesc = new AttributeDesc();

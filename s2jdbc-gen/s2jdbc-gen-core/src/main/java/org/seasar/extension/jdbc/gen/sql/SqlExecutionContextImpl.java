@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,68 +28,42 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.log.Logger;
 
 /**
- * @author taedium
+ * {@link SqlExecutionContext}の実装クラスです。
  * 
+ * @author taedium
  */
 public class SqlExecutionContextImpl implements SqlExecutionContext {
 
-    private static final Logger logger = Logger
+    /** ロガー */
+    protected static final Logger logger = Logger
             .getLogger(SqlExecutionContextImpl.class);
 
+    /** {@link SqlFailedException}のリスト */
     protected List<SqlFailedException> exceptionList = new ArrayList<SqlFailedException>();
 
+    /** コネクション */
     protected Connection connection;
 
+    /** エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false} */
+    protected boolean haltOnError;
+
+    /** ステートメント */
     protected Statement statement;
-
-    protected String sql;
-
-    protected File sqlFile;
 
     /**
      * @param connection
-     * @param sqlFailList
+     *            コネクション
+     * @param haltOnError
+     *            エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}
      */
-    public SqlExecutionContextImpl(Connection connection) {
+    public SqlExecutionContextImpl(Connection connection, boolean haltOnError) {
         if (connection == null) {
             throw new NullPointerException("connection");
         }
         this.connection = connection;
+        this.haltOnError = haltOnError;
     }
 
-    /**
-     * @return Returns the sql.
-     */
-    public String getSql() {
-        return sql;
-    }
-
-    /**
-     * @param sql
-     *            The sql to set.
-     */
-    public void setSql(String sql) {
-        this.sql = sql;
-    }
-
-    /**
-     * @return Returns the sqlFile.
-     */
-    public File getSqlFile() {
-        return sqlFile;
-    }
-
-    /**
-     * @param sqlFile
-     *            The sqlFile to set.
-     */
-    public void setSqlFile(File sqlFile) {
-        this.sqlFile = sqlFile;
-    }
-
-    /**
-     * @return Returns the statement.
-     */
     public Statement getStatement() {
         if (statement != null) {
             return statement;
@@ -99,23 +72,23 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         return statement;
     }
 
-    /**
-     * @return Returns the exceptionList.
-     */
     public List<SqlFailedException> getExceptionList() {
         return Collections.unmodifiableList(exceptionList);
     }
 
     public void addException(SqlFailedException exception) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                logger.log(e);
+            }
+            statement = null;
+        }
+        if (haltOnError) {
+            throw exception;
+        }
         exceptionList.add(exception);
-        if (statement == null) {
-            return;
-        }
-        try {
-            statement.close();
-        } catch (SQLException ignore) {
-        }
-        statement = null;
     }
 
     public void destroy() {

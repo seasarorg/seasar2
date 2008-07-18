@@ -31,6 +31,10 @@ import static org.junit.Assert.*;
  */
 public class GenerateTestCommandTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();

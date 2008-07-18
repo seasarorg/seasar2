@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import java.io.File;
-
 import org.junit.Test;
 import org.seasar.framework.mock.sql.MockConnection;
 
@@ -26,14 +24,15 @@ import org.seasar.framework.mock.sql.MockConnection;
  */
 public class SqlExecutorImplTest {
 
+    /**
+     * 
+     */
     @Test
     public void testExecute() {
-        SqlExecutorImpl executor = new SqlExecutorImpl(true);
+        SqlExecutorImpl executor = new SqlExecutorImpl("aaa", "bbb");
         MockConnection connection = new MockConnection();
         SqlExecutionContextImpl context = new SqlExecutionContextImpl(
-                connection);
-        context.setSql("aaa");
-        context.setSqlFile(new File("sqlFile"));
+                connection, true);
         executor.execute(context);
     }
 

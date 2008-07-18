@@ -16,10 +16,17 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * SQLを実行するインタフェースです。
  * 
+ * @author taedium
  */
 public interface SqlExecutor {
 
+    /**
+     * SQLを実行します。
+     * 
+     * @param context
+     *            SQLの実行コンテキスト
+     */
     void execute(SqlExecutionContext context);
 }

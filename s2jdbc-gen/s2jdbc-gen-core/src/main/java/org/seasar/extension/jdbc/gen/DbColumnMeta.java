@@ -37,7 +37,7 @@ public class DbColumnMeta {
     /** スケール */
     protected int scale;
 
-    /** NULL可能ならば{@code true} */
+    /** NULL可能の場合{@code true} */
     protected boolean nullable;
 
     /** 主キーの場合{@code true} */

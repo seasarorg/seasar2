@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class DerbyGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public DerbyGenDialect() {
     }
 

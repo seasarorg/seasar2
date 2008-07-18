@@ -23,7 +23,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.log.Logger;
 
 /**
- * エンティティのを生成するコマンドの抽象クラスです。
+ * コマンドの抽象クラスです。
  * 
  * @author taedium
  */
@@ -51,8 +51,14 @@ public abstract class AbstractCommand implements Command {
         getLogger().log("DS2JDBCGen0008", new Object[] { commandClassName });
     }
 
+    /**
+     * サブクラスで実行します。
+     */
     protected abstract void doExecute();
 
+    /**
+     * 設定可能なプロパティの値をログ出力します。
+     */
     protected void logWritableProperties() {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(getClass());
         for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
@@ -66,10 +72,16 @@ public abstract class AbstractCommand implements Command {
         }
     }
 
+    /**
+     * 検証します。
+     */
     protected final void validate() {
         doValidate();
     }
 
+    /**
+     * サブクラスで検証します。
+     */
     protected abstract void doValidate();
 
     /**
@@ -79,6 +91,9 @@ public abstract class AbstractCommand implements Command {
         doInit();
     }
 
+    /**
+     * サブクラスで初期化します。
+     */
     protected abstract void doInit();
 
     /**
@@ -88,7 +103,16 @@ public abstract class AbstractCommand implements Command {
         doDestroy();
     }
 
+    /**
+     * サブクラスで破棄します。
+     */
     protected abstract void doDestroy();
 
+    /**
+     * ロガーを返します。
+     * 
+     * @return ロガー
+     */
     protected abstract Logger getLogger();
+
 }

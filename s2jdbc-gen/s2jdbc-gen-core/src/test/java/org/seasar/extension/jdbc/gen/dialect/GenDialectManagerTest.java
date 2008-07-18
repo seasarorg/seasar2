@@ -29,6 +29,7 @@ import static org.junit.Assert.*;
  */
 public class GenDialectManagerTest {
 
+    /** */
     @After
     public void tearDown() {
         GenDialectManager.dialectMap.remove(MyDialect.class.getName());
@@ -58,9 +59,11 @@ public class GenDialectManagerTest {
         assertSame(myGenDialect, GenDialectManager.getGenDialect(myDialect));
     }
 
+    /** */
     public static class MyDialect extends StandardDialect {
     }
 
+    /** */
     public static class MyGenDialect extends StandardGenDialect {
     }
 

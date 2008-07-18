@@ -29,24 +29,35 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 
 /**
- * @author taedium
+ * {@link EntityMetaReader}の実装クラスです。
  * 
+ * @author taedium
  */
 public class EntityMetaReaderImpl implements EntityMetaReader {
 
+    /** ルートディレクトリ */
     protected File rootDir;
 
+    /** 読み取り対象とするパッケージ名 */
     protected String packageName;
 
+    /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
+    /**
+     * インタスタンスを構築します。
+     * 
+     * @param rootDir
+     *            ルートディレクトリ
+     * @param packageName
+     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param entityMetaFactory
+     *            エンティティメタデータのファクトリ
+     */
     public EntityMetaReaderImpl(File rootDir, String packageName,
             EntityMetaFactory entityMetaFactory) {
         if (rootDir == null) {
             throw new NullPointerException("rootDir");
-        }
-        if (packageName == null) {
-            throw new NullPointerException("packageName");
         }
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
@@ -58,13 +69,11 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
 
     public List<EntityMeta> read() {
         final List<EntityMeta> entityMetaList = new ArrayList<EntityMeta>();
-        final String packageNamePrefix = packageName;
 
         ClassTraversal.forEach(rootDir, new ClassHandler() {
 
             public void processClass(String packageName, String shortClassName) {
-                if (packageName != null
-                        && !packageName.startsWith(packageNamePrefix)) {
+                if (!isTarget(packageName, shortClassName)) {
                     return;
                 }
                 String className = ClassUtil.concatName(packageName,
@@ -79,5 +88,27 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         });
 
         return entityMetaList;
+    }
+
+    /**
+     * 読み取りの対象クラスの場合{@code true}を返します。
+     * 
+     * @param packageName
+     *            パッケージ名
+     * @param shortClassName
+     *            クラスの単純名
+     * @return 読み取りの対象クラスの場合{@code true}
+     */
+    protected boolean isTarget(String packageName, String shortClassName) {
+        if (packageName == null) {
+            return true;
+        }
+        if (packageName.equals(this.packageName)) {
+            return true;
+        }
+        if (packageName.startsWith(this.packageName + ".")) {
+            return true;
+        }
+        return false;
     }
 }

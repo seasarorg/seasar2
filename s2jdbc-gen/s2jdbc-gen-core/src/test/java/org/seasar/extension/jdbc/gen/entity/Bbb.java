@@ -30,6 +30,7 @@ import javax.persistence.UniqueConstraint;
         @UniqueConstraint(columnNames = { "ddd", "eee", "fff" }) })
 public class Bbb {
 
+    /** */
     @Id
     public Integer id;
 }

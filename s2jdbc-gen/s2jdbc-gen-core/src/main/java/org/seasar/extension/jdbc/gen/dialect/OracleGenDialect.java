@@ -85,6 +85,11 @@ public class OracleGenDialect extends StandardGenDialect {
         return "/";
     }
 
+    /**
+     * Oracle用の{@link JavaType}の実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class OracleJavaType extends StandardJavaType {
 
         private static JavaType DECIMAL = new OracleJavaType() {
@@ -99,6 +104,9 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
+        /**
+         * インスタンスを構築します。
+         */
         protected OracleJavaType() {
         }
 
@@ -182,6 +190,9 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
+        /**
+         * インスタンスを構築します。
+         */
         protected OracleDbType() {
         }
 

@@ -23,28 +23,34 @@ import javax.persistence.TableGenerator;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
- * @author taedium
+ * アノテーションに関するユーティリティクラスです。
  * 
+ * @author taedium
  */
 public class AnnotationUtil {
 
+    /** デフォルトの{@link Table}を取得するためのクラス */
     @Table
     protected static class TableAnnotated {
     }
 
+    /** デフォルトの{@link Table} */
     protected static Table DEFAULT_TABLE = TableAnnotated.class
             .getAnnotation(Table.class);
 
+    /** デフォルトの{@link Column} */
     @Column(length = 255, precision = 19, scale = 2)
     protected static Column DEFAULT_COLUMN = ReflectionUtil.getDeclaredField(
             AnnotationUtil.class, "DEFAULT_COLUMN").getAnnotation(Column.class);
 
+    /** デフォルトの{@link SequenceGenerator} */
     @SequenceGenerator(name = "default")
     protected static final SequenceGenerator DEFAULT_SEQUENCE_GENERATOR = ReflectionUtil
             .getDeclaredField(AnnotationUtil.class,
                     "DEFAULT_SEQUENCE_GENERATOR").getAnnotation(
                     SequenceGenerator.class);
 
+    /** デフォルトの{@link TableGenerator} */
     @TableGenerator(name = "default")
     protected static final TableGenerator DEFAULT_TABLE_GENERATOR = ReflectionUtil
             .getDeclaredField(AnnotationUtil.class, "DEFAULT_TABLE_GENERATOR")
@@ -53,18 +59,38 @@ public class AnnotationUtil {
     private AnnotationUtil() {
     }
 
+    /**
+     * デフォルトの{@link Table}を返します。
+     * 
+     * @return デフォルトの{@link Table}
+     */
     public static Table getDefaultTable() {
         return DEFAULT_TABLE;
     }
 
+    /**
+     * デフォルトの{@link Column}を返します。
+     * 
+     * @return デフォルトの{@link Column}
+     */
     public static Column getDefaultColumn() {
         return DEFAULT_COLUMN;
     }
 
+    /**
+     * デフォルトの{@link SequenceGenerator}を返します。
+     * 
+     * @return デフォルトの{@link SequenceGenerator}
+     */
     public static SequenceGenerator getDefaultSequenceGenerator() {
         return DEFAULT_SEQUENCE_GENERATOR;
     }
 
+    /**
+     * デフォルトの{@link TableGenerator}を返します。
+     * 
+     * @return デフォルトの{@link TableGenerator}
+     */
     public static TableGenerator getDefaultTableGenerator() {
         return DEFAULT_TABLE_GENERATOR;
     }

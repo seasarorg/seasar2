@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class ColumnDescTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEquals() throws Exception {
         ColumnDesc columnDesc = new ColumnDesc();

@@ -28,6 +28,7 @@ import javax.persistence.GenerationType;
  */
 public class PrimaryKeyDesc {
 
+    /** キー */
     protected final Key key = new Key();
 
     /** {@link GenerationType#IDENTITY}で識別子が生成される場合{@code true} */
@@ -37,19 +38,23 @@ public class PrimaryKeyDesc {
     protected List<String> columnNameList = new ArrayList<String>();
 
     /**
-     * {@link GenerationType#IDENTITY}で識別子が生成される場合{@code true}、そうでない場合{@code false}を返します。
+     * {@link GenerationType#IDENTITY}で識別子が生成される場合{@code true}、そうでない場合{@code
+     * false}を返します。
      * 
-     * @return {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合{@code false}
+     * @return {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合
+     *         {@code false}
      */
     public boolean isIdentity() {
         return identity;
     }
 
     /**
-     * {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合{@code false}を設定します。
+     * {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合{@code
+     * false}を設定します。
      * 
      * @param identity
-     *            {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合{@code false}
+     *            {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合
+     *            {@code false}
      */
     public void setIdentity(boolean identity) {
         this.identity = identity;
@@ -95,10 +100,22 @@ public class PrimaryKeyDesc {
         return key.equals(other.key);
     }
 
+    /**
+     * キーです。
+     * 
+     * @author taedium
+     */
     protected static class Key {
 
+        /** カラム名のリスト */
         protected List<String> columnNameList = new ArrayList<String>();
 
+        /**
+         * カラム名を追加します。
+         * 
+         * @param columnName
+         *            カラム名
+         */
         protected void addColumnName(String columnName) {
             if (columnName != null) {
                 columnNameList.add(columnName.toLowerCase());

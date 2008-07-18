@@ -51,6 +51,15 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     public AttributeDescFactoryImpl(
             PersistenceConvention persistenceConvention, GenDialect dialect,
             String versionColumn) {
+        if (persistenceConvention == null) {
+            throw new NullPointerException("persistenceConvention");
+        }
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        if (versionColumn == null) {
+            throw new NullPointerException("versionColumn");
+        }
         this.persistenceConvention = persistenceConvention;
         this.dialect = dialect;
         this.versionColumn = versionColumn;

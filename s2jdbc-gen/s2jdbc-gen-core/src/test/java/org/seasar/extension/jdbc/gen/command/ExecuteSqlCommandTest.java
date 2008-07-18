@@ -30,6 +30,10 @@ import static org.junit.Assert.*;
  */
 public class ExecuteSqlCommandTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();
@@ -62,7 +66,7 @@ public class ExecuteSqlCommandTest {
         command.init();
         assertNotNull(command.createScriptTokenizer());
         assertNotNull(command.createSqlScriptReader(new File("sqlFile")));
-        assertNotNull(command.createSqlExecutor());
+        assertNotNull(command.createSqlExecutor(new File("sqlFile"), "bbb"));
         assertNotNull(command.createSqlExecutionContext());
     }
 }

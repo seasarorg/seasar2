@@ -42,6 +42,9 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
      *            方言
      */
     public PrimaryKeyDescFactoryImpl(GenDialect dialect) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         this.dialect = dialect;
     }
 
@@ -56,17 +59,11 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
         return primaryKeyDesc;
     }
 
-    public PrimaryKeyDesc getPrimaryKeyDesc(String columnName) {
-        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
-        primaryKeyDesc.addColumnName(columnName);
-        return primaryKeyDesc;
-    }
-
     /**
      * カラムの名前を処理します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
+     * @param idPropertyMetaList
+     *            識別子のプロパティメタデータのリスト
      * @param primaryKeyDesc
      *            主キー記述
      */
@@ -81,15 +78,14 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
     /**
      * {@link GenerationType#IDENTITY}で識別子が生成されるかどうかを処理します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
+     * @param idPropertyMetaList
+     *            識別子のプロパティメタデータのリスト
      * @param primaryKeyDesc
      *            主キー記述
      */
     protected void doIdentity(List<PropertyMeta> idPropertyMetaList,
             PrimaryKeyDesc primaryKeyDesc) {
-        if (idPropertyMetaList.size() == 1) {
-            PropertyMeta propertyMeta = idPropertyMetaList.get(0);
+        for (PropertyMeta propertyMeta : idPropertyMetaList) {
             GenerationType generationType = propertyMeta.getGenerationType();
             if (generationType == GenerationType.AUTO) {
                 generationType = dialect.getDefaultGenerationType();

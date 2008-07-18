@@ -21,6 +21,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
@@ -29,23 +30,36 @@ import org.seasar.extension.jdbc.gen.TestModel;
 import org.seasar.extension.jdbc.gen.TestModelFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * テストクラスのJavaファイルを生成する{@link Command}の実装です。
+ * <p>
+ * このコマンドは、エンティティクラスのメタデータからテストクラスのJavaファイルを生成します。 そのため、
+ * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります。
+ * また、そのディレクトリは、プロパティ{@link #classpathRootDir}に設定しておく必要があります。
+ * </p>
+ * <p>
+ * このコマンドは、エンティティクラス１つにつき１つのテストクラスを生成します。。
+ * </p>
  * 
+ * @author taedium
  */
 public class GenerateTestCommand extends AbstractCommand {
 
+    /** ロガー */
     protected static Logger logger = Logger
             .getLogger(GenerateTestCommand.class);
 
+    /** クラスパスのルートとなるディレクトリ */
     protected File classpathRootDir;
 
     /** {@link JdbcManager}のコンポーネントを含むdiconファイル */
@@ -60,6 +74,7 @@ public class GenerateTestCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
 
     /** ルートパッケージ名 */
@@ -68,7 +83,7 @@ public class GenerateTestCommand extends AbstractCommand {
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
 
-    /** テンプレートファイルを格納するディレクトリ */
+    /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
 
     /** テストクラス名のサフィックス */
@@ -80,198 +95,250 @@ public class GenerateTestCommand extends AbstractCommand {
     /** テストクラスのテンプレート名 */
     protected String testTemplateFileName = "java/test.ftl";
 
-    protected S2ContainerFactorySupport containerFactorySupport;
+    /** {@link SingletonS2ContainerFactory}のサポート */
+    protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
     /** 方言 */
     protected GenDialect dialect;
 
+    /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
+    /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
+    /** テストのモデルのファクトリ */
     protected TestModelFactory testModelFactory;
 
+    /** ジェネレータ */
+    protected Generator generator;
+
     /**
-     * @return Returns the testClassNameSuffix.
+     * テストクラス名のサフィックスを返します。
+     * 
+     * @return テストクラス名のサフィックス
      */
     public String getTestClassNameSuffix() {
         return testClassNameSuffix;
     }
 
     /**
+     * テストクラス名のサフィックスを設定します。
+     * 
      * @param testClassNameSuffix
-     *            The testClassNameSuffix to set.
+     *            テストクラス名のサフィックス
      */
     public void setTestClassNameSuffix(String testClassNameSuffix) {
         this.testClassNameSuffix = testClassNameSuffix;
     }
 
     /**
-     * @return Returns the entityPackageName.
+     * エンティティのパッケージ名を返します。
+     * 
+     * @return エンティティのパッケージ名
      */
     public String getEntityPackageName() {
         return entityPackageName;
     }
 
     /**
+     * エンティティのパッケージ名を設定します。
+     * 
      * @param entityPackageName
-     *            The entityPackageName to set.
+     *            エンティティのパッケージ名
      */
     public void setEntityPackageName(String entityPackageName) {
         this.entityPackageName = entityPackageName;
     }
 
     /**
-     * @return Returns the testTemplateFileName.
+     * テストクラスのテンプレート名を返します。
+     * 
+     * @return テストクラスのテンプレート名
      */
     public String getTestTemplateFileName() {
         return testTemplateFileName;
     }
 
     /**
+     * テストクラスのテンプレート名を設定します。
+     * 
      * @param testTemplateFileName
-     *            The testTemplateFileName to set.
+     *            テストクラスのテンプレート名
      */
     public void setTestTemplateFileName(String testTemplateFileName) {
         this.testTemplateFileName = testTemplateFileName;
     }
 
     /**
-     * @return Returns the testJavaFileDestDir.
+     * 生成するJavaファイルの出力先ディレクトリを返します。
+     * 
+     * @return 生成するJavaファイルの出力先ディレクトリ
      */
     public File getTestJavaFileDestDir() {
         return testJavaFileDestDir;
     }
 
     /**
+     * 生成するJavaファイルの出力先ディレクトリを設定します。
+     * 
      * @param testJavaFileDestDir
-     *            The testJavaFileDestDir to set.
+     *            生成するJavaファイルの出力先ディレクトリ
      */
     public void setTestJavaFileDestDir(File testJavaFileDestDir) {
         this.testJavaFileDestDir = testJavaFileDestDir;
     }
 
     /**
-     * @return Returns the javaFileEncoding.
+     * Javaファイルのエンコーディングを返します。
+     * 
+     * @return Javaファイルのエンコーディング
      */
     public String getJavaFileEncoding() {
         return javaFileEncoding;
     }
 
     /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
      * @param javaFileEncoding
-     *            The javaFileEncoding to set.
+     *            Javaファイルのエンコーディング
      */
     public void setJavaFileEncoding(String javaFileEncoding) {
         this.javaFileEncoding = javaFileEncoding;
     }
 
     /**
-     * @return Returns the jdbcManagerName.
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
      */
     public String getJdbcManagerName() {
         return jdbcManagerName;
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     *            The jdbcManagerName to set.
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
-     * @return Returns the overwrite.
+     * 上書きをする場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return 上書きをする場合{@code true}、しない場合{@code false}
      */
     public boolean isOverwrite() {
         return overwrite;
     }
 
     /**
+     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param overwrite
-     *            The overwrite to set.
+     *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         this.overwrite = overwrite;
     }
 
     /**
-     * @return Returns the rootPackageName.
+     * ルートパッケージ名を設定します。
+     * 
+     * @return ルートパッケージ名
      */
     public String getRootPackageName() {
         return rootPackageName;
     }
 
     /**
+     * ルートパッケージ名を返します。
+     * 
      * @param rootPackageName
-     *            The rootPackageName to set.
+     *            ルートパッケージ名
      */
     public void setRootPackageName(String rootPackageName) {
         this.rootPackageName = rootPackageName;
     }
 
     /**
-     * @return Returns the templateFileEncoding.
+     * テンプレートファイルのエンコーディングを返します。
+     * 
+     * @return テンプレートファイルのエンコーディング
      */
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
 
     /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
      * @param templateFileEncoding
-     *            The templateFileEncoding to set.
+     *            テンプレートファイルのエンコーディング
      */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         this.templateFileEncoding = templateFileEncoding;
     }
 
     /**
-     * @return Returns the templateFileDir.
+     * テンプレートファイルを格納するプライマリディレクトリを返します。
+     * 
+     * @return テンプレートファイルを格納するプライマリディレクトリ
      */
     public File getTemplateFilePrimaryDir() {
         return templateFilePrimaryDir;
     }
 
     /**
-     * @param templateFileDir
-     *            The templateFileDir to set.
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルを格納するプライマリディレクトリ
      */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
     /**
-     * @return Returns the classpathRootDir.
+     * クラスパスのルートとなるディレクトリを返します。
+     * 
+     * @return クラスパスのルートとなるディレクトリ
      */
     public File getClasspathRootDir() {
         return classpathRootDir;
     }
 
     /**
-     * @return Returns the configPath.
+     * クラスパスのルートとなるディレクトリを設定します。
+     * 
+     * @param classpathRootDir
+     *            クラスパスのルートとなるディレクトリ
+     */
+    public void setClasspathRootDir(File classpathRootDir) {
+        this.classpathRootDir = classpathRootDir;
+    }
+
+    /**
+     * 設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
      */
     public String getConfigPath() {
         return configPath;
     }
 
-    /** ジェネレータ */
-    protected Generator generator;
-
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     *            The configPath to set.
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
-    }
-
-    /**
-     * @param classpathRootDir
-     *            The classpathRootDir to set.
-     */
-    public void setClasspathRootDir(File classpathRootDir) {
-        this.classpathRootDir = classpathRootDir;
     }
 
     @Override
@@ -286,7 +353,8 @@ public class GenerateTestCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        containerFactorySupport = new S2ContainerFactorySupport(configPath);
+        containerFactorySupport = new SingletonS2ContainerFactorySupport(
+                configPath);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
@@ -315,11 +383,21 @@ public class GenerateTestCommand extends AbstractCommand {
         }
     }
 
+    /**
+     * {@link EntityMetaReader}の実装を作成します。
+     * 
+     * @return {@link EntityMetaReader}の実装
+     */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathRootDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory);
     }
 
+    /**
+     * {@link TestModelFactory}の実装を作成します。
+     * 
+     * @return {@link TestModelFactory}の実装
+     */
     protected TestModelFactory createTestModelFactory() {
         String packageName = ClassUtil.concatName(rootPackageName,
                 entityPackageName);
@@ -337,10 +415,10 @@ public class GenerateTestCommand extends AbstractCommand {
     }
 
     /**
-     * エンティティクラスのJavaファイルを生成します。
+     * 生成します。
      * 
-     * @param entityDescList
-     *            エンティティ記述のリスト
+     * @param entityMetaList
+     *            エンティティメタデータのリスト
      */
     protected void generate(List<EntityMeta> entityMetaList) {
         for (EntityMeta entityMeta : entityMetaList) {
@@ -348,6 +426,12 @@ public class GenerateTestCommand extends AbstractCommand {
         }
     }
 
+    /**
+     * テストクラスのJavaファイルを生成します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
     protected void generateEntityTest(EntityMeta entityMeta) {
         TestModel testModel = testModelFactory.getEntityTestModel(entityMeta);
         GenerationContext context = createGenerationContext(testModel,
@@ -356,13 +440,13 @@ public class GenerateTestCommand extends AbstractCommand {
     }
 
     /**
-     * {@link GenerationContext}を返します。
+     * {@link GenerationContext}の実装を作成します。
      * 
      * @param model
      *            モデル
      * @param templateName
      *            テンプレート名
-     * @return {@link GenerationContext}
+     * @return {@link GenerationContext}の実装
      */
     protected GenerationContext createGenerationContext(TestModel model,
             String templateName) {
@@ -373,10 +457,11 @@ public class GenerateTestCommand extends AbstractCommand {
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 
-        return new GenerationContext(model, dir, file, templateName,
+        return new GenerationContextImpl(model, dir, file, templateName,
                 javaFileEncoding, overwrite);
     }
 
+    @Override
     protected Logger getLogger() {
         return logger;
     }

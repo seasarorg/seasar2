@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-
 /**
  * MaxDBの方言を扱うクラスです。
  * 
@@ -23,6 +22,9 @@ package org.seasar.extension.jdbc.gen.dialect;
  */
 public class MaxdbGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public MaxdbGenDialect() {
     }
 

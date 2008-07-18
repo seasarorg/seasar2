@@ -30,19 +30,19 @@ public class AttributeDesc {
     /** 属性のクラス */
     protected Class<?> attributeClass;
 
-    /** 識別子であれば{@code true} */
+    /** 識別子の場合{@code true} */
     protected boolean id;
 
     /** 時制の種別 */
     protected TemporalType temporalType;
 
-    /** バージョンであれば{@code true} */
+    /** バージョンの場合{@code true} */
     protected boolean version;
 
-    /** 一時的であれば{@code true} */
+    /** 一時的の場合{@code true} */
     protected boolean trnsient;
 
-    /** {@code LOB}であれば{@code true} */
+    /** {@code LOB}の場合{@code true} */
     protected boolean lob;
 
     /** カラムの名前 */
@@ -57,7 +57,7 @@ public class AttributeDesc {
     /** スケール */
     protected int scale;
 
-    /** {@code null}可能ならば{@code true} */
+    /** {@code null}可能の場合{@code true} */
     protected boolean nullable;
 
     /**
@@ -105,19 +105,19 @@ public class AttributeDesc {
     }
 
     /**
-     * 識別子であれば{@code true}を返します。
+     * 識別子の場合{@code true}を返します。
      * 
-     * @return 識別子であれば{@code true}、そうでなければ{@code false}
+     * @return 識別子の場合{@code true}、そうでなければ{@code false}
      */
     public boolean isId() {
         return id;
     }
 
     /**
-     * 識別子であれば{@code true}を設定します。
+     * 識別子の場合{@code true}を設定します。
      * 
      * @param id
-     *            識別子であれば{@code true}
+     *            識別子の場合{@code true}
      */
     public void setId(boolean id) {
         this.id = id;
@@ -143,57 +143,57 @@ public class AttributeDesc {
     }
 
     /**
-     * バージョンであれば{@code true}を返します。
+     * バージョンの場合{@code true}を返します。
      * 
-     * @return バージョンであれば{@code true}、そうでなければ{@code false}
+     * @return バージョンの場合{@code true}、そうでなければ{@code false}
      */
     public boolean isVersion() {
         return version;
     }
 
     /**
-     * バージョンであれば{@code true}を設定します。
+     * バージョンの場合{@code true}を設定します。
      * 
      * @param version
-     *            バージョンであれば{@code true}
+     *            バージョンの場合{@code true}
      */
     public void setVersion(boolean version) {
         this.version = version;
     }
 
     /**
-     * 一時的であれば{@code true}を返します。
+     * 一時的の場合{@code true}を返します。
      * 
-     * @return 一時的であれば{@code true}、そうでなければ{@code false}
+     * @return 一時的の場合{@code true}、そうでなければ{@code false}
      */
     public boolean isTransient() {
         return trnsient;
     }
 
     /**
-     * 一時的であれば{@code true}を設定します。
+     * 一時的の場合{@code true}を設定します。
      * 
      * @param trnsient
-     *            一時的であれば{@code true}
+     *            一時的の場合{@code true}
      */
     public void setTransient(boolean trnsient) {
         this.trnsient = trnsient;
     }
 
     /**
-     * {@code LOB}であれば{@code true}を返します。
+     * {@code LOB}の場合{@code true}を返します。
      * 
-     * @return {@code LOB}であれば{@code true}、そうでなければ{@code false}
+     * @return {@code LOB}の場合{@code true}、そうでなければ{@code false}
      */
     public boolean isLob() {
         return lob;
     }
 
     /**
-     * {@code LOB}であれば{@code true}を設定します。
+     * {@code LOB}の場合{@code true}を設定します。
      * 
      * @param lob
-     *            {@code LOB}であれば{@code true}
+     *            {@code LOB}の場合{@code true}
      */
     public void setLob(boolean lob) {
         this.lob = lob;

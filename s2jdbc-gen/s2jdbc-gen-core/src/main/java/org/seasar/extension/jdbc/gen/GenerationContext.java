@@ -18,121 +18,51 @@ package org.seasar.extension.jdbc.gen;
 import java.io.File;
 
 /**
- * {@link Generator}のためのコンテキストです。
+ * {@link Generator}のためのコンテキストを表すインタフェースです。
  * 
  * @author taedium
  */
-public class GenerationContext {
-
-    /** データモデル */
-    protected Object model;
-
-    /** 生成するファイルの出力先ディレクトリ */
-    protected File dir;
-
-    /** 生成するファイル */
-    protected File file;
-
-    /** テンプレート名 */
-    protected String templateName;
-
-    /** エンコーディング */
-    protected String encoding;
-
-    /** 上書きする場合{@code true} */
-    protected boolean overwrite;
-
-    /**
-     * @param model
-     *            データモデル
-     * @param dir
-     *            生成するファイルの出力先ディレクトリ
-     * @param file
-     *            生成するファイル
-     * @param templateName
-     *            テンプレート名
-     * @param encoding
-     *            生成するファイルのエンコーディング
-     * @param overwrite
-     *            上書きする場合{@code true}、しない場合{@code false}
-     */
-    public GenerationContext(Object model, File dir, File file,
-            String templateName, String encoding, boolean overwrite) {
-        if (model == null) {
-            throw new NullPointerException("model");
-        }
-        if (dir == null) {
-            throw new NullPointerException("dir");
-        }
-        if (file == null) {
-            throw new NullPointerException("file");
-        }
-        if (templateName == null) {
-            throw new NullPointerException("templateName");
-        }
-        if (encoding == null) {
-            throw new NullPointerException("encoding");
-        }
-        this.model = model;
-        this.dir = dir;
-        this.file = file;
-        this.templateName = templateName;
-        this.encoding = encoding;
-        this.overwrite = overwrite;
-    }
+public interface GenerationContext {
 
     /**
      * エンコーディングを返します。
      * 
      * @return エンコーディング
      */
-    public String getEncoding() {
-        return encoding;
-    }
+    String getEncoding();
 
     /**
      * データモデルを返します。
      * 
      * @return データモデル
      */
-    public Object getModel() {
-        return model;
-    }
+    Object getModel();
 
     /**
      * 生成するファイルのディレクトリを返します。
      * 
      * @return 生成するファイルのディレクトリ
      */
-    public File getDir() {
-        return dir;
-    }
+    public File getDir();
 
     /**
      * 生成するファイルを返します。
      * 
      * @return 生成するファイル
      */
-    public File getFile() {
-        return file;
-    }
+    public File getFile();
 
     /**
      * テンプレート名を返します。
      * 
      * @return テンプレート名
      */
-    public String getTemplateName() {
-        return templateName;
-    }
+    public String getTemplateName();
 
     /**
      * 上書きする場合は{@code true}、しない場合は{@code false}を返します。
      * 
      * @return 上書きする場合は{@code true}、しない場合は{@code false}
      */
-    public boolean isOverwrite() {
-        return overwrite;
-    }
-
+    public boolean isOverwrite();
 }

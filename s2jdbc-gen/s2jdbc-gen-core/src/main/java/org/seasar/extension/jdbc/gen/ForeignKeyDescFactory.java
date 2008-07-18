@@ -29,7 +29,7 @@ public interface ForeignKeyDescFactory {
      * 
      * @param propertyMeta
      *            プロパティメタデータ
-     * @return 外部キー記述
+     * @return 存在する場合は外部キー記述、存在しない場合は{@code null}
      */
     ForeignKeyDesc getForeignKeyDesc(PropertyMeta propertyMeta);
 

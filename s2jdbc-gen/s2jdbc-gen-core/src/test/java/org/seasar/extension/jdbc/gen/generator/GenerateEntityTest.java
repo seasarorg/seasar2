@@ -41,12 +41,20 @@ public class GenerateEntityTest {
 
     private GeneratorImplStub generator;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity");
         generator = new GeneratorImplStub("UTF-8");
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testSingleId() throws Exception {
         AttributeDesc id = new AttributeDesc();
@@ -119,15 +127,17 @@ public class GenerateEntityTest {
         entityDesc.addAttribute(version);
 
         EntityModel model = factory.getEntityModel(entityDesc);
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/entity.ftl", "UTF-8",
-                false);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_SingleId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     */
     /**
      * 
      * @throws Exception
@@ -160,9 +170,8 @@ public class GenerateEntityTest {
         entityDesc.addAttribute(id2);
 
         EntityModel model = factory.getEntityModel(entityDesc);
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/entity.ftl", "UTF-8",
-                false);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")

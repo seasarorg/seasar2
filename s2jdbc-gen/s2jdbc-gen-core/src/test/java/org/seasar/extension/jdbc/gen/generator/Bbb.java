@@ -29,13 +29,16 @@ import javax.persistence.OneToMany;
 @Entity
 public class Bbb {
 
+    /** */
     @Id
     @Column(nullable = false)
     public Integer id;
 
+    /** */
     @Column(nullable = true)
     public String name;
 
+    /** */
     @OneToMany(mappedBy = "bbb")
     public List<Aaa> aaas;
 }

@@ -20,8 +20,8 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.TestModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.TestModel;
 import org.seasar.extension.jdbc.gen.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -44,6 +44,10 @@ public class GenerateTestTest {
 
     private GeneratorImplStub generator;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConventionImpl pc = new PersistenceConventionImpl();
@@ -70,11 +74,9 @@ public class GenerateTestTest {
     @Test
     public void test_CompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
-        TestModel model = entityTestModelFactory
-                .getEntityTestModel(entityMeta);
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/test.ftl", "UTF-8",
-                false);
+        TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/test.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
@@ -89,11 +91,9 @@ public class GenerateTestTest {
     @Test
     public void test_NoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
-        TestModel model = entityTestModelFactory
-                .getEntityTestModel(entityMeta);
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/test.ftl", "UTF-8",
-                false);
+        TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/test.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_NoId.txt";

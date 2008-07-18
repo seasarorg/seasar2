@@ -55,8 +55,8 @@ public class GenerateConditionTask extends AbstractTask {
         command.setEntityPackageName(entityPackageName);
     }
 
-    public void setJavaFileDir(File javaFileDir) {
-        command.setJavaFileDir(javaFileDir);
+    public void setJavaFileDir(File javaFileDestDir) {
+        command.setJavaFileDestDir(javaFileDestDir);
     }
 
     public void setJavaFileEncoding(String javaFileEncoding) {

@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen;
 import javax.persistence.UniqueConstraint;
 
 /**
- * {@link UniqueKeyDesc }のファクトリです。
+ * {@link UniqueKeyDesc 一意キー記述}のファクトリです。
  * 
  * @author taedium
  */
@@ -29,7 +29,7 @@ public interface UniqueKeyDescFactory {
      * 
      * @param uniqueConstraint
      *            一意制約
-     * @return 一キー記述
+     * @return 存在する場合は一意キー記述、存在しない場合は{@code null}
      */
     UniqueKeyDesc getCompositeUniqueKeyDesc(UniqueConstraint uniqueConstraint);
 
@@ -38,7 +38,7 @@ public interface UniqueKeyDescFactory {
      * 
      * @param columnDesc
      *            カラム記述
-     * @return 一キー記述
+     * @return 存在する場合は一意キー記述、存在しない場合は{@code null}
      */
     UniqueKeyDesc getSingleUniqueKeyDesc(ColumnDesc columnDesc);
 

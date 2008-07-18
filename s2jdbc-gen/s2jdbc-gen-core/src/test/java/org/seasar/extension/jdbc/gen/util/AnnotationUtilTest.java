@@ -27,11 +27,19 @@ import static org.junit.Assert.*;
  */
 public class AnnotationUtilTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetDefaultTable() throws Exception {
         assertNotNull(AnnotationUtil.getDefaultTable());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetDefaultColumn() throws Exception {
         Column column = AnnotationUtil.getDefaultColumn();
@@ -41,11 +49,19 @@ public class AnnotationUtilTest {
         assertEquals(2, column.scale());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetDefaultSequenceGenerator() throws Exception {
         assertNotNull(AnnotationUtil.getDefaultSequenceGenerator());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetDefaultTableGenerator() throws Exception {
         assertNotNull(AnnotationUtil.getDefaultTableGenerator());

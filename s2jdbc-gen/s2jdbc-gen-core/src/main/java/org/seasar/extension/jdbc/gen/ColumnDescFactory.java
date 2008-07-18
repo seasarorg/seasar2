@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
- * {@link ColumnDesc}のファクトリです。
+ * {@link ColumnDesc カラム記述}のファクトリです。
  * 
  * @author taedium
  */
@@ -29,7 +29,7 @@ public interface ColumnDescFactory {
      * 
      * @param propertyMeta
      *            プロパティメタデータ
-     * @return カラム記述
+     * @return 存在する場合はカラム記述、存在しない場合は{@code null}
      */
     ColumnDesc getColumnDesc(PropertyMeta propertyMeta);
 

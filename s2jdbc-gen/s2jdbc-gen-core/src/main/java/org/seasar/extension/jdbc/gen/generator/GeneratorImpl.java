@@ -38,6 +38,9 @@ import freemarker.template.Template;
 
 /**
  * {@link Generator}の実装クラスです。
+ * <p>
+ * テンプレートエンジンのFreeMarkerを利用します。
+ * <p>
  * 
  * @author taedium
  */
@@ -46,6 +49,7 @@ public class GeneratorImpl implements Generator {
     /** ロガー */
     protected static Logger logger = Logger.getLogger(GeneratorImpl.class);
 
+    /** デフォルトのテンプレートディレクトリの名前 */
     protected static String DEFAULT_TEMPLATE_DIR_NAME = "org/seasar/extension/jdbc/gen/generator/tempaltes";
 
     /** FreeMarkerの設定 */
@@ -136,7 +140,7 @@ public class GeneratorImpl implements Generator {
      * 
      * @param context
      *            コンテキスト
-     * @return
+     * @return {@link Writer}
      */
     protected Writer openWriter(GenerationContext context) {
         Charset charset = Charset.forName(context.getEncoding());

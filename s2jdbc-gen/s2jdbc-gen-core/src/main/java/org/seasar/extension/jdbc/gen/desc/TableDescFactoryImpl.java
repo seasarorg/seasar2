@@ -65,6 +65,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
     /** シーケンス記述のファクトリ */
     protected SequenceDescFactory sequenceDescFactory;
 
+    /** 識別子生成用のテーブル記述のファクトリ */
     protected IdTableDescFactory idTableDescFactory;
 
     /**
@@ -80,6 +81,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
      *            外部キー記述のファクトリ
      * @param sequenceDescFactory
      *            シーケンス記述のファクトリ
+     * @param idTableDescFactory
+     *            識別子生成用のテーブル記述のファクトリ
      */
     public TableDescFactoryImpl(ColumnDescFactory columnDescFactory,
             PrimaryKeyDescFactory primaryKeyDescFactory,
@@ -274,6 +277,16 @@ public class TableDescFactoryImpl implements TableDescFactory {
         }
     }
 
+    /**
+     * 識別子生成用のテーブル記述を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param tableDesc
+     *            テーブル記述
+     * @param table
+     *            テーブル
+     */
     protected void doIdTableDesc(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {

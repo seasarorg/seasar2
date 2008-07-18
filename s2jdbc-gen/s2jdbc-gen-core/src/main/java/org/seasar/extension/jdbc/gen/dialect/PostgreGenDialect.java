@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class PostgreGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public PostgreGenDialect() {
     }
 

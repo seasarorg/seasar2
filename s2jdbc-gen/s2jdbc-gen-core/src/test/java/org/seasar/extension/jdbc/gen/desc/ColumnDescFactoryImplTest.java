@@ -45,33 +45,47 @@ public class ColumnDescFactoryImplTest {
 
     private ColumnDescFactoryImpl columnDescFactory;
 
+    @SuppressWarnings("unused")
     private String string;
 
+    @SuppressWarnings("unused")
     @Transient
     private String trnsient;
 
+    @SuppressWarnings("unused")
     @OneToOne
     private Aaa relationship;
 
+    @SuppressWarnings("unused")
     @Column(length = 10)
     private String customLengthString;
 
+    @SuppressWarnings("unused")
     @Column(columnDefinition = "VARCHAR2(10)")
     private String customDefinitionString;
 
+    @SuppressWarnings("unused")
     private Integer nullableReference;
 
+    @SuppressWarnings("unused")
     @Column(nullable = false)
     private Integer nonNullableReference;
 
+    @SuppressWarnings("unused")
     private int nonNullablePrimitive;
 
+    @SuppressWarnings("unused")
     @Column(nullable = true)
     private int nullablePrimitive;
 
+    @SuppressWarnings("unused")
     @Column(unique = true)
     private String unique;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -83,6 +97,10 @@ public class ColumnDescFactoryImplTest {
         columnDescFactory = new ColumnDescFactoryImpl(new StandardGenDialect());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testTransient() throws Exception {
         Field field = getClass().getDeclaredField("trnsient");
@@ -92,6 +110,10 @@ public class ColumnDescFactoryImplTest {
         assertNull(columnDesc);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testRelationship() throws Exception {
         Field field = getClass().getDeclaredField("relationship");
@@ -101,6 +123,10 @@ public class ColumnDescFactoryImplTest {
         assertNull(columnDesc);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testName() throws Exception {
         Field field = getClass().getDeclaredField("string");
@@ -111,6 +137,10 @@ public class ColumnDescFactoryImplTest {
         assertEquals("STRING", columnDesc.getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testDefinition() throws Exception {
         Field field = getClass().getDeclaredField("string");
@@ -121,6 +151,10 @@ public class ColumnDescFactoryImplTest {
         assertEquals("varchar(255)", columnDesc.getDefinition());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testDefinition_length() throws Exception {
         Field field = getClass().getDeclaredField("customLengthString");
@@ -131,6 +165,10 @@ public class ColumnDescFactoryImplTest {
         assertEquals("varchar(10)", columnDesc.getDefinition());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testDefinition_columnDefinition() throws Exception {
         Field field = getClass().getDeclaredField("customDefinitionString");
@@ -141,6 +179,10 @@ public class ColumnDescFactoryImplTest {
         assertEquals("VARCHAR2(10)", columnDesc.getDefinition());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNullable_nullableReference() throws Exception {
         Field field = getClass().getDeclaredField("nullableReference");
@@ -151,6 +193,10 @@ public class ColumnDescFactoryImplTest {
         assertTrue(columnDesc.isNullable());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNullable_nonNullableReference() throws Exception {
         Field field = getClass().getDeclaredField("nonNullableReference");
@@ -161,6 +207,10 @@ public class ColumnDescFactoryImplTest {
         assertFalse(columnDesc.isNullable());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNullable_nullablePrimitive() throws Exception {
         Field field = getClass().getDeclaredField("nullablePrimitive");
@@ -171,6 +221,10 @@ public class ColumnDescFactoryImplTest {
         assertTrue(columnDesc.isNullable());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNullable_nonNullablePrimitive() throws Exception {
         Field field = getClass().getDeclaredField("nonNullablePrimitive");
@@ -182,6 +236,10 @@ public class ColumnDescFactoryImplTest {
         assertFalse(columnDesc.isNullable());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testUnique() throws Exception {
         Field field = getClass().getDeclaredField("string");
@@ -192,6 +250,10 @@ public class ColumnDescFactoryImplTest {
         assertFalse(columnDesc.isUnique());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testUnique_unique() throws Exception {
         Field field = getClass().getDeclaredField("unique");
@@ -202,6 +264,11 @@ public class ColumnDescFactoryImplTest {
         assertTrue(columnDesc.isUnique());
     }
 
+    /**
+     * 
+     * @author taedium
+     * 
+     */
     @Entity
     public static class Aaa {
     }

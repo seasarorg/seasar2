@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class UniqueKeyDescTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEquals() throws Exception {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();

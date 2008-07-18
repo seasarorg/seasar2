@@ -17,24 +17,32 @@ package org.seasar.extension.jdbc.gen.model;
 
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.DbModelFactory;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 
 /**
- * @author taedium
+ * {@link DbModelFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class DbModelFactoryImpl implements DbModelFactory {
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** SQLステートメントの区切り文字 */
     protected char statementDelimiter;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param dialect
+     *            方言
+     * @param statementDelimiter
+     *            SQLステートメントの区切り文字
      */
     public DbModelFactoryImpl(GenDialect dialect, char statementDelimiter) {
         if (dialect == null) {
@@ -44,7 +52,7 @@ public class DbModelFactoryImpl implements DbModelFactory {
         this.statementDelimiter = statementDelimiter;
     }
 
-    public DbModel getSchemaModel(List<TableDesc> tableDescList) {
+    public DbModel getDbModel(List<TableDesc> tableDescList) {
         DbModel model = new DbModel();
         model.setDialect(dialect);
         model.setDelimiter(statementDelimiter);

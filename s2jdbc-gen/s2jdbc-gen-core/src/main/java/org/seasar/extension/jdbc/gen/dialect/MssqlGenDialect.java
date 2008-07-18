@@ -26,6 +26,9 @@ import javax.persistence.GenerationType;
  */
 public class MssqlGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public MssqlGenDialect() {
         sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "function"));

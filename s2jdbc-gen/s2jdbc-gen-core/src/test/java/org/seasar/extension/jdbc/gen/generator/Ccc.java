@@ -27,9 +27,11 @@ import javax.persistence.Id;
 @Entity
 public class Ccc {
 
+    /** */
     @Id
     public String id1;
 
+    /** */
     @Id
     public BigDecimal id2;
 }

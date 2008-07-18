@@ -19,10 +19,20 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
- * @author taedium
+ * 識別子を生成する{@link TableDesc テーブル記述}のファクトリです。
  * 
+ * @author taedium
  */
 public interface IdTableDescFactory {
 
+    /**
+     * 識別子を生成するテーブル記述を返します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return 存在する場合は識別子を生成するテーブル記述、存在しない場合は{@code null}
+     */
     TableDesc getTableDesc(EntityMeta entityMeta, PropertyMeta propertyMeta);
 }

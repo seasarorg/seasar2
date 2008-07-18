@@ -42,6 +42,7 @@ public class StandardGenDialect implements GenDialect {
     /** SQL型をキー、@{DbType データ型}を値とするマップ */
     protected Map<Integer, DbType> dataTypeMap = new HashMap<Integer, DbType>();
 
+    /** SQLブロックの開始を表す単語の連なりのリスト */
     protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
 
     /**
@@ -196,6 +197,11 @@ public class StandardGenDialect implements GenDialect {
         return equals;
     }
 
+    /**
+     * 標準的な{@link JavaType}の実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class StandardJavaType implements JavaType {
 
         private static JavaType ARRAY = new StandardJavaType(Object.class);
@@ -261,10 +267,18 @@ public class StandardGenDialect implements GenDialect {
 
         private Class<?> clazz;
 
+        /**
+         * インスタンスを構築します。
+         */
         protected StandardJavaType() {
-            this.clazz = clazz;
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param clazz
+         *            クラス
+         */
         protected StandardJavaType(Class<?> clazz) {
             this.clazz = clazz;
         }
@@ -321,14 +335,12 @@ public class StandardGenDialect implements GenDialect {
 
         private static DbType INTEGER = new StandardDbType("integer");
 
-        private static DbType JAVA_OBJECT = new StandardDbType(
-                "java_object");
+        private static DbType JAVA_OBJECT = new StandardDbType("java_object");
 
         private static DbType LONGVARBYNARY = new StandardDbType(
                 "longvarbynary");
 
-        private static DbType LONGVARCHAR = new StandardDbType(
-                "longvarchar");
+        private static DbType LONGVARCHAR = new StandardDbType("longvarchar");
 
         private static DbType NULL = new StandardDbType("null");
 
@@ -369,6 +381,9 @@ public class StandardGenDialect implements GenDialect {
         /** 定義 */
         private String definition;
 
+        /**
+         * インスタンスを構築します。
+         */
         protected StandardDbType() {
         }
 

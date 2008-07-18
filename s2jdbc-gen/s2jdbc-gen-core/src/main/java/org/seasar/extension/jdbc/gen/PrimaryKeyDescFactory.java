@@ -20,7 +20,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
- * {@link PrimaryKeyDesc}のファクトリです。
+ * {@link PrimaryKeyDesc 主キー記述}のファクトリです。
  * 
  * @author taedium
  */
@@ -29,9 +29,9 @@ public interface PrimaryKeyDescFactory {
     /**
      * 主キー記述を返します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
-     * @return 主キー記述
+     * @param idPropertyMetaList
+     *            識別子を表すプロパティメタデータのリスト
+     * @return 存在する場合は主キー記述、存在しない場合は{@code null}
      */
     PrimaryKeyDesc getPrimaryKeyDesc(List<PropertyMeta> idPropertyMetaList);
 

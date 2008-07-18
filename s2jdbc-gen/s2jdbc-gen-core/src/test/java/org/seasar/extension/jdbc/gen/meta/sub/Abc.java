@@ -25,6 +25,7 @@ import javax.persistence.Id;
 @Entity
 public class Abc {
 
+    /** */
     @Id
     public Integer id;
 

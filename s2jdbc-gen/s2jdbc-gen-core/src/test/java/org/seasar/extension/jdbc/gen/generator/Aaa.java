@@ -34,30 +34,38 @@ import javax.persistence.Version;
 @Entity
 public class Aaa {
 
+    /** */
     @Id
     @Column(nullable = false)
     public Integer id;
 
+    /** */
     @Column(nullable = false)
     public String name;
 
+    /** */
     @Lob
     @Column(nullable = false)
     public byte[] lob;
 
+    /** */
     @Temporal(TemporalType.DATE)
     public Date date;
 
+    /** */
     @Transient
     public String temp;
 
+    /** */
     @Version
     @Column(nullable = false)
     public Integer version;
 
+    /** */
     @Column(nullable = false)
     public Integer bbbId;
 
+    /** */
     @ManyToOne
     public Bbb bbb;
 }

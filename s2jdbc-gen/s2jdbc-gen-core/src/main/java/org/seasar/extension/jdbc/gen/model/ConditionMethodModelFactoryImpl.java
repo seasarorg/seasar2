@@ -20,18 +20,26 @@ import org.seasar.extension.jdbc.gen.ConditionMethodModel;
 import org.seasar.extension.jdbc.gen.ConditionMethodModelFactory;
 
 /**
- * @author taedium
+ * {@link ConditionMethodModelFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class ConditionMethodModelFactoryImpl implements
         ConditionMethodModelFactory {
 
+    /** 条件クラス名のサフィックス */
     protected String conditionClassNameSuffix;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param conditionClassNameSuffix
+     *            条件クラス名のサフィックス
      */
     public ConditionMethodModelFactoryImpl(String conditionClassNameSuffix) {
+        if (conditionClassNameSuffix == null) {
+            throw new NullPointerException("conditionClassNameSuffix");
+        }
         this.conditionClassNameSuffix = conditionClassNameSuffix;
     }
 

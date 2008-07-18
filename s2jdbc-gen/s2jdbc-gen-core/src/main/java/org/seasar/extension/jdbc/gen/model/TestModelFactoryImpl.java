@@ -31,27 +31,47 @@ import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * {@link TestModelFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class TestModelFactoryImpl implements TestModelFactory {
 
+    /** 設定ファイルのパス */
     protected String configPath;
 
+    /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName;
 
+    /** パッケージ名 */
     protected String packageName;
 
+    /** テストクラス名のサフィックス */
     protected String ｔestClassNameSuffix;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param configPath
-     * @param testClassNameSuffix
+     *            設定ファイルのパス
      * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
      * @param packageName
+     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param ｔestClassNameSuffix
+     *            テストクラス名のサフィックス
      */
     public TestModelFactoryImpl(String configPath, String jdbcManagerName,
             String packageName, String ｔestClassNameSuffix) {
+        if (configPath == null) {
+            throw new NullPointerException("configPath");
+        }
+        if (jdbcManagerName == null) {
+            throw new NullPointerException("jdbcManagerName");
+        }
+        if (ｔestClassNameSuffix == null) {
+            throw new NullPointerException("ｔestClassNameSuffix");
+        }
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
         this.packageName = packageName;
@@ -70,6 +90,14 @@ public class TestModelFactoryImpl implements TestModelFactory {
         return testModel;
     }
 
+    /**
+     * インポートするパッケージ名を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param testModel
+     *            テストモデル
+     */
     protected void doImportPackageNames(EntityMeta entityMeta,
             TestModel testModel) {
         testModel.addImportPackageName(JdbcManager.class.getName());
@@ -83,6 +111,14 @@ public class TestModelFactoryImpl implements TestModelFactory {
         }
     }
 
+    /**
+     * 識別子の値を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param testModel
+     *            テストモデル
+     */
     protected void doIdValue(EntityMeta entityMeta, TestModel testModel) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
@@ -90,6 +126,13 @@ public class TestModelFactoryImpl implements TestModelFactory {
         }
     }
 
+    /**
+     * 識別子の値を取得します。
+     * 
+     * @param propertyClass
+     *            プロパティのクラス
+     * @return 識別子の値
+     */
     protected String getIdValue(Class<?> propertyClass) {
         Class<?> clazz = ClassUtil.getPrimitiveClassIfWrapper(propertyClass);
         if (clazz.isPrimitive()) {

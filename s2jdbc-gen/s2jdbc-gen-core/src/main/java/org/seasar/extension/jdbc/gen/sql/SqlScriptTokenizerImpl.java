@@ -20,29 +20,47 @@ import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
 import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
 
 /**
- * @author taedium
+ * {@link SqlScriptTokenizer}の実装クラスです。
  * 
+ * @author taedium
  */
 public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
+    /** SQLステートメントの区切り文字 */
     protected char statementDelimiter;
 
+    /** SQLブロックの区切り文字 */
     protected String blockDelimiter;
 
+    /** SQLの行 */
     protected String line;
 
+    /** 現在の位置 */
     protected int pos;
 
+    /** 次の位置 */
     protected int nextPos;
 
+    /** {@code #line}の長さ */
     protected int length;
 
+    /** トークン */
     protected String token;
 
+    /** トークンのタイプ */
     protected TokenType type;
 
-    protected boolean commentBlockStarted;
+    /** ブロックコメントが開始されている場合{@code true} */
+    protected boolean blockCommentStarted;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param statementDelimiter
+     *            SQLステートメントの区切り文字
+     * @param blockDelimiter
+     *            SQLブロックの区切り文字
+     */
     public SqlScriptTokenizerImpl(char statementDelimiter, String blockDelimiter) {
         if (isOther(statementDelimiter) || statementDelimiter == '\'') {
             throw new IllegalArgumentException("statementDelimiter");
@@ -65,7 +83,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         pos = 0;
         nextPos = 0;
 
-        if (commentBlockStarted) {
+        if (blockCommentStarted) {
             type = BLOCK_COMMENT;
         } else if (blockDelimiter.equalsIgnoreCase(line.trim())) {
             type = BLOCK_DELIMITER;
@@ -75,6 +93,12 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         }
     }
 
+    /**
+     * 次のトークンを前もって調べます。
+     * 
+     * @param index
+     *            開始インデックス
+     */
     protected void peek(int index) {
         if (index < length) {
             char c = line.charAt(index);
@@ -108,6 +132,14 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         }
     }
 
+    /**
+     * 文字について次のトークンを前もって調べます。
+     * 
+     * @param index
+     *            開始インデックス
+     * @param c
+     *            文字
+     */
     protected void peekChar(int index, char c) {
         if (c == statementDelimiter) {
             type = STATEMENT_DELIMITER;
@@ -155,7 +187,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
                 if (nextIndex < length) {
                     char c2 = line.charAt(nextIndex);
                     if (c == '*' && c2 == '/') {
-                        commentBlockStarted = false;
+                        blockCommentStarted = false;
                         token = line.substring(pos, i);
                         type = END_OF_BLOCK_COMMENT;
                         pos = i;
@@ -164,7 +196,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
                     }
                 }
             }
-            commentBlockStarted = true;
+            blockCommentStarted = true;
             token = line.substring(pos, length);
             type = END_OF_LINE;
             return BLOCK_COMMENT;
@@ -208,6 +240,13 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         throw new IllegalStateException(type.name());
     }
 
+    /**
+     * コメントや単語以外の場合{@code true}を返します。
+     * 
+     * @param c
+     *            文字
+     * @return コメントや単語以外の場合{@code true}
+     */
     protected static boolean isOther(char c) {
         return Character.isWhitespace(c) || c == '=' || c == '?' || c == '<'
                 || c == '>' || c == '(' || c == ')' || c == '!' || c == '*'

@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class SequenceDescTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEquals() throws Exception {
         SequenceDesc sequenceDesc = new SequenceDesc();

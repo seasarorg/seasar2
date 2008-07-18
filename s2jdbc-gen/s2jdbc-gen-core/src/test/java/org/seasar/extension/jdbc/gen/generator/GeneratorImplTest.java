@@ -33,6 +33,10 @@ public class GeneratorImplTest {
 
     private GeneratorImplStub generator;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         String packageName = ClassUtil.getPackageName(getClass());
@@ -47,9 +51,10 @@ public class GeneratorImplTest {
      */
     @Test
     public void testGenerate() throws Exception {
-        GenerationContext context = new GenerationContext(new MyModel("hoge"),
-                new File("dir"), new File("file"), getClass().getSimpleName()
-                        + "_Generate.ftl", "UTF-8", false);
+        GenerationContext context = new GenerationContextImpl(new MyModel(
+                "hoge"), new File("dir"), new File("file"), getClass()
+                .getSimpleName()
+                + "_Generate.ftl", "UTF-8", false);
         generator.generate(context);
         assertEquals("hoge", generator.getResult());
     }

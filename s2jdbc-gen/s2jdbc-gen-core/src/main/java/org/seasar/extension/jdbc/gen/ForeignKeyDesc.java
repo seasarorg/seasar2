@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class ForeignKeyDesc {
 
+    /** キー */
     protected final Key key = new Key();
 
     /** カラム名のリスト */
@@ -143,6 +144,11 @@ public class ForeignKeyDesc {
         key.addtReferencedColumnName(referencedColumnName);
     }
 
+    /**
+     * 参照されるテーブルの完全な名前を返します。
+     * 
+     * @return 参照されるテーブルの完全な名前
+     */
     public String getReferencedFullTableName() {
         StringBuilder buf = new StringBuilder();
         if (referencedCatalogName != null) {
@@ -174,6 +180,11 @@ public class ForeignKeyDesc {
         return key.equals(other.key);
     }
 
+    /**
+     * キーです。
+     * 
+     * @author taedium
+     */
     protected static class Key {
 
         /** カラム名のリスト */
@@ -191,6 +202,12 @@ public class ForeignKeyDesc {
         /** 参照されるカラム名のリスト */
         protected List<String> referencedColumnNameList = new ArrayList<String>();
 
+        /**
+         * カラム名を追加します。
+         * 
+         * @param columnName
+         *            カラム名
+         */
         protected void addColumnName(String columnName) {
             if (columnName != null) {
                 this.columnNameList.add(columnName.toLowerCase());
@@ -199,6 +216,12 @@ public class ForeignKeyDesc {
             }
         }
 
+        /**
+         * 参照されるテーブルのカタログ名を設定します。
+         * 
+         * @param referencedCatalogName
+         *            参照されるテーブルのカタログ名
+         */
         protected void setReferencedCatalogName(String referencedCatalogName) {
             if (referencedCatalogName != null) {
                 this.referencedCatalogName = referencedCatalogName
@@ -206,18 +229,36 @@ public class ForeignKeyDesc {
             }
         }
 
+        /**
+         * 参照されるテーブルのスキーマ名を設定します。
+         * 
+         * @param referencedSchemaName
+         *            参照されるテーブルのスキーマ名
+         */
         protected void setReferencedSchemaName(String referencedSchemaName) {
             if (referencedSchemaName != null) {
                 this.referencedSchemaName = referencedSchemaName.toLowerCase();
             }
         }
 
+        /**
+         * 参照されるテーブル名を設定します。
+         * 
+         * @param referencedTableName
+         *            参照されるテーブル名
+         */
         protected void setReferencedTableName(String referencedTableName) {
             if (referencedTableName != null) {
                 this.referencedTableName = referencedTableName.toLowerCase();
             }
         }
 
+        /***
+         * 参照されるカラム名を追加します。
+         * 
+         * @param referencedColumnName
+         *            参照されるカラム名
+         */
         protected void addtReferencedColumnName(String referencedColumnName) {
             if (referencedColumnName != null) {
                 this.referencedColumnNameList.add(referencedColumnName

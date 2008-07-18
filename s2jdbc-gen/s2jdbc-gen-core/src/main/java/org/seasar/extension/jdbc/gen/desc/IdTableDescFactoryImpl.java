@@ -42,24 +42,33 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
- * @author taedium
+ * {@link IdTableDescFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class IdTableDescFactoryImpl implements IdTableDescFactory {
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** 主キー記述のファクトリ */
     protected PrimaryKeyDescFactory primaryKeyDescFactory;
 
+    /** カラム記述のファクトリ */
     protected ColumnDescFactory columnDescFactory;
 
+    /** 一意キー記述のファクトリ */
     protected UniqueKeyDescFactory uniqueKeyDescFactory;
 
     /**
      * @param dialect
+     *            方言
      * @param primaryKeyDescFactory
+     *            主キー記述のファクトリ
      * @param columnDescFactory
+     *            カラム記述のファクトリ
      * @param uniqueKeyDescFactory
+     *            一意キー記述のファクトリ
      */
     public IdTableDescFactoryImpl(GenDialect dialect,
             ColumnDescFactory columnDescFactory,
@@ -104,6 +113,16 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         return null;
     }
 
+    /**
+     * 名前を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param tableDesc
+     *            テーブル記述
+     * @param generator
+     *            テーブルジェネレータ
+     */
     protected void doName(EntityMeta entityMeta, TableDesc tableDesc,
             TableGenerator generator) {
         String catalogName = generator.catalog();
@@ -124,6 +143,16 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         tableDesc.setName(tableName);
     }
 
+    /**
+     * 主キー記述を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param tableDesc
+     *            テーブル記述
+     * @param generator
+     *            テーブルジェネレータ
+     */
     protected void doPrimaryKeyDesc(PropertyMeta propertyMeta,
             TableDesc tableDesc, TableGenerator generator) {
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
@@ -131,6 +160,16 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
     }
 
+    /**
+     * カラム記述を処理します。
+     * 
+     * @param propertyMetaList
+     *            プロパティメタデータのリスト
+     * @param tableDesc
+     *            テーブル記述
+     * @param generator
+     *            テーブルジェネレータ
+     */
     protected void doColumnDesc(List<PropertyMeta> propertyMetaList,
             TableDesc tableDesc, TableGenerator generator) {
         for (PropertyMeta propertyMeta : propertyMetaList) {
@@ -140,6 +179,16 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         }
     }
 
+    /**
+     * 一意キー記述を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param tableDesc
+     *            テーブル記述
+     * @param generator
+     *            テーブルジェネレータ
+     */
     protected void doUniqueKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
             TableGenerator generator) {
         for (UniqueConstraint uc : generator.uniqueConstraints()) {
@@ -151,6 +200,13 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         }
     }
 
+    /**
+     * テーブルジェネレータを返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return テーブルジェネレータ
+     */
     protected TableGenerator getTableGenerator(PropertyMeta propertyMeta) {
         Field field = propertyMeta.getField();
         TableGenerator tableGenerator = field
@@ -159,6 +215,13 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
                 .getDefaultTableGenerator();
     }
 
+    /**
+     * テーブルジェネレータの主キーのカラムに対応するプロパティメタデータを返します。
+     * 
+     * @param generator
+     *            テーブルジェネレータ
+     * @return 主キーのカラムに対応するプロパティメタデータ
+     */
     protected PropertyMeta getPkPropertyMeta(TableGenerator generator) {
         String pkColumnName = generator.pkColumnName();
         if (StringUtil.isEmpty(pkColumnName)) {
@@ -167,6 +230,13 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         return createAdaptivePropertyMeta(pkColumnName);
     }
 
+    /**
+     * テーブルジェネレータの値カラムに対応するプロパティメタデータを返します。
+     * 
+     * @param generator
+     *            テーブルジェネレータ
+     * @return 値カラムに対応するプロパティメタデータ
+     */
     protected PropertyMeta getValuePropertyMeta(TableGenerator generator) {
         String valueColumnName = generator.valueColumnName();
         if (StringUtil.isEmpty(valueColumnName)) {
@@ -175,6 +245,13 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         return createAdaptivePropertyMeta(valueColumnName);
     }
 
+    /**
+     * アダプタとなるプロパティメタデータを作成します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return アダプタとなるプロパティメタデータ
+     */
     protected PropertyMeta createAdaptivePropertyMeta(String columnName) {
         ColumnMeta columnMeta = new ColumnMeta();
         columnMeta.setName(columnName);
@@ -182,6 +259,7 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         propertyMeta.setColumnMeta(columnMeta);
         class Dummy {
 
+            @SuppressWarnings("unused")
             public String field;
         }
         propertyMeta.setField(ReflectionUtil.getField(Dummy.class, "field"));

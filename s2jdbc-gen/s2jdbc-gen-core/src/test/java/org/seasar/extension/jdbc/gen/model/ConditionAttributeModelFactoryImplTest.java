@@ -30,8 +30,13 @@ public class ConditionAttributeModelFactoryImplTest {
 
     private ConditionAttributeModelFactoryImpl factory = new ConditionAttributeModelFactoryImpl();
 
+    @SuppressWarnings("unused")
     private String property;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetConditionAttributeModel() throws Exception {
         PropertyMeta propertyMeta = new PropertyMeta();

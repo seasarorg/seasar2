@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class Db2GenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public Db2GenDialect() {
     }
 

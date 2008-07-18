@@ -39,10 +39,14 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class EntityModelFactoryImpl implements EntityModelFactory {
 
+    /** パッケージ名 */
     protected String packageName;
 
     /**
+     * インスタンスを構築しますｌ
+     * 
      * @param packageName
+     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      */
     public EntityModelFactoryImpl(String packageName) {
         this.packageName = packageName;

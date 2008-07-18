@@ -29,11 +29,13 @@ import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author taedium
+ * {@link SequenceDescFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class SequenceDescFactoryImpl implements SequenceDescFactory {
 
+    /** 方言 */
     protected GenDialect dialect;
 
     /**
@@ -66,6 +68,13 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
         return null;
     }
 
+    /**
+     * シーケンスジェネレータを返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return シーケンスジェネレータ
+     */
     protected SequenceGenerator getSequenceGenerator(PropertyMeta propertyMeta) {
         Field field = propertyMeta.getField();
         SequenceGenerator sequenceGenerator = field
@@ -74,6 +83,17 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
                 .getDefaultSequenceGenerator();
     }
 
+    /**
+     * シーケンスの名前を返します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param sequenceGenerator
+     *            シーケンスジェネレータ
+     * @return シーケンスの名前
+     */
     protected String getSequenceName(EntityMeta entityMeta,
             PropertyMeta propertyMeta, SequenceGenerator sequenceGenerator) {
         String sequenceName = sequenceGenerator.sequenceName();
@@ -84,6 +104,13 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
                 + propertyMeta.getColumnMeta().getName();
     }
 
+    /**
+     * シーケンスのデータ型を返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return シーケンスのデータ型
+     */
     protected String getDataType(PropertyMeta propertyMeta) {
         int sqlType = propertyMeta.getValueType().getSqlType();
         return dialect.getDbType(sqlType).getDefinition(0, 20, 0);

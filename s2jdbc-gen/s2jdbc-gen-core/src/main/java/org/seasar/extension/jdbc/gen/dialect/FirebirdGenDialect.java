@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class FirebirdGenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public FirebirdGenDialect() {
     }
 

@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class TableDescTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEquals() throws Exception {
         TableDesc tableDesc = new TableDesc();

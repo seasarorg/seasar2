@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-
 /**
  * DB2 400の方言を扱うクラスです。
  * 
@@ -23,6 +22,9 @@ package org.seasar.extension.jdbc.gen.dialect;
  */
 public class Db2400GenDialect extends Db2390GenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public Db2400GenDialect() {
     }
 

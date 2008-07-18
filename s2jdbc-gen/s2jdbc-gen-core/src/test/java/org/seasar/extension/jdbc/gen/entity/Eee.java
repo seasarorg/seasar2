@@ -27,6 +27,7 @@ import javax.persistence.Id;
 @Entity
 public class Eee {
 
+    /** */
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     public Integer id;

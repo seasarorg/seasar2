@@ -34,8 +34,12 @@ public class DbModelFactoryImplTest {
     private DbModelFactoryImpl factory = new DbModelFactoryImpl(
             new StandardGenDialect(), ';');
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testGetSchemaModel() throws Exception {
+    public void testGetDbModel() throws Exception {
         SequenceDesc sequenceDesc = new SequenceDesc();
         sequenceDesc.setSequenceName("HOGE");
         TableDesc tableDesc = new TableDesc();
@@ -48,16 +52,20 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        DbModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
-                tableDesc2));
+        DbModel model = factory
+                .getDbModel(Arrays.asList(tableDesc, tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());
         assertEquals(2, model.getSequenceDescList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testGetSchemaModel_duplicatedSequenceDesc() throws Exception {
+    public void testGetDbModel_duplicatedSequenceDesc() throws Exception {
         SequenceDesc sequenceDesc = new SequenceDesc();
         sequenceDesc.setSequenceName("HOGE");
         TableDesc tableDesc = new TableDesc();
@@ -70,16 +78,20 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        DbModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
-                tableDesc2));
+        DbModel model = factory
+                .getDbModel(Arrays.asList(tableDesc, tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());
         assertEquals(1, model.getSequenceDescList().size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testGetSchemaModel_idTableDesc() throws Exception {
+    public void testGetDbModel_idTableDesc() throws Exception {
         TableDesc tableDesc = new TableDesc();
         tableDesc.setName("AAA");
 
@@ -90,8 +102,8 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addIdTableDesc(idTableDesc);
 
-        DbModel model = factory.getSchemaModel(Arrays.asList(tableDesc,
-                tableDesc2));
+        DbModel model = factory
+                .getDbModel(Arrays.asList(tableDesc, tableDesc2));
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(3, model.getTableDescList().size());

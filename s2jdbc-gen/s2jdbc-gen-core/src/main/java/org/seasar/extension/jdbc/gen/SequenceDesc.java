@@ -22,6 +22,7 @@ package org.seasar.extension.jdbc.gen;
  */
 public class SequenceDesc {
 
+    /** キー */
     protected final Key key = new Key();
 
     /** シーケンス名 */
@@ -133,10 +134,22 @@ public class SequenceDesc {
         return key.equals(other.key);
     }
 
+    /**
+     * キーです。
+     * 
+     * @author taedium
+     */
     protected static class Key {
 
+        /** シーケンス名 */
         protected String sequenceName;
 
+        /**
+         * シーケンス名を設定します。
+         * 
+         * @param sequenceName
+         *            シーケンス名
+         */
         public void setSequenceName(String sequenceName) {
             if (sequenceName != null) {
                 this.sequenceName = sequenceName.toLowerCase();

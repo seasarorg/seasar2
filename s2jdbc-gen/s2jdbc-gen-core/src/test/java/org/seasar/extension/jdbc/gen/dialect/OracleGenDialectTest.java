@@ -75,6 +75,10 @@ public class OracleGenDialectTest {
         assertEquals("long", dbType.getDefinition(4001, 0, 0));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testJavaType_decimal() throws Exception {
         JavaType javaType = dialect.getJavaType(Types.DECIMAL);
@@ -86,6 +90,10 @@ public class OracleGenDialectTest {
                 false));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIsSqlBlockStartWords() throws Exception {
         assertTrue(dialect.isSqlBlockStartWords(Arrays.asList("create", "or",

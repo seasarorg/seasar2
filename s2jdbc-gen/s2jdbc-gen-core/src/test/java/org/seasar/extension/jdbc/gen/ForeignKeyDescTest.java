@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class ForeignKeyDescTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEquals() throws Exception {
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
@@ -53,6 +57,10 @@ public class ForeignKeyDescTest {
                 .hashCode());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetReferencedFullTableName() throws Exception {
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();

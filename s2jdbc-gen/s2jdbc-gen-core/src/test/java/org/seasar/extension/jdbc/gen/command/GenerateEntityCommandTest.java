@@ -28,6 +28,10 @@ import static org.junit.Assert.*;
  */
 public class GenerateEntityCommandTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @After
     public void tearDown() throws Exception {
         SingletonS2ContainerFactory.destroy();

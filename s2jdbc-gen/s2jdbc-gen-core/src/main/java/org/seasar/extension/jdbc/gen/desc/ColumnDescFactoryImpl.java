@@ -45,6 +45,9 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      *            方言
      */
     public ColumnDescFactoryImpl(GenDialect dialect) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         this.dialect = dialect;
     }
 
@@ -102,7 +105,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     }
 
     /**
-     * {@code null}可能性を処理します。
+     * NULL可能かどうかを処理します。
      * 
      * @param propertyMeta
      *            プロパティメタデータ

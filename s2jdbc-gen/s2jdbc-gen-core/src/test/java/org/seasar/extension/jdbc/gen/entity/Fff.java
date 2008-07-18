@@ -28,6 +28,7 @@ import javax.persistence.TableGenerator;
 @Entity
 public class Fff {
 
+    /** */
     @Id
     @TableGenerator(name = "GENERATOR", schema = "SCHEMA", table = "GENERATOR_TABLE", pkColumnName = "PK_COLUMN", valueColumnName = "VALUE_COLUMN", pkColumnValue = "HOGE", initialValue = 100)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "GENERATOR")

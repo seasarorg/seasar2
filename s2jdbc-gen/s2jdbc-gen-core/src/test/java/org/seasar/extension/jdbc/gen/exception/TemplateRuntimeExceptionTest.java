@@ -25,6 +25,10 @@ import freemarker.template.TemplateException;
  */
 public class TemplateRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         TemplateRuntimeException e = new TemplateRuntimeException(

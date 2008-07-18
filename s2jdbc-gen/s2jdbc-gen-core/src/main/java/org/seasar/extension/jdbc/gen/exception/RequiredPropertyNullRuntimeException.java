@@ -18,20 +18,33 @@ package org.seasar.extension.jdbc.gen.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * 必須のプロパティが{@code null}の場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class RequiredPropertyNullRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /** プロパティ名 */
     protected String propertyName;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     */
     public RequiredPropertyNullRuntimeException(String propertyName) {
         super("ES2JDBCGen0001", new Object[] { propertyName });
         this.propertyName = propertyName;
     }
 
+    /**
+     * プロパティ名を返します。
+     * 
+     * @return プロパティ名
+     */
     public String getPropertyName() {
         return propertyName;
     }

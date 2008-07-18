@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
-import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
 
 import static org.junit.Assert.*;
 
@@ -34,11 +33,19 @@ public class UniqueKeyDescFactoryImplTest {
 
     private UniqueKeyDescFactoryImpl factory;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         factory = new UniqueKeyDescFactoryImpl();
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetCompositeUniqueKeyDesc() throws Exception {
         UniqueConstraint[] uniqueConstraints = Aaa.class.getAnnotation(
@@ -55,12 +62,17 @@ public class UniqueKeyDescFactoryImplTest {
         assertNull(uniqueKeyDesc);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSingleUniqueKeyDesc() throws Exception {
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName("aaa");
         columnDesc.setUnique(true);
-        UniqueKeyDesc uniqueKeyDesc = factory.getSingleUniqueKeyDesc(columnDesc);
+        UniqueKeyDesc uniqueKeyDesc = factory
+                .getSingleUniqueKeyDesc(columnDesc);
         assertNotNull(uniqueKeyDesc);
         assertEquals(1, uniqueKeyDesc.getColumnNameList().size());
         assertEquals("aaa", uniqueKeyDesc.getColumnNameList().get(0));
@@ -70,6 +82,7 @@ public class UniqueKeyDescFactoryImplTest {
         assertNull(uniqueKeyDesc);
     }
 
+    /** */
     @Table(uniqueConstraints = {
             @UniqueConstraint(columnNames = { "aaa", "bbb" }),
             @UniqueConstraint(columnNames = {}) })

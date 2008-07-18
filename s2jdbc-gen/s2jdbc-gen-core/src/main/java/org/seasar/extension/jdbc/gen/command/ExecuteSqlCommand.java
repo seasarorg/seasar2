@@ -17,12 +17,13 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlExecutor;
@@ -38,146 +39,216 @@ import org.seasar.extension.jdbc.gen.sql.SqlScriptTokenizerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
- * @author taedium
+ * SQLを実行する{@link Command}の実装です。
+ * <p>
+ * このコマンドは、指定されたSQLファイルに記述された複数のSQLステートメントまたはSQLブロックをデータベースに対し実行します。SQLファイルには、1
+ * 行コメントやブロックコメントを記述することもできます。コメントはSQLとは認識されず実行されません。
+ * </p>
  * 
+ * @author taedium
  */
 public class ExecuteSqlCommand extends AbstractCommand {
 
-    protected Logger logger = Logger.getLogger(ExecuteSqlCommand.class);
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(ExecuteSqlCommand.class);
 
+    /** SQLブロックの区切り文字 */
     protected String blockDelimiter = null;
 
+    /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
 
+    /** エラー発生時に処理を中止する場合{@code true} */
     protected boolean haltOnError = false;
 
+    /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    /** SQLファイルのエンコーディング */
     protected String sqlFileEncoding = "UTF-8";
 
+    /** 実行するSQLファイルのリスト */
     protected List<File> sqlFileList = new ArrayList<File>();
 
+    /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
 
-    protected S2ContainerFactorySupport containerFactorySupport;
+    /** すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false} */
+    protected boolean transactional = true;
 
+    /** {@link SingletonS2ContainerFactory}のサポート */
+    protected SingletonS2ContainerFactorySupport containerFactorySupport;
+
+    /** データソース */
     protected DataSource dataSource;
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** ユーザトランザクション */
     protected UserTransaction userTransaction;
 
+    /** SQLスクリプトのトークナイザ */
     protected SqlScriptTokenizer sqlScriptTokenizer;
 
-    protected SqlExecutor sqlExecutor;
-
+    /**
+     * インスタンスを構築します。
+     */
     public ExecuteSqlCommand() {
     }
 
     /**
-     * @return Returns the blockDelimiter.
+     * SQLブロックの区切り文字を返します。
+     * 
+     * @return SQLブロックの区切り文字
      */
     public String getBlockDelimiter() {
         return blockDelimiter;
     }
 
     /**
+     * SQLブロックの区切り文字を設定します。
+     * 
      * @param blockDelimiter
-     *            The blockDelimiter to set.
+     *            SQLブロックの区切り文字
      */
     public void setBlockDelimiter(String blockDelimiter) {
         this.blockDelimiter = blockDelimiter;
     }
 
     /**
-     * @return Returns the configPath.
+     * 設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
      */
     public String getConfigPath() {
         return configPath;
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     *            The configPath to set.
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
     }
 
     /**
-     * @return Returns the haltOnError.
+     * エラー発生時に処理を中止する場合{@code true}を返します。
+     * 
+     * @return エラー発生時に処理を中止する場合{@code true}
      */
     public boolean isHaltOnError() {
         return haltOnError;
     }
 
     /**
+     * エラー発生時に処理を中止する場合{@code true}を設定します。
+     * 
      * @param haltOnError
-     *            The haltOnError to set.
+     *            エラー発生時に処理を中止する場合{@code true}
      */
     public void setHaltOnError(boolean haltOnError) {
         this.haltOnError = haltOnError;
     }
 
     /**
-     * @return Returns the jdbcManagerName.
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
      */
     public String getJdbcManagerName() {
         return jdbcManagerName;
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     *            The jdbcManagerName to set.
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
-     * @return Returns the sqlFileEncoding.
+     * SQLファイルのエンコーディングを返します。
+     * 
+     * @return SQLファイルのエンコーディング
      */
     public String getSqlFileEncoding() {
         return sqlFileEncoding;
     }
 
     /**
+     * SQLファイルのエンコーディングを設定します。
+     * 
      * @param sqlFileEncoding
-     *            The sqlFileEncoding to set.
+     *            SQLファイルのエンコーディング
      */
     public void setSqlFileEncoding(String sqlFileEncoding) {
         this.sqlFileEncoding = sqlFileEncoding;
     }
 
     /**
-     * @return Returns the sqlFileList.
+     * 実行するSQLファイルのリストを返します。
+     * 
+     * @return 実行するSQLファイルのリスト
      */
     public List<File> getSqlFileList() {
         return sqlFileList;
     }
 
     /**
+     * 実行するSQLファイルのリストを設定します。
+     * 
      * @param sqlFileList
-     *            The sqlFileList to set.
+     *            実行するSQLファイルのリスト
      */
     public void setSqlFileList(List<File> sqlFileList) {
         this.sqlFileList = sqlFileList;
     }
 
     /**
-     * @return Returns the statementDelimiter.
+     * すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isTransactional() {
+        return transactional;
+    }
+
+    /**
+     * すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param transactional
+     *            すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public void setTransactional(boolean transactional) {
+        this.transactional = transactional;
+    }
+
+    /**
+     * SQLステートメントの区切り文字を返します。
+     * 
+     * @return SQLステートメントの区切り文字
      */
     public char getStatementDelimiter() {
         return statementDelimiter;
     }
 
     /**
+     * SQLステートメントの区切り文字を設定します。
+     * 
      * @param statementDelimiter
-     *            The statementDelimiter to set.
+     *            SQLステートメントの区切り文字
      */
     public void setStatementDelimiter(char statementDelimiter) {
         this.statementDelimiter = statementDelimiter;
@@ -192,18 +263,20 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        containerFactorySupport = new S2ContainerFactorySupport(configPath);
+        containerFactorySupport = new SingletonS2ContainerFactorySupport(
+                configPath);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-        userTransaction = SingletonS2Container
-                .getComponent(UserTransaction.class);
+        if (transactional) {
+            userTransaction = SingletonS2Container
+                    .getComponent(UserTransaction.class);
+        }
 
         sqlScriptTokenizer = createScriptTokenizer();
-        sqlExecutor = createSqlExecutor();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -211,51 +284,23 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() {
-        LinkedList<SqlFailedException> exceptionList = new LinkedList<SqlFailedException>();
         try {
-            userTransaction.begin();
-            SqlExecutionContext context = createSqlExecutionContext();
-            try {
-                executeSqlFileList(context);
-            } finally {
-                exceptionList.addAll(context.getExceptionList());
-                context.destroy();
+            if (transactional) {
+                userTransaction.begin();
             }
-            if (exceptionList.isEmpty()) {
+            executeSqlFileList();
+            if (transactional) {
                 userTransaction.commit();
-            } else {
-                userTransaction.rollback();
             }
         } catch (Throwable t) {
-            try {
-                userTransaction.rollback();
-            } catch (Throwable th) {
-                logger.log(th);
+            if (transactional) {
+                try {
+                    userTransaction.rollback();
+                } catch (Throwable th) {
+                    logger.log(th);
+                }
             }
             throw new SRuntimeException("ES2JDBCGen0002", new Object[] { t }, t);
-        } finally {
-            if (!exceptionList.isEmpty()) {
-                for (SqlFailedException e : exceptionList) {
-                    logger.error(e.getMessage());
-                }
-                throw exceptionList.getFirst();
-            }
-        }
-    }
-
-    protected void executeSqlFileList(SqlExecutionContext context) {
-        for (File sqlFile : sqlFileList) {
-            SqlScriptReader reader = createSqlScriptReader(sqlFile);
-            try {
-                for (String sql = reader.readSql(); sql != null; sql = reader
-                        .readSql()) {
-                    context.setSqlFile(sqlFile);
-                    context.setSql(sql);
-                    sqlExecutor.execute(context);
-                }
-            } finally {
-                reader.close();
-            }
         }
     }
 
@@ -266,26 +311,93 @@ public class ExecuteSqlCommand extends AbstractCommand {
         }
     }
 
-    protected SqlExecutor createSqlExecutor() {
-        return new SqlExecutorImpl(haltOnError);
+    /**
+     * SQLファイルのリストを実行します。
+     */
+    protected void executeSqlFileList() {
+        SqlExecutionContext context = createSqlExecutionContext();
+        try {
+            for (File sqlFile : sqlFileList) {
+                executeSqlFile(context, sqlFile);
+            }
+        } finally {
+            if (!context.getExceptionList().isEmpty()) {
+                for (SqlFailedException e : context.getExceptionList()) {
+                    logger.error(e.getMessage());
+                }
+                throw context.getExceptionList().get(0);
+            }
+        }
     }
 
+    /**
+     * SQLファイルを実行します。
+     * 
+     * @param context
+     *            SQLの実行コンテキスト
+     * @param sqlFile
+     *            SQLファイル
+     */
+    protected void executeSqlFile(SqlExecutionContext context, File sqlFile) {
+        SqlScriptReader reader = createSqlScriptReader(sqlFile);
+        try {
+            for (String sql = reader.readSql(); sql != null; sql = reader
+                    .readSql()) {
+                SqlExecutor sqlExecutor = createSqlExecutor(sqlFile, sql);
+                sqlExecutor.execute(context);
+            }
+        } finally {
+            reader.close();
+        }
+    }
+
+    /**
+     * {@link SqlExecutor}の実装を作成します。
+     * 
+     * @param sqlFile
+     *            SQLファイル
+     * @param sql
+     *            SQL
+     * @return {@link SqlExecutor}の実装
+     */
+    protected SqlExecutor createSqlExecutor(File sqlFile, String sql) {
+        return new SqlExecutorImpl(sqlFile.getPath(), sql);
+    }
+
+    /**
+     * {@link SqlScriptReader}の実装を作成します。
+     * 
+     * @param sqlFile
+     *            SQLファイル
+     * @return {@link SqlScriptReader}の実装
+     */
     protected SqlScriptReader createSqlScriptReader(File sqlFile) {
         return new SqlScriptReaderImpl(sqlFile, sqlFileEncoding,
                 sqlScriptTokenizer, dialect);
     }
 
+    /**
+     * {@link SqlScriptTokenizer}の実装を作成します。
+     * 
+     * @return {@link SqlScriptTokenizer}の実装
+     */
     protected SqlScriptTokenizer createScriptTokenizer() {
         String blockDelimiter = this.blockDelimiter != null ? this.blockDelimiter
                 : dialect.getSqlBlockDelimiter();
         return new SqlScriptTokenizerImpl(statementDelimiter, blockDelimiter);
     }
 
+    /**
+     * {@link SqlExecutionContext}の実装を作成します。
+     * 
+     * @return {@link SqlExecutionContext}の実装
+     */
     protected SqlExecutionContext createSqlExecutionContext() {
         return new SqlExecutionContextImpl(DataSourceUtil
-                .getConnection(dataSource));
+                .getConnection(dataSource), haltOnError);
     }
 
+    @Override
     protected Logger getLogger() {
         return logger;
     }

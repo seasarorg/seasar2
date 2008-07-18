@@ -111,6 +111,10 @@ public class EntityModelFactoryImplTest {
         assertEquals(Version.class.getName(), iterator.next());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetEntityModel_tableQualified() throws Exception {
         EntityDesc entityDesc = new EntityDesc();
@@ -127,6 +131,10 @@ public class EntityModelFactoryImplTest {
         assertEquals(Table.class.getName(), iterator.next());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetEntityModel_tableNotQualified() throws Exception {
         EntityDesc entityDesc = new EntityDesc();

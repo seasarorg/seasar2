@@ -20,42 +20,68 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author taedium
+ * データベースのモデルです。
  * 
+ * @author taedium
  */
 public class DbModel {
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** 区切り文字 */
     protected char delimiter;
 
+    /** テーブル記述のリスト */
     protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
 
+    /** シーケンス記述のリスト */
     protected List<SequenceDesc> sequenceDescList = new ArrayList<SequenceDesc>();
 
+    /**
+     * 方言を返します。
+     * 
+     * @return 方言
+     */
     public GenDialect getDialect() {
         return dialect;
     }
 
+    /**
+     * 方言を設定します。
+     * 
+     * @param dialect
+     *            方言
+     */
     public void setDialect(GenDialect dialect) {
         this.dialect = dialect;
     }
 
     /**
-     * @return Returns the delimiter.
+     * 区切り文字を返します。
+     * 
+     * @return 区切り文字
      */
     public char getDelimiter() {
         return delimiter;
     }
 
     /**
+     * 区切り文字を設定します。
+     * 
      * @param delimiter
-     *            The delimiter to set.
+     *            区切り文字
      */
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * テーブル記述を追加します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     */
     public void addTableDesc(TableDesc tableDesc) {
         if (tableDescList.contains(tableDesc)) {
             return;
@@ -63,10 +89,21 @@ public class DbModel {
         tableDescList.add(tableDesc);
     }
 
+    /**
+     * テーブル記述のリストを返します。
+     * 
+     * @return テーブル記述のリスト
+     */
     public List<TableDesc> getTableDescList() {
         return Collections.unmodifiableList(tableDescList);
     }
 
+    /**
+     * シーケンス記述を追加します。
+     * 
+     * @param sequenceDesc
+     *            シーケンス記述
+     */
     public void addSequenceDesc(SequenceDesc sequenceDesc) {
         if (sequenceDescList.contains(sequenceDesc)) {
             return;
@@ -74,10 +111,22 @@ public class DbModel {
         sequenceDescList.add(sequenceDesc);
     }
 
+    /**
+     * シーケンス記述のリストを返します。
+     * 
+     * @return シーケンス記述のリスト
+     */
     public List<SequenceDesc> getSequenceDescList() {
         return Collections.unmodifiableList(sequenceDescList);
     }
 
+    /**
+     * シーケンス定義の断片を返します。
+     * 
+     * @param sequenceDesc
+     *            シーケンス記述
+     * @return シーケンス定義の断片
+     */
     public String getSequenceDefinitionFragment(SequenceDesc sequenceDesc) {
         return dialect.getSequenceDefinitionFragment(
                 sequenceDesc.getDataType(), sequenceDesc.getInitialValue(),

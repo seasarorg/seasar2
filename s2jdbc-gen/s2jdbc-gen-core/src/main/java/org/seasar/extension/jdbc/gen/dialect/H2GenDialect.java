@@ -24,6 +24,9 @@ import javax.persistence.GenerationType;
  */
 public class H2GenDialect extends StandardGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public H2GenDialect() {
     }
 

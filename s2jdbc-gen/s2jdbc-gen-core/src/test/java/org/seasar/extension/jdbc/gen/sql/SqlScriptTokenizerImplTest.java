@@ -29,11 +29,18 @@ public class SqlScriptTokenizerImplTest {
 
     private SqlScriptTokenizerImpl tokenizer;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         tokenizer = new SqlScriptTokenizerImpl(';', "/");
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetToken_endOfLine() {
         tokenizer.addLine("aaa");
@@ -45,6 +52,9 @@ public class SqlScriptTokenizerImplTest {
         assertEquals("", tokenizer.getToken());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetToken_endOfFile() {
         tokenizer.addLine("aaa");
@@ -60,6 +70,9 @@ public class SqlScriptTokenizerImplTest {
         assertNull(tokenizer.getToken());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetToken_lineComment() {
         tokenizer.addLine("aaa -- bbb /* ; ");
@@ -72,6 +85,9 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetToken_blockCommentInTwoLines() {
         tokenizer.addLine("aaa/*b");
@@ -94,6 +110,9 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     */
     @Test
     public void testGetToken_blockCommentsInOneLine() {
         tokenizer.addLine("aaa/*bbb*/ccc/*ddd*/");
@@ -116,6 +135,10 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetToken_statementDelimiter() throws Exception {
         tokenizer.addLine("select * from aaa; ");
@@ -136,6 +159,10 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetToken_blockDelimiter() throws Exception {
         tokenizer.addLine("aaa go");
@@ -154,6 +181,10 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetToken_wordAndOther() throws Exception {
         tokenizer.addLine("select,");
@@ -163,12 +194,17 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(",", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
+
         tokenizer.addLine("bbb");
         assertEquals(WORD, tokenizer.nextToken());
         assertEquals("bbb", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetToken_quote() throws Exception {
         tokenizer.addLine("'aaa'");
@@ -177,6 +213,10 @@ public class SqlScriptTokenizerImplTest {
         assertEquals(END_OF_LINE, tokenizer.nextToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetToken_quoteNotClosed() throws Exception {
         tokenizer.addLine("'aaa");

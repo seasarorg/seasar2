@@ -20,10 +20,10 @@ import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
-import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
@@ -42,6 +42,10 @@ public class GenerateConstraintTest {
 
     private DbModel model;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         generator = new GeneratorImplStub("UTF-8");
@@ -88,24 +92,32 @@ public class GenerateConstraintTest {
 
         DbModelFactoryImpl factory = new DbModelFactoryImpl(
                 new StandardGenDialect(), ';');
-        model = factory.getSchemaModel(Arrays.asList(tableDesc));
+        model = factory.getDbModel(Arrays.asList(tableDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreate() throws Exception {
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "sql/create-constraint.ftl",
-                "UTF-8", false);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "sql/create-constraint.ftl", "UTF-8",
+                false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testDrop() throws Exception {
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "sql/drop-constraint.ftl",
-                "UTF-8", false);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "sql/drop-constraint.ftl", "UTF-8",
+                false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Drop.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

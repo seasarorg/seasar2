@@ -46,6 +46,10 @@ public class GenerateConditionTest {
 
     private GeneratorImplStub generator;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConventionImpl pc = new PersistenceConventionImpl();
@@ -68,27 +72,33 @@ public class GenerateConditionTest {
         generator = new GeneratorImplStub("UTF-8");
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testManyToOne() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         ConditionModel model = conditionModelfactory
                 .getConditionModel(entityMeta);
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/condition.ftl",
-                "UTF-8", false);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/condition.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_ManyToOne.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testOneToOne() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
         ConditionModel model = conditionModelfactory
                 .getConditionModel(entityMeta);
-        GenerationContext context = new GenerationContext(model,
-                new File("dir"), new File("file"), "java/condition.ftl",
-                "UTF-8", false);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/condition.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_OneToMany.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

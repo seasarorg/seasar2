@@ -15,9 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
- * {@link AttributeDesc}のファクトリです。
+ * {@link AttributeDesc 属性記述}のファクトリです。
  * 
  * @author taedium
  */

@@ -20,35 +20,49 @@ import java.sql.SQLException;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * SQLの実行に失敗した場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class SqlFailedException extends SRuntimeException {
 
-    protected String fileName;
+    private static final long serialVersionUID = 1L;
 
+    /** ファイルのパス */
+    protected String filePath;
+
+    /** SQL */
     protected String sql;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param cause
-     * @param fileName
+     *            原因
+     * @param filePath
+     *            ファイルのパス
      * @param sql
+     *            SQL
      */
-    public SqlFailedException(SQLException cause, String fileName, String sql) {
-        super("ES2JDBCGen0003", new Object[] { fileName, sql, cause }, cause);
-        this.fileName = fileName;
+    public SqlFailedException(SQLException cause, String filePath, String sql) {
+        super("ES2JDBCGen0003", new Object[] { filePath, sql, cause }, cause);
+        this.filePath = filePath;
         this.sql = sql;
     }
 
     /**
-     * @return Returns the sqlFileName.
+     * ファイルのパスを返します。
+     * 
+     * @return ファイルのパス
      */
-    public String getFileName() {
-        return fileName;
+    public String getFilePath() {
+        return filePath;
     }
 
     /**
-     * @return Returns the sql.
+     * SQLを返します。
+     * 
+     * @return SQL
      */
     public String getSql() {
         return sql;

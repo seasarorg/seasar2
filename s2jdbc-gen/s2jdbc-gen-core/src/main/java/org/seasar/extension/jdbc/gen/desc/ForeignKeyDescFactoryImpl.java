@@ -39,6 +39,9 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
      * @param entityMetaFactory
      */
     public ForeignKeyDescFactoryImpl(EntityMetaFactory entityMetaFactory) {
+        if (entityMetaFactory == null) {
+            throw new NullPointerException("entityMetaFactory");
+        }
         this.entityMetaFactory = entityMetaFactory;
     }
 

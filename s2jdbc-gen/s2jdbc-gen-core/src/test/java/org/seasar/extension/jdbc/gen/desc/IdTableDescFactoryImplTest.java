@@ -47,15 +47,21 @@ public class IdTableDescFactoryImplTest {
 
     private IdTableDescFactoryImpl idTableDescFactory;
 
+    @SuppressWarnings("unused")
     @Id
     @TableGenerator(name = "generator", catalog = "AAA", schema = "BBB", table = "CCC", pkColumnName = "DDD", valueColumnName = "EEE")
     @GeneratedValue(generator = "generator", strategy = GenerationType.TABLE)
     private Integer tableId;
 
+    @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     private Integer noGeneraterTableId;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -73,6 +79,10 @@ public class IdTableDescFactoryImplTest {
                 ukdf);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetTableDesc_tableId() throws Exception {
         Field field = getClass().getDeclaredField("tableId");
@@ -95,6 +105,10 @@ public class IdTableDescFactoryImplTest {
         assertEquals("EEE", tableDesc.getColumnDescList().get(1).getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetTableDesc_noGeneraterTableId() throws Exception {
         Field field = getClass().getDeclaredField("noGeneraterTableId");

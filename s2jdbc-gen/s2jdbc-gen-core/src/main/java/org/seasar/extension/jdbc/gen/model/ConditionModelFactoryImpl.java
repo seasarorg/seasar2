@@ -34,22 +34,43 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
+    /** 条件クラスの属性モデルのファクトリ */
     protected ConditionAttributeModelFactory conditionAttributeModelFactory;
 
+    /** 条件クラスのメソッドモデルのファクトリ */
     protected ConditionMethodModelFactory conditionMethodModelFactory;
 
+    /** パッケージ名 */
     protected String packageName;
 
+    /** 条件クラス名のサフィックス */
     protected String conditionClassNameSuffix;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param conditionAttributeModelFactory
+     *            条件クラスの属性モデルのファクトリ
      * @param conditionMethodModelFactory
+     *            条件クラスのメソッドモデルのファクトリ
+     * @param packageName
+     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param conditionClassNameSuffix
+     *            条件クラス名のサフィックス
      */
     public ConditionModelFactoryImpl(
             ConditionAttributeModelFactory conditionAttributeModelFactory,
             ConditionMethodModelFactory conditionMethodModelFactory,
             String packageName, String conditionClassNameSuffix) {
+        if (conditionAttributeModelFactory == null) {
+            throw new NullPointerException("conditionAttributeModelFactory");
+        }
+        if (conditionMethodModelFactory == null) {
+            throw new NullPointerException("conditionMethodModelFactory");
+        }
+        if (conditionClassNameSuffix == null) {
+            throw new NullPointerException("conditionClassNameSuffix");
+        }
         this.conditionAttributeModelFactory = conditionAttributeModelFactory;
         this.conditionMethodModelFactory = conditionMethodModelFactory;
         this.packageName = packageName;
@@ -77,6 +98,14 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
         return conditionModel;
     }
 
+    /**
+     * 条件クラスの属性モデルを処理します。
+     * 
+     * @param conditionModel
+     *            条件クラスのモデル
+     * @param propertyMeta
+     *            プロパティメタデータ
+     */
     protected void doConditionAttributeModel(ConditionModel conditionModel,
             PropertyMeta propertyMeta) {
         ConditionAttributeModel attributeModel = conditionAttributeModelFactory
@@ -84,6 +113,14 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
         conditionModel.addConditionAttributeModel(attributeModel);
     }
 
+    /**
+     * 条件クラスのメソッドモデルを処理します。
+     * 
+     * @param conditionModel
+     *            条件クラスのモデル
+     * @param propertyMeta
+     *            プロパティメタデータ
+     */
     protected void doConditionMethodModel(ConditionModel conditionModel,
             PropertyMeta propertyMeta) {
         ConditionMethodModel methodModel = conditionMethodModelFactory
@@ -94,7 +131,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
     /**
      * インポートするパッケージ名を処理します。
      * 
-     * @param model
+     * @param conditionModel
      *            エンティティ条件クラスのモデル
      * @param entityMeta
      *            エンティティ
@@ -112,6 +149,14 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
         }
     }
 
+    /**
+     * インポートするパッケージ名を追加します。
+     * 
+     * @param conditionModel
+     *            条件クラスのモデル
+     * @param clazz
+     *            インポートするクラス
+     */
     protected void addImportPackageName(ConditionModel conditionModel,
             Class<?> clazz) {
         String pakcageName = ClassUtil.getPackageName(clazz);

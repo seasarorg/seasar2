@@ -36,6 +36,7 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
     /** 属性記述のファクトリ */
     protected AttributeDescFactory attributeDescFactory;
 
+    /** スキーマが指定されている場合{@code true} */
     protected boolean schemaSpecified;
 
     /**
@@ -45,9 +46,17 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      *            永続化層の命名規約
      * @param attributeDescFactory
      *            属性記述のファクトリ
+     * @param schemaSpecified
+     *            スキーマが指定されている場合{@code true}
      */
     public EntityDescFactoryImpl(PersistenceConvention persistenceConvention,
             AttributeDescFactory attributeDescFactory, boolean schemaSpecified) {
+        if (persistenceConvention == null) {
+            throw new NullPointerException("persistenceConvention");
+        }
+        if (attributeDescFactory == null) {
+            throw new NullPointerException("attributeDescFactory");
+        }
         this.persistenceConvention = persistenceConvention;
         this.attributeDescFactory = attributeDescFactory;
         this.schemaSpecified = schemaSpecified;

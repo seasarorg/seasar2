@@ -22,6 +22,7 @@ package org.seasar.extension.jdbc.gen;
  */
 public class ColumnDesc {
 
+    /** キー */
     protected final Key key = new Key();
 
     /** 名前 */
@@ -133,11 +134,23 @@ public class ColumnDesc {
         return key.equals(other.key);
     }
 
+    /**
+     * キーです。
+     * 
+     * @author taedium
+     */
     protected static class Key {
 
-        private String name;
+        /** 名前 */
+        protected String name;
 
-        public void setName(String name) {
+        /**
+         * 名前を設定します。
+         * 
+         * @param name
+         *            　名前
+         */
+        protected void setName(String name) {
             if (name != null) {
                 this.name = name.toLowerCase();
             }
@@ -164,8 +177,9 @@ public class ColumnDesc {
             }
             final Key other = (Key) obj;
             if (name == null) {
-                if (other.name != null)
+                if (other.name != null) {
                     return false;
+                }
             } else if (!name.equals(other.name)) {
                 return false;
             }

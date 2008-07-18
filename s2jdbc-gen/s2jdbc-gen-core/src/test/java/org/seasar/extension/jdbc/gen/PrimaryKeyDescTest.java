@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class PrimaryKeyDescTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEquals() throws Exception {
         PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();

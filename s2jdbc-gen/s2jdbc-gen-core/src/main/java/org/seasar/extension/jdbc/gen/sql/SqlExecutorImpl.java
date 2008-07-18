@@ -24,31 +24,47 @@ import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 import org.seasar.framework.log.Logger;
 
 /**
- * @author taedium
+ * {@link SqlExecutor}の実装クラスです。
  * 
+ * @author taedium
  */
 public class SqlExecutorImpl implements SqlExecutor {
 
-    protected Logger logger = Logger.getLogger(SqlExecutorImpl.class);
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(SqlExecutorImpl.class);
 
-    protected boolean haltOnError;
+    /** SQLファイルのパス */
+    protected String sqlFilePath;
 
-    public SqlExecutorImpl(boolean haltOnError) {
-        this.haltOnError = haltOnError;
+    /** SQL */
+    protected String sql;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param sqlFilePath
+     *            SQLファイルのパス
+     * @param sql
+     *            SQL
+     */
+    public SqlExecutorImpl(String sqlFilePath, String sql) {
+        if (sqlFilePath == null) {
+            throw new NullPointerException("sqlFilePath");
+        }
+        if (sql == null) {
+            throw new NullPointerException("sql");
+        }
+        this.sqlFilePath = sqlFilePath;
+        this.sql = sql;
     }
 
     public void execute(SqlExecutionContext context) {
-        logger.log("DS2JDBCGen0007", new Object[] { context.getSql() });
+        logger.log("DS2JDBCGen0007", new Object[] { sql });
         Statement statement = context.getStatement();
         try {
-            statement.execute(context.getSql());
+            statement.execute(sql);
         } catch (SQLException e) {
-            SqlFailedException failedException = new SqlFailedException(e,
-                    context.getSqlFile().getName(), context.getSql());
-            context.addException(failedException);
-            if (haltOnError) {
-                throw failedException;
-            }
+            context.addException(new SqlFailedException(e, sqlFilePath, sql));
         }
     }
 }

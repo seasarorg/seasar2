@@ -15,32 +15,43 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
 import java.sql.Statement;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 
 /**
- * @author taedium
+ * SQLの実行コンテキストです。
  * 
+ * @author taedium
  */
 public interface SqlExecutionContext {
 
-    String getSql();
-
-    void setSql(String sql);
-
-    File getSqlFile();
-
-    void setSqlFile(File file);
-
+    /**
+     * ステートメントを返します。
+     * 
+     * @return ステートメント
+     */
     Statement getStatement();
 
+    /**
+     * 例外のリストを返します。
+     * 
+     * @return 例外のリスト
+     */
     List<SqlFailedException> getExceptionList();
 
+    /**
+     * 例外を追加します。
+     * 
+     * @param exception
+     *            例外
+     */
     void addException(SqlFailedException exception);
 
+    /**
+     * 破棄します。
+     */
     public void destroy();
 
 }

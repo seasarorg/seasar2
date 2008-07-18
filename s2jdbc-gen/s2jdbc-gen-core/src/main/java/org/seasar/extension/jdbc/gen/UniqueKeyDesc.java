@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class UniqueKeyDesc {
 
+    /** キー */
     protected final Key key = new Key();
 
     /** カラム名のリスト */
@@ -71,10 +72,22 @@ public class UniqueKeyDesc {
         return key.equals(other.key);
     }
 
+    /**
+     * キーです。
+     * 
+     * @author taedium
+     */
     protected static class Key {
 
+        /** カラム名のリスト */
         protected List<String> columnNameList = new ArrayList<String>();
 
+        /**
+         * カラム名を追加します。
+         * 
+         * @param columnName
+         *            カラム名
+         */
         protected void addColumnName(String columnName) {
             if (columnName != null) {
                 columnNameList.add(columnName.toLowerCase());

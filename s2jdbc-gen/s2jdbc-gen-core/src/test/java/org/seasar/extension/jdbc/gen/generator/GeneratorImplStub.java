@@ -27,12 +27,21 @@ import org.seasar.extension.jdbc.gen.GenerationContext;
  */
 public class GeneratorImplStub extends GeneratorImpl {
 
-    protected Writer writer = new StringWriter();
+    private Writer writer = new StringWriter();
 
+    /**
+     * 
+     * @param templateFielEncoding
+     */
     public GeneratorImplStub(String templateFielEncoding) {
         this(templateFielEncoding, null);
     }
 
+    /**
+     * 
+     * @param templateFielEncoding
+     * @param templateDir
+     */
     public GeneratorImplStub(String templateFielEncoding, File templateDir) {
         super(templateFielEncoding, templateDir);
     }
@@ -51,6 +60,10 @@ public class GeneratorImplStub extends GeneratorImpl {
         return writer;
     }
 
+    /**
+     * 
+     * @return
+     */
     protected String getResult() {
         return writer.toString();
     }

@@ -30,8 +30,13 @@ public class ConditionMethodModelFactoryImplTest {
     private ConditionMethodModelFactoryImpl factory = new ConditionMethodModelFactoryImpl(
             "Condition");
 
+    @SuppressWarnings("unused")
     private String property;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetConditionMethodModel() throws Exception {
         PropertyMeta propertyMeta = new PropertyMeta();

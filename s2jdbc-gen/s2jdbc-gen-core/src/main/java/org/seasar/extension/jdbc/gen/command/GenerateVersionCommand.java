@@ -19,31 +19,45 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.exception.IllegalVersionValueRuntimeException;
+import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
 
 /**
- * @author taedium
+ * バージョン番号を保持するテキストファイルとバージョン番号を更新するDMLを持つSQLファイルを生成する{@link Command}の実装です。
+ * <p>
+ * このコマンドは、バージョン番号を保持したテキストファイルから値を読み、それをインクリメントします。
+ * また、新しいバージョン番号でデータベースのバージョン管理の用のテーブルを更新するUPDATE文を持つSQLファイルを生成します。
+ * このコマンドを実行しても、データベースに対する更新は行われません。
+ * </p>
  * 
+ * @author taedium
  */
 public class GenerateVersionCommand extends AbstractCommand {
 
+    /** ロガー */
     protected static Logger logger = Logger
             .getLogger(GenerateVersionCommand.class);
 
+    /** スキーマのバージョンを保持するテーブルのカラム名 */
     protected String schemaInfoColumnName = "VERSION";
 
+    /** スキーマのバージョンを保持するテーブル名 */
     protected String schemaInfoTableName = "SCHEMA_INFO";
 
+    /** SQLファイルの出力先ディレクトリ */
     protected File sqlFileDestDir = new File("db", "dml");
 
+    /** SQLファイルのエンコーディング */
     protected String sqlFileEncoding = "UTF-8";
 
+    /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
 
     /** テンプレートファイルのエンコーディング */
@@ -52,127 +66,254 @@ public class GenerateVersionCommand extends AbstractCommand {
     /** テンプレートファイルの格納ディレクトリ */
     protected File templateFilePrimaryDir = null;
 
+    /** バージョンファイルの出力先ディレクトリ */
     protected File versionFileDestDir = new File("db");
 
+    /** バージョンファイル名 */
     protected String versionFileName = "version.txt";
 
+    /** バージョンのテンプレートファイル名 */
     protected String versionTemplateFileName = "txt/version.ftl";
 
+    /** バージョンを更新するDMLのSQLファイル名 */
     protected String updateVersionSqlFileName = "update-version.sql";
 
+    /** バージョンを更新するDMLのテンプレートファイル名 */
     protected String updateVersionTemplateFileName = "sql/update-version.ftl";
 
+    /** ジェネレータ */
     protected Generator generator;
 
+    /**
+     * インスタンスを構築します。
+     */
     public GenerateVersionCommand() {
     }
 
+    /**
+     * スキーマのバージョンを保持するテーブルのカラム名を返します。
+     * 
+     * @return スキーマのバージョンを保持するテーブルのカラム名
+     */
     public String getSchemaInfoColumnName() {
         return schemaInfoColumnName;
     }
 
+    /**
+     * スキーマのバージョンを保持するテーブルのカラム名を設定します。
+     * 
+     * @param schemaInfoColumnName
+     *            スキーマのバージョンを保持するテーブルのカラム名
+     */
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
+    /**
+     * スキーマのバージョンを保持するテーブル名を返します。
+     * 
+     * @return スキーマのバージョンを保持するテーブル名
+     */
     public String getSchemaInfoTableName() {
         return schemaInfoTableName;
     }
 
+    /**
+     * スキーマのバージョンを保持するテーブル名を設定します。
+     * 
+     * @param schemaInfoTableName
+     *            スキーマのバージョンを保持するテーブル名
+     */
     public void setSchemaInfoTableName(String schemaInfoTableName) {
         this.schemaInfoTableName = schemaInfoTableName;
     }
 
+    /**
+     * SQLファイルの出力先ディレクトリを返します。
+     * 
+     * @return SQLファイルの出力先ディレクトリ
+     */
     public File getSqlFileDestDir() {
         return sqlFileDestDir;
     }
 
+    /**
+     * SQLファイルの出力先ディレクトリを設定します。
+     * 
+     * @param sqlFileDestDir
+     *            SQLファイルの出力先ディレクトリ
+     */
     public void setSqlFileDestDir(File sqlFileDestDir) {
         this.sqlFileDestDir = sqlFileDestDir;
     }
 
+    /**
+     * SQLファイルの出力先ディレクトリを返します。
+     * 
+     * @return SQLファイルの出力先ディレクトリ
+     */
     public String getSqlFileEncoding() {
         return sqlFileEncoding;
     }
 
+    /**
+     * SQLファイルのエンコーディングを設定します。
+     * 
+     * @param sqlFileEncoding
+     *            SQLファイルのエンコーディング
+     */
     public void setSqlFileEncoding(String sqlFileEncoding) {
         this.sqlFileEncoding = sqlFileEncoding;
     }
 
     /**
-     * @return Returns the statementDelimiter.
+     * SQLステートメントの区切り文字を返します。
+     * 
+     * @return SQLステートメントの区切り文字
      */
     public char getStatementDelimiter() {
         return statementDelimiter;
     }
 
     /**
+     * SQLステートメントの区切り文字を設定します。
+     * 
      * @param statementDelimiter
-     *            The statementDelimiter to set.
+     *            SQLステートメントの区切り文字
      */
     public void setStatementDelimiter(char statementDelimiter) {
         this.statementDelimiter = statementDelimiter;
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを返します。
+     * 
+     * @return テンプレートファイルのエンコーディング
+     */
     public String getTemplateFileEncoding() {
         return templateFileEncoding;
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
+     * @param templateFileEncoding
+     *            テンプレートファイルのエンコーディング
+     */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         this.templateFileEncoding = templateFileEncoding;
     }
 
+    /**
+     * テンプレートファイルの格納ディレクトリを返します。
+     * 
+     * @return テンプレートファイルの格納ディレクトリ
+     */
     public File getTemplateFilePrimaryDir() {
         return templateFilePrimaryDir;
     }
 
+    /**
+     * テンプレートファイルの格納ディレクトリを設定します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルの格納ディレクトリ
+     */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
     /**
-     * @return Returns the versionFileDestDir.
+     * バージョンファイルの出力先ディレクトリを返します。
+     * 
+     * @return バージョンファイルの出力先ディレクトリ
      */
     public File getVersionFileDestDir() {
         return versionFileDestDir;
     }
 
     /**
+     * バージョンファイルの出力先ディレクトリを設定します。
+     * 
      * @param versionFileDestDir
-     *            The versionFileDestDir to set.
+     *            バージョンファイルの出力先ディレクトリ
      */
     public void setVersionFileDestDir(File versionFileDestDir) {
         this.versionFileDestDir = versionFileDestDir;
     }
 
+    /**
+     * バージョンファイル名を返します。
+     * 
+     * @return バージョンファイル名
+     */
     public String getVersionFileName() {
         return versionFileName;
     }
 
+    /**
+     * バージョンファイル名を設定します。
+     * 
+     * @param versionFileName
+     *            バージョンファイル名
+     */
     public void setVersionFileName(String versionFileName) {
         this.versionFileName = versionFileName;
     }
 
+    /**
+     * バージョンのテンプレートファイル名を返します。
+     * 
+     * @return バージョンのテンプレートファイル名
+     */
     public String getVersionTemplateFileName() {
         return versionTemplateFileName;
     }
 
+    /**
+     * バージョンのテンプレートファイル名を設定します。
+     * 
+     * @param versionTemplateFileName
+     *            バージョンのテンプレートファイル名
+     */
     public void setVersionTemplateFileName(String versionTemplateFileName) {
         this.versionTemplateFileName = versionTemplateFileName;
     }
 
+    /**
+     * バージョンを更新するDMLのSQLファイル名を返します。
+     * 
+     * @return バージョンを更新するDMLのSQLファイル名
+     */
     public String getUpdateVersionSqlFileName() {
         return updateVersionSqlFileName;
     }
 
+    /**
+     * バージョンを更新するDMLのSQLファイル名を設定します。
+     * 
+     * @param updateVersionSqlFileName
+     *            バージョンを更新するDMLのSQLファイル名
+     */
     public void setUpdateVersionSqlFileName(String updateVersionSqlFileName) {
         this.updateVersionSqlFileName = updateVersionSqlFileName;
     }
 
+    /**
+     * バージョンを更新するDMLのテンプレートファイル名を返します。
+     * 
+     * @return バージョンを更新するDMLのテンプレートファイル名
+     */
     public String getUpdateVersionTemplateFileName() {
         return updateVersionTemplateFileName;
     }
 
+    /**
+     * バージョンを更新するDMLのテンプレートファイル名を設定します。
+     * 
+     * @param updateVersionTemplateFileName
+     *            バージョンを更新するDMLのテンプレートファイル名
+     */
     public void setUpdateVersionTemplateFileName(
             String updateVersionTemplateFileName) {
         this.updateVersionTemplateFileName = updateVersionTemplateFileName;
@@ -201,6 +342,11 @@ public class GenerateVersionCommand extends AbstractCommand {
     protected void doDestroy() {
     }
 
+    /**
+     * バージョン番号を読み取ります。
+     * 
+     * @return バージョン番号
+     */
     protected int readVersion() {
         File versionFile = new File(versionFileDestDir, versionFileName);
         if (!versionFile.exists()) {
@@ -213,32 +359,50 @@ public class GenerateVersionCommand extends AbstractCommand {
         throw new IllegalVersionValueRuntimeException(versionFileName, value);
     }
 
-    protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
-    }
-
+    /**
+     * バージョン番号を更新するSQLを生成します。
+     * 
+     * @param version
+     *            バージョン番号
+     */
     protected void generateUpdateVersionSql(int version) {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put("version", version);
         model.put("schemaInfoTableName", schemaInfoTableName);
         model.put("schemaInfoColumnName", schemaInfoColumnName);
         model.put("delimiter", statementDelimiter);
-        GenerationContext context = new GenerationContext(model,
+        GenerationContext context = new GenerationContextImpl(model,
                 sqlFileDestDir, new File(sqlFileDestDir,
                         updateVersionSqlFileName),
                 updateVersionTemplateFileName, sqlFileEncoding, true);
         generator.generate(context);
     }
 
+    /**
+     * バージョン番号を含むテキストファイルを生成します。
+     * 
+     * @param version
+     *            バージョン番号
+     */
     protected void generateVersion(int version) {
         Map<String, Integer> model = new HashMap<String, Integer>();
         model.put("version", version);
-        GenerationContext context = new GenerationContext(model,
+        GenerationContext context = new GenerationContextImpl(model,
                 sqlFileDestDir, new File(versionFileDestDir, versionFileName),
                 versionTemplateFileName, "UTF-8", true);
         generator.generate(context);
     }
 
+    /**
+     * {@link Generator}の実装を作成します。
+     * 
+     * @return {@link Generator}の実装
+     */
+    protected Generator createGenerator() {
+        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
+    }
+
+    @Override
     protected Logger getLogger() {
         return logger;
     }

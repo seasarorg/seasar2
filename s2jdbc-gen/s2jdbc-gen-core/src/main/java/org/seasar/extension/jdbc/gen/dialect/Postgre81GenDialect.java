@@ -22,6 +22,9 @@ package org.seasar.extension.jdbc.gen.dialect;
  */
 public class Postgre81GenDialect extends PostgreGenDialect {
 
+    /**
+     * インスタンスを構築します。
+     */
     public Postgre81GenDialect() {
     }
 

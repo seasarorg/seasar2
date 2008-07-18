@@ -24,5 +24,6 @@ import javax.persistence.Entity;
 @Entity
 public class Ddd {
 
+    /** */
     public String name;
 }

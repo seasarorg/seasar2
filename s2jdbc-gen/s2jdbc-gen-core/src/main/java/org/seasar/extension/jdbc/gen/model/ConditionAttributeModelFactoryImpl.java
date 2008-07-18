@@ -30,8 +30,9 @@ import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * {@link ConditionAttributeModelFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class ConditionAttributeModelFactoryImpl implements
         ConditionAttributeModelFactory {

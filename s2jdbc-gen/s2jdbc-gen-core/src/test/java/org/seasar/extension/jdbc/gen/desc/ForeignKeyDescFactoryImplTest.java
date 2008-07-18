@@ -27,7 +27,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
-import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -49,6 +48,10 @@ public class ForeignKeyDescFactoryImplTest {
 
     private ForeignKeyDescFactoryImpl foreignKeyDescFactory;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         PersistenceConvention pc = new PersistenceConventionImpl();
@@ -66,6 +69,10 @@ public class ForeignKeyDescFactoryImplTest {
         foreignKeyDescFactory = new ForeignKeyDescFactoryImpl(entityMetaFactory);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testSingleForeignKey() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -81,6 +88,10 @@ public class ForeignKeyDescFactoryImplTest {
         assertEquals("ID", foreignKeyDesc.getReferencedColumnNameList().get(0));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCompositeForeignKey() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -98,6 +109,10 @@ public class ForeignKeyDescFactoryImplTest {
         assertEquals("ID2", foreignKeyDesc.getReferencedColumnNameList().get(1));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNoForeignKey() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
@@ -106,22 +121,29 @@ public class ForeignKeyDescFactoryImplTest {
         assertNull(foreignKeyDesc);
     }
 
+    /** */
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "AAA")
     public static class Aaa {
 
+        /** */
         @Id
         public Integer id;
 
+        /** */
         public Integer bbbId;
 
+        /** */
         public Integer cccId1;
 
+        /** */
         public Integer cccId2;
 
+        /** */
         @ManyToOne
         public Bbb bbb;
 
+        /** */
         @OneToOne
         @JoinColumns( {
                 @JoinColumn(name = "CCC_ID1", referencedColumnName = "ID1"),
@@ -129,22 +151,27 @@ public class ForeignKeyDescFactoryImplTest {
         public Ccc ccc;
     }
 
+    /** */
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "BBB")
     public static class Bbb {
 
+        /** */
         @Id
         public Integer id;
 
     }
 
+    /** */
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "CCC")
     public static class Ccc {
 
+        /** */
         @Id
         public Integer id1;
 
+        /** */
         @Id
         public Integer id2;
 

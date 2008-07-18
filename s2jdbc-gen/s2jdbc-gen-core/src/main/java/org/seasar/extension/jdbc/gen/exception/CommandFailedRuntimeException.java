@@ -18,15 +18,25 @@ package org.seasar.extension.jdbc.gen.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * コマンドの実行が失敗した場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class CommandFailedRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /** コマンドのクラス名 */
     protected String commandClassName;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param cause
+     *            原因
+     * @param commandClassName
+     *            コマンドのクラス名
+     */
     public CommandFailedRuntimeException(Throwable cause,
             String commandClassName) {
         super("ES2JDBCGen0005", new Object[] { commandClassName, cause }, cause);
@@ -34,7 +44,9 @@ public class CommandFailedRuntimeException extends SRuntimeException {
     }
 
     /**
-     * @return Returns the commandClassName.
+     * コマンドのクラス名を返します。
+     * 
+     * @return コマンドのクラス名
      */
     public String getCommandClassName() {
         return commandClassName;

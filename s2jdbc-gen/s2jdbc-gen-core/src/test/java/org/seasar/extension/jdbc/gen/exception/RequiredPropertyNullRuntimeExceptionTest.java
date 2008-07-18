@@ -25,6 +25,10 @@ import static org.junit.Assert.*;
  */
 public class RequiredPropertyNullRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         RequiredPropertyNullRuntimeException e = new RequiredPropertyNullRuntimeException(

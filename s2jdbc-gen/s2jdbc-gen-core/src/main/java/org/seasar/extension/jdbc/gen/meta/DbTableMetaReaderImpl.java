@@ -38,7 +38,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.ResultSetUtil;
 
 /**
- * {@code SchemaReader}の実装クラスです。
+ * {@code DbTableMetaReader}の実装クラスです。
  * 
  * @author taedium
  */
