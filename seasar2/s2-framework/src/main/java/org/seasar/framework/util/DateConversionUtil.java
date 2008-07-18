@@ -239,6 +239,7 @@ public final class DateConversionUtil {
      * 日付パターンから日付のデリミタを取り除きます。
      * 
      * @param pattern
+     *            パターン
      * @return 日付のデリミタを取り除いた後のパターン
      */
     public static String removeDelimiter(String pattern) {
