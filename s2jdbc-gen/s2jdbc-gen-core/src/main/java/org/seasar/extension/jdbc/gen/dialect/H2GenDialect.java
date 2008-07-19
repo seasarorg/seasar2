@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.sql.Types;
+
 import javax.persistence.GenerationType;
 
 /**
@@ -28,6 +30,8 @@ public class H2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public H2GenDialect() {
+        dbTypeMap.put(Types.BINARY, H2DbType.BINARY);
+        dbTypeMap.put(Types.DECIMAL, H2DbType.DECIMAL);
     }
 
     @Override
@@ -49,5 +53,45 @@ public class H2GenDialect extends StandardGenDialect {
     public String getSequenceDefinitionFragment(String dataType, int initValue,
             int allocationSize) {
         return "start with " + allocationSize + " increment by " + initValue;
+    }
+
+    /**
+     * H2用の{@link DbType}の実装です。
+     * 
+     * @author taedium
+     */
+    public static class H2DbType extends StandardDbType {
+
+        private static DbType BINARY = new H2DbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("binary(%d)", length);
+            }
+        };
+
+        private static DbType DECIMAL = new H2DbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("decimal(%d,%d)", precision, scale);
+            }
+        };
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected H2DbType() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param definition
+         *            定義
+         */
+        protected H2DbType(String definition) {
+            super(definition);
+        }
     }
 }

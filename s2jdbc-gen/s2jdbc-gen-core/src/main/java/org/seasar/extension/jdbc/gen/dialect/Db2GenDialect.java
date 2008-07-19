@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.sql.Types;
+
 import javax.persistence.GenerationType;
 
 /**
@@ -28,6 +30,12 @@ public class Db2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public Db2GenDialect() {
+        dbTypeMap.put(Types.BINARY, Db2DbType.BINARY);
+        dbTypeMap.put(Types.BOOLEAN, Db2DbType.BOOLEAN);
+        dbTypeMap.put(Types.BLOB, Db2DbType.BLOB);
+        dbTypeMap.put(Types.CLOB, Db2DbType.CLOB);
+        dbTypeMap.put(Types.DECIMAL, Db2DbType.DECIMAL);
+        dbTypeMap.put(Types.TINYINT, Db2DbType.TINYINT);
     }
 
     @Override
@@ -45,5 +53,65 @@ public class Db2GenDialect extends StandardGenDialect {
             int allocationSize) {
         return "as " + dataType + " start with " + allocationSize
                 + " increment by " + initValue;
+    }
+
+    /**
+     * DB2用の{@link DbType}の実装です。
+     * 
+     * @author taedium
+     */
+    public static class Db2DbType extends StandardDbType {
+
+        private static DbType BINARY = new Db2DbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("varchar(%d) for bit data", length);
+            }
+        };
+
+        private static DbType BOOLEAN = new Db2DbType("smallint");
+
+        private static DbType BLOB = new Db2DbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("blob(%d)", length);
+            }
+        };
+
+        private static DbType CLOB = new Db2DbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("clob(%d)", length);
+            }
+        };
+
+        private static DbType DECIMAL = new Db2DbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("numeric(%d,%d)", precision, scale);
+            }
+        };
+
+        private static DbType TINYINT = new Db2DbType("smallint");
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected Db2DbType() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param definition
+         *            定義
+         */
+        protected Db2DbType(String definition) {
+            super(definition);
+        }
     }
 }

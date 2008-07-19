@@ -65,9 +65,6 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
         if (isOther(statementDelimiter) || statementDelimiter == '\'') {
             throw new IllegalArgumentException("statementDelimiter");
         }
-        if (blockDelimiter == null) {
-            throw new NullPointerException("blockDelimiter");
-        }
         this.statementDelimiter = statementDelimiter;
         this.blockDelimiter = blockDelimiter;
         type = END_OF_LINE;
@@ -85,7 +82,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
 
         if (blockCommentStarted) {
             type = BLOCK_COMMENT;
-        } else if (blockDelimiter.equalsIgnoreCase(line.trim())) {
+        } else if (line.trim().equalsIgnoreCase(blockDelimiter)) {
             type = BLOCK_DELIMITER;
             nextPos = length;
         } else {

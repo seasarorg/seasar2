@@ -48,18 +48,8 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_numeric() throws Exception {
-        DbType dbType = dialect.getDbType(Types.NUMERIC);
-        assertEquals("number(10,5)", dbType.getDefinition(0, 10, 5));
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testDbType_varbinary() throws Exception {
-        DbType dbType = dialect.getDbType(Types.VARBINARY);
+    public void testDbType_binary() throws Exception {
+        DbType dbType = dialect.getDbType(Types.BINARY);
         assertEquals("raw(2000)", dbType.getDefinition(2000, 0, 0));
         assertEquals("long raw", dbType.getDefinition(2001, 0, 0));
     }
@@ -73,6 +63,16 @@ public class OracleGenDialectTest {
         DbType dbType = dialect.getDbType(Types.VARCHAR);
         assertEquals("varchar2(4000)", dbType.getDefinition(4000, 0, 0));
         assertEquals("long", dbType.getDefinition(4001, 0, 0));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testDbType_bigint() throws Exception {
+        DbType dbType = dialect.getDbType(Types.BIGINT);
+        assertEquals("numeric(10,0)", dbType.getDefinition(0, 10, 0));
     }
 
     /**

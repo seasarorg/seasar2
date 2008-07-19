@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.sql.Types;
+
 import javax.persistence.GenerationType;
 
 /**
@@ -28,6 +30,10 @@ public class MysqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MysqlGenDialect() {
+        dbTypeMap.put(Types.BINARY, MysqlDbType.BINARY);
+        dbTypeMap.put(Types.BLOB, MysqlDbType.BLOB);
+        dbTypeMap.put(Types.CLOB, MysqlDbType.CLOB);
+        dbTypeMap.put(Types.DECIMAL, MysqlDbType.DECIMAL);
     }
 
     @Override
@@ -40,4 +46,80 @@ public class MysqlGenDialect extends StandardGenDialect {
         return "/";
     }
 
+    /**
+     * MySQL用の{@link DbType}の実装です。
+     * 
+     * @author taedium
+     */
+    public static class MysqlDbType extends StandardDbType {
+
+        private static DbType BINARY = new MysqlDbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                if (length <= 0xFF) {
+                    return "tinyblob";
+                } else if (length <= 0xFFFF) {
+                    return "blob";
+                } else if (length <= 0xFFFFFF) {
+                    return "mediumblob";
+                }
+                return "longblob";
+            }
+        };
+
+        private static DbType BLOB = new MysqlDbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                if (length <= 0xFF) {
+                    return "tinyblob";
+                } else if (length <= 0xFFFF) {
+                    return "blob";
+                } else if (length <= 0xFFFFFF) {
+                    return "mediumblob";
+                }
+                return "longblob";
+            }
+        };
+
+        private static DbType CLOB = new MysqlDbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                if (length <= 0xFF) {
+                    return "tinytext";
+                } else if (length <= 0xFFFF) {
+                    return "text";
+                } else if (length <= 0xFFFFFF) {
+                    return "mediumtext";
+                }
+                return "longtext";
+            }
+        };
+
+        private static DbType DECIMAL = new MysqlDbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("numeric(%d,%d)", precision, scale);
+            }
+        };
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected MysqlDbType() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param definition
+         *            定義
+         */
+        protected MysqlDbType(String definition) {
+            super(definition);
+        }
+    }
 }

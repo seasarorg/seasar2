@@ -32,22 +32,19 @@ public class OracleGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public OracleGenDialect() {
-        super();
         javaTypeMap.put(Types.DECIMAL, OracleJavaType.DECIMAL);
 
-        dataTypeMap.put(Types.BINARY, OracleDbType.BINARY);
-        dataTypeMap.put(Types.BIT, OracleDbType.BIT);
-        dataTypeMap.put(Types.BIGINT, OracleDbType.BIGINT);
-        dataTypeMap.put(Types.CHAR, OracleDbType.CHAR);
-        dataTypeMap.put(Types.DECIMAL, OracleDbType.DECIMAL);
-        dataTypeMap.put(Types.DOUBLE, OracleDbType.DOUBLE);
-        dataTypeMap.put(Types.INTEGER, OracleDbType.INTEGER);
-        dataTypeMap.put(Types.NUMERIC, OracleDbType.NUMERIC);
-        dataTypeMap.put(Types.SMALLINT, OracleDbType.SMALLINT);
-        dataTypeMap.put(Types.TIME, OracleDbType.TIME);
-        dataTypeMap.put(Types.TINYINT, OracleDbType.TINYINT);
-        dataTypeMap.put(Types.VARBINARY, OracleDbType.VARBINARY);
-        dataTypeMap.put(Types.VARCHAR, OracleDbType.VARCHAR);
+        dbTypeMap.put(Types.BINARY, OracleDbType.BINARY);
+        dbTypeMap.put(Types.BOOLEAN, OracleDbType.BOOLEAN);
+        dbTypeMap.put(Types.BIGINT, OracleDbType.BIGINT);
+        dbTypeMap.put(Types.CHAR, OracleDbType.CHAR);
+        dbTypeMap.put(Types.DECIMAL, OracleDbType.DECIMAL);
+        dbTypeMap.put(Types.DOUBLE, OracleDbType.DOUBLE);
+        dbTypeMap.put(Types.INTEGER, OracleDbType.INTEGER);
+        dbTypeMap.put(Types.SMALLINT, OracleDbType.SMALLINT);
+        dbTypeMap.put(Types.TIME, OracleDbType.TIME);
+        dbTypeMap.put(Types.TINYINT, OracleDbType.TINYINT);
+        dbTypeMap.put(Types.VARCHAR, OracleDbType.VARCHAR);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
                 "procedure"));
@@ -128,47 +125,15 @@ public class OracleGenDialect extends StandardGenDialect {
      */
     public static class OracleDbType extends StandardDbType {
 
-        private static DbType BIGINT = new OracleDbType("number(19,0)");
-
-        private static DbType BINARY = new OracleDbType() {
+        private static DbType BIGINT = new OracleDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
-                return VARBINARY.getDefinition(length, precision, scale);
+                return format("numeric(%d,0)", precision);
             }
         };
 
-        private static DbType BIT = new OracleDbType("number(1,0)");
-
-        private static DbType CHAR = new OracleDbType("char(1 char)");
-
-        private static DbType DECIMAL = new OracleDbType() {
-
-            @Override
-            public String getDefinition(int length, int presision, int scale) {
-                return format("number(%d,%d)", presision, scale);
-            }
-        };
-
-        private static DbType DOUBLE = new OracleDbType("double precision");
-
-        private static DbType INTEGER = new OracleDbType("number(10,0)");
-
-        private static DbType NUMERIC = new OracleDbType() {
-
-            @Override
-            public String getDefinition(int length, int presision, int scale) {
-                return format("number(%d,%d)", presision, scale);
-            }
-        };
-
-        private static DbType SMALLINT = new OracleDbType("number(5,0)");
-
-        private static DbType TIME = new OracleDbType("date");
-
-        private static DbType TINYINT = new OracleDbType("number(3,0)");
-
-        private static DbType VARBINARY = new OracleDbType() {
+        private static DbType BINARY = new OracleDbType() {
 
             @Override
             public String getDefinition(int length, int precision, int scale) {
@@ -178,6 +143,28 @@ public class OracleGenDialect extends StandardGenDialect {
                 return format("raw(%d)", length);
             }
         };
+
+        private static DbType BOOLEAN = new OracleDbType("number(1,0)");
+
+        private static DbType CHAR = new OracleDbType("char(1 char)");
+
+        private static DbType DECIMAL = new OracleDbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("number(%d,%d)", precision, scale);
+            }
+        };
+
+        private static DbType DOUBLE = new OracleDbType("double precision");
+
+        private static DbType INTEGER = new OracleDbType("number(10,0)");
+
+        private static DbType SMALLINT = new OracleDbType("number(5,0)");
+
+        private static DbType TIME = new OracleDbType("date");
+
+        private static DbType TINYINT = new OracleDbType("number(3,0)");
 
         private static DbType VARCHAR = new OracleDbType() {
 

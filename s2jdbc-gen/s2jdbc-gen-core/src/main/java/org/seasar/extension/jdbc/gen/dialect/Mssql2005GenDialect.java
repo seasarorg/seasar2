@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.sql.Types;
+
 /**
  * MS SQL Server 2005の方言を扱うクラスです。
  * 
@@ -26,6 +28,35 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      * インスタンスを構築します。
      */
     public Mssql2005GenDialect() {
+        dbTypeMap.put(Types.BLOB, Mssql2005DbType.BLOB);
+        dbTypeMap.put(Types.CLOB, Mssql2005DbType.CLOB);
     }
 
+    /**
+     * MS SQL Server用の{@link DbType}の実装です。
+     * 
+     * @author taedium
+     */
+    public static class Mssql2005DbType extends StandardDbType {
+
+        private static DbType BLOB = new Mssql2005DbType("varbinary(max)");
+
+        private static DbType CLOB = new Mssql2005DbType("varchar(max)");
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected Mssql2005DbType() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param definition
+         *            定義
+         */
+        protected Mssql2005DbType(String definition) {
+            super(definition);
+        }
+    }
 }

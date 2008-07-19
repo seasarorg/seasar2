@@ -36,11 +36,11 @@ import org.seasar.extension.jdbc.gen.GenDialect;
  */
 public class StandardGenDialect implements GenDialect {
 
-    /** SQL型をキー、@{JavaType Java型}を値とするマップ */
+    /** SQL型をキー、{@link JavaType Java型}を値とするマップ */
     protected Map<Integer, JavaType> javaTypeMap = new HashMap<Integer, JavaType>();
 
-    /** SQL型をキー、@{DbType データ型}を値とするマップ */
-    protected Map<Integer, DbType> dataTypeMap = new HashMap<Integer, DbType>();
+    /** SQL型をキー、{@link DbType データ型}を値とするマップ */
+    protected Map<Integer, DbType> dbTypeMap = new HashMap<Integer, DbType>();
 
     /** SQLブロックの開始を表す単語の連なりのリスト */
     protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
@@ -80,36 +80,36 @@ public class StandardGenDialect implements GenDialect {
         javaTypeMap.put(Types.VARBINARY, StandardJavaType.VARBINARY);
         javaTypeMap.put(Types.VARCHAR, StandardJavaType.VARCHAR);
 
-        dataTypeMap.put(Types.ARRAY, StandardDbType.ARRAY);
-        dataTypeMap.put(Types.BIGINT, StandardDbType.BIGINT);
-        dataTypeMap.put(Types.BINARY, StandardDbType.BINARY);
-        dataTypeMap.put(Types.BIT, StandardDbType.BIT);
-        dataTypeMap.put(Types.BLOB, StandardDbType.BLOB);
-        dataTypeMap.put(Types.BOOLEAN, StandardDbType.BOOLEAN);
-        dataTypeMap.put(Types.CHAR, StandardDbType.CHAR);
-        dataTypeMap.put(Types.CLOB, StandardDbType.CLOB);
-        dataTypeMap.put(Types.DATALINK, StandardDbType.DATALINK);
-        dataTypeMap.put(Types.DATE, StandardDbType.DATE);
-        dataTypeMap.put(Types.DECIMAL, StandardDbType.DECIMAL);
-        dataTypeMap.put(Types.DISTINCT, StandardDbType.DISTINCT);
-        dataTypeMap.put(Types.DOUBLE, StandardDbType.DOUBLE);
-        dataTypeMap.put(Types.FLOAT, StandardDbType.FLOAT);
-        dataTypeMap.put(Types.INTEGER, StandardDbType.INTEGER);
-        dataTypeMap.put(Types.JAVA_OBJECT, StandardDbType.JAVA_OBJECT);
-        dataTypeMap.put(Types.LONGVARBINARY, StandardDbType.LONGVARBYNARY);
-        dataTypeMap.put(Types.LONGVARCHAR, StandardDbType.LONGVARCHAR);
-        dataTypeMap.put(Types.NULL, StandardDbType.NULL);
-        dataTypeMap.put(Types.NUMERIC, StandardDbType.NUMERIC);
-        dataTypeMap.put(Types.OTHER, StandardDbType.OTHER);
-        dataTypeMap.put(Types.REAL, StandardDbType.REAL);
-        dataTypeMap.put(Types.REF, StandardDbType.REF);
-        dataTypeMap.put(Types.SMALLINT, StandardDbType.SMALLINT);
-        dataTypeMap.put(Types.STRUCT, StandardDbType.STRUCT);
-        dataTypeMap.put(Types.TIME, StandardDbType.TIME);
-        dataTypeMap.put(Types.TIMESTAMP, StandardDbType.TIMESTAMP);
-        dataTypeMap.put(Types.TINYINT, StandardDbType.TINYINT);
-        dataTypeMap.put(Types.VARBINARY, StandardDbType.VARBINARY);
-        dataTypeMap.put(Types.VARCHAR, StandardDbType.VARCHAR);
+        dbTypeMap.put(Types.ARRAY, StandardDbType.ARRAY);
+        dbTypeMap.put(Types.BIGINT, StandardDbType.BIGINT);
+        dbTypeMap.put(Types.BINARY, StandardDbType.BINARY);
+        dbTypeMap.put(Types.BIT, StandardDbType.BIT);
+        dbTypeMap.put(Types.BLOB, StandardDbType.BLOB);
+        dbTypeMap.put(Types.BOOLEAN, StandardDbType.BOOLEAN);
+        dbTypeMap.put(Types.CHAR, StandardDbType.CHAR);
+        dbTypeMap.put(Types.CLOB, StandardDbType.CLOB);
+        dbTypeMap.put(Types.DATALINK, StandardDbType.DATALINK);
+        dbTypeMap.put(Types.DATE, StandardDbType.DATE);
+        dbTypeMap.put(Types.DECIMAL, StandardDbType.DECIMAL);
+        dbTypeMap.put(Types.DISTINCT, StandardDbType.DISTINCT);
+        dbTypeMap.put(Types.DOUBLE, StandardDbType.DOUBLE);
+        dbTypeMap.put(Types.FLOAT, StandardDbType.FLOAT);
+        dbTypeMap.put(Types.INTEGER, StandardDbType.INTEGER);
+        dbTypeMap.put(Types.JAVA_OBJECT, StandardDbType.JAVA_OBJECT);
+        dbTypeMap.put(Types.LONGVARBINARY, StandardDbType.LONGVARBYNARY);
+        dbTypeMap.put(Types.LONGVARCHAR, StandardDbType.LONGVARCHAR);
+        dbTypeMap.put(Types.NULL, StandardDbType.NULL);
+        dbTypeMap.put(Types.NUMERIC, StandardDbType.NUMERIC);
+        dbTypeMap.put(Types.OTHER, StandardDbType.OTHER);
+        dbTypeMap.put(Types.REAL, StandardDbType.REAL);
+        dbTypeMap.put(Types.REF, StandardDbType.REF);
+        dbTypeMap.put(Types.SMALLINT, StandardDbType.SMALLINT);
+        dbTypeMap.put(Types.STRUCT, StandardDbType.STRUCT);
+        dbTypeMap.put(Types.TIME, StandardDbType.TIME);
+        dbTypeMap.put(Types.TIMESTAMP, StandardDbType.TIMESTAMP);
+        dbTypeMap.put(Types.TINYINT, StandardDbType.TINYINT);
+        dbTypeMap.put(Types.VARBINARY, StandardDbType.VARBINARY);
+        dbTypeMap.put(Types.VARCHAR, StandardDbType.VARCHAR);
     }
 
     public boolean isUserTable(String tableName) {
@@ -148,7 +148,7 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public DbType getDbType(int sqlType) {
-        return dataTypeMap.get(sqlType);
+        return dbTypeMap.get(sqlType);
     }
 
     public GenerationType getDefaultGenerationType() {
@@ -311,13 +311,7 @@ public class StandardGenDialect implements GenDialect {
 
         private static DbType BOOLEAN = new StandardDbType("boolean");
 
-        private static DbType CHAR = new StandardDbType() {
-
-            @Override
-            public String getDefinition(int length, int precision, int scale) {
-                return format("char(%d)", length);
-            }
-        };
+        private static DbType CHAR = new StandardDbType("char(1)");
 
         private static DbType CLOB = new StandardDbType("clob");
 
@@ -365,7 +359,7 @@ public class StandardGenDialect implements GenDialect {
         private static DbType VARBINARY = new StandardDbType("varbinary") {
 
             @Override
-            public String getDefinition(int length, int presision, int scale) {
+            public String getDefinition(int length, int precision, int scale) {
                 return format("varbinary(%d)", length);
             }
         };
@@ -397,7 +391,7 @@ public class StandardGenDialect implements GenDialect {
             this.definition = definition;
         }
 
-        public String getDefinition(int length, int presision, int scale) {
+        public String getDefinition(int length, int precision, int scale) {
             if (definition == null) {
                 throw new IllegalStateException("definition");
             }

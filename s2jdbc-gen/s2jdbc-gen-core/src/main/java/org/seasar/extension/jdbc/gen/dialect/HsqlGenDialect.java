@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.sql.Types;
+
 import javax.persistence.GenerationType;
 
 /**
@@ -28,6 +30,9 @@ public class HsqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public HsqlGenDialect() {
+        dbTypeMap.put(Types.BINARY, HsqlDbType.BINARY);
+        dbTypeMap.put(Types.BLOB, HsqlDbType.BLOB);
+        dbTypeMap.put(Types.CLOB, HsqlDbType.CLOB);
     }
 
     @Override
@@ -50,5 +55,41 @@ public class HsqlGenDialect extends StandardGenDialect {
             int allocationSize) {
         return dataType + " start with " + allocationSize + " increment By "
                 + initValue;
+    }
+
+    /**
+     * HSQLDB用の{@link DbType}の実装です。
+     * 
+     * @author taedium
+     */
+    public static class HsqlDbType extends StandardDbType {
+
+        private static DbType BINARY = new HsqlDbType() {
+
+            @Override
+            public String getDefinition(int length, int precision, int scale) {
+                return format("varbinary(%d)", length);
+            }
+        };
+
+        private static DbType BLOB = new HsqlDbType("longvarbinary");
+
+        private static DbType CLOB = new HsqlDbType("longvarchar");
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected HsqlDbType() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param definition
+         *            定義
+         */
+        protected HsqlDbType(String definition) {
+            super(definition);
+        }
     }
 }

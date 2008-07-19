@@ -37,7 +37,7 @@ public class StandardGenDialectTest {
     @Test
     public void testDbType_char() throws Exception {
         DbType dbType = dialect.getDbType(Types.CHAR);
-        assertEquals("char(10)", dbType.getDefinition(10, 0, 0));
+        assertEquals("char(1)", dbType.getDefinition(10, 0, 0));
     }
 
     /**
