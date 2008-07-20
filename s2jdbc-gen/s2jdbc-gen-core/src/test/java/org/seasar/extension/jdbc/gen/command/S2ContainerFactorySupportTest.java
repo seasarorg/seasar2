@@ -45,7 +45,7 @@ public class S2ContainerFactorySupportTest {
     @Test
     public void testInitAndDestroy() throws Exception {
         SingletonS2ContainerFactorySupport support = new SingletonS2ContainerFactorySupport(
-                "s2jdbc-gen-core-test.dicon");
+                "s2jdbc-gen-core-test.dicon", "ut");
         support.init();
         assertTrue(SingletonS2ContainerFactory.hasContainer());
         support.destory();
@@ -61,7 +61,7 @@ public class S2ContainerFactorySupportTest {
         S2Container container = new S2ContainerImpl();
         SingletonS2ContainerFactory.setContainer(container);
         SingletonS2ContainerFactorySupport support = new SingletonS2ContainerFactorySupport(
-                "s2jdbc-gen-core-test.dicon");
+                "s2jdbc-gen-core-test.dicon", "ut");
         support.init();
         assertSame(container, SingletonS2ContainerFactory.getContainer());
         support.destory();

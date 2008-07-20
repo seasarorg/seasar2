@@ -30,7 +30,7 @@ import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
 
 /**
- * バージョン番号を保持するテキストファイルとバージョン番号を更新するDMLを持つSQLファイルを生成する{@link Command}の実装です。
+ * バージョン番号を保持するテキストファイルとバージョン番号を更新するDMLファイルを生成する{@link Command}の実装です。
  * <p>
  * このコマンドは、バージョン番号を保持したテキストファイルから値を読み、それをインクリメントします。
  * また、新しいバージョン番号でデータベースのバージョン管理の用のテーブルを更新するUPDATE文を持つSQLファイルを生成します。
@@ -51,11 +51,11 @@ public class GenerateVersionCommand extends AbstractCommand {
     /** スキーマのバージョンを保持するテーブル名 */
     protected String schemaInfoTableName = "SCHEMA_INFO";
 
-    /** SQLファイルの出力先ディレクトリ */
-    protected File sqlFileDestDir = new File("db", "dml");
+    /** DMLファイルの出力先ディレクトリ */
+    protected File dmlFileDestDir = new File("db/dml");
 
-    /** SQLファイルのエンコーディング */
-    protected String sqlFileEncoding = "UTF-8";
+    /** DMLファイルのエンコーディング */
+    protected String dmlFileEncoding = "UTF-8";
 
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
@@ -75,8 +75,8 @@ public class GenerateVersionCommand extends AbstractCommand {
     /** バージョンのテンプレートファイル名 */
     protected String versionTemplateFileName = "txt/version.ftl";
 
-    /** バージョンを更新するDMLのSQLファイル名 */
-    protected String updateVersionSqlFileName = "update-version.sql";
+    /** バージョンを更新するDMLファイル名 */
+    protected String updateVersionDmlFileName = "update-version.sql";
 
     /** バージョンを更新するDMLのテンプレートファイル名 */
     protected String updateVersionTemplateFileName = "sql/update-version.ftl";
@@ -129,41 +129,41 @@ public class GenerateVersionCommand extends AbstractCommand {
     }
 
     /**
-     * SQLファイルの出力先ディレクトリを返します。
+     * DMLファイルの出力先ディレクトリを返します。
      * 
-     * @return SQLファイルの出力先ディレクトリ
+     * @return DMLファイルの出力先ディレクトリ
      */
-    public File getSqlFileDestDir() {
-        return sqlFileDestDir;
+    public File getDmlFileDestDir() {
+        return dmlFileDestDir;
     }
 
     /**
-     * SQLファイルの出力先ディレクトリを設定します。
+     * DMLファイルの出力先ディレクトリを設定します。
      * 
-     * @param sqlFileDestDir
-     *            SQLファイルの出力先ディレクトリ
+     * @param dmlFileDestDir
+     *            DMLファイルの出力先ディレクトリ
      */
-    public void setSqlFileDestDir(File sqlFileDestDir) {
-        this.sqlFileDestDir = sqlFileDestDir;
+    public void setDmlFileDestDir(File dmlFileDestDir) {
+        this.dmlFileDestDir = dmlFileDestDir;
     }
 
     /**
-     * SQLファイルの出力先ディレクトリを返します。
+     * DMLファイルの出力先ディレクトリを返します。
      * 
-     * @return SQLファイルの出力先ディレクトリ
+     * @return DMLファイルの出力先ディレクトリ
      */
-    public String getSqlFileEncoding() {
-        return sqlFileEncoding;
+    public String getDmlFileEncoding() {
+        return dmlFileEncoding;
     }
 
     /**
      * SQLファイルのエンコーディングを設定します。
      * 
-     * @param sqlFileEncoding
+     * @param dmlFileEncoding
      *            SQLファイルのエンコーディング
      */
-    public void setSqlFileEncoding(String sqlFileEncoding) {
-        this.sqlFileEncoding = sqlFileEncoding;
+    public void setDmlFileEncoding(String dmlFileEncoding) {
+        this.dmlFileEncoding = dmlFileEncoding;
     }
 
     /**
@@ -205,19 +205,19 @@ public class GenerateVersionCommand extends AbstractCommand {
     }
 
     /**
-     * テンプレートファイルの格納ディレクトリを返します。
+     * テンプレートファイルを格納するプライマリディレクトリを返します。
      * 
-     * @return テンプレートファイルの格納ディレクトリ
+     * @return テンプレートファイルを格納するプライマリディレクトリ
      */
     public File getTemplateFilePrimaryDir() {
         return templateFilePrimaryDir;
     }
 
     /**
-     * テンプレートファイルの格納ディレクトリを設定します。
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
      * 
      * @param templateFilePrimaryDir
-     *            テンプレートファイルの格納ディレクトリ
+     *            テンプレートファイルを格納するプライマリディレクトリ
      */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
@@ -283,20 +283,20 @@ public class GenerateVersionCommand extends AbstractCommand {
     /**
      * バージョンを更新するDMLのSQLファイル名を返します。
      * 
-     * @return バージョンを更新するDMLのSQLファイル名
+     * @return バージョンを更新するDMLファイル名
      */
-    public String getUpdateVersionSqlFileName() {
-        return updateVersionSqlFileName;
+    public String getUpdateVersionDmlFileName() {
+        return updateVersionDmlFileName;
     }
 
     /**
-     * バージョンを更新するDMLのSQLファイル名を設定します。
+     * バージョンを更新するDMLファイル名を設定します。
      * 
-     * @param updateVersionSqlFileName
+     * @param updateVersionDmlFileName
      *            バージョンを更新するDMLのSQLファイル名
      */
-    public void setUpdateVersionSqlFileName(String updateVersionSqlFileName) {
-        this.updateVersionSqlFileName = updateVersionSqlFileName;
+    public void setUpdateVersionDmlFileName(String updateVersionDmlFileName) {
+        this.updateVersionDmlFileName = updateVersionDmlFileName;
     }
 
     /**
@@ -335,7 +335,7 @@ public class GenerateVersionCommand extends AbstractCommand {
         generateUpdateVersionSql(nextVersion);
         generateVersion(nextVersion);
         logger.log("DS2JDBCGen0004", new Object[] { currentVersion,
-                nextVersion, updateVersionSqlFileName });
+                nextVersion, updateVersionDmlFileName });
     }
 
     @Override
@@ -372,9 +372,9 @@ public class GenerateVersionCommand extends AbstractCommand {
         model.put("schemaInfoColumnName", schemaInfoColumnName);
         model.put("delimiter", statementDelimiter);
         GenerationContext context = new GenerationContextImpl(model,
-                sqlFileDestDir, new File(sqlFileDestDir,
-                        updateVersionSqlFileName),
-                updateVersionTemplateFileName, sqlFileEncoding, true);
+                dmlFileDestDir, new File(dmlFileDestDir,
+                        updateVersionDmlFileName),
+                updateVersionTemplateFileName, dmlFileEncoding, true);
         generator.generate(context);
     }
 
@@ -388,7 +388,7 @@ public class GenerateVersionCommand extends AbstractCommand {
         Map<String, Integer> model = new HashMap<String, Integer>();
         model.put("version", version);
         GenerationContext context = new GenerationContextImpl(model,
-                sqlFileDestDir, new File(versionFileDestDir, versionFileName),
+                dmlFileDestDir, new File(versionFileDestDir, versionFileName),
                 versionTemplateFileName, "UTF-8", true);
         generator.generate(context);
     }

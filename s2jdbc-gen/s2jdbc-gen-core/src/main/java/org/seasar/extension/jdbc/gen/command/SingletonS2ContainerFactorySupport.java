@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import org.seasar.extension.jdbc.gen.util.EnvUtil;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
@@ -27,6 +28,12 @@ public class SingletonS2ContainerFactorySupport {
     /** 設定ファイルのパス */
     protected String configPath;
 
+    /** 環境名 */
+    protected String env;
+
+    /** 元の環境名 */
+    protected String originalEnv;
+
     /** 初期化された場合{@code true} */
     protected boolean initialized;
 
@@ -35,9 +42,12 @@ public class SingletonS2ContainerFactorySupport {
      * 
      * @param configPath
      *            設定ファイルのパス
+     * @param env
+     *            環境名
      */
-    public SingletonS2ContainerFactorySupport(String configPath) {
+    public SingletonS2ContainerFactorySupport(String configPath, String env) {
         this.configPath = configPath;
+        this.env = env;
     }
 
     /**
@@ -46,6 +56,8 @@ public class SingletonS2ContainerFactorySupport {
     public void init() {
         if (!SingletonS2ContainerFactory.hasContainer()) {
             initialized = true;
+            originalEnv = EnvUtil.getValue();
+            EnvUtil.setValue(env);
             SingletonS2ContainerFactory.setConfigPath(configPath);
             SingletonS2ContainerFactory.init();
         }
@@ -57,6 +69,7 @@ public class SingletonS2ContainerFactorySupport {
     protected void destory() {
         if (initialized) {
             SingletonS2ContainerFactory.destroy();
+            EnvUtil.setValue(originalEnv);
         }
     }
 }

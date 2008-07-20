@@ -17,20 +17,38 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileList;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand;
 
 /**
- * @author taedium
+ * SQLを実行する{@link Task}です。
  * 
+ * @author taedium
+ * @see ExecuteSqlCommand
  */
 public class ExecuteSqlTask extends AbstractTask {
 
+    /** コマンド */
     protected ExecuteSqlCommand command = new ExecuteSqlCommand();
 
+    /**
+     * インスタンスを構築します。
+     */
+    public ExecuteSqlTask() {
+    }
+
+    /** SQLファイルのリスト */
     protected FileList sqlFileList;
 
+    /**
+     * すでに値が設定された{@link FileList}を追加します。
+     * 
+     * @param sqlFileList
+     *            すでに値が設定された{@link FileList}
+     */
     public void addConfiguredSqlFileList(FileList sqlFileList) {
         File dir = sqlFileList.getDir(getProject());
         for (String fileName : sqlFileList.getFiles(getProject())) {
@@ -40,59 +58,83 @@ public class ExecuteSqlTask extends AbstractTask {
     }
 
     /**
+     * SQLブロックの区切り文字を設定します。
+     * 
      * @param blockDelimiter
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setBlockDelimiter(java.lang.String)
+     *            SQLブロックの区切り文字
      */
     public void setBlockDelimiter(String blockDelimiter) {
         command.setBlockDelimiter(blockDelimiter);
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setConfigPath(java.lang.String)
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }
 
     /**
+     * SQLステートメントの区切り文字を設定します。
+     * 
      * @param statementDelimiter
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setDelimiter(char)
+     *            SQLステートメントの区切り文字
      */
     public void setStatementDelimiter(char statementDelimiter) {
         command.setStatementDelimiter(statementDelimiter);
     }
 
     /**
+     * エラー発生時に処理を中止する場合{@code true}を設定します。
+     * 
      * @param haltOnError
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setHaltOnError(boolean)
+     *            エラー発生時に処理を中止する場合{@code true}
      */
     public void setHaltOnError(boolean haltOnError) {
         command.setHaltOnError(haltOnError);
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setJdbcManagerName(java.lang.String)
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**
+     * SQLファイルのエンコーディングを設定します。
+     * 
      * @param sqlFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setSqlFileEncoding(java.lang.String)
+     *            SQLファイルのエンコーディング
      */
     public void setSqlFileEncoding(String sqlFileEncoding) {
         command.setSqlFileEncoding(sqlFileEncoding);
     }
 
     /**
+     * すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
      * @param transactional
-     * @see org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand#setTransactional(boolean)
+     *            すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false}
      */
     public void setTransactional(boolean transactional) {
         command.setTransactional(transactional);
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        command.setEnv(env);
     }
 
     @Override

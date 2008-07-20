@@ -17,111 +17,149 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateTestCommand;
 
 /**
- * @author taedium
+ * テストクラスのJavaファイルを生成する{@link Task}です。
  * 
+ * @author taedium
+ * @see GenerateTestCommand
  */
 public class GenerateTestTask extends AbstractTask {
 
+    /** コマンド */
     protected GenerateTestCommand command = new GenerateTestCommand();
 
     /**
+     * クラスパスのルートとなるディレクトリを設定します。
+     * 
      * @param classpathRootDir
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setClasspathRootDir(java.io.File)
+     *            クラスパスのルートとなるディレクトリ
      */
     public void setClasspathRootDir(File classpathRootDir) {
         command.setClasspathRootDir(classpathRootDir);
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setConfigPath(java.lang.String)
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }
 
     /**
+     * エンティティのパッケージ名を設定します。
+     * 
      * @param entityPackageName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setEntityPackageName(java.lang.String)
+     *            エンティティのパッケージ名
      */
     public void setEntityPackageName(String entityPackageName) {
         command.setEntityPackageName(entityPackageName);
     }
 
     /**
+     * テストクラス名のサフィックスを設定します。
+     * 
      * @param testClassNameSuffix
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setTestClassNameSuffix(java.lang.String)
+     *            テストクラス名のサフィックス
      */
     public void setTestClassNameSuffix(String testClassNameSuffix) {
         command.setTestClassNameSuffix(testClassNameSuffix);
     }
 
     /**
-     * @param testTemplateFileName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setTestTemplateFileName(java.lang.String)
+     * テストクラスのテンプレート名を設定します。
+     * 
+     * @param templateFileName
+     *            テストクラスのテンプレート名
      */
-    public void setTestTemplateFileName(String testTemplateFileName) {
-        command.setTestTemplateFileName(testTemplateFileName);
+    public void setTemplateFileName(String templateFileName) {
+        command.setTemplateFileName(templateFileName);
     }
 
     /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
      * @param javaFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setJavaFileEncoding(java.lang.String)
+     *            Javaファイルのエンコーディング
      */
     public void setJavaFileEncoding(String javaFileEncoding) {
         command.setJavaFileEncoding(javaFileEncoding);
     }
 
     /**
-     * @param testJavaFileDestDir
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setTestJavaFileDestDir(java.io.File)
+     * 生成するJavaファイルの出力先ディレクトリを設定します。
+     * 
+     * @param javaFileDestDir
+     *            生成するJavaファイルの出力先ディレクトリ
      */
-    public void setTestJavaFileDestDir(File testJavaFileDestDir) {
-        command.setTestJavaFileDestDir(testJavaFileDestDir);
+    public void setJavaFileDestDir(File javaFileDestDir) {
+        command.setJavaFileDestDir(javaFileDestDir);
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setJdbcManagerName(java.lang.String)
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**
+     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param overwrite
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setOverwrite(boolean)
+     *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         command.setOverwrite(overwrite);
     }
 
     /**
+     * ルートパッケージ名を返します。
+     * 
      * @param rootPackageName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setRootPackageName(java.lang.String)
+     *            ルートパッケージ名
      */
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
 
     /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
      * @param templateFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setTemplateFileEncoding(java.lang.String)
+     *            テンプレートファイルのエンコーディング
      */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
     /**
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
+     * 
      * @param templateFilePrimaryDir
-     * @see org.seasar.extension.jdbc.gen.command.GenerateTestCommand#setTemplateFilePrimaryDir(java.io.File)
+     *            テンプレートファイルを格納するプライマリディレクトリ
      */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        command.setEnv(env);
     }
 
     @Override

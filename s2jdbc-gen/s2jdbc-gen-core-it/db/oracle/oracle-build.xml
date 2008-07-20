@@ -29,6 +29,7 @@
 			classpathRef="classpath"
 		/>
 		<javac 
+			
 			srcdir="temp/src"
 			destdir="temp/build"
 			classpathref="classpath"
@@ -39,7 +40,7 @@
 		<gen-ddl 
 			classpathRootDir="temp/build"
 			rootpackagename="example"
-			sqlfiledestdir="temp/ddl"
+			ddlfiledestdir="temp/ddl"
 			overwrite="true"
 			classpathref="classpath"
 		/>
@@ -74,7 +75,7 @@
 		<gen-test
 			classpathrootdir="temp/build"
 			rootpackagename="example"
-			testjavafiledestdir="temp/src"
+			javafiledestdir="temp/src"
 			overwrite="true"
 			classpathRef="classpath"
 		/>
@@ -89,19 +90,19 @@
 		<gen-condition
 			classpathrootdir="temp/build"
 			rootpackagename="example"
-			javafiledir="temp/src"
+			javafiledestdir="temp/src"
 			overwrite="true"
 			classpathRef="classpath"
 		/>
 		<gen-ddl 
 			classpathRootDir="temp/build"
 			rootpackagename="example"
-			sqlfiledestdir="temp/ddl"
+			ddlfiledestdir="temp/ddl"
 			overwrite="true"
 			classpathref="classpath"
 		/>
 		<gen-version 
-			sqlfiledestdir="temp/dml"
+			dmlfiledestdir="temp/dml"
 			versionfiledestdir="."
 			classpathref="classpath"
 		/>

@@ -17,74 +17,166 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateConditionCommand;
 
 /**
+ * 条件クラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
+ * @see GenerateConditionCommand
  */
 public class GenerateConditionTask extends AbstractTask {
 
+    /** コマンド */
     protected GenerateConditionCommand command = new GenerateConditionCommand();
 
+    /**
+     * インスタンスを構築します。
+     */
     public GenerateConditionTask() {
     }
 
+    /**
+     * クラスパスのルートとなるディレクトリを設定します。
+     * 
+     * @param classpathRootDir
+     *            クラスパスのルートとなるディレクトリ
+     */
     public void setClasspathRootDir(File classpathRootDir) {
         command.setClasspathRootDir(classpathRootDir);
     }
 
+    /**
+     * 条件クラス名のサフィックスを設定します。
+     * 
+     * @param conditionClassNameSuffix
+     *            条件クラス名のサフィックス
+     */
     public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
         command.setConditionClassNameSuffix(conditionClassNameSuffix);
     }
 
+    /**
+     * 条件クラスのパッケージ名を設定します。
+     * 
+     * @param conditionPackageName
+     *            条件クラスのパッケージ名
+     */
     public void setConditionPackageName(String conditionPackageName) {
         command.setConditionPackageName(conditionPackageName);
     }
 
+    /**
+     * 条件クラスのテンプレート名を設定します。
+     * 
+     * @param conditionTemplateFileName
+     *            条件クラスのテンプレート名
+     */
     public void setConditionTemplateFileName(String conditionTemplateFileName) {
         command.setConditionTemplateFileName(conditionTemplateFileName);
     }
 
+    /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }
+
+    /**
+     * エンティティクラスのパッケージ名を設定します。
+     * 
+     * @param entityPackageName
+     *            エンティティクラスのパッケージ名
+     */
 
     public void setEntityPackageName(String entityPackageName) {
         command.setEntityPackageName(entityPackageName);
     }
 
-    public void setJavaFileDir(File javaFileDestDir) {
+    /**
+     * 生成するJavaファイルの出力先ディレクトリを設定します。
+     * 
+     * @param javaFileDestDir
+     *            生成するJavaファイルの出力先ディレクトリ
+     */
+    public void setJavaFileDestDir(File javaFileDestDir) {
         command.setJavaFileDestDir(javaFileDestDir);
     }
 
+    /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
+     * @param javaFileEncoding
+     *            Javaファイルのエンコーディング
+     */
     public void setJavaFileEncoding(String javaFileEncoding) {
         command.setJavaFileEncoding(javaFileEncoding);
     }
 
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
     public void setJdbcManagerName(String jdbcManagerName) {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**
+     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param overwrite
-     * @see org.seasar.extension.jdbc.gen.command.GenerateConditionCommand#setOverwrite(boolean)
+     *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         command.setOverwrite(overwrite);
     }
 
+    /**
+     * ルートパッケージ名を設定します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
+     * @param templateFileEncoding
+     *            テンプレートファイルのエンコーディング
+     */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
+    /**
+     * テンプレートファイルを格納したプライマリディレクトリを設定します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルを格納したプライマリディレクトリ
+     */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        command.setEnv(env);
     }
 
     @Override

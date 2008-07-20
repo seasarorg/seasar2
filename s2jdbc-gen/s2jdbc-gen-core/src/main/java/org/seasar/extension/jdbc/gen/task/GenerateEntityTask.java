@@ -17,15 +17,19 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateEntityCommand;
 
 /**
+ * エンティティクラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
+ * @see GenerateEntityCommand
  */
 public class GenerateEntityTask extends AbstractTask {
 
+    /** コマンド */
     protected GenerateEntityCommand command = new GenerateEntityCommand();
 
     /**
@@ -34,26 +38,62 @@ public class GenerateEntityTask extends AbstractTask {
     public GenerateEntityTask() {
     }
 
+    /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }
 
+    /**
+     * エンティティクラスのパッケージ名を設定します。
+     * 
+     * @param entityPackageName
+     *            エンティティクラスのパッケージ名
+     */
     public void setEntityPackageName(String entityPackageName) {
         command.setEntityPackageName(entityPackageName);
     }
 
+    /**
+     * エンティティクラスのテンプレート名を設定します。
+     * 
+     * @param entityTemplateFileName
+     *            エンティティクラスのテンプレート名
+     */
     public void setEntityTemplateFileName(String entityTemplateFileName) {
         command.setEntityTemplateFileName(entityTemplateFileName);
     }
 
+    /**
+     * 生成するJavaファイルの出力先ディレクトリを設定します。
+     * 
+     * @param javaFileDestDir
+     *            生成するJavaファイルの出力先ディレクトリ
+     */
     public void setJavaFileDestDir(File javaFileDestDir) {
         command.setJavaFileDestDir(javaFileDestDir);
     }
 
+    /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
+     * @param javaFileEncoding
+     *            Javaファイルのエンコーディング
+     */
     public void setJavaFileEncoding(String javaFileEncoding) {
         command.setJavaFileEncoding(javaFileEncoding);
     }
 
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
     public void setJdbcManagerName(String jdbcManagerName) {
         command.setJdbcManagerName(jdbcManagerName);
     }
@@ -66,28 +106,73 @@ public class GenerateEntityTask extends AbstractTask {
         command.setOverwrite(overwrite);
     }
 
+    /**
+     * ルートパッケージ名を設定します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ名
+     */
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
 
+    /**
+     * スキーマ名を設定します。
+     * 
+     * @param schemaName
+     *            スキーマ名
+     */
     public void setSchemaName(String schemaName) {
         command.setSchemaName(schemaName);
     }
 
+    /**
+     * Javaコード生成の対象とするテーブル名の正規表現を設定します。
+     * 
+     * @param tableNamePattern
+     *            Javaコード生成の対象とするテーブル名の正規表現
+     */
     public void setTableNamePattern(String tableNamePattern) {
         command.setTableNamePattern(tableNamePattern);
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
+     * @param templateFileEncoding
+     *            テンプレートファイルのエンコーディング
+     */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
+    /**
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルを格納するプライマリディレクトリ
+     */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 
+    /**
+     * バージョンカラムの名前を設定します。
+     * 
+     * @param versionColumnName
+     *            バージョンカラムの名前
+     */
     public void setVersionColumnName(String versionColumnName) {
         command.setVersionColumnName(versionColumnName);
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     */
+    public void setEnv(String env) {
+        command.setEnv(env);
     }
 
     @Override

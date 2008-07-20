@@ -22,6 +22,7 @@ import org.apache.tools.ant.types.Reference;
 import org.seasar.extension.jdbc.gen.Command;
 
 /**
+ * {@link Task}の抽象クラスです。
  * 
  * @author taedium
  */
@@ -74,5 +75,10 @@ public abstract class AbstractTask extends Task {
         executor.execute(getCommand());
     }
 
+    /**
+     * コマンドを返します。
+     * 
+     * @return コマンド
+     */
     protected abstract Command getCommand();
 }

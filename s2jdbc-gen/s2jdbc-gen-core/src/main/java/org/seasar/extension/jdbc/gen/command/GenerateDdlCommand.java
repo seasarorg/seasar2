@@ -88,44 +88,47 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
 
-    /** 制約を作成するDDLのSQLファイル名 */
-    protected String createConstraintSqlFileName = "create-constraint.sql";
+    /** 制約を作成するDDLファイル名 */
+    protected String createConstraintDdlFileName = "create-constraint.sql";
 
     /** 制約を作成するDDLのテンプレートファイル名 */
     protected String createConstraintTemplateFileName = "sql/create-constraint.ftl";
 
-    /** テーブルを作成するDDLのSQLファイル名 */
-    protected String createTableSqlFileName = "create-table.sql";
+    /** テーブルを作成するDDLファイル名 */
+    protected String createTableDdlFileName = "create-table.sql";
 
     /** テーブルを作成するDDLのテンプレートファイル名 */
     protected String createTableTemplateFileName = "sql/create-table.ftl";
 
-    /** シーケンスを生成するDDLのSQLファイル */
-    protected String createSequenceSqlFileName = "create-sequence.sql";
+    /** シーケンスを生成するDDLファイル */
+    protected String createSequenceDdlFileName = "create-sequence.sql";
 
     /** シーケンスを生成するDDLのテンプレートファイル */
     protected String createSequenceTemplateFileName = "sql/create-sequence.ftl";
 
-    /** 制約を削除するDDLのSQLファイル名 */
-    protected String dropConstraintSqlFileName = "drop-constraint.sql";
+    /** 制約を削除するDDLファイル名 */
+    protected String dropConstraintDdlFileName = "drop-constraint.sql";
 
     /** 制約を削除するDDLのテンプレートファイル名 */
     protected String dropConstraintTemplateFileName = "sql/drop-constraint.ftl";
 
-    /** テーブルを削除するDDLのSQLファイル名 */
-    protected String dropTableSqlFileName = "drop-table.sql";
+    /** テーブルを削除するDDLファイル名 */
+    protected String dropTableDdlFileName = "drop-table.sql";
 
     /** テーブルを削除するDDLのテンプレートファイル名 */
     protected String dropTableTemplateFileName = "sql/drop-table.ftl";
 
-    /** シーケンスを削除するDDLのSQLファイル名 */
-    protected String dropSequenceSqlFileName = "drop-sequence.sql";
+    /** シーケンスを削除するDDLファイル名 */
+    protected String dropSequenceDdlFileName = "drop-sequence.sql";
 
     /** シーケンスを削除するDDLのテンプレートファイル名 */
     protected String dropSequenceTemplateFileName = "sql/drop-sequence.ftl";
 
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
+
+    /** 環境名 */
+    protected String env = "ut";
 
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
@@ -136,11 +139,11 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
-    /** SQLファイルの出力先ディレクトリ */
-    protected File sqlFileDestDir = new File("db", "ddl");
+    /** DDLファイルの出力先ディレクトリ */
+    protected File ddlFileDestDir = new File("db/ddl");
 
-    /** SQLファイルのエンコーディング */
-    protected String sqlFileEncoding = "UTF-8";
+    /** DDLファイルのエンコーディング */
+    protected String ddlFileEncoding = "UTF-8";
 
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
@@ -237,42 +240,42 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 制約を作成するDDLのSQLファイル名を返します。
+     * 制約を作成するDDLファイル名を返します。
      * 
-     * @return 制約を作成するDDLのSQLファイル名
+     * @return 制約を作成するDDLファイル名
      */
-    public String getCreateConstraintSqlFileName() {
-        return createConstraintSqlFileName;
+    public String getCreateConstraintDdlFileName() {
+        return createConstraintDdlFileName;
     }
 
     /**
-     * 制約を作成するDDLのSQLファイル名を設定します。
+     * 制約を作成するDDLファイル名を設定します。
      * 
-     * @param createConstraintSqlFileName
-     *            制約を作成するDDLのSQLファイル名
+     * @param createConstraintDdlFileName
+     *            制約を作成するDDLファイル名
      */
-    public void setCreateConstraintSqlFileName(
-            String createConstraintSqlFileName) {
-        this.createConstraintSqlFileName = createConstraintSqlFileName;
+    public void setCreateConstraintDdlFileName(
+            String createConstraintDdlFileName) {
+        this.createConstraintDdlFileName = createConstraintDdlFileName;
     }
 
     /**
-     * テーブルを作成するDDLのSQLファイル名を返します。
+     * テーブルを作成するDDLファイル名を返します。
      * 
-     * @return テーブルを作成するDDLのSQLファイル名
+     * @return テーブルを作成するDDLファイル名
      */
-    public String getCreateTableSqlFileName() {
-        return createTableSqlFileName;
+    public String getCreateTableDdlFileName() {
+        return createTableDdlFileName;
     }
 
     /**
-     * テーブルを作成するDDLのSQLファイル名を設定します。
+     * テーブルを作成するDDLファイル名を設定します。
      * 
-     * @param createTableSqlFileName
-     *            テーブルを作成するDDLのSQLファイル名
+     * @param createTableDdlFileName
+     *            テーブルを作成するDDLファイル名
      */
-    public void setCreateTableSqlFileName(String createTableSqlFileName) {
-        this.createTableSqlFileName = createTableSqlFileName;
+    public void setCreateTableDdlFileName(String createTableDdlFileName) {
+        this.createTableDdlFileName = createTableDdlFileName;
     }
 
     /**
@@ -296,22 +299,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * シーケンスを作成するDDLのSQLファイル名を返します。
+     * シーケンスを作成するDDLファイル名を返します。
      * 
      * @return シーケンスを作成するDDLのSQLレートファイル名
      */
-    public String getCreateSequenceSqlFileName() {
-        return createSequenceSqlFileName;
+    public String getCreateSequenceDdlFileName() {
+        return createSequenceDdlFileName;
     }
 
     /**
-     * シーケンスを作成するDDLのSQLファイル名を設定します。
+     * シーケンスを作成するDDLファイル名を設定します。
      * 
-     * @param createSequenceSqlFileName
+     * @param createSequenceDdlFileName
      *            シーケンスを作成するDDLのSQLレートファイル名
      */
-    public void setCreateSequenceSqlFileName(String createSequenceSqlFileName) {
-        this.createSequenceSqlFileName = createSequenceSqlFileName;
+    public void setCreateSequenceDdlFileName(String createSequenceDdlFileName) {
+        this.createSequenceDdlFileName = createSequenceDdlFileName;
     }
 
     /**
@@ -335,22 +338,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 制約を削除するDDLのSQLファイル名を返します。
+     * 制約を削除するDDLファイル名を返します。
      * 
-     * @return 制約を削除するDDLのSQLファイル名
+     * @return 制約を削除するDDLファイル名
      */
-    public String getDropConstraintSqlFileName() {
-        return dropConstraintSqlFileName;
+    public String getDropConstraintDdlFileName() {
+        return dropConstraintDdlFileName;
     }
 
     /**
-     * 制約を削除するDDLのSQLファイル名を設定します。
+     * 制約を削除するDDLファイル名を設定します。
      * 
-     * @param dropConstraintSqlFileName
-     *            制約を削除するDDLのSQLファイル名
+     * @param dropConstraintDdlFileName
+     *            制約を削除するDDLファイル名
      */
-    public void setDropConstraintSqlFileName(String dropConstraintSqlFileName) {
-        this.dropConstraintSqlFileName = dropConstraintSqlFileName;
+    public void setDropConstraintDdlFileName(String dropConstraintDdlFileName) {
+        this.dropConstraintDdlFileName = dropConstraintDdlFileName;
     }
 
     /**
@@ -374,22 +377,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * テーブルを削除するDDLのSQLファイル名を返します。
+     * テーブルを削除するDDLファイル名を返します。
      * 
-     * @return テーブルを削除するDDLのSQLファイル名
+     * @return テーブルを削除するDDLファイル名
      */
-    public String getDropTableSqlFileName() {
-        return dropTableSqlFileName;
+    public String getDropTableDdlFileName() {
+        return dropTableDdlFileName;
     }
 
     /**
-     * テーブルを削除するDDLのSQLファイル名を設定します。
+     * テーブルを削除するDDLファイル名を設定します。
      * 
-     * @param dropTableSqlFileName
-     *            テーブルを削除するDDLのSQLファイル名
+     * @param dropTableDdlFileName
+     *            テーブルを削除するDDLファイル名
      */
-    public void setDropTableSqlFileName(String dropTableSqlFileName) {
-        this.dropTableSqlFileName = dropTableSqlFileName;
+    public void setDropTableDdlFileName(String dropTableDdlFileName) {
+        this.dropTableDdlFileName = dropTableDdlFileName;
     }
 
     /**
@@ -412,22 +415,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * シーケンスを削除するDDLのSQLファイル名を返します。
+     * シーケンスを削除するDDLファイル名を返します。
      * 
-     * @return シーケンスを削除するDDLのSQLファイル名
+     * @return シーケンスを削除するDDLファイル名
      */
-    public String getDropSequenceSqlFileName() {
-        return dropSequenceSqlFileName;
+    public String getDropSequenceDdlFileName() {
+        return dropSequenceDdlFileName;
     }
 
     /**
-     * シーケンスを削除するDDLのSQLファイル名を設定します。
+     * シーケンスを削除するDDLファイル名を設定します。
      * 
-     * @param dropSequenceSqlFileName
-     *            シーケンスを削除するDDLのSQLファイル名
+     * @param dropSequenceDdlFileName
+     *            シーケンスを削除するDDLファイル名
      */
-    public void setDropSequenceSqlFileName(String dropSequenceSqlFileName) {
-        this.dropSequenceSqlFileName = dropSequenceSqlFileName;
+    public void setDropSequenceDdlFileName(String dropSequenceDdlFileName) {
+        this.dropSequenceDdlFileName = dropSequenceDdlFileName;
     }
 
     /**
@@ -467,6 +470,25 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     public void setEntityPackageName(String entityPackageName) {
         this.entityPackageName = entityPackageName;
+    }
+
+    /**
+     * 環境名を返します。
+     * 
+     * @return 環境名
+     */
+    public String getEnv() {
+        return env;
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        this.env = env;
     }
 
     /**
@@ -546,41 +568,41 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * SQLファイルの出力先ディレクトリを返します。
+     * DDLファイルの出力先ディレクトリを返します。
      * 
-     * @return SQLファイルの出力先ディレクトリ
+     * @return DDLファイルの出力先ディレクトリ
      */
-    public File getSqlFileDestDir() {
-        return sqlFileDestDir;
+    public File getDdlFileDestDir() {
+        return ddlFileDestDir;
     }
 
     /**
-     * SQLファイルの出力先ディレクトリを設定します。
+     * DDLファイルの出力先ディレクトリを設定します。
      * 
-     * @param sqlFileDestDir
-     *            SQLファイルの出力先ディレクトリ
+     * @param ddlFileDestDir
+     *            DDLファイルの出力先ディレクトリ
      */
-    public void setSqlFileDestDir(File sqlFileDestDir) {
-        this.sqlFileDestDir = sqlFileDestDir;
+    public void setDdlFileDestDir(File ddlFileDestDir) {
+        this.ddlFileDestDir = ddlFileDestDir;
     }
 
     /**
-     * SQLファイルのエンコーディングを返します。
+     * DDLファイルのエンコーディングを返します。
      * 
-     * @return SQLファイルのエンコーディング
+     * @return DDLファイルのエンコーディング
      */
-    public String getSqlFileEncoding() {
-        return sqlFileEncoding;
+    public String getDdlFileEncoding() {
+        return ddlFileEncoding;
     }
 
     /**
-     * SQLファイルのエンコーディングを設定します。
+     * DDLファイルのエンコーディングを設定します。
      * 
-     * @param sqlFileEncoding
-     *            SQLファイルのエンコーディング
+     * @param ddlFileEncoding
+     *            DDLファイルのエンコーディング
      */
-    public void setSqlFileEncoding(String sqlFileEncoding) {
-        this.sqlFileEncoding = sqlFileEncoding;
+    public void setDdlFileEncoding(String ddlFileEncoding) {
+        this.ddlFileEncoding = ddlFileEncoding;
     }
 
     /**
@@ -631,7 +653,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath);
+                configPath, env);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
@@ -732,9 +754,9 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected void generateTable(DbModel model) {
         GenerationContext createTableCtx = createGenerationContext(model,
-                createTableSqlFileName, createTableTemplateFileName);
+                createTableDdlFileName, createTableTemplateFileName);
         GenerationContext dropTableCtx = createGenerationContext(model,
-                dropTableSqlFileName, dropTableTemplateFileName);
+                dropTableDdlFileName, dropTableTemplateFileName);
         generator.generate(createTableCtx);
         generator.generate(dropTableCtx);
     }
@@ -747,9 +769,9 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected void generateConstraint(DbModel model) {
         GenerationContext createConstraintCtx = createGenerationContext(model,
-                createConstraintSqlFileName, createConstraintTemplateFileName);
+                createConstraintDdlFileName, createConstraintTemplateFileName);
         GenerationContext dropConstraintCtx = createGenerationContext(model,
-                dropConstraintSqlFileName, dropConstraintTemplateFileName);
+                dropConstraintDdlFileName, dropConstraintTemplateFileName);
         generator.generate(createConstraintCtx);
         generator.generate(dropConstraintCtx);
     }
@@ -762,9 +784,9 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected void generateSequence(DbModel model) {
         GenerationContext createSequenceCtx = createGenerationContext(model,
-                createSequenceSqlFileName, createSequenceTemplateFileName);
+                createSequenceDdlFileName, createSequenceTemplateFileName);
         GenerationContext dropSequenceCtx = createGenerationContext(model,
-                dropSequenceSqlFileName, dropSequenceTemplateFileName);
+                dropSequenceDdlFileName, dropSequenceTemplateFileName);
         generator.generate(createSequenceCtx);
         generator.generate(dropSequenceCtx);
     }
@@ -782,8 +804,8 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected GenerationContext createGenerationContext(Object model,
             String SqlFileName, String templateName) {
-        return new GenerationContextImpl(model, sqlFileDestDir, new File(
-                sqlFileDestDir, SqlFileName), templateName, sqlFileEncoding,
+        return new GenerationContextImpl(model, ddlFileDestDir, new File(
+                ddlFileDestDir, SqlFileName), templateName, ddlFileEncoding,
                 overwrite);
     }
 

@@ -79,6 +79,9 @@ public class GenerateConditionCommand extends AbstractCommand {
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
 
+    /** 環境名 */
+    protected String env = "ut";
+
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File("src/main/java");
 
@@ -239,6 +242,25 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     /**
+     * 環境名を返します。
+     * 
+     * @return 環境名
+     */
+    public String getEnv() {
+        return env;
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        this.env = env;
+    }
+
+    /**
      * 生成するJavaファイルの出力先ディレクトリを返します。
      * 
      * @return 生成するJavaファイルの出力先ディレクトリ
@@ -381,7 +403,7 @@ public class GenerateConditionCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath);
+                configPath, env);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container

@@ -17,15 +17,18 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.apache.tools.ant.Task;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateVersionCommand;
 
 /**
- * @author taedium
+ * バージョン番号を保持するテキストファイルとバージョン番号を更新するDMLファイルを生成する{@link Task}です。
  * 
+ * @author taedium
  */
 public class GenerateVersionTask extends AbstractTask {
 
+    /** コマンド */
     protected GenerateVersionCommand command = new GenerateVersionCommand();
 
     /**
@@ -34,59 +37,123 @@ public class GenerateVersionTask extends AbstractTask {
     public GenerateVersionTask() {
     }
 
+    /**
+     * スキーマのバージョンを保持するテーブルのカラム名を設定します。
+     * 
+     * @param schemaInfoColumnName
+     *            スキーマのバージョンを保持するテーブルのカラム名
+     */
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         command.setSchemaInfoColumnName(schemaInfoColumnName);
     }
 
+    /**
+     * スキーマのバージョンを保持するテーブル名を設定します。
+     * 
+     * @param schemaInfoTableName
+     *            スキーマのバージョンを保持するテーブル名
+     */
     public void setSchemaInfoTableName(String schemaInfoTableName) {
         command.setSchemaInfoTableName(schemaInfoTableName);
     }
 
-    public void setSqlFileDestDir(File sqlFileDestDir) {
-        command.setSqlFileDestDir(sqlFileDestDir);
-    }
-
-    public void setSqlFileEncoding(String sqlFileEncoding) {
-        command.setSqlFileEncoding(sqlFileEncoding);
+    /**
+     * DMLファイルの出力先ディレクトリを設定します。
+     * 
+     * @param dmlFileDestDir
+     *            DMLファイルの出力先ディレクトリ
+     */
+    public void setDmlFileDestDir(File dmlFileDestDir) {
+        command.setDmlFileDestDir(dmlFileDestDir);
     }
 
     /**
+     * SQLファイルのエンコーディングを設定します。
+     * 
+     * @param dmlFileEncoding
+     *            SQLファイルのエンコーディング
+     */
+    public void setDmlFileEncoding(String dmlFileEncoding) {
+        command.setDmlFileEncoding(dmlFileEncoding);
+    }
+
+    /**
+     * SQLステートメントの区切り文字を設定します。
+     * 
      * @param statementDelimiter
-     * @see org.seasar.extension.jdbc.gen.command.GenerateVersionCommand#setStatementDelimiter(char)
+     *            SQLステートメントの区切り文字
      */
     public void setStatementDelimiter(char statementDelimiter) {
         command.setStatementDelimiter(statementDelimiter);
     }
 
+    /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
+     * @param templateFileEncoding
+     *            テンプレートファイルのエンコーディング
+     */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
+    /**
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルを格納するプライマリディレクトリ
+     */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 
-    public void setUpdateVersionSqlFileName(String updateVersionSqlFileName) {
-        command.setUpdateVersionSqlFileName(updateVersionSqlFileName);
+    /**
+     * バージョンを更新するDMLファイル名を設定します。
+     * 
+     * @param updateVersionDmlFileName
+     *            バージョンを更新するDMLのSQLファイル名
+     */
+    public void setUpdateVersionDmlFileName(String updateVersionDmlFileName) {
+        command.setUpdateVersionDmlFileName(updateVersionDmlFileName);
     }
 
+    /**
+     * バージョンを更新するDMLのテンプレートファイル名を設定します。
+     * 
+     * @param updateVersionTemplateFileName
+     *            バージョンを更新するDMLのテンプレートファイル名
+     */
     public void setUpdateVersionTemplateFileName(
             String updateVersionTemplateFileName) {
         command.setUpdateVersionTemplateFileName(updateVersionTemplateFileName);
     }
 
     /**
+     * バージョンファイルの出力先ディレクトリを設定します。
+     * 
      * @param versionFileDestDir
-     * @see org.seasar.extension.jdbc.gen.command.GenerateVersionCommand#setVersionFileDestDir(java.io.File)
+     *            バージョンファイルの出力先ディレクトリ
      */
     public void setVersionFileDestDir(File versionFileDestDir) {
         command.setVersionFileDestDir(versionFileDestDir);
     }
 
+    /**
+     * バージョンファイル名を設定します。
+     * 
+     * @param versionFileName
+     *            バージョンファイル名
+     */
     public void setVersionFileName(String versionFileName) {
         command.setVersionFileName(versionFileName);
     }
 
+    /**
+     * バージョンのテンプレートファイル名を設定します。
+     * 
+     * @param versionTemplateFileName
+     *            バージョンのテンプレートファイル名
+     */
     public void setVersionTemplateFileName(String versionTemplateFileName) {
         command.setVersionTemplateFileName(versionTemplateFileName);
     }

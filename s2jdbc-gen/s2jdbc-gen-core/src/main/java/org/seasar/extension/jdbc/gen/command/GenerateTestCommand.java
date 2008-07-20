@@ -90,10 +90,10 @@ public class GenerateTestCommand extends AbstractCommand {
     protected String testClassNameSuffix = "Test";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File testJavaFileDestDir = new File("src/test/java");
+    protected File javaFileDestDir = new File("src/test/java");
 
     /** テストクラスのテンプレート名 */
-    protected String testTemplateFileName = "java/test.ftl";
+    protected String templateFileName = "java/test.ftl";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -106,6 +106,9 @@ public class GenerateTestCommand extends AbstractCommand {
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
+
+    /** 環境名 */
+    protected String env = "ut";
 
     /** テストのモデルのファクトリ */
     protected TestModelFactory testModelFactory;
@@ -152,22 +155,41 @@ public class GenerateTestCommand extends AbstractCommand {
     }
 
     /**
+     * 環境名を返します。
+     * 
+     * @return 環境名
+     */
+    public String getEnv() {
+        return env;
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        this.env = env;
+    }
+
+    /**
      * テストクラスのテンプレート名を返します。
      * 
      * @return テストクラスのテンプレート名
      */
-    public String getTestTemplateFileName() {
-        return testTemplateFileName;
+    public String getTemplateFileName() {
+        return templateFileName;
     }
 
     /**
      * テストクラスのテンプレート名を設定します。
      * 
-     * @param testTemplateFileName
+     * @param templateFileName
      *            テストクラスのテンプレート名
      */
-    public void setTestTemplateFileName(String testTemplateFileName) {
-        this.testTemplateFileName = testTemplateFileName;
+    public void setTemplateFileName(String templateFileName) {
+        this.templateFileName = templateFileName;
     }
 
     /**
@@ -175,18 +197,18 @@ public class GenerateTestCommand extends AbstractCommand {
      * 
      * @return 生成するJavaファイルの出力先ディレクトリ
      */
-    public File getTestJavaFileDestDir() {
-        return testJavaFileDestDir;
+    public File getJavaFileDestDir() {
+        return javaFileDestDir;
     }
 
     /**
      * 生成するJavaファイルの出力先ディレクトリを設定します。
      * 
-     * @param testJavaFileDestDir
+     * @param javaFileDestDir
      *            生成するJavaファイルの出力先ディレクトリ
      */
-    public void setTestJavaFileDestDir(File testJavaFileDestDir) {
-        this.testJavaFileDestDir = testJavaFileDestDir;
+    public void setJavaFileDestDir(File javaFileDestDir) {
+        this.javaFileDestDir = javaFileDestDir;
     }
 
     /**
@@ -354,7 +376,7 @@ public class GenerateTestCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath);
+                configPath, env);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
@@ -435,7 +457,7 @@ public class GenerateTestCommand extends AbstractCommand {
     protected void generateEntityTest(EntityMeta entityMeta) {
         TestModel testModel = testModelFactory.getEntityTestModel(entityMeta);
         GenerationContext context = createGenerationContext(testModel,
-                testTemplateFileName);
+                templateFileName);
         generator.generate(context);
     }
 
@@ -453,7 +475,7 @@ public class GenerateTestCommand extends AbstractCommand {
         String packageName = model.getPackageName();
         String shortClassName = model.getShortClassName();
 
-        File dir = new File(testJavaFileDestDir, packageName.replace('.',
+        File dir = new File(javaFileDestDir, packageName.replace('.',
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 

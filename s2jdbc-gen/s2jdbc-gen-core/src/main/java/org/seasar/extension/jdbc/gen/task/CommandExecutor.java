@@ -31,16 +31,26 @@ import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
 /**
- * @author taedium
+ * {@link Command}をAntのクラスローダとは別のクラスローダで実行します。
  * 
+ * @author taedium
  */
 public class CommandExecutor {
 
     /** クラスパス */
     protected Path classpath;
 
+    /** タスク名 */
     protected String taskName;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param classpath
+     *            クラスパス
+     * @param taskName
+     *            タスク名
+     */
     public CommandExecutor(Path classpath, String taskName) {
         if (classpath == null) {
             throw new BuildException("classpath is not specified for '"
@@ -54,13 +64,24 @@ public class CommandExecutor {
         this.taskName = taskName;
     }
 
-    public void execute(Command originalCommand) {
+    /**
+     * コマンドを実行します。
+     * 
+     * @param command
+     *            コマンド
+     */
+    public void execute(Command command) {
         ClassLoader classLoader = createClassLoader();
-        Object newCommand = createCommand(originalCommand, classLoader);
-        copyProperties(originalCommand, newCommand);
+        Object newCommand = createCommand(command, classLoader);
+        copyProperties(command, newCommand);
         executeCommand(classLoader, newCommand);
     }
 
+    /**
+     * クラスローダを作成します。
+     * 
+     * @return クラスローダ
+     */
     protected ClassLoader createClassLoader() {
         URL[] urls = null;
         try {
@@ -77,18 +98,19 @@ public class CommandExecutor {
     /**
      * 指定されたクラスローダーでコマンドのインスタンスを生成します。
      * 
+     * @param command
+     *            コマンド
      * @param classLoader
-     *            クラスローダー
-     * @return コマンドのインスタンス
+     *            クラスローダ
+     * @return 新しいコマンドのインスタンス
      */
-    protected Object createCommand(Command originalCommand,
-            ClassLoader classLoader) {
+    protected Object createCommand(Command command, ClassLoader classLoader) {
         ClassLoader originalLoader = Thread.currentThread()
                 .getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
         try {
-            Class<?> clazz = ClassLoaderUtil.loadClass(classLoader,
-                    originalCommand.getClass().getName());
+            Class<?> clazz = ClassLoaderUtil.loadClass(classLoader, command
+                    .getClass().getName());
             return ClassUtil.newInstance(clazz);
         } finally {
             Thread.currentThread().setContextClassLoader(originalLoader);
@@ -96,26 +118,24 @@ public class CommandExecutor {
     }
 
     /**
-     * JavaBeans形式のオブジェクトのプロパティをコピーします。
+     * JavaBeans形式のプロパティをコピーします。
      * 
      * @param src
-     *            コピー元
+     *            コピー元のコマンド
      * @param dest
-     *            コピー先
+     *            コピー先のコマンド
      */
-    protected void copyProperties(Object src, Object dest) {
+    protected void copyProperties(Command src, Object dest) {
         BeanUtil.copy(src, dest);
     }
 
     /**
      * コマンドを実行します。
      * 
-     * @param clazz
-     *            コマンドクラス
+     * @param classLoader
+     *            コマンドを実行するクラスローダ
      * @param command
      *            コマンドのインスタンス
-     * @param classLoader
-     *            コマンドを実行するクラスローダー
      */
     protected void executeCommand(ClassLoader classLoader, Object command) {
         ClassLoader original = Thread.currentThread().getContextClassLoader();

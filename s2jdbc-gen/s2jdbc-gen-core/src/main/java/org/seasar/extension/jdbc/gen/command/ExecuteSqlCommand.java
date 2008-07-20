@@ -63,6 +63,9 @@ public class ExecuteSqlCommand extends AbstractCommand {
     /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
 
+    /** 環境名 */
+    protected String env = "ut";
+
     /** エラー発生時に処理を中止する場合{@code true} */
     protected boolean haltOnError = false;
 
@@ -138,6 +141,25 @@ public class ExecuteSqlCommand extends AbstractCommand {
      */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
+    }
+
+    /**
+     * 環境名を返します。
+     * 
+     * @return 環境名
+     */
+    public String getEnv() {
+        return env;
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        this.env = env;
     }
 
     /**
@@ -264,7 +286,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath);
+                configPath, env);
         containerFactorySupport.init();
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
