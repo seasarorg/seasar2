@@ -19,7 +19,7 @@ import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenDialect.JavaType;
+import org.seasar.extension.jdbc.gen.GenDialect.Type;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
@@ -82,7 +82,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * 名前を処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
@@ -95,7 +95,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * 識別子を処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
@@ -107,16 +107,15 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * プロパティのクラスを処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
     protected void doAttributeClass(DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        JavaType javaType = dialect.getJavaType(columnMeta.getSqlType());
-        Class<?> clazz = javaType.getJavaClass(columnMeta.getLength(),
-                columnMeta.getScale(), columnMeta.getTypeName(), columnMeta
-                        .isNullable());
+        Type type = dialect.getType(columnMeta.getSqlType());
+        Class<?> clazz = type.getJavaClass(columnMeta.getLength(), columnMeta
+                .getLength(), columnMeta.getScale(), columnMeta.getTypeName());
         attributeDesc.setAttributeClass(clazz);
     }
 
@@ -124,7 +123,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * <code>LOB</code>を処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
@@ -137,7 +136,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * 時制の種別を処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
@@ -151,7 +150,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * 一時的なプロパティを処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
@@ -163,7 +162,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * バージョンを処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
@@ -178,16 +177,22 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      * カラムの名前を処理します。
      * 
      * @param columnMeta
-     *            カラムメタ情報
+     *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
     protected void doColumn(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
         attributeDesc.setColumnName(columnMeta.getName());
+        attributeDesc.setColumnTypeName(columnMeta.getTypeName());
         attributeDesc.setLength(columnMeta.getLength());
         attributeDesc.setPrecision(columnMeta.getLength());
         attributeDesc.setScale(columnMeta.getScale());
         attributeDesc.setNullable(columnMeta.isNullable());
+        Type type = dialect.getType(columnMeta.getSqlType());
+        String definition = type.getColumnDefinition(columnMeta.getLength(),
+                columnMeta.getLength(), columnMeta.getScale(), columnMeta
+                        .getTypeName());
+        attributeDesc.setColumnDefinition(definition);
     }
 
 }

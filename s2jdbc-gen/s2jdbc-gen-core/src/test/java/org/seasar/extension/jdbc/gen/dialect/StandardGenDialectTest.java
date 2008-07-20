@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenDialect.DbType;
+import org.seasar.extension.jdbc.gen.GenDialect.Type;
 
 import static org.junit.Assert.*;
 
@@ -35,9 +35,13 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_char() throws Exception {
-        DbType dbType = dialect.getDbType(Types.CHAR);
-        assertEquals("char(1)", dbType.getDefinition(10, 0, 0));
+    public void testType_char() throws Exception {
+        Type type = dialect.getType(Types.CHAR);
+        assertEquals(String.class, type.getJavaClass(10, 0, 0, null));
+        assertEquals("char(10)", type.getColumnDefinition(10, 0, 0, null));
+
+        assertEquals(Character.class, type.getJavaClass(1, 0, 0, null));
+        assertEquals("char(1)", type.getColumnDefinition(1, 0, 0, null));
     }
 
     /**
@@ -45,18 +49,18 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_varbinary() throws Exception {
-        DbType dbType = dialect.getDbType(Types.VARBINARY);
-        assertEquals("varbinary(10)", dbType.getDefinition(10, 0, 0));
+    public void testType_varbinary() throws Exception {
+        Type type = dialect.getType(Types.VARBINARY);
+        assertEquals("varbinary(10)", type.getColumnDefinition(10, 0, 0, null));
     }
 
     /**
      * 
      * @throws Exception
      */
-    public void testDbType_varchar() throws Exception {
-        DbType dbType = dialect.getDbType(Types.VARCHAR);
-        assertEquals("varchar(10)", dbType.getDefinition(10, 0, 0));
+    public void testType_varchar() throws Exception {
+        Type type = dialect.getType(Types.VARCHAR);
+        assertEquals("varchar(10)", type.getColumnDefinition(10, 0, 0, null));
     }
 
 }

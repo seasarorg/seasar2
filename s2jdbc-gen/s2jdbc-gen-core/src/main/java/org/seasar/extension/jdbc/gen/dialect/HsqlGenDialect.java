@@ -30,9 +30,9 @@ public class HsqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public HsqlGenDialect() {
-        dbTypeMap.put(Types.BINARY, HsqlDbType.BINARY);
-        dbTypeMap.put(Types.BLOB, HsqlDbType.BLOB);
-        dbTypeMap.put(Types.CLOB, HsqlDbType.CLOB);
+        typeMap.put(Types.BINARY, HsqlType.BINARY);
+        typeMap.put(Types.BLOB, HsqlType.BLOB);
+        typeMap.put(Types.CLOB, HsqlType.CLOB);
     }
 
     @Override
@@ -58,38 +58,62 @@ public class HsqlGenDialect extends StandardGenDialect {
     }
 
     /**
-     * HSQLDB用の{@link DbType}の実装です。
+     * HSQLDB用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class HsqlDbType extends StandardDbType {
+    public static class HsqlType extends StandardType {
 
-        private static DbType BINARY = new HsqlDbType() {
+        private static Type BINARY = new HsqlType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("varbinary(%d)", length);
             }
         };
 
-        private static DbType BLOB = new HsqlDbType("longvarbinary");
+        private static Type BLOB = new HsqlType() {
 
-        private static DbType CLOB = new HsqlDbType("longvarchar");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "longvarbinary";
+            }
+        };
+
+        private static Type CLOB = new HsqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "longvarchar";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected HsqlDbType() {
+        protected HsqlType() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected HsqlDbType(String definition) {
-            super(definition);
-        }
     }
 }

@@ -66,23 +66,21 @@ public class GenerateEntityTest {
         id.setId(true);
         id.setAttributeClass(int.class);
         id.setColumnName("ID");
-        id.setPrecision(10);
-        id.setScale(0);
+        id.setColumnDefinition("integer");
         id.setNullable(false);
 
         AttributeDesc name = new AttributeDesc();
         name.setName("name");
         name.setAttributeClass(String.class);
         name.setColumnName("NAME");
-        name.setLength(20);
+        name.setColumnDefinition("varchar(10)");
         name.setNullable(false);
 
         AttributeDesc sal = new AttributeDesc();
         sal.setName("sal");
         sal.setAttributeClass(BigDecimal.class);
         sal.setColumnName("SAL");
-        sal.setPrecision(15);
-        sal.setScale(5);
+        sal.setColumnDefinition("decimal(15,5)");
         sal.setNullable(false);
 
         AttributeDesc lob = new AttributeDesc();
@@ -90,7 +88,7 @@ public class GenerateEntityTest {
         lob.setLob(true);
         lob.setAttributeClass(byte[].class);
         lob.setColumnName("LOB");
-        lob.setLength(10);
+        lob.setColumnDefinition("blob");
         lob.setNullable(true);
 
         AttributeDesc date = new AttributeDesc();
@@ -98,7 +96,7 @@ public class GenerateEntityTest {
         date.setTemporalType(TemporalType.DATE);
         date.setAttributeClass(java.util.Date.class);
         date.setColumnName("DATE");
-        date.setLength(10);
+        date.setColumnDefinition("date");
         date.setNullable(true);
 
         AttributeDesc temp = new AttributeDesc();
@@ -106,7 +104,6 @@ public class GenerateEntityTest {
         temp.setTransient(true);
         temp.setAttributeClass(String.class);
         temp.setColumnName("TEMP");
-        temp.setLength(10);
         temp.setNullable(false);
 
         AttributeDesc version = new AttributeDesc();
@@ -114,8 +111,7 @@ public class GenerateEntityTest {
         version.setVersion(true);
         version.setAttributeClass(Integer.class);
         version.setColumnName("VERSION");
-        version.setPrecision(10);
-        version.setScale(0);
+        version.setColumnDefinition("integer");
         version.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
@@ -153,8 +149,7 @@ public class GenerateEntityTest {
         id1.setId(true);
         id1.setAttributeClass(int.class);
         id1.setColumnName("ID1");
-        id1.setPrecision(10);
-        id1.setScale(0);
+        id1.setColumnDefinition("integer");
         id1.setNullable(false);
 
         AttributeDesc id2 = new AttributeDesc();
@@ -162,8 +157,7 @@ public class GenerateEntityTest {
         id2.setId(true);
         id2.setAttributeClass(int.class);
         id2.setColumnName("ID");
-        id2.setPrecision(20);
-        id2.setScale(0);
+        id2.setColumnDefinition("integer");
         id2.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
@@ -204,6 +198,36 @@ public class GenerateEntityTest {
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_Copyright.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testNullColumnDefinition() throws Exception {
+        AttributeDesc name = new AttributeDesc();
+        name.setName("name");
+        name.setAttributeClass(String.class);
+        name.setColumnName("NAME");
+        name.setColumnTypeName("hoge");
+        name.setColumnDefinition(null);
+        name.setNullable(false);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setName("Foo");
+        entityDesc.addAttribute(name);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_NullColumnDefinition.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 }

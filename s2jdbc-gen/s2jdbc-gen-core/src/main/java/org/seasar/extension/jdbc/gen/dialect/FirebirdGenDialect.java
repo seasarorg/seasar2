@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,13 +31,13 @@ public class FirebirdGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public FirebirdGenDialect() {
-        dbTypeMap.put(Types.BIGINT, FirebirdDbType.BIGINT);
-        dbTypeMap.put(Types.BINARY, FirebirdDbType.BINARY);
-        dbTypeMap.put(Types.BOOLEAN, FirebirdDbType.BOOLEAN);
-        dbTypeMap.put(Types.CLOB, FirebirdDbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, FirebirdDbType.DECIMAL);
-        dbTypeMap.put(Types.DOUBLE, FirebirdDbType.DOUBLE);
-        dbTypeMap.put(Types.TINYINT, FirebirdDbType.TINYINT);
+        typeMap.put(Types.BIGINT, FirebirdType.BIGINT);
+        typeMap.put(Types.BINARY, FirebirdType.BINARY);
+        typeMap.put(Types.BOOLEAN, FirebirdType.BOOLEAN);
+        typeMap.put(Types.CLOB, FirebirdType.CLOB);
+        typeMap.put(Types.DECIMAL, FirebirdType.DECIMAL);
+        typeMap.put(Types.DOUBLE, FirebirdType.DOUBLE);
+        typeMap.put(Types.TINYINT, FirebirdType.TINYINT);
 
     }
 
@@ -46,52 +47,122 @@ public class FirebirdGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Firebird用の{@link DbType}の実装です。
+     * Firebird用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class FirebirdDbType extends StandardDbType {
+    public static class FirebirdType extends StandardType {
 
-        private static DbType BIGINT = new FirebirdDbType() {
+        private static Type BIGINT = new FirebirdType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Long.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,0)", precision);
             }
         };
 
-        private static DbType BINARY = new FirebirdDbType("blob");
-
-        private static DbType BOOLEAN = new FirebirdDbType("smallint");
-
-        private static DbType CLOB = new FirebirdDbType("blob sub_type 1");
-
-        private static DbType DECIMAL = new FirebirdDbType() {
+        private static Type BINARY = new FirebirdType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "blob";
+            }
+        };
+
+        private static Type BOOLEAN = new FirebirdType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Boolean.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
+
+        private static Type CLOB = new FirebirdType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "blob sub_type 1";
+            }
+        };
+
+        private static Type DECIMAL = new FirebirdType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("number(%d,%d)", precision, scale);
             }
         };
 
-        private static DbType DOUBLE = new FirebirdDbType("double precision");
+        private static Type DOUBLE = new FirebirdType() {
 
-        private static DbType TINYINT = new FirebirdDbType("smallint");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "double precision";
+            }
+        };
+
+        private static Type TINYINT = new FirebirdType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Short.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected FirebirdDbType() {
+        protected FirebirdType() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected FirebirdDbType(String definition) {
-            super(definition);
-        }
     }
 }

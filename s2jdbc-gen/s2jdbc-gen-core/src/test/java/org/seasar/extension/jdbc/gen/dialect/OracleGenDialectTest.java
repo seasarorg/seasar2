@@ -20,8 +20,7 @@ import java.sql.Types;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenDialect.DbType;
-import org.seasar.extension.jdbc.gen.GenDialect.JavaType;
+import org.seasar.extension.jdbc.gen.GenDialect.Type;
 
 import static org.junit.Assert.*;
 
@@ -38,9 +37,13 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_decimal() throws Exception {
-        DbType dbType = dialect.getDbType(Types.DECIMAL);
-        assertEquals("number(10,5)", dbType.getDefinition(0, 10, 5));
+    public void testType_decimal() throws Exception {
+        Type type = dialect.getType(Types.DECIMAL);
+        assertEquals("number(10,5)", type.getColumnDefinition(0, 10, 5, null));
+        assertEquals(Integer.class, type.getJavaClass(0, 8, 0, "NUMBER"));
+        assertEquals(BigDecimal.class, type.getJavaClass(0, 8, 2, "NUMBER"));
+        assertEquals(BigDecimal.class, type.getJavaClass(0, 11, 0, "NUMBER"));
+
     }
 
     /**
@@ -48,10 +51,10 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_binary() throws Exception {
-        DbType dbType = dialect.getDbType(Types.BINARY);
-        assertEquals("raw(2000)", dbType.getDefinition(2000, 0, 0));
-        assertEquals("long raw", dbType.getDefinition(2001, 0, 0));
+    public void testType_binary() throws Exception {
+        Type dbType = dialect.getType(Types.BINARY);
+        assertEquals("raw(2000)", dbType.getColumnDefinition(2000, 0, 0, null));
+        assertEquals("long raw", dbType.getColumnDefinition(2001, 0, 0, null));
     }
 
     /**
@@ -59,10 +62,11 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_varchar() throws Exception {
-        DbType dbType = dialect.getDbType(Types.VARCHAR);
-        assertEquals("varchar2(4000)", dbType.getDefinition(4000, 0, 0));
-        assertEquals("long", dbType.getDefinition(4001, 0, 0));
+    public void testType_varchar() throws Exception {
+        Type dbType = dialect.getType(Types.VARCHAR);
+        assertEquals("varchar2(4000)", dbType.getColumnDefinition(4000, 0, 0,
+                null));
+        assertEquals("long", dbType.getColumnDefinition(4001, 0, 0, null));
     }
 
     /**
@@ -70,24 +74,9 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testDbType_bigint() throws Exception {
-        DbType dbType = dialect.getDbType(Types.BIGINT);
-        assertEquals("numeric(10,0)", dbType.getDefinition(0, 10, 0));
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testJavaType_decimal() throws Exception {
-        JavaType javaType = dialect.getJavaType(Types.DECIMAL);
-        assertEquals(Integer.class, javaType
-                .getJavaClass(8, 0, "NUMBER", false));
-        assertEquals(BigDecimal.class, javaType.getJavaClass(8, 2, "NUMBER",
-                false));
-        assertEquals(BigDecimal.class, javaType.getJavaClass(11, 0, "NUMBER",
-                false));
+    public void testType_bigint() throws Exception {
+        Type type = dialect.getType(Types.BIGINT);
+        assertEquals("numeric(10,0)", type.getColumnDefinition(0, 10, 0, null));
     }
 
     /**

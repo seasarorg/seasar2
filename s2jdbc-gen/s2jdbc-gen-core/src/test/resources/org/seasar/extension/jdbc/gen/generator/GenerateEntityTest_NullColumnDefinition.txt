@@ -2,7 +2,6 @@ package hoge.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -13,13 +12,9 @@ import javax.persistence.Table;
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
-    /** */
-    @Id
-    @Column(columnDefinition = "integer", nullable = false)
-    public int id1;
-
-    /** */
-    @Id
-    @Column(columnDefinition = "integer", nullable = false)
-    public int id2;
+    /**
+     * FIXME このプロパティに対応するカラムの型(hoge)はサポート対象外です。
+     */
+    @Column(columnDefinition = null, nullable = false)
+    public String name;
 }

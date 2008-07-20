@@ -24,25 +24,25 @@ public class Foo {
     /** */
     @Id
     @GeneratedValue
-    @Column(precision = 10, nullable = false)
+    @Column(columnDefinition = "integer", nullable = false)
     public int id;
 
     /** */
-    @Column(length = 20, nullable = false)
+    @Column(columnDefinition = "varchar(10)", nullable = false)
     public String name;
 
     /** */
-    @Column(precision = 15, scale = 5, nullable = false)
+    @Column(columnDefinition = "decimal(15,5)", nullable = false)
     public BigDecimal sal;
 
     /** */
     @Lob
-    @Column(length = 10, nullable = true)
+    @Column(columnDefinition = "blob", nullable = true)
     public byte[] lob;
 
     /** */
     @Temporal(TemporalType.DATE)
-    @Column(length = 10, nullable = true)
+    @Column(columnDefinition = "date", nullable = true)
     public Date date;
 
     /** */
@@ -51,6 +51,6 @@ public class Foo {
 
     /** */
     @Version
-    @Column(precision = 10, nullable = false)
+    @Column(columnDefinition = "integer", nullable = false)
     public Integer version;
 }

@@ -66,6 +66,12 @@ public class AttributeModel {
     /** {@code #scale}が利用可能な場合{@code true} */
     protected boolean scaleAvailable;
 
+    /** カラム定義 */
+    protected String columnDefinition;
+
+    /** カラムの型名 */
+    protected String columnTypeName;
+
     /**
      * 名前を返します。
      * 
@@ -330,6 +336,44 @@ public class AttributeModel {
      */
     public void setAttributeClass(Class<?> attributeClass) {
         this.attributeClass = attributeClass;
+    }
+
+    /**
+     * カラム定義を返します。
+     * 
+     * @return カラム定義
+     */
+    public String getColumnDefinition() {
+        return columnDefinition;
+    }
+
+    /**
+     * カラム定義を設定します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
+    public void setColumnDefinition(String columnDefinition) {
+        this.columnDefinition = columnDefinition;
+    }
+
+    /**
+     * カラムの型名を返します。
+     * 
+     * @return カラムの型名
+     */
+    public String getColumnTypeName() {
+        return columnTypeName;
+    }
+
+    /**
+     * カラムの型名を設定します。
+     * 
+     * @param columnTypeName
+     *            カラムの型名
+     */
+    public void setColumnTypeName(String columnTypeName) {
+        this.columnTypeName = columnTypeName;
     }
 
 }

@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,12 +31,12 @@ public class DerbyGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public DerbyGenDialect() {
-        dbTypeMap.put(Types.BINARY, DerbyDbType.BINARY);
-        dbTypeMap.put(Types.BOOLEAN, DerbyDbType.BOOLEAN);
-        dbTypeMap.put(Types.BLOB, DerbyDbType.BLOB);
-        dbTypeMap.put(Types.CLOB, DerbyDbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, DerbyDbType.DECIMAL);
-        dbTypeMap.put(Types.TINYINT, DerbyDbType.TINYINT);
+        typeMap.put(Types.BINARY, DerbyType.BINARY);
+        typeMap.put(Types.BOOLEAN, DerbyType.BOOLEAN);
+        typeMap.put(Types.BLOB, DerbyType.BLOB);
+        typeMap.put(Types.CLOB, DerbyType.CLOB);
+        typeMap.put(Types.DECIMAL, DerbyType.DECIMAL);
+        typeMap.put(Types.TINYINT, DerbyType.TINYINT);
     }
 
     @Override
@@ -44,62 +45,107 @@ public class DerbyGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Derby用の{@link DbType}の実装です。
+     * Derby用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class DerbyDbType extends StandardDbType {
+    public static class DerbyType extends StandardType {
 
-        private static DbType BINARY = new DerbyDbType() {
+        private static Type BINARY = new DerbyType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("varchar(%d) for bit data", length);
             }
         };
 
-        private static DbType BOOLEAN = new DerbyDbType("smallint");
-
-        private static DbType BLOB = new DerbyDbType() {
+        private static Type BOOLEAN = new DerbyType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Boolean.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
+
+        private static Type BLOB = new DerbyType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("blob(%d)", length);
             }
         };
 
-        private static DbType CLOB = new DerbyDbType() {
+        private static Type CLOB = new DerbyType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("clob(%d)", length);
             }
         };
 
-        private static DbType DECIMAL = new DerbyDbType() {
+        private static Type DECIMAL = new DerbyType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,%d)", precision, scale);
             }
         };
 
-        private static DbType TINYINT = new DerbyDbType("smallint");
+        private static Type TINYINT = new DerbyType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Short.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected DerbyDbType() {
+        protected DerbyType() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected DerbyDbType(String definition) {
-            super(definition);
-        }
     }
 }

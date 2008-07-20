@@ -60,6 +60,12 @@ public class AttributeDesc {
     /** NULL可能の場合{@code true} */
     protected boolean nullable;
 
+    /** カラム定義 */
+    protected String columnDefinition;
+
+    /** カラムの型名 */
+    protected String columnTypeName;
+
     /**
      * インスタンスを構築します。
      */
@@ -292,6 +298,44 @@ public class AttributeDesc {
      */
     public void setNullable(boolean nullable) {
         this.nullable = nullable;
+    }
+
+    /**
+     * カラム定義を返します。
+     * 
+     * @return カラム定義
+     */
+    public String getColumnDefinition() {
+        return columnDefinition;
+    }
+
+    /**
+     * カラム定義を設定します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
+    public void setColumnDefinition(String columnDefinition) {
+        this.columnDefinition = columnDefinition;
+    }
+
+    /**
+     * カラムの型名を返します。
+     * 
+     * @return カラムの型名
+     */
+    public String getColumnTypeName() {
+        return columnTypeName;
+    }
+
+    /**
+     * カラムの型名を設定します。
+     * 
+     * @param columnTypeName
+     *            カラムの型名
+     */
+    public void setColumnTypeName(String columnTypeName) {
+        this.columnTypeName = columnTypeName;
     }
 
 }

@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenDialect.DbType;
+import org.seasar.extension.jdbc.gen.GenDialect.Type;
 import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -97,9 +97,9 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
             definition = column.columnDefinition();
         } else {
             int sqlType = propertyMeta.getValueType().getSqlType();
-            DbType dbType = dialect.getDbType(sqlType);
-            definition = dbType.getDefinition(column.length(), column
-                    .precision(), column.scale());
+            Type type = dialect.getType(sqlType);
+            definition = type.getColumnDefinition(column.length(), column
+                    .precision(), column.scale(), null);
         }
         columnDesc.setDefinition(definition);
     }

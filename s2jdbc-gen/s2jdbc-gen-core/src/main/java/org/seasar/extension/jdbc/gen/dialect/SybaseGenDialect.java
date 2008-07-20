@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.Date;
 
 import javax.persistence.GenerationType;
 
@@ -30,17 +32,16 @@ public class SybaseGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public SybaseGenDialect() {
-        dbTypeMap.put(Types.BIGINT, SybaseDbType.BIGINT);
-        dbTypeMap.put(Types.BINARY, SybaseDbType.BINARY);
-        dbTypeMap.put(Types.BOOLEAN, SybaseDbType.BOOLEAN);
-        dbTypeMap.put(Types.BLOB, SybaseDbType.BLOB);
-        dbTypeMap.put(Types.CLOB, SybaseDbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, SybaseDbType.DECIMAL);
-        dbTypeMap.put(Types.DOUBLE, SybaseDbType.DOUBLE);
-        dbTypeMap.put(Types.INTEGER, SybaseDbType.INTEGER);
-        dbTypeMap.put(Types.DATE, SybaseDbType.DATE);
-        dbTypeMap.put(Types.TIME, SybaseDbType.TIME);
-        dbTypeMap.put(Types.TIMESTAMP, SybaseDbType.TIMESTAMP);
+        typeMap.put(Types.BINARY, SybaseType.BINARY);
+        typeMap.put(Types.BOOLEAN, SybaseType.BOOLEAN);
+        typeMap.put(Types.BLOB, SybaseType.BLOB);
+        typeMap.put(Types.CLOB, SybaseType.CLOB);
+        typeMap.put(Types.DECIMAL, SybaseType.DECIMAL);
+        typeMap.put(Types.DOUBLE, SybaseType.DOUBLE);
+        typeMap.put(Types.INTEGER, SybaseType.INTEGER);
+        typeMap.put(Types.DATE, SybaseType.DATE);
+        typeMap.put(Types.TIME, SybaseType.TIME);
+        typeMap.put(Types.TIMESTAMP, SybaseType.TIMESTAMP);
     }
 
     @Override
@@ -54,68 +55,168 @@ public class SybaseGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Sybase用の{@link DbType}の実装です。
+     * Sybase用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class SybaseDbType extends StandardDbType {
+    public static class SybaseType extends StandardType {
 
-        private static DbType BIGINT = new SybaseDbType() {
+        private static Type BINARY = new SybaseType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
-                return format("numeric(%d,0)", precision);
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
             }
-        };
-
-        private static DbType BINARY = new SybaseDbType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("varbinary(%d)", length);
             }
-
         };
 
-        private static DbType BOOLEAN = new SybaseDbType("tinyint");
-
-        private static DbType BLOB = new SybaseDbType("image");
-
-        private static DbType CLOB = new SybaseDbType("text");
-
-        private static DbType DECIMAL = new SybaseDbType() {
+        private static Type BOOLEAN = new SybaseType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Boolean.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "bit";
+            }
+        };
+
+        private static Type BLOB = new SybaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "image";
+            }
+        };
+
+        private static Type CLOB = new SybaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "text";
+            }
+        };
+
+        private static Type DECIMAL = new SybaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,%d)", precision, scale);
             }
         };
 
-        private static DbType DOUBLE = new SybaseDbType("double precision");
+        private static Type DOUBLE = new SybaseType() {
 
-        private static DbType INTEGER = new SybaseDbType("int");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
 
-        private static DbType DATE = new SybaseDbType("datetime");
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "double precision";
+            }
+        };
 
-        private static DbType TIME = new SybaseDbType("datetime");
+        private static Type INTEGER = new SybaseType() {
 
-        private static DbType TIMESTAMP = new SybaseDbType("datetime");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Integer.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "int";
+            }
+        };
+
+        private static Type DATE = new SybaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Date.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "datetime";
+            }
+        };
+
+        private static Type TIME = new SybaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Date.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "datetime";
+            }
+        };
+
+        private static Type TIMESTAMP = new SybaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Date.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "datetime";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected SybaseDbType() {
+        protected SybaseType() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected SybaseDbType(String definition) {
-            super(definition);
-        }
     }
 
 }

@@ -15,11 +15,14 @@
  */
 package org.seasar.extension.jdbc.gen.desc;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -121,6 +124,18 @@ public class ForeignKeyDescFactoryImplTest {
         assertNull(foreignKeyDesc);
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testInverseRelationship() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
+        ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
+                .getForeignKeyDesc(entityMeta.getPropertyMeta("aaas"));
+        assertNull(foreignKeyDesc);
+    }
+
     /** */
     @Entity
     @Table(catalog = "hoge", schema = "foo", name = "AAA")
@@ -159,6 +174,10 @@ public class ForeignKeyDescFactoryImplTest {
         /** */
         @Id
         public Integer id;
+
+        /** */
+        @OneToMany(mappedBy = "bbb")
+        public List<Aaa> aaas;
 
     }
 

@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,10 +31,10 @@ public class MysqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MysqlGenDialect() {
-        dbTypeMap.put(Types.BINARY, MysqlDbType.BINARY);
-        dbTypeMap.put(Types.BLOB, MysqlDbType.BLOB);
-        dbTypeMap.put(Types.CLOB, MysqlDbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, MysqlDbType.DECIMAL);
+        typeMap.put(Types.BINARY, MysqlType.BINARY);
+        typeMap.put(Types.BLOB, MysqlType.BLOB);
+        typeMap.put(Types.CLOB, MysqlType.CLOB);
+        typeMap.put(Types.DECIMAL, MysqlType.DECIMAL);
     }
 
     @Override
@@ -47,16 +48,23 @@ public class MysqlGenDialect extends StandardGenDialect {
     }
 
     /**
-     * MySQL用の{@link DbType}の実装です。
+     * MySQL用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class MysqlDbType extends StandardDbType {
+    public static class MysqlType extends StandardType {
 
-        private static DbType BINARY = new MysqlDbType() {
+        private static Type BINARY = new MysqlType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 if (length <= 0xFF) {
                     return "tinyblob";
                 } else if (length <= 0xFFFF) {
@@ -68,10 +76,17 @@ public class MysqlGenDialect extends StandardGenDialect {
             }
         };
 
-        private static DbType BLOB = new MysqlDbType() {
+        private static Type BLOB = new MysqlType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 if (length <= 0xFF) {
                     return "tinyblob";
                 } else if (length <= 0xFFFF) {
@@ -83,10 +98,17 @@ public class MysqlGenDialect extends StandardGenDialect {
             }
         };
 
-        private static DbType CLOB = new MysqlDbType() {
+        private static Type CLOB = new MysqlType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 if (length <= 0xFF) {
                     return "tinytext";
                 } else if (length <= 0xFFFF) {
@@ -98,10 +120,17 @@ public class MysqlGenDialect extends StandardGenDialect {
             }
         };
 
-        private static DbType DECIMAL = new MysqlDbType() {
+        private static Type DECIMAL = new MysqlType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,%d)", precision, scale);
             }
         };
@@ -109,17 +138,7 @@ public class MysqlGenDialect extends StandardGenDialect {
         /**
          * インスタンスを構築します。
          */
-        protected MysqlDbType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected MysqlDbType(String definition) {
-            super(definition);
+        protected MysqlType() {
         }
     }
 }

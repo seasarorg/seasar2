@@ -28,35 +28,52 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      * インスタンスを構築します。
      */
     public Mssql2005GenDialect() {
-        dbTypeMap.put(Types.BLOB, Mssql2005DbType.BLOB);
-        dbTypeMap.put(Types.CLOB, Mssql2005DbType.CLOB);
+        typeMap.put(Types.BLOB, Mssql2005Type.BLOB);
+        typeMap.put(Types.CLOB, Mssql2005Type.CLOB);
     }
 
     /**
-     * MS SQL Server用の{@link DbType}の実装です。
+     * MS SQL Server用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class Mssql2005DbType extends StandardDbType {
+    public static class Mssql2005Type extends StandardType {
 
-        private static DbType BLOB = new Mssql2005DbType("varbinary(max)");
+        private static Type BLOB = new Mssql2005Type() {
 
-        private static DbType CLOB = new Mssql2005DbType("varchar(max)");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "varbinary(max)";
+            }
+
+        };
+
+        private static Type CLOB = new Mssql2005Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "varchar(max)";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected Mssql2005DbType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected Mssql2005DbType(String definition) {
-            super(definition);
+        protected Mssql2005Type() {
         }
     }
 }

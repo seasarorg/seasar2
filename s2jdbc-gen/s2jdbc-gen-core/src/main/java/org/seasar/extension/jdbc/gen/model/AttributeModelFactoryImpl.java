@@ -15,12 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.math.BigDecimal;
-
 import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.AttributeModel;
 import org.seasar.extension.jdbc.gen.AttributeModelFactory;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link AttributeModelFactory}の実装クラスです。
@@ -39,88 +36,9 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setNullable(attributeDesc.isNullable());
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
-        doLength(attributeDesc, attributeModel);
-        doPrecision(attributeDesc, attributeModel);
-        doScale(attributeDesc, attributeModel);
+        attributeModel.setColumnDefinition(attributeDesc.getColumnDefinition());
+        attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
         return attributeModel;
     }
 
-    /**
-     * 長さを処理します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @param attributeModel
-     *            属性モデル
-     */
-    protected void doLength(AttributeDesc attributeDesc,
-            AttributeModel attributeModel) {
-        Class<?> attributeClass = attributeDesc.getAttributeClass();
-        int length = attributeDesc.getLength();
-        if (!isNumber(attributeClass) && length > 0) {
-            attributeModel.setLengthAvailable(true);
-            attributeModel.setLength(length);
-        }
-    }
-
-    /**
-     * 精度を処理します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @param attributeModel
-     *            属性モデル
-     */
-    protected void doPrecision(AttributeDesc attributeDesc,
-            AttributeModel attributeModel) {
-        Class<?> attributeClass = attributeDesc.getAttributeClass();
-        int precision = attributeDesc.getPrecision();
-        if (isNumber(attributeClass) && precision > 0) {
-            attributeModel.setPrecisionAvailable(true);
-            attributeModel.setPrecision(precision);
-        }
-    }
-
-    /**
-     * スケールを処理します。
-     * 
-     * @param attributeDesc
-     *            属性記述
-     * @param attributeModel
-     *            属性モデル
-     */
-    protected void doScale(AttributeDesc attributeDesc,
-            AttributeModel attributeModel) {
-        Class<?> attributeClass = attributeDesc.getAttributeClass();
-        int scale = attributeDesc.getScale();
-        if (isDecimalNumber(attributeClass) && scale > 0) {
-            attributeModel.setScaleAvailable(true);
-            attributeModel.setScale(scale);
-        }
-    }
-
-    /**
-     * 数を表す場合{@code true}を返します。
-     * 
-     * @param attributeClass
-     *            属性のクラス
-     * @return 数を表す場合{@code true}
-     */
-    protected boolean isNumber(Class<?> attributeClass) {
-        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeClass);
-        return Number.class.isAssignableFrom(clazz);
-    }
-
-    /**
-     * 小数を表す場合{@code true}を返します。
-     * 
-     * @param attributeClass
-     *            属性のクラス
-     * @return 小数を表す場合{@code true}を返します。
-     */
-    protected boolean isDecimalNumber(Class<?> attributeClass) {
-        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeClass);
-        return clazz == BigDecimal.class || clazz == Float.class
-                || clazz == Double.class;
-    }
 }

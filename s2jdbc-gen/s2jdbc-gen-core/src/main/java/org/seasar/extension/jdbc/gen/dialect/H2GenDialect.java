@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,8 +31,8 @@ public class H2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public H2GenDialect() {
-        dbTypeMap.put(Types.BINARY, H2DbType.BINARY);
-        dbTypeMap.put(Types.DECIMAL, H2DbType.DECIMAL);
+        typeMap.put(Types.BINARY, H2Type.BINARY);
+        typeMap.put(Types.DECIMAL, H2Type.DECIMAL);
     }
 
     @Override
@@ -56,24 +57,38 @@ public class H2GenDialect extends StandardGenDialect {
     }
 
     /**
-     * H2用の{@link DbType}の実装です。
+     * H2用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class H2DbType extends StandardDbType {
+    public static class H2Type extends StandardType {
 
-        private static DbType BINARY = new H2DbType() {
+        private static Type BINARY = new H2Type() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("binary(%d)", length);
             }
         };
 
-        private static DbType DECIMAL = new H2DbType() {
+        private static Type DECIMAL = new H2Type() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("decimal(%d,%d)", precision, scale);
             }
         };
@@ -81,17 +96,8 @@ public class H2GenDialect extends StandardGenDialect {
         /**
          * インスタンスを構築します。
          */
-        protected H2DbType() {
+        protected H2Type() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected H2DbType(String definition) {
-            super(definition);
-        }
     }
 }

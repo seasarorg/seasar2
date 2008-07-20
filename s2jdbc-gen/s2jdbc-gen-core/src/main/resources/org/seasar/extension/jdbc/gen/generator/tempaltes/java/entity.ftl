@@ -18,7 +18,13 @@ import ${importName};
 public class ${shortClassName} {
 <#list attributeModelList as attr>
 
+  <#if attr.transient || attr.columnDefinition??>
     /** */
+  <#else>
+    /**
+     * FIXME このプロパティに対応するカラムの型(${attr.columnTypeName})はサポート対象外です。
+     */
+  </#if>
   <#if attr.id>
     @Id
     <#if !hasCompositeId()>
@@ -38,7 +44,7 @@ public class ${shortClassName} {
     @Version
   </#if>
   <#if !attr.transient>
-    @Column(<#if attr.lengthAvailable>length = ${attr.length}, </#if><#if attr.precisionAvailable>precision = ${attr.precision}, </#if><#if attr.scaleAvailable>scale = ${attr.scale}, </#if>nullable = ${attr.nullable?string})
+    @Column(columnDefinition = <#if attr.columnDefinition??>"${attr.columnDefinition}"<#else>null</#if>, nullable = ${attr.nullable?string})
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>

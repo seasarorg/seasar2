@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,17 +31,13 @@ public class PostgreGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public PostgreGenDialect() {
-        dbTypeMap.put(Types.BIGINT, PostgreDbType.BIGINT);
-        dbTypeMap.put(Types.BINARY, PostgreDbType.BINARY);
-        dbTypeMap.put(Types.BOOLEAN, PostgreDbType.BOOLEAN);
-        dbTypeMap.put(Types.BLOB, PostgreDbType.BLOB);
-        dbTypeMap.put(Types.CLOB, PostgreDbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, PostgreDbType.DECIMAL);
-        dbTypeMap.put(Types.DOUBLE, PostgreDbType.DOUBLE);
-        dbTypeMap.put(Types.FLOAT, PostgreDbType.FLOAT);
-        dbTypeMap.put(Types.INTEGER, PostgreDbType.INTEGER);
-        dbTypeMap.put(Types.SMALLINT, PostgreDbType.SMALLINT);
-        dbTypeMap.put(Types.TINYINT, PostgreDbType.TINYINT);
+        typeMap.put(Types.BINARY, PostgreType.BINARY);
+        typeMap.put(Types.BLOB, PostgreType.BLOB);
+        typeMap.put(Types.CLOB, PostgreType.CLOB);
+        typeMap.put(Types.DECIMAL, PostgreType.DECIMAL);
+        typeMap.put(Types.DOUBLE, PostgreType.DOUBLE);
+        typeMap.put(Types.FLOAT, PostgreType.FLOAT);
+        typeMap.put(Types.TINYINT, PostgreType.TINYINT);
     }
 
     @Override
@@ -61,54 +58,121 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     /**
-     * PostgreSQL用の{@link DbType}の実装です。
+     * PostgreSQL用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class PostgreDbType extends StandardDbType {
+    public static class PostgreType extends StandardType {
 
-        private static DbType BIGINT = new PostgreDbType("int8");
-
-        private static DbType BINARY = new PostgreDbType("bytea");
-
-        private static DbType BOOLEAN = new PostgreDbType("bool");
-
-        private static DbType BLOB = new PostgreDbType("oid");
-
-        private static DbType CLOB = new PostgreDbType("text");
-
-        private static DbType DECIMAL = new PostgreDbType() {
+        private static Type BINARY = new PostgreType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "bytea";
+            }
+        };
+
+        private static Type BLOB = new PostgreType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "oid";
+            }
+        };
+
+        private static Type CLOB = new PostgreType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "text";
+            }
+        };
+
+        private static Type DECIMAL = new PostgreType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,%d)", precision, scale);
             }
         };
 
-        private static DbType DOUBLE = new PostgreDbType("float8");
+        private static Type DOUBLE = new PostgreType() {
 
-        private static DbType FLOAT = new PostgreDbType("float4");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
 
-        private static DbType INTEGER = new PostgreDbType("int4");
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "double precision";
+            }
+        };
 
-        private static DbType SMALLINT = new PostgreDbType("int2");
+        private static Type FLOAT = new PostgreType() {
 
-        private static DbType TINYINT = new PostgreDbType("int2");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "real";
+            }
+        };
+
+        private static Type TINYINT = new PostgreType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected PostgreDbType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected PostgreDbType(String definition) {
-            super(definition);
+        protected PostgreType() {
         }
     }
 }

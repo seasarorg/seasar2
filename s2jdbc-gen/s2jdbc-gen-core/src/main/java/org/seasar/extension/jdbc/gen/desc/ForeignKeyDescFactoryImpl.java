@@ -46,7 +46,8 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
     }
 
     public ForeignKeyDesc getForeignKeyDesc(PropertyMeta propertyMeta) {
-        if (!propertyMeta.isRelationship()) {
+        if (!propertyMeta.isRelationship()
+                || propertyMeta.getMappedBy() != null) {
             return null;
         }
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();

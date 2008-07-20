@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,13 +31,13 @@ public class InterbaseGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public InterbaseGenDialect() {
-        dbTypeMap.put(Types.BIGINT, InterbaseDbType.BIGINT);
-        dbTypeMap.put(Types.BINARY, InterbaseDbType.BINARY);
-        dbTypeMap.put(Types.BOOLEAN, InterbaseDbType.BOOLEAN);
-        dbTypeMap.put(Types.CLOB, InterbaseDbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, InterbaseDbType.DECIMAL);
-        dbTypeMap.put(Types.DOUBLE, InterbaseDbType.DOUBLE);
-        dbTypeMap.put(Types.TINYINT, InterbaseDbType.TINYINT);
+        typeMap.put(Types.BIGINT, InterbaseType.BIGINT);
+        typeMap.put(Types.BINARY, InterbaseType.BINARY);
+        typeMap.put(Types.BOOLEAN, InterbaseType.BOOLEAN);
+        typeMap.put(Types.CLOB, InterbaseType.CLOB);
+        typeMap.put(Types.DECIMAL, InterbaseType.DECIMAL);
+        typeMap.put(Types.DOUBLE, InterbaseType.DOUBLE);
+        typeMap.put(Types.TINYINT, InterbaseType.TINYINT);
     }
 
     @Override
@@ -45,52 +46,122 @@ public class InterbaseGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Interbase用の{@link DbType}の実装です。
+     * Interbase用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class InterbaseDbType extends StandardDbType {
+    public static class InterbaseType extends StandardType {
 
-        private static DbType BIGINT = new InterbaseDbType() {
+        private static Type BIGINT = new InterbaseType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Long.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,0)", precision);
             }
         };
 
-        private static DbType BINARY = new InterbaseDbType("blob");
-
-        private static DbType BOOLEAN = new InterbaseDbType("smallint");
-
-        private static DbType CLOB = new InterbaseDbType("blob sub_type 1");
-
-        private static DbType DECIMAL = new InterbaseDbType() {
+        private static Type BINARY = new InterbaseType() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "blob";
+            }
+        };
+
+        private static Type BOOLEAN = new InterbaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Boolean.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
+
+        private static Type CLOB = new InterbaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "blob sub_type 1";
+            }
+        };
+
+        private static Type DECIMAL = new InterbaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("number(%d,%d)", precision, scale);
             }
         };
 
-        private static DbType DOUBLE = new InterbaseDbType("double precision");
+        private static Type DOUBLE = new InterbaseType() {
 
-        private static DbType TINYINT = new InterbaseDbType("smallint");
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "double precision";
+            }
+        };
+
+        private static Type TINYINT = new InterbaseType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Short.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected InterbaseDbType() {
+        protected InterbaseType() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected InterbaseDbType(String definition) {
-            super(definition);
-        }
     }
 }

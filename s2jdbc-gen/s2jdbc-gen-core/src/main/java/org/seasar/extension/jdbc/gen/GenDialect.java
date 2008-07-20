@@ -68,22 +68,13 @@ public interface GenDialect {
     TemporalType getTemporalType(int sqlType, String typeName);
 
     /**
-     * Javaの型を返します。
+     * SQL型に対応する型を返します。
      * 
      * @param sqlType
      *            SQL型
-     * @return Javaの型
+     * @return SQL型に対応する型
      */
-    JavaType getJavaType(int sqlType);
-
-    /**
-     * データベースの型を返します。
-     * 
-     * @param sqlType
-     *            JDBCのSQL型
-     * @return データ型
-     */
-    DbType getDbType(int sqlType);
+    Type getType(int sqlType);
 
     /**
      * デフォルトの{@link GenerationType}を返します。
@@ -147,38 +138,14 @@ public interface GenDialect {
     boolean isSqlBlockStartWords(List<String> words);
 
     /**
-     * JDBCのSQL型に対応するJavaのクラスをあらわします。
+     * Javaクラスとデータベースのカラム定義を表すインタフェースです。
      * 
      * @author taedium
      */
-    interface JavaType {
+    public interface Type {
 
         /**
-         * クラスを返します。
-         * 
-         * @param length
-         *            長さ
-         * @param scale
-         *            スケール
-         * @param typeName
-         *            データベースのデータ型名
-         * @param nullable
-         *            {@code null}可能ならば{@code true}
-         * @return
-         */
-        Class<?> getJavaClass(int length, int scale, String typeName,
-                boolean nullable);
-    }
-
-    /**
-     * JDBCのSQL型に対応するデータベースのデータ型をあらわします。
-     * 
-     * @author taedium
-     */
-    public interface DbType {
-
-        /**
-         * 定義を返します。
+         * Javaのクラスを返します。
          * 
          * @param length
          *            長さ
@@ -186,9 +153,27 @@ public interface GenDialect {
          *            精度
          * @param scale
          *            スケール
-         * @return 定義
+         * @param typeName
+         *            カラムの型名
+         * @return Javaのクラス
          */
-        String getDefinition(int length, int precision, int scale);
+        Class<?> getJavaClass(int length, int precision, int scale,
+                String typeName);
 
+        /**
+         * カラム定義を返します。
+         * 
+         * @param length
+         *            長さ
+         * @param precision
+         *            精度
+         * @param scale
+         *            スケール
+         * @param typeName
+         *            カラムの型名
+         * @return カラム定義、サポートされるカラム定義が存在しない場合{@code null}
+         */
+        String getColumnDefinition(int length, int precision, int scale,
+                String typeName);
     }
 }

@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
@@ -30,12 +31,12 @@ public class Db2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public Db2GenDialect() {
-        dbTypeMap.put(Types.BINARY, Db2DbType.BINARY);
-        dbTypeMap.put(Types.BOOLEAN, Db2DbType.BOOLEAN);
-        dbTypeMap.put(Types.BLOB, Db2DbType.BLOB);
-        dbTypeMap.put(Types.CLOB, Db2DbType.CLOB);
-        dbTypeMap.put(Types.DECIMAL, Db2DbType.DECIMAL);
-        dbTypeMap.put(Types.TINYINT, Db2DbType.TINYINT);
+        typeMap.put(Types.BINARY, Db2Type.BINARY);
+        typeMap.put(Types.BOOLEAN, Db2Type.BOOLEAN);
+        typeMap.put(Types.BLOB, Db2Type.BLOB);
+        typeMap.put(Types.CLOB, Db2Type.CLOB);
+        typeMap.put(Types.DECIMAL, Db2Type.DECIMAL);
+        typeMap.put(Types.TINYINT, Db2Type.TINYINT);
     }
 
     @Override
@@ -56,62 +57,107 @@ public class Db2GenDialect extends StandardGenDialect {
     }
 
     /**
-     * DB2用の{@link DbType}の実装です。
+     * DB2用の{@link Type}の実装です。
      * 
      * @author taedium
      */
-    public static class Db2DbType extends StandardDbType {
+    public static class Db2Type extends StandardType {
 
-        private static DbType BINARY = new Db2DbType() {
+        private static Type BINARY = new Db2Type() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("varchar(%d) for bit data", length);
             }
         };
 
-        private static DbType BOOLEAN = new Db2DbType("smallint");
-
-        private static DbType BLOB = new Db2DbType() {
+        private static Type BOOLEAN = new Db2Type() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Boolean.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
+
+        private static Type BLOB = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("blob(%d)", length);
             }
         };
 
-        private static DbType CLOB = new Db2DbType() {
+        private static Type CLOB = new Db2Type() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("clob(%d)", length);
             }
         };
 
-        private static DbType DECIMAL = new Db2DbType() {
+        private static Type DECIMAL = new Db2Type() {
 
             @Override
-            public String getDefinition(int length, int precision, int scale) {
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
                 return format("numeric(%d,%d)", precision, scale);
             }
         };
 
-        private static DbType TINYINT = new Db2DbType("smallint");
+        private static Type TINYINT = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Short.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "smallint";
+            }
+        };
 
         /**
          * インスタンスを構築します。
          */
-        protected Db2DbType() {
+        protected Db2Type() {
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param definition
-         *            定義
-         */
-        protected Db2DbType(String definition) {
-            super(definition);
-        }
     }
 }
