@@ -201,7 +201,7 @@ public class StandardGenDialect implements GenDialect {
         private static Type INTEGER = new StandardType(Integer.class, "integer");
 
         private static Type LONGVARBYNARY = new StandardType(byte[].class,
-                "longvarbynary");
+                "longvarbinary");
 
         private static Type LONGVARCHAR = new StandardType(String.class,
                 "longvarchar");

@@ -15,34 +15,20 @@
  */
 package org.seasar.extension.jdbc.gen.util;
 
-import java.io.Closeable;
-import java.io.IOException;
-
-import org.seasar.framework.exception.IORuntimeException;
+import org.junit.Test;
 
 /**
- * {@link Closeable}のユーティリティクラスです。
- * 
  * @author taedium
+ * 
  */
-public class CloseableUtil {
-
-    private CloseableUtil() {
-    }
+public class CloseableUtilTest {
 
     /**
-     * クローズします。
      * 
-     * @param closeable
-     *            {@link Closeable}
+     * @throws Exception
      */
-    public static void close(Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
+    @Test
+    public void testClose() throws Exception {
+        CloseableUtil.close(null);
     }
 }

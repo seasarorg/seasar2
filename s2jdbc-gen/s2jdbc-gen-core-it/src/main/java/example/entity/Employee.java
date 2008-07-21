@@ -20,12 +20,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * @author taedium
  * 
  */
 @Entity
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "FIRST_NAME",
+        "LAST_NAME" }) })
 public class Employee {
 
     /** */
@@ -34,7 +38,10 @@ public class Employee {
     public Integer id;
 
     /** */
-    public String name;
+    public String firstName;
+
+    /** */
+    public String lastName;
 
     /** */
     public Integer departmentId;

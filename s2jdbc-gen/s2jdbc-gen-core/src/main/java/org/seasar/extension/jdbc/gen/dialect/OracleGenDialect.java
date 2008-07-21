@@ -188,10 +188,7 @@ public class OracleGenDialect extends StandardGenDialect {
             @Override
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
-                if (length > 1) {
-                    return format("char(%d char)", length);
-                }
-                return "char(1 char)";
+                return format("char(%d)", length);
             }
         };
 
