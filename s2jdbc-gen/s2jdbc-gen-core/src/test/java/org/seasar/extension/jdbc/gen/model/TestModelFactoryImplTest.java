@@ -44,7 +44,7 @@ public class TestModelFactoryImplTest {
     @Before
     public void setUp() throws Exception {
         factory = new TestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
-                "hoge", "Test");
+                "Test");
     }
 
     /**
@@ -55,10 +55,12 @@ public class TestModelFactoryImplTest {
     public void testGetEntityTestModel() throws Exception {
         EntityMeta entityMeta = new EntityMeta();
         entityMeta.setName("Foo");
+        entityMeta.setEntityClass(getClass());
         TestModel testModel = factory.getEntityTestModel(entityMeta);
         assertEquals("s2jdbc.dicon", testModel.getConfigPath());
         assertEquals("jdbcManager", testModel.getJdbcManagerName());
-        assertEquals("hoge", testModel.getPackageName());
+        assertEquals("org.seasar.extension.jdbc.gen.model", testModel
+                .getPackageName());
         assertEquals("FooTest", testModel.getShortClassName());
         assertEquals("Foo", testModel.getShortEntityClassName());
         assertEquals(2, testModel.getImportNameSet().size());
@@ -69,7 +71,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Boolean() {
-        assertEquals("true", factory.getIdExpression(Boolean.class));
+        assertEquals("true", factory.getExpression(Boolean.class));
     }
 
     /**
@@ -77,7 +79,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Character() {
-        assertEquals("'a'", factory.getIdExpression(Character.class));
+        assertEquals("'a'", factory.getExpression(Character.class));
     }
 
     /**
@@ -85,7 +87,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Byte() {
-        assertEquals("(byte) 1", factory.getIdExpression(Byte.class));
+        assertEquals("(byte) 1", factory.getExpression(Byte.class));
     }
 
     /**
@@ -93,7 +95,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Short() {
-        assertEquals("(short) 1", factory.getIdExpression(Short.class));
+        assertEquals("(short) 1", factory.getExpression(Short.class));
     }
 
     /**
@@ -101,7 +103,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Integer() {
-        assertEquals("1", factory.getIdExpression(Integer.class));
+        assertEquals("1", factory.getExpression(Integer.class));
     }
 
     /**
@@ -109,7 +111,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Long() {
-        assertEquals("1L", factory.getIdExpression(Long.class));
+        assertEquals("1L", factory.getExpression(Long.class));
     }
 
     /**
@@ -117,7 +119,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Float() {
-        assertEquals("1f", factory.getIdExpression(Float.class));
+        assertEquals("1f", factory.getExpression(Float.class));
     }
 
     /**
@@ -125,7 +127,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Double() {
-        assertEquals("1d", factory.getIdExpression(Double.class));
+        assertEquals("1d", factory.getExpression(Double.class));
     }
 
     /**
@@ -134,7 +136,7 @@ public class TestModelFactoryImplTest {
     @Test
     public void testGetIdExpression_BigDecimal() {
         assertEquals("new BigDecimal(1)", factory
-                .getIdExpression(BigDecimal.class));
+                .getExpression(BigDecimal.class));
     }
 
     /**
@@ -143,7 +145,7 @@ public class TestModelFactoryImplTest {
     @Test
     public void testGetIdExpression_BigInteger() {
         assertEquals("new BigInteger(1)", factory
-                .getIdExpression(BigInteger.class));
+                .getExpression(BigInteger.class));
     }
 
     /**
@@ -151,7 +153,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_String() {
-        assertEquals("\"aaa\"", factory.getIdExpression(String.class));
+        assertEquals("\"aaa\"", factory.getExpression(String.class));
     }
 
     /**
@@ -159,7 +161,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Date() {
-        assertEquals("new Date()", factory.getIdExpression(Date.class));
+        assertEquals("new Date()", factory.getExpression(Date.class));
     }
 
     /**
@@ -168,7 +170,7 @@ public class TestModelFactoryImplTest {
     @Test
     public void testGetIdExpression_Calender() {
         assertEquals("Calendar.getInstance()", factory
-                .getIdExpression(Calendar.class));
+                .getExpression(Calendar.class));
     }
 
     /**
@@ -177,7 +179,7 @@ public class TestModelFactoryImplTest {
     @Test
     public void testGetIdExpression_sqlDate() {
         assertEquals("Date.valueOf(\"2008-01-01\")", factory
-                .getIdExpression(java.sql.Date.class));
+                .getExpression(java.sql.Date.class));
     }
 
     /**
@@ -186,7 +188,7 @@ public class TestModelFactoryImplTest {
     @Test
     public void testGetIdExpression_Time() {
         assertEquals("Time.valueOf(\"12:00:00\")", factory
-                .getIdExpression(Time.class));
+                .getExpression(Time.class));
     }
 
     /**
@@ -195,6 +197,6 @@ public class TestModelFactoryImplTest {
     @Test
     public void testGetIdExpression_Timestamp() {
         assertEquals("Timestamp.valueOf(\"2008-01-01 12:00:00\")", factory
-                .getIdExpression(Timestamp.class));
+                .getExpression(Timestamp.class));
     }
 }

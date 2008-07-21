@@ -421,10 +421,8 @@ public class GenerateTestCommand extends AbstractCommand {
      * @return {@link TestModelFactory}の実装
      */
     protected TestModelFactory createTestModelFactory() {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                entityPackageName);
         return new TestModelFactoryImpl(configPath, jdbcManagerName,
-                packageName, testClassNameSuffix);
+                testClassNameSuffix);
     }
 
     /**

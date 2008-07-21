@@ -1,4 +1,4 @@
-package hoge.entity;
+package org.seasar.extension.jdbc.gen.generator;
 
 import java.math.BigDecimal;
 import org.seasar.extension.jdbc.JdbcManager;

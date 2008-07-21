@@ -30,6 +30,9 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
     public Mssql2005GenDialect() {
         typeMap.put(Types.BLOB, Mssql2005Type.BLOB);
         typeMap.put(Types.CLOB, Mssql2005Type.CLOB);
+        typeMap.put(Types.LONGVARBINARY, Mssql2005Type.LONGVARBINARY);
+        typeMap.put(Types.LONGVARCHAR, Mssql2005Type.LONGVARCHAR);
+
     }
 
     /**
@@ -37,7 +40,7 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      * 
      * @author taedium
      */
-    public static class Mssql2005Type extends StandardType {
+    public static class Mssql2005Type extends MssqlType {
 
         private static Type BLOB = new Mssql2005Type() {
 
@@ -66,6 +69,39 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
             @Override
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
+                return "varchar(max)";
+            }
+        };
+
+        private static Type LONGVARBINARY = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "varbinary(max)";
+            }
+        };
+
+        private static Type LONGVARCHAR = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                if ("ntext".equalsIgnoreCase(typeName)) {
+                    return "nvarchar(max)";
+                }
                 return "varchar(max)";
             }
         };

@@ -116,7 +116,9 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doNullable(PropertyMeta propertyMeta, ColumnDesc columnDesc,
             Column column) {
-        if (column != AnnotationUtil.getDefaultColumn()) {
+        if (propertyMeta.isId()) {
+            columnDesc.setNullable(false);
+        } else if (column != AnnotationUtil.getDefaultColumn()) {
             columnDesc.setNullable(column.nullable());
         } else {
             Class<?> clazz = propertyMeta.getField().getType();

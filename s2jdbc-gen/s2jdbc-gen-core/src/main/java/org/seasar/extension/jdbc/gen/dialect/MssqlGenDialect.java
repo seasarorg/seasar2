@@ -36,18 +36,28 @@ public class MssqlGenDialect extends StandardGenDialect {
         typeMap.put(Types.BINARY, MssqlType.BINARY);
         typeMap.put(Types.BOOLEAN, MssqlType.BOOLEAN);
         typeMap.put(Types.BLOB, MssqlType.BLOB);
+        typeMap.put(Types.CHAR, MssqlType.CHAR);
         typeMap.put(Types.CLOB, MssqlType.CLOB);
+        typeMap.put(Types.DATE, MssqlType.DATE);
         typeMap.put(Types.DECIMAL, MssqlType.DECIMAL);
         typeMap.put(Types.DOUBLE, MssqlType.DOUBLE);
         typeMap.put(Types.INTEGER, MssqlType.INTEGER);
-        typeMap.put(Types.DATE, MssqlType.DATE);
+        typeMap.put(Types.LONGVARBINARY, MssqlType.LONGVARBINARY);
+        typeMap.put(Types.LONGVARCHAR, MssqlType.LONGVARCHAR);
+        typeMap.put(Types.NUMERIC, MssqlType.NUMERIC);
         typeMap.put(Types.TIME, MssqlType.TIME);
         typeMap.put(Types.TIMESTAMP, MssqlType.TIMESTAMP);
+        typeMap.put(Types.VARCHAR, MssqlType.VARCHAR);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
         sqlBlockStartWordsList.add(Arrays.asList("declare"));
         sqlBlockStartWordsList.add(Arrays.asList("begin"));
+    }
+
+    @Override
+    public String getDefaultSchemaName(String userName) {
+        return "dbo";
     }
 
     @Override
@@ -68,6 +78,11 @@ public class MssqlGenDialect extends StandardGenDialect {
     @Override
     public String getSqlBlockDelimiter() {
         return "go";
+    }
+
+    @Override
+    public String getIdentityDefinition() {
+        return "identity";
     }
 
     /**
@@ -122,6 +137,27 @@ public class MssqlGenDialect extends StandardGenDialect {
             }
         };
 
+        private static Type CHAR = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                if (length > 1) {
+                    return String.class;
+                }
+                return Character.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                if ("nchar".equalsIgnoreCase(typeName)) {
+                    return format("nchar(%d)", length);
+                }
+                return format("char(%d)", length);
+            }
+        };
+
         private static Type CLOB = new MssqlType() {
 
             @Override
@@ -137,6 +173,21 @@ public class MssqlGenDialect extends StandardGenDialect {
             }
         };
 
+        private static Type DATE = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Date.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "datetime";
+            }
+        };
+
         private static Type DECIMAL = new MssqlType() {
 
             @Override
@@ -148,7 +199,12 @@ public class MssqlGenDialect extends StandardGenDialect {
             @Override
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
-                return format("numeric(%d,%d)", precision, scale);
+                if ("money".equalsIgnoreCase(typeName)) {
+                    return "money";
+                } else if ("smallmoney".equalsIgnoreCase(typeName)) {
+                    return "smallmoney";
+                }
+                return format("decimal(%d,%d)", precision, scale);
             }
         };
 
@@ -182,18 +238,51 @@ public class MssqlGenDialect extends StandardGenDialect {
             }
         };
 
-        private static Type DATE = new MssqlType() {
+        private static Type LONGVARBINARY = new MssqlType() {
 
             @Override
             public Class<?> getJavaClass(int length, int precision, int scale,
                     String typeName) {
-                return Date.class;
+                return byte[].class;
             }
 
             @Override
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
-                return "datetime";
+                return "image";
+            }
+        };
+
+        private static Type LONGVARCHAR = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                if ("ntext".equalsIgnoreCase(typeName)) {
+                    return "ntext";
+                }
+                return "text";
+            }
+        };
+
+        private static Type NUMERIC = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return BigDecimal.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return format("numeric(%d,%d)", precision, scale);
             }
         };
 
@@ -223,7 +312,28 @@ public class MssqlGenDialect extends StandardGenDialect {
             @Override
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
+                if ("smalldatetime".equalsIgnoreCase(typeName)) {
+                    return "smalldatetime";
+                }
                 return "datetime";
+            }
+        };
+
+        private static Type VARCHAR = new MssqlType() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                if ("nvarchar".equalsIgnoreCase(typeName)) {
+                    return format("nvarchar(%d)", length);
+                }
+                return format("varchar(%d)", length);
             }
         };
 

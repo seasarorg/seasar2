@@ -96,8 +96,8 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      *            エンティティ記述
      */
     public void doTable(DbTableMeta tableMeta, EntityDesc entityDesc) {
-        entityDesc.setCatalogName(tableMeta.getCatalogName());
         if (schemaSpecified) {
+            entityDesc.setCatalogName(tableMeta.getCatalogName());
             entityDesc.setSchemaName(tableMeta.getSchemaName());
         }
         entityDesc.setTableName(tableMeta.getName());

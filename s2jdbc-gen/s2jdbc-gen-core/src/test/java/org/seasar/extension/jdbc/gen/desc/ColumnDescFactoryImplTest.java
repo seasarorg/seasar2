@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
@@ -81,6 +82,10 @@ public class ColumnDescFactoryImplTest {
     @SuppressWarnings("unused")
     @Column(unique = true)
     private String unique;
+
+    @SuppressWarnings("unused")
+    @Id
+    private Integer id;
 
     /**
      * 
@@ -228,6 +233,21 @@ public class ColumnDescFactoryImplTest {
     @Test
     public void testNullable_nonNullablePrimitive() throws Exception {
         Field field = getClass().getDeclaredField("nonNullablePrimitive");
+        PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
+                field, new EntityMeta());
+
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        assertNotNull(columnDesc);
+        assertFalse(columnDesc.isNullable());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testNullable_id() throws Exception {
+        Field field = getClass().getDeclaredField("id");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
 

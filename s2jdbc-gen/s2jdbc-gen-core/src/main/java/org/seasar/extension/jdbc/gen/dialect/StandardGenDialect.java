@@ -152,6 +152,10 @@ public class StandardGenDialect implements GenDialect {
         return equals;
     }
 
+    public String getIdentityDefinition() {
+        throw new UnsupportedOperationException("getIdentityDefinition");
+    }
+
     /**
      * 標準の{@link Type}の実装クラスです。
      * 

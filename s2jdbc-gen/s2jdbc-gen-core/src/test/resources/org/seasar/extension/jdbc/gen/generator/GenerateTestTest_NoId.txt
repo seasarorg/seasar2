@@ -1,4 +1,4 @@
-package hoge.entity;
+package org.seasar.extension.jdbc.gen.generator;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;

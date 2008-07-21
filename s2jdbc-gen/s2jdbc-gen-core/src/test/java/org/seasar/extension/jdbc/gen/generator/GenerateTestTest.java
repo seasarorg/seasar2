@@ -63,7 +63,7 @@ public class GenerateTestTest {
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
         entityTestModelFactory = new TestModelFactoryImpl("s2jdbc.dicon",
-                "jdbcManager", "hoge.entity", "Test");
+                "jdbcManager", "Test");
         generator = new GeneratorImplStub("UTF-8");
     }
 

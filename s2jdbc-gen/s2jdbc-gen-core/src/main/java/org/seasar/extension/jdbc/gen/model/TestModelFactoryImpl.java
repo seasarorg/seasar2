@@ -43,9 +43,6 @@ public class TestModelFactoryImpl implements TestModelFactory {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName;
 
-    /** パッケージ名 */
-    protected String packageName;
-
     /** テストクラス名のサフィックス */
     protected String ｔestClassNameSuffix;
 
@@ -56,13 +53,11 @@ public class TestModelFactoryImpl implements TestModelFactory {
      *            設定ファイルのパス
      * @param jdbcManagerName
      *            {@link JdbcManager}のコンポーネント名
-     * @param packageName
-     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @param ｔestClassNameSuffix
      *            テストクラス名のサフィックス
      */
     public TestModelFactoryImpl(String configPath, String jdbcManagerName,
-            String packageName, String ｔestClassNameSuffix) {
+            String ｔestClassNameSuffix) {
         if (configPath == null) {
             throw new NullPointerException("configPath");
         }
@@ -74,7 +69,6 @@ public class TestModelFactoryImpl implements TestModelFactory {
         }
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
-        this.packageName = packageName;
         this.ｔestClassNameSuffix = ｔestClassNameSuffix;
     }
 
@@ -82,6 +76,8 @@ public class TestModelFactoryImpl implements TestModelFactory {
         TestModel testModel = new TestModel();
         testModel.setConfigPath(configPath);
         testModel.setJdbcManagerName(jdbcManagerName);
+        String packageName = ClassUtil.splitPackageAndShortClassName(entityMeta
+                .getEntityClass().getName())[0];
         testModel.setPackageName(packageName);
         testModel.setShortClassName(entityMeta.getName() + ｔestClassNameSuffix);
         testModel.setShortEntityClassName(entityMeta.getName());
@@ -121,18 +117,18 @@ public class TestModelFactoryImpl implements TestModelFactory {
     protected void doIdValue(EntityMeta entityMeta, TestModel testModel) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
-            testModel.addIdExpression(getIdExpression(propertyClass));
+            testModel.addIdExpression(getExpression(propertyClass));
         }
     }
 
     /**
-     * 識別子の式を取得します。
+     * プロパティのクラスの値を表す式を取得します。
      * 
      * @param propertyClass
      *            プロパティのクラス
      * @return 識別子の式
      */
-    protected String getIdExpression(Class<?> propertyClass) {
+    protected String getExpression(Class<?> propertyClass) {
         Class<?> clazz = ClassUtil.getPrimitiveClassIfWrapper(propertyClass);
         if (clazz.isPrimitive()) {
             if (clazz == boolean.class) {
