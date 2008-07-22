@@ -34,9 +34,22 @@ public class Db2GenDialect extends StandardGenDialect {
         typeMap.put(Types.BINARY, Db2Type.BINARY);
         typeMap.put(Types.BOOLEAN, Db2Type.BOOLEAN);
         typeMap.put(Types.BLOB, Db2Type.BLOB);
+        typeMap.put(Types.CHAR, Db2Type.CHAR);
         typeMap.put(Types.CLOB, Db2Type.CLOB);
         typeMap.put(Types.DECIMAL, Db2Type.DECIMAL);
+        typeMap.put(Types.LONGVARBINARY, Db2Type.LONGVARBINARY);
+        typeMap.put(Types.LONGVARCHAR, Db2Type.LONGVARCHAR);
+        typeMap.put(Types.REAL, Db2Type.REAL);
         typeMap.put(Types.TINYINT, Db2Type.TINYINT);
+        typeMap.put(Types.VARBINARY, Db2Type.VARBINARY);
+    }
+
+    @Override
+    public String getDefaultSchemaName(String userName) {
+        if (userName == null) {
+            return null;
+        }
+        return userName.toUpperCase();
     }
 
     @Override
@@ -79,6 +92,9 @@ public class Db2GenDialect extends StandardGenDialect {
             @Override
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
+                if ("char () for bit data".equalsIgnoreCase(typeName)) {
+                    return format("char(%d) for bit data", length);
+                }
                 return format("varchar(%d) for bit data", length);
             }
         };
@@ -113,6 +129,27 @@ public class Db2GenDialect extends StandardGenDialect {
             }
         };
 
+        private static Type CHAR = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                if (length > 1) {
+                    return String.class;
+                }
+                return Character.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                if (length > 254) {
+                    return "char(254)";
+                }
+                return format("char(%d)", length);
+            }
+        };
+
         private static Type CLOB = new Db2Type() {
 
             @Override
@@ -143,6 +180,51 @@ public class Db2GenDialect extends StandardGenDialect {
             }
         };
 
+        private static Type LONGVARBINARY = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "long varchar for bit data";
+            }
+        };
+
+        private static Type LONGVARCHAR = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return String.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "long varchar";
+            }
+        };
+
+        private static Type REAL = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return Double.class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return "real";
+            }
+        };
+
         private static Type TINYINT = new Db2Type() {
 
             @Override
@@ -155,6 +237,21 @@ public class Db2GenDialect extends StandardGenDialect {
             public String getColumnDefinition(int length, int precision,
                     int scale, String typeName) {
                 return "smallint";
+            }
+        };
+
+        private static Type VARBINARY = new Db2Type() {
+
+            @Override
+            public Class<?> getJavaClass(int length, int precision, int scale,
+                    String typeName) {
+                return byte[].class;
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, String typeName) {
+                return format("varchar(%d) for bit data", length);
             }
         };
 
