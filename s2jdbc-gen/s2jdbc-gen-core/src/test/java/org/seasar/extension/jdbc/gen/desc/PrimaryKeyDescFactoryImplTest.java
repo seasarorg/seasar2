@@ -16,8 +16,6 @@
 package org.seasar.extension.jdbc.gen.desc;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.junit.Before;
@@ -71,74 +69,13 @@ public class PrimaryKeyDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testId_assigned() throws Exception {
+    public void testId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
                 .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
-        assertFalse(primaryKeyDesc.isIdentity());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testId_identity() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
-        PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
-        assertNotNull(primaryKeyDesc);
-        assertEquals(1, primaryKeyDesc.getColumnNameList().size());
-        assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
-        assertTrue(primaryKeyDesc.isIdentity());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testId_sequence() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
-        PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
-        assertNotNull(primaryKeyDesc);
-        assertEquals(1, primaryKeyDesc.getColumnNameList().size());
-        assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
-        assertFalse(primaryKeyDesc.isIdentity());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testId_table() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
-        PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
-        assertNotNull(primaryKeyDesc);
-        assertEquals(1, primaryKeyDesc.getColumnNameList().size());
-        assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
-        assertFalse(primaryKeyDesc.isIdentity());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testId_auto() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
-        PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
-        assertNotNull(primaryKeyDesc);
-        assertEquals(1, primaryKeyDesc.getColumnNameList().size());
-        assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
-        assertFalse(primaryKeyDesc.isIdentity());
     }
 
     /**
@@ -154,7 +91,6 @@ public class PrimaryKeyDescFactoryImplTest {
         assertEquals(2, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID1", primaryKeyDesc.getColumnNameList().get(0));
         assertEquals("ID2", primaryKeyDesc.getColumnNameList().get(1));
-        assertFalse(primaryKeyDesc.isIdentity());
     }
 
     /**
@@ -175,46 +111,6 @@ public class PrimaryKeyDescFactoryImplTest {
 
         /** */
         @Id
-        public Integer id;
-    }
-
-    /** */
-    @Entity
-    public static class Bbb {
-
-        /** */
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        public Integer id;
-    }
-
-    /** */
-    @Entity
-    public static class Ccc {
-
-        /** */
-        @Id
-        @GeneratedValue(strategy = GenerationType.SEQUENCE)
-        public Integer id;
-    }
-
-    /** */
-    @Entity
-    public static class Ddd {
-
-        /** */
-        @Id
-        @GeneratedValue(strategy = GenerationType.TABLE)
-        public Integer id;
-    }
-
-    /** */
-    @Entity
-    public static class Eee {
-
-        /** */
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
         public Integer id;
     }
 

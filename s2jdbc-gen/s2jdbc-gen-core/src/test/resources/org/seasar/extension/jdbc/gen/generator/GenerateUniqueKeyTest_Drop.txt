@@ -1,0 +1,2 @@
+alter table AAA.BBB.HOGE drop constraint HOGE_UK1;
+alter table AAA.BBB.HOGE drop constraint HOGE_UK2;

@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Transient;
@@ -86,6 +88,11 @@ public class ColumnDescFactoryImplTest {
     @SuppressWarnings("unused")
     @Id
     private Integer id;
+
+    @SuppressWarnings("unused")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer identityId;
 
     /**
      * 
@@ -282,6 +289,20 @@ public class ColumnDescFactoryImplTest {
         ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
         assertNotNull(columnDesc);
         assertTrue(columnDesc.isUnique());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIdentity() throws Exception {
+        Field field = getClass().getDeclaredField("identityId");
+        PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
+                field, new EntityMeta());
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        assertNotNull(columnDesc);
+        assertTrue(columnDesc.isIdentity());
     }
 
     /**

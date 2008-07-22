@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
@@ -36,7 +34,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateConstraintTest {
+public class GenerateForeignKeyTest {
 
     private GeneratorImplStub generator;
 
@@ -49,18 +47,6 @@ public class GenerateConstraintTest {
     @Before
     public void setUp() throws Exception {
         generator = new GeneratorImplStub("UTF-8");
-
-        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
-        primaryKeyDesc.addColumnName("PK1");
-        primaryKeyDesc.addColumnName("PK2");
-
-        UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
-        uniqueKeyDesc.addColumnName("UK1-1");
-        uniqueKeyDesc.addColumnName("UK1-2");
-
-        UniqueKeyDesc uniqueKeyDesc2 = new UniqueKeyDesc();
-        uniqueKeyDesc2.addColumnName("UK2-1");
-        uniqueKeyDesc2.addColumnName("UK2-2");
 
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
         foreignKeyDesc.addColumnName("FK1-1");
@@ -84,9 +70,6 @@ public class GenerateConstraintTest {
         tableDesc.setCatalogName("AAA");
         tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
-        tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
-        tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
-        tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 
@@ -102,7 +85,7 @@ public class GenerateConstraintTest {
     @Test
     public void testCreate() throws Exception {
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "sql/create-constraint.ftl", "UTF-8",
+                "dir"), new File("file"), "sql/create-foreignkey.ftl", "UTF-8",
                 false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
@@ -116,7 +99,7 @@ public class GenerateConstraintTest {
     @Test
     public void testDrop() throws Exception {
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "sql/drop-constraint.ftl", "UTF-8",
+                "dir"), new File("file"), "sql/drop-foreignkey.ftl", "UTF-8",
                 false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Drop.txt";

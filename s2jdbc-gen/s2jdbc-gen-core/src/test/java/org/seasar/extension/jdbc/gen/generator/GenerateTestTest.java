@@ -72,7 +72,7 @@ public class GenerateTestTest {
      * @throws Exception
      */
     @Test
-    public void test_CompositeId() throws Exception {
+    public void testCompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
         TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -89,7 +89,7 @@ public class GenerateTestTest {
      * @throws Exception
      */
     @Test
-    public void test_NoId() throws Exception {
+    public void testNoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
         TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(

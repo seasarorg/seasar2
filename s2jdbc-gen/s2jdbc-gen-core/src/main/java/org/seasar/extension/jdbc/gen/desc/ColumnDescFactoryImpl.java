@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.desc;
 import java.lang.reflect.Field;
 
 import javax.persistence.Column;
+import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
@@ -58,6 +59,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         Column column = getColumn(propertyMeta);
         ColumnDesc columnDesc = new ColumnDesc();
         doName(propertyMeta, columnDesc, column);
+        doIdentity(propertyMeta, columnDesc, column);
         doDefinition(propertyMeta, columnDesc, column);
         doNullable(propertyMeta, columnDesc, column);
         doUnique(propertyMeta, columnDesc, column);
@@ -78,6 +80,27 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
             Column column) {
         ColumnMeta columnMeta = propertyMeta.getColumnMeta();
         columnDesc.setName(columnMeta.getName());
+    }
+
+    /**
+     * IDENTITYカラムを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param columnDesc
+     *            カラム記述
+     * @param column
+     *            カラム
+     */
+    protected void doIdentity(PropertyMeta propertyMeta, ColumnDesc columnDesc,
+            Column column) {
+        GenerationType generationType = propertyMeta.getGenerationType();
+        if (generationType == GenerationType.AUTO) {
+            generationType = dialect.getDefaultGenerationType();
+        }
+        if (generationType == GenerationType.IDENTITY) {
+            columnDesc.setIdentity(true);
+        }
     }
 
     /**

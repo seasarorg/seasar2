@@ -57,6 +57,11 @@ public class PostgreGenDialect extends StandardGenDialect {
                 + initValue;
     }
 
+    @Override
+    public String getIdentityColumnDefinition() {
+        return "not null";
+    }
+
     /**
      * PostgreSQL用の{@link Type}の実装です。
      * 

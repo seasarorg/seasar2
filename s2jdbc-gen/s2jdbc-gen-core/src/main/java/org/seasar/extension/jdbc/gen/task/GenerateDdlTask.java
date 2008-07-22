@@ -59,26 +59,91 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 制約を作成するDDLファイル名を設定します。
+     * 外部キーを作成するDDLファイル名を設定します。
      * 
-     * @param createConstraintDdlFileName
-     *            制約を作成するDDLファイル名
+     * @param createForeignKeyDdlFileName
+     *            外部キーを作成するDDLファイル名
      */
-    public void setCreateConstraintDdlFileName(
-            String createConstraintDdlFileName) {
-        command.setCreateConstraintDdlFileName(createConstraintDdlFileName);
+    public void setCreateForeignKeyDdlFileName(
+            String createForeignKeyDdlFileName) {
+        command.setCreateForeignKeyDdlFileName(createForeignKeyDdlFileName);
     }
 
     /**
-     * 制約を作成するDDLのテンプレートファイル名を設定します。
+     * 外部キーを作成するDDLのテンプレートファイル名を設定します。
      * 
-     * @param createConstraintTemplateFileName
-     *            制約を作成するDDLのテンプレートファイル名
+     * @param createForeignKeyTemplateFileName
+     *            外部キーを作成するDDLのテンプレートファイル名
      */
-    public void setCreateConstraintTemplateFileName(
-            String createConstraintTemplateFileName) {
+    public void setCreateForeignKeyTemplateFileName(
+            String createForeignKeyTemplateFileName) {
         command
-                .setCreateConstraintTemplateFileName(createConstraintTemplateFileName);
+                .setCreateForeignKeyTemplateFileName(createForeignKeyTemplateFileName);
+    }
+
+    /**
+     * 一意キーを作成するDDLファイル名を設定します。
+     * 
+     * @param createUniqueKeyDdlFileName
+     *            一意キーを作成するDDLファイル名
+     */
+    public void setCreateUniqueKeyDdlFileName(String createUniqueKeyDdlFileName) {
+        command.setCreateUniqueKeyDdlFileName(createUniqueKeyDdlFileName);
+    }
+
+    /**
+     * 一意キーを作成するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param createUniqueKeyTemplateFileName
+     *            一意キーを作成するDDLのテンプレートファイル名
+     */
+    public void setCreateUniqueKeyTemplateFileName(
+            String createUniqueKeyTemplateFileName) {
+        command
+                .setCreateUniqueKeyTemplateFileName(createUniqueKeyTemplateFileName);
+    }
+
+    /**
+     * 外部キーを削除するDDLファイル名を設定します。
+     * 
+     * @param dropForeignKeyDdlFileName
+     *            外部キーを削除するDDLファイル名
+     */
+    public void setDropForeignKeyDdlFileName(String dropForeignKeyDdlFileName) {
+        command.setDropForeignKeyDdlFileName(dropForeignKeyDdlFileName);
+    }
+
+    /**
+     * 外部キーを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropForeignKeyTemplateFileName
+     *            外部キーを削除するDDLのテンプレートファイル名
+     */
+    public void setDropForeignKeyTemplateFileName(
+            String dropForeignKeyTemplateFileName) {
+        command
+                .setDropForeignKeyTemplateFileName(dropForeignKeyTemplateFileName);
+    }
+
+    /**
+     * 一意キーを削除するDDLファイル名を設定します。
+     * 
+     * @param dropUniqueKeyDdlFileName
+     *            一意キーを削除するDDLファイル名
+     */
+    public void setDropUniqueKeyDdlFileName(String dropUniqueKeyDdlFileName) {
+        command.setDropUniqueKeyDdlFileName(dropUniqueKeyDdlFileName);
+    }
+
+    /**
+     * 一意キーを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropUniqueKeyTemplateFileName
+     *            一意キーを削除するDDLのテンプレートファイル名
+     */
+    public void setDropUniqueKeyTemplateFileName(
+            String dropUniqueKeyTemplateFileName) {
+        command.setDropUniqueKeyTemplateFileName(dropUniqueKeyTemplateFileName);
     }
 
     /**
@@ -122,28 +187,6 @@ public class GenerateDdlTask extends AbstractTask {
     public void setCreateTableTemplateFileName(
             String createTableTemplateFileName) {
         command.setCreateTableTemplateFileName(createTableTemplateFileName);
-    }
-
-    /**
-     * 制約を削除するDDLファイル名を設定します。
-     * 
-     * @param dropConstraintDdlFileName
-     *            制約を削除するDDLファイル名
-     */
-    public void setDropConstraintDdlFileName(String dropConstraintDdlFileName) {
-        command.setDropConstraintDdlFileName(dropConstraintDdlFileName);
-    }
-
-    /**
-     * 制約を削除するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param dropConstraintTemplateFileName
-     *            制約を削除するDDLのテンプレートファイル名
-     */
-    public void setDropConstraintTemplateFileName(
-            String dropConstraintTemplateFileName) {
-        command
-                .setDropConstraintTemplateFileName(dropConstraintTemplateFileName);
     }
 
     /**

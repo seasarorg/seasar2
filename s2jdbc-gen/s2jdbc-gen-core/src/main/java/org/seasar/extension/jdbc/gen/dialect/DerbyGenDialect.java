@@ -44,6 +44,11 @@ public class DerbyGenDialect extends StandardGenDialect {
         return GenerationType.IDENTITY;
     }
 
+    @Override
+    public String getIdentityColumnDefinition() {
+        return "not null generated always as identity";
+    }
+
     /**
      * Derby用の{@link Type}の実装です。
      * 

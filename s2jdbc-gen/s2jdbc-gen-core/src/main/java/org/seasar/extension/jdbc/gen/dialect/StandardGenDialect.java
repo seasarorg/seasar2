@@ -152,7 +152,7 @@ public class StandardGenDialect implements GenDialect {
         return equals;
     }
 
-    public String getIdentityDefinition() {
+    public String getIdentityColumnDefinition() {
         throw new UnsupportedOperationException("getIdentityDefinition");
     }
 

@@ -1,0 +1,2 @@
+alter table AAA.BBB.HOGE add constraint HOGE_FK1 foreign key (FK1-1, FK1-2) references CCC.DDD.FOO (REF1-1, REF1-2);
+alter table AAA.BBB.HOGE add constraint HOGE_FK2 foreign key (FK2-1, FK2-2) references EEE.FFF.BAR (REF2-1, REF2-2);

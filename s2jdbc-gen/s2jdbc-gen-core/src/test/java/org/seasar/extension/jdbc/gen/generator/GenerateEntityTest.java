@@ -137,13 +137,10 @@ public class GenerateEntityTest {
 
     /**
      * 
-     */
-    /**
-     * 
      * @throws Exception
      */
     @Test
-    public void testGenerate_CompositeId() throws Exception {
+    public void testCompositeId() throws Exception {
         AttributeDesc id1 = new AttributeDesc();
         id1.setName("id1");
         id1.setId(true);

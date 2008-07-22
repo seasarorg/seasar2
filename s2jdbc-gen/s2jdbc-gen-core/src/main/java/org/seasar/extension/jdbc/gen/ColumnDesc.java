@@ -31,6 +31,9 @@ public class ColumnDesc {
     /** 定義 */
     protected String definition;
 
+    /** IDENTITYカラムの場合{@code true} */
+    protected boolean identity;
+
     /** {@code null}可能ならば{@code true} */
     protected boolean nullable;
 
@@ -112,6 +115,25 @@ public class ColumnDesc {
      */
     public void setUnique(boolean unique) {
         this.unique = unique;
+    }
+
+    /**
+     * IDENTITYカラムの場合{@code true}を返します。
+     * 
+     * @return IDENTITYカラムの場合{@code true}
+     */
+    public boolean isIdentity() {
+        return identity;
+    }
+
+    /**
+     * IDENTITYカラムの場合{@code true}を設定します。
+     * 
+     * @param identity
+     *            IDENTITYカラムの場合{@code true}
+     */
+    public void setIdentity(boolean identity) {
+        this.identity = identity;
     }
 
     @Override

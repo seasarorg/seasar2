@@ -54,6 +54,11 @@ public class SybaseGenDialect extends StandardGenDialect {
         return "go";
     }
 
+    @Override
+    public String getIdentityColumnDefinition() {
+        return "identity not null";
+    }
+
     /**
      * Sybase用の{@link Type}の実装です。
      * 

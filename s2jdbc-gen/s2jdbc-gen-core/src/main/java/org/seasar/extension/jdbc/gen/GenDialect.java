@@ -137,7 +137,12 @@ public interface GenDialect {
      */
     boolean isSqlBlockStartWords(List<String> words);
 
-    String getIdentityDefinition();
+    /**
+     * IDENTITYカラムの定義を返します。
+     * 
+     * @return IDENTITYカラムの定義
+     */
+    String getIdentityColumnDefinition();
 
     /**
      * Javaクラスとデータベースのカラム定義を表すインタフェースです。

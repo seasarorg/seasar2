@@ -23,8 +23,9 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.dialect.MssqlGenDialect;
 import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
 
@@ -51,14 +52,18 @@ public class GenerateTableTest {
         ColumnDesc no = new ColumnDesc();
         no.setName("no");
         no.setDefinition("integer");
+        no.setIdentity(true);
         no.setNullable(false);
         no.setUnique(true);
 
         ColumnDesc name = new ColumnDesc();
         name.setName("name");
         name.setDefinition("varchar");
-        name.setNullable(true);
+        name.setNullable(false);
         name.setUnique(false);
+
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        primaryKeyDesc.addColumnName("no");
 
         TableDesc tableDesc = new TableDesc();
         tableDesc.setCatalogName("AAA");
@@ -66,17 +71,55 @@ public class GenerateTableTest {
         tableDesc.setName("HOGE");
         tableDesc.addColumnDesc(no);
         tableDesc.addColumnDesc(name);
+        tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
+
+        ColumnDesc no2 = new ColumnDesc();
+        no2.setName("no");
+        no2.setDefinition("integer");
+        no2.setNullable(false);
+        no2.setUnique(true);
+
+        ColumnDesc name2 = new ColumnDesc();
+        name2.setName("name");
+        name2.setDefinition("varchar");
+        name2.setNullable(false);
+        name2.setUnique(false);
+
+        PrimaryKeyDesc primaryKeyDesc2 = new PrimaryKeyDesc();
+        primaryKeyDesc2.addColumnName("no");
+        primaryKeyDesc2.addColumnName("name");
 
         TableDesc tableDesc2 = new TableDesc();
         tableDesc2.setCatalogName("AAA");
         tableDesc2.setSchemaName("BBB");
         tableDesc2.setName("FOO");
-        tableDesc2.addColumnDesc(no);
-        tableDesc2.addColumnDesc(name);
+        tableDesc2.addColumnDesc(no2);
+        tableDesc2.addColumnDesc(name2);
+        tableDesc2.setPrimaryKeyDesc(primaryKeyDesc2);
+
+        ColumnDesc no3 = new ColumnDesc();
+        no3.setName("no");
+        no3.setDefinition("integer");
+        no3.setNullable(true);
+        no3.setUnique(true);
+
+        ColumnDesc name3 = new ColumnDesc();
+        name3.setName("name");
+        name3.setDefinition("varchar");
+        name3.setNullable(true);
+        name3.setUnique(false);
+
+        TableDesc tableDesc3 = new TableDesc();
+        tableDesc3.setCatalogName("AAA");
+        tableDesc3.setSchemaName("BBB");
+        tableDesc3.setName("BAR");
+        tableDesc3.addColumnDesc(no3);
+        tableDesc3.addColumnDesc(name3);
 
         DbModelFactoryImpl factory = new DbModelFactoryImpl(
-                new StandardGenDialect(), ';');
-        model = factory.getDbModel(Arrays.asList(tableDesc, tableDesc2));
+                new MssqlGenDialect(), ';');
+        model = factory.getDbModel(Arrays.asList(tableDesc, tableDesc2,
+                tableDesc3));
     }
 
     /**

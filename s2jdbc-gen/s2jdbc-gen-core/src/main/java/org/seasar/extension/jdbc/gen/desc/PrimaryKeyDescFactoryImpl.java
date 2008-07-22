@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc.gen.desc;
 
 import java.util.List;
 
-import javax.persistence.GenerationType;
-
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -52,7 +50,6 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
             List<PropertyMeta> idPropertyMetaList) {
         PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
         doColumnName(idPropertyMetaList, primaryKeyDesc);
-        doIdentity(idPropertyMetaList, primaryKeyDesc);
         if (primaryKeyDesc.getColumnNameList().isEmpty()) {
             return null;
         }
@@ -72,27 +69,6 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
         for (PropertyMeta propertyMeta : idPropertyMetaList) {
             ColumnMeta columnMeta = propertyMeta.getColumnMeta();
             primaryKeyDesc.addColumnName(columnMeta.getName());
-        }
-    }
-
-    /**
-     * {@link GenerationType#IDENTITY}で識別子が生成されるかどうかを処理します。
-     * 
-     * @param idPropertyMetaList
-     *            識別子のプロパティメタデータのリスト
-     * @param primaryKeyDesc
-     *            主キー記述
-     */
-    protected void doIdentity(List<PropertyMeta> idPropertyMetaList,
-            PrimaryKeyDesc primaryKeyDesc) {
-        for (PropertyMeta propertyMeta : idPropertyMetaList) {
-            GenerationType generationType = propertyMeta.getGenerationType();
-            if (generationType == GenerationType.AUTO) {
-                generationType = dialect.getDefaultGenerationType();
-            }
-            if (generationType == GenerationType.IDENTITY) {
-                primaryKeyDesc.setIdentity(true);
-            }
         }
     }
 }

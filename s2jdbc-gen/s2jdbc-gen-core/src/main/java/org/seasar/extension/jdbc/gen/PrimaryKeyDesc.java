@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.GenerationType;
-
 /**
  * 主キー記述です。
  * 
@@ -31,34 +29,8 @@ public class PrimaryKeyDesc {
     /** キー */
     protected final Key key = new Key();
 
-    /** {@link GenerationType#IDENTITY}で識別子が生成される場合{@code true} */
-    protected boolean identity;
-
     /** カラム名のリスト */
     protected List<String> columnNameList = new ArrayList<String>();
-
-    /**
-     * {@link GenerationType#IDENTITY}で識別子が生成される場合{@code true}、そうでない場合{@code
-     * false}を返します。
-     * 
-     * @return {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合
-     *         {@code false}
-     */
-    public boolean isIdentity() {
-        return identity;
-    }
-
-    /**
-     * {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合{@code
-     * false}を設定します。
-     * 
-     * @param identity
-     *            {@link GenerationType#IDENTITY}で識別子を生成する場合{@code true}、そうでない場合
-     *            {@code false}
-     */
-    public void setIdentity(boolean identity) {
-        this.identity = identity;
-    }
 
     /**
      * カラム名のリストを返します。

@@ -10,160 +10,19 @@
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
 	
 	<target name="testAll">
-		<antcall target="testFromDbToEntity"/>
-		<antcall target="testFromEntityToDb"/>
+		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
+		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
 	</target>
 	
 	<target name="testFromDbToEntity" >
-		<delete dir="temp"/>
-		<mkdir dir="temp/build"/>
-		<copy todir="temp/build">
-			<fileset dir="resources">
-				<include name="**"/>
-			</fileset>
-		</copy>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="sql">
-				<file name="create.sql"/>
-			</sqlFileList>
-		</exec-sql>
-		<gen-entity
-			rootpackagename="example"
-			javafiledestdir="temp/src"
-			overwrite="true"
-			classpathRef="classpath"
-		/>
-		<javac 
-			srcdir="temp/src"
-			destdir="temp/build"
-			classpathref="classpath"
-			encoding="UTF-8"
-			fork="true"
-			debug="on"
-		/>
-		<gen-ddl 
-			classpathRootDir="temp/build"
-			rootpackagename="example"
-			ddlfiledestdir="temp/ddl"
-			overwrite="true"
-			classpathref="classpath"
-		/>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="sql">
-				<file name="drop.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="temp/ddl">
-				<file name="create-table.sql"/>
-				<file name="drop-table.sql"/>
-			</sqlFileList>
-		</exec-sql>
+		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
 	</target>
 	
 	<target name="testFromEntityToDb" >
-		<delete dir="temp"/>
-		<mkdir dir="temp/build"/>
-		<mkdir dir="temp/result"/>
-		<copy todir="temp/build">
-			<fileset dir="resources">
-				<include name="**"/>
-			</fileset>
-		</copy>
-		<javac 
-			srcdir="../../src/main/java"
-			destdir="temp/build"
-			classpathref="classpath"
-			encoding="UTF-8"
-			fork="true"
-			debug="on"
-		/>
-		<gen-test
-			classpathrootdir="temp/build"
-			rootpackagename="example"
-			javafiledestdir="temp/src"
-			overwrite="true"
-			classpathRef="classpath"
-		/>
-		<javac 
-			srcdir="temp/src"
-			destdir="temp/build"
-			classpathref="classpath"
-			encoding="UTF-8"
-			fork="true"
-			debug="on"
-		/>
-		<gen-condition
-			classpathrootdir="temp/build"
-			rootpackagename="example"
-			javafiledestdir="temp/src"
-			overwrite="true"
-			classpathRef="classpath"
-		/>
-		<gen-ddl 
-			classpathRootDir="temp/build"
-			rootpackagename="example"
-			ddlfiledestdir="temp/ddl"
-			overwrite="true"
-			classpathref="classpath"
-		/>
-		<gen-version 
-			dmlfiledestdir="temp/dml"
-			versionfiledestdir="."
-			classpathref="classpath"
-		/>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="sql">
-				<file name="create.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="temp/ddl">
-				<file name="create-table.sql"/>
-				<file name="create-constraint.sql"/>
-				<file name="create-sequence.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="temp/dml">
-				<file name="update-version.sql"/>
-			</sqlFileList>
-		</exec-sql>
-		<junit haltonfailure="no" printsummary="true">
-			<formatter type="xml"/>
-			<classpath refid="classpath"/>
-			<batchtest todir="temp/result">
-				<fileset dir="temp/src">
-					<include name="**/*Test.java"/>
-				</fileset>
-			</batchtest>
-		</junit>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="temp/ddl">
-				<file name="drop-sequence.sql"/>
-				<file name="drop-constraint.sql"/>
-				<file name="drop-table.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="sql">
-				<file name="drop.sql"/>
-			</sqlFileList>
-		</exec-sql>
+		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
 	</target>
 
 	<target name="dump-dbmeta" >
-		<delete dir="temp"/>
-		<mkdir dir="temp/build"/>
-		<copy todir="temp/build">
-			<fileset dir="resources">
-				<include name="**"/>
-			</fileset>
-		</copy>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="sql">
-				<file name="create.sql"/>
-			</sqlFileList>
-		</exec-sql>
-		<dump-dbmeta
-			classpathRef="classpath"
-		/>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="sql">
-				<file name="drop.sql"/>
-			</sqlFileList>
-		</exec-sql>
+		<ant antfile="../common-build.xml" target="dump-dbmeta" inheritrefs="true"/>
 	</target>
 </project>

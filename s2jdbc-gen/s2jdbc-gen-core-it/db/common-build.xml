@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="s2jdbc-gen-common" default="dump-dbmeta" basedir=".">
+	
+	<target name="testFromDbToEntity" >
+		<delete dir="temp"/>
+		<mkdir dir="temp/build"/>
+		<copy todir="temp/build">
+			<fileset dir="resources">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="create.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<gen-entity
+			rootpackagename="example"
+			javafiledestdir="temp/src"
+			overwrite="true"
+			classpathRef="classpath"
+		/>
+		<javac 
+			srcdir="temp/src"
+			destdir="temp/build"
+			classpathref="classpath"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+		/>
+		<gen-ddl 
+			classpathRootDir="temp/build"
+			rootpackagename="example"
+			ddlfiledestdir="temp/ddl"
+			overwrite="true"
+			classpathref="classpath"
+		/>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="drop.sql"/>
+			</sqlFileList>
+			<sqlFileList dir="temp/ddl">
+				<file name="010-create-table.sql"/>
+				<file name="020-create-uniquekey.sql"/>
+				<file name="030-create-foreignkey.sql"/>
+				<file name="040-create-sequence.sql"/>
+				<file name="010-drop-sequence.sql"/>
+				<file name="020-drop-foreignkey.sql"/>
+				<file name="030-drop-uniquekey.sql"/>
+				<file name="040-drop-table.sql"/>
+			</sqlFileList>
+		</exec-sql>
+	</target>
+	
+	<target name="testFromEntityToDb" >
+		<delete dir="temp"/>
+		<mkdir dir="temp/build"/>
+		<mkdir dir="temp/result"/>
+		<copy todir="temp/build">
+			<fileset dir="resources">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<javac 
+			srcdir="../../src/main/java"
+			destdir="temp/build"
+			classpathref="classpath"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+		/>
+		<gen-test
+			classpathrootdir="temp/build"
+			rootpackagename="example"
+			javafiledestdir="temp/src"
+			overwrite="true"
+			classpathRef="classpath"
+		/>
+		<javac 
+			srcdir="temp/src"
+			destdir="temp/build"
+			classpathref="classpath"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+		/>
+		<gen-condition
+			classpathrootdir="temp/build"
+			rootpackagename="example"
+			javafiledestdir="temp/src"
+			overwrite="true"
+			classpathRef="classpath"
+		/>
+		<gen-ddl 
+			classpathRootDir="temp/build"
+			rootpackagename="example"
+			ddlfiledestdir="temp/ddl"
+			overwrite="true"
+			classpathref="classpath"
+		/>
+		<gen-version 
+			dmlfiledestdir="temp/dml"
+			versionfiledestdir="."
+			classpathref="classpath"
+		/>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="create.sql"/>
+			</sqlFileList>
+			<sqlFileList dir="temp/ddl">
+				<file name="010-create-table.sql"/>
+				<file name="020-create-uniquekey.sql"/>
+				<file name="030-create-foreignkey.sql"/>
+				<file name="040-create-sequence.sql"/>
+			</sqlFileList>
+			<sqlFileList dir="temp/dml">
+				<file name="update-version.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<junit haltonfailure="no" printsummary="true">
+			<formatter type="xml"/>
+			<classpath refid="classpath"/>
+			<batchtest todir="temp/result" fork="true">
+				<fileset dir="temp/src">
+					<include name="**/*Test.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="temp/ddl">
+				<file name="010-drop-sequence.sql"/>
+				<file name="020-drop-foreignkey.sql"/>
+				<file name="030-drop-uniquekey.sql"/>
+				<file name="040-drop-table.sql"/>
+			</sqlFileList>
+			<sqlFileList dir="sql">
+				<file name="drop.sql"/>
+			</sqlFileList>
+		</exec-sql>
+	</target>
+
+	<target name="dump-dbmeta" >
+		<delete dir="temp"/>
+		<mkdir dir="temp/build"/>
+		<copy todir="temp/build">
+			<fileset dir="resources">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="create.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<dump-dbmeta
+			classpathRef="classpath"
+		/>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="drop.sql"/>
+			</sqlFileList>
+		</exec-sql>
+	</target>
+</project>

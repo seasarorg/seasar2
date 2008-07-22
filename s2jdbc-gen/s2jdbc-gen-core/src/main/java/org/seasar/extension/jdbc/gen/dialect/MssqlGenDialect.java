@@ -81,8 +81,8 @@ public class MssqlGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getIdentityDefinition() {
-        return "identity";
+    public String getIdentityColumnDefinition() {
+        return "identity not null";
     }
 
     /**

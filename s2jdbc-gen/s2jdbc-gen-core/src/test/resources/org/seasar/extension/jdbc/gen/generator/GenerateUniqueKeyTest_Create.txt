@@ -1,0 +1,2 @@
+alter table AAA.BBB.HOGE add constraint HOGE_UK1 unique (UK1-1, UK1-2);
+alter table AAA.BBB.HOGE add constraint HOGE_UK2 unique (UK2-1, UK2-2);

@@ -88,38 +88,50 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
 
-    /** 制約を作成するDDLファイル名 */
-    protected String createConstraintDdlFileName = "create-constraint.sql";
-
-    /** 制約を作成するDDLのテンプレートファイル名 */
-    protected String createConstraintTemplateFileName = "sql/create-constraint.ftl";
-
     /** テーブルを作成するDDLファイル名 */
-    protected String createTableDdlFileName = "create-table.sql";
+    protected String createTableDdlFileName = "010-create-table.sql";
+
+    /** 一意キーを作成するDDLファイル名 */
+    protected String createUniqueKeyDdlFileName = "020-create-uniquekey.sql";
+
+    /** 外部キーを作成するDDLファイル名 */
+    protected String createForeignKeyDdlFileName = "030-create-foreignkey.sql";
+
+    /** シーケンスを生成するDDLファイル */
+    protected String createSequenceDdlFileName = "040-create-sequence.sql";
+
+    /** テーブルを削除するDDLファイル名 */
+    protected String dropTableDdlFileName = "040-drop-table.sql";
+
+    /** 一意キーを削除するDDLファイル名 */
+    protected String dropUniqueKeyDdlFileName = "030-drop-uniquekey.sql";
+
+    /** 外部キーを削除するDDLファイル名 */
+    protected String dropForeignKeyDdlFileName = "020-drop-foreignkey.sql";
+
+    /** シーケンスを削除するDDLファイル名 */
+    protected String dropSequenceDdlFileName = "010-drop-sequence.sql";
 
     /** テーブルを作成するDDLのテンプレートファイル名 */
     protected String createTableTemplateFileName = "sql/create-table.ftl";
 
-    /** シーケンスを生成するDDLファイル */
-    protected String createSequenceDdlFileName = "create-sequence.sql";
+    /** 一意キーを作成するDDLのテンプレートファイル名 */
+    protected String createUniqueKeyTemplateFileName = "sql/create-uniquekey.ftl";
+
+    /** 外部キーを作成するDDLのテンプレートファイル名 */
+    protected String createForeignKeyTemplateFileName = "sql/create-foreignkey.ftl";
 
     /** シーケンスを生成するDDLのテンプレートファイル */
     protected String createSequenceTemplateFileName = "sql/create-sequence.ftl";
 
-    /** 制約を削除するDDLファイル名 */
-    protected String dropConstraintDdlFileName = "drop-constraint.sql";
-
-    /** 制約を削除するDDLのテンプレートファイル名 */
-    protected String dropConstraintTemplateFileName = "sql/drop-constraint.ftl";
-
-    /** テーブルを削除するDDLファイル名 */
-    protected String dropTableDdlFileName = "drop-table.sql";
-
     /** テーブルを削除するDDLのテンプレートファイル名 */
     protected String dropTableTemplateFileName = "sql/drop-table.ftl";
 
-    /** シーケンスを削除するDDLファイル名 */
-    protected String dropSequenceDdlFileName = "drop-sequence.sql";
+    /** 外部キーを削除するDDLのテンプレートファイル名 */
+    protected String dropForeignKeyTemplateFileName = "sql/drop-foreignkey.ftl";
+
+    /** 一意キーを削除するDDLのテンプレートファイル名 */
+    protected String dropUniqueKeyTemplateFileName = "sql/drop-uniquekey.ftl";
 
     /** シーケンスを削除するDDLのテンプレートファイル名 */
     protected String dropSequenceTemplateFileName = "sql/drop-sequence.ftl";
@@ -220,46 +232,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 制約を作成するDDLのテンプレートファイル名を返します。
-     * 
-     * @return 制約を作成するDDLのテンプレートファイル名
-     */
-    public String getCreateConstraintTemplateFileName() {
-        return createConstraintTemplateFileName;
-    }
-
-    /**
-     * 制約を作成するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param createConstraintTemplateFileName
-     *            制約を作成するDDLのテンプレートファイル名
-     */
-    public void setCreateConstraintTemplateFileName(
-            String createConstraintTemplateFileName) {
-        this.createConstraintTemplateFileName = createConstraintTemplateFileName;
-    }
-
-    /**
-     * 制約を作成するDDLファイル名を返します。
-     * 
-     * @return 制約を作成するDDLファイル名
-     */
-    public String getCreateConstraintDdlFileName() {
-        return createConstraintDdlFileName;
-    }
-
-    /**
-     * 制約を作成するDDLファイル名を設定します。
-     * 
-     * @param createConstraintDdlFileName
-     *            制約を作成するDDLファイル名
-     */
-    public void setCreateConstraintDdlFileName(
-            String createConstraintDdlFileName) {
-        this.createConstraintDdlFileName = createConstraintDdlFileName;
-    }
-
-    /**
      * テーブルを作成するDDLファイル名を返します。
      * 
      * @return テーブルを作成するDDLファイル名
@@ -338,45 +310,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 制約を削除するDDLファイル名を返します。
-     * 
-     * @return 制約を削除するDDLファイル名
-     */
-    public String getDropConstraintDdlFileName() {
-        return dropConstraintDdlFileName;
-    }
-
-    /**
-     * 制約を削除するDDLファイル名を設定します。
-     * 
-     * @param dropConstraintDdlFileName
-     *            制約を削除するDDLファイル名
-     */
-    public void setDropConstraintDdlFileName(String dropConstraintDdlFileName) {
-        this.dropConstraintDdlFileName = dropConstraintDdlFileName;
-    }
-
-    /**
-     * 制約を削除するDDLのテンプレートファイル名を返します。
-     * 
-     * @return 制約を削除するDDLのテンプレートファイル名
-     */
-    public String getDropConstraintTemplateFileName() {
-        return dropConstraintTemplateFileName;
-    }
-
-    /**
-     * 制約を削除するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param dropConstraintTemplateFileName
-     *            制約を削除するDDLのテンプレートファイル名
-     */
-    public void setDropConstraintTemplateFileName(
-            String dropConstraintTemplateFileName) {
-        this.dropConstraintTemplateFileName = dropConstraintTemplateFileName;
-    }
-
-    /**
      * テーブルを削除するDDLファイル名を返します。
      * 
      * @return テーブルを削除するDDLファイル名
@@ -451,6 +384,163 @@ public class GenerateDdlCommand extends AbstractCommand {
     public void setDropSequenceTemplateFileName(
             String dropSequenceTemplateFileName) {
         this.dropSequenceTemplateFileName = dropSequenceTemplateFileName;
+    }
+
+    /**
+     * 一意キーを作成するDDLファイル名を返します。
+     * 
+     * @return 一意キーを作成するDDLファイル名
+     */
+    public String getCreateUniqueKeyDdlFileName() {
+        return createUniqueKeyDdlFileName;
+    }
+
+    /**
+     * 一意キーを作成するDDLファイル名を設定します。
+     * 
+     * @param createUniqueKeyDdlFileName
+     *            一意キーを作成するDDLファイル名
+     */
+    public void setCreateUniqueKeyDdlFileName(String createUniqueKeyDdlFileName) {
+        this.createUniqueKeyDdlFileName = createUniqueKeyDdlFileName;
+    }
+
+    /**
+     * 外部キーを作成するDDLファイル名を返します。
+     * 
+     * @return 外部キーを作成するDDLファイル名
+     */
+    public String getCreateForeignKeyDdlFileName() {
+        return createForeignKeyDdlFileName;
+    }
+
+    /**
+     * 外部キーを作成するDDLファイル名を設定します。
+     * 
+     * @param createForeignKeyDdlFileName
+     *            外部キーを作成するDDLファイル名
+     */
+    public void setCreateForeignKeyDdlFileName(
+            String createForeignKeyDdlFileName) {
+        this.createForeignKeyDdlFileName = createForeignKeyDdlFileName;
+    }
+
+    /**
+     * 一意キーを削除するDDLファイル名を返します。
+     * 
+     * @return 一意キーを削除するDDLファイル名
+     */
+    public String getDropUniqueKeyDdlFileName() {
+        return dropUniqueKeyDdlFileName;
+    }
+
+    /**
+     * 一意キーを削除するDDLファイル名を設定します。
+     * 
+     * @param dropUniqueKeyDdlFileName
+     *            一意キーを削除するDDLファイル名
+     */
+    public void setDropUniqueKeyDdlFileName(String dropUniqueKeyDdlFileName) {
+        this.dropUniqueKeyDdlFileName = dropUniqueKeyDdlFileName;
+    }
+
+    /**
+     * 外部キーを削除するDDLファイル名を返します。
+     * 
+     * @return 外部キーを削除するDDLファイル名
+     */
+    public String getDropForeignKeyDdlFileName() {
+        return dropForeignKeyDdlFileName;
+    }
+
+    /**
+     * 外部キーを削除するDDLファイル名を設定します。
+     * 
+     * @param dropForeignKeyDdlFileName
+     *            外部キーを削除するDDLファイル名
+     */
+    public void setDropForeignKeyDdlFileName(String dropForeignKeyDdlFileName) {
+        this.dropForeignKeyDdlFileName = dropForeignKeyDdlFileName;
+    }
+
+    /**
+     * 一意キーを作成するDDLのテンプレートファイル名を返します。
+     * 
+     * @return 一意キーを作成するDDLのテンプレートファイル名
+     */
+    public String getCreateUniqueKeyTemplateFileName() {
+        return createUniqueKeyTemplateFileName;
+    }
+
+    /**
+     * 一意キーを作成するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param createUniqueKeyTemplateFileName
+     *            一意キーを作成するDDLのテンプレートファイル名
+     */
+    public void setCreateUniqueKeyTemplateFileName(
+            String createUniqueKeyTemplateFileName) {
+        this.createUniqueKeyTemplateFileName = createUniqueKeyTemplateFileName;
+    }
+
+    /**
+     * 外部キーを作成するDDLのテンプレートファイル名を返します。
+     * 
+     * @return 外部キーを作成するDDLのテンプレートファイル名
+     */
+    public String getCreateForeignKeyTemplateFileName() {
+        return createForeignKeyTemplateFileName;
+    }
+
+    /**
+     * 外部キーを作成するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param createForeignKeyTemplateFileName
+     *            外部キーを作成するDDLのテンプレートファイル名
+     */
+    public void setCreateForeignKeyTemplateFileName(
+            String createForeignKeyTemplateFileName) {
+        this.createForeignKeyTemplateFileName = createForeignKeyTemplateFileName;
+    }
+
+    /**
+     * 外部キーを削除するDDLのテンプレートファイル名を返します。
+     * 
+     * @return 外部キーを削除するDDLのテンプレートファイル名
+     */
+    public String getDropForeignKeyTemplateFileName() {
+        return dropForeignKeyTemplateFileName;
+    }
+
+    /**
+     * 外部キーを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropForeignKeyTemplateFileName
+     *            外部キーを削除するDDLのテンプレートファイル名
+     */
+    public void setDropForeignKeyTemplateFileName(
+            String dropForeignKeyTemplateFileName) {
+        this.dropForeignKeyTemplateFileName = dropForeignKeyTemplateFileName;
+    }
+
+    /**
+     * 一意キーを削除するDDLのテンプレートファイル名を返します。
+     * 
+     * @return 一意キーを削除するDDLのテンプレートファイル名
+     */
+    public String getDropUniqueKeyTemplateFileName() {
+        return dropUniqueKeyTemplateFileName;
+    }
+
+    /**
+     * 一意キーを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropUniqueKeyTemplateFileName
+     *            一意キーを削除するDDLのテンプレートファイル名
+     */
+    public void setDropUniqueKeyTemplateFileName(
+            String dropUniqueKeyTemplateFileName) {
+        this.dropUniqueKeyTemplateFileName = dropUniqueKeyTemplateFileName;
     }
 
     /**
@@ -742,53 +832,69 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected void generate(List<TableDesc> tableDescList) {
         DbModel model = dbModelFactory.getDbModel(tableDescList);
         generateTable(model);
-        generateConstraint(model);
+        generateUniqueKeyDdl(model);
+        generateForeignKeyDdl(model);
         generateSequence(model);
     }
 
     /**
-     * テーブルに関するDDLのSQLファイルを作成します。
+     * テーブルに関するDDLファイルを作成します。
      * 
      * @param model
      *            データベースのモデル
      */
     protected void generateTable(DbModel model) {
-        GenerationContext createTableCtx = createGenerationContext(model,
+        GenerationContext createContext = createGenerationContext(model,
                 createTableDdlFileName, createTableTemplateFileName);
-        GenerationContext dropTableCtx = createGenerationContext(model,
+        GenerationContext dropContext = createGenerationContext(model,
                 dropTableDdlFileName, dropTableTemplateFileName);
-        generator.generate(createTableCtx);
-        generator.generate(dropTableCtx);
+        generator.generate(createContext);
+        generator.generate(dropContext);
     }
 
     /**
-     * 制約に関するDDLのSQLファイルを作成します。
+     * 一意キーに関するDDLファイルを作成します。
      * 
      * @param model
      *            データベースのモデル
      */
-    protected void generateConstraint(DbModel model) {
-        GenerationContext createConstraintCtx = createGenerationContext(model,
-                createConstraintDdlFileName, createConstraintTemplateFileName);
-        GenerationContext dropConstraintCtx = createGenerationContext(model,
-                dropConstraintDdlFileName, dropConstraintTemplateFileName);
-        generator.generate(createConstraintCtx);
-        generator.generate(dropConstraintCtx);
+    protected void generateUniqueKeyDdl(DbModel model) {
+        GenerationContext createContext = createGenerationContext(model,
+                createUniqueKeyDdlFileName, createUniqueKeyTemplateFileName);
+        GenerationContext dropContext = createGenerationContext(model,
+                dropUniqueKeyDdlFileName, dropUniqueKeyTemplateFileName);
+        generator.generate(createContext);
+        generator.generate(dropContext);
     }
 
     /**
-     *シーケンスに関するDDLのSQLファイルを作成します。
+     * 外部キーに関するDDLファイルを作成します。
+     * 
+     * @param model
+     *            データベースのモデル
+     */
+    protected void generateForeignKeyDdl(DbModel model) {
+        GenerationContext createContext = createGenerationContext(model,
+                createForeignKeyDdlFileName, createForeignKeyTemplateFileName);
+        GenerationContext dropContext = createGenerationContext(model,
+                dropForeignKeyDdlFileName, dropForeignKeyTemplateFileName);
+        generator.generate(createContext);
+        generator.generate(dropContext);
+    }
+
+    /**
+     *シーケンスに関するDDLファイルを作成します。
      * 
      * @param model
      *            データベースのモデル
      */
     protected void generateSequence(DbModel model) {
-        GenerationContext createSequenceCtx = createGenerationContext(model,
+        GenerationContext createContext = createGenerationContext(model,
                 createSequenceDdlFileName, createSequenceTemplateFileName);
-        GenerationContext dropSequenceCtx = createGenerationContext(model,
+        GenerationContext dropContext = createGenerationContext(model,
                 dropSequenceDdlFileName, dropSequenceTemplateFileName);
-        generator.generate(createSequenceCtx);
-        generator.generate(dropSequenceCtx);
+        generator.generate(createContext);
+        generator.generate(dropContext);
     }
 
     /**

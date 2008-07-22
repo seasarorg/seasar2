@@ -128,9 +128,18 @@ public class DbModel {
      * @return シーケンス定義の断片
      */
     public String getSequenceDefinitionFragment(SequenceDesc sequenceDesc) {
-        return dialect.getSequenceDefinitionFragment(
-                sequenceDesc.getDataType(), sequenceDesc.getInitialValue(),
-                sequenceDesc.getAllocationSize());
+        return dialect.getSequenceDefinitionFragment(sequenceDesc.getDataType(),
+                sequenceDesc.getInitialValue(), sequenceDesc
+                        .getAllocationSize());
+    }
+
+    /**
+     * IDENTITYカラムの定義を返します。
+     * 
+     * @return IDENTITYカラムの定義
+     */
+    public String getIdentityColumnDefinition() {
+        return dialect.getIdentityColumnDefinition();
     }
 
 }
