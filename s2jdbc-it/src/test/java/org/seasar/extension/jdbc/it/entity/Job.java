@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.it.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
 /**
@@ -31,6 +30,5 @@ public class Job {
     public int id;
 
     /** */
-    @Enumerated
     public JobType jobType;
 }
