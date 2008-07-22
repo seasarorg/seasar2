@@ -46,7 +46,7 @@ public class GenerateUniqueKeyTest {
      */
     @Before
     public void setUp() throws Exception {
-        generator = new GeneratorImplStub("UTF-8");
+        generator = new GeneratorImplStub();
 
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         uniqueKeyDesc.addColumnName("UK1-1");

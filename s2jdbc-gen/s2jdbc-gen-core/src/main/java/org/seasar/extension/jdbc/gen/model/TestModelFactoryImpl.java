@@ -81,20 +81,20 @@ public class TestModelFactoryImpl implements TestModelFactory {
         testModel.setPackageName(packageName);
         testModel.setShortClassName(entityMeta.getName() + ｔestClassNameSuffix);
         testModel.setShortEntityClassName(entityMeta.getName());
-        doImportName(entityMeta, testModel);
-        doIdValue(entityMeta, testModel);
+        doImportName(testModel, entityMeta);
+        doIdValue(testModel, entityMeta);
         return testModel;
     }
 
     /**
      * インポート名を処理します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
      * @param testModel
      *            テストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
      */
-    protected void doImportName(EntityMeta entityMeta, TestModel testModel) {
+    protected void doImportName(TestModel testModel, EntityMeta entityMeta) {
         testModel.addImportName(JdbcManager.class.getName());
         testModel.addImportName(S2TestCase.class.getName());
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
@@ -109,12 +109,12 @@ public class TestModelFactoryImpl implements TestModelFactory {
     /**
      * 識別子の式を処理します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
      * @param testModel
      *            テストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
      */
-    protected void doIdValue(EntityMeta entityMeta, TestModel testModel) {
+    protected void doIdValue(TestModel testModel, EntityMeta entityMeta) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
             testModel.addIdExpression(getExpression(propertyClass));

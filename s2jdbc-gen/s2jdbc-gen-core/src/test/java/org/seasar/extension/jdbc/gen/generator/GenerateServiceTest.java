@@ -20,11 +20,9 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.ServiceModel;
+import org.seasar.extension.jdbc.gen.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -38,11 +36,11 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateConditionTest {
+public class GenerateServiceTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
-    private ConditionModelFactoryImpl conditionModelfactory;
+    private ServiceModelFactoryImpl serviceModelFactory;
 
     private GeneratorImplStub generator;
 
@@ -64,11 +62,8 @@ public class GenerateConditionTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
-        ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
-                "Condition");
-        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf,
-                "hoge.condition", "Condition");
+        serviceModelFactory = new ServiceModelFactoryImpl("hoge.service",
+                "Service");
         generator = new GeneratorImplStub();
     }
 
@@ -77,14 +72,13 @@ public class GenerateConditionTest {
      * @throws Exception
      */
     @Test
-    public void testManyToOne() throws Exception {
+    public void testSingleId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
-        ConditionModel model = conditionModelfactory
-                .getConditionModel(entityMeta);
+        ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/condition.ftl", "UTF-8", false);
+                "dir"), new File("file"), "java/service.ftl", "UTF-8", false);
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_ManyToOne.txt";
+        String path = getClass().getName().replace(".", "/") + "_SingleId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
@@ -93,15 +87,29 @@ public class GenerateConditionTest {
      * @throws Exception
      */
     @Test
-    public void testOneToOne() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
-        ConditionModel model = conditionModelfactory
-                .getConditionModel(entityMeta);
+    public void testCompositeId() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
+        ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/condition.ftl", "UTF-8", false);
+                "dir"), new File("file"), "java/service.ftl", "UTF-8", false);
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_OneToMany.txt";
+        String path = getClass().getName().replace(".", "/")
+                + "_CompositeId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testNoId() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
+        ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/service.ftl", "UTF-8", false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/") + "_NoId.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
 }

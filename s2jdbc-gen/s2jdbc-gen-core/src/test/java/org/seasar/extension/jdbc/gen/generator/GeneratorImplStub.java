@@ -33,8 +33,8 @@ public class GeneratorImplStub extends GeneratorImpl {
      * 
      * @param templateFielEncoding
      */
-    public GeneratorImplStub(String templateFielEncoding) {
-        this(templateFielEncoding, null);
+    public GeneratorImplStub() {
+        this("UTF-8", null);
     }
 
     /**

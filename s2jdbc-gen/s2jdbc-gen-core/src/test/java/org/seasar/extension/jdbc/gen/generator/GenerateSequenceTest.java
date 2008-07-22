@@ -46,7 +46,7 @@ public class GenerateSequenceTest {
      */
     @Before
     public void setUp() throws Exception {
-        generator = new GeneratorImplStub("UTF-8");
+        generator = new GeneratorImplStub();
 
         SequenceDesc sequenceDesc = new SequenceDesc();
         sequenceDesc.setSequenceName("HOGE");

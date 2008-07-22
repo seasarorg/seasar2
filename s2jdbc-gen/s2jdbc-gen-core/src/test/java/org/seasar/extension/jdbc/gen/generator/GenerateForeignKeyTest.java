@@ -46,7 +46,7 @@ public class GenerateForeignKeyTest {
      */
     @Before
     public void setUp() throws Exception {
-        generator = new GeneratorImplStub("UTF-8");
+        generator = new GeneratorImplStub();
 
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
         foreignKeyDesc.addColumnName("FK1-1");

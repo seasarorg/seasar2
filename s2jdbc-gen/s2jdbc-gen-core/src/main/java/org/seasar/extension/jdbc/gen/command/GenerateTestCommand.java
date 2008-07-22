@@ -48,7 +48,7 @@ import org.seasar.framework.util.ClassUtil;
  * また、そのディレクトリは、プロパティ{@link #classpathRootDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは、エンティティクラス１つにつき１つのテストクラスを生成します。。
+ * このコマンドは、エンティティクラス１つにつき１つのテストクラスを生成します。
  * </p>
  * 
  * @author taedium

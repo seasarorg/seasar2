@@ -76,6 +76,20 @@
 			overwrite="true"
 			classpathRef="classpath"
 		/>
+		<gen-condition
+			classpathrootdir="temp/build"
+			rootpackagename="example"
+			javafiledestdir="temp/src"
+			overwrite="true"
+			classpathRef="classpath"
+		/>
+		<gen-service
+			classpathrootdir="temp/build"
+			rootpackagename="example"
+			javafiledestdir="temp/src"
+			overwrite="true"
+			classpathRef="classpath"
+		/>
 		<javac 
 			srcdir="temp/src"
 			destdir="temp/build"
@@ -83,13 +97,6 @@
 			encoding="UTF-8"
 			fork="true"
 			debug="on"
-		/>
-		<gen-condition
-			classpathrootdir="temp/build"
-			rootpackagename="example"
-			javafiledestdir="temp/src"
-			overwrite="true"
-			classpathRef="classpath"
 		/>
 		<gen-ddl 
 			classpathRootDir="temp/build"
@@ -122,7 +129,7 @@
 			<classpath refid="classpath"/>
 			<batchtest todir="temp/result" fork="true">
 				<fileset dir="temp/src">
-					<include name="**/*Test.java"/>
+					<include name="example/entity/*Test.java"/>
 				</fileset>
 			</batchtest>
 		</junit>

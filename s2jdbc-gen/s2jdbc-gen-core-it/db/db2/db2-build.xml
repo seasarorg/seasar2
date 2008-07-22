@@ -2,9 +2,22 @@
 <project name="s2jdbc-gen-db2" default="testAll" basedir=".">
 
 	<path id="classpath">
-		<fileset dir="../../lib"/>
-		<pathelement location="../../../s2jdbc-gen-core/build/classes"/>
 		<pathelement location="temp/build"/>
+		<pathelement location="../../../s2jdbc-gen-core/build/classes"/>
+		<pathelement location="../../../seasar2/build/classes"/>
+		<pathelement location="../../../s2-tiger/build/classes"/>
+		<fileset dir="../../../s2jdbc-gen-core-it/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+		<fileset dir="../../../s2jdbc-gen-core/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+		<fileset dir="../../../seasar2/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+		<fileset dir="../../../s2-tiger/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
 	</path>
 	
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>

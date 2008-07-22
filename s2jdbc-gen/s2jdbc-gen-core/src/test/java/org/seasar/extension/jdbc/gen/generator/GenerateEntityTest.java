@@ -52,7 +52,7 @@ public class GenerateEntityTest {
     public void setUp() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity",
                 new AttributeModelFactoryImpl());
-        generator = new GeneratorImplStub("UTF-8");
+        generator = new GeneratorImplStub();
     }
 
     /**

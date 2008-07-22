@@ -47,7 +47,7 @@ public class GenerateTableTest {
      */
     @Before
     public void setUp() throws Exception {
-        generator = new GeneratorImplStub("UTF-8");
+        generator = new GeneratorImplStub();
 
         ColumnDesc no = new ColumnDesc();
         no.setName("no");

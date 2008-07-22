@@ -64,7 +64,7 @@ public class GenerateTestTest {
         entityMetaFactory.setTableMetaFactory(tmf);
         entityTestModelFactory = new TestModelFactoryImpl("s2jdbc.dicon",
                 "jdbcManager", "Test");
-        generator = new GeneratorImplStub("UTF-8");
+        generator = new GeneratorImplStub();
     }
 
     /**

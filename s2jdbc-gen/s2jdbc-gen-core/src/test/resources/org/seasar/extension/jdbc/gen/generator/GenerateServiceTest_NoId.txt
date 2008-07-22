@@ -1,0 +1,11 @@
+package hoge.service;
+
+import org.seasar.extension.jdbc.gen.generator.Ddd;
+import org.seasar.extension.jdbc.service.S2AbstractService;
+
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
+public class DddService extends S2AbstractService<Ddd> {
+}

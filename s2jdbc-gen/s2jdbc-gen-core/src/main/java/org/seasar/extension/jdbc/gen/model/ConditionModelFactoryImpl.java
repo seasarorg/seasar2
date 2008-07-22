@@ -131,7 +131,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      * インポート名を処理します。
      * 
      * @param conditionModel
-     *            エンティティ条件クラスのモデル
+     *            条件クラスのモデル
      * @param entityMeta
      *            エンティティメタデータ
      */
