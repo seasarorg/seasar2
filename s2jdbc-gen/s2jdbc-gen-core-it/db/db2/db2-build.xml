@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="s2jdbc-gen-db2" default="testAll" basedir=".">
+
+	<path id="classpath">
+		<fileset dir="../../lib"/>
+		<pathelement location="../../../s2jdbc-gen-core/build/classes"/>
+		<pathelement location="temp/build"/>
+	</path>
+	
+	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+	
+	<target name="testAll">
+		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
+		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
+	</target>
+	
+	<target name="testFromDbToEntity" >
+		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
+	</target>
+	
+	<target name="testFromEntityToDb" >
+		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
+	</target>
+
+	<target name="dump-dbmeta" >
+		<ant antfile="../common-build.xml" target="dump-dbmeta" inheritrefs="true"/>
+	</target>
+</project>

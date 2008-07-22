@@ -15,6 +15,7 @@
  */
 package example.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -38,9 +39,11 @@ public class Employee {
     public Integer id;
 
     /** */
+    @Column(nullable = false)
     public String firstName;
 
     /** */
+    @Column(nullable = false)
     public String lastName;
 
     /** */
