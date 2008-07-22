@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -62,6 +63,7 @@ import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
 import org.seasar.extension.jdbc.types.Authority;
+import org.seasar.extension.jdbc.types.EnumOrdinalType;
 import org.seasar.extension.jdbc.types.EnumType;
 import org.seasar.extension.jdbc.types.UserDefineType;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -490,6 +492,15 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         Field field = MyEnum.class.getDeclaredField("type");
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
+        assertEquals(EnumType.class, propertyMeta.getValueType().getClass());
+
+        field = MyEnum.class.getDeclaredField("ordinalType");
+        propertyMeta = factory.createPropertyMeta(field, entityMeta);
+        assertEquals(EnumOrdinalType.class, propertyMeta.getValueType()
+                .getClass());
+
+        field = MyEnum.class.getDeclaredField("stringType");
+        propertyMeta = factory.createPropertyMeta(field, entityMeta);
         assertEquals(EnumType.class, propertyMeta.getValueType().getClass());
     }
 
@@ -930,6 +941,14 @@ public class PropertyMetaFactoryImplTest extends TestCase {
 
         /** */
         public TemporalType type;
+
+        /** */
+        @Enumerated
+        public TemporalType ordinalType;
+
+        /** */
+        @Enumerated(javax.persistence.EnumType.STRING)
+        public TemporalType stringType;
 
     }
 

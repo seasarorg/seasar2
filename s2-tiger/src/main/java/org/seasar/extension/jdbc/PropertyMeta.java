@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EnumType;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
@@ -88,6 +89,11 @@ public class PropertyMeta {
      * 時制の種別です。
      */
     protected TemporalType temporalType;
+
+    /**
+     * enumの種別です。
+     */
+    protected EnumType enumType;
 
     /**
      * バージョン用かどうかです。
@@ -338,6 +344,25 @@ public class PropertyMeta {
      */
     public void setTemporalType(TemporalType temporalType) {
         this.temporalType = temporalType;
+    }
+
+    /**
+     * enumの種別を返します。
+     * 
+     * @return enumの種別
+     */
+    public EnumType getEnumType() {
+        return enumType;
+    }
+
+    /**
+     * enumの種別を設定します。
+     * 
+     * @param enumType
+     *            enumの種別
+     */
+    public void setEnumType(EnumType enumType) {
+        this.enumType = enumType;
     }
 
     /**

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -63,7 +64,6 @@ import org.seasar.extension.jdbc.exception.VersionPropertyNotNumberRuntimeExcept
 import org.seasar.extension.jdbc.id.IdentityIdGenerator;
 import org.seasar.extension.jdbc.id.SequenceIdGenerator;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
-import org.seasar.extension.jdbc.types.EnumType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.container.annotation.tiger.Binding;
 import org.seasar.framework.container.annotation.tiger.BindingType;
@@ -146,6 +146,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                 doColumnMeta(propertyMeta, field, entityMeta);
                 doId(propertyMeta, field, entityMeta);
                 doTemporal(propertyMeta, field, entityMeta);
+                doEnum(propertyMeta, field, entityMeta);
                 doVersion(propertyMeta, field, entityMeta);
                 doLob(propertyMeta, field, entityMeta);
                 doValueType(propertyMeta, entityMeta);
@@ -169,8 +170,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            エンティティメタデータ
      */
     protected void doField(PropertyMeta propertyMeta, Field field,
-            @SuppressWarnings("unused")
-            EntityMeta entityMeta) {
+            @SuppressWarnings("unused") EntityMeta entityMeta) {
         propertyMeta.setField(field);
     }
 
@@ -185,8 +185,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            エンティティメタデータ
      */
     protected void doName(PropertyMeta propertyMeta, Field field,
-            @SuppressWarnings("unused")
-            EntityMeta entityMeta) {
+            @SuppressWarnings("unused") EntityMeta entityMeta) {
         propertyMeta.setName(persistenceConvention
                 .fromFieldNameToPropertyName(field.getName()));
     }
@@ -276,7 +275,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            識別子に付けられた{@link GeneratedValue}アノテーション
      * @param entityMeta
      *            エンティティのメタデータ
-     * @return {@link GenerationType#SEQUENCE}方式で識別子の値を自動生成するIDジェネレータが存在した場合に<code>true</code>
+     * @return {@link GenerationType#SEQUENCE}方式で識別子の値を自動生成するIDジェネレータが存在した場合に
+     *         <code>true</code>
      */
     protected boolean doSequenceIdGenerator(PropertyMeta propertyMeta,
             GeneratedValue generatedValue, EntityMeta entityMeta) {
@@ -311,7 +311,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            識別子に付けられた{@link GeneratedValue}アノテーション
      * @param entityMeta
      *            エンティティのメタデータ
-     * @return {@link GenerationType#TABLE}方式で識別子の値を自動生成するIDジェネレータが存在した場合に<code>true</code>
+     * @return {@link GenerationType#TABLE}方式で識別子の値を自動生成するIDジェネレータが存在した場合に
+     *         <code>true</code>
      */
     protected boolean doTableIdGenerator(PropertyMeta propertyMeta,
             GeneratedValue generatedValue, EntityMeta entityMeta) {
@@ -361,6 +362,28 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
     }
 
     /**
+     * enumの種別を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doEnum(PropertyMeta propertyMeta, Field field,
+            EntityMeta entityMeta) {
+        if (!propertyMeta.getPropertyClass().isEnum()) {
+            return;
+        }
+        Enumerated enumerated = field.getAnnotation(Enumerated.class);
+        if (enumerated == null) {
+            return;
+        }
+        propertyMeta.setEnumType(enumerated.value());
+    }
+
+    /**
      * バージョンチェック用かどうかを処理します。
      * 
      * @param propertyMeta
@@ -371,8 +394,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            エンティティメタデータ
      */
     protected void doVersion(PropertyMeta propertyMeta, Field field,
-            @SuppressWarnings("unused")
-            EntityMeta entityMeta) {
+            @SuppressWarnings("unused") EntityMeta entityMeta) {
         if (field.getAnnotation(Version.class) == null) {
             return;
         }
@@ -396,8 +418,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            エンティティメタデータ
      */
     protected void doTransient(PropertyMeta propertyMeta, Field field,
-            @SuppressWarnings("unused")
-            EntityMeta entityMeta) {
+            @SuppressWarnings("unused") EntityMeta entityMeta) {
         propertyMeta.setTransient(field.getAnnotation(Transient.class) != null
                 || ModifierUtil.isTransient(field));
     }
@@ -413,8 +434,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            エンティティメタデータ
      */
     protected void doLob(PropertyMeta propertyMeta, Field field,
-            @SuppressWarnings("unused")
-            EntityMeta entityMeta) {
+            @SuppressWarnings("unused") EntityMeta entityMeta) {
         propertyMeta.setLob(field.getAnnotation(Lob.class) != null);
     }
 
@@ -483,9 +503,21 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
         }
 
         if (propertyClass.isEnum()) {
-            propertyMeta.setValueType(new EnumType(
-                    (Class<? extends Enum>) propertyClass));
-            return;
+            if (propertyMeta.getEnumType() == null) {
+                propertyMeta.setValueType(ValueTypes
+                        .getValueType(propertyClass));
+                return;
+            }
+            switch (propertyMeta.getEnumType()) {
+            case ORDINAL:
+                propertyMeta.setValueType(ValueTypes
+                        .getEnumOrdinalValueType(propertyClass));
+                return;
+            case STRING:
+                propertyMeta.setValueType(ValueTypes
+                        .getEnumStringValueType(propertyClass));
+                return;
+            }
         }
 
         if (Serializable.class.isAssignableFrom(propertyClass)) {
@@ -690,8 +722,8 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
      *            多対一関連
      */
     protected void doManyToOne(PropertyMeta propertyMeta, Field field,
-            EntityMeta entityMeta, @SuppressWarnings("unused")
-            ManyToOne manyToOne) {
+            EntityMeta entityMeta,
+            @SuppressWarnings("unused") ManyToOne manyToOne) {
         propertyMeta.setRelationshipType(RelationshipType.MANY_TO_ONE);
         Class<?> relationshipClass = field.getType();
         if (relationshipClass.getAnnotation(Entity.class) == null) {

@@ -25,6 +25,12 @@ import org.seasar.extension.jdbc.ValueType;
  */
 public class ValueTypesTest extends TestCase {
 
+    @Override
+    protected void tearDown() throws Exception {
+        ValueTypes.clear();
+        super.tearDown();
+    }
+
     /**
      * @throws Exception
      */
@@ -40,6 +46,28 @@ public class ValueTypesTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testEnumString() throws Exception {
+        ValueType valueType = ValueTypes.getEnumStringValueType(MyEnum.class);
+        assertNotNull(valueType);
+        assertTrue(valueType instanceof EnumType);
+        EnumType enumType = (EnumType) valueType;
+        assertEquals(MyEnum.ONE, enumType.toEnum("ONE"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testEnumOrdinal() throws Exception {
+        ValueType valueType = ValueTypes.getEnumOrdinalValueType(MyEnum.class);
+        assertNotNull(valueType);
+        assertTrue(valueType instanceof EnumOrdinalType);
+        EnumOrdinalType enumType = (EnumOrdinalType) valueType;
+        assertEquals(MyEnum.ONE, enumType.toEnum(0));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testInheritedEnum() throws Exception {
         ValueType valueType = ValueTypes.getValueType(MyEnum2.ONE.getClass());
         assertNotNull(valueType);
@@ -47,6 +75,19 @@ public class ValueTypesTest extends TestCase {
         EnumType enumType = (EnumType) valueType;
         assertEquals(MyEnum2.ONE, enumType.toEnum("ONE"));
         assertSame(valueType, ValueTypes.getValueType(MyEnum2.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testEnum_CustomValueType() throws Exception {
+        ValueTypes.setEnumDefaultValueType(EnumOrdinalType.class);
+        ValueType valueType = ValueTypes.getValueType(MyEnum.class);
+        assertNotNull(valueType);
+        assertTrue(valueType instanceof EnumOrdinalType);
+        EnumOrdinalType enumType = (EnumOrdinalType) valueType;
+        assertEquals(MyEnum.ONE, enumType.toEnum(0));
+        assertSame(valueType, ValueTypes.getValueType(MyEnum.class));
     }
 
     /**
@@ -95,4 +136,5 @@ public class ValueTypesTest extends TestCase {
 
         abstract void f();
     }
+
 }

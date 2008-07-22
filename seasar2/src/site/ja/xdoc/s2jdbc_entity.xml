@@ -56,6 +56,11 @@
 						</li>
 						<li>
 							<p>
+								<a href="#列挙定義">列挙定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
 								<a href="#時制定義">時制定義</a>
 							</p>
 						</li>
@@ -100,24 +105,16 @@
 				</li>
 			</ul>
 		</section>
-
 		<section name="概要">
-			<p>
-				エンティティの定義の仕方を説明します。ここでいっているエンティティとは、
-				データベースに永続化されるものだと考えてください。
+			<p> エンティティの定義の仕方を説明します。ここでいっているエンティティとは、 データベースに永続化されるものだと考えてください。
 			</p>
-
-			<div
-				style="background-color: red; font-weight: bold; font-size: larger;">
+			<div style="background-color: red; font-weight: bold; font-size: larger;">
 				<p>注意点</p>
 			</div>
-			<p>
-				エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
-				すべてのアノテーションや属性をサポートしているわけではありません。
-				ここに取り上げられているもののみサポートされているとお考えください。
+			<p> エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
+				すべてのアノテーションや属性をサポートしているわけではありません。 ここに取り上げられているもののみサポートされているとお考えください。
 			</p>
 		</section>
-
 		<section name="エンティティ定義">
 			<p>
 				エンティティにするためには、
@@ -129,9 +126,7 @@ public class Employee {
     ...
 }
 ]]></source>
-			<p>
-				name属性でエンティティ名を指定することができます。 次の例では、Empというエンティティ名を指定しています。
-			</p>
+			<p> name属性でエンティティ名を指定することができます。 次の例では、Empというエンティティ名を指定しています。</p>
 			<source><![CDATA[@Entity(name = "Emp")
 public class Employee {
     ...
@@ -144,7 +139,6 @@ public class Employee {
 				<code>Employee</code>
 				になります。
 			</p>
-
 			<subsection name="テーブル定義">
 				<p>
 					テーブル情報を指定するには、
@@ -152,8 +146,7 @@ public class Employee {
 					を使います。
 				</p>
 				<p>
-					name属性でテーブル名を指定することができます。
-					指定しなかった場合、テーブル名はエンティティ名と同じになります。エンティティ名が、
+					name属性でテーブル名を指定することができます。 指定しなかった場合、テーブル名はエンティティ名と同じになります。エンティティ名が、
 					<code>AaaBbb</code>
 					のようなキャメル記法の場合、テーブル名は、
 					<code>AAA_BBB</code>
@@ -172,17 +165,13 @@ public class Employee {
 public class Employee {
     ...
 }]]></source>
-				<p>
-					schema属性でスキーマを指定することができます。
-					指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
-				</p>
-				<p>
-					catalog属性でカタログを指定することができます。
+				<p> schema属性でスキーマを指定することができます。
+					指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。</p>
+				<p> catalog属性でカタログを指定することができます。
 					指定した場合、自動生成されるSQLのテーブル名がカタログ.テーブル名になります。
 					catalog属性とschema属性の両方を指定した場合、自動生成されるSQLのテーブル名はカタログ.スキーマ.テーブル名になります。
 				</p>
 			</subsection>
-
 			<subsection name="継承">
 				<p>
 					エンティティは
@@ -199,22 +188,17 @@ public class Employee extends AbstractEmployee {
 }]]></source>
 				<p>
 					<code>@MappedSuperclass</code>
-					には、エンティティと同じように永続プロパティを定義できます。
-					定義された永続プロパティは、サブクラスの永続プロパティとみなされます。
+					には、エンティティと同じように永続プロパティを定義できます。 定義された永続プロパティは、サブクラスの永続プロパティとみなされます。
 					スーパークラスとサブクラスでインスタンスフィールドの名前が重複しないように定義してください。
 				</p>
 				<p>
 					エンティティは
 					<code>@MappedSuperclass</code>
-					が指定されていないクラスも継承できます。
-					しかし、この場合、スーパークラスのプロパティはサブクラスの永続プロパティとみなされません。
+					が指定されていないクラスも継承できます。 しかし、この場合、スーパークラスのプロパティはサブクラスの永続プロパティとみなされません。
 				</p>
-				<p>
-					エンティティが他のエンティティを継承することはサポートされていません。
-				</p>
+				<p> エンティティが他のエンティティを継承することはサポートされていません。</p>
 			</subsection>
 		</section>
-
 		<section name="プロパティ定義">
 			<subsection name="永続プロパティの型">
 				<p>
@@ -306,6 +290,14 @@ public class Employee extends AbstractEmployee {
 							</li>
 						</ul>
 					</dd>
+					<dt>列挙型</dt>
+					<dd>
+						<ul>
+							<li>
+								<p>java.lang.Enumのサブクラス</p>
+							</li>
+						</ul>
+					</dd>
 					<dt>日付・時刻型</dt>
 					<dd>
 						<ul>
@@ -363,7 +355,6 @@ public class Employee extends AbstractEmployee {
 					</dd>
 				</dl>
 			</subsection>
-
 			<subsection name="カラム定義">
 				<p>
 					カラム情報を指定するには、
@@ -371,8 +362,7 @@ public class Employee extends AbstractEmployee {
 					を使います。
 				</p>
 				<p>
-					name属性でカラム名を指定することができます。
-					指定しなかった場合、カラム名はフィールド名と同じになります。フィールド名が、
+					name属性でカラム名を指定することができます。 指定しなかった場合、カラム名はフィールド名と同じになります。フィールド名が、
 					<code>aaaBbb</code>
 					のようなキャメル記法の場合、カラム名は、
 					<code>AAA_BBB</code>
@@ -397,18 +387,13 @@ public class Employee extends AbstractEmployee {
 @Column(name = "AB1234")
 public String shortName;
 ]]></source>
-				<p>
-					insertable属性で挿入可能かどうかを指定することができます。デフォルトはtrueです。
-					falseの場合、挿入用のSQLにこのカラムは含まれません。
-					カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+				<p> insertable属性で挿入可能かどうかを指定することができます。デフォルトはtrueです。
+					falseの場合、挿入用のSQLにこのカラムは含まれません。 カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
 				</p>
-				<p>
-					updatable属性で更新可能かどうかを指定することができます。デフォルトはtrueです。
-					falseの場合、更新用のSQLにこのカラムは含まれません。
-					カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+				<p> updatable属性で更新可能かどうかを指定することができます。デフォルトはtrueです。
+					falseの場合、更新用のSQLにこのカラムは含まれません。 カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
 				</p>
 			</subsection>
-
 			<subsection name="識別子定義">
 				<p>
 					識別子(主キー)であることを指定するには、
@@ -432,8 +417,7 @@ public Integer id;
 public Integer id2;
 ]]></source>
 				<p>
-					識別子は、アプリケーション側で生成することもできますが、
-					Seasar2に自動生成させることもできます。自動生成させるには、
+					識別子は、アプリケーション側で生成することもできますが、 Seasar2に自動生成させることもできます。自動生成させるには、
 					<code>@GeneratedValue</code>
 					を使います。
 				</p>
@@ -452,22 +436,20 @@ public Integer id2;
 					<dt>GenerationType.IDENTITY</dt>
 					<dd>データベース固有の識別子自動生成を使います。</dd>
 					<dt>GenerationType.AUTO(デフォルト)</dt>
-					<dd>
-						データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。
-						IDENTITYが使える場合はIDENTITYに、
-						IDENTITYが使えなくてSEQUENCEが使える場合はSEQUENCEに、
-						IDENTITYもSEQUENCEも使えない場合はTABLEになります。
-					</dd>
+					<dd> データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。
+						IDENTITYが使える場合はIDENTITYに、 IDENTITYが使えなくてSEQUENCEが使える場合はSEQUENCEに、
+						IDENTITYもSEQUENCEも使えない場合はTABLEになります。</dd>
 				</dl>
-
 				<h4>GenerationType.TABLE</h4>
-				<p>GenerationType.TABLEは次のようにして使います。</p>
+				<p>GenerationType.TABLEは次のようにして使います。
+				</p>
 				<source><![CDATA[
 @Id
 @GeneratedValue(strategy = GenerationType.TABLE)
 public Integer id;
 ]]></source>
-				<p>上記のように指定した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。</p>
+				<p>上記のように指定した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
+				</p>
 				<source><![CDATA[
 create table ID_GENERATOR {
   PK varchar(80) not null primary key,
@@ -476,8 +458,7 @@ create table ID_GENERATOR {
 				<source><![CDATA[
 insert into ID_GENERATOR (PK, VALUE) values ('EMPLOYEE_ID', 1);
 ]]></source>
-				<p>
-					ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。
+				<p> ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。
 				</p>
 				<p>
 					テーブル名やカラム名をカスタマイズするには、次のように@TableGeneratorアノテーションで指定します。
@@ -587,6 +568,50 @@ public Long version = 0L;
 				<p>
 					@Versionアノテーションは数値型のフィールドにのみ指定することができます。JPA仕様ではTimestamp型のフィールドもバージョンチェックに使用できることになっていますが、S2JDBCではサポートしていません。更新時刻の保持と排他制御は目的が違うので別のフィールドにしてください。
 				</p>
+			</subsection>
+
+			<subsection name="列挙定義">
+				<p>
+					<code>java.lang.Enum</code>
+					のサブクラスは，デフォルトでは列挙定数の名前 (
+					<code>Enum#name()</code>
+					の戻り値) で扱われます．
+					列挙の扱いを変更するには、
+					<code>@Enumerated</code>
+					を指定します。
+					<code>@Enumerated</code>
+					で指定可能な値は次のとおりです。
+				</p>
+				<dl>
+					<dt>
+						<code>EnumType.ORDINAL</code>
+					</dt>
+					<dd>
+						列挙定数の序数 (
+						<code>Enum#ordinal()</code>
+						の戻り値) で扱うことを指定します (デフォルト)。
+					</dd>
+					<dt>
+						<code>EnumType.STRING</code>
+					</dt>
+					<dd>
+						列挙定数の名前 (
+						<code>Enum#name()</code>
+						の戻り値) で扱うことを指定します。
+					</dd>
+				</dl>
+				<source><![CDATA[
+public JobType jobType; //名前で扱われます
+
+@Enumerated
+public JobType jobType; //序数で扱われます
+
+@Enumerated(EnumType.ORDINAL)
+public JobType jobType; //序数で扱われます
+
+@Enumerated(EnumType.STRING)
+public JobType jobType; //名前で扱われます
+]]></source>
 			</subsection>
 
 			<subsection name="時制定義">
