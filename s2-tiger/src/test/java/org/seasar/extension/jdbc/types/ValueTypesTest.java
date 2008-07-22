@@ -37,9 +37,9 @@ public class ValueTypesTest extends TestCase {
     public void testEnum() throws Exception {
         ValueType valueType = ValueTypes.getValueType(MyEnum.class);
         assertNotNull(valueType);
-        assertTrue(valueType instanceof EnumType);
-        EnumType enumType = (EnumType) valueType;
-        assertEquals(MyEnum.ONE, enumType.toEnum("ONE"));
+        assertTrue(valueType instanceof EnumOrdinalType);
+        EnumOrdinalType enumType = (EnumOrdinalType) valueType;
+        assertEquals(MyEnum.ONE, enumType.toEnum(0));
         assertSame(valueType, ValueTypes.getValueType(MyEnum.class));
     }
 
@@ -71,9 +71,9 @@ public class ValueTypesTest extends TestCase {
     public void testInheritedEnum() throws Exception {
         ValueType valueType = ValueTypes.getValueType(MyEnum2.ONE.getClass());
         assertNotNull(valueType);
-        assertTrue(valueType instanceof EnumType);
-        EnumType enumType = (EnumType) valueType;
-        assertEquals(MyEnum2.ONE, enumType.toEnum("ONE"));
+        assertTrue(valueType instanceof EnumOrdinalType);
+        EnumOrdinalType enumType = (EnumOrdinalType) valueType;
+        assertEquals(MyEnum2.ONE, enumType.toEnum(0));
         assertSame(valueType, ValueTypes.getValueType(MyEnum2.class));
     }
 
@@ -81,13 +81,17 @@ public class ValueTypesTest extends TestCase {
      * @throws Exception
      */
     public void testEnum_CustomValueType() throws Exception {
-        ValueTypes.setEnumDefaultValueType(EnumOrdinalType.class);
+        ValueTypes.setEnumDefaultValueType(EnumType.class);
         ValueType valueType = ValueTypes.getValueType(MyEnum.class);
         assertNotNull(valueType);
-        assertTrue(valueType instanceof EnumOrdinalType);
-        EnumOrdinalType enumType = (EnumOrdinalType) valueType;
-        assertEquals(MyEnum.ONE, enumType.toEnum(0));
+        assertTrue(valueType instanceof EnumType);
+        EnumType enumType = (EnumType) valueType;
+        assertEquals(MyEnum.ONE, enumType.toEnum("ONE"));
         assertSame(valueType, ValueTypes.getValueType(MyEnum.class));
+    }
+
+    public void tearDownEnum_CustomValueType() throws Exception {
+        ValueTypes.setEnumDefaultValueType(EnumOrdinalType.class);
     }
 
     /**

@@ -492,7 +492,8 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         Field field = MyEnum.class.getDeclaredField("type");
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
-        assertEquals(EnumType.class, propertyMeta.getValueType().getClass());
+        assertEquals(EnumOrdinalType.class, propertyMeta.getValueType()
+                .getClass());
 
         field = MyEnum.class.getDeclaredField("ordinalType");
         propertyMeta = factory.createPropertyMeta(field, entityMeta);

@@ -27,5 +27,17 @@
 		<property name="dialect">standardDialect</property>
 		<property name="dialect">sybaseDialect</property>
 		-->
+
+		<!--
+			Seasar2.4.27 から，Enum 型のプロパティは序数 (Enum#ordinal()の戻り値) で扱われます．
+			Seasar2.4.26 以前と同様に，Enum 型のプロパティを名前 (Enum#name()の戻り値) で
+			扱う場合は以下のコメントを解除してください．
+		-->
+		<!--
+		<initMethod>
+			@org.seasar.extension.jdbc.types.ValueTypes@setEnumDefaultValueType(
+				@org.seasar.extension.jdbc.types.EnumType@class)
+		</initMethod>
+		-->
 	</component>
 </components>

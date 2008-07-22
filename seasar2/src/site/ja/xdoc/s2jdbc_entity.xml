@@ -573,8 +573,8 @@ public Long version = 0L;
 			<subsection name="列挙定義">
 				<p>
 					<code>java.lang.Enum</code>
-					のサブクラスは，デフォルトでは列挙定数の名前 (
-					<code>Enum#name()</code>
+					のサブクラスは，デフォルトでは列挙定数の序数 (
+					<code>Enum#ordinal()</code>
 					の戻り値) で扱われます．
 					列挙の扱いを変更するには、
 					<code>@Enumerated</code>
@@ -601,7 +601,7 @@ public Long version = 0L;
 					</dd>
 				</dl>
 				<source><![CDATA[
-public JobType jobType; //名前で扱われます
+public JobType jobType; //序数で扱われます
 
 @Enumerated
 public JobType jobType; //序数で扱われます
@@ -611,6 +611,30 @@ public JobType jobType; //序数で扱われます
 
 @Enumerated(EnumType.STRING)
 public JobType jobType; //名前で扱われます
+]]></source>
+				<div
+					style="background-color: red; font-weight: bold; font-size: larger;">
+					<p>注意点</p>
+				</div>
+				<p>
+					Seasar2.4.26までは、
+					<code>@Enumerated</code>
+					はサポートされておらず、列挙は名前で扱われていました。
+					Seasra2.4.27以降で2.4.26以前と同じように
+					<code>@Enumerated</code>
+					の指定されていない列挙を名前で扱うには、
+					<code>s2jdbc.dicon</code>
+					に次のように記述をしてください。
+				</p>
+				<source><![CDATA[
+<component name="jdbcManager" class="org.seasar.extension.jdbc.manager.JdbcManagerImpl">
+    ・・・
+    <!-- 以下を追加 -->
+    <initMethod>
+        @org.seasar.extension.jdbc.types.ValueTypes@setEnumDefaultValueType(
+            @org.seasar.extension.jdbc.types.EnumType@class)
+    </initMethod>
+</component>
 ]]></source>
 			</subsection>
 
