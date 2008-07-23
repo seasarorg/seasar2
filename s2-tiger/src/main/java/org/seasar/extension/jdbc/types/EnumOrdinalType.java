@@ -40,7 +40,7 @@ public class EnumOrdinalType extends AbstractValueType {
      */
     @SuppressWarnings("unchecked")
     public EnumOrdinalType(Class<? extends Enum> enumClass) {
-        super(Types.VARCHAR);
+        super(Types.INTEGER);
         this.enumClass = enumClass;
     }
 
