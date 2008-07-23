@@ -7,7 +7,7 @@
 
 	<component class="org.seasar.framework.unit.impl.ConfigFileIncluderImpl">
 		<initMethod name="addConfigFile">
-			<arg>"jdbc.dicon"</arg>
+			<arg>"s2jdbc.dicon"</arg>
 		</initMethod>
 	</component>
 		

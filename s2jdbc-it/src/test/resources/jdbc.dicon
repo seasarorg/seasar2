@@ -17,11 +17,5 @@
 		class="org.seasar.extension.dbcp.impl.DataSourceImpl"
 	/>
 
-	<component class="org.seasar.extension.jdbc.manager.JdbcManagerImpl"/>
-	<component class="org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl"/>
-	<component class="org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl"/>
-	<component class="org.seasar.extension.jdbc.meta.TableMetaFactoryImpl"/>
-	<component class="org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl"/>
 	<component class="org.seasar.framework.convention.impl.PersistenceConventionImpl"/>
-
 </components>
