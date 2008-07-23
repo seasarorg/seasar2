@@ -128,9 +128,9 @@ public class DbModel {
      * @return シーケンス定義の断片
      */
     public String getSequenceDefinitionFragment(SequenceDesc sequenceDesc) {
-        return dialect.getSequenceDefinitionFragment(sequenceDesc.getDataType(),
-                sequenceDesc.getInitialValue(), sequenceDesc
-                        .getAllocationSize());
+        return dialect.getSequenceDefinitionFragment(
+                sequenceDesc.getDataType(), sequenceDesc.getInitialValue(),
+                sequenceDesc.getAllocationSize());
     }
 
     /**
@@ -140,6 +140,24 @@ public class DbModel {
      */
     public String getIdentityColumnDefinition() {
         return dialect.getIdentityColumnDefinition();
+    }
+
+    /**
+     * 外部キーを削除する構文を返します。
+     * 
+     * @return 外部キーを削除する構文
+     */
+    public String getDropForeignKeySyntax() {
+        return dialect.getDropForeignKeySyntax();
+    }
+
+    /**
+     * 一意キーを削除する構文を返します。
+     * 
+     * @return 外部キーを削除する構文
+     */
+    public String getDropUniqueKeySyntax() {
+        return dialect.getDropUniqueKeySyntax();
     }
 
 }

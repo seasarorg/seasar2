@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="s2jdbc-gen-mysql" default="testAll" basedir=".">
+
+	<path id="classpath">
+		<pathelement location="temp/build"/>
+		<pathelement location="../../../s2jdbc-gen-core/build/classes"/>
+		<pathelement location="../../../seasar2/build/classes"/>
+		<pathelement location="../../../s2-tiger/build/classes"/>
+		<fileset dir="../../../s2jdbc-gen-core-it/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+		<fileset dir="../../../s2jdbc-gen-core/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+		<fileset dir="../../../seasar2/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+		<fileset dir="../../../s2-tiger/lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+	</path>
+	
+	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+	
+	<target name="testAll">
+		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
+		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
+	</target>
+	
+	<target name="testFromDbToEntity" >
+		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
+	</target>
+	
+	<target name="testFromEntityToDb" >
+		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
+	</target>
+
+	<target name="dump-dbmeta" >
+		<ant antfile="../common-build.xml" target="dump-dbmeta" inheritrefs="true"/>
+	</target>
+</project>

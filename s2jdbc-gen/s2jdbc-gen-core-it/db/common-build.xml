@@ -107,7 +107,7 @@
 		/>
 		<gen-version 
 			dmlfiledestdir="temp/dml"
-			versionfiledestdir="."
+			versionfiledestdir="temp"
 			classpathref="classpath"
 		/>
 		<exec-sql classpathref="classpath">

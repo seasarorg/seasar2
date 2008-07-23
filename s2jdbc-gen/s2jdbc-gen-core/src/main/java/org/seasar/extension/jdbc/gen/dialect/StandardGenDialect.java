@@ -156,6 +156,14 @@ public class StandardGenDialect implements GenDialect {
         throw new UnsupportedOperationException("getIdentityDefinition");
     }
 
+    public String getDropForeignKeySyntax() {
+        return "drop constraint";
+    }
+
+    public String getDropUniqueKeySyntax() {
+        return "drop constraint";
+    }
+
     /**
      * 標準の{@link Type}の実装クラスです。
      * 

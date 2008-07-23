@@ -145,6 +145,20 @@ public interface GenDialect {
     String getIdentityColumnDefinition();
 
     /**
+     * 外部キーを削除する構文を返します。
+     * 
+     * @return 外部キーを削除する構文
+     */
+    String getDropForeignKeySyntax();
+
+    /**
+     * 一意キーを削除する構文を返します。
+     * 
+     * @return 外部キーを削除する構文
+     */
+    String getDropUniqueKeySyntax();
+
+    /**
      * Javaクラスとデータベースのカラム定義を表すインタフェースです。
      * 
      * @author taedium
