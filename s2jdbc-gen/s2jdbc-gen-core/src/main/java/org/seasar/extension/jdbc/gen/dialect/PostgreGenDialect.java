@@ -41,6 +41,11 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getDefaultSchemaName(String userName) {
+        return null;
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }
