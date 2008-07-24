@@ -109,7 +109,7 @@ public class Db2Dialect extends StandardDialect {
     @Override
     public String getForUpdateString(final SelectForUpdateType type,
             final int waitSeconds, final Pair<String, String>... aliases) {
-        return " for read only with rs";
+        return " for update with rs";
     }
 
     @Override
