@@ -27,7 +27,7 @@ import org.seasar.framework.exception.ParserConfigurationRuntimeException;
  * @author higa
  * 
  */
-public final class DocumentBuilderFactoryUtil {
+public class DocumentBuilderFactoryUtil {
 
     private DocumentBuilderFactoryUtil() {
     }

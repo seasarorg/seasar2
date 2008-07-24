@@ -27,7 +27,7 @@ import org.seasar.framework.message.MessageFormatter;
  * 
  * @author koichik
  */
-public final class SEntityExistsException extends EntityExistsException {
+public class SEntityExistsException extends EntityExistsException {
 
     private static final long serialVersionUID = 0L;
 

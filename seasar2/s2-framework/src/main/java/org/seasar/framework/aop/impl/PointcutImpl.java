@@ -32,7 +32,7 @@ import org.seasar.framework.util.ModifierUtil;
  * @author higa
  * 
  */
-public final class PointcutImpl implements Pointcut, Serializable {
+public class PointcutImpl implements Pointcut, Serializable {
 
     static final long serialVersionUID = 0L;
 

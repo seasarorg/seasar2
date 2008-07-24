@@ -29,7 +29,7 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * 
  */
-public final class PropertyTypeUtil {
+public class PropertyTypeUtil {
 
     private PropertyTypeUtil() {
     }

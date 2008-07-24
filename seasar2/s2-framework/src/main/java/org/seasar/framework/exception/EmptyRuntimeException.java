@@ -21,7 +21,7 @@ package org.seasar.framework.exception;
  * @author higa
  * 
  */
-public final class EmptyRuntimeException extends SRuntimeException {
+public class EmptyRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 4625805280526951642L;
 

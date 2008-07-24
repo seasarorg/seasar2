@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
  * @author higa
  * 
  */
-public final class DoubleConversionUtil {
+public class DoubleConversionUtil {
 
     private DoubleConversionUtil() {
     }

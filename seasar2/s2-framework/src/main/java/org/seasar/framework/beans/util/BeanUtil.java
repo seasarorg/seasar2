@@ -30,7 +30,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  * @author higa
  * 
  */
-public final class BeanUtil {
+public class BeanUtil {
 
     private BeanUtil() {
     }

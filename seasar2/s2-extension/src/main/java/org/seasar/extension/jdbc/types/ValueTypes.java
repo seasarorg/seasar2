@@ -46,7 +46,7 @@ import org.seasar.framework.util.ModifierUtil;
  * @author higa
  * 
  */
-public final class ValueTypes {
+public class ValueTypes {
 
     /**
      * String用の値タイプです。

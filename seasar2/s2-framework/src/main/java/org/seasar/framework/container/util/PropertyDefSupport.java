@@ -25,7 +25,7 @@ import org.seasar.framework.util.CaseInsensitiveMap;
  * @author higa
  * 
  */
-public final class PropertyDefSupport {
+public class PropertyDefSupport {
 
     private CaseInsensitiveMap propertyDefs = new CaseInsensitiveMap();
 

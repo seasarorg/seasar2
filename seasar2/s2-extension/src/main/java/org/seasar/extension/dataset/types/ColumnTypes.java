@@ -32,7 +32,7 @@ import org.seasar.framework.util.MapUtil;
  * @author higa
  * 
  */
-public final class ColumnTypes {
+public class ColumnTypes {
 
     /**
      * 文字列用の {@link ColumnType}です。

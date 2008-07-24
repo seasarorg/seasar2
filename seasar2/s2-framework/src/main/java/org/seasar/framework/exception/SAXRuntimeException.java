@@ -24,7 +24,7 @@ import org.xml.sax.SAXParseException;
  * @author higa
  * 
  */
-public final class SAXRuntimeException extends SRuntimeException {
+public class SAXRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = -4933312103385038765L;
 
     /**

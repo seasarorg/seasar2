@@ -36,7 +36,7 @@ import org.w3c.dom.Text;
  * @author higa
  * 
  */
-public final class DomUtil {
+public class DomUtil {
 
     private DomUtil() {
     }

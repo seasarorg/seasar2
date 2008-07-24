@@ -30,7 +30,7 @@ import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
  * @author higa
  * 
  */
-public final class ResourceUtil {
+public class ResourceUtil {
 
     private ResourceUtil() {
     }

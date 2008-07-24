@@ -31,7 +31,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * 
  * @author higa
  */
-public final class SAXParserUtil {
+public class SAXParserUtil {
 
     private SAXParserUtil() {
     }

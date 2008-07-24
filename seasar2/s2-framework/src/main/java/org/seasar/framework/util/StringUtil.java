@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
  * @author higa
  * 
  */
-public final class StringUtil {
+public class StringUtil {
 
     /**
      * 空の文字列の配列です。

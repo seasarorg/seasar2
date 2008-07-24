@@ -23,7 +23,7 @@ import java.text.ParseException;
  * @author higa
  * 
  */
-public final class ParseRuntimeException extends SRuntimeException {
+public class ParseRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -5237329676597387063L;
 

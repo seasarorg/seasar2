@@ -26,7 +26,7 @@ import java.util.Locale;
  * @author higa
  * 
  */
-public final class NumberConversionUtil {
+public class NumberConversionUtil {
 
     private NumberConversionUtil() {
     }

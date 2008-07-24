@@ -23,7 +23,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author higa
  * 
  */
-public final class ColumnNotFoundRuntimeException extends SRuntimeException {
+public class ColumnNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 0L;
 

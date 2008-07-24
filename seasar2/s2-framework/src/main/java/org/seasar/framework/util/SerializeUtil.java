@@ -30,7 +30,7 @@ import org.seasar.framework.exception.IORuntimeException;
  * @author higa
  * 
  */
-public final class SerializeUtil {
+public class SerializeUtil {
 
     private static final int BYTE_ARRAY_SIZE = 8 * 1024;
 

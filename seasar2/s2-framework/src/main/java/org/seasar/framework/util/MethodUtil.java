@@ -28,7 +28,7 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  * @author higa
  * 
  */
-public final class MethodUtil {
+public class MethodUtil {
 
     private static final Method IS_BRIDGE_METHOD = getIsBridgeMethod();
 

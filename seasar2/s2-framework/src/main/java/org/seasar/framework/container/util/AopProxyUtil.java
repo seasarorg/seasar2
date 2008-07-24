@@ -29,7 +29,7 @@ import org.seasar.framework.container.ContainerConstants;
  * 
  * @author koichik
  */
-public final class AopProxyUtil {
+public class AopProxyUtil {
 
     private AopProxyUtil() {
     }

@@ -23,7 +23,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author higa
  * 
  */
-public final class ParserConfigurationRuntimeException extends
+public class ParserConfigurationRuntimeException extends
         SRuntimeException {
 
     private static final long serialVersionUID = -4610465906028959083L;

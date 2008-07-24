@@ -27,7 +27,7 @@ import org.seasar.framework.exception.IORuntimeException;
  * @author higa
  * 
  */
-public final class ReaderUtil {
+public class ReaderUtil {
 
     private static final int BUF_SIZE = 8192;
 

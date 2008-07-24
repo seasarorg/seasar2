@@ -27,7 +27,7 @@ import org.seasar.framework.exception.NamingRuntimeException;
  * 
  * @author higa
  */
-public final class InitialContextUtil {
+public class InitialContextUtil {
 
     private InitialContextUtil() {
     }

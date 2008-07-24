@@ -25,7 +25,7 @@ import java.io.Reader;
  * @author higa
  * 
  */
-public final class TextUtil {
+public class TextUtil {
 
     private static final String UTF8 = "UTF-8";
 

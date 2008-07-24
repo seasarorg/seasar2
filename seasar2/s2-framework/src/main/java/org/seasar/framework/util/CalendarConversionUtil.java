@@ -25,7 +25,7 @@ import java.util.TimeZone;
  * @author higa
  * 
  */
-public final class CalendarConversionUtil {
+public class CalendarConversionUtil {
 
     private CalendarConversionUtil() {
     }

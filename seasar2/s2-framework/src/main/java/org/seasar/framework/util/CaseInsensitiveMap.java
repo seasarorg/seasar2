@@ -24,7 +24,7 @@ import java.util.Map;
  * @author higa
  * 
  */
-public final class CaseInsensitiveMap extends ArrayMap {
+public class CaseInsensitiveMap extends ArrayMap {
 
     private static final long serialVersionUID = 1L;
 

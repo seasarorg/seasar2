@@ -29,7 +29,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @see org.seasar.framework.container.impl.TooManyRegistrationComponentDefImpl#getComponent()
  */
-public final class TooManyRegistrationRuntimeException extends
+public class TooManyRegistrationRuntimeException extends
         SRuntimeException {
 
     private static final long serialVersionUID = -6522677955855595193L;

@@ -26,7 +26,7 @@ import java.util.jar.JarFile;
  * 
  * @author taedium
  */
-public final class ResourceTraversal {
+public class ResourceTraversal {
 
     /**
      * リソースを処理するインターフェースです。

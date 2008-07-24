@@ -23,7 +23,7 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * @author manhole
  */
-public final class OgnlRuntimeException extends SRuntimeException {
+public class OgnlRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 2290558407298004909L;
 

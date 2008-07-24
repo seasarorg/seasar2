@@ -31,7 +31,7 @@ import org.xml.sax.SAXException;
  * @author higa
  * 
  */
-public final class DocumentBuilderUtil {
+public class DocumentBuilderUtil {
 
     private DocumentBuilderUtil() {
     }

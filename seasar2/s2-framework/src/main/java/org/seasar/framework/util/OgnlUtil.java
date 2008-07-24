@@ -30,7 +30,7 @@ import org.seasar.framework.exception.OgnlRuntimeException;
  * @author higa
  * 
  */
-public final class OgnlUtil {
+public class OgnlUtil {
 
     private OgnlUtil() {
     }

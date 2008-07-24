@@ -25,7 +25,7 @@ import java.security.SecureRandom;
  * @author higa
  * 
  */
-public final class UUID {
+public class UUID {
 
     private static final byte[] DEFAULT_ADDRESS = new byte[] { (byte) 127,
             (byte) 0, (byte) 0, (byte) 1 };

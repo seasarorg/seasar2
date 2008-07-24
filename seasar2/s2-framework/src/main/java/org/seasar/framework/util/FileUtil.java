@@ -28,7 +28,7 @@ import org.seasar.framework.exception.IORuntimeException;
  * 
  * @author higa
  */
-public final class FileUtil {
+public class FileUtil {
 
     private FileUtil() {
     }

@@ -29,7 +29,7 @@ import org.seasar.framework.util.Tokenizer;
  * @author higa
  * 
  */
-public final class ConstantAnnotationUtil {
+public class ConstantAnnotationUtil {
 
     private ConstantAnnotationUtil() {
     }

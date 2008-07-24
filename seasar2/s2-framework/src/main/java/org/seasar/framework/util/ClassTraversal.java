@@ -25,7 +25,7 @@ import java.util.jar.JarFile;
  * 
  * @author koichik
  */
-public final class ClassTraversal {
+public class ClassTraversal {
     private static final String CLASS_SUFFIX = ".class";
 
     private static final String WAR_FILE_EXTENSION = ".war";

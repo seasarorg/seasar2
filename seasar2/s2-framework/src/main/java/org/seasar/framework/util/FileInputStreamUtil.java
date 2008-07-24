@@ -27,7 +27,7 @@ import org.seasar.framework.exception.IORuntimeException;
  * @author higa
  * 
  */
-public final class FileInputStreamUtil {
+public class FileInputStreamUtil {
 
     private FileInputStreamUtil() {
     }

@@ -43,7 +43,7 @@ import org.seasar.framework.util.DisposableUtil;
  * @author koichik
  * @author goto
  */
-public final class SingletonS2ContainerFactory {
+public class SingletonS2ContainerFactory {
 
     private static final Logger logger = Logger
             .getLogger(SingletonS2ContainerFactory.class);

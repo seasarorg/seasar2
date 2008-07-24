@@ -27,7 +27,7 @@ import org.seasar.framework.container.S2Container;
  * @author higa
  * 
  */
-public final class AspectDefSupport {
+public class AspectDefSupport {
 
     private List aspectDefs = new ArrayList();
 

@@ -24,7 +24,7 @@ import java.text.MessageFormat;
  * 
  */
 
-public final class MessageFormatter {
+public class MessageFormatter {
 
     private static final String MESSAGES = "Messages";
 

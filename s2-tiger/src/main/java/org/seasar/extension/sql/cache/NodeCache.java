@@ -31,7 +31,7 @@ import org.seasar.framework.util.ResourceUtil;
  * @author higa
  * 
  */
-public final class NodeCache {
+public class NodeCache {
 
     private static volatile boolean initialized;
 

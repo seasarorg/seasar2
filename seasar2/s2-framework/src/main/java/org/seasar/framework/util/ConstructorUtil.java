@@ -28,7 +28,7 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  * @author higa
  * 
  */
-public final class ConstructorUtil {
+public class ConstructorUtil {
 
     private ConstructorUtil() {
     }

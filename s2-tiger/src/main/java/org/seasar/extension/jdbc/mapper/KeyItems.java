@@ -21,7 +21,7 @@ package org.seasar.extension.jdbc.mapper;
  * @author higa
  * 
  */
-public final class KeyItems {
+public class KeyItems {
 
 	private Object[] values;
 

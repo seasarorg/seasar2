@@ -23,7 +23,7 @@ import java.math.BigInteger;
  * @author higa
  * 
  */
-public final class BigIntegerConversionUtil {
+public class BigIntegerConversionUtil {
 
     private BigIntegerConversionUtil() {
     }

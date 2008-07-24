@@ -34,7 +34,7 @@ import org.seasar.framework.exception.NoSuchMethodRuntimeException;
  * @author higa
  * 
  */
-public final class ClassUtil {
+public class ClassUtil {
 
     private static Map wrapperToPrimitiveMap = new HashMap();
 

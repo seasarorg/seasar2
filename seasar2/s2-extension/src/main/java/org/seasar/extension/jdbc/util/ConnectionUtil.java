@@ -30,7 +30,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  * @author higa
  * 
  */
-public final class ConnectionUtil {
+public class ConnectionUtil {
 
     private ConnectionUtil() {
     }

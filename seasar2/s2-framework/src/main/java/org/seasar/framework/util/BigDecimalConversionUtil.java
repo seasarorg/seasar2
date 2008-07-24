@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
  * @author higa
  * 
  */
-public final class BigDecimalConversionUtil {
+public class BigDecimalConversionUtil {
 
     /**
      * Tiger用のNormalizerのクラス名です。

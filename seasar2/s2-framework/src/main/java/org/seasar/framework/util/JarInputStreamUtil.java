@@ -27,7 +27,7 @@ import org.seasar.framework.exception.IORuntimeException;
  * 
  * @author koichik
  */
-public final class JarInputStreamUtil {
+public class JarInputStreamUtil {
     private JarInputStreamUtil() {
     }
 

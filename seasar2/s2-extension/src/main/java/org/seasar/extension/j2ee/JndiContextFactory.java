@@ -27,7 +27,7 @@ import javax.naming.spi.InitialContextFactory;
  * @author higa
  * 
  */
-public final class JndiContextFactory implements InitialContextFactory {
+public class JndiContextFactory implements InitialContextFactory {
 
     public Context getInitialContext(Hashtable env) throws NamingException {
         return new JndiContext(env);

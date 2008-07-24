@@ -32,7 +32,7 @@ import org.seasar.framework.util.CaseInsensitiveSet;
  * @author higa
  * @author manhole
  */
-public final class DatabaseMetaDataUtil {
+public class DatabaseMetaDataUtil {
 
     private DatabaseMetaDataUtil() {
     }

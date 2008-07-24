@@ -25,7 +25,7 @@ import org.seasar.framework.container.S2Container;
  * 
  * @author koichik
  */
-public final class S2ContainerBehavior {
+public class S2ContainerBehavior {
 
     private static Provider provider = new DefaultProvider();
 

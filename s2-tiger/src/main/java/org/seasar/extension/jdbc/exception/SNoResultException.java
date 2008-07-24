@@ -28,7 +28,7 @@ import org.seasar.framework.message.MessageFormatter;
  * @author higa
  * 
  */
-public final class SNoResultException extends NoResultException {
+public class SNoResultException extends NoResultException {
 
     private static final long serialVersionUID = 0L;
 

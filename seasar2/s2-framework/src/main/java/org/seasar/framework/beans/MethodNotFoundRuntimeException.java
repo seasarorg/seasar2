@@ -26,7 +26,7 @@ import org.seasar.framework.util.MethodUtil;
  * @author higa
  * 
  */
-public final class MethodNotFoundRuntimeException extends SRuntimeException {
+public class MethodNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -3508955801981550317L;
 

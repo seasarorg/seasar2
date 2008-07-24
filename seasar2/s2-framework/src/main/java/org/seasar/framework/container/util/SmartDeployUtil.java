@@ -32,7 +32,7 @@ import org.seasar.framework.util.FieldUtil;
  * @author shot
  * 
  */
-public final class SmartDeployUtil {
+public class SmartDeployUtil {
 
     private SmartDeployUtil() {
     }

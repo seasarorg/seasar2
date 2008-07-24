@@ -65,7 +65,7 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * 
  */
-public final class BeanDescImpl implements BeanDesc {
+public class BeanDescImpl implements BeanDesc {
 
     private static final Logger logger = Logger.getLogger(BeanDescImpl.class);
 

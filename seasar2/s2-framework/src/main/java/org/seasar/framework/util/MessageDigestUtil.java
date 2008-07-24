@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
  * @author higa
  * 
  */
-public final class MessageDigestUtil {
+public class MessageDigestUtil {
 
     private MessageDigestUtil() {
     }

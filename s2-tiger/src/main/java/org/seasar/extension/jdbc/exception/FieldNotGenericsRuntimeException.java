@@ -25,7 +25,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author higa
  * 
  */
-public final class FieldNotGenericsRuntimeException extends SRuntimeException {
+public class FieldNotGenericsRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 0L;
 

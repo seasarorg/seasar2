@@ -26,7 +26,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  * @author higa
  * 
  */
-public final class ResultSetUtil {
+public class ResultSetUtil {
 
     private ResultSetUtil() {
     }

@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
  * @author higa
  * 
  */
-public final class StringConversionUtil {
+public class StringConversionUtil {
 
     /**
      * WAVE DASHです。

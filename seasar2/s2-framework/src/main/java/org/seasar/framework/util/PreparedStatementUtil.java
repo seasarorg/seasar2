@@ -27,7 +27,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  * @author higa
  * 
  */
-public final class PreparedStatementUtil {
+public class PreparedStatementUtil {
 
     private PreparedStatementUtil() {
     }

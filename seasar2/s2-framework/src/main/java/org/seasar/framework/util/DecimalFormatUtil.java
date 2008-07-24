@@ -25,7 +25,7 @@ import java.util.Locale;
  * @author higa
  * 
  */
-public final class DecimalFormatUtil {
+public class DecimalFormatUtil {
 
     private DecimalFormatUtil() {
     }

@@ -28,7 +28,7 @@ import org.seasar.framework.exception.SIllegalArgumentException;
  * @author higa
  * 
  */
-public final class FieldUtil {
+public class FieldUtil {
 
     /**
      * ReflectUtilのクラス名です。

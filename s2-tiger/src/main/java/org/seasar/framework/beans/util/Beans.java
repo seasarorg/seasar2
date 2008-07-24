@@ -21,7 +21,7 @@ package org.seasar.framework.beans.util;
  * @author higa
  * 
  */
-public final class Beans {
+public class Beans {
 
     private Beans() {
     }

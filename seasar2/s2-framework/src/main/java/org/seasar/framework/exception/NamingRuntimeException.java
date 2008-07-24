@@ -23,7 +23,7 @@ import javax.naming.NamingException;
  * @author higa
  * 
  */
-public final class NamingRuntimeException extends SRuntimeException {
+public class NamingRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -3176447530746274091L;
 

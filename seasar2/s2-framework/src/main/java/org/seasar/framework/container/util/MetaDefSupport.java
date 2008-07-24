@@ -27,7 +27,7 @@ import org.seasar.framework.container.S2Container;
  * @author higa
  * 
  */
-public final class MetaDefSupport {
+public class MetaDefSupport {
 
     private List metaDefs = new ArrayList();
 

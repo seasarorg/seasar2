@@ -23,7 +23,7 @@ import javax.transaction.SystemException;
  * @author higa
  * 
  */
-public final class SystemRuntimeException extends SRuntimeException {
+public class SystemRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 7215695745074415461L;
 

@@ -32,7 +32,7 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * 
  */
-public final class S2ContainerUtil implements ContainerConstants {
+public class S2ContainerUtil implements ContainerConstants {
 
     private static final Logger logger = Logger
             .getLogger(S2ContainerUtil.class);

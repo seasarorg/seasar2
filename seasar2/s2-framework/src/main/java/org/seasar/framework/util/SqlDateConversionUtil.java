@@ -23,7 +23,7 @@ import java.sql.Date;
  * @author higa
  * 
  */
-public final class SqlDateConversionUtil {
+public class SqlDateConversionUtil {
 
     private SqlDateConversionUtil() {
     }

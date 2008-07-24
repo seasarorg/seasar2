@@ -345,7 +345,7 @@ public class SLinkedList implements Cloneable, Externalizable {
      * 要素を格納するエントリです。
      * 
      */
-    public final class Entry {
+    public class Entry {
 
         private Object _element;
 

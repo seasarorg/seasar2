@@ -26,7 +26,7 @@ import java.util.Locale;
  * @author higa
  * 
  */
-public final class MockHeaderUtil {
+public class MockHeaderUtil {
 
     private static SimpleDateFormat[] DATE_FORMATTERS = {
             new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US),

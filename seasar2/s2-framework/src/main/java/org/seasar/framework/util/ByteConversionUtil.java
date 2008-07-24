@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
  * @author higa
  * 
  */
-public final class ByteConversionUtil {
+public class ByteConversionUtil {
 
     private ByteConversionUtil() {
     }

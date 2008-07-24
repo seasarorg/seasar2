@@ -22,7 +22,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author koichik
  */
-public final class VersionPropertyNotNumberRuntimeException extends
+public class VersionPropertyNotNumberRuntimeException extends
         SRuntimeException {
 
     private static final long serialVersionUID = 0L;

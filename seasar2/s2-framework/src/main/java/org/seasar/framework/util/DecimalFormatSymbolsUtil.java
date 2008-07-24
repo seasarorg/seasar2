@@ -25,7 +25,7 @@ import java.util.Map;
  * @author higa
  * 
  */
-public final class DecimalFormatSymbolsUtil {
+public class DecimalFormatSymbolsUtil {
 
     private static Map cache = MapUtil.createHashMap();
 

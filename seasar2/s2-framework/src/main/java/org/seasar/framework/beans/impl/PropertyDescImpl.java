@@ -46,7 +46,7 @@ import org.seasar.framework.util.TimestampConversionUtil;
  * 
  * @author higa
  */
-public final class PropertyDescImpl implements PropertyDesc {
+public class PropertyDescImpl implements PropertyDesc {
 
     private static final Object[] EMPTY_ARGS = new Object[0];
 

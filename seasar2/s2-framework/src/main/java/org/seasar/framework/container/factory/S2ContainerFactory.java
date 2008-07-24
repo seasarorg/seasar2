@@ -62,7 +62,7 @@ import org.seasar.framework.util.StringUtil;
  * @author higa
  * @author jundu
  */
-public final class S2ContainerFactory {
+public class S2ContainerFactory {
 
     /**
      * コンフィグレーションdiconファイルを指定するためのシステムプロパティ名を表す定数です。

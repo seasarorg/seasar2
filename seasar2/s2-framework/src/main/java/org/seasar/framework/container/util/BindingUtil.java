@@ -29,7 +29,7 @@ import org.seasar.framework.container.ContainerConstants;
  * @author higa
  * 
  */
-public final class BindingUtil implements ContainerConstants {
+public class BindingUtil implements ContainerConstants {
 
     private BindingUtil() {
     }

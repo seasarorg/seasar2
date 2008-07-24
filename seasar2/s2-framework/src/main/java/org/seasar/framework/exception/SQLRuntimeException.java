@@ -25,7 +25,7 @@ import org.seasar.framework.message.MessageFormatter;
  * @author higa
  * @author manhole
  */
-public final class SQLRuntimeException extends SRuntimeException {
+public class SQLRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 2533513110369526191L;
 

@@ -23,7 +23,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * @author higa
  * 
  */
-public final class TableNotFoundRuntimeException extends SRuntimeException {
+public class TableNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -8455516906109819288L;
 

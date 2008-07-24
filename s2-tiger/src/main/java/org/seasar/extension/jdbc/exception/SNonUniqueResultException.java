@@ -27,7 +27,7 @@ import org.seasar.framework.message.MessageFormatter;
  * @author higa
  * 
  */
-public final class SNonUniqueResultException extends NonUniqueResultException {
+public class SNonUniqueResultException extends NonUniqueResultException {
 
     private static final long serialVersionUID = 0L;
 

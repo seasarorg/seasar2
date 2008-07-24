@@ -23,7 +23,7 @@ import javax.transaction.RollbackException;
  * @author higa
  * 
  */
-public final class RollbackRuntimeException extends SRuntimeException {
+public class RollbackRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = -889986104662559877L;
 

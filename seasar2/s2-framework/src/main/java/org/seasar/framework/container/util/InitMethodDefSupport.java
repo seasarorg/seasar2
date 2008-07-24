@@ -27,7 +27,7 @@ import org.seasar.framework.container.S2Container;
  * @author higa
  * 
  */
-public final class InitMethodDefSupport {
+public class InitMethodDefSupport {
 
     private List methodDefs = new ArrayList();
 

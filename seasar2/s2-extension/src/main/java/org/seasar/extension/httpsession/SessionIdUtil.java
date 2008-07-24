@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  * @author higa
  * 
  */
-public final class SessionIdUtil {
+public class SessionIdUtil {
 
     /**
      * セッション識別子のキーをあらわします。

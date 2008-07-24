@@ -28,7 +28,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  * @author higa
  * 
  */
-public final class DataSourceUtil {
+public class DataSourceUtil {
 
     private DataSourceUtil() {
     }

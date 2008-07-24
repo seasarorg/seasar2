@@ -30,7 +30,7 @@ import org.seasar.framework.exception.ParseRuntimeException;
  * @author higa
  * 
  */
-public final class TimeConversionUtil {
+public class TimeConversionUtil {
 
     private TimeConversionUtil() {
     }

@@ -43,7 +43,7 @@ import org.seasar.framework.util.SLinkedList;
  * 
  * @author higa
  */
-public final class TransactionImpl implements ExtendedTransaction,
+public class TransactionImpl implements ExtendedTransaction,
         SynchronizationRegister {
 
     private static final int VOTE_READONLY = 0;

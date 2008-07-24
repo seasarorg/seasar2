@@ -27,7 +27,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  * @author higa
  * 
  */
-public final class StatementUtil {
+public class StatementUtil {
 
     private StatementUtil() {
     }

@@ -24,7 +24,7 @@ import java.util.Date;
  * @author higa
  * 
  */
-public final class TimestampConversionUtil {
+public class TimestampConversionUtil {
 
     private TimestampConversionUtil() {
     }

@@ -28,7 +28,7 @@ import org.seasar.framework.exception.SystemRuntimeException;
  * @author higa
  * 
  */
-public final class TransactionManagerUtil {
+public class TransactionManagerUtil {
 
     private TransactionManagerUtil() {
     }

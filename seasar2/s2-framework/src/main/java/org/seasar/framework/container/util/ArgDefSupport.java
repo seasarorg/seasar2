@@ -27,7 +27,7 @@ import org.seasar.framework.container.S2Container;
  * @author higa
  * 
  */
-public final class ArgDefSupport {
+public class ArgDefSupport {
 
     private List argDefs = new ArrayList();
 

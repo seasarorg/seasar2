@@ -27,7 +27,7 @@ import org.seasar.framework.container.S2Container;
  * @author higa
  * 
  */
-public final class DestroyMethodDefSupport {
+public class DestroyMethodDefSupport {
 
     private List methodDefs = new ArrayList();
 

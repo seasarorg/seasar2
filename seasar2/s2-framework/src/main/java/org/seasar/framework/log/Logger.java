@@ -28,7 +28,7 @@ import org.seasar.framework.message.MessageFormatter;
  * @author higa
  * 
  */
-public final class Logger {
+public class Logger {
 
     private static final Map loggers = new HashMap();
 

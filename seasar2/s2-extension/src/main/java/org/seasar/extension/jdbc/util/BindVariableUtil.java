@@ -31,7 +31,7 @@ import org.seasar.framework.util.SStringBuilder;
  * @author higa
  * 
  */
-public final class BindVariableUtil {
+public class BindVariableUtil {
 
     private static final String NULL = "null";
 

@@ -21,7 +21,7 @@ package org.seasar.framework.util;
  * @author higa
  * 
  */
-public final class BooleanConversionUtil {
+public class BooleanConversionUtil {
 
     private BooleanConversionUtil() {
     }

@@ -29,7 +29,7 @@ import org.seasar.framework.util.MapUtil;
  * @author higa
  * 
  */
-public final class BeanDescFactory {
+public class BeanDescFactory {
 
     private static volatile boolean initialized;
 

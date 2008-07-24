@@ -40,7 +40,7 @@ import org.seasar.framework.util.MethodUtil;
  * 
  * @author higa
  */
-public final class AopProxy implements Serializable {
+public class AopProxy implements Serializable {
 
     static final long serialVersionUID = 0L;
 
