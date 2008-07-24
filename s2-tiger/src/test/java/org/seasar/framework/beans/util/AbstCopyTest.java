@@ -15,12 +15,14 @@
  */
 package org.seasar.framework.beans.util;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.seasar.framework.beans.ConverterRuntimeException;
+import org.seasar.framework.beans.converter.DateConverter;
 import org.seasar.framework.beans.converter.NumberConverter;
 
 /**
@@ -717,6 +719,9 @@ public class AbstCopyTest extends TestCase {
         assertEquals(new Long(1), new MyCopy().converter(
                 new NumberConverter("##0")).convertValue("1", "aaa",
                 Integer.class));
+        assertEquals("19700101", new MyCopy().converter(
+                new DateConverter("yyyyMMdd")).convertValue(new Timestamp(0),
+                "aaa", java.util.Date.class));
     }
 
     /**
@@ -729,6 +734,39 @@ public class AbstCopyTest extends TestCase {
         } catch (ConverterRuntimeException e) {
             System.out.println(e);
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDateConverter() throws Exception {
+        assertEquals("19700101", new MyCopy().dateConverter("yyyyMMdd")
+                .convertValue(new java.util.Date(0), "aaa", String.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSqlDateConverter() throws Exception {
+        assertEquals("19700101", new MyCopy().sqlDateConverter("yyyyMMdd")
+                .convertValue(new java.sql.Date(0), "aaa", String.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testTimeConverter() throws Exception {
+        assertEquals("00", new MyCopy().timeConverter("ss").convertValue(
+                new java.sql.Time(0), "aaa", String.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testTimestampConverter() throws Exception {
+        assertEquals("19700101 00", new MyCopy().timestampConverter(
+                "yyyyMMdd ss").convertValue(new java.sql.Timestamp(0), "aaa",
+                String.class));
     }
 
     /**

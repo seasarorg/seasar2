@@ -27,6 +27,9 @@ import org.seasar.framework.beans.ConverterRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.converter.DateConverter;
 import org.seasar.framework.beans.converter.NumberConverter;
+import org.seasar.framework.beans.converter.SqlDateConverter;
+import org.seasar.framework.beans.converter.TimeConverter;
+import org.seasar.framework.beans.converter.TimestampConverter;
 import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
@@ -207,6 +210,45 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      */
     public S dateConverter(String pattern, String... propertyNames) {
         return converter(new DateConverter(pattern), propertyNames);
+    }
+
+    /**
+     * SQL用日付のコンバータを設定します。
+     * 
+     * @param pattern
+     *            日付のパターン
+     * @param propertyNames
+     *            プロパティ名の配列
+     * @return このインスタンス自身
+     */
+    public S sqlDateConverter(String pattern, String... propertyNames) {
+        return converter(new SqlDateConverter(pattern), propertyNames);
+    }
+
+    /**
+     * 時間のコンバータを設定します。
+     * 
+     * @param pattern
+     *            時間のパターン
+     * @param propertyNames
+     *            プロパティ名の配列
+     * @return このインスタンス自身
+     */
+    public S timeConverter(String pattern, String... propertyNames) {
+        return converter(new TimeConverter(pattern), propertyNames);
+    }
+
+    /**
+     * 日時のコンバータを設定します。
+     * 
+     * @param pattern
+     *            日時のパターン
+     * @param propertyNames
+     *            プロパティ名の配列
+     * @return このインスタンス自身
+     */
+    public S timestampConverter(String pattern, String... propertyNames) {
+        return converter(new TimestampConverter(pattern), propertyNames);
     }
 
     /**
@@ -426,6 +468,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            コピー先のプロパティクラス
      * @return 変換後の値
      */
+    @SuppressWarnings("unused")
     protected Object convertValue(Object value, String destPropertyName,
             Class<?> destPropertyClass) {
         if (value == null) {
@@ -438,9 +481,10 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             if (targetClass == null) {
                 return value;
             }
-            for (Converter c : converters) {
-                if (c.isTarget(targetClass)) {
-                    converter = c;
+            for (Class<?> clazz = targetClass; clazz != Object.class; clazz = clazz
+                    .getSuperclass()) {
+                converter = findConverter(clazz);
+                if (converter != null) {
                     break;
                 }
             }
@@ -456,5 +500,21 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
         } catch (Throwable cause) {
             throw new ConverterRuntimeException(destPropertyName, value, cause);
         }
+    }
+
+    /**
+     * クラスに対応するコンバータを探します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return コンバータ
+     */
+    protected Converter findConverter(Class<?> clazz) {
+        for (Converter c : converters) {
+            if (c.isTarget(clazz)) {
+                return c;
+            }
+        }
+        return null;
     }
 }
