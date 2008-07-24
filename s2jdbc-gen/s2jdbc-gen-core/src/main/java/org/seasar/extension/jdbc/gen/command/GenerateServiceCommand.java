@@ -438,7 +438,7 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     protected void generate(List<EntityMeta> entityMetaList) {
         for (EntityMeta entityMeta : entityMetaList) {
-            generateCondition(entityMeta);
+            generateService(entityMeta);
         }
     }
 
@@ -448,7 +448,7 @@ public class GenerateServiceCommand extends AbstractCommand {
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void generateCondition(EntityMeta entityMeta) {
+    protected void generateService(EntityMeta entityMeta) {
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = createGenerationContext(model,
                 serviceTemplateFileName);
