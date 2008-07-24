@@ -38,7 +38,7 @@ public class HotdeployUtil {
 
     private static Boolean hotdeploy;
 
-    private HotdeployUtil() {
+    protected HotdeployUtil() {
     }
 
     /**

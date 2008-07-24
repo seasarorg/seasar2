@@ -30,7 +30,7 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class FileUtil {
 
-    private FileUtil() {
+    protected FileUtil() {
     }
 
     /**

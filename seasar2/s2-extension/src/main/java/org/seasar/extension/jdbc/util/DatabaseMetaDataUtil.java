@@ -34,7 +34,7 @@ import org.seasar.framework.util.CaseInsensitiveSet;
  */
 public class DatabaseMetaDataUtil {
 
-    private DatabaseMetaDataUtil() {
+    protected DatabaseMetaDataUtil() {
     }
 
     /**

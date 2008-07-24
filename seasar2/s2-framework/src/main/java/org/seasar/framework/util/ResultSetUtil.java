@@ -28,7 +28,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class ResultSetUtil {
 
-    private ResultSetUtil() {
+    protected ResultSetUtil() {
     }
 
     /**

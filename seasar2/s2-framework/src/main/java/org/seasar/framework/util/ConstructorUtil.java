@@ -30,7 +30,7 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  */
 public class ConstructorUtil {
 
-    private ConstructorUtil() {
+    protected ConstructorUtil() {
     }
 
     /**

@@ -32,7 +32,7 @@ import org.seasar.framework.exception.ParseRuntimeException;
  */
 public class TimeConversionUtil {
 
-    private TimeConversionUtil() {
+    protected TimeConversionUtil() {
     }
 
     /**

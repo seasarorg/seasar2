@@ -50,7 +50,7 @@ public class FieldUtil {
      */
     protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_FIELD_TYPE_METHOD = getElementTypeFromFieldTypeMethod("Set");
 
-    private FieldUtil() {
+    protected FieldUtil() {
     }
 
     /**

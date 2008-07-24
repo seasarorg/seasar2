@@ -24,7 +24,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  */
 public class AssertionUtil {
 
-    private AssertionUtil() {
+    protected AssertionUtil() {
     }
 
     /**

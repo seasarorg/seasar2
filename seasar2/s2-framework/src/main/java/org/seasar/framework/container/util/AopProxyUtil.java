@@ -31,7 +31,7 @@ import org.seasar.framework.container.ContainerConstants;
  */
 public class AopProxyUtil {
 
-    private AopProxyUtil() {
+    protected AopProxyUtil() {
     }
 
     /**

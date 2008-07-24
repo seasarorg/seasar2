@@ -30,7 +30,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class DataSourceUtil {
 
-    private DataSourceUtil() {
+    protected DataSourceUtil() {
     }
 
     /**

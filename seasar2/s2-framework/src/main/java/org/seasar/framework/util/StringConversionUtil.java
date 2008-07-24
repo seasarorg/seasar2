@@ -36,7 +36,7 @@ public class StringConversionUtil {
      */
     public static final int FULLWIDTH_TILDE = 0xff5e;
 
-    private StringConversionUtil() {
+    protected StringConversionUtil() {
     }
 
     /**

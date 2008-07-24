@@ -31,7 +31,7 @@ public class ReaderUtil {
 
     private static final int BUF_SIZE = 8192;
 
-    private ReaderUtil() {
+    protected ReaderUtil() {
     }
 
     /**

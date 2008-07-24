@@ -43,7 +43,7 @@ public class BigDecimalConversionUtil {
         }
     }
 
-    private BigDecimalConversionUtil() {
+    protected BigDecimalConversionUtil() {
     }
 
     /**

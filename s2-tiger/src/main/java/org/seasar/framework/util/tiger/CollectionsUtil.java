@@ -52,7 +52,7 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public abstract class CollectionsUtil {
 
-    private CollectionsUtil() {
+    protected CollectionsUtil() {
     }
 
     /**

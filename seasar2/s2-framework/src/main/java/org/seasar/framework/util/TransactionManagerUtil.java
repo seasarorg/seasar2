@@ -30,7 +30,7 @@ import org.seasar.framework.exception.SystemRuntimeException;
  */
 public class TransactionManagerUtil {
 
-    private TransactionManagerUtil() {
+    protected TransactionManagerUtil() {
     }
 
     /**

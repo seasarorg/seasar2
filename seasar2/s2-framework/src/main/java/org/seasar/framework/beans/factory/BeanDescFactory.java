@@ -39,7 +39,7 @@ public class BeanDescFactory {
         initialize();
     }
 
-    private BeanDescFactory() {
+    protected BeanDescFactory() {
     }
 
     /**

@@ -26,7 +26,7 @@ import java.util.Date;
  */
 public class TimestampConversionUtil {
 
-    private TimestampConversionUtil() {
+    protected TimestampConversionUtil() {
     }
 
     /**

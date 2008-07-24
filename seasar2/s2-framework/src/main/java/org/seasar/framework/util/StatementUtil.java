@@ -29,7 +29,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class StatementUtil {
 
-    private StatementUtil() {
+    protected StatementUtil() {
     }
 
     /**

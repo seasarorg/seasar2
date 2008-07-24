@@ -33,7 +33,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SAXParserUtil {
 
-    private SAXParserUtil() {
+    protected SAXParserUtil() {
     }
 
     /**

@@ -32,7 +32,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  */
 public class BeanUtil {
 
-    private BeanUtil() {
+    protected BeanUtil() {
     }
 
     /**

@@ -39,7 +39,7 @@ public class AccessTypeDefFactory {
      */
     public static final AccessTypeDef FIELD = new AccessTypeFieldDef();
 
-    private AccessTypeDefFactory() {
+    protected AccessTypeDefFactory() {
     }
 
     private static Map accessTypeDefs = new HashMap();

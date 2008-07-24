@@ -32,7 +32,7 @@ import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
  */
 public class ResourceUtil {
 
-    private ResourceUtil() {
+    protected ResourceUtil() {
     }
 
     /**

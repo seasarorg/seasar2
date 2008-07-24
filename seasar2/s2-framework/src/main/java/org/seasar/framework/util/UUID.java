@@ -35,7 +35,7 @@ public class UUID {
     private static String _base = StringUtil.toHex(getAddress())
             + StringUtil.toHex(System.identityHashCode(_random));
 
-    private UUID() {
+    protected UUID() {
     }
 
     /**

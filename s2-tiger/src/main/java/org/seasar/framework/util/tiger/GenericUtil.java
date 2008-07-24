@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public abstract class GenericUtil {
 
-    private GenericUtil() {
+    protected GenericUtil() {
     }
 
     /**

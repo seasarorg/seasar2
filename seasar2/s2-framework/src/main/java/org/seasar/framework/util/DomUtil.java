@@ -38,7 +38,7 @@ import org.w3c.dom.Text;
  */
 public class DomUtil {
 
-    private DomUtil() {
+    protected DomUtil() {
     }
 
     /**

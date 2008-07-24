@@ -69,7 +69,7 @@ public class AutoBindingDefFactory {
         addAutoBindingDef(SEMIAUTO);
     }
 
-    private AutoBindingDefFactory() {
+    protected AutoBindingDefFactory() {
     }
 
     /**

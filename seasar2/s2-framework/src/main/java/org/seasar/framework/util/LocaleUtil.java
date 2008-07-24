@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 public class LocaleUtil {
 
-    private LocaleUtil() {
+    protected LocaleUtil() {
     }
 
     /**

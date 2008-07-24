@@ -29,7 +29,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class PreparedStatementUtil {
 
-    private PreparedStatementUtil() {
+    protected PreparedStatementUtil() {
     }
 
     /**

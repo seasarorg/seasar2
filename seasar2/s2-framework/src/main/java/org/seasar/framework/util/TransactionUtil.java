@@ -32,7 +32,7 @@ import org.seasar.framework.exception.SystemRuntimeException;
  */
 public class TransactionUtil {
 
-    private TransactionUtil() {
+    protected TransactionUtil() {
     }
 
     /**

@@ -35,7 +35,7 @@ public class StringUtil {
     /**
      * 
      */
-    private StringUtil() {
+    protected StringUtil() {
     }
 
     /**

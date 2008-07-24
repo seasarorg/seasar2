@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
  */
 public class ShortConversionUtil {
 
-    private ShortConversionUtil() {
+    protected ShortConversionUtil() {
     }
 
     /**

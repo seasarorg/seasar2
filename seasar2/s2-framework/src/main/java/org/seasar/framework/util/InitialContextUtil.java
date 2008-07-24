@@ -29,7 +29,7 @@ import org.seasar.framework.exception.NamingRuntimeException;
  */
 public class InitialContextUtil {
 
-    private InitialContextUtil() {
+    protected InitialContextUtil() {
     }
 
     /**

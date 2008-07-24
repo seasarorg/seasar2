@@ -29,7 +29,7 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  */
 public class ArrayUtil {
 
-    private ArrayUtil() {
+    protected ArrayUtil() {
     }
 
     /**

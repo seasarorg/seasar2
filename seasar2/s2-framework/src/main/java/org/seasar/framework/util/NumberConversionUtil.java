@@ -28,7 +28,7 @@ import java.util.Locale;
  */
 public class NumberConversionUtil {
 
-    private NumberConversionUtil() {
+    protected NumberConversionUtil() {
     }
 
     /**

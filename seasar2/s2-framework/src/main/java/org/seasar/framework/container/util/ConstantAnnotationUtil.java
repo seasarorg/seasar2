@@ -31,7 +31,7 @@ import org.seasar.framework.util.Tokenizer;
  */
 public class ConstantAnnotationUtil {
 
-    private ConstantAnnotationUtil() {
+    protected ConstantAnnotationUtil() {
     }
 
     /**

@@ -25,7 +25,7 @@ import java.math.BigInteger;
  */
 public class BigIntegerConversionUtil {
 
-    private BigIntegerConversionUtil() {
+    protected BigIntegerConversionUtil() {
     }
 
     /**

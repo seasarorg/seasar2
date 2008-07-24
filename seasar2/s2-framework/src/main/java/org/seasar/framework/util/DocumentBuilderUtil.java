@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  */
 public class DocumentBuilderUtil {
 
-    private DocumentBuilderUtil() {
+    protected DocumentBuilderUtil() {
     }
 
     /**

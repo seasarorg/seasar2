@@ -27,7 +27,7 @@ import java.util.Locale;
  */
 public class DecimalFormatUtil {
 
-    private DecimalFormatUtil() {
+    protected DecimalFormatUtil() {
     }
 
     /**

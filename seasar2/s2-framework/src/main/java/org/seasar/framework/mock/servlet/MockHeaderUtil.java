@@ -35,7 +35,7 @@ public class MockHeaderUtil {
             new SimpleDateFormat("yyyy-MM-dd"),
             new SimpleDateFormat("yyyy/MM/dd") };
 
-    private MockHeaderUtil() {
+    protected MockHeaderUtil() {
     }
 
     /**

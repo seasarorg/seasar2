@@ -31,7 +31,7 @@ import org.seasar.framework.util.MethodUtil;
  */
 public class AnnotationUtil {
 
-    private AnnotationUtil() {
+    protected AnnotationUtil() {
     }
 
     /**

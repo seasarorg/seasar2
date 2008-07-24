@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  */
 public class SAXParserFactoryUtil {
 
-    private SAXParserFactoryUtil() {
+    protected SAXParserFactoryUtil() {
     }
 
     /**

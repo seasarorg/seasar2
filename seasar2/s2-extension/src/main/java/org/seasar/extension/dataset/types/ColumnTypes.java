@@ -129,7 +129,7 @@ public class ColumnTypes {
         registerColumnType(Types.VARCHAR, STRING);
     }
 
-    private ColumnTypes() {
+    protected ColumnTypes() {
     }
 
     /**

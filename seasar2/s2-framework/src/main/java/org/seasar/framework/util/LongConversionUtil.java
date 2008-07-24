@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat;
  */
 public class LongConversionUtil {
 
-    private LongConversionUtil() {
+    protected LongConversionUtil() {
     }
 
     /**

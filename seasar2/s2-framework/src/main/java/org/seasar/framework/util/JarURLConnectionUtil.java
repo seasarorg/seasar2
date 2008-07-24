@@ -29,7 +29,7 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class JarURLConnectionUtil {
 
-    private JarURLConnectionUtil() {
+    protected JarURLConnectionUtil() {
     }
 
     /**

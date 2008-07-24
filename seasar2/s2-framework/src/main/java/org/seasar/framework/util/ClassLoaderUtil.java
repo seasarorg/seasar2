@@ -38,7 +38,7 @@ public abstract class ClassLoaderUtil {
 
     private static final Method definePackageMethod = getDefinePackageMethod();
 
-    private ClassLoaderUtil() {
+    protected ClassLoaderUtil() {
     }
 
     private static Method getFindLoadedClassMethod() {

@@ -31,7 +31,7 @@ import org.seasar.framework.container.ContainerConstants;
  */
 public class BindingUtil implements ContainerConstants {
 
-    private BindingUtil() {
+    protected BindingUtil() {
     }
 
     /**

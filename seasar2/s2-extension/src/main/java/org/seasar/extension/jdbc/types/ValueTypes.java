@@ -270,7 +270,7 @@ public class ValueTypes {
         initialize();
     }
 
-    private ValueTypes() {
+    protected ValueTypes() {
     }
 
     /**

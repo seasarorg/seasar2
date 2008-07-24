@@ -74,7 +74,7 @@ public class ClassUtil {
     /**
      * 
      */
-    private ClassUtil() {
+    protected ClassUtil() {
     }
 
     /**

@@ -31,7 +31,7 @@ import org.seasar.framework.util.StringUtil;
  */
 public class PropertyTypeUtil {
 
-    private PropertyTypeUtil() {
+    protected PropertyTypeUtil() {
     }
 
     /**

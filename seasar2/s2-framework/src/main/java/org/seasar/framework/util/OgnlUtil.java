@@ -32,7 +32,7 @@ import org.seasar.framework.exception.OgnlRuntimeException;
  */
 public class OgnlUtil {
 
-    private OgnlUtil() {
+    protected OgnlUtil() {
     }
 
     /**

@@ -36,7 +36,7 @@ import org.seasar.framework.exception.NoSuchMethodRuntimeException;
  */
 public abstract class ReflectionUtil {
 
-    private ReflectionUtil() {
+    protected ReflectionUtil() {
     }
 
     /**

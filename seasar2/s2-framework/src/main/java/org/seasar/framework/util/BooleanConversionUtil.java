@@ -23,7 +23,7 @@ package org.seasar.framework.util;
  */
 public class BooleanConversionUtil {
 
-    private BooleanConversionUtil() {
+    protected BooleanConversionUtil() {
     }
 
     /**

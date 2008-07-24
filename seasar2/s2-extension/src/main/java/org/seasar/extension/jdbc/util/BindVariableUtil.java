@@ -35,7 +35,7 @@ public class BindVariableUtil {
 
     private static final String NULL = "null";
 
-    private BindVariableUtil() {
+    protected BindVariableUtil() {
     }
 
     /**

@@ -29,7 +29,7 @@ public class DecimalFormatSymbolsUtil {
 
     private static Map cache = MapUtil.createHashMap();
 
-    private DecimalFormatSymbolsUtil() {
+    protected DecimalFormatSymbolsUtil() {
     }
 
     /**

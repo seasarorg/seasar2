@@ -29,7 +29,7 @@ import org.seasar.framework.exception.IllegalClassFormatRuntimeException;
  */
 public class ClassTransformerUtil {
 
-    private ClassTransformerUtil() {
+    protected ClassTransformerUtil() {
     }
 
     /**

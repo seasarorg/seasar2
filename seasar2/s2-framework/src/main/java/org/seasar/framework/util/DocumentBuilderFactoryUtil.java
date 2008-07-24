@@ -29,7 +29,7 @@ import org.seasar.framework.exception.ParserConfigurationRuntimeException;
  */
 public class DocumentBuilderFactoryUtil {
 
-    private DocumentBuilderFactoryUtil() {
+    protected DocumentBuilderFactoryUtil() {
     }
 
     /**

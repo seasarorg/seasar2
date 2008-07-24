@@ -62,7 +62,7 @@ public class BindingTypeDefFactory {
         addBindingTypeDef(NONE);
     }
 
-    private BindingTypeDefFactory() {
+    protected BindingTypeDefFactory() {
     }
 
     /**

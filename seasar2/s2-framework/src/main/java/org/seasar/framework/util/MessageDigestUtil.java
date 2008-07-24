@@ -24,7 +24,7 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MessageDigestUtil {
 
-    private MessageDigestUtil() {
+    protected MessageDigestUtil() {
     }
 
     /**

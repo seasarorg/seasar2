@@ -23,7 +23,7 @@ package org.seasar.framework.beans.util;
  */
 public class Beans {
 
-    private Beans() {
+    protected Beans() {
     }
 
     /**

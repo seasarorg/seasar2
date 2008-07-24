@@ -33,7 +33,7 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class JarFileUtil {
 
-    private JarFileUtil() {
+    protected JarFileUtil() {
     }
 
     /**

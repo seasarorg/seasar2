@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  */
 public class ResourceBundleUtil {
 
-    private ResourceBundleUtil() {
+    protected ResourceBundleUtil() {
     }
 
     /**

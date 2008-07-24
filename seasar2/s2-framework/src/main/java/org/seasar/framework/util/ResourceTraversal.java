@@ -42,7 +42,7 @@ public class ResourceTraversal {
         void processResource(String path, InputStream is);
     }
 
-    private ResourceTraversal() {
+    protected ResourceTraversal() {
     }
 
     /**

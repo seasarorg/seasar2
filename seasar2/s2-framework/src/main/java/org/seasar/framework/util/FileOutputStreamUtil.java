@@ -29,7 +29,7 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class FileOutputStreamUtil {
 
-    private FileOutputStreamUtil() {
+    protected FileOutputStreamUtil() {
     }
 
     /**

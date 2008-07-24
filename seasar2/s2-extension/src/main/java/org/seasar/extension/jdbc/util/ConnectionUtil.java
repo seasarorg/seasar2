@@ -32,7 +32,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class ConnectionUtil {
 
-    private ConnectionUtil() {
+    protected ConnectionUtil() {
     }
 
     /**

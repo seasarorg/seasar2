@@ -25,7 +25,7 @@ import java.sql.Date;
  */
 public class SqlDateConversionUtil {
 
-    private SqlDateConversionUtil() {
+    protected SqlDateConversionUtil() {
     }
 
     /**
