@@ -117,9 +117,9 @@ public class GenerateTableTest {
         tableDesc3.addColumnDesc(name3);
 
         DbModelFactoryImpl factory = new DbModelFactoryImpl(
-                new MssqlGenDialect(), ';');
+                new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
         model = factory.getDbModel(Arrays.asList(tableDesc, tableDesc2,
-                tableDesc3));
+                tableDesc3), 0);
     }
 
     /**

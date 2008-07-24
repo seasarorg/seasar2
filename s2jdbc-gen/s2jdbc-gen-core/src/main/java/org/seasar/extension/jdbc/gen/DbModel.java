@@ -32,6 +32,14 @@ public class DbModel {
     /** 区切り文字 */
     protected char delimiter;
 
+    protected String schemaInfoFullTableName;
+
+    protected String schemaInfoColumnName;
+
+    protected String schemaInfoColumnDefinition;
+
+    protected int versionNo;
+
     /** テーブル記述のリスト */
     protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
 
@@ -74,6 +82,66 @@ public class DbModel {
      */
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
+    }
+
+    /**
+     * @return Returns the dbInfoFullTableName.
+     */
+    public String getSchemaInfoFullTableName() {
+        return schemaInfoFullTableName;
+    }
+
+    /**
+     * @param dbInfoFullTableName
+     *            The dbInfofullTableName to set.
+     */
+    public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
+        this.schemaInfoFullTableName = schemaInfoFullTableName;
+    }
+
+    /**
+     * @return Returns the dbInfoColumnName.
+     */
+    public String getSchemaInfoColumnName() {
+        return schemaInfoColumnName;
+    }
+
+    /**
+     * @param dbInfoColumnName
+     *            The dbInfoColumnName to set.
+     */
+    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
+        this.schemaInfoColumnName = schemaInfoColumnName;
+    }
+
+    /**
+     * @return Returns the versionNo.
+     */
+    public int getVersionNo() {
+        return versionNo;
+    }
+
+    /**
+     * @param versionNo
+     *            The versionNo to set.
+     */
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    /**
+     * @return Returns the dbInfoColumnDefinition.
+     */
+    public String getSchemaInfoColumnDefinition() {
+        return schemaInfoColumnDefinition;
+    }
+
+    /**
+     * @param dbInfoColumnDefinition
+     *            The dbInfoColumnDefinition to set.
+     */
+    public void setSchemaInfoColumnDefinition(String dbInfoColumnDefinition) {
+        this.schemaInfoColumnDefinition = dbInfoColumnDefinition;
     }
 
     /**

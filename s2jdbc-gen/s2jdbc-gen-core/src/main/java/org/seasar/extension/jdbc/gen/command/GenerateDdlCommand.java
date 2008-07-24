@@ -37,6 +37,8 @@ import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.VersionManager;
+import org.seasar.extension.jdbc.gen.VersionManager.VersionUnit;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.IdTableDescFactoryImpl;
@@ -50,6 +52,7 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.version.VersionManagerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -145,14 +148,11 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
-    /** 上書きをする場合{@code true}、しない場合{@code false} */
-    protected boolean overwrite = true;
-
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
     /** DDLファイルの出力先ディレクトリ */
-    protected File ddlFileDestDir = new File("db/ddl");
+    protected File ddlFileDestDir = new File("db");
 
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
@@ -165,6 +165,10 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
+
+    protected String schemaInfoFullTableName = "SCHEMA_INFO";
+
+    protected String schemaInfoColumnName = "VERSION";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -186,6 +190,8 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** ジェネレータ */
     protected Generator generator;
+
+    protected VersionManager versionManager;
 
     /**
      * インスタンスを構築します。
@@ -620,25 +626,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 上書きをする場合{@code true}、しない場合{@code false}を返します。
-     * 
-     * @return 上書きをする場合{@code true}、しない場合{@code false}
-     */
-    public boolean isOverwrite() {
-        return overwrite;
-    }
-
-    /**
-     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
-     * 
-     * @param overwrite
-     *            上書きをする場合{@code true}、しない場合{@code false}
-     */
-    public void setOverwrite(boolean overwrite) {
-        this.overwrite = overwrite;
-    }
-
-    /**
      * ルートパッケージ名を返します。
      * 
      * @return ルートパッケージ名
@@ -755,6 +742,7 @@ public class GenerateDdlCommand extends AbstractCommand {
         tableDescFactory = createTableDescFactory();
         dbModelFactory = createDbModelFactory();
         generator = createGenerator();
+        versionManager = createVersionManager();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -811,7 +799,8 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DbModelFactory}の実装
      */
     protected DbModelFactory createDbModelFactory() {
-        return new DbModelFactoryImpl(dialect, statementDelimiter);
+        return new DbModelFactoryImpl(dialect, statementDelimiter,
+                schemaInfoFullTableName, schemaInfoColumnName);
     }
 
     /**
@@ -823,78 +812,67 @@ public class GenerateDdlCommand extends AbstractCommand {
         return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
+    protected VersionManager createVersionManager() {
+        return new VersionManagerImpl(ddlFileDestDir, "version.txt", "0000");
+    }
+
     /**
      * 生成します。
      * 
      * @param tableDescList
      *            テーブル記述のリスト
      */
-    protected void generate(List<TableDesc> tableDescList) {
-        DbModel model = dbModelFactory.getDbModel(tableDescList);
-        generateTable(model);
-        generateUniqueKeyDdl(model);
-        generateForeignKeyDdl(model);
-        generateSequence(model);
+    protected void generate(final List<TableDesc> tableDescList) {
+        versionManager.increment(new VersionUnit() {
+
+            public void execute(File nextVersionDir, int nextVersionNo) {
+                DbModel model = dbModelFactory.getDbModel(tableDescList,
+                        nextVersionNo);
+                generateCreateDdl(model, new File(nextVersionDir, "create"));
+                generateDropDdl(model, new File(nextVersionDir, "drop"));
+            }
+        });
     }
 
-    /**
-     * テーブルに関するDDLファイルを作成します。
-     * 
-     * @param model
-     *            データベースのモデル
-     */
-    protected void generateTable(DbModel model) {
-        GenerationContext createContext = createGenerationContext(model,
-                createTableDdlFileName, createTableTemplateFileName);
-        GenerationContext dropContext = createGenerationContext(model,
-                dropTableDdlFileName, dropTableTemplateFileName);
-        generator.generate(createContext);
-        generator.generate(dropContext);
+    protected void generateCreateDdl(DbModel model, File createDir) {
+        GenerationContext tableContext = createGenerationContext(model,
+                createDir, createTableDdlFileName, createTableTemplateFileName);
+        generator.generate(tableContext);
+
+        GenerationContext uniqueKeyContext = createGenerationContext(model,
+                createDir, createUniqueKeyDdlFileName,
+                createUniqueKeyTemplateFileName);
+        generator.generate(uniqueKeyContext);
+
+        GenerationContext foreignKeyContext = createGenerationContext(model,
+                createDir, createForeignKeyDdlFileName,
+                createForeignKeyTemplateFileName);
+        generator.generate(foreignKeyContext);
+
+        GenerationContext sequenceContext = createGenerationContext(model,
+                createDir, createSequenceDdlFileName,
+                createSequenceTemplateFileName);
+        generator.generate(sequenceContext);
     }
 
-    /**
-     * 一意キーに関するDDLファイルを作成します。
-     * 
-     * @param model
-     *            データベースのモデル
-     */
-    protected void generateUniqueKeyDdl(DbModel model) {
-        GenerationContext createContext = createGenerationContext(model,
-                createUniqueKeyDdlFileName, createUniqueKeyTemplateFileName);
-        GenerationContext dropContext = createGenerationContext(model,
-                dropUniqueKeyDdlFileName, dropUniqueKeyTemplateFileName);
-        generator.generate(createContext);
-        generator.generate(dropContext);
-    }
+    protected void generateDropDdl(DbModel model, File dropDir) {
+        GenerationContext tableContext = createGenerationContext(model,
+                dropDir, dropTableDdlFileName, dropTableTemplateFileName);
+        generator.generate(tableContext);
 
-    /**
-     * 外部キーに関するDDLファイルを作成します。
-     * 
-     * @param model
-     *            データベースのモデル
-     */
-    protected void generateForeignKeyDdl(DbModel model) {
-        GenerationContext createContext = createGenerationContext(model,
-                createForeignKeyDdlFileName, createForeignKeyTemplateFileName);
-        GenerationContext dropContext = createGenerationContext(model,
-                dropForeignKeyDdlFileName, dropForeignKeyTemplateFileName);
-        generator.generate(createContext);
-        generator.generate(dropContext);
-    }
+        GenerationContext uniqueKeyContext = createGenerationContext(model,
+                dropDir, dropUniqueKeyDdlFileName,
+                dropUniqueKeyTemplateFileName);
+        generator.generate(uniqueKeyContext);
 
-    /**
-     *シーケンスに関するDDLファイルを作成します。
-     * 
-     * @param model
-     *            データベースのモデル
-     */
-    protected void generateSequence(DbModel model) {
-        GenerationContext createContext = createGenerationContext(model,
-                createSequenceDdlFileName, createSequenceTemplateFileName);
-        GenerationContext dropContext = createGenerationContext(model,
-                dropSequenceDdlFileName, dropSequenceTemplateFileName);
-        generator.generate(createContext);
-        generator.generate(dropContext);
+        GenerationContext foreignKeyContext = createGenerationContext(model,
+                dropDir, dropForeignKeyDdlFileName,
+                dropForeignKeyTemplateFileName);
+        generator.generate(foreignKeyContext);
+
+        GenerationContext sequenceContext = createGenerationContext(model,
+                dropDir, dropSequenceDdlFileName, dropSequenceTemplateFileName);
+        generator.generate(sequenceContext);
     }
 
     /**
@@ -908,11 +886,10 @@ public class GenerateDdlCommand extends AbstractCommand {
      *            テンプレートファイルの名前
      * @return
      */
-    protected GenerationContext createGenerationContext(Object model,
+    protected GenerationContext createGenerationContext(Object model, File dir,
             String SqlFileName, String templateName) {
-        return new GenerationContextImpl(model, ddlFileDestDir, new File(
-                ddlFileDestDir, SqlFileName), templateName, ddlFileEncoding,
-                overwrite);
+        return new GenerationContextImpl(model, dir,
+                new File(dir, SqlFileName), templateName, ddlFileEncoding, true);
     }
 
     @Override

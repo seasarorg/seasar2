@@ -67,8 +67,8 @@ public class GenerateSequenceTest {
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
         DbModelFactoryImpl factory = new DbModelFactoryImpl(
-                new HsqlGenDialect(), ';');
-        model = factory.getDbModel(Arrays.asList(tableDesc, tableDesc2));
+                new HsqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
+        model = factory.getDbModel(Arrays.asList(tableDesc, tableDesc2), 0);
     }
 
     /**

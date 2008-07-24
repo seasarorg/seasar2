@@ -251,16 +251,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
-     * 
-     * @param overwrite
-     *            上書きをする場合{@code true}、しない場合{@code false}
-     */
-    public void setOverwrite(boolean overwrite) {
-        command.setOverwrite(overwrite);
-    }
-
-    /**
      * ルートパッケージ名を設定します。
      * 
      * @param rootPackageName

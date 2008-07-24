@@ -32,7 +32,7 @@ import static org.junit.Assert.*;
 public class DbModelFactoryImplTest {
 
     private DbModelFactoryImpl factory = new DbModelFactoryImpl(
-            new StandardGenDialect(), ';');
+            new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION");
 
     /**
      * 
@@ -52,8 +52,8 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        DbModel model = factory
-                .getDbModel(Arrays.asList(tableDesc, tableDesc2));
+        DbModel model = factory.getDbModel(
+                Arrays.asList(tableDesc, tableDesc2), 0);
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());
@@ -78,8 +78,8 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        DbModel model = factory
-                .getDbModel(Arrays.asList(tableDesc, tableDesc2));
+        DbModel model = factory.getDbModel(
+                Arrays.asList(tableDesc, tableDesc2), 0);
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());
@@ -102,8 +102,8 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addIdTableDesc(idTableDesc);
 
-        DbModel model = factory
-                .getDbModel(Arrays.asList(tableDesc, tableDesc2));
+        DbModel model = factory.getDbModel(
+                Arrays.asList(tableDesc, tableDesc2), 0);
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(3, model.getTableDescList().size());

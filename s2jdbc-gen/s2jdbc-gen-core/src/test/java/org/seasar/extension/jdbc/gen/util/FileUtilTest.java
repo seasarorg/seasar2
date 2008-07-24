@@ -13,25 +13,31 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.util;
 
-import java.util.List;
+import java.io.File;
+
+import org.junit.Test;
 
 /**
- * {@link DbModel データベースのモデル}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface DbModelFactory {
+public class FileUtilTest {
 
     /**
-     * データベースのモデルを返します。
-     * 
-     * @param tableDesclist
-     *            テーブル記述のリスト
-     * @param versionNo
-     *            バージョン番号
-     * @return データベースのモデル
+     * Test method for
+     * {@link org.seasar.extension.jdbc.gen.util.FileUtil#copyDir(java.io.File, java.io.File)}
+     * .
      */
-    DbModel getDbModel(List<TableDesc> tableDesclist, int versionNo);
+    @Test
+    public void testCopyDir() {
+        File f = new File("src");
+        for (File child : f.listFiles()) {
+            System.out.println(child.getAbsolutePath());
+            if (child.isDirectory()) {
+
+            }
+        }
+    }
 }

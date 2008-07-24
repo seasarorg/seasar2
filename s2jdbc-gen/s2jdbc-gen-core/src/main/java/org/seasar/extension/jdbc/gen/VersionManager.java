@@ -15,23 +15,18 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.util.List;
+import java.io.File;
 
 /**
- * {@link DbModel データベースのモデル}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface DbModelFactory {
+public interface VersionManager {
 
-    /**
-     * データベースのモデルを返します。
-     * 
-     * @param tableDesclist
-     *            テーブル記述のリスト
-     * @param versionNo
-     *            バージョン番号
-     * @return データベースのモデル
-     */
-    DbModel getDbModel(List<TableDesc> tableDesclist, int versionNo);
+    void increment(VersionUnit unit);
+
+    interface VersionUnit {
+
+        void execute(File nextVersionDir, int nextVersionNo);
+    }
 }

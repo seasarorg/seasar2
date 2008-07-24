@@ -13,25 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.exception;
 
-import java.util.List;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * {@link DbModel データベースのモデル}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface DbModelFactory {
+public class NextVersionDirExistsRuntimeExceptionTest {
 
-    /**
-     * データベースのモデルを返します。
-     * 
-     * @param tableDesclist
-     *            テーブル記述のリスト
-     * @param versionNo
-     *            バージョン番号
-     * @return データベースのモデル
-     */
-    DbModel getDbModel(List<TableDesc> tableDesclist, int versionNo);
+    @Test
+    public void test() {
+        NextVersionDirExistsRuntimeException e = new NextVersionDirExistsRuntimeException(
+                "aaa", "bbb");
+        assertEquals("aaa", e.getVersionDirPath());
+        assertEquals("bbb", e.getVersionFilePath());
+        System.out.println(e.getMessage());
+    }
+
 }

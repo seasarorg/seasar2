@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import java.sql.Types;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.DbModel;
@@ -36,6 +37,10 @@ public class DbModelFactoryImpl implements DbModelFactory {
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter;
 
+    protected String schemaInfoFullTableName;
+
+    protected String schemaInfoColumnName;
+
     /**
      * インスタンスを構築します。
      * 
@@ -44,15 +49,24 @@ public class DbModelFactoryImpl implements DbModelFactory {
      * @param statementDelimiter
      *            SQLステートメントの区切り文字
      */
-    public DbModelFactoryImpl(GenDialect dialect, char statementDelimiter) {
+    public DbModelFactoryImpl(GenDialect dialect, char statementDelimiter,
+            String schemaInfoFullTableName, String schemaInfoColumnName) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
+        if (schemaInfoFullTableName == null) {
+            throw new NullPointerException("schemaInfoFullTableName");
+        }
+        if (schemaInfoColumnName == null) {
+            throw new NullPointerException("schemaInfoColumnName");
+        }
         this.dialect = dialect;
         this.statementDelimiter = statementDelimiter;
+        this.schemaInfoFullTableName = schemaInfoFullTableName;
+        this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
-    public DbModel getDbModel(List<TableDesc> tableDescList) {
+    public DbModel getDbModel(List<TableDesc> tableDescList, int versionNo) {
         DbModel model = new DbModel();
         model.setDialect(dialect);
         model.setDelimiter(statementDelimiter);
@@ -65,7 +79,12 @@ public class DbModelFactoryImpl implements DbModelFactory {
                 model.addTableDesc(idTableDesc);
             }
         }
+        model.setSchemaInfoFullTableName(schemaInfoFullTableName);
+        model.setSchemaInfoColumnName(schemaInfoColumnName);
+        model.setVersionNo(versionNo);
+        String columnDefinition = dialect.getType(Types.INTEGER)
+                .getColumnDefinition(0, 9, 0, null);
+        model.setSchemaInfoColumnDefinition(columnDefinition);
         return model;
     }
-
 }

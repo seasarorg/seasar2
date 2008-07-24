@@ -64,8 +64,8 @@ public class GenerateUniqueKeyTest {
         tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
 
         DbModelFactoryImpl factory = new DbModelFactoryImpl(
-                new StandardGenDialect(), ';');
-        model = factory.getDbModel(Arrays.asList(tableDesc));
+                new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION");
+        model = factory.getDbModel(Arrays.asList(tableDesc), 0);
     }
 
     /**

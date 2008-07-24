@@ -69,8 +69,9 @@ public class GenerateDdlCommandTest {
         assertNotNull(command.createGenerator());
         assertNotNull(command.createDbModelFactory());
         assertNotNull(command.createTableDescFactory());
-        assertNotNull(command.createGenerationContext(new Object(), "aaa",
-                "bbb"));
+        assertNotNull(command.createVersionManager());
+        assertNotNull(command.createGenerationContext(new Object(), new File(
+                "xxx"), "aaa", "bbb"));
     }
 
 }
