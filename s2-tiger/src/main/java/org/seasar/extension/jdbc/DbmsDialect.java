@@ -268,6 +268,13 @@ public interface DbmsDialect {
     String getLockHintString(SelectForUpdateType type, int waitSeconds);
 
     /**
+     * 内部結合した場合に<code>FOR UPDATE</code>をサポートしていれば<code>true</code>を返します。
+     * 
+     * @return 内部結合した場合に<code>FOR UPDATE</code>をサポートしていれば<code>true</code>
+     */
+    boolean supportsInnerJoinForUpdate();
+
+    /**
      * 外部結合した場合に<code>FOR UPDATE</code>をサポートしていれば<code>true</code>を返します。
      * 
      * @return 外部結合した場合に<code>FOR UPDATE</code>をサポートしていれば<code>true</code>

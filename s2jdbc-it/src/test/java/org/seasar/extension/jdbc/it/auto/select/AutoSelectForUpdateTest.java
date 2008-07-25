@@ -55,7 +55,8 @@ public class AutoSelectForUpdateTest {
      */
     @Prerequisite("#ENV != 'standard'")
     public void testForUpdate_innerJoin() throws Exception {
-        if (!implementor.getDialect().supportsForUpdate(NORMAL, false)) {
+        if (!implementor.getDialect().supportsForUpdate(NORMAL, false)
+            || !implementor.getDialect().supportsInnerJoinForUpdate()) {
             return;
         }
         jdbcManager

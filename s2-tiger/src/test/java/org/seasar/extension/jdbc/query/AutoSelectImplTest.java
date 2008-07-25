@@ -40,6 +40,7 @@ import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.dialect.Db2Dialect;
 import org.seasar.extension.jdbc.dialect.HsqlDialect;
 import org.seasar.extension.jdbc.dialect.MssqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
@@ -1955,7 +1956,22 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
-    public void testForUpdate_join_notSupported() {
+    public void testForUpdate_innerJoin_notSupported() {
+        manager.setDialect(new Db2Dialect());
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        try {
+            query.innerJoin("bbb").forUpdate();
+            query.prepare(null);
+            fail();
+        } catch (UnsupportedOperationException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testForUpdate_outerJoin_notSupported() {
         manager.setDialect(new PostgreDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         try {

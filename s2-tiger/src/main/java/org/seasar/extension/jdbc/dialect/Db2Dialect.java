@@ -113,6 +113,11 @@ public class Db2Dialect extends StandardDialect {
     }
 
     @Override
+    public boolean supportsInnerJoinForUpdate() {
+        return false;
+    }
+
+    @Override
     public boolean supportsOuterJoinForUpdate() {
         return false;
     }

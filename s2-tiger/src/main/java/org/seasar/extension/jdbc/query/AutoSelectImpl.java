@@ -1126,7 +1126,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                     sb.append(token);
                 } else {
                     PropertyMeta pm = entityMeta.getPropertyMeta(names[1]);
-                    String itemName = tableAlias + "." + pm.getColumnMeta().getName();
+                    String itemName = tableAlias + "."
+                            + pm.getColumnMeta().getName();
                     if (convertAlias) {
                         String alias = selectClause.getColumnAlias(itemName);
                         if (!StringUtil.isEmpty(alias)) {
@@ -1303,7 +1304,19 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         }
         final DbmsDialect dialect = getJdbcManager().getDialect();
         for (JoinMeta joinMeta : joinMetaList) {
-            if (joinMeta.getJoinType() == JoinType.LEFT_OUTER) {
+            switch (joinMeta.getJoinType()) {
+            case INNER:
+                if (!dialect.supportsInnerJoinForUpdate()) {
+                    logger.log("ESSR0709", new Object[] {
+                            callerClass.getName(), callerMethodName });
+                    final EntityMeta entityMeta = getJdbcManager()
+                            .getEntityMetaFactory().getEntityMeta(baseClass);
+                    throw new UnsupportedOperationException(MessageFormatter
+                            .getMessage("ESSR0763", new Object[] {
+                                    entityMeta.getName(), dialect.getName() }));
+                }
+                break;
+            case LEFT_OUTER:
                 if (!dialect.supportsOuterJoinForUpdate()) {
                     logger.log("ESSR0709", new Object[] {
                             callerClass.getName(), callerMethodName });

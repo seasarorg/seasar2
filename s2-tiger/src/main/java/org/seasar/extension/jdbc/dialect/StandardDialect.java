@@ -363,6 +363,10 @@ public class StandardDialect implements DbmsDialect {
         return "";
     }
 
+    public boolean supportsInnerJoinForUpdate() {
+        return true;
+    }
+
     public boolean supportsOuterJoinForUpdate() {
         return true;
     }
