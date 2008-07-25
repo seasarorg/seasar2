@@ -16,15 +16,18 @@
 package org.seasar.extension.jdbc.query;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.OptimisticLockException;
 
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
@@ -191,8 +194,119 @@ public class AbsAutoBatchUpdateTest extends TestCase {
         assertEquals(3, rows[2]);
     }
 
+    /**
+     * 
+     */
+    public void testBatch_OptimisticException() {
+        List<Eee> entities = Arrays.asList(new Eee(), new Eee(), new Eee());
+        MyBatchUpdate<Eee> query = new MyBatchUpdate<Eee>(manager, entities)
+                .batchSize(2);
+        query.optimisticLock = true;
+        assertEquals(2, query.batchSize);
+
+        try {
+            query.executeBatch(new MockPreparedStatement(null, null) {
+
+                @Override
+                public void addBatch() throws SQLException {
+                    ++added;
+                }
+
+                @Override
+                public int[] executeBatch() throws SQLException {
+                    ++executed;
+                    return executed == 1 ? new int[] { 1, 0 } : new int[] { 1 };
+                }
+
+            });
+            fail();
+        } catch (OptimisticLockException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testBatchOracle() {
+        manager.setDialect(new OracleDialect());
+        List<Eee> entities = Arrays.asList(new Eee(), new Eee(), new Eee());
+        MyBatchUpdate<Eee> query = new MyBatchUpdate<Eee>(manager, entities)
+                .batchSize(2);
+        query.optimisticLock = true;
+        assertEquals(2, query.batchSize);
+
+        int[] rows = query.executeBatch(new MockPreparedStatement(null, null) {
+
+            @Override
+            public void addBatch() throws SQLException {
+                ++added;
+            }
+
+            @Override
+            public int[] executeBatch() throws SQLException {
+                ++executed;
+                return executed == 1 ? new int[] { Statement.SUCCESS_NO_INFO,
+                        Statement.SUCCESS_NO_INFO }
+                        : new int[] { Statement.SUCCESS_NO_INFO };
+            }
+
+            @Override
+            public int getUpdateCount() throws SQLException {
+                return executed == 1 ? 2 : 1;
+            }
+
+        });
+        assertEquals(3, added);
+        assertEquals(2, executed);
+        assertEquals(3, rows.length);
+        assertEquals(1, rows[0]);
+        assertEquals(1, rows[1]);
+        assertEquals(1, rows[2]);
+    }
+
+    /**
+     * 
+     */
+    public void testBatchOracle_OptimisicLockException() {
+        manager.setDialect(new OracleDialect());
+        List<Eee> entities = Arrays.asList(new Eee(), new Eee(), new Eee());
+        MyBatchUpdate<Eee> query = new MyBatchUpdate<Eee>(manager, entities)
+                .batchSize(2);
+        query.optimisticLock = true;
+        assertEquals(2, query.batchSize);
+
+        try {
+            query.executeBatch(new MockPreparedStatement(null, null) {
+
+                @Override
+                public void addBatch() throws SQLException {
+                    ++added;
+                }
+
+                @Override
+                public int[] executeBatch() throws SQLException {
+                    ++executed;
+                    return executed == 1 ? new int[] {
+                            Statement.SUCCESS_NO_INFO,
+                            Statement.SUCCESS_NO_INFO }
+                            : new int[] { Statement.SUCCESS_NO_INFO };
+                }
+
+                @Override
+                public int getUpdateCount() throws SQLException {
+                    return executed == 1 ? 1 : 1;
+                }
+
+            });
+            fail();
+        } catch (OptimisticLockException expected) {
+        }
+    }
+
     private static class MyBatchUpdate<T> extends
             AbstractAutoBatchUpdate<T, MyBatchUpdate<T>> {
+
+        boolean optimisticLock;
 
         /**
          * @param jdbcManager
@@ -210,7 +324,7 @@ public class AbsAutoBatchUpdateTest extends TestCase {
 
         @Override
         protected boolean isOptimisticLock() {
-            return false;
+            return optimisticLock;
         }
 
         @Override

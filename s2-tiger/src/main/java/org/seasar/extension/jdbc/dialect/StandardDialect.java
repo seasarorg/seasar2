@@ -196,6 +196,10 @@ public class StandardDialect implements DbmsDialect {
         return 0;
     }
 
+    public boolean supportsBatchUpdateResults() {
+        return true;
+    }
+
     /**
      * 行番号ファンクション名を返します。
      * 

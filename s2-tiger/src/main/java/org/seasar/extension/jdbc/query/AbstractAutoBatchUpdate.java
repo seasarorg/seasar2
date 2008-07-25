@@ -21,6 +21,7 @@ import java.util.List;
 import javax.persistence.OptimisticLockException;
 
 import org.seasar.extension.jdbc.BatchUpdate;
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.exception.SEntityExistsException;
@@ -51,7 +52,10 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     /** バッチサイズ */
     protected int batchSize;
 
-    /** バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないなら<code>true</code> */
+    /**
+     * バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないなら
+     * <code>true</code>
+     */
     protected boolean suppresOptimisticLockException;
 
     /**
@@ -127,9 +131,6 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
         try {
             final PreparedStatement ps = getPreparedStatement(jdbcContext);
             final int[] rows = executeBatch(ps);
-            if (isOptimisticLock()) {
-                validateRows(rows);
-            }
             if (entityMeta.hasVersionPropertyMeta()) {
                 incrementVersions();
             }
@@ -149,8 +150,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
      * @return 更新された行数の配列
      */
     protected int[] executeBatch(final PreparedStatement ps) {
-        final int batchSize = this.batchSize > 0 ? this.batchSize : jdbcManager
-                .getDialect().getDefaultBatchSize();
+        final DbmsDialect dialect = jdbcManager.getDialect();
+        final int batchSize = this.batchSize > 0 ? this.batchSize : dialect
+                .getDefaultBatchSize();
         final int size = entities.size();
         final int[] updateRows = new int[size];
         int pos = 0;
@@ -163,6 +165,9 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
             resetParams();
             if (i == size - 1 || (batchSize > 0 && (i + 1) % batchSize == 0)) {
                 final int[] rows = PreparedStatementUtil.executeBatch(ps);
+                if (isOptimisticLock()) {
+                    validateRows(ps, rows);
+                }
                 System.arraycopy(rows, 0, updateRows, pos, rows.length);
                 pos = i + 1;
             }
@@ -217,19 +222,30 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
     /**
      * 行を更新または削除できたかどうかチェックします。
      * 
+     * @param ps
+     *            準備されたステートメント
      * @param rows
      *            更新行数の配列
      * @throws OptimisticLockException
      *             行を更新または削除できなかった場合
      */
-    protected void validateRows(final int[] rows) {
+    protected void validateRows(final PreparedStatement ps, final int[] rows) {
         if (suppresOptimisticLockException) {
             return;
         }
-        for (int i = 0; i < rows.length; ++i) {
-            if (rows[i] == 0) {
-                throw new SOptimisticLockException(entities.get(i));
+        final DbmsDialect dialect = jdbcManager.getDialect();
+        if (dialect.supportsBatchUpdateResults()) {
+            for (int i = 0; i < rows.length; ++i) {
+                if (rows[i] != 1) {
+                    throw new SOptimisticLockException(entities.get(i));
+                }
             }
+        } else if (StatementUtil.getUpdateCount(ps) == rows.length) {
+            for (int i = 0; i < rows.length; ++i) {
+                rows[i] = 1;
+            }
+        } else {
+            throw new SOptimisticLockException();
         }
     }
 

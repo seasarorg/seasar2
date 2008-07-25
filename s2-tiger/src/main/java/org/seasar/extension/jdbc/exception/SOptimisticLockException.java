@@ -32,6 +32,12 @@ public class SOptimisticLockException extends OptimisticLockException {
     private static final long serialVersionUID = 1L;
 
     /**
+     * インスタンスを構築します．
+     */
+    public SOptimisticLockException() {
+    }
+
+    /**
      * インスタンスを構築します。
      * 
      * @param entity

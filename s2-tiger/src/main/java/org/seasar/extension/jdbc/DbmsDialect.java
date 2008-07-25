@@ -165,22 +165,24 @@ public interface DbmsDialect {
     boolean supportsIdentity();
 
     /**
-     * 識別子が{@link GenerationType#IDENTITY}で生成される場合に、 識別子をINSERT文に含める場合は<code>true</code>を返します。
+     * 識別子が{@link GenerationType#IDENTITY}で生成される場合に、 識別子をINSERT文に含める場合は
+     * <code>true</code>を返します。
      * 
      * @return 識別子をINSERT文に含める場合は<code>true</code>
      */
     boolean isInsertIdentityColumn();
 
     /**
-     * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、 生成された主キーの値を{@link Statement#getGeneratedKeys()}で取得できる場合は<code>true</code>を返します。
+     * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、 生成された主キーの値を
+     * {@link Statement#getGeneratedKeys()}で取得できる場合は<code>true</code>を返します。
      * 
-     * @return 生成された識別子の値を{@link Statement#getGeneratedKeys()}で取得できる場合は<code>true</code>
+     * @return 生成された識別子の値を{@link Statement#getGeneratedKeys()}で取得できる場合は
+     *         <code>true</code>
      */
     boolean supportsGetGeneratedKeys();
 
     /**
-     * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、
-     * 生成された主キーの値を取得するSQLを返します。
+     * 識別子が{@link GenerationType#IDENTITY}で自動生成される場合に、 生成された主キーの値を取得するSQLを返します。
      * 
      * @param tableName
      *            テーブル名
@@ -216,6 +218,13 @@ public interface DbmsDialect {
     int getDefaultBatchSize();
 
     /**
+     * バッチ更新の結果として更新カウントの配列を正しく返す場合は<code>true</code>を返します。
+     * 
+     * @return バッチ更新の結果として更新カウントの配列を正しく返す場合は<code>true</code>
+     */
+    boolean supportsBatchUpdateResults();
+
+    /**
      * 一意制約違反を原因とする例外であれば<code>true</code>を返します。
      * 
      * @param t
@@ -241,7 +250,8 @@ public interface DbmsDialect {
      * @param type
      *            SELECT ～ FOR UPDATEのタイプ
      * @param waitSeconds
-     *            <code>type</code>に{@link SelectForUpdateType#WAIT}が指定された場合の待機時間(秒単位)
+     *            <code>type</code>に{@link SelectForUpdateType#WAIT}
+     *            が指定された場合の待機時間(秒単位)
      * @param aliases
      *            ロック対象となるカラムのエイリアス。対象が指定されなかった場合は空の配列
      * @return SELECT文に付加する<code>FOR UPDATE</code>句のSQL
@@ -262,7 +272,8 @@ public interface DbmsDialect {
      * @param type
      *            SELECT ～ FOR UPDATEのタイプ
      * @param waitSeconds
-     *            <code>type</code>に{@link SelectForUpdateType#WAIT}が指定された場合の待機時間(秒単位)
+     *            <code>type</code>に{@link SelectForUpdateType#WAIT}
+     *            が指定された場合の待機時間(秒単位)
      * @return SELECT文に付加するロックヒント
      */
     String getLockHintString(SelectForUpdateType type, int waitSeconds);

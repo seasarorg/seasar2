@@ -139,4 +139,20 @@ public class StatementUtil {
             throw new SQLRuntimeException(ex);
         }
     }
+
+    /**
+     * 更新カウントを返します。
+     * 
+     * @param statement
+     *            ステートメント
+     * @return 更新カウント
+     * @see Statement#getUpdateCount()
+     */
+    public static int getUpdateCount(Statement statement) {
+        try {
+            return statement.getUpdateCount();
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
 }

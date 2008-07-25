@@ -180,6 +180,11 @@ public class OracleDialect extends StandardDialect {
     }
 
     @Override
+    public boolean supportsBatchUpdateResults() {
+        return false;
+    }
+
+    @Override
     public boolean supportsForUpdate(final SelectForUpdateType type,
             boolean withTarget) {
         return true;
