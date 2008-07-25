@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.it.auto;
 
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -188,14 +187,10 @@ public class AutoBatchDeleteTest {
                 .where("employeeId = ?", 2)
                 .getSingleResult();
         jdbcManager.delete(employee1).execute();
-        int[] result = null;
         try {
-            result = jdbcManager.deleteBatch(employee2, employee3).execute();
+            jdbcManager.deleteBatch(employee2, employee3).execute();
         } catch (OptimisticLockException ignore) {
             return;
-        }
-        if (!containsSuccessNoInfo(result)) {
-            fail();
         }
     }
 
@@ -248,15 +243,6 @@ public class AutoBatchDeleteTest {
             .deleteBatch(employee2, employee3)
             .suppresOptimisticLockException()
             .execute();
-    }
-
-    private boolean containsSuccessNoInfo(int[] batchResult) {
-        for (int i : batchResult) {
-            if (i == Statement.SUCCESS_NO_INFO) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
