@@ -356,8 +356,8 @@ public class AutoBatchUpdateTest {
         jdbcManager.update(employee1).execute();
         try {
             jdbcManager.updateBatch(employee2, employee3).execute();
-        } catch (OptimisticLockException ignore) {
-            return;
+            fail();
+        } catch (OptimisticLockException expected) {
         }
     }
 

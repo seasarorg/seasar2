@@ -189,8 +189,8 @@ public class AutoBatchDeleteTest {
         jdbcManager.delete(employee1).execute();
         try {
             jdbcManager.deleteBatch(employee2, employee3).execute();
-        } catch (OptimisticLockException ignore) {
-            return;
+            fail();
+        } catch (OptimisticLockException expected) {
         }
     }
 
