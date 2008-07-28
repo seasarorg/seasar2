@@ -323,6 +323,7 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 					SQLファイルのパラメータが1つの場合は、
 					<code>selectBySqlFile()</code>
 					の3番目の引数で値を直接指定します。
+					SQLファイルの中では/*$1*/のようにパラメータを指定してください。
 				</p>
 				<source><![CDATA[
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
