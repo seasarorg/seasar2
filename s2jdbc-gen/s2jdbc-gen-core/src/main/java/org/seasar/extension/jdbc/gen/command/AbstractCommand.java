@@ -53,8 +53,10 @@ public abstract class AbstractCommand implements Command {
 
     /**
      * サブクラスで実行します。
+     * 
+     * @throws Throwable
      */
-    protected abstract void doExecute();
+    protected abstract void doExecute() throws Throwable;
 
     /**
      * 設定可能なプロパティの値をログ出力します。

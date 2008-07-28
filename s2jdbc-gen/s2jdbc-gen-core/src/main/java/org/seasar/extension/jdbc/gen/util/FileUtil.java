@@ -28,14 +28,28 @@ import org.seasar.framework.util.InputStreamUtil;
 import org.seasar.framework.util.OutputStreamUtil;
 
 /**
- * @author taedium
+ * {@link File}に関するユーティリティクラスです。
  * 
+ * @author taedium
  */
 public class FileUtil {
 
-    private FileUtil() {
+    /**
+     * 
+     */
+    protected FileUtil() {
     }
 
+    /**
+     * ディレクトリをコピーします。
+     * 
+     * @param srcDir
+     *            コピー元ディレクトリ
+     * @param destDir
+     *            コピー先ディレクトリ
+     * @param filter
+     *            フィルタ
+     */
     public static void copyDirectory(File srcDir, File destDir,
             FilenameFilter filter) {
         if (!srcDir.isDirectory()) {
@@ -52,6 +66,16 @@ public class FileUtil {
         copyDir(srcDir, destDir, filter);
     }
 
+    /**
+     * ディレクトリを再帰的にコピーします。
+     * 
+     * @param srcDir
+     *            コピー元ディレクトリ
+     * @param destDir
+     *            コピー先ディレクトリ
+     * @param filter
+     *            フィルタ
+     */
     protected static void copyDir(File srcDir, File destDir,
             FilenameFilter filter) {
         destDir.mkdirs();
@@ -66,6 +90,14 @@ public class FileUtil {
         }
     }
 
+    /**
+     * ファイルをコピーします。
+     * 
+     * @param src
+     *            コピー元ファイル
+     * @param dest
+     *            コピー先ファイル
+     */
     protected static void copyFile(File src, File dest) {
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
@@ -86,6 +118,12 @@ public class FileUtil {
         }
     }
 
+    /**
+     * ディレクトリを削除します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     */
     public static void deleteDirectory(File dir) {
         if (!dir.isDirectory()) {
             throw new IllegalArgumentException("dir");
@@ -96,30 +134,31 @@ public class FileUtil {
         deleteDir(dir);
     }
 
+    /**
+     * ディレクトリを再帰的に削除します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     */
     protected static void deleteDir(File dir) {
         for (File file : dir.listFiles()) {
             if (file.isDirectory()) {
                 deleteDir(file);
                 file.delete();
             } else {
-                deleteFile(file);
+                file.delete();
             }
         }
         dir.delete();
     }
 
-    protected static void deleteFile(File file) {
-        file.delete();
-    }
-
-    public static boolean createNewFile(File file) {
-        try {
-            return file.createNewFile();
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-    }
-
+    /**
+     * この抽象パス名の正規の形式を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return この抽象パス名と同じファイルまたはディレクトリを示す正規パス名文字列
+     */
     public static String getCanonicalPath(File file) {
         try {
             return file.getCanonicalPath();

@@ -18,17 +18,28 @@ package org.seasar.extension.jdbc.gen.exception;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * 次のバージョンのディレクトリがすでに存在する場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class NextVersionDirExistsRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /** バージョンディレクトリのパス */
     protected String versionDirPath;
 
+    /** バージョンファイルのパス */
     protected String versionFilePath;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param versionDirPath
+     *            バージョンディレクトリのパス
+     * @param versionFilePath
+     *            バージョンファイルのパス
+     */
     public NextVersionDirExistsRuntimeException(String versionDirPath,
             String versionFilePath) {
         super("ES2JDBCGen0008",
@@ -38,14 +49,18 @@ public class NextVersionDirExistsRuntimeException extends SRuntimeException {
     }
 
     /**
-     * @return Returns the versionDirPath.
+     * バージョンディレクトリのパスを返します。
+     * 
+     * @return バージョンディレクトリのパス
      */
     public String getVersionDirPath() {
         return versionDirPath;
     }
 
     /**
-     * @return Returns the versionFilePath.
+     * バージョンファイルのパスを返します。
+     * 
+     * @return バージョンファイルのパス
      */
     public String getVersionFilePath() {
         return versionFilePath;

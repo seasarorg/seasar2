@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DbModel;
 import org.seasar.extension.jdbc.gen.DbModelFactory;
+import org.seasar.extension.jdbc.gen.DdlVersion;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -37,8 +38,6 @@ import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
-import org.seasar.extension.jdbc.gen.VersionManager;
-import org.seasar.extension.jdbc.gen.VersionManager.VersionUnit;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.IdTableDescFactoryImpl;
@@ -47,17 +46,20 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.exception.NextVersionDirExistsRuntimeException;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.version.VersionManagerImpl;
+import org.seasar.extension.jdbc.gen.util.FileUtil;
+import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.StringConversionUtil;
 
 /**
  * DDLのSQLファイルを生成する{@link Command}の実装です。
@@ -67,12 +69,14 @@ import org.seasar.framework.util.ClassUtil;
  * また、そのディレクトリは、プロパティ{@link #classpathRootDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドが生成するDDLは次の6つです。
+ * このコマンドが生成するDDLは次の8つです。
  * <ul>
  * <li>テーブルを作成するDDL</li>
  * <li>テーブルを削除するDDL</li>
- * <li>制約を作成するDDL</li>
- * <li>制約を削除するDDL</li>
+ * <li>一意キーを作成するDDL</li>
+ * <li>一意キーを削除するDDL</li>
+ * <li>外部キーを作成するDDL</li>
+ * <li>外部キーを削除するDDL</li>
  * <li>シーケンスを作成するDDL</li>
  * <li>シーケンスを削除するDDL</li>
  * </ul>
@@ -152,7 +156,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected String rootPackageName = "";
 
     /** DDLファイルの出力先ディレクトリ */
-    protected File ddlFileDestDir = new File("db");
+    protected File migrationRootDir = new File("db");
 
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
@@ -166,9 +170,17 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
 
+    /** スキーマ情報を格納する完全なテーブル名 */
     protected String schemaInfoFullTableName = "SCHEMA_INFO";
 
+    /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName = "VERSION";
+
+    /** DDLのバージョンを格納するファイル名 */
+    protected String ddlVersionFileName = "ddl-version.txt";
+
+    /** バージョン番号のパターン */
+    protected String versionNoPattern = "0000";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -191,7 +203,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ジェネレータ */
     protected Generator generator;
 
-    protected VersionManager versionManager;
+    /** DDLのバージョン */
+    protected DdlVersion ddlVersion;
 
     /**
      * インスタンスを構築します。
@@ -649,8 +662,8 @@ public class GenerateDdlCommand extends AbstractCommand {
      * 
      * @return DDLファイルの出力先ディレクトリ
      */
-    public File getDdlFileDestDir() {
-        return ddlFileDestDir;
+    public File getMigrationRootDir() {
+        return migrationRootDir;
     }
 
     /**
@@ -659,8 +672,8 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param ddlFileDestDir
      *            DDLファイルの出力先ディレクトリ
      */
-    public void setDdlFileDestDir(File ddlFileDestDir) {
-        this.ddlFileDestDir = ddlFileDestDir;
+    public void setMigrationRootDir(File ddlFileDestDir) {
+        this.migrationRootDir = ddlFileDestDir;
     }
 
     /**
@@ -720,6 +733,82 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
+    /**
+     * スキーマ情報を格納する完全なテーブル名を返します。
+     * 
+     * @return スキーマ情報を格納する完全なテーブル名
+     */
+    public String getSchemaInfoFullTableName() {
+        return schemaInfoFullTableName;
+    }
+
+    /**
+     * スキーマ情報を格納する完全なテーブル名を設定します。
+     * 
+     * @param schemaInfoFullTableName
+     *            スキーマ情報を格納する完全なテーブル名
+     */
+    public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
+        this.schemaInfoFullTableName = schemaInfoFullTableName;
+    }
+
+    /**
+     * スキーマのバージョン番号を格納するカラム名を返します。
+     * 
+     * @return スキーマのバージョン番号を格納するカラム名
+     */
+    public String getSchemaInfoColumnName() {
+        return schemaInfoColumnName;
+    }
+
+    /**
+     * スキーマのバージョン番号を格納するカラム名を設定します。
+     * 
+     * @param schemaInfoColumnName
+     *            スキーマのバージョン番号を格納するカラム名
+     */
+    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
+        this.schemaInfoColumnName = schemaInfoColumnName;
+    }
+
+    /**
+     * DDLのバージョンを格納するファイル名を返します。
+     * 
+     * @return DDLのバージョンを格納するファイル名
+     */
+    public String getDdlVersionFileName() {
+        return ddlVersionFileName;
+    }
+
+    /**
+     * DDLのバージョンを格納するファイル名を設定します。
+     * 
+     * @param ddlVersionFileName
+     *            DDLのバージョンを格納するファイル名
+     */
+    public void setDdlVersionFileName(String ddlVersionFileName) {
+        this.ddlVersionFileName = ddlVersionFileName;
+    }
+
+    /**
+     * バージョン番号のパターンを返します。
+     * 
+     * @return バージョン番号のパターン
+     */
+    public String getVersionNoPattern() {
+        return versionNoPattern;
+    }
+
+    /**
+     * バージョン番号のパターンを設定します。
+     * 
+     * @param versionNoPattern
+     *            バージョン番号のパターン
+     */
+    public void setVersionNoPattern(String versionNoPattern) {
+        this.versionNoPattern = versionNoPattern;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathRootDir == null) {
@@ -738,24 +827,41 @@ public class GenerateDdlCommand extends AbstractCommand {
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
 
+        ddlVersion = createDdlVersion();
         entityMetaReader = createEntityMetaReader();
         tableDescFactory = createTableDescFactory();
         dbModelFactory = createDbModelFactory();
         generator = createGenerator();
-        versionManager = createVersionManager();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
     }
 
     @Override
-    protected void doExecute() {
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
-        for (EntityMeta entityMeta : entityMetaList) {
-            tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
+    protected void doExecute() throws Throwable {
+        int versionNo = ddlVersion.getVersionNo();
+        int nextVersionNo = versionNo + 1;
+        File versionDir = new File(migrationRootDir,
+                convertVersionNoToVersionName(versionNo));
+        File nextVersionDir = new File(migrationRootDir,
+                convertVersionNoToVersionName(nextVersionNo));
+        if (nextVersionDir.exists()) {
+            throw new NextVersionDirExistsRuntimeException(nextVersionDir
+                    .getPath(), ddlVersionFileName);
         }
-        generate(tableDescList);
+        try {
+            if (versionDir.exists()) {
+                FileUtil.copyDirectory(versionDir, nextVersionDir,
+                        new ExclusionFilenameFilter());
+            }
+            generateDdl(nextVersionDir, nextVersionNo);
+            ddlVersion.setVersionNo(nextVersionNo);
+        } catch (Throwable t) {
+            if (nextVersionDir.exists()) {
+                FileUtil.deleteDirectory(nextVersionDir);
+            }
+            throw t;
+        }
     }
 
     @Override
@@ -763,6 +869,93 @@ public class GenerateDdlCommand extends AbstractCommand {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
         }
+    }
+
+    /**
+     * DDLファイルを生成します。
+     * 
+     * @param nextVersionDir
+     *            次のバージョンのディレクトリ
+     * @param nextVersionNo
+     *            次のバージョン番号
+     */
+    public void generateDdl(File nextVersionDir, int nextVersionNo) {
+        List<EntityMeta> entityMetaList = entityMetaReader.read();
+        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
+        for (EntityMeta entityMeta : entityMetaList) {
+            tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
+        }
+        DbModel model = dbModelFactory.getDbModel(tableDescList, nextVersionNo);
+        generateCreateDdl(model, new File(nextVersionDir, "create"));
+        generateDropDdl(model, new File(nextVersionDir, "drop"));
+    }
+
+    /**
+     * 作成用のDDLファイルを生成します。
+     * 
+     * @param model
+     *            データモデル
+     * @param createDir
+     *            ファイルを生成するディレクトリ
+     */
+    protected void generateCreateDdl(DbModel model, File createDir) {
+        GenerationContext tableContext = createGenerationContext(model,
+                createDir, createTableDdlFileName, createTableTemplateFileName);
+        generator.generate(tableContext);
+
+        GenerationContext uniqueKeyContext = createGenerationContext(model,
+                createDir, createUniqueKeyDdlFileName,
+                createUniqueKeyTemplateFileName);
+        generator.generate(uniqueKeyContext);
+
+        GenerationContext foreignKeyContext = createGenerationContext(model,
+                createDir, createForeignKeyDdlFileName,
+                createForeignKeyTemplateFileName);
+        generator.generate(foreignKeyContext);
+
+        GenerationContext sequenceContext = createGenerationContext(model,
+                createDir, createSequenceDdlFileName,
+                createSequenceTemplateFileName);
+        generator.generate(sequenceContext);
+    }
+
+    /**
+     * 削除用のDDLファイルを生成します。
+     * 
+     * @param model
+     *            データモデル
+     * @param dropDir
+     *            ファイルを生成するディレクトリ
+     */
+    protected void generateDropDdl(DbModel model, File dropDir) {
+        GenerationContext tableContext = createGenerationContext(model,
+                dropDir, dropTableDdlFileName, dropTableTemplateFileName);
+        generator.generate(tableContext);
+
+        GenerationContext uniqueKeyContext = createGenerationContext(model,
+                dropDir, dropUniqueKeyDdlFileName,
+                dropUniqueKeyTemplateFileName);
+        generator.generate(uniqueKeyContext);
+
+        GenerationContext foreignKeyContext = createGenerationContext(model,
+                dropDir, dropForeignKeyDdlFileName,
+                dropForeignKeyTemplateFileName);
+        generator.generate(foreignKeyContext);
+
+        GenerationContext sequenceContext = createGenerationContext(model,
+                dropDir, dropSequenceDdlFileName, dropSequenceTemplateFileName);
+        generator.generate(sequenceContext);
+    }
+
+    /**
+     * バージョン番号をバージョン番号名に変換します。
+     * 
+     * @param versionNo
+     *            バージョン番号
+     * @return バージョン番号名
+     */
+    protected String convertVersionNoToVersionName(int versionNo) {
+        return StringConversionUtil.toString(versionNo, versionNoPattern);
     }
 
     /**
@@ -794,6 +987,16 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
+     * {@link DdlVersion}の実装を作成します。
+     * 
+     * @return {@link DdlVersion}の実装
+     */
+    protected DdlVersion createDdlVersion() {
+        return new DdlVersionImpl(
+                new File(migrationRootDir, ddlVersionFileName));
+    }
+
+    /**
      * {@link DbModelFactory}の実装を作成します。
      * 
      * @return {@link DbModelFactory}の実装
@@ -812,84 +1015,23 @@ public class GenerateDdlCommand extends AbstractCommand {
         return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
-    protected VersionManager createVersionManager() {
-        return new VersionManagerImpl(ddlFileDestDir, "version.txt", "0000");
-    }
-
-    /**
-     * 生成します。
-     * 
-     * @param tableDescList
-     *            テーブル記述のリスト
-     */
-    protected void generate(final List<TableDesc> tableDescList) {
-        versionManager.increment(new VersionUnit() {
-
-            public void execute(File nextVersionDir, int nextVersionNo) {
-                DbModel model = dbModelFactory.getDbModel(tableDescList,
-                        nextVersionNo);
-                generateCreateDdl(model, new File(nextVersionDir, "create"));
-                generateDropDdl(model, new File(nextVersionDir, "drop"));
-            }
-        });
-    }
-
-    protected void generateCreateDdl(DbModel model, File createDir) {
-        GenerationContext tableContext = createGenerationContext(model,
-                createDir, createTableDdlFileName, createTableTemplateFileName);
-        generator.generate(tableContext);
-
-        GenerationContext uniqueKeyContext = createGenerationContext(model,
-                createDir, createUniqueKeyDdlFileName,
-                createUniqueKeyTemplateFileName);
-        generator.generate(uniqueKeyContext);
-
-        GenerationContext foreignKeyContext = createGenerationContext(model,
-                createDir, createForeignKeyDdlFileName,
-                createForeignKeyTemplateFileName);
-        generator.generate(foreignKeyContext);
-
-        GenerationContext sequenceContext = createGenerationContext(model,
-                createDir, createSequenceDdlFileName,
-                createSequenceTemplateFileName);
-        generator.generate(sequenceContext);
-    }
-
-    protected void generateDropDdl(DbModel model, File dropDir) {
-        GenerationContext tableContext = createGenerationContext(model,
-                dropDir, dropTableDdlFileName, dropTableTemplateFileName);
-        generator.generate(tableContext);
-
-        GenerationContext uniqueKeyContext = createGenerationContext(model,
-                dropDir, dropUniqueKeyDdlFileName,
-                dropUniqueKeyTemplateFileName);
-        generator.generate(uniqueKeyContext);
-
-        GenerationContext foreignKeyContext = createGenerationContext(model,
-                dropDir, dropForeignKeyDdlFileName,
-                dropForeignKeyTemplateFileName);
-        generator.generate(foreignKeyContext);
-
-        GenerationContext sequenceContext = createGenerationContext(model,
-                dropDir, dropSequenceDdlFileName, dropSequenceTemplateFileName);
-        generator.generate(sequenceContext);
-    }
-
     /**
      * {@link GenerationContext}の実装を作成します。
      * 
      * @param model
      *            データベースのモデル
-     * @param SqlFileName
-     *            SQLファイルの名前
+     * @param dir
+     *            生成するファイルの出力先ディレクトリ
+     * @param fileName
+     *            ファイルの名前
      * @param templateName
      *            テンプレートファイルの名前
      * @return
      */
     protected GenerationContext createGenerationContext(Object model, File dir,
-            String SqlFileName, String templateName) {
-        return new GenerationContextImpl(model, dir,
-                new File(dir, SqlFileName), templateName, ddlFileEncoding, true);
+            String fileName, String templateName) {
+        return new GenerationContextImpl(model, dir, new File(dir, fileName),
+                templateName, ddlFileEncoding, true);
     }
 
     @Override

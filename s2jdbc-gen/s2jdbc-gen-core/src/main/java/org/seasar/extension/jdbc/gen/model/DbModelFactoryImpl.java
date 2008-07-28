@@ -37,8 +37,10 @@ public class DbModelFactoryImpl implements DbModelFactory {
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter;
 
+    /** スキーマ情報を格納するテーブル名 */
     protected String schemaInfoFullTableName;
 
+    /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName;
 
     /**
@@ -48,6 +50,11 @@ public class DbModelFactoryImpl implements DbModelFactory {
      *            方言
      * @param statementDelimiter
      *            SQLステートメントの区切り文字
+     * @param schemaInfoFullTableName
+     *            スキーマ情報を格納するテーブル名
+     * @param schemaInfoColumnName
+     *            スキーマのバージョン番号を格納するカラム名
+     * 
      */
     public DbModelFactoryImpl(GenDialect dialect, char statementDelimiter,
             String schemaInfoFullTableName, String schemaInfoColumnName) {
@@ -83,7 +90,7 @@ public class DbModelFactoryImpl implements DbModelFactory {
         model.setSchemaInfoColumnName(schemaInfoColumnName);
         model.setVersionNo(versionNo);
         String columnDefinition = dialect.getType(Types.INTEGER)
-                .getColumnDefinition(0, 9, 0, null);
+                .getColumnDefinition(0, 10, 0, null);
         model.setSchemaInfoColumnDefinition(columnDefinition);
         return model;
     }

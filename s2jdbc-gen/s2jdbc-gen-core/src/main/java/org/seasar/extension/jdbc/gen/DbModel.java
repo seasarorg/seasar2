@@ -32,12 +32,16 @@ public class DbModel {
     /** 区切り文字 */
     protected char delimiter;
 
+    /** スキーマ情報を格納するテーブル名 */
     protected String schemaInfoFullTableName;
 
+    /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName;
 
+    /** スキーマのバージョン番号を格納するカラムの定義 */
     protected String schemaInfoColumnDefinition;
 
+    /** スキーマのバージョン番号 */
     protected int versionNo;
 
     /** テーブル記述のリスト */
@@ -85,63 +89,79 @@ public class DbModel {
     }
 
     /**
-     * @return Returns the dbInfoFullTableName.
+     * スキーマ情報を格納するテーブル名を返します。
+     * 
+     * @return スキーマ情報を格納するテーブル名
      */
     public String getSchemaInfoFullTableName() {
         return schemaInfoFullTableName;
     }
 
     /**
-     * @param dbInfoFullTableName
-     *            The dbInfofullTableName to set.
+     * スキーマ情報を格納するテーブル名を設定します。
+     * 
+     * @param schemaInfoFullTableName
+     *            スキーマ情報を格納するテーブル名
      */
     public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
         this.schemaInfoFullTableName = schemaInfoFullTableName;
     }
 
     /**
-     * @return Returns the dbInfoColumnName.
+     * スキーマのバージョン番号を格納するカラム名を返します。
+     * 
+     * @return スキーマのバージョン番号を格納するカラム名
      */
     public String getSchemaInfoColumnName() {
         return schemaInfoColumnName;
     }
 
     /**
-     * @param dbInfoColumnName
-     *            The dbInfoColumnName to set.
+     * スキーマのバージョン番号を格納するカラム名を設定します。
+     * 
+     * @param schemaInfoColumnName
+     *            スキーマのバージョン番号を格納するカラム名
      */
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
     /**
-     * @return Returns the versionNo.
+     * バージョン番号を返します。
+     * 
+     * @return バージョン番号
      */
     public int getVersionNo() {
         return versionNo;
     }
 
     /**
+     * バージョン番号を設定します。
+     * 
      * @param versionNo
-     *            The versionNo to set.
+     *            バージョン番号
      */
     public void setVersionNo(int versionNo) {
         this.versionNo = versionNo;
     }
 
     /**
-     * @return Returns the dbInfoColumnDefinition.
+     * スキーマのバージョン番号を格納するカラムの定義を返します。
+     * 
+     * @return スキーマのバージョン番号を格納するカラムの定義
      */
     public String getSchemaInfoColumnDefinition() {
         return schemaInfoColumnDefinition;
     }
 
     /**
-     * @param dbInfoColumnDefinition
-     *            The dbInfoColumnDefinition to set.
+     * スキーマのバージョン番号を格納するカラムの定義を設定します。
+     * 
+     * @param schemaInfoColumnDefinition
+     *            スキーマのバージョン番号を格納するカラムの定義
      */
-    public void setSchemaInfoColumnDefinition(String dbInfoColumnDefinition) {
-        this.schemaInfoColumnDefinition = dbInfoColumnDefinition;
+    public void setSchemaInfoColumnDefinition(String schemaInfoColumnDefinition) {
+        this.schemaInfoColumnDefinition = schemaInfoColumnDefinition;
     }
 
     /**

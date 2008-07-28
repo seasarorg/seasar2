@@ -267,7 +267,7 @@ public class GenerateDdlTask extends AbstractTask {
      *            DDLファイルの出力先ディレクトリ
      */
     public void setDdlFileDestDir(File ddlFileDestDir) {
-        command.setDdlFileDestDir(ddlFileDestDir);
+        command.setMigrationRootDir(ddlFileDestDir);
     }
 
     /**

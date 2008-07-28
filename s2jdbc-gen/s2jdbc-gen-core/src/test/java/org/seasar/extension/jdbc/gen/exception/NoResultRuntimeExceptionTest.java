@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.exception;
 
 import org.junit.Test;
 
@@ -23,26 +23,16 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateVersionCommandTest {
+public class NoResultRuntimeExceptionTest {
 
     /**
      * 
      * @throws Exception
      */
     @Test
-    public void testValidate() throws Exception {
-        GenerateVersionCommand command = new GenerateVersionCommand();
-        command.validate();
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testFactoryMethod() throws Exception {
-        GenerateVersionCommand command = new GenerateVersionCommand();
-        command.init();
-        assertNotNull(command.createGenerator());
+    public void test() throws Exception {
+        NoResultRuntimeException e = new NoResultRuntimeException("aaa");
+        assertEquals("aaa", e.getTableName());
+        System.out.println(e.getMessage());
     }
 }

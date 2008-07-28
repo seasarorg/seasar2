@@ -15,18 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
-
 /**
- * @author taedium
+ * スキーマのバージョンを表すインタフェースです。
  * 
+ * @author taedium
  */
-public interface VersionManager {
+public interface SchemaVersion {
 
-    void increment(VersionUnit unit);
-
-    interface VersionUnit {
-
-        void execute(File nextVersionDir, int nextVersionNo);
-    }
+    /**
+     * バージョン番号を返します。
+     * 
+     * @return バージョン番号
+     */
+    public int getVersionNo();
 }

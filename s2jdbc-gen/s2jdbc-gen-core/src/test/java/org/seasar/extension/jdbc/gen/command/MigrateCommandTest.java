@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -28,7 +27,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateDdlCommandTest {
+public class MigrateCommandTest {
 
     /**
      * 
@@ -44,34 +43,15 @@ public class GenerateDdlCommandTest {
      * @throws Exception
      */
     @Test
-    public void testValidate() throws Exception {
-        GenerateDdlCommand command = new GenerateDdlCommand();
-        command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        try {
-            command.validate();
-            fail();
-        } catch (RequiredPropertyNullRuntimeException expected) {
-        }
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
     public void testFactoryMethod() throws Exception {
-        GenerateDdlCommand command = new GenerateDdlCommand();
+        MigrateCommand command = new MigrateCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        command.setClasspathRootDir(new File("dir"));
-        command.validate();
         command.init();
+        assertNotNull(command.createSchemaVersion());
         assertNotNull(command.createDdlVersion());
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createGenerator());
-        assertNotNull(command.createDbModelFactory());
-        assertNotNull(command.createTableDescFactory());
-        assertNotNull(command.createGenerationContext(new Object(), new File(
-                "xxx"), "aaa", "bbb"));
+        assertNotNull(command.createScriptTokenizer());
+        assertNotNull(command.createSqlScriptReader(new File("sqlFile")));
+        assertNotNull(command.createSqlExecutor(new File("sqlFile"), "bbb"));
+        assertNotNull(command.createSqlExecutionContext());
     }
-
 }
