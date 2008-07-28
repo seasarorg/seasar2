@@ -47,9 +47,15 @@ public class DdlVersionImpl implements DdlVersion {
     protected Integer versionNo;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param file
+     *            ファイル
      */
     public DdlVersionImpl(File file) {
+        if (file == null) {
+            throw new NullPointerException("file");
+        }
         this.file = file;
     }
 

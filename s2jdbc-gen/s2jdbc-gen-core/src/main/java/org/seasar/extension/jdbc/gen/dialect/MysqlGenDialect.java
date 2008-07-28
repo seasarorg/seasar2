@@ -31,6 +31,9 @@ import org.seasar.framework.util.StringUtil;
  */
 public class MysqlGenDialect extends StandardGenDialect {
 
+    /** テーブルが見つからないことを示すエラーコード */
+    protected static int TABLE_NOT_FOUND_ERROR_CODE = 208;
+
     /**
      * インスタンスを構築します。
      */
@@ -76,6 +79,13 @@ public class MysqlGenDialect extends StandardGenDialect {
     @Override
     public String getDropUniqueKeySyntax() {
         return "drop index";
+    }
+
+    @Override
+    public boolean isTableNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
     }
 
     /**

@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
@@ -162,6 +163,55 @@ public class StandardGenDialect implements GenDialect {
 
     public String getDropUniqueKeySyntax() {
         return "drop constraint";
+    }
+
+    public boolean isTableNotFound(Throwable throwable) {
+        return false;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}を返します。
+     * <p>
+     * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、例外コードが設定されていない場合は
+     * <code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}
+     */
+    protected Integer getErrorCode(Throwable t) {
+        SQLException cause = getCauseSQLException(t);
+        if (cause != null) {
+            return cause.getErrorCode();
+        }
+        return null;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException SQL例外}を返します。
+     * <p>
+     * 例外チェーンにSQL例外が存在しない場合は<code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException SQL例外}
+     */
+    protected SQLException getCauseSQLException(Throwable t) {
+        SQLException cause = null;
+        while (t != null) {
+            if (t instanceof SQLException) {
+                cause = SQLException.class.cast(t);
+                if (cause.getNextException() != null) {
+                    cause = cause.getNextException();
+                    t = cause;
+                    continue;
+                }
+            }
+            t = t.getCause();
+        }
+        return cause;
     }
 
     /**

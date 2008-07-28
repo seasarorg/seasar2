@@ -29,6 +29,9 @@ import javax.persistence.GenerationType;
  */
 public class OracleGenDialect extends StandardGenDialect {
 
+    /** テーブルが見つからないことを示すエラーコード */
+    protected static int TABLE_NOT_FOUND_ERROR_CODE = 942;
+
     /**
      * インスタンスを構築します。
      */
@@ -87,6 +90,13 @@ public class OracleGenDialect extends StandardGenDialect {
     @Override
     public String getSqlBlockDelimiter() {
         return "/";
+    }
+
+    @Override
+    public boolean isTableNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
     }
 
     /**

@@ -29,6 +29,9 @@ import javax.persistence.GenerationType;
  */
 public class MssqlGenDialect extends StandardGenDialect {
 
+    /** テーブルが見つからないことを示すエラーコード */
+    protected static int TABLE_NOT_FOUND_ERROR_CODE = 1051;
+
     /**
      * インスタンスを構築します。
      */
@@ -83,6 +86,13 @@ public class MssqlGenDialect extends StandardGenDialect {
     @Override
     public String getIdentityColumnDefinition() {
         return "identity not null";
+    }
+
+    @Override
+    public boolean isTableNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
     }
 
     /**

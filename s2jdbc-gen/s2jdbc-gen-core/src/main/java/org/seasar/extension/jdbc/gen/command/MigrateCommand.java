@@ -531,8 +531,8 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link SchemaVersion}の実装
      */
     protected SchemaVersion createSchemaVersion() {
-        return new SchemaVersionImpl(dataSource, schemaInfoFullTableName,
-                schemaInfoColumnName);
+        return new SchemaVersionImpl(dataSource, dialect,
+                schemaInfoFullTableName, schemaInfoColumnName);
     }
 
     /**

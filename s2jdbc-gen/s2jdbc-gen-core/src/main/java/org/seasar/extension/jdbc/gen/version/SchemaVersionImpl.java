@@ -22,12 +22,14 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SchemaVersion;
 import org.seasar.extension.jdbc.gen.exception.NoResultRuntimeException;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ResultSetUtil;
 import org.seasar.framework.util.StatementUtil;
 
@@ -44,6 +46,9 @@ public class SchemaVersionImpl implements SchemaVersion {
     /** データソース */
     protected DataSource dataSource;
 
+    /** 方言 */
+    protected GenDialect dialect;
+
     /** カタログ名やスキーマ名を含む完全なテーブル名 */
     protected String fullTableName;
 
@@ -54,12 +59,30 @@ public class SchemaVersionImpl implements SchemaVersion {
      * インスタンスを構築します。
      * 
      * @param dataSource
+     *            データソース
+     * @param dialect
+     *            方言
      * @param fullTableName
+     *            カタログ名やスキーマ名を含む完全なテーブル名
      * @param columnName
+     *            カラム名
      */
-    public SchemaVersionImpl(DataSource dataSource, String fullTableName,
-            String columnName) {
+    public SchemaVersionImpl(DataSource dataSource, GenDialect dialect,
+            String fullTableName, String columnName) {
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource");
+        }
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        if (fullTableName == null) {
+            throw new NullPointerException("fullTableName");
+        }
+        if (columnName == null) {
+            throw new NullPointerException("columnName");
+        }
         this.dataSource = dataSource;
+        this.dialect = dialect;
         this.fullTableName = fullTableName;
         this.columnName = columnName;
     }
@@ -68,17 +91,10 @@ public class SchemaVersionImpl implements SchemaVersion {
         Connection conn = DataSourceUtil.getConnection(dataSource);
         try {
             String sql = "select " + columnName + " from " + fullTableName;
-            PreparedStatement ps = null;
+            PreparedStatement ps = ConnectionUtil.prepareStatement(conn, sql);
             try {
-                ResultSet rs = null;
+                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
                 try {
-                    try {
-                        ps = conn.prepareStatement(sql);
-                        rs = ps.executeQuery();
-                    } catch (SQLException e) {
-                        logger.log("IS2JDBCGen0004", new Object[] { sql });
-                        return 0;
-                    }
                     if (rs.next()) {
                         return rs.getInt(1);
                     }
@@ -91,6 +107,11 @@ public class SchemaVersionImpl implements SchemaVersion {
             } finally {
                 StatementUtil.close(ps);
             }
+        } catch (SQLRuntimeException e) {
+            if (dialect.isTableNotFound(e)) {
+                return 0;
+            }
+            throw e;
         } finally {
             ConnectionUtil.close(conn);
         }

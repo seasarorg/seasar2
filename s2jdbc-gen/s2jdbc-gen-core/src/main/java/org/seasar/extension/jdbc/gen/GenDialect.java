@@ -159,6 +159,15 @@ public interface GenDialect {
     String getDropUniqueKeySyntax();
 
     /**
+     * テーブルが存在しない例外を表す場合{@code true}を返します。
+     * 
+     * @param throwable
+     *            何らかの例外
+     * @return テーブルが存在しない例外を表す場合{@code true}
+     */
+    boolean isTableNotFound(Throwable throwable);
+
+    /**
      * Javaクラスとデータベースのカラム定義を表すインタフェースです。
      * 
      * @author taedium
