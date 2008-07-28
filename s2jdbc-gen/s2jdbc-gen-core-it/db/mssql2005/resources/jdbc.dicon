@@ -10,7 +10,7 @@
 			"com.microsoft.sqlserver.jdbc.SQLServerDriver"
 		</property>
 		<property name="URL">
-			"jdbc:sqlserver://localhost;databaseName=S2JDBCGEN"
+			"jdbc:sqlserver://10.24.1.65;databaseName=S2JDBCGEN"
 		</property>
 		<property name="user">"S2JDBCGEN"</property>
 		<property name="password">"sa"</property>

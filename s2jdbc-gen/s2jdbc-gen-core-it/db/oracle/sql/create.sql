@@ -14,6 +14,3 @@ create table raw_table (raw_column raw(2000));
 create table timestamp_table (timestamp_column timestamp);
 create table urowid_table (urowid_column urowid (4000));
 create table varchar2_table (varchar2_column varchar2(4000));
-
-create table schema_info (version number(8));
-insert into schema_info values(0);

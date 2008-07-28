@@ -31,7 +31,3 @@ create table mediumblob_table (mediumblob_column mediumblob);
 create table mediumtext_table (mediumtext_column mediumtext);
 create table longblob_table (longblob_column longblob);
 create table longtext_table (longtext_column longtext);
-
-
-create table schema_info (version integer);
-insert into schema_info values(0);

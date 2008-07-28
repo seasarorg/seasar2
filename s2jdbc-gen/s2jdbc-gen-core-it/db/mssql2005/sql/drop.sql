@@ -23,5 +23,3 @@ drop table binary_table;
 drop table varbinary_table;
 drop table varbinary_max_table;
 drop table image_table;
-
-drop table schema_info;

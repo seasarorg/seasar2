@@ -25,6 +25,7 @@
 	<target name="testAll">
 		<ant antfile="../common-build.xml" target="testFromDbToEntity" inheritrefs="true"/>
 		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
+		<ant antfile="../common-build.xml" target="testMigrate" inheritrefs="true"/>
 	</target>
 	
 	<target name="testFromDbToEntity" >
@@ -34,8 +35,12 @@
 	<target name="testFromEntityToDb" >
 		<ant antfile="../common-build.xml" target="testFromEntityToDb" inheritrefs="true"/>
 	</target>
+	
+	<target name="testMigrate" >
+		<ant antfile="../common-build.xml" target="testMigrate" inheritrefs="true"/>
+	</target>
 
-	<target name="dump-dbmeta" >
-		<ant antfile="../common-build.xml" target="dump-dbmeta" inheritrefs="true"/>
+	<target name="dump-db-meta" >
+		<ant antfile="../common-build.xml" target="dump-db-meta" inheritrefs="true"/>
 	</target>
 </project>

@@ -23,6 +23,3 @@ create table varbinary_table (varbinary_column varbinary);
 create table longvarbinary_table (longvarbinary_column longvarbinary);
 --create table other_table (other_column other);
 --create table object_table (object_column other);
-
-create table schema_info (version integer);
-insert into schema_info values(0);

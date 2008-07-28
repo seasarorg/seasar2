@@ -31,6 +31,3 @@ create table int2_table (int2_column int2);
 create table serial4_table (serial4_column serial4);
 create table timetz_table (timetz_column timetz);
 create table timestamptz_table (timestamptz_column timestamptz);
-
-create table schema_info (version integer);
-insert into schema_info values(0);

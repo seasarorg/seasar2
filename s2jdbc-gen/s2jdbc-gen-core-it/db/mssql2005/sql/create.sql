@@ -23,6 +23,3 @@ create table binary_table (binary_column binary);
 create table varbinary_table (varbinary_column varbinary);
 create table varbinary_max_table (varbinary_max_column varbinary(max));
 create table image_table (image_column image);
-
-create table schema_info (version integer);
-insert into schema_info values(0);

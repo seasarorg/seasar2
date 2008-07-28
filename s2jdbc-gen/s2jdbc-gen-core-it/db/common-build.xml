@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="s2jdbc-gen-common" default="dump-dbmeta" basedir=".">
+<project name="s2jdbc-gen-common" default="dump-db-meta" basedir=".">
 	
 	<target name="testFromDbToEntity" >
+		<!-- setUp -->
 		<delete dir="temp"/>
 		<mkdir dir="temp/build"/>
 		<copy todir="temp/build">
@@ -14,6 +15,7 @@
 				<file name="create.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<!-- test -->
 		<gen-entity
 			rootpackagename="example"
 			javafiledestdir="temp/src"
@@ -31,28 +33,19 @@
 		<gen-ddl 
 			classpathRootDir="temp/build"
 			rootpackagename="example"
-			ddlfiledestdir="temp/ddl"
-			overwrite="true"
+			ddlfiledestdir="temp/db"
 			classpathref="classpath"
 		/>
+		<!-- tearDown -->
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="sql">
 				<file name="drop.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="temp/ddl">
-				<file name="010-create-table.sql"/>
-				<file name="020-create-uniquekey.sql"/>
-				<file name="030-create-foreignkey.sql"/>
-				<file name="040-create-sequence.sql"/>
-				<file name="010-drop-sequence.sql"/>
-				<file name="020-drop-foreignkey.sql"/>
-				<file name="030-drop-uniquekey.sql"/>
-				<file name="040-drop-table.sql"/>
 			</sqlFileList>
 		</exec-sql>
 	</target>
 	
 	<target name="testFromEntityToDb" >
+		<!-- setUp -->
 		<delete dir="temp"/>
 		<mkdir dir="temp/build"/>
 		<mkdir dir="temp/result"/>
@@ -69,6 +62,7 @@
 			fork="true"
 			debug="on"
 		/>
+		<!-- test -->
 		<gen-test
 			classpathrootdir="temp/build"
 			rootpackagename="example"
@@ -101,29 +95,13 @@
 		<gen-ddl 
 			classpathRootDir="temp/build"
 			rootpackagename="example"
-			ddlfiledestdir="temp/ddl"
-			overwrite="true"
+			ddlfiledestdir="temp/db"
 			classpathref="classpath"
 		/>
-		<gen-version 
-			dmlfiledestdir="temp/dml"
-			versionfiledestdir="temp"
+		<migrate 
 			classpathref="classpath"
+			migrationrootdir="temp/db"
 		/>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="sql">
-				<file name="create.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="temp/ddl">
-				<file name="010-create-table.sql"/>
-				<file name="020-create-uniquekey.sql"/>
-				<file name="030-create-foreignkey.sql"/>
-				<file name="040-create-sequence.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="temp/dml">
-				<file name="update-version.sql"/>
-			</sqlFileList>
-		</exec-sql>
 		<junit haltonfailure="no" printsummary="true">
 			<formatter type="xml"/>
 			<classpath refid="classpath"/>
@@ -133,20 +111,62 @@
 				</fileset>
 			</batchtest>
 		</junit>
-		<exec-sql classpathref="classpath">
-			<sqlFileList dir="temp/ddl">
-				<file name="010-drop-sequence.sql"/>
-				<file name="020-drop-foreignkey.sql"/>
-				<file name="030-drop-uniquekey.sql"/>
-				<file name="040-drop-table.sql"/>
-			</sqlFileList>
-			<sqlFileList dir="sql">
-				<file name="drop.sql"/>
-			</sqlFileList>
-		</exec-sql>
+		<!-- tearDown -->
+		<migrate 
+			classpathref="classpath"
+			migrationrootdir="temp/db"
+			to="0"
+		/>
+	</target>
+	
+	<target name="testMigrate" >
+		<!-- setUp -->
+		<delete dir="temp"/>
+		<mkdir dir="temp/build"/>
+		<copy todir="temp/build">
+			<fileset dir="resources">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<javac 
+			srcdir="../../src/main/java"
+			destdir="temp/build"
+			classpathref="classpath"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+		/>
+		<!-- test -->
+		<gen-ddl 
+			classpathRootDir="temp/build"
+			rootpackagename="example"
+			ddlfiledestdir="temp/db"
+			classpathref="classpath"
+		/>
+		<migrate 
+			classpathref="classpath"
+			migrationrootdir="temp/db"
+		/>
+		<gen-ddl 
+			classpathRootDir="temp/build"
+			rootpackagename="example"
+			ddlfiledestdir="temp/db"
+			classpathref="classpath"
+		/>
+		<migrate 
+			classpathref="classpath"
+			migrationrootdir="temp/db"
+		/>
+		<!-- tearDown -->
+		<migrate 
+			classpathref="classpath"
+			migrationrootdir="temp/db"
+			to="0"
+		/>
 	</target>
 
-	<target name="dump-dbmeta" >
+	<target name="dump-db-meta" >
+		<!-- setUp -->
 		<delete dir="temp"/>
 		<mkdir dir="temp/build"/>
 		<copy todir="temp/build">
@@ -159,9 +179,11 @@
 				<file name="create.sql"/>
 			</sqlFileList>
 		</exec-sql>
-		<dump-dbmeta
+		<!-- test -->
+		<dump-db-meta
 			classpathRef="classpath"
 		/>
+		<!-- tearDown -->
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="sql">
 				<file name="drop.sql"/>

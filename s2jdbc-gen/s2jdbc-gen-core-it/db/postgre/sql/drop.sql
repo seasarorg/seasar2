@@ -31,5 +31,3 @@ drop table int2_table;
 drop table serial4_table;
 drop table timetz_table;
 drop table timestamptz_table;
-
-drop table schema_info;
