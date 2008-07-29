@@ -27,6 +27,9 @@ import javax.persistence.GenerationType;
  */
 public class DerbyGenDialect extends StandardGenDialect {
 
+    /** テーブルが見つからないことを示すSQLステート */
+    protected static String TABLE_NOT_FOUND_SQL_STATE = "42X05";
+
     /**
      * インスタンスを構築します。
      */
@@ -47,6 +50,12 @@ public class DerbyGenDialect extends StandardGenDialect {
     @Override
     public String getIdentityColumnDefinition() {
         return "not null generated always as identity";
+    }
+
+    @Override
+    public boolean isTableNotFound(Throwable throwable) {
+        String sqlState = getSQLState(throwable);
+        return TABLE_NOT_FOUND_SQL_STATE.equals(sqlState);
     }
 
     /**

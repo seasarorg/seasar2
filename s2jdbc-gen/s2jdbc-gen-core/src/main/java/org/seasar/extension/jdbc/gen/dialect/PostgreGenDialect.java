@@ -27,6 +27,9 @@ import javax.persistence.GenerationType;
  */
 public class PostgreGenDialect extends StandardGenDialect {
 
+    /** テーブルが見つからないことを示すSQLステート */
+    protected static String TABLE_NOT_FOUND_SQL_STATE = "42P01";
+
     /**
      * インスタンスを構築します。
      */
@@ -65,6 +68,12 @@ public class PostgreGenDialect extends StandardGenDialect {
     @Override
     public String getIdentityColumnDefinition() {
         return "not null";
+    }
+
+    @Override
+    public boolean isTableNotFound(Throwable throwable) {
+        String sqlState = getSQLState(throwable);
+        return TABLE_NOT_FOUND_SQL_STATE.equals(sqlState);
     }
 
     /**

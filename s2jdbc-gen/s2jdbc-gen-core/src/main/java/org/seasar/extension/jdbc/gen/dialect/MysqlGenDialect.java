@@ -32,7 +32,7 @@ import org.seasar.framework.util.StringUtil;
 public class MysqlGenDialect extends StandardGenDialect {
 
     /** テーブルが見つからないことを示すエラーコード */
-    protected static int TABLE_NOT_FOUND_ERROR_CODE = 208;
+    protected static int TABLE_NOT_FOUND_ERROR_CODE = 1146;
 
     /**
      * インスタンスを構築します。

@@ -29,6 +29,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * 標準的な方言をあつかうクラスです。
@@ -184,6 +185,25 @@ public class StandardGenDialect implements GenDialect {
         SQLException cause = getCauseSQLException(t);
         if (cause != null) {
             return cause.getErrorCode();
+        }
+        return null;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
+     * <p>
+     * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、SQLステートが設定されていない場合は
+     * <code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException#getSQLState() SQLステート}
+     */
+    protected String getSQLState(Throwable t) {
+        SQLException cause = getCauseSQLException(t);
+        if (cause != null && !StringUtil.isEmpty(cause.getSQLState())) {
+            return cause.getSQLState();
         }
         return null;
     }

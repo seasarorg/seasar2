@@ -55,6 +55,9 @@ public class SchemaVersionImpl implements SchemaVersion {
     /** カラム名 */
     protected String columnName;
 
+    /** スキーマのバージョンを取得するSQL */
+    protected String sql;
+
     /**
      * インスタンスを構築します。
      * 
@@ -85,12 +88,12 @@ public class SchemaVersionImpl implements SchemaVersion {
         this.dialect = dialect;
         this.fullTableName = fullTableName;
         this.columnName = columnName;
+        sql = "select " + columnName + " from " + fullTableName;
     }
 
     public int getVersionNo() {
         Connection conn = DataSourceUtil.getConnection(dataSource);
         try {
-            String sql = "select " + columnName + " from " + fullTableName;
             PreparedStatement ps = ConnectionUtil.prepareStatement(conn, sql);
             try {
                 ResultSet rs = PreparedStatementUtil.executeQuery(ps);
@@ -109,6 +112,7 @@ public class SchemaVersionImpl implements SchemaVersion {
             }
         } catch (SQLRuntimeException e) {
             if (dialect.isTableNotFound(e)) {
+                logger.log("IS2JDBCGen0004", new Object[] { sql });
                 return 0;
             }
             throw e;
