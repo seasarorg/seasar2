@@ -16,11 +16,12 @@
 package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * Oracleの方言を扱うクラスです。
@@ -36,25 +37,28 @@ public class OracleGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public OracleGenDialect() {
-        typeMap.put(101, OracleType.BINARY_DOUBLE);
-        typeMap.put(100, OracleType.BINARY_FLOAT);
-        typeMap.put(Types.BINARY, OracleType.BINARY);
-        typeMap.put(Types.BOOLEAN, OracleType.BOOLEAN);
-        typeMap.put(Types.BIGINT, OracleType.BIGINT);
-        typeMap.put(Types.CHAR, OracleType.CHAR);
-        typeMap.put(Types.DECIMAL, OracleType.DECIMAL);
-        typeMap.put(Types.DOUBLE, OracleType.DOUBLE);
-        typeMap.put(Types.INTEGER, OracleType.INTEGER);
-        typeMap.put(Types.LONGVARBINARY, OracleType.LONGVARBINARY);
-        typeMap.put(Types.LONGVARCHAR, OracleType.LONGVARCHAR);
-        typeMap.put(Types.OTHER, OracleType.OTHER);
-        typeMap.put(Types.SMALLINT, OracleType.SMALLINT);
-        typeMap.put(Types.TIME, OracleType.DATE);
-        typeMap.put(Types.TIME, OracleType.TIME);
-        typeMap.put(Types.TIME, OracleType.TIMESTAMP);
-        typeMap.put(Types.TINYINT, OracleType.TINYINT);
-        typeMap.put(Types.VARBINARY, OracleType.VARBINARY);
-        typeMap.put(Types.VARCHAR, OracleType.VARCHAR);
+        typeMap.put(Types.BINARY, OracleSqlType.BINARY);
+        typeMap.put(Types.BOOLEAN, OracleSqlType.BOOLEAN);
+        typeMap.put(Types.BIGINT, OracleSqlType.BIGINT);
+        typeMap.put(Types.DECIMAL, OracleSqlType.DECIMAL);
+        typeMap.put(Types.DOUBLE, OracleSqlType.DOUBLE);
+        typeMap.put(Types.INTEGER, OracleSqlType.INTEGER);
+        typeMap.put(Types.SMALLINT, OracleSqlType.SMALLINT);
+        typeMap.put(Types.TIME, OracleSqlType.TIME);
+        typeMap.put(Types.VARCHAR, OracleSqlType.VARCHAR);
+
+        namedTypeMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
+        namedTypeMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
+        namedTypeMap.put("blob", OracleColumnType.BLOB);
+        namedTypeMap.put("clob", OracleColumnType.CLOB);
+        namedTypeMap.put("long", OracleColumnType.LONG);
+        namedTypeMap.put("long_raw", OracleColumnType.LONG_RAW);
+        namedTypeMap.put("nchar", OracleColumnType.NCHAR);
+        namedTypeMap.put("nclob", OracleColumnType.NCLOB);
+        namedTypeMap.put("number", OracleColumnType.NUMBER);
+        namedTypeMap.put("nvarchar", OracleColumnType.NVARCHAR);
+        namedTypeMap.put("raw", OracleColumnType.RAW);
+        namedTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
                 "procedure"));
@@ -100,331 +104,143 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Oracle用の{@link Type}の実装クラスです。
+     * Oracle用の{@link SqlType}の実装クラスです。
      * 
      * @author taedium
      */
-    public static class OracleType extends StandardType {
+    public static class OracleSqlType extends StandardSqlType {
 
-        private static Type BINARY_DOUBLE = new OracleType() {
+        private static SqlType BIGINT = new OracleSqlType("number($p,0)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
+        private static SqlType BINARY = new OracleSqlType() {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "binary_double";
+                    int scale, boolean identity) {
+                columnDefinition = length > 2000 ? "blob" : "raw($l)";
+                return super.getColumnDefinition(length, precision, scale, identity);
             }
         };
 
-        private static Type BINARY_FLOAT = new OracleType() {
+        private static SqlType BOOLEAN = new OracleSqlType("number(1,0)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
+        private static SqlType DECIMAL = new OracleSqlType("number($p,$s)");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "binary_float";
-            }
-        };
+        private static SqlType DOUBLE = new OracleSqlType("double precision");
 
-        private static Type BIGINT = new OracleType() {
+        private static SqlType INTEGER = new OracleSqlType("number(10,0)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
+        private static SqlType SMALLINT = new OracleSqlType("number(5,0)");
+
+        private static SqlType TIME = new OracleSqlType("date");
+
+        private static SqlType VARCHAR = new OracleSqlType() {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,0)", precision);
-            }
-        };
-
-        private static Type BINARY = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length > 2000) {
-                    return "long raw";
-                }
-                return format("raw(%d)", length);
-            }
-        };
-
-        private static Type BOOLEAN = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "number(1,0)";
-            }
-        };
-
-        private static Type CHAR = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (length > 1) {
-                    return String.class;
-                }
-                return Character.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("char(%d)", length);
-            }
-        };
-
-        private static Type DECIMAL = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (precision > 10 || scale > 0) {
-                    return BigDecimal.class;
-                }
-                return Integer.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("number(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "double precision";
-            }
-        };
-
-        private static Type INTEGER = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Integer.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "number(10,0)";
-            }
-        };
-
-        private static Type LONGVARCHAR = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "long";
-            }
-        };
-
-        private static Type LONGVARBINARY = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "long raw";
-            }
-        };
-
-        private static Type OTHER = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("nchar".equalsIgnoreCase(typeName)) {
-                    return format("nchar(%d)", length / 2);
-                } else if ("nvarchar2".equalsIgnoreCase(typeName)) {
-                    return format("nvarchar2(%d)", length / 2);
-                } else if ("nclob".equalsIgnoreCase(typeName)) {
-                    return "nclob";
-                } else if ("rowid".equalsIgnoreCase(typeName)) {
-                    return "rowid";
-                } else if ("urowid".equalsIgnoreCase(typeName)) {
-                    return format("urowid(%d)", length);
-                }
-
-                return null;
-            }
-        };
-
-        private static Type SMALLINT = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "number(5,0)";
-            }
-        };
-
-        private static Type DATE = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "date";
-            }
-        };
-
-        private static Type TIME = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "date";
-            }
-        };
-
-        private static Type TIMESTAMP = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("date".equalsIgnoreCase(typeName)) {
-                    return "date";
-                }
-                return "timestamp";
-            }
-        };
-
-        private static Type TINYINT = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "number(3,0)";
-            }
-        };
-
-        private static Type VARBINARY = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length > 2000) {
-                    return "long raw";
-                }
-                return format("raw(%d)", length);
-            }
-        };
-
-        private static Type VARCHAR = new OracleType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length > 4000) {
-                    return "long";
-                }
-                return format("varchar2(%d)", length);
+                    int scale, boolean identity) {
+                columnDefinition = length > 4000 ? "clob" : "varchar2($l)";
+                return super.getColumnDefinition(length, precision, scale, identity);
             }
         };
 
         /**
          * インスタンスを構築します。
          */
-        protected OracleType() {
+        protected OracleSqlType() {
+        }
+
+        protected OracleSqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class OracleColumnType extends StandardColumnType {
+
+        private static OracleColumnType BINARY_DOUBLE = new OracleColumnType(
+                "binary_double", Double.class);
+
+        private static OracleColumnType BINARY_FLOAT = new OracleColumnType(
+                "binary_float", Float.class);
+
+        private static OracleColumnType BLOB = new OracleColumnType("blob",
+                byte[].class, true);
+
+        private static OracleColumnType CLOB = new OracleColumnType("clob",
+                String.class, true);
+
+        private static OracleColumnType LONG_RAW = new OracleColumnType(
+                "long raw", byte[].class);
+
+        private static OracleColumnType LONG = new OracleColumnType("long",
+                String.class);
+
+        private static OracleColumnType NCHAR = new OracleColumnType(
+                "nchar($l)", String.class) {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale) {
+                return super.getColumnDefinition(length / 2, precision, scale);
+            }
+        };
+
+        private static OracleColumnType NCLOB = new OracleColumnType("nclob",
+                String.class, true);
+
+        private static OracleColumnType NUMBER = new OracleColumnType(
+                "number($p,$s)", BigDecimal.class) {
+
+            @Override
+            public Class<?> getAttributeClass(int length, int precision,
+                    int scale) {
+                if (scale != 0) {
+                    return BigDecimal.class;
+                }
+                if (precision == 1) {
+                    return Boolean.class;
+                }
+                if (precision <= 5) {
+                    return Short.class;
+                }
+                if (precision <= 10) {
+                    return Integer.class;
+                }
+                if (precision <= 19) {
+                    return Long.class;
+                }
+                return BigInteger.class;
+            }
+        };
+
+        private static OracleColumnType NVARCHAR = new OracleColumnType(
+                "nvarchar($l)", String.class) {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale) {
+                return super.getColumnDefinition(length / 2, precision, scale);
+            }
+        };
+
+        private static OracleColumnType RAW = new OracleColumnType("raw($l)",
+                byte[].class);
+
+        private static OracleColumnType VARCHAR2 = new OracleColumnType(
+                "varchar2($l)", byte[].class);
+
+        public OracleColumnType(String columnDefinition, Class javaClass) {
+            super(columnDefinition, javaClass);
+        }
+
+        public OracleColumnType(String columnDefinition, Class<?> javaClass,
+                boolean lob) {
+            super(columnDefinition, javaClass, lob, null);
+        }
+
+        public OracleColumnType(String columnDefinition, Class<?> javaClass,
+                TemporalType temporalType) {
+            super(columnDefinition, javaClass, false, temporalType);
         }
 
     }

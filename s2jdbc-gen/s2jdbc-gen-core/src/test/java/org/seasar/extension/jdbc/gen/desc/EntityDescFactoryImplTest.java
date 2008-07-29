@@ -85,8 +85,10 @@ public class EntityDescFactoryImplTest {
     public void testGetAttributeDescList() throws Exception {
         DbColumnMeta columnMeta1 = new DbColumnMeta();
         columnMeta1.setName("BAR");
+        columnMeta1.setTypeName("varchar");
         DbColumnMeta columnMeta2 = new DbColumnMeta();
         columnMeta2.setName("FOO");
+        columnMeta2.setTypeName("varchar");
         DbTableMeta tableMeta = new DbTableMeta();
         tableMeta.setName("HOGE");
         tableMeta.addColumnMeta(columnMeta1);
@@ -104,9 +106,11 @@ public class EntityDescFactoryImplTest {
         DbColumnMeta columnMeta1 = new DbColumnMeta();
         columnMeta1.setName("BAR");
         columnMeta1.setPrimaryKey(true);
+        columnMeta1.setTypeName("varchar");
         DbColumnMeta columnMeta2 = new DbColumnMeta();
         columnMeta2.setName("FOO");
         columnMeta2.setPrimaryKey(true);
+        columnMeta2.setTypeName("varchar");
         DbTableMeta tableMeta = new DbTableMeta();
         tableMeta.setName("HOGE");
         tableMeta.addColumnMeta(columnMeta1);

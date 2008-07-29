@@ -89,8 +89,8 @@ public class DbModelFactoryImpl implements DbModelFactory {
         model.setSchemaInfoFullTableName(schemaInfoFullTableName);
         model.setSchemaInfoColumnName(schemaInfoColumnName);
         model.setVersionNo(versionNo);
-        String columnDefinition = dialect.getType(Types.INTEGER)
-                .getColumnDefinition(0, 10, 0, null);
+        String columnDefinition = dialect.getSqlType(Types.INTEGER)
+                .getColumnDefinition(0, 10, 0, false);
         model.setSchemaInfoColumnDefinition(columnDefinition);
         return model;
     }

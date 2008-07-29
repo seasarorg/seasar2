@@ -17,8 +17,10 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.Date;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * PostgreSQLの方言を扱うクラスです。
@@ -34,13 +36,33 @@ public class PostgreGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public PostgreGenDialect() {
-        typeMap.put(Types.BINARY, PostgreType.BINARY);
-        typeMap.put(Types.BLOB, PostgreType.BLOB);
-        typeMap.put(Types.CLOB, PostgreType.CLOB);
-        typeMap.put(Types.DECIMAL, PostgreType.DECIMAL);
-        typeMap.put(Types.DOUBLE, PostgreType.DOUBLE);
-        typeMap.put(Types.FLOAT, PostgreType.FLOAT);
-        typeMap.put(Types.TINYINT, PostgreType.TINYINT);
+        typeMap.put(Types.BIGINT, PostgreSqlType.BIGINT);
+        typeMap.put(Types.BINARY, PostgreSqlType.BINARY);
+        typeMap.put(Types.BOOLEAN, PostgreSqlType.BOOLEAN);
+        typeMap.put(Types.BLOB, PostgreSqlType.BLOB);
+        typeMap.put(Types.CLOB, PostgreSqlType.CLOB);
+        typeMap.put(Types.DECIMAL, PostgreSqlType.DECIMAL);
+        typeMap.put(Types.DOUBLE, PostgreSqlType.DOUBLE);
+        typeMap.put(Types.FLOAT, PostgreSqlType.FLOAT);
+        typeMap.put(Types.INTEGER, PostgreSqlType.INTEGER);
+
+        namedTypeMap.put("bigint", PostgreColumnType.BIGINT);
+        namedTypeMap.put("bigserial", PostgreColumnType.BIGSERIAL);
+        namedTypeMap.put("bit", PostgreColumnType.BIT);
+        namedTypeMap.put("bool", PostgreColumnType.BOOL);
+        namedTypeMap.put("bpchar", PostgreColumnType.BPCHAR);
+        namedTypeMap.put("bytea", PostgreColumnType.BYTEA);
+        namedTypeMap.put("float4", PostgreColumnType.FLOAT4);
+        namedTypeMap.put("float8", PostgreColumnType.FLOAT8);
+        namedTypeMap.put("int2", PostgreColumnType.INT2);
+        namedTypeMap.put("int4", PostgreColumnType.INT4);
+        namedTypeMap.put("int8", PostgreColumnType.INT8);
+        namedTypeMap.put("money", PostgreColumnType.MONEY);
+        namedTypeMap.put("numeric", PostgreColumnType.NUMERIC);
+        namedTypeMap.put("serial", PostgreColumnType.SERIAL);
+        namedTypeMap.put("timestampz", PostgreColumnType.TIMESTAMPZ);
+        namedTypeMap.put("timez", PostgreColumnType.TIMEZ);
+        namedTypeMap.put("varbit", PostgreColumnType.VARBIT);
     }
 
     @Override
@@ -77,121 +99,126 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     /**
-     * PostgreSQL用の{@link Type}の実装です。
+     * PostgreSQL用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class PostgreType extends StandardType {
+    public static class PostgreSqlType extends StandardSqlType {
 
-        private static Type BINARY = new PostgreType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static PostgreSqlType BIGINT = new PostgreSqlType() {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "bytea";
+                    int scale, boolean identity) {
+                return identity ? "bigserial" : "bigint";
             }
         };
 
-        private static Type BLOB = new PostgreType() {
+        private static PostgreSqlType BINARY = new PostgreSqlType("bytea");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static PostgreSqlType BOOLEAN = new PostgreSqlType("bool");
+
+        private static PostgreSqlType BLOB = new PostgreSqlType("oid");
+
+        private static PostgreSqlType CLOB = new PostgreSqlType("text");
+
+        private static PostgreSqlType DECIMAL = new PostgreSqlType(
+                "decimal($p,$s)");
+
+        private static PostgreSqlType DOUBLE = new PostgreSqlType("float8");
+
+        private static PostgreSqlType FLOAT = new PostgreSqlType("float4");
+
+        private static PostgreSqlType INTEGER = new PostgreSqlType() {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "oid";
+                    int scale, boolean identity) {
+                return identity ? "serial" : "integer";
             }
+
         };
 
-        private static Type CLOB = new PostgreType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "text";
-            }
-        };
-
-        private static Type DECIMAL = new PostgreType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new PostgreType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "double precision";
-            }
-        };
-
-        private static Type FLOAT = new PostgreType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "real";
-            }
-        };
-
-        private static Type TINYINT = new PostgreType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
+        protected PostgreSqlType() {
+        }
 
         /**
          * インスタンスを構築します。
          */
-        protected PostgreType() {
+        protected PostgreSqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    /**
+     * @author taedium
+     * 
+     */
+    public static class PostgreColumnType extends StandardColumnType {
+
+        private static PostgreColumnType BIT = new PostgreColumnType("bit($l)",
+                byte[].class);
+
+        private static PostgreColumnType BOOL = new PostgreColumnType("bool",
+                Boolean.class);
+
+        private static PostgreColumnType INT8 = new PostgreColumnType("int8",
+                Long.class);
+
+        private static PostgreColumnType BIGSERIAL = new PostgreColumnType(
+                "bigserial", Long.class);
+
+        private static PostgreColumnType BIGINT = new PostgreColumnType("oid",
+                byte[].class, true);
+
+        private static PostgreColumnType BYTEA = new PostgreColumnType("bytea",
+                byte[].class);
+
+        private static PostgreColumnType BPCHAR = new PostgreColumnType(
+                "char($l)", String.class);
+
+        private static PostgreColumnType NUMERIC = new PostgreColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        private static PostgreColumnType INT4 = new PostgreColumnType("int4",
+                Integer.class);
+
+        private static PostgreColumnType SERIAL = new PostgreColumnType(
+                "serial", Integer.class);
+
+        private static PostgreColumnType INT2 = new PostgreColumnType("int2",
+                Short.class);
+
+        private static PostgreColumnType FLOAT4 = new PostgreColumnType(
+                "float4", Float.class);
+
+        private static PostgreColumnType FLOAT8 = new PostgreColumnType(
+                "float8", Double.class);
+
+        private static PostgreColumnType MONEY = new PostgreColumnType("money",
+                Float.class);
+
+        private static PostgreColumnType TIMESTAMPZ = new PostgreColumnType(
+                "timestampz", Date.class, TemporalType.TIMESTAMP);
+
+        private static PostgreColumnType TIMEZ = new PostgreColumnType("timez",
+                Date.class, TemporalType.TIME);
+
+        private static PostgreColumnType VARBIT = new PostgreColumnType(
+                "varbit", byte[].class);
+
+        public PostgreColumnType(String columnDefinition, Class javaClass) {
+            super(columnDefinition, javaClass);
+        }
+
+        public PostgreColumnType(String columnDefinition, Class<?> javaClass,
+                boolean lob) {
+            super(columnDefinition, javaClass, lob, null);
+        }
+
+        public PostgreColumnType(String columnDefinition, Class<?> javaClass,
+                TemporalType temporalType) {
+            super(columnDefinition, javaClass, false, temporalType);
         }
     }
 }

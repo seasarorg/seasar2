@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.desc;
 
-import java.sql.Types;
-
 import javax.persistence.TemporalType;
 
 import org.junit.Before;
@@ -56,6 +54,7 @@ public class AttributeDescFactoryImplTest {
     public void testName() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("HOGE");
+        columnMeta.setTypeName("varchar");
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertEquals("hoge", attributeDesc.getName());
     }
@@ -68,6 +67,7 @@ public class AttributeDescFactoryImplTest {
     public void testIsId() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
+        columnMeta.setTypeName("varchar");
         columnMeta.setPrimaryKey(true);
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertTrue(attributeDesc.isId());
@@ -81,7 +81,7 @@ public class AttributeDescFactoryImplTest {
     public void testGetAttributeClass() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
-        columnMeta.setSqlType(Types.VARCHAR);
+        columnMeta.setTypeName("varchar");
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertEquals(String.class, attributeDesc.getAttributeClass());
     }
@@ -94,7 +94,7 @@ public class AttributeDescFactoryImplTest {
     public void testGetTemporalType() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
-        columnMeta.setSqlType(Types.DATE);
+        columnMeta.setTypeName("date");
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertEquals(TemporalType.DATE, attributeDesc.getTemporalType());
     }
@@ -107,7 +107,7 @@ public class AttributeDescFactoryImplTest {
     public void testIsLob() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
-        columnMeta.setSqlType(Types.BLOB);
+        columnMeta.setTypeName("blob");
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertTrue(attributeDesc.isLob());
     }
@@ -120,6 +120,7 @@ public class AttributeDescFactoryImplTest {
     public void testIsVersion() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("version");
+        columnMeta.setTypeName("integer");
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertTrue(attributeDesc.isVersion());
     }
@@ -132,6 +133,7 @@ public class AttributeDescFactoryImplTest {
     public void testColumn() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("HOGE");
+        columnMeta.setTypeName("varchar");
         columnMeta.setLength(10);
         columnMeta.setScale(5);
         columnMeta.setNullable(true);

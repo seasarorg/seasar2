@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * DB2の方言を扱うクラスです。
@@ -37,17 +38,21 @@ public class Db2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public Db2GenDialect() {
-        typeMap.put(Types.BINARY, Db2Type.BINARY);
-        typeMap.put(Types.BOOLEAN, Db2Type.BOOLEAN);
-        typeMap.put(Types.BLOB, Db2Type.BLOB);
-        typeMap.put(Types.CHAR, Db2Type.CHAR);
-        typeMap.put(Types.CLOB, Db2Type.CLOB);
-        typeMap.put(Types.DECIMAL, Db2Type.DECIMAL);
-        typeMap.put(Types.LONGVARBINARY, Db2Type.LONGVARBINARY);
-        typeMap.put(Types.LONGVARCHAR, Db2Type.LONGVARCHAR);
-        typeMap.put(Types.REAL, Db2Type.REAL);
-        typeMap.put(Types.TINYINT, Db2Type.TINYINT);
-        typeMap.put(Types.VARBINARY, Db2Type.VARBINARY);
+        typeMap.put(Types.BINARY, Db2SqlType.BINARY);
+        typeMap.put(Types.BLOB, Db2SqlType.BLOB);
+        typeMap.put(Types.BOOLEAN, Db2SqlType.BOOLEAN);
+        typeMap.put(Types.CLOB, Db2SqlType.CLOB);
+        typeMap.put(Types.DECIMAL, Db2SqlType.DECIMAL);
+        typeMap.put(Types.FLOAT, Db2SqlType.FLOAT);
+
+        namedTypeMap.put("blob", Db2ColumnType.BLOB);
+        namedTypeMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
+        namedTypeMap.put("clob", Db2ColumnType.CLOB);
+        namedTypeMap.put("decimal", Db2ColumnType.DECIMAL);
+        namedTypeMap
+                .put("long varchar bit data", Db2ColumnType.LONGVARCHAR_BIT);
+        namedTypeMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
+        namedTypeMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
     }
 
     @Override
@@ -115,192 +120,66 @@ public class Db2GenDialect extends StandardGenDialect {
         return sqlExceptionList;
     }
 
-    /**
-     * DB2用の{@link Type}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class Db2Type extends StandardType {
+    public static class Db2SqlType extends StandardSqlType {
 
-        private static Type BINARY = new Db2Type() {
+        private static Db2SqlType BINARY = new Db2SqlType("varchar($l) for bit data");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static Db2SqlType BLOB = new Db2SqlType("blob($l)");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("char () for bit data".equalsIgnoreCase(typeName)) {
-                    return format("char(%d) for bit data", length);
-                }
-                return format("varchar(%d) for bit data", length);
-            }
-        };
+        private static Db2SqlType BOOLEAN = new Db2SqlType("smallint(1)");
 
-        private static Type BOOLEAN = new Db2Type() {
+        private static Db2SqlType CLOB = new Db2SqlType("clob($l)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
+        private static Db2SqlType DECIMAL = new Db2SqlType("decimal($p,$s)");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        private static Type BLOB = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("blob(%d)", length);
-            }
-        };
-
-        private static Type CHAR = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (length > 1) {
-                    return String.class;
-                }
-                return Character.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length > 254) {
-                    return "char(254)";
-                }
-                return format("char(%d)", length);
-            }
-        };
-
-        private static Type CLOB = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("clob(%d)", length);
-            }
-        };
-
-        private static Type DECIMAL = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type LONGVARBINARY = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "long varchar for bit data";
-            }
-        };
-
-        private static Type LONGVARCHAR = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "long varchar";
-            }
-        };
-
-        private static Type REAL = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "real";
-            }
-        };
-
-        private static Type TINYINT = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        private static Type VARBINARY = new Db2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("varchar(%d) for bit data", length);
-            }
-        };
+        private static Db2SqlType FLOAT = new Db2SqlType("real");
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
-        protected Db2Type() {
+        protected Db2SqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class Db2ColumnType extends StandardColumnType {
+
+        private static Db2ColumnType BLOB = new Db2ColumnType("blob($l)",
+                byte[].class);
+
+        private static Db2ColumnType CHAR_BIT = new Db2ColumnType(
+                "char($l) for bit data", byte[].class);
+
+        private static Db2ColumnType CLOB = new Db2ColumnType("clob($l)",
+                String.class);
+
+        private static Db2ColumnType DECIMAL = new Db2ColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        private static Db2ColumnType LONGVARCHAR_BIT = new Db2ColumnType(
+                "long varchar for bit data", byte[].class);
+
+        private static Db2ColumnType LONGVARCHAR = new Db2ColumnType(
+                "long varchar", String.class);
+
+        private static Db2ColumnType VARCHAR_BIT = new Db2ColumnType(
+                "varchar(%d) for bit data", byte[].class);
+
+        public Db2ColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
         }
 
+        public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
+                boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
+                TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
+        }
     }
 }

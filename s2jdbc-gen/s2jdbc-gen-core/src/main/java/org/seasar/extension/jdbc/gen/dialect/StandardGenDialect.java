@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -38,8 +38,10 @@ import org.seasar.framework.util.StringUtil;
  */
 public class StandardGenDialect implements GenDialect {
 
-    /** SQL型をキー、{@link Type}を値とするマップ */
-    protected Map<Integer, Type> typeMap = new HashMap<Integer, Type>();
+    /** SQL型をキー、{@link SqlType}を値とするマップ */
+    protected Map<Integer, SqlType> typeMap = new HashMap<Integer, SqlType>();
+
+    protected Map<String, ColumnType> namedTypeMap = new CaseInsensitiveMap();
 
     /** SQLブロックの開始を表す単語の連なりのリスト */
     protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
@@ -48,64 +50,59 @@ public class StandardGenDialect implements GenDialect {
      * インスタンスを構築します。
      */
     public StandardGenDialect() {
-        typeMap.put(Types.BIGINT, StandardType.BIGINT);
-        typeMap.put(Types.BINARY, StandardType.BINARY);
-        typeMap.put(Types.BIT, StandardType.BIT);
-        typeMap.put(Types.BLOB, StandardType.BLOB);
-        typeMap.put(Types.BOOLEAN, StandardType.BOOLEAN);
-        typeMap.put(Types.CHAR, StandardType.CHAR);
-        typeMap.put(Types.CLOB, StandardType.CLOB);
-        typeMap.put(Types.DATE, StandardType.DATE);
-        typeMap.put(Types.DECIMAL, StandardType.DECIMAL);
-        typeMap.put(Types.DOUBLE, StandardType.DOUBLE);
-        typeMap.put(Types.FLOAT, StandardType.FLOAT);
-        typeMap.put(Types.INTEGER, StandardType.INTEGER);
-        typeMap.put(Types.LONGVARBINARY, StandardType.LONGVARBYNARY);
-        typeMap.put(Types.LONGVARCHAR, StandardType.LONGVARCHAR);
-        typeMap.put(Types.NUMERIC, StandardType.NUMERIC);
-        typeMap.put(Types.REAL, StandardType.REAL);
-        typeMap.put(Types.SMALLINT, StandardType.SMALLINT);
-        typeMap.put(Types.TIME, StandardType.TIME);
-        typeMap.put(Types.TIMESTAMP, StandardType.TIMESTAMP);
-        typeMap.put(Types.TINYINT, StandardType.TINYINT);
-        typeMap.put(Types.VARBINARY, StandardType.VARBINARY);
-        typeMap.put(Types.VARCHAR, StandardType.VARCHAR);
+        typeMap.put(Types.BIGINT, StandardSqlType.BIGINT);
+        typeMap.put(Types.BINARY, StandardSqlType.BINARY);
+        typeMap.put(Types.BLOB, StandardSqlType.BLOB);
+        typeMap.put(Types.BOOLEAN, StandardSqlType.BOOLEAN);
+        typeMap.put(Types.CHAR, StandardSqlType.CHAR);
+        typeMap.put(Types.CLOB, StandardSqlType.CLOB);
+        typeMap.put(Types.DATE, StandardSqlType.DATE);
+        typeMap.put(Types.DECIMAL, StandardSqlType.DECIMAL);
+        typeMap.put(Types.DOUBLE, StandardSqlType.DOUBLE);
+        typeMap.put(Types.FLOAT, StandardSqlType.FLOAT);
+        typeMap.put(Types.INTEGER, StandardSqlType.INTEGER);
+        typeMap.put(Types.SMALLINT, StandardSqlType.SMALLINT);
+        typeMap.put(Types.TIME, StandardSqlType.TIME);
+        typeMap.put(Types.TIMESTAMP, StandardSqlType.TIMESTAMP);
+        typeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
+
+        namedTypeMap.put("bigint", StandardColumnType.BIGINT);
+        namedTypeMap.put("bit", StandardColumnType.BIT);
+        namedTypeMap.put("binary", StandardColumnType.BINARY);
+        namedTypeMap.put("blob", StandardColumnType.BLOB);
+        namedTypeMap.put("boolean", StandardColumnType.BOOLEAN);
+        namedTypeMap.put("char", StandardColumnType.CHAR);
+        namedTypeMap.put("clob", StandardColumnType.CLOB);
+        namedTypeMap.put("date", StandardColumnType.DATE);
+        namedTypeMap.put("decimal", StandardColumnType.DECIMAL);
+        namedTypeMap.put("double", StandardColumnType.DOUBLE);
+        namedTypeMap.put("float", StandardColumnType.FLOAT);
+        namedTypeMap.put("integer", StandardColumnType.INTEGER);
+        namedTypeMap.put("longvarbinary", StandardColumnType.LONGVARBINARY);
+        namedTypeMap.put("longvarchar", StandardColumnType.LONGVARCHAR);
+        namedTypeMap.put("numeric", StandardColumnType.NUMERIC);
+        namedTypeMap.put("real", StandardColumnType.REAL);
+        namedTypeMap.put("time", StandardColumnType.TIME);
+        namedTypeMap.put("timestamp", StandardColumnType.TIMESTAMP);
+        namedTypeMap.put("tinyint", StandardColumnType.TINYINT);
+        namedTypeMap.put("varbinary", StandardColumnType.VARBINARY);
+        namedTypeMap.put("varchar", StandardColumnType.VARCHAR);
     }
 
     public boolean isUserTable(String tableName) {
         return true;
     }
 
-    public boolean isLobType(int sqlType, String typeName) {
-        switch (sqlType) {
-        case Types.BLOB:
-        case Types.CLOB:
-        case Types.LONGVARBINARY:
-        case Types.LONGVARCHAR:
-            return true;
-        }
-        return false;
-    }
-
-    public TemporalType getTemporalType(int sqlType, String typeName) {
-        switch (sqlType) {
-        case Types.DATE:
-            return TemporalType.DATE;
-        case Types.TIME:
-            return TemporalType.TIME;
-        case Types.TIMESTAMP:
-            return TemporalType.TIMESTAMP;
-        }
-        return null;
-    }
-
     public String getDefaultSchemaName(String userName) {
         return userName;
     }
 
-    public Type getType(int sqlType) {
-        Type type = typeMap.get(sqlType);
-        return type != null ? type : StandardType.UNKOWN;
+    public SqlType getSqlType(int sqlType) {
+        return typeMap.get(sqlType);
+    }
+
+    public ColumnType getColumnType(String typeName) {
+        return namedTypeMap.get(typeName);
     }
 
     public GenerationType getDefaultGenerationType() {
@@ -171,25 +168,6 @@ public class StandardGenDialect implements GenDialect {
     }
 
     /**
-     * 例外チェーンをたどって原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}を返します。
-     * <p>
-     * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、例外コードが設定されていない場合は
-     * <code>null</code>を返します。
-     * </p>
-     * 
-     * @param t
-     *            例外
-     * @return 原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}
-     */
-    protected Integer getErrorCode(Throwable t) {
-        SQLException cause = getCauseSQLException(t);
-        if (cause != null) {
-            return cause.getErrorCode();
-        }
-        return null;
-    }
-
-    /**
      * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
      * <p>
      * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、SQLステートが設定されていない場合は
@@ -204,6 +182,25 @@ public class StandardGenDialect implements GenDialect {
         SQLException cause = getCauseSQLException(t);
         if (cause != null && !StringUtil.isEmpty(cause.getSQLState())) {
             return cause.getSQLState();
+        }
+        return null;
+    }
+
+    /**
+     * 例外チェーンをたどって原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}を返します。
+     * <p>
+     * 例外チェーンに{@link SQLException SQL例外}が存在しない場合や、例外コードが設定されていない場合は
+     * <code>null</code>を返します。
+     * </p>
+     * 
+     * @param t
+     *            例外
+     * @return 原因となった{@link SQLException#getErrorCode() ベンダー固有の例外コード}
+     */
+    protected Integer getErrorCode(Throwable t) {
+        SQLException cause = getCauseSQLException(t);
+        if (cause != null) {
+            return cause.getErrorCode();
         }
         return null;
     }
@@ -235,155 +232,219 @@ public class StandardGenDialect implements GenDialect {
     }
 
     /**
-     * 標準の{@link Type}の実装クラスです。
+     * 標準の{@link SqlType}の実装クラスです。
      * 
      * @author taedium
      */
-    public static class StandardType implements Type {
+    public static class StandardSqlType implements SqlType {
 
-        private static Type BIGINT = new StandardType(Long.class, "bigint");
+        private static StandardSqlType BIGINT = new StandardSqlType("bigint");
 
-        private static Type BIT = new StandardType(Boolean.class, "bit");
+        private static StandardSqlType BINARY = new StandardSqlType("binary");
 
-        private static Type BINARY = new StandardType(byte[].class, "binary");
+        private static StandardSqlType BLOB = new StandardSqlType("blob");
 
-        private static Type BLOB = new StandardType(byte[].class, "blob");
+        private static StandardSqlType BOOLEAN = new StandardSqlType("boolean");
 
-        private static Type BOOLEAN = new StandardType(Boolean.class, "boolean");
+        private static StandardSqlType CHAR = new StandardSqlType("char(1)");
 
-        private static Type CHAR = new StandardType() {
+        private static StandardSqlType CLOB = new StandardSqlType("clob");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (length > 1) {
-                    return String.class;
-                }
-                return Character.class;
-            }
+        private static StandardSqlType DATE = new StandardSqlType("date");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("char(%d)", length);
-            }
-        };
+        private static StandardSqlType DECIMAL = new StandardSqlType("decimal");
 
-        private static Type CLOB = new StandardType(String.class, "clob");
+        private static StandardSqlType DOUBLE = new StandardSqlType("double");
 
-        private static Type DATE = new StandardType(Date.class, "date");
+        private static StandardSqlType FLOAT = new StandardSqlType("float");
 
-        private static Type DECIMAL = new StandardType(BigDecimal.class,
-                "decimal");
+        private static StandardSqlType INTEGER = new StandardSqlType("integer");
 
-        private static Type DOUBLE = new StandardType(Double.class, "double");
+        private static StandardSqlType SMALLINT = new StandardSqlType(
+                "smallint");
 
-        private static Type FLOAT = new StandardType(Float.class, "float");
+        private static StandardSqlType TIME = new StandardSqlType("time");
 
-        private static Type INTEGER = new StandardType(Integer.class, "integer");
-
-        private static Type LONGVARBYNARY = new StandardType(byte[].class,
-                "longvarbinary");
-
-        private static Type LONGVARCHAR = new StandardType(String.class,
-                "longvarchar");
-
-        private static Type NUMERIC = new StandardType(BigDecimal.class,
-                "numeric");
-
-        private static Type REAL = new StandardType(Float.class, "real");
-
-        private static Type SMALLINT = new StandardType(Short.class, "smallint");
-
-        private static Type TIME = new StandardType(Date.class, "time");
-
-        private static Type TIMESTAMP = new StandardType(Date.class,
+        private static StandardSqlType TIMESTAMP = new StandardSqlType(
                 "timestamp");
 
-        private static Type TINYINT = new StandardType(Short.class, "tinyint");
-
-        private static Type UNKOWN = new StandardType(Object.class, null);
-
-        private static Type VARBINARY = new StandardType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("varbinary(%d)", length);
-            }
-        };
-
-        private static Type VARCHAR = new StandardType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("varchar(%d)", length);
-            }
-        };
-
-        private Class<?> javaClass;
+        private static StandardSqlType VARCHAR = new StandardSqlType(
+                "varchar($l)");
 
         /** 定義 */
-        private String columnDefinition;
+        protected String columnDefinition;
 
-        /**
-         * インスタンスを構築します。
-         */
-        protected StandardType() {
+        protected StandardSqlType() {
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param javaClass
-         *            Javaのクラス
          * @param columnDefinition
          *            カラム定義
          */
-        protected StandardType(Class<?> javaClass, String columnDefinition) {
-            this.javaClass = javaClass;
+        protected StandardSqlType(String columnDefinition) {
             this.columnDefinition = columnDefinition;
         }
 
-        public Class<?> getJavaClass(int length, int precision, int scale,
-                String typeName) {
-            if (javaClass == null) {
-                throw new IllegalStateException("clazz");
+        public String getColumnDefinition(int length, int precision, int scale, boolean identity) {
+            return format(columnDefinition, length, precision, scale);
+        }
+    }
+
+    /**
+     * @author taedium
+     * 
+     */
+    public static class StandardColumnType implements ColumnType {
+
+        private static StandardColumnType BIGINT = new StandardColumnType(
+                "bigint", Long.class);
+
+        private static StandardColumnType BIT = new StandardColumnType("bit",
+                Boolean.class);
+
+        private static StandardColumnType BINARY = new StandardColumnType(
+                "binary", byte[].class);
+
+        private static StandardColumnType BLOB = new StandardColumnType("blob",
+                byte[].class, true);
+
+        private static StandardColumnType BOOLEAN = new StandardColumnType(
+                "boolean", Boolean.class);
+
+        private static StandardColumnType CHAR = new StandardColumnType(
+                "char($l)", String.class);
+
+        private static StandardColumnType CLOB = new StandardColumnType("clob",
+                String.class, true);
+
+        private static StandardColumnType DATE = new StandardColumnType("date",
+                Date.class, TemporalType.DATE);
+
+        private static StandardColumnType DECIMAL = new StandardColumnType(
+                "decimal", BigDecimal.class);
+
+        private static StandardColumnType DOUBLE = new StandardColumnType(
+                "double", Double.class);
+
+        private static StandardColumnType FLOAT = new StandardColumnType(
+                "float", Float.class);
+
+        private static StandardColumnType INTEGER = new StandardColumnType(
+                "integer", Integer.class);
+
+        private static StandardColumnType LONGVARBINARY = new StandardColumnType(
+                "longvarbinary", byte[].class);
+
+        private static StandardColumnType LONGVARCHAR = new StandardColumnType(
+                "longvarchar", String.class);
+
+        private static StandardColumnType NUMERIC = new StandardColumnType(
+                "numeric", BigDecimal.class);
+
+        private static StandardColumnType REAL = new StandardColumnType("real",
+                Float.class);
+
+        private static StandardColumnType SMALLINT = new StandardColumnType(
+                "smallint", Short.class);
+
+        private static StandardColumnType TIME = new StandardColumnType("time",
+                Date.class, TemporalType.DATE);
+
+        private static StandardColumnType TIMESTAMP = new StandardColumnType(
+                "timestamp", Date.class, TemporalType.DATE);
+
+        private static StandardColumnType TINYINT = new StandardColumnType(
+                "tinyint", Short.class);
+
+        private static StandardColumnType VARBINARY = new StandardColumnType(
+                "varbinary($l)", byte[].class);
+
+        private static StandardColumnType VARCHAR = new StandardColumnType(
+                "varchar($l)", String.class);
+
+        protected String columnDefinition;
+
+        protected Class attributeClass;
+
+        protected boolean lob;
+
+        protected TemporalType temporalType;
+
+        public StandardColumnType(String columnDefinition,
+                Class<?> attributeClass) {
+            this(columnDefinition, attributeClass, false, null);
+        }
+
+        public StandardColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            this(columnDefinition, attributeClass, lob, null);
+        }
+
+        public StandardColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            this(columnDefinition, attributeClass, false, temporalType);
+        }
+
+        public StandardColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob, TemporalType temporalType) {
+            this.columnDefinition = columnDefinition;
+            this.attributeClass = attributeClass;
+            this.lob = lob;
+            this.temporalType = temporalType;
+        }
+
+        public String getColumnDefinition(int length, int precision, int scale) {
+            return format(columnDefinition, length, precision, scale);
+        }
+
+        public Class<?> getAttributeClass(int length, int precision, int scale) {
+            return attributeClass;
+        }
+
+        public boolean isLob() {
+            return lob;
+        }
+
+        public TemporalType getTemporalType() {
+            return temporalType;
+        }
+
+    }
+
+    protected static String format(String format, int length, int precision,
+            int scale) {
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < format.length(); i++) {
+            char c = format.charAt(i);
+            if (c == '$') {
+                i++;
+                if (i < format.length()) {
+                    c = format.charAt(i);
+                    switch (c) {
+                    case 'l':
+                        buf.append(length);
+                        break;
+                    case 'p':
+                        buf.append(precision);
+                        break;
+                    case 's':
+                        buf.append(scale);
+                        break;
+                    default:
+                        buf.append('$');
+                        buf.append(c);
+                        break;
+                    }
+                } else {
+                    buf.append(c);
+                }
+            } else {
+                buf.append(c);
             }
-            return javaClass;
         }
-
-        public String getColumnDefinition(int length, int precision, int scale,
-                String typeName) {
-            return columnDefinition;
-        }
-
-        /**
-         * フォーマットします。
-         * 
-         * @param format
-         *            フォーマット
-         * @param args
-         *            引数
-         * @return フォーマットされた文字列
-         */
-        protected String format(String format, Object... args) {
-            return new Formatter().format(format, args).toString();
-        }
-
+        return buf.toString();
     }
 
 }

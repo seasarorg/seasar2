@@ -15,9 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import java.math.BigDecimal;
-import java.sql.Types;
-
 import javax.persistence.GenerationType;
 
 /**
@@ -31,14 +28,6 @@ public class FirebirdGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public FirebirdGenDialect() {
-        typeMap.put(Types.BIGINT, FirebirdType.BIGINT);
-        typeMap.put(Types.BINARY, FirebirdType.BINARY);
-        typeMap.put(Types.BOOLEAN, FirebirdType.BOOLEAN);
-        typeMap.put(Types.CLOB, FirebirdType.CLOB);
-        typeMap.put(Types.DECIMAL, FirebirdType.DECIMAL);
-        typeMap.put(Types.DOUBLE, FirebirdType.DOUBLE);
-        typeMap.put(Types.TINYINT, FirebirdType.TINYINT);
-
     }
 
     @Override
@@ -46,123 +35,4 @@ public class FirebirdGenDialect extends StandardGenDialect {
         return GenerationType.SEQUENCE;
     }
 
-    /**
-     * Firebird用の{@link Type}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class FirebirdType extends StandardType {
-
-        private static Type BIGINT = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Long.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,0)", precision);
-            }
-        };
-
-        private static Type BINARY = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "blob";
-            }
-        };
-
-        private static Type BOOLEAN = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        private static Type CLOB = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "blob sub_type 1";
-            }
-        };
-
-        private static Type DECIMAL = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("number(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "double precision";
-            }
-        };
-
-        private static Type TINYINT = new FirebirdType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        /**
-         * インスタンスを構築します。
-         */
-        protected FirebirdType() {
-        }
-
-    }
 }

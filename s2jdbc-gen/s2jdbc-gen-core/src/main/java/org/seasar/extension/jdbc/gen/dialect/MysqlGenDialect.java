@@ -21,8 +21,7 @@ import java.sql.Types;
 import java.util.Date;
 
 import javax.persistence.GenerationType;
-
-import org.seasar.framework.util.StringUtil;
+import javax.persistence.TemporalType;
 
 /**
  * MySQLの方言を扱うクラスです。
@@ -38,22 +37,38 @@ public class MysqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MysqlGenDialect() {
-        typeMap.put(Types.BIGINT, MysqlType.BIGINT);
-        typeMap.put(Types.BINARY, MysqlType.BINARY);
-        typeMap.put(Types.BIT, MysqlType.BIT);
-        typeMap.put(Types.BLOB, MysqlType.BLOB);
-        typeMap.put(Types.CLOB, MysqlType.CLOB);
-        typeMap.put(Types.DATE, MysqlType.DATE);
-        typeMap.put(Types.DECIMAL, MysqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, MysqlType.DOUBLE);
-        typeMap.put(Types.REAL, MysqlType.REAL);
-        typeMap.put(Types.INTEGER, MysqlType.INTEGER);
-        typeMap.put(Types.LONGVARBINARY, MysqlType.LONGVARBINARY);
-        typeMap.put(Types.LONGVARCHAR, MysqlType.LONGVARCHAR);
-        typeMap.put(Types.SMALLINT, MysqlType.SMALLINT);
-        typeMap.put(Types.TINYINT, MysqlType.TINYINT);
-        typeMap.put(Types.TIMESTAMP, MysqlType.TIMESTAMP);
-        typeMap.put(Types.VARCHAR, MysqlType.VARCHAR);
+        typeMap.put(Types.BINARY, MysqlSqlType.BINARY);
+        typeMap.put(Types.BLOB, MysqlSqlType.BLOB);
+        typeMap.put(Types.CLOB, MysqlSqlType.CLOB);
+        typeMap.put(Types.DECIMAL, MysqlSqlType.DECIMAL);
+        typeMap.put(Types.DOUBLE, MysqlSqlType.DOUBLE);
+        typeMap.put(Types.FLOAT, MysqlSqlType.FLOAT);
+        typeMap.put(Types.INTEGER, MysqlSqlType.INTEGER);
+
+        namedTypeMap.put("bigint unsigned", MysqlColumnType.BIGINT_UNSIGNED);
+        namedTypeMap.put("binary", MysqlColumnType.BINARY);
+        namedTypeMap.put("bit", MysqlColumnType.BIT);
+        namedTypeMap.put("blob", MysqlColumnType.BLOB);
+        namedTypeMap.put("datetime", MysqlColumnType.DATETIME);
+        namedTypeMap.put("decimal", MysqlColumnType.DECIMAL);
+        namedTypeMap.put("double", MysqlColumnType.DOUBLE);
+        namedTypeMap.put("int", MysqlColumnType.INT);
+        namedTypeMap.put("int unsigned", MysqlColumnType.INT_UNSIGNED);
+        namedTypeMap.put("longblob", MysqlColumnType.LONGBLOB);
+        namedTypeMap.put("longtext", MysqlColumnType.LONGTEXT);
+        namedTypeMap.put("mediumblob", MysqlColumnType.MEDIUMBLOB);
+        namedTypeMap.put("mediumint", MysqlColumnType.MEDIUMINT);
+        namedTypeMap.put("mediumint unsigned",
+                MysqlColumnType.MEDIUMINT_UNSIGNED);
+        namedTypeMap.put("mediumtext", MysqlColumnType.MEDIUMTEXT);
+        namedTypeMap
+                .put("smallint unsigned", MysqlColumnType.SMALLINT_UNSIGNED);
+        namedTypeMap.put("tinyblob", MysqlColumnType.TINYBLOB);
+        namedTypeMap.put("tinyint", MysqlColumnType.TINYINT);
+        namedTypeMap.put("tinyint unsigned", MysqlColumnType.TINYINT_UNSIGNED);
+        namedTypeMap.put("tinytext", MysqlColumnType.TINYTEXT);
+        namedTypeMap.put("text", MysqlColumnType.TEXT);
+        namedTypeMap.put("year", MysqlColumnType.YEAR);
     }
 
     @Override
@@ -89,26 +104,19 @@ public class MysqlGenDialect extends StandardGenDialect {
     }
 
     /**
-     * MySQL用の{@link Type}の実装です。
+     * MySQL用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class MysqlType extends StandardType {
+    public static class MysqlSqlType extends StandardSqlType {
 
-        private static Type BINARY = new MysqlType() {
+        private static MysqlSqlType BINARY = new MysqlSqlType("binary($l)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static MysqlSqlType BLOB = new MysqlSqlType() {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("binary".equalsIgnoreCase(typeName)) {
-                    return format("binary(%d)", length);
-                }
+                    int scale, boolean identity) {
                 if (length <= 0xFF) {
                     return "tinyblob";
                 } else if (length <= 0xFFFF) {
@@ -120,81 +128,11 @@ public class MysqlGenDialect extends StandardGenDialect {
             }
         };
 
-        private static Type BIGINT = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (StringUtil.endsWithIgnoreCase(typeName, "unsigned")) {
-                    return BigInteger.class;
-                }
-                return Long.class;
-            }
+        private static MysqlSqlType CLOB = new MysqlSqlType() {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (StringUtil.endsWithIgnoreCase(typeName, "unsigned")) {
-                    return "bigint unsigned";
-                }
-                return "bigint";
-            }
-        };
-
-        private static Type BIT = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (length > 1) {
-                    return byte[].class;
-                }
-                return Boolean.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length > 1) {
-                    return format("bit(%d)", length);
-                }
-                return "bit";
-            }
-        };
-
-        private static Type BLOB = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length <= 0xFF) {
-                    return "tinyblob";
-                } else if (length <= 0xFFFF) {
-                    return "blob";
-                } else if (length <= 0xFFFFFF) {
-                    return "mediumblob";
-                }
-                return "longblob";
-            }
-        };
-
-        private static Type CLOB = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
+                    int scale, boolean identity) {
                 if (length <= 0xFF) {
                     return "tinytext";
                 } else if (length <= 0xFFFF) {
@@ -206,210 +144,105 @@ public class MysqlGenDialect extends StandardGenDialect {
             }
         };
 
-        private static Type DATE = new MysqlType() {
+        private static MysqlSqlType DECIMAL = new MysqlSqlType("decimal($p,$s)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
+        private static MysqlSqlType DOUBLE = new MysqlSqlType("double($p,$s)");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("year".equalsIgnoreCase(typeName)) {
-                    return "year";
-                }
-                return "date";
-            }
-        };
+        private static MysqlSqlType FLOAT = new MysqlSqlType("float(%d,%d)");
 
-        private static Type DECIMAL = new MysqlType() {
+        private static MysqlSqlType INTEGER = new MysqlSqlType("int");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("decimal(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("double(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type REAL = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Float.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("float(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type INTEGER = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (StringUtil.endsWithIgnoreCase(typeName, "unsigned")) {
-                    return Long.class;
-                }
-                return Integer.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (StringUtil.endsWithIgnoreCase(typeName, "unsigned")) {
-                    return "int unsigned";
-                }
-                return "int";
-            }
-        };
-
-        private static Type LONGVARBINARY = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length <= 0xFF) {
-                    return "tinyblob";
-                } else if (length <= 0xFFFF) {
-                    return "blob";
-                } else if (length <= 0xFFFFFF) {
-                    return "mediumblob";
-                }
-                return "longblob";
-            }
-        };
-
-        private static Type LONGVARCHAR = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (length <= 0xFF) {
-                    return "tinytext";
-                } else if (length <= 0xFFFF) {
-                    return "text";
-                } else if (length <= 0xFFFFFF) {
-                    return "mediumtext";
-                }
-                return "longtext";
-            }
-        };
-
-        private static Type SMALLINT = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (StringUtil.endsWithIgnoreCase(typeName, "unsigned")) {
-                    return Integer.class;
-                }
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if (StringUtil.endsWithIgnoreCase(typeName, "unsigned")) {
-                    return "smallint unsigned";
-                }
-                return "smallint";
-            }
-        };
-
-        private static Type TINYINT = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "tinyint";
-            }
-        };
-
-        private static Type TIMESTAMP = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("datetime".equalsIgnoreCase(typeName)) {
-                    return "datetime";
-                }
-                return "timestamp";
-            }
-        };
-
-        private static Type VARCHAR = new MysqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("tinytext".equalsIgnoreCase(typeName)) {
-                    return "tinytext";
-                }
-                return format("varchar(%d)", length);
-            }
-        };
+        protected MysqlSqlType() {
+        }
 
         /**
          * インスタンスを構築します。
          */
-        protected MysqlType() {
+        protected MysqlSqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class MysqlColumnType extends StandardColumnType {
+
+        private static MysqlColumnType BIGINT_UNSIGNED = new MysqlColumnType(
+                "bigint unsigned", BigInteger.class);
+
+        private static MysqlColumnType BINARY = new MysqlColumnType(
+                "binary($l)", byte[].class);
+
+        private static MysqlColumnType BIT = new MysqlColumnType("bit($l)",
+                byte[].class);
+
+        private static MysqlColumnType BLOB = new MysqlColumnType("blob",
+                byte[].class, true);
+
+        private static MysqlColumnType DATETIME = new MysqlColumnType(
+                "datetime", Date.class, TemporalType.TIMESTAMP);
+
+        private static MysqlColumnType DECIMAL = new MysqlColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        private static MysqlColumnType DOUBLE = new MysqlColumnType(
+                "double($p,$s)", Double.class);
+
+        private static MysqlColumnType INT = new MysqlColumnType("int",
+                Integer.class);
+
+        private static MysqlColumnType INT_UNSIGNED = new MysqlColumnType(
+                "int unsigned", Long.class);
+
+        private static MysqlColumnType LONGBLOB = new MysqlColumnType(
+                "longblob", byte[].class, true);
+
+        private static MysqlColumnType LONGTEXT = new MysqlColumnType(
+                "longtext", String.class, true);
+
+        private static MysqlColumnType MEDIUMBLOB = new MysqlColumnType(
+                "mediumblob", byte[].class, true);
+
+        private static MysqlColumnType MEDIUMINT = new MysqlColumnType(
+                "mediumint", Integer.class);
+
+        private static MysqlColumnType MEDIUMINT_UNSIGNED = new MysqlColumnType(
+                "mediumint unsigned", Integer.class);
+
+        private static MysqlColumnType MEDIUMTEXT = new MysqlColumnType(
+                "mediumtext", String.class, true);
+
+        private static MysqlColumnType SMALLINT_UNSIGNED = new MysqlColumnType(
+                "smallint unsigned", Integer.class);
+
+        private static MysqlColumnType TINYBLOB = new MysqlColumnType(
+                "tinyblob", byte[].class, true);
+
+        private static MysqlColumnType TINYINT = new MysqlColumnType("tinyint",
+                Byte.class);
+
+        private static MysqlColumnType TINYINT_UNSIGNED = new MysqlColumnType(
+                "tinyint unsigned", Short.class);
+
+        private static MysqlColumnType TINYTEXT = new MysqlColumnType(
+                "tinytext", String.class, true);
+
+        private static MysqlColumnType TEXT = new MysqlColumnType("text",
+                String.class, true);
+
+        private static MysqlColumnType YEAR = new MysqlColumnType("year",
+                Date.class, TemporalType.DATE);
+
+        public MysqlColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
+        }
+
+        public MysqlColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public MysqlColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
         }
     }
 }

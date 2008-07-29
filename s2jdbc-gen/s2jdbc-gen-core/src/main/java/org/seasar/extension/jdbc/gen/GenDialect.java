@@ -46,35 +46,15 @@ public interface GenDialect {
     boolean isUserTable(String tableName);
 
     /**
-     * {@code LOB}型であれば{@code true}を返します。
-     * 
-     * @param sqlType
-     *            SQL型
-     * @param typeName
-     *            型名
-     * @return LOB型であれば{@code true}
-     */
-    boolean isLobType(int sqlType, String typeName);
-
-    /**
-     * 時間型を返します。
-     * 
-     * @param sqlType
-     *            SQL型
-     * @param typeName
-     *            型名
-     * @return 時間型
-     */
-    TemporalType getTemporalType(int sqlType, String typeName);
-
-    /**
      * SQL型に対応する型を返します。
      * 
      * @param sqlType
      *            SQL型
      * @return SQL型に対応する型
      */
-    Type getType(int sqlType);
+    SqlType getSqlType(int sqlType);
+
+    ColumnType getColumnType(String columnTypeName);
 
     /**
      * デフォルトの{@link GenerationType}を返します。
@@ -167,43 +147,19 @@ public interface GenDialect {
      */
     boolean isTableNotFound(Throwable throwable);
 
-    /**
-     * Javaクラスとデータベースのカラム定義を表すインタフェースです。
-     * 
-     * @author taedium
-     */
-    public interface Type {
+    public interface SqlType {
 
-        /**
-         * Javaのクラスを返します。
-         * 
-         * @param length
-         *            長さ
-         * @param precision
-         *            精度
-         * @param scale
-         *            スケール
-         * @param typeName
-         *            カラムの型名
-         * @return Javaのクラス
-         */
-        Class<?> getJavaClass(int length, int precision, int scale,
-                String typeName);
+        String getColumnDefinition(int length, int precision, int scale, boolean identity);
+    }
 
-        /**
-         * カラム定義を返します。
-         * 
-         * @param length
-         *            長さ
-         * @param precision
-         *            精度
-         * @param scale
-         *            スケール
-         * @param typeName
-         *            カラムの型名
-         * @return カラム定義、サポートされるカラム定義が存在しない場合{@code null}
-         */
-        String getColumnDefinition(int length, int precision, int scale,
-                String typeName);
+    public interface ColumnType {
+
+        Class<?> getAttributeClass(int length, int precision, int scale);
+
+        String getColumnDefinition(int length, int precision, int scale);
+
+        boolean isLob();
+
+        TemporalType getTemporalType();
     }
 }

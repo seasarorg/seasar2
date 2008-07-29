@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenDialect.Type;
+import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
 
 import static org.junit.Assert.*;
 
@@ -35,15 +35,14 @@ public class MysqlGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testGetType_binary() throws Exception {
-        Type type = dialect.getType(Types.BINARY);
-        assertEquals("tinyblob", type.getColumnDefinition(255, 0, 0, null));
-        assertEquals("blob", type.getColumnDefinition(256, 0, 0, null));
-        assertEquals("blob", type.getColumnDefinition(65535, 0, 0, null));
-        assertEquals("mediumblob", type.getColumnDefinition(65536, 0, 0, null));
-        assertEquals("mediumblob", type.getColumnDefinition(16777215, 0, 0,
-                null));
-        assertEquals("longblob", type.getColumnDefinition(16777216, 0, 0, null));
+    public void testGetSqlType_blob() throws Exception {
+        SqlType type = dialect.getSqlType(Types.BLOB);
+        assertEquals("tinyblob", type.getColumnDefinition(255, 0, 0, false));
+        assertEquals("blob", type.getColumnDefinition(256, 0, 0, false));
+        assertEquals("blob", type.getColumnDefinition(65535, 0, 0, false));
+        assertEquals("mediumblob", type.getColumnDefinition(65536, 0, 0, false));
+        assertEquals("mediumblob", type.getColumnDefinition(16777215, 0, 0, false));
+        assertEquals("longblob", type.getColumnDefinition(16777216, 0, 0, false));
     }
 
     /**
@@ -51,30 +50,13 @@ public class MysqlGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testGetType_blob() throws Exception {
-        Type type = dialect.getType(Types.BLOB);
-        assertEquals("tinyblob", type.getColumnDefinition(255, 0, 0, null));
-        assertEquals("blob", type.getColumnDefinition(256, 0, 0, null));
-        assertEquals("blob", type.getColumnDefinition(65535, 0, 0, null));
-        assertEquals("mediumblob", type.getColumnDefinition(65536, 0, 0, null));
-        assertEquals("mediumblob", type.getColumnDefinition(16777215, 0, 0,
-                null));
-        assertEquals("longblob", type.getColumnDefinition(16777216, 0, 0, null));
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetType_clob() throws Exception {
-        Type type = dialect.getType(Types.CLOB);
-        assertEquals("tinytext", type.getColumnDefinition(255, 0, 0, null));
-        assertEquals("text", type.getColumnDefinition(256, 0, 0, null));
-        assertEquals("text", type.getColumnDefinition(65535, 0, 0, null));
-        assertEquals("mediumtext", type.getColumnDefinition(65536, 0, 0, null));
-        assertEquals("mediumtext", type.getColumnDefinition(16777215, 0, 0,
-                null));
-        assertEquals("longtext", type.getColumnDefinition(16777216, 0, 0, null));
+    public void testGetSqlType_clob() throws Exception {
+        SqlType type = dialect.getSqlType(Types.CLOB);
+        assertEquals("tinytext", type.getColumnDefinition(255, 0, 0, false));
+        assertEquals("text", type.getColumnDefinition(256, 0, 0, false));
+        assertEquals("text", type.getColumnDefinition(65535, 0, 0, false));
+        assertEquals("mediumtext", type.getColumnDefinition(65536, 0, 0, false));
+        assertEquals("mediumtext", type.getColumnDefinition(16777215, 0, 0, false));
+        assertEquals("longtext", type.getColumnDefinition(16777216, 0, 0, false));
     }
 }

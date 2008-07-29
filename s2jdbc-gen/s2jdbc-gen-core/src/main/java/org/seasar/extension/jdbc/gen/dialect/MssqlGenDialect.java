@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * MS SQL Serverの方言を扱うクラスです。
@@ -36,21 +37,32 @@ public class MssqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MssqlGenDialect() {
-        typeMap.put(Types.BINARY, MssqlType.BINARY);
-        typeMap.put(Types.BOOLEAN, MssqlType.BOOLEAN);
-        typeMap.put(Types.BLOB, MssqlType.BLOB);
-        typeMap.put(Types.CHAR, MssqlType.CHAR);
-        typeMap.put(Types.CLOB, MssqlType.CLOB);
-        typeMap.put(Types.DATE, MssqlType.DATE);
-        typeMap.put(Types.DECIMAL, MssqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, MssqlType.DOUBLE);
-        typeMap.put(Types.INTEGER, MssqlType.INTEGER);
-        typeMap.put(Types.LONGVARBINARY, MssqlType.LONGVARBINARY);
-        typeMap.put(Types.LONGVARCHAR, MssqlType.LONGVARCHAR);
-        typeMap.put(Types.NUMERIC, MssqlType.NUMERIC);
-        typeMap.put(Types.TIME, MssqlType.TIME);
-        typeMap.put(Types.TIMESTAMP, MssqlType.TIMESTAMP);
-        typeMap.put(Types.VARCHAR, MssqlType.VARCHAR);
+        typeMap.put(Types.BINARY, MssqlSqlType.BINARY);
+        typeMap.put(Types.BOOLEAN, MssqlSqlType.BOOLEAN);
+        typeMap.put(Types.BLOB, MssqlSqlType.BLOB);
+        typeMap.put(Types.CLOB, MssqlSqlType.CLOB);
+        typeMap.put(Types.DATE, MssqlSqlType.DATE);
+        typeMap.put(Types.DECIMAL, MssqlSqlType.DECIMAL);
+        typeMap.put(Types.DOUBLE, MssqlSqlType.DOUBLE);
+        typeMap.put(Types.INTEGER, MssqlSqlType.INTEGER);
+        typeMap.put(Types.TIME, MssqlSqlType.TIME);
+        typeMap.put(Types.TIMESTAMP, MssqlSqlType.TIMESTAMP);
+
+        namedTypeMap.put("binary", MssqlColumnType.BINARY);
+        namedTypeMap.put("bit", MssqlColumnType.BIT);
+        namedTypeMap.put("datetime", MssqlColumnType.DATETIME);
+        namedTypeMap.put("decimal", MssqlColumnType.DECIMAL);
+        namedTypeMap.put("image", MssqlColumnType.IMAGE);
+        namedTypeMap.put("int", MssqlColumnType.INT);
+        namedTypeMap.put("money", MssqlColumnType.MONEY);
+        namedTypeMap.put("nchar", MssqlColumnType.NCHAR);
+        namedTypeMap.put("ntext", MssqlColumnType.NTEXT);
+        namedTypeMap.put("numeric", MssqlColumnType.NUMERIC);
+        namedTypeMap.put("nvarchar", MssqlColumnType.NVARCHAR);
+        namedTypeMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
+        namedTypeMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
+        namedTypeMap.put("text", MssqlColumnType.TEXT);
+        namedTypeMap.put("varbinary", MssqlColumnType.VARBINARY);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
@@ -96,261 +108,99 @@ public class MssqlGenDialect extends StandardGenDialect {
     }
 
     /**
-     * MS SQL Server用の{@link Type}の実装です。
+     * MS SQL Server用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class MssqlType extends StandardType {
+    public static class MssqlSqlType extends StandardSqlType {
 
-        private static Type BINARY = new MssqlType() {
+        private static MssqlSqlType BINARY = new MssqlSqlType("varbinary($l)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static MssqlSqlType BOOLEAN = new MssqlSqlType("bit");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("varbinary(%d)", length);
-            }
-        };
+        private static MssqlSqlType BLOB = new MssqlSqlType("image");
 
-        private static Type BOOLEAN = new MssqlType() {
+        private static MssqlSqlType CLOB = new MssqlSqlType("text");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
+        private static MssqlSqlType DATE = new MssqlSqlType("datetime");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "bit";
-            }
-        };
+        private static MssqlSqlType DECIMAL = new MssqlSqlType("decimal($p,$s)");
 
-        private static Type BLOB = new MssqlType() {
+        private static MssqlSqlType DOUBLE = new MssqlSqlType("double precision");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static MssqlSqlType INTEGER = new MssqlSqlType("int");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "image";
-            }
-        };
+        private static MssqlSqlType TIME = new MssqlSqlType("datetime");
 
-        private static Type CHAR = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                if (length > 1) {
-                    return String.class;
-                }
-                return Character.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("nchar".equalsIgnoreCase(typeName)) {
-                    return format("nchar(%d)", length);
-                }
-                return format("char(%d)", length);
-            }
-        };
-
-        private static Type CLOB = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "text";
-            }
-        };
-
-        private static Type DATE = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "datetime";
-            }
-        };
-
-        private static Type DECIMAL = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("money".equalsIgnoreCase(typeName)) {
-                    return "money";
-                } else if ("smallmoney".equalsIgnoreCase(typeName)) {
-                    return "smallmoney";
-                }
-                return format("decimal(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "double precision";
-            }
-        };
-
-        private static Type INTEGER = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Integer.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "int";
-            }
-        };
-
-        private static Type LONGVARBINARY = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "image";
-            }
-        };
-
-        private static Type LONGVARCHAR = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("ntext".equalsIgnoreCase(typeName)) {
-                    return "ntext";
-                }
-                return "text";
-            }
-        };
-
-        private static Type NUMERIC = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type TIME = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "datetime";
-            }
-        };
-
-        private static Type TIMESTAMP = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("smalldatetime".equalsIgnoreCase(typeName)) {
-                    return "smalldatetime";
-                }
-                return "datetime";
-            }
-        };
-
-        private static Type VARCHAR = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("nvarchar".equalsIgnoreCase(typeName)) {
-                    return format("nvarchar(%d)", length);
-                }
-                return format("varchar(%d)", length);
-            }
-        };
+        private static MssqlSqlType TIMESTAMP = new MssqlSqlType("datetime");
 
         /**
          * インスタンスを構築します。
          */
-        protected MssqlType() {
+        protected MssqlSqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class MssqlColumnType extends StandardColumnType {
+
+        private static MssqlColumnType BINARY = new MssqlColumnType(
+                "binary($l)", byte[].class);
+
+        private static MssqlColumnType BIT = new MssqlColumnType("bit",
+                Boolean.class);
+
+        private static MssqlColumnType DATETIME = new MssqlColumnType(
+                "datetime", Date.class, TemporalType.TIMESTAMP);
+
+        private static MssqlColumnType DECIMAL = new MssqlColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        private static MssqlColumnType IMAGE = new MssqlColumnType("image",
+                byte[].class, true);
+
+        private static MssqlColumnType INT = new MssqlColumnType("int",
+                Integer.class);
+
+        private static MssqlColumnType MONEY = new MssqlColumnType("money",
+                BigDecimal.class);
+
+        private static MssqlColumnType NCHAR = new MssqlColumnType("nchar($l)",
+                BigDecimal.class);
+
+        private static MssqlColumnType NTEXT = new MssqlColumnType("ntext",
+                BigDecimal.class);
+
+        private static MssqlColumnType NUMERIC = new MssqlColumnType(
+                "numeric($p,$s)", BigDecimal.class);
+
+        private static MssqlColumnType NVARCHAR = new MssqlColumnType(
+                "nvarchar($l)", String.class);
+
+        private static MssqlColumnType SMALLDATETIME = new MssqlColumnType(
+                "smalldatetime", Date.class, TemporalType.TIMESTAMP);
+
+        private static MssqlColumnType SMALLMONEY = new MssqlColumnType(
+                "smallmoney", BigDecimal.class);
+
+        private static MssqlColumnType TEXT = new MssqlColumnType("text",
+                String.class);
+
+        private static MssqlColumnType VARBINARY = new MssqlColumnType(
+                "varbinary($l)", byte[].class);
+
+        public MssqlColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
+        }
+
+        public MssqlColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public MssqlColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
         }
     }
 }

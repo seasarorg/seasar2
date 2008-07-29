@@ -15,9 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
-import java.math.BigDecimal;
-import java.sql.Types;
-
 import javax.persistence.GenerationType;
 
 /**
@@ -31,13 +28,6 @@ public class InterbaseGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public InterbaseGenDialect() {
-        typeMap.put(Types.BIGINT, InterbaseType.BIGINT);
-        typeMap.put(Types.BINARY, InterbaseType.BINARY);
-        typeMap.put(Types.BOOLEAN, InterbaseType.BOOLEAN);
-        typeMap.put(Types.CLOB, InterbaseType.CLOB);
-        typeMap.put(Types.DECIMAL, InterbaseType.DECIMAL);
-        typeMap.put(Types.DOUBLE, InterbaseType.DOUBLE);
-        typeMap.put(Types.TINYINT, InterbaseType.TINYINT);
     }
 
     @Override
@@ -45,123 +35,4 @@ public class InterbaseGenDialect extends StandardGenDialect {
         return GenerationType.SEQUENCE;
     }
 
-    /**
-     * Interbase用の{@link Type}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class InterbaseType extends StandardType {
-
-        private static Type BIGINT = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Long.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,0)", precision);
-            }
-        };
-
-        private static Type BINARY = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "blob";
-            }
-        };
-
-        private static Type BOOLEAN = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        private static Type CLOB = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "blob sub_type 1";
-            }
-        };
-
-        private static Type DECIMAL = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("number(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "double precision";
-            }
-        };
-
-        private static Type TINYINT = new InterbaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        /**
-         * インスタンスを構築します。
-         */
-        protected InterbaseType() {
-        }
-
-    }
 }

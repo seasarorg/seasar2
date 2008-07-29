@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * H2の方言を扱うクラスです。
@@ -34,8 +35,11 @@ public class H2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public H2GenDialect() {
-        typeMap.put(Types.BINARY, H2Type.BINARY);
-        typeMap.put(Types.DECIMAL, H2Type.DECIMAL);
+        typeMap.put(Types.BINARY, H2SqlType.BINARY);
+        typeMap.put(Types.DECIMAL, H2SqlType.DECIMAL);
+
+        namedTypeMap.put("binary", H2ColumnType.BINARY);
+        namedTypeMap.put("decimal", H2ColumnType.DECIMAL);
     }
 
     @Override
@@ -72,47 +76,44 @@ public class H2GenDialect extends StandardGenDialect {
     }
 
     /**
-     * H2用の{@link Type}の実装です。
+     * H2用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class H2Type extends StandardType {
+    public static class H2SqlType extends StandardSqlType {
 
-        private static Type BINARY = new H2Type() {
+        private static H2SqlType BINARY = new H2SqlType("binary($l)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("binary(%d)", length);
-            }
-        };
-
-        private static Type DECIMAL = new H2Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("decimal(%d,%d)", precision, scale);
-            }
-        };
+        private static H2SqlType DECIMAL = new H2SqlType("decimal($p,$s)");
 
         /**
          * インスタンスを構築します。
          */
-        protected H2Type() {
+        protected H2SqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class H2ColumnType extends StandardColumnType {
+
+        private static H2ColumnType BINARY = new H2ColumnType("binary($l)",
+                byte[].class);
+
+        private static H2ColumnType DECIMAL = new H2ColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        public H2ColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
         }
 
+        public H2ColumnType(String columnDefinition, Class<?> attributeClass,
+                boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public H2ColumnType(String columnDefinition, Class<?> attributeClass,
+                TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
+        }
     }
 }

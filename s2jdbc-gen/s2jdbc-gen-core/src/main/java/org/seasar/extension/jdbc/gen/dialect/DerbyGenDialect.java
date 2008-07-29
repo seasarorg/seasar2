@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * Derbyの方言を扱うクラスです。
@@ -34,12 +35,22 @@ public class DerbyGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public DerbyGenDialect() {
-        typeMap.put(Types.BINARY, DerbyType.BINARY);
-        typeMap.put(Types.BOOLEAN, DerbyType.BOOLEAN);
-        typeMap.put(Types.BLOB, DerbyType.BLOB);
-        typeMap.put(Types.CLOB, DerbyType.CLOB);
-        typeMap.put(Types.DECIMAL, DerbyType.DECIMAL);
-        typeMap.put(Types.TINYINT, DerbyType.TINYINT);
+        typeMap.put(Types.BINARY, DerbySqlType.BINARY);
+        typeMap.put(Types.BLOB, DerbySqlType.BLOB);
+        typeMap.put(Types.BOOLEAN, DerbySqlType.BOOLEAN);
+        typeMap.put(Types.CLOB, DerbySqlType.CLOB);
+        typeMap.put(Types.DECIMAL, DerbySqlType.DECIMAL);
+        typeMap.put(Types.FLOAT, DerbySqlType.FLOAT);
+
+        namedTypeMap.put("blob", DerbyColumnType.BLOB);
+        namedTypeMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);
+        namedTypeMap.put("clob", DerbyColumnType.CLOB);
+        namedTypeMap.put("decimal", DerbyColumnType.DECIMAL);
+        namedTypeMap.put("long varchar bit data",
+                DerbyColumnType.LONGVARCHAR_BIT);
+        namedTypeMap.put("long varchar", DerbyColumnType.LONGVARCHAR);
+        namedTypeMap
+                .put("varchar () for bit data", DerbyColumnType.VARCHAR_BIT);
     }
 
     @Override
@@ -59,106 +70,71 @@ public class DerbyGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Derby用の{@link Type}の実装です。
+     * Derby用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class DerbyType extends StandardType {
+    public static class DerbySqlType extends StandardSqlType {
 
-        private static Type BINARY = new DerbyType() {
+        private static DerbySqlType BINARY = new DerbySqlType(
+                "varchar($l) for bit data");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static DerbySqlType BLOB = new DerbySqlType("blob($l)");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("varchar(%d) for bit data", length);
-            }
-        };
+        private static DerbySqlType BOOLEAN = new DerbySqlType("smallint(1)");
 
-        private static Type BOOLEAN = new DerbyType() {
+        private static DerbySqlType CLOB = new DerbySqlType("clob($l)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
+        private static DerbySqlType DECIMAL = new DerbySqlType("decimal($p,$s)");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
-
-        private static Type BLOB = new DerbyType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("blob(%d)", length);
-            }
-        };
-
-        private static Type CLOB = new DerbyType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("clob(%d)", length);
-            }
-        };
-
-        private static Type DECIMAL = new DerbyType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type TINYINT = new DerbyType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Short.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "smallint";
-            }
-        };
+        private static DerbySqlType FLOAT = new DerbySqlType("real");
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
-        protected DerbyType() {
+        protected DerbySqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class DerbyColumnType extends StandardColumnType {
+
+        private static DerbyColumnType BLOB = new DerbyColumnType("blob($l)",
+                byte[].class);
+
+        private static DerbyColumnType CHAR_BIT = new DerbyColumnType(
+                "char($l) for bit data", byte[].class);
+
+        private static DerbyColumnType CLOB = new DerbyColumnType("clob($l)",
+                String.class);
+
+        private static DerbyColumnType DECIMAL = new DerbyColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        private static DerbyColumnType LONGVARCHAR_BIT = new DerbyColumnType(
+                "long varchar for bit data", byte[].class);
+
+        private static DerbyColumnType LONGVARCHAR = new DerbyColumnType(
+                "long varchar", String.class);
+
+        private static DerbyColumnType VARCHAR_BIT = new DerbyColumnType(
+                "varchar(%d) for bit data", byte[].class);
+
+        public DerbyColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
+        }
+
+        public DerbyColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public DerbyColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
         }
 
     }

@@ -15,7 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.math.BigDecimal;
 import java.sql.Types;
+
+import javax.persistence.TemporalType;
 
 /**
  * MS SQL Server 2005の方言を扱うクラスです。
@@ -28,88 +31,56 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      * インスタンスを構築します。
      */
     public Mssql2005GenDialect() {
-        typeMap.put(Types.BLOB, Mssql2005Type.BLOB);
-        typeMap.put(Types.CLOB, Mssql2005Type.CLOB);
-        typeMap.put(Types.LONGVARBINARY, Mssql2005Type.LONGVARBINARY);
-        typeMap.put(Types.LONGVARCHAR, Mssql2005Type.LONGVARCHAR);
+        typeMap.put(Types.BLOB, Mssql2005SqlType.BLOB);
+        typeMap.put(Types.CLOB, Mssql2005SqlType.CLOB);
 
+        namedTypeMap.put("image", MssqlColumnType.IMAGE);
+        namedTypeMap.put("ntext", MssqlColumnType.NTEXT);
+        namedTypeMap.put("text", MssqlColumnType.TEXT);
     }
 
     /**
-     * MS SQL Server用の{@link Type}の実装です。
+     * MS SQL Server 2005用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class Mssql2005Type extends MssqlType {
+    public static class Mssql2005SqlType extends StandardSqlType {
 
-        private static Type BLOB = new Mssql2005Type() {
+        private static Mssql2005SqlType BLOB = new Mssql2005SqlType("varbinary(max)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "varbinary(max)";
-            }
-
-        };
-
-        private static Type CLOB = new Mssql2005Type() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "varchar(max)";
-            }
-        };
-
-        private static Type LONGVARBINARY = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "varbinary(max)";
-            }
-        };
-
-        private static Type LONGVARCHAR = new MssqlType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                if ("ntext".equalsIgnoreCase(typeName)) {
-                    return "nvarchar(max)";
-                }
-                return "varchar(max)";
-            }
-        };
+        private static Mssql2005SqlType CLOB = new Mssql2005SqlType("varchar(max)");
 
         /**
          * インスタンスを構築します。
          */
-        protected Mssql2005Type() {
+        protected Mssql2005SqlType(String columnDefinition) {
+            super(columnDefinition);
+        }
+    }
+
+    public static class MssqlColumnType extends StandardColumnType {
+
+        private static MssqlColumnType IMAGE = new MssqlColumnType(
+                "varbinary(max)", byte[].class, true);
+
+        private static MssqlColumnType NTEXT = new MssqlColumnType(
+                "nvarchar(max)", BigDecimal.class);
+
+        private static MssqlColumnType TEXT = new MssqlColumnType(
+                "varchar(max)", String.class);
+
+        public MssqlColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
+        }
+
+        public MssqlColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public MssqlColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
         }
     }
 }

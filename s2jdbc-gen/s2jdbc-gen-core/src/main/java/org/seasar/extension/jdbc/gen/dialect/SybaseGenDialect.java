@@ -20,6 +20,7 @@ import java.sql.Types;
 import java.util.Date;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 /**
  * Sybaseの方言を扱うクラスです。
@@ -32,16 +33,32 @@ public class SybaseGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public SybaseGenDialect() {
-        typeMap.put(Types.BINARY, SybaseType.BINARY);
-        typeMap.put(Types.BOOLEAN, SybaseType.BOOLEAN);
-        typeMap.put(Types.BLOB, SybaseType.BLOB);
-        typeMap.put(Types.CLOB, SybaseType.CLOB);
-        typeMap.put(Types.DECIMAL, SybaseType.DECIMAL);
-        typeMap.put(Types.DOUBLE, SybaseType.DOUBLE);
-        typeMap.put(Types.INTEGER, SybaseType.INTEGER);
-        typeMap.put(Types.DATE, SybaseType.DATE);
-        typeMap.put(Types.TIME, SybaseType.TIME);
-        typeMap.put(Types.TIMESTAMP, SybaseType.TIMESTAMP);
+        typeMap.put(Types.BINARY, SybaseSqlType.BINARY);
+        typeMap.put(Types.BOOLEAN, SybaseSqlType.BOOLEAN);
+        typeMap.put(Types.BLOB, SybaseSqlType.BLOB);
+        typeMap.put(Types.CLOB, SybaseSqlType.CLOB);
+        typeMap.put(Types.DATE, SybaseSqlType.DATE);
+        typeMap.put(Types.DECIMAL, SybaseSqlType.DECIMAL);
+        typeMap.put(Types.DOUBLE, SybaseSqlType.DOUBLE);
+        typeMap.put(Types.INTEGER, SybaseSqlType.INTEGER);
+        typeMap.put(Types.TIME, SybaseSqlType.TIME);
+        typeMap.put(Types.TIMESTAMP, SybaseSqlType.TIMESTAMP);
+
+        namedTypeMap.put("binary", SybaseColumnType.BINARY);
+        namedTypeMap.put("bit", SybaseColumnType.BIT);
+        namedTypeMap.put("datetime", SybaseColumnType.DATETIME);
+        namedTypeMap.put("decimal", SybaseColumnType.DECIMAL);
+        namedTypeMap.put("image", SybaseColumnType.IMAGE);
+        namedTypeMap.put("int", SybaseColumnType.INT);
+        namedTypeMap.put("money", SybaseColumnType.MONEY);
+        namedTypeMap.put("nchar", SybaseColumnType.NCHAR);
+        namedTypeMap.put("ntext", SybaseColumnType.NTEXT);
+        namedTypeMap.put("numeric", SybaseColumnType.NUMERIC);
+        namedTypeMap.put("nvarchar", SybaseColumnType.NVARCHAR);
+        namedTypeMap.put("smalldatetime", SybaseColumnType.SMALLDATETIME);
+        namedTypeMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
+        namedTypeMap.put("text", SybaseColumnType.TEXT);
+        namedTypeMap.put("varbinary", SybaseColumnType.VARBINARY);
     }
 
     @Override
@@ -60,168 +77,99 @@ public class SybaseGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Sybase用の{@link Type}の実装です。
+     * Sybase用の{@link SqlType}の実装です。
      * 
      * @author taedium
      */
-    public static class SybaseType extends StandardType {
+    public static class SybaseSqlType extends StandardSqlType {
 
-        private static Type BINARY = new SybaseType() {
+        private static SybaseSqlType BINARY = new SybaseSqlType("varbinary($l)");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static SybaseSqlType BOOLEAN = new SybaseSqlType("bit");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("varbinary(%d)", length);
-            }
-        };
+        private static SybaseSqlType BLOB = new SybaseSqlType("image");
 
-        private static Type BOOLEAN = new SybaseType() {
+        private static SybaseSqlType CLOB = new SybaseSqlType("text");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Boolean.class;
-            }
+        private static SybaseSqlType DATE = new SybaseSqlType("datetime");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "bit";
-            }
-        };
+        private static SybaseSqlType DECIMAL = new SybaseSqlType("decimal($p,$s)");
 
-        private static Type BLOB = new SybaseType() {
+        private static SybaseSqlType DOUBLE = new SybaseSqlType("double precision");
 
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return byte[].class;
-            }
+        private static SybaseSqlType INTEGER = new SybaseSqlType("int");
 
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "image";
-            }
-        };
+        private static SybaseSqlType TIME = new SybaseSqlType("datetime");
 
-        private static Type CLOB = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return String.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "text";
-            }
-        };
-
-        private static Type DECIMAL = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return BigDecimal.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return format("numeric(%d,%d)", precision, scale);
-            }
-        };
-
-        private static Type DOUBLE = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Double.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "double precision";
-            }
-        };
-
-        private static Type INTEGER = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Integer.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "int";
-            }
-        };
-
-        private static Type DATE = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "datetime";
-            }
-        };
-
-        private static Type TIME = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "datetime";
-            }
-        };
-
-        private static Type TIMESTAMP = new SybaseType() {
-
-            @Override
-            public Class<?> getJavaClass(int length, int precision, int scale,
-                    String typeName) {
-                return Date.class;
-            }
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, String typeName) {
-                return "datetime";
-            }
-        };
+        private static SybaseSqlType TIMESTAMP = new SybaseSqlType("datetime");
 
         /**
          * インスタンスを構築します。
          */
-        protected SybaseType() {
+        protected SybaseSqlType(String columnDefinition) {
+            super(columnDefinition);
         }
-
     }
 
+    public static class SybaseColumnType extends StandardColumnType {
+
+        private static SybaseColumnType BINARY = new SybaseColumnType(
+                "binary($l)", byte[].class);
+
+        private static SybaseColumnType BIT = new SybaseColumnType("bit",
+                Boolean.class);
+
+        private static SybaseColumnType DATETIME = new SybaseColumnType(
+                "datetime", Date.class, TemporalType.TIMESTAMP);
+
+        private static SybaseColumnType DECIMAL = new SybaseColumnType(
+                "decimal($p,$s)", BigDecimal.class);
+
+        private static SybaseColumnType IMAGE = new SybaseColumnType("image",
+                byte[].class, true);
+
+        private static SybaseColumnType INT = new SybaseColumnType("int",
+                Integer.class);
+
+        private static SybaseColumnType MONEY = new SybaseColumnType("money",
+                BigDecimal.class);
+
+        private static SybaseColumnType NCHAR = new SybaseColumnType(
+                "nchar($l)", BigDecimal.class);
+
+        private static SybaseColumnType NTEXT = new SybaseColumnType("ntext",
+                BigDecimal.class);
+
+        private static SybaseColumnType NUMERIC = new SybaseColumnType(
+                "numeric($p,$s)", BigDecimal.class);
+
+        private static SybaseColumnType NVARCHAR = new SybaseColumnType(
+                "nvarchar($l)", String.class);
+
+        private static SybaseColumnType SMALLDATETIME = new SybaseColumnType(
+                "smalldatetime", Date.class, TemporalType.TIMESTAMP);
+
+        private static SybaseColumnType SMALLMONEY = new SybaseColumnType(
+                "smallmoney", BigDecimal.class);
+
+        private static SybaseColumnType TEXT = new SybaseColumnType("text",
+                String.class);
+
+        private static SybaseColumnType VARBINARY = new SybaseColumnType(
+                "varbinary($l)", byte[].class);
+
+        public SybaseColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
+        }
+
+        public SybaseColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob);
+        }
+
+        public SybaseColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, temporalType);
+        }
+    }
 }

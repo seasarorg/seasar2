@@ -26,28 +26,21 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class StandardGenDialectTest {
+public class PostgreGenDialectTest {
 
-    private StandardGenDialect dialect = new StandardGenDialect();
+    private PostgreGenDialect dialect = new PostgreGenDialect();
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testType_char() throws Exception {
-        SqlType type = dialect.getSqlType(Types.CHAR);
-        assertEquals("char(1)", type.getColumnDefinition(10, 0, 0, false));
+    public void testGetSqlType_integer() throws Exception {
+        SqlType type = dialect.getSqlType(Types.INTEGER);
+        assertEquals("serial", type.getColumnDefinition(10, 0, 0, true));
+        assertEquals("integer", type.getColumnDefinition(10, 0, 0, false));
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
-    public void testType_varchar() throws Exception {
-        SqlType type = dialect.getSqlType(Types.VARCHAR);
-        assertEquals("varchar(10)", type.getColumnDefinition(10, 0, 0, false));
+    public void testGetSqlType_bigint() throws Exception {
+        SqlType type = dialect.getSqlType(Types.BIGINT);
+        assertEquals("bigserial", type.getColumnDefinition(10, 0, 0, true));
+        assertEquals("bigint", type.getColumnDefinition(10, 0, 0, false));
     }
-
 }

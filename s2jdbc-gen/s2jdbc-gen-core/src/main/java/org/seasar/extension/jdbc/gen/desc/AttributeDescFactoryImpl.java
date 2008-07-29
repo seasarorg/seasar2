@@ -19,7 +19,7 @@ import org.seasar.extension.jdbc.gen.AttributeDesc;
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenDialect.Type;
+import org.seasar.extension.jdbc.gen.GenDialect.ColumnType;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
@@ -113,9 +113,9 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      */
     protected void doAttributeClass(DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        Type type = dialect.getType(columnMeta.getSqlType());
-        Class<?> clazz = type.getJavaClass(columnMeta.getLength(), columnMeta
-                .getLength(), columnMeta.getScale(), columnMeta.getTypeName());
+        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
+        Class<?> clazz = columnType.getAttributeClass(columnMeta.getLength(),
+                columnMeta.getLength(), columnMeta.getScale());
         attributeDesc.setAttributeClass(clazz);
     }
 
@@ -128,8 +128,8 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      *            属性記述
      */
     protected void doLob(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
-        attributeDesc.setLob(dialect.isLobType(columnMeta.getSqlType(),
-                columnMeta.getTypeName()));
+        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
+        attributeDesc.setLob(columnType.isLob());
     }
 
     /**
@@ -142,8 +142,8 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      */
     protected void doTemporalType(DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        attributeDesc.setTemporalType(dialect.getTemporalType(columnMeta
-                .getSqlType(), columnMeta.getTypeName()));
+        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
+        attributeDesc.setTemporalType(columnType.getTemporalType());
     }
 
     /**
@@ -188,10 +188,9 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         attributeDesc.setPrecision(columnMeta.getLength());
         attributeDesc.setScale(columnMeta.getScale());
         attributeDesc.setNullable(columnMeta.isNullable());
-        Type type = dialect.getType(columnMeta.getSqlType());
-        String definition = type.getColumnDefinition(columnMeta.getLength(),
-                columnMeta.getLength(), columnMeta.getScale(), columnMeta
-                        .getTypeName());
+        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
+        String definition = columnType.getColumnDefinition(columnMeta
+                .getLength(), columnMeta.getLength(), columnMeta.getScale());
         attributeDesc.setColumnDefinition(definition);
     }
 
