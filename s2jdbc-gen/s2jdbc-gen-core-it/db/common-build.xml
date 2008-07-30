@@ -12,7 +12,7 @@
 		</copy>
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="sql">
-				<file name="create.sql"/>
+				<file name="setup-supported.sql"/>
 			</sqlFileList>
 		</exec-sql>
 		<!-- test -->
@@ -39,9 +39,18 @@
 		<!-- tearDown -->
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="sql">
-				<file name="drop.sql"/>
+				<file name="teardown-supported.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<migrate 
+			classpathref="classpath"
+			migrationrootdir="temp/db"
+		/>
+		<migrate 
+			classpathref="classpath"
+			migrationrootdir="temp/db"
+			to="0"
+		/>
 	</target>
 	
 	<target name="testFromEntityToDb" >
@@ -176,7 +185,8 @@
 		</copy>
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="sql">
-				<file name="create.sql"/>
+				<file name="setup-supported.sql"/>
+				<file name="setup-unsupported.sql"/>
 			</sqlFileList>
 		</exec-sql>
 		<!-- test -->
@@ -186,7 +196,8 @@
 		<!-- tearDown -->
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="sql">
-				<file name="drop.sql"/>
+				<file name="teardown-supported.sql"/>
+				<file name="teardown-unsupported.sql"/>
 			</sqlFileList>
 		</exec-sql>
 	</target>

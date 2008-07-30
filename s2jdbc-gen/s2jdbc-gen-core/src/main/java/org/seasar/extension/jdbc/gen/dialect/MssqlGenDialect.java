@@ -31,7 +31,7 @@ import javax.persistence.TemporalType;
 public class MssqlGenDialect extends StandardGenDialect {
 
     /** テーブルが見つからないことを示すエラーコード */
-    protected static int TABLE_NOT_FOUND_ERROR_CODE = 1051;
+    protected static int TABLE_NOT_FOUND_ERROR_CODE = 208;
 
     /**
      * インスタンスを構築します。
@@ -126,7 +126,8 @@ public class MssqlGenDialect extends StandardGenDialect {
 
         private static MssqlSqlType DECIMAL = new MssqlSqlType("decimal($p,$s)");
 
-        private static MssqlSqlType DOUBLE = new MssqlSqlType("double precision");
+        private static MssqlSqlType DOUBLE = new MssqlSqlType(
+                "double precision");
 
         private static MssqlSqlType INTEGER = new MssqlSqlType("int");
 

@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
@@ -52,11 +53,11 @@ public class OracleGenDialect extends StandardGenDialect {
         namedTypeMap.put("blob", OracleColumnType.BLOB);
         namedTypeMap.put("clob", OracleColumnType.CLOB);
         namedTypeMap.put("long", OracleColumnType.LONG);
-        namedTypeMap.put("long_raw", OracleColumnType.LONG_RAW);
+        namedTypeMap.put("long raw", OracleColumnType.LONG_RAW);
         namedTypeMap.put("nchar", OracleColumnType.NCHAR);
         namedTypeMap.put("nclob", OracleColumnType.NCLOB);
         namedTypeMap.put("number", OracleColumnType.NUMBER);
-        namedTypeMap.put("nvarchar", OracleColumnType.NVARCHAR);
+        namedTypeMap.put("nvarchar2", OracleColumnType.NVARCHAR2);
         namedTypeMap.put("raw", OracleColumnType.RAW);
         namedTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
 
@@ -103,6 +104,15 @@ public class OracleGenDialect extends StandardGenDialect {
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
     }
 
+    @Override
+    public ColumnType getColumnType(String typeName) {
+        if (org.seasar.framework.util.StringUtil.startsWithIgnoreCase(typeName,
+                "timestamp")) {
+            return OracleColumnType.TIMESTAMP;
+        }
+        return super.getColumnType(typeName);
+    }
+
     /**
      * Oracle用の{@link SqlType}の実装クラスです。
      * 
@@ -118,7 +128,8 @@ public class OracleGenDialect extends StandardGenDialect {
             public String getColumnDefinition(int length, int precision,
                     int scale, boolean identity) {
                 columnDefinition = length > 2000 ? "blob" : "raw($l)";
-                return super.getColumnDefinition(length, precision, scale, identity);
+                return super.getColumnDefinition(length, precision, scale,
+                        identity);
             }
         };
 
@@ -140,7 +151,8 @@ public class OracleGenDialect extends StandardGenDialect {
             public String getColumnDefinition(int length, int precision,
                     int scale, boolean identity) {
                 columnDefinition = length > 4000 ? "clob" : "varchar2($l)";
-                return super.getColumnDefinition(length, precision, scale, identity);
+                return super.getColumnDefinition(length, precision, scale,
+                        identity);
             }
         };
 
@@ -213,8 +225,8 @@ public class OracleGenDialect extends StandardGenDialect {
             }
         };
 
-        private static OracleColumnType NVARCHAR = new OracleColumnType(
-                "nvarchar($l)", String.class) {
+        private static OracleColumnType NVARCHAR2 = new OracleColumnType(
+                "nvarchar2($l)", String.class) {
 
             @Override
             public String getColumnDefinition(int length, int precision,
@@ -225,6 +237,9 @@ public class OracleGenDialect extends StandardGenDialect {
 
         private static OracleColumnType RAW = new OracleColumnType("raw($l)",
                 byte[].class);
+
+        private static OracleColumnType TIMESTAMP = new OracleColumnType(
+                "timestamp($s)", Date.class, TemporalType.TIMESTAMP);
 
         private static OracleColumnType VARCHAR2 = new OracleColumnType(
                 "varchar2($l)", byte[].class);

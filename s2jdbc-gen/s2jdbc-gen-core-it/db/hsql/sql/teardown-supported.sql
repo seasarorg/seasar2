@@ -1,6 +1,7 @@
 drop table integer_table;
 drop table int_table;
 drop table double_table;
+drop table double_precision_table;
 drop table float_table;
 drop table varchar_table;
 drop table varchar_ignorecase_table;

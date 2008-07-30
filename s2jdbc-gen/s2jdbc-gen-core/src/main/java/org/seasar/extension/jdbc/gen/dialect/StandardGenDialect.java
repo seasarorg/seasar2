@@ -67,8 +67,8 @@ public class StandardGenDialect implements GenDialect {
         typeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
 
         namedTypeMap.put("bigint", StandardColumnType.BIGINT);
-        namedTypeMap.put("bit", StandardColumnType.BIT);
         namedTypeMap.put("binary", StandardColumnType.BINARY);
+        namedTypeMap.put("bit", StandardColumnType.BIT);
         namedTypeMap.put("blob", StandardColumnType.BLOB);
         namedTypeMap.put("boolean", StandardColumnType.BOOLEAN);
         namedTypeMap.put("char", StandardColumnType.CHAR);
@@ -82,6 +82,7 @@ public class StandardGenDialect implements GenDialect {
         namedTypeMap.put("longvarchar", StandardColumnType.LONGVARCHAR);
         namedTypeMap.put("numeric", StandardColumnType.NUMERIC);
         namedTypeMap.put("real", StandardColumnType.REAL);
+        namedTypeMap.put("smallint", StandardColumnType.SMALLINT);
         namedTypeMap.put("time", StandardColumnType.TIME);
         namedTypeMap.put("timestamp", StandardColumnType.TIMESTAMP);
         namedTypeMap.put("tinyint", StandardColumnType.TINYINT);
@@ -102,7 +103,11 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public ColumnType getColumnType(String typeName) {
-        return namedTypeMap.get(typeName);
+        ColumnType columnType = namedTypeMap.get(typeName);
+        if (columnType != null) {
+            return columnType;
+        }
+        return StandardColumnType.UNKOWN;
     }
 
     public GenerationType getDefaultGenerationType() {
@@ -287,7 +292,8 @@ public class StandardGenDialect implements GenDialect {
             this.columnDefinition = columnDefinition;
         }
 
-        public String getColumnDefinition(int length, int precision, int scale, boolean identity) {
+        public String getColumnDefinition(int length, int precision, int scale,
+                boolean identity) {
             return format(columnDefinition, length, precision, scale);
         }
     }
@@ -301,11 +307,11 @@ public class StandardGenDialect implements GenDialect {
         private static StandardColumnType BIGINT = new StandardColumnType(
                 "bigint", Long.class);
 
-        private static StandardColumnType BIT = new StandardColumnType("bit",
-                Boolean.class);
-
         private static StandardColumnType BINARY = new StandardColumnType(
                 "binary", byte[].class);
+
+        private static StandardColumnType BIT = new StandardColumnType("bit",
+                Boolean.class);
 
         private static StandardColumnType BLOB = new StandardColumnType("blob",
                 byte[].class, true);
@@ -363,6 +369,9 @@ public class StandardGenDialect implements GenDialect {
 
         private static StandardColumnType VARCHAR = new StandardColumnType(
                 "varchar($l)", String.class);
+
+        private static StandardColumnType UNKOWN = new StandardColumnType(null,
+                String.class);
 
         protected String columnDefinition;
 

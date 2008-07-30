@@ -60,9 +60,11 @@ public class PostgreGenDialect extends StandardGenDialect {
         namedTypeMap.put("money", PostgreColumnType.MONEY);
         namedTypeMap.put("numeric", PostgreColumnType.NUMERIC);
         namedTypeMap.put("serial", PostgreColumnType.SERIAL);
-        namedTypeMap.put("timestampz", PostgreColumnType.TIMESTAMPZ);
-        namedTypeMap.put("timez", PostgreColumnType.TIMEZ);
+        namedTypeMap.put("text", PostgreColumnType.TEXT);
+        namedTypeMap.put("timestamptz", PostgreColumnType.TIMESTAMPTZ);
+        namedTypeMap.put("timetz", PostgreColumnType.TIMETZ);
         namedTypeMap.put("varbit", PostgreColumnType.VARBIT);
+        namedTypeMap.put("varchar", PostgreColumnType.VARCHAR);
     }
 
     @Override
@@ -178,7 +180,16 @@ public class PostgreGenDialect extends StandardGenDialect {
                 "char($l)", String.class);
 
         private static PostgreColumnType NUMERIC = new PostgreColumnType(
-                "decimal($p,$s)", BigDecimal.class);
+                "decimal($p,$s)", BigDecimal.class) {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale) {
+                precision = precision > 1000 ? 1000 : precision;
+                return super.getColumnDefinition(length, precision, scale);
+            }
+
+        };
 
         private static PostgreColumnType INT4 = new PostgreColumnType("int4",
                 Integer.class);
@@ -198,14 +209,28 @@ public class PostgreGenDialect extends StandardGenDialect {
         private static PostgreColumnType MONEY = new PostgreColumnType("money",
                 Float.class);
 
-        private static PostgreColumnType TIMESTAMPZ = new PostgreColumnType(
-                "timestampz", Date.class, TemporalType.TIMESTAMP);
+        private static PostgreColumnType TEXT = new PostgreColumnType("text",
+                String.class, true);
 
-        private static PostgreColumnType TIMEZ = new PostgreColumnType("timez",
-                Date.class, TemporalType.TIME);
+        private static PostgreColumnType TIMETZ = new PostgreColumnType(
+                "timetz", Date.class, TemporalType.TIME);
+
+        private static PostgreColumnType TIMESTAMPTZ = new PostgreColumnType(
+                "timestamptz", Date.class, TemporalType.TIMESTAMP);
 
         private static PostgreColumnType VARBIT = new PostgreColumnType(
                 "varbit", byte[].class);
+
+        private static PostgreColumnType VARCHAR = new PostgreColumnType(
+                "varchar($l)", String.class) {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale) {
+                length = length > 10485760 ? 10485760 : length;
+                return super.getColumnDefinition(length, precision, scale);
+            }
+        };
 
         public PostgreColumnType(String columnDefinition, Class javaClass) {
             super(columnDefinition, javaClass);

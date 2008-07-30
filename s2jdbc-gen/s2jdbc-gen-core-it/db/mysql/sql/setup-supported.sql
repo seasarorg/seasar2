@@ -1,12 +1,18 @@
 create table bit_table (bit_column bit);
 create table tinyint_table (tinyint_column tinyint);
+create table tinyint_unsigned_table (tinyint_unsigned_column tinyint unsigned);
 create table bool_table (bool_column bool);
 create table boolean_table (boolean_column boolean);
 create table smallint_table (smallint_column smallint);
+create table smallint_unsigned_table (smallint_unsigned_column smallint unsigned);
 create table mediumint_table (mediumint_column mediumint);
+create table mediumint_unsigned_table (mediumint_unsigned_column mediumint unsigned);
 create table int_table (int_column int);
+create table int_unsigned_table (int_unsigned_column int unsigned);
 create table integer_table (integer_column integer);
+create table integer_unsigned_table (integer_unsigned_column integer unsigned);
 create table bigint_table (bigint_column bigint);
+create table bigint_unsigned_table (bigint_unsigned_column bigint unsigned);
 create table float_table (float_column float);
 create table double_table (double_column double);
 create table double_precision_table (double_precision_column double precision);

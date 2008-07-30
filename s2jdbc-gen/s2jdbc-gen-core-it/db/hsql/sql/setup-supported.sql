@@ -1,6 +1,7 @@
 create table integer_table (integer_column integer);
 create table int_table (int_column int);
 create table double_table (double_column double);
+create table double_precision_table (double_precision_column double precision);
 create table float_table (float_column float);
 create table varchar_table (varchar_column varchar);
 create table varchar_ignorecase_table (varchar_ignorecase_column varchar_ignorecase);
@@ -21,5 +22,3 @@ create table bigint_table (bigint_column bigint);
 create table real_table (real_column real);
 create table varbinary_table (varbinary_column varbinary);
 create table longvarbinary_table (longvarbinary_column longvarbinary);
---create table other_table (other_column other);
---create table object_table (object_column other);

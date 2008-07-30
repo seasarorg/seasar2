@@ -19,7 +19,7 @@ create table int8_table (int8_column int8);
 create table serial8_table (serial8_column serial8);
 create table varbit_table (varbit_column varbit);
 create table bool_table (bool_column bool);
-create table varchar_table (varchar_column varchar);
+create table varchar_table (varchar_column varchar(100));
 create table char_table (char_column char);
 create table float8_table (float8_column float8);
 create table int_table (int_column int);

@@ -49,8 +49,8 @@ public class Db2GenDialect extends StandardGenDialect {
         namedTypeMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
         namedTypeMap.put("clob", Db2ColumnType.CLOB);
         namedTypeMap.put("decimal", Db2ColumnType.DECIMAL);
-        namedTypeMap
-                .put("long varchar bit data", Db2ColumnType.LONGVARCHAR_BIT);
+        namedTypeMap.put("long varchar for bit data",
+                Db2ColumnType.LONGVARCHAR_BIT);
         namedTypeMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
         namedTypeMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
     }
@@ -122,11 +122,12 @@ public class Db2GenDialect extends StandardGenDialect {
 
     public static class Db2SqlType extends StandardSqlType {
 
-        private static Db2SqlType BINARY = new Db2SqlType("varchar($l) for bit data");
+        private static Db2SqlType BINARY = new Db2SqlType(
+                "varchar($l) for bit data");
 
         private static Db2SqlType BLOB = new Db2SqlType("blob($l)");
 
-        private static Db2SqlType BOOLEAN = new Db2SqlType("smallint(1)");
+        private static Db2SqlType BOOLEAN = new Db2SqlType("smallint");
 
         private static Db2SqlType CLOB = new Db2SqlType("clob($l)");
 
@@ -166,7 +167,7 @@ public class Db2GenDialect extends StandardGenDialect {
                 "long varchar", String.class);
 
         private static Db2ColumnType VARCHAR_BIT = new Db2ColumnType(
-                "varchar(%d) for bit data", byte[].class);
+                "varchar($l) for bit data", byte[].class);
 
         public Db2ColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);

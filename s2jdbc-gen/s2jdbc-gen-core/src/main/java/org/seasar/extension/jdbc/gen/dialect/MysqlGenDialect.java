@@ -148,7 +148,7 @@ public class MysqlGenDialect extends StandardGenDialect {
 
         private static MysqlSqlType DOUBLE = new MysqlSqlType("double($p,$s)");
 
-        private static MysqlSqlType FLOAT = new MysqlSqlType("float(%d,%d)");
+        private static MysqlSqlType FLOAT = new MysqlSqlType("float($p,$s)");
 
         private static MysqlSqlType INTEGER = new MysqlSqlType("int");
 
@@ -172,7 +172,23 @@ public class MysqlGenDialect extends StandardGenDialect {
                 "binary($l)", byte[].class);
 
         private static MysqlColumnType BIT = new MysqlColumnType("bit($l)",
-                byte[].class);
+                byte[].class) {
+
+            @Override
+            public Class<?> getAttributeClass(int length, int precision,
+                    int scale) {
+                return length == 0 ? Boolean.class : super.getAttributeClass(
+                        length, precision, scale);
+            }
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale) {
+                return length == 0 ? "bool" : super.getColumnDefinition(length,
+                        precision, scale);
+            }
+
+        };
 
         private static MysqlColumnType BLOB = new MysqlColumnType("blob",
                 byte[].class, true);

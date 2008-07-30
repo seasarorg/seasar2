@@ -12,5 +12,4 @@ drop table number_table;
 drop table nvarchar2_table;
 drop table raw_table;
 drop table timestamp_table;
-drop table urowid_table;
 drop table varchar2_table;
