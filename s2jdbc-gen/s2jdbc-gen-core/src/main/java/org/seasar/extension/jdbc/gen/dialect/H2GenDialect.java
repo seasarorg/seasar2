@@ -38,8 +38,8 @@ public class H2GenDialect extends StandardGenDialect {
         typeMap.put(Types.BINARY, H2SqlType.BINARY);
         typeMap.put(Types.DECIMAL, H2SqlType.DECIMAL);
 
-        namedTypeMap.put("binary", H2ColumnType.BINARY);
-        namedTypeMap.put("decimal", H2ColumnType.DECIMAL);
+        columnTypeMap.put("binary", H2ColumnType.BINARY);
+        columnTypeMap.put("decimal", H2ColumnType.DECIMAL);
     }
 
     @Override

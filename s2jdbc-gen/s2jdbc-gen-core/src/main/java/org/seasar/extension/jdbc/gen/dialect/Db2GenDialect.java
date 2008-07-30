@@ -45,14 +45,14 @@ public class Db2GenDialect extends StandardGenDialect {
         typeMap.put(Types.DECIMAL, Db2SqlType.DECIMAL);
         typeMap.put(Types.FLOAT, Db2SqlType.FLOAT);
 
-        namedTypeMap.put("blob", Db2ColumnType.BLOB);
-        namedTypeMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
-        namedTypeMap.put("clob", Db2ColumnType.CLOB);
-        namedTypeMap.put("decimal", Db2ColumnType.DECIMAL);
-        namedTypeMap.put("long varchar for bit data",
+        columnTypeMap.put("blob", Db2ColumnType.BLOB);
+        columnTypeMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
+        columnTypeMap.put("clob", Db2ColumnType.CLOB);
+        columnTypeMap.put("decimal", Db2ColumnType.DECIMAL);
+        columnTypeMap.put("long varchar for bit data",
                 Db2ColumnType.LONGVARCHAR_BIT);
-        namedTypeMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
-        namedTypeMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
+        columnTypeMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
+        columnTypeMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
     }
 
     @Override
@@ -120,6 +120,11 @@ public class Db2GenDialect extends StandardGenDialect {
         return sqlExceptionList;
     }
 
+    /**
+     * DB2用の link StandardSqlType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class Db2SqlType extends StandardSqlType {
 
         private static Db2SqlType BINARY = new Db2SqlType(
@@ -146,6 +151,11 @@ public class Db2GenDialect extends StandardGenDialect {
         }
     }
 
+    /**
+     * DB2用の link StandardColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class Db2ColumnType extends StandardColumnType {
 
         private static Db2ColumnType BLOB = new Db2ColumnType("blob($l)",
@@ -169,15 +179,43 @@ public class Db2GenDialect extends StandardGenDialect {
         private static Db2ColumnType VARCHAR_BIT = new Db2ColumnType(
                 "varchar($l) for bit data", byte[].class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
         public Db2ColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
                 boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
                 TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

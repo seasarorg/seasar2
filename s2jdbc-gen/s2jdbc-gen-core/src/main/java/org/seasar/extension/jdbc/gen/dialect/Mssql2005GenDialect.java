@@ -34,9 +34,9 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
         typeMap.put(Types.BLOB, Mssql2005SqlType.BLOB);
         typeMap.put(Types.CLOB, Mssql2005SqlType.CLOB);
 
-        namedTypeMap.put("image", MssqlColumnType.IMAGE);
-        namedTypeMap.put("ntext", MssqlColumnType.NTEXT);
-        namedTypeMap.put("text", MssqlColumnType.TEXT);
+        columnTypeMap.put("image", MssqlColumnType.IMAGE);
+        columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
+        columnTypeMap.put("text", MssqlColumnType.TEXT);
     }
 
     /**

@@ -13,30 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
-
-import java.util.Calendar;
+package example.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.Lob;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-public class CalendarEntity {
+public class ByteArrayEntity {
 
     /** */
-    @Temporal(TemporalType.DATE)
-    public Calendar dateProperty;
+    public byte[] byteArrayProperty;
 
     /** */
-    @Temporal(TemporalType.TIME)
-    public Calendar timeProperty;
-
-    /** */
-    @Temporal(TemporalType.TIMESTAMP)
-    public Calendar timestampProperty;
+    @Lob
+    public byte[] blobProperty;
 }

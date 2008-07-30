@@ -46,25 +46,25 @@ public class PostgreGenDialect extends StandardGenDialect {
         typeMap.put(Types.FLOAT, PostgreSqlType.FLOAT);
         typeMap.put(Types.INTEGER, PostgreSqlType.INTEGER);
 
-        namedTypeMap.put("bigint", PostgreColumnType.BIGINT);
-        namedTypeMap.put("bigserial", PostgreColumnType.BIGSERIAL);
-        namedTypeMap.put("bit", PostgreColumnType.BIT);
-        namedTypeMap.put("bool", PostgreColumnType.BOOL);
-        namedTypeMap.put("bpchar", PostgreColumnType.BPCHAR);
-        namedTypeMap.put("bytea", PostgreColumnType.BYTEA);
-        namedTypeMap.put("float4", PostgreColumnType.FLOAT4);
-        namedTypeMap.put("float8", PostgreColumnType.FLOAT8);
-        namedTypeMap.put("int2", PostgreColumnType.INT2);
-        namedTypeMap.put("int4", PostgreColumnType.INT4);
-        namedTypeMap.put("int8", PostgreColumnType.INT8);
-        namedTypeMap.put("money", PostgreColumnType.MONEY);
-        namedTypeMap.put("numeric", PostgreColumnType.NUMERIC);
-        namedTypeMap.put("serial", PostgreColumnType.SERIAL);
-        namedTypeMap.put("text", PostgreColumnType.TEXT);
-        namedTypeMap.put("timestamptz", PostgreColumnType.TIMESTAMPTZ);
-        namedTypeMap.put("timetz", PostgreColumnType.TIMETZ);
-        namedTypeMap.put("varbit", PostgreColumnType.VARBIT);
-        namedTypeMap.put("varchar", PostgreColumnType.VARCHAR);
+        columnTypeMap.put("bigint", PostgreColumnType.BIGINT);
+        columnTypeMap.put("bigserial", PostgreColumnType.BIGSERIAL);
+        columnTypeMap.put("bit", PostgreColumnType.BIT);
+        columnTypeMap.put("bool", PostgreColumnType.BOOL);
+        columnTypeMap.put("bpchar", PostgreColumnType.BPCHAR);
+        columnTypeMap.put("bytea", PostgreColumnType.BYTEA);
+        columnTypeMap.put("float4", PostgreColumnType.FLOAT4);
+        columnTypeMap.put("float8", PostgreColumnType.FLOAT8);
+        columnTypeMap.put("int2", PostgreColumnType.INT2);
+        columnTypeMap.put("int4", PostgreColumnType.INT4);
+        columnTypeMap.put("int8", PostgreColumnType.INT8);
+        columnTypeMap.put("money", PostgreColumnType.MONEY);
+        columnTypeMap.put("numeric", PostgreColumnType.NUMERIC);
+        columnTypeMap.put("serial", PostgreColumnType.SERIAL);
+        columnTypeMap.put("text", PostgreColumnType.TEXT);
+        columnTypeMap.put("timestamptz", PostgreColumnType.TIMESTAMPTZ);
+        columnTypeMap.put("timetz", PostgreColumnType.TIMETZ);
+        columnTypeMap.put("varbit", PostgreColumnType.VARBIT);
+        columnTypeMap.put("varchar", PostgreColumnType.VARCHAR);
     }
 
     @Override

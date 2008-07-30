@@ -13,25 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package example.entity;
 
-import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 /**
- * {@link DbModel データベースのモデル}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface DbModelFactory {
+@Entity
+public class SerializableEntity {
 
-    /**
-     * データベースのモデルを返します。
-     * 
-     * @param tableDesclist
-     *            テーブル記述のリスト
-     * @param versionNo
-     *            バージョン番号
-     * @return データベースのモデル
-     */
-    DbModel getDbModel(List<TableDesc> tableDesclist, int versionNo);
+    /** */
+    public MySerializable serializableProperty;
+
+    /** */
+    @Lob
+    public MySerializable blobProperty;
 }

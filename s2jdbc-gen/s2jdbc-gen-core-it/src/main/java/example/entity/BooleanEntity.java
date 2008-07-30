@@ -13,18 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
+package example.entity;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
 
 /**
  * @author taedium
  * 
  */
-public class MySerializable implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@Entity
+public class BooleanEntity {
 
     /** */
-    public String aaa;
+    public Boolean booleanProperty;
 }

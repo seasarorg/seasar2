@@ -36,6 +36,8 @@ import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlScriptReaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlScriptTokenizerImpl;
+import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
+import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.gen.version.SchemaVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -98,6 +100,10 @@ public class MigrateCommand extends AbstractCommand {
 
     /** マイグレーション先となるバージョン番号 */
     protected Integer to = null;
+
+    protected String createDirName = "create";
+
+    protected String dropDirName = "drop";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -394,7 +400,7 @@ public class MigrateCommand extends AbstractCommand {
     protected void drop(int versionNo) {
         String versionName = convertVersionNoToVersionName(versionNo);
         File versionDir = new File(migrationRootDir, versionName);
-        File dropDir = new File(versionDir, "drop");
+        File dropDir = new File(versionDir, dropDirName);
         SqlExecutionContext context = createSqlExecutionContext();
         try {
             try {
@@ -430,7 +436,7 @@ public class MigrateCommand extends AbstractCommand {
     protected void create(int versionNo) {
         String versionDirName = convertVersionNoToVersionName(versionNo);
         File versionDir = new File(migrationRootDir, versionDirName);
-        File createDir = new File(versionDir, "create");
+        File createDir = new File(versionDir, createDirName);
         SqlExecutionContext context = createSqlExecutionContext();
         try {
             try {

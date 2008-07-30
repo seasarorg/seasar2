@@ -44,21 +44,21 @@ public class SybaseGenDialect extends StandardGenDialect {
         typeMap.put(Types.TIME, SybaseSqlType.TIME);
         typeMap.put(Types.TIMESTAMP, SybaseSqlType.TIMESTAMP);
 
-        namedTypeMap.put("binary", SybaseColumnType.BINARY);
-        namedTypeMap.put("bit", SybaseColumnType.BIT);
-        namedTypeMap.put("datetime", SybaseColumnType.DATETIME);
-        namedTypeMap.put("decimal", SybaseColumnType.DECIMAL);
-        namedTypeMap.put("image", SybaseColumnType.IMAGE);
-        namedTypeMap.put("int", SybaseColumnType.INT);
-        namedTypeMap.put("money", SybaseColumnType.MONEY);
-        namedTypeMap.put("nchar", SybaseColumnType.NCHAR);
-        namedTypeMap.put("ntext", SybaseColumnType.NTEXT);
-        namedTypeMap.put("numeric", SybaseColumnType.NUMERIC);
-        namedTypeMap.put("nvarchar", SybaseColumnType.NVARCHAR);
-        namedTypeMap.put("smalldatetime", SybaseColumnType.SMALLDATETIME);
-        namedTypeMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
-        namedTypeMap.put("text", SybaseColumnType.TEXT);
-        namedTypeMap.put("varbinary", SybaseColumnType.VARBINARY);
+        columnTypeMap.put("binary", SybaseColumnType.BINARY);
+        columnTypeMap.put("bit", SybaseColumnType.BIT);
+        columnTypeMap.put("datetime", SybaseColumnType.DATETIME);
+        columnTypeMap.put("decimal", SybaseColumnType.DECIMAL);
+        columnTypeMap.put("image", SybaseColumnType.IMAGE);
+        columnTypeMap.put("int", SybaseColumnType.INT);
+        columnTypeMap.put("money", SybaseColumnType.MONEY);
+        columnTypeMap.put("nchar", SybaseColumnType.NCHAR);
+        columnTypeMap.put("ntext", SybaseColumnType.NTEXT);
+        columnTypeMap.put("numeric", SybaseColumnType.NUMERIC);
+        columnTypeMap.put("nvarchar", SybaseColumnType.NVARCHAR);
+        columnTypeMap.put("smalldatetime", SybaseColumnType.SMALLDATETIME);
+        columnTypeMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
+        columnTypeMap.put("text", SybaseColumnType.TEXT);
+        columnTypeMap.put("varbinary", SybaseColumnType.VARBINARY);
     }
 
     @Override

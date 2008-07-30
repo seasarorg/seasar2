@@ -41,7 +41,9 @@ public class StandardGenDialect implements GenDialect {
     /** SQL型をキー、{@link SqlType}を値とするマップ */
     protected Map<Integer, SqlType> typeMap = new HashMap<Integer, SqlType>();
 
-    protected Map<String, ColumnType> namedTypeMap = new CaseInsensitiveMap();
+    /** カラムの型名をキー、{@link ColumnType}を値とするマップ */
+    @SuppressWarnings("unchecked")
+    protected Map<String, ColumnType> columnTypeMap = new CaseInsensitiveMap();
 
     /** SQLブロックの開始を表す単語の連なりのリスト */
     protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
@@ -66,28 +68,28 @@ public class StandardGenDialect implements GenDialect {
         typeMap.put(Types.TIMESTAMP, StandardSqlType.TIMESTAMP);
         typeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
 
-        namedTypeMap.put("bigint", StandardColumnType.BIGINT);
-        namedTypeMap.put("binary", StandardColumnType.BINARY);
-        namedTypeMap.put("bit", StandardColumnType.BIT);
-        namedTypeMap.put("blob", StandardColumnType.BLOB);
-        namedTypeMap.put("boolean", StandardColumnType.BOOLEAN);
-        namedTypeMap.put("char", StandardColumnType.CHAR);
-        namedTypeMap.put("clob", StandardColumnType.CLOB);
-        namedTypeMap.put("date", StandardColumnType.DATE);
-        namedTypeMap.put("decimal", StandardColumnType.DECIMAL);
-        namedTypeMap.put("double", StandardColumnType.DOUBLE);
-        namedTypeMap.put("float", StandardColumnType.FLOAT);
-        namedTypeMap.put("integer", StandardColumnType.INTEGER);
-        namedTypeMap.put("longvarbinary", StandardColumnType.LONGVARBINARY);
-        namedTypeMap.put("longvarchar", StandardColumnType.LONGVARCHAR);
-        namedTypeMap.put("numeric", StandardColumnType.NUMERIC);
-        namedTypeMap.put("real", StandardColumnType.REAL);
-        namedTypeMap.put("smallint", StandardColumnType.SMALLINT);
-        namedTypeMap.put("time", StandardColumnType.TIME);
-        namedTypeMap.put("timestamp", StandardColumnType.TIMESTAMP);
-        namedTypeMap.put("tinyint", StandardColumnType.TINYINT);
-        namedTypeMap.put("varbinary", StandardColumnType.VARBINARY);
-        namedTypeMap.put("varchar", StandardColumnType.VARCHAR);
+        columnTypeMap.put("bigint", StandardColumnType.BIGINT);
+        columnTypeMap.put("binary", StandardColumnType.BINARY);
+        columnTypeMap.put("bit", StandardColumnType.BIT);
+        columnTypeMap.put("blob", StandardColumnType.BLOB);
+        columnTypeMap.put("boolean", StandardColumnType.BOOLEAN);
+        columnTypeMap.put("char", StandardColumnType.CHAR);
+        columnTypeMap.put("clob", StandardColumnType.CLOB);
+        columnTypeMap.put("date", StandardColumnType.DATE);
+        columnTypeMap.put("decimal", StandardColumnType.DECIMAL);
+        columnTypeMap.put("double", StandardColumnType.DOUBLE);
+        columnTypeMap.put("float", StandardColumnType.FLOAT);
+        columnTypeMap.put("integer", StandardColumnType.INTEGER);
+        columnTypeMap.put("longvarbinary", StandardColumnType.LONGVARBINARY);
+        columnTypeMap.put("longvarchar", StandardColumnType.LONGVARCHAR);
+        columnTypeMap.put("numeric", StandardColumnType.NUMERIC);
+        columnTypeMap.put("real", StandardColumnType.REAL);
+        columnTypeMap.put("smallint", StandardColumnType.SMALLINT);
+        columnTypeMap.put("time", StandardColumnType.TIME);
+        columnTypeMap.put("timestamp", StandardColumnType.TIMESTAMP);
+        columnTypeMap.put("tinyint", StandardColumnType.TINYINT);
+        columnTypeMap.put("varbinary", StandardColumnType.VARBINARY);
+        columnTypeMap.put("varchar", StandardColumnType.VARCHAR);
     }
 
     public boolean isUserTable(String tableName) {
@@ -103,7 +105,7 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public ColumnType getColumnType(String typeName) {
-        ColumnType columnType = namedTypeMap.get(typeName);
+        ColumnType columnType = columnTypeMap.get(typeName);
         if (columnType != null) {
             return columnType;
         }
@@ -276,9 +278,12 @@ public class StandardGenDialect implements GenDialect {
         private static StandardSqlType VARCHAR = new StandardSqlType(
                 "varchar($l)");
 
-        /** 定義 */
+        /** カラム定義 */
         protected String columnDefinition;
 
+        /**
+         * インスタンスを構築します。
+         */
         protected StandardSqlType() {
         }
 
@@ -299,8 +304,9 @@ public class StandardGenDialect implements GenDialect {
     }
 
     /**
-     * @author taedium
+     * 標準の{@link ColumnType}の実装クラスです。
      * 
+     * @author taedium
      */
     public static class StandardColumnType implements ColumnType {
 
@@ -373,30 +379,74 @@ public class StandardGenDialect implements GenDialect {
         private static StandardColumnType UNKOWN = new StandardColumnType(null,
                 String.class);
 
+        /** カラム定義 */
         protected String columnDefinition;
 
-        protected Class attributeClass;
+        /** 属性のクラス */
+        protected Class<?> attributeClass;
 
+        /** LOBの場合{@code true} */
         protected boolean lob;
 
+        /** 時制型 */
         protected TemporalType temporalType;
 
-        public StandardColumnType(String columnDefinition,
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
+        protected StandardColumnType(String columnDefinition,
                 Class<?> attributeClass) {
             this(columnDefinition, attributeClass, false, null);
         }
 
-        public StandardColumnType(String columnDefinition,
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
+        protected StandardColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob) {
             this(columnDefinition, attributeClass, lob, null);
         }
 
-        public StandardColumnType(String columnDefinition,
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
+        protected StandardColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             this(columnDefinition, attributeClass, false, temporalType);
         }
 
-        public StandardColumnType(String columnDefinition,
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         * @param temporalType
+         *            時制型
+         */
+        protected StandardColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob, TemporalType temporalType) {
             this.columnDefinition = columnDefinition;
             this.attributeClass = attributeClass;
@@ -422,6 +472,19 @@ public class StandardGenDialect implements GenDialect {
 
     }
 
+    /**
+     * フォーマットします。
+     * 
+     * @param format
+     *            フォーマット文字列
+     * @param length
+     *            長さ
+     * @param precision
+     *            精度
+     * @param scale
+     *            スケール
+     * @return フォーマットされた文字列
+     */
     protected static String format(String format, int length, int precision,
             int scale) {
         StringBuilder buf = new StringBuilder();

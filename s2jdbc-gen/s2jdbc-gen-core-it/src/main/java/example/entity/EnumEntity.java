@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
+package example.entity;
 
 import javax.persistence.Entity;
 
@@ -22,8 +22,8 @@ import javax.persistence.Entity;
  * 
  */
 @Entity
-public class ByteEntity {
+public class EnumEntity {
 
     /** */
-    public Byte byteProperty;
+    public MyEnum enumProperty;
 }

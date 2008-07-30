@@ -13,9 +13,8 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.util;
 
-import org.seasar.extension.jdbc.gen.util.EnvUtil;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
@@ -66,7 +65,7 @@ public class SingletonS2ContainerFactorySupport {
     /**
      * 破棄します。
      */
-    protected void destory() {
+    public void destory() {
         if (initialized) {
             SingletonS2ContainerFactory.destroy();
             EnvUtil.setValue(originalEnv);

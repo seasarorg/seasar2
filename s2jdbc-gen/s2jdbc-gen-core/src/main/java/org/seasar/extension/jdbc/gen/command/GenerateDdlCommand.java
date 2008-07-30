@@ -24,8 +24,8 @@ import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.DbModel;
-import org.seasar.extension.jdbc.gen.DbModelFactory;
+import org.seasar.extension.jdbc.gen.DdlModel;
+import org.seasar.extension.jdbc.gen.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.DdlVersion;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
@@ -51,8 +51,10 @@ import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeExcept
 import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
+import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -182,6 +184,10 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
+    protected String createDirName = "create";
+
+    protected String dropDirName = "drop";
+
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
@@ -198,7 +204,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected TableDescFactory tableDescFactory;
 
     /** データベースのモデルのファクトリ */
-    protected DbModelFactory dbModelFactory;
+    protected DdlModelFactory ddlModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -830,7 +836,7 @@ public class GenerateDdlCommand extends AbstractCommand {
         ddlVersion = createDdlVersion();
         entityMetaReader = createEntityMetaReader();
         tableDescFactory = createTableDescFactory();
-        dbModelFactory = createDbModelFactory();
+        ddlModelFactory = createDbModelFactory();
         generator = createGenerator();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
@@ -840,15 +846,23 @@ public class GenerateDdlCommand extends AbstractCommand {
     @Override
     protected void doExecute() throws Throwable {
         int versionNo = ddlVersion.getVersionNo();
-        int nextVersionNo = versionNo + 1;
         File versionDir = new File(migrationRootDir,
                 convertVersionNoToVersionName(versionNo));
+        if (versionNo == 0) {
+            File createDir = new File(versionDir, createDirName);
+            createDir.mkdirs();
+            File dropDir = new File(versionDir, dropDirName);
+            dropDir.mkdirs();
+        }
+
+        int nextVersionNo = versionNo + 1;
         File nextVersionDir = new File(migrationRootDir,
                 convertVersionNoToVersionName(nextVersionNo));
         if (nextVersionDir.exists()) {
             throw new NextVersionDirExistsRuntimeException(nextVersionDir
                     .getPath(), ddlVersionFileName);
         }
+
         try {
             if (versionDir.exists()) {
                 FileUtil.copyDirectory(versionDir, nextVersionDir,
@@ -885,9 +899,9 @@ public class GenerateDdlCommand extends AbstractCommand {
         for (EntityMeta entityMeta : entityMetaList) {
             tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
         }
-        DbModel model = dbModelFactory.getDbModel(tableDescList, nextVersionNo);
-        generateCreateDdl(model, new File(nextVersionDir, "create"));
-        generateDropDdl(model, new File(nextVersionDir, "drop"));
+        DdlModel model = ddlModelFactory.getDdlModel(tableDescList, nextVersionNo);
+        generateCreateDdl(model, new File(nextVersionDir, createDirName));
+        generateDropDdl(model, new File(nextVersionDir, dropDirName));
     }
 
     /**
@@ -898,7 +912,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param createDir
      *            ファイルを生成するディレクトリ
      */
-    protected void generateCreateDdl(DbModel model, File createDir) {
+    protected void generateCreateDdl(DdlModel model, File createDir) {
         GenerationContext tableContext = createGenerationContext(model,
                 createDir, createTableDdlFileName, createTableTemplateFileName);
         generator.generate(tableContext);
@@ -927,7 +941,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param dropDir
      *            ファイルを生成するディレクトリ
      */
-    protected void generateDropDdl(DbModel model, File dropDir) {
+    protected void generateDropDdl(DdlModel model, File dropDir) {
         GenerationContext tableContext = createGenerationContext(model,
                 dropDir, dropTableDdlFileName, dropTableTemplateFileName);
         generator.generate(tableContext);
@@ -997,12 +1011,12 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DbModelFactory}の実装を作成します。
+     * {@link DdlModelFactory}の実装を作成します。
      * 
-     * @return {@link DbModelFactory}の実装
+     * @return {@link DdlModelFactory}の実装
      */
-    protected DbModelFactory createDbModelFactory() {
-        return new DbModelFactoryImpl(dialect, statementDelimiter,
+    protected DdlModelFactory createDbModelFactory() {
+        return new DdlModelFactoryImpl(dialect, statementDelimiter,
                 schemaInfoFullTableName, schemaInfoColumnName);
     }
 

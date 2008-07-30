@@ -48,21 +48,21 @@ public class MssqlGenDialect extends StandardGenDialect {
         typeMap.put(Types.TIME, MssqlSqlType.TIME);
         typeMap.put(Types.TIMESTAMP, MssqlSqlType.TIMESTAMP);
 
-        namedTypeMap.put("binary", MssqlColumnType.BINARY);
-        namedTypeMap.put("bit", MssqlColumnType.BIT);
-        namedTypeMap.put("datetime", MssqlColumnType.DATETIME);
-        namedTypeMap.put("decimal", MssqlColumnType.DECIMAL);
-        namedTypeMap.put("image", MssqlColumnType.IMAGE);
-        namedTypeMap.put("int", MssqlColumnType.INT);
-        namedTypeMap.put("money", MssqlColumnType.MONEY);
-        namedTypeMap.put("nchar", MssqlColumnType.NCHAR);
-        namedTypeMap.put("ntext", MssqlColumnType.NTEXT);
-        namedTypeMap.put("numeric", MssqlColumnType.NUMERIC);
-        namedTypeMap.put("nvarchar", MssqlColumnType.NVARCHAR);
-        namedTypeMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
-        namedTypeMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
-        namedTypeMap.put("text", MssqlColumnType.TEXT);
-        namedTypeMap.put("varbinary", MssqlColumnType.VARBINARY);
+        columnTypeMap.put("binary", MssqlColumnType.BINARY);
+        columnTypeMap.put("bit", MssqlColumnType.BIT);
+        columnTypeMap.put("datetime", MssqlColumnType.DATETIME);
+        columnTypeMap.put("decimal", MssqlColumnType.DECIMAL);
+        columnTypeMap.put("image", MssqlColumnType.IMAGE);
+        columnTypeMap.put("int", MssqlColumnType.INT);
+        columnTypeMap.put("money", MssqlColumnType.MONEY);
+        columnTypeMap.put("nchar", MssqlColumnType.NCHAR);
+        columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
+        columnTypeMap.put("numeric", MssqlColumnType.NUMERIC);
+        columnTypeMap.put("nvarchar", MssqlColumnType.NVARCHAR);
+        columnTypeMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
+        columnTypeMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
+        columnTypeMap.put("text", MssqlColumnType.TEXT);
+        columnTypeMap.put("varbinary", MssqlColumnType.VARBINARY);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "function"));

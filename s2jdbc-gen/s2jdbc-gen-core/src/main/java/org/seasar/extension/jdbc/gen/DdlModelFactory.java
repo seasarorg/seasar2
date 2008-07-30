@@ -13,17 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
+package org.seasar.extension.jdbc.gen;
 
-import javax.persistence.Entity;
+import java.util.List;
 
 /**
- * @author taedium
+ * {@link DdlModel DDLのモデル}のファクトリです。
  * 
+ * @author taedium
  */
-@Entity
-public class EnumEntity {
+public interface DdlModelFactory {
 
-    /** */
-    public MyEnum enumProperty;
+    /**
+     * DDLのモデルを返します。
+     * 
+     * @param tableDesclist
+     *            テーブル記述のリスト
+     * @param versionNo
+     *            バージョン番号
+     * @return DDLのモデル
+     */
+    DdlModel getDdlModel(List<TableDesc> tableDesclist, int versionNo);
 }

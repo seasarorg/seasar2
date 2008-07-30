@@ -21,12 +21,12 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.DbModel;
+import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.MssqlGenDialect;
-import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -39,7 +39,7 @@ public class GenerateTableTest {
 
     private GeneratorImplStub generator;
 
-    private DbModel model;
+    private DdlModel model;
 
     /**
      * 
@@ -116,9 +116,9 @@ public class GenerateTableTest {
         tableDesc3.addColumnDesc(no3);
         tableDesc3.addColumnDesc(name3);
 
-        DbModelFactoryImpl factory = new DbModelFactoryImpl(
+        DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
-        model = factory.getDbModel(Arrays.asList(tableDesc, tableDesc2,
+        model = factory.getDdlModel(Arrays.asList(tableDesc, tableDesc2,
                 tableDesc3), 0);
     }
 

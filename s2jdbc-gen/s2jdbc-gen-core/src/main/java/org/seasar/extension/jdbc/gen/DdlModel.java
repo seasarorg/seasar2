@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * データベースのモデルです。
+ * DDLのモデルです。
  * 
  * @author taedium
  */
-public class DbModel {
+public class DdlModel {
 
     /** 方言 */
     protected GenDialect dialect;

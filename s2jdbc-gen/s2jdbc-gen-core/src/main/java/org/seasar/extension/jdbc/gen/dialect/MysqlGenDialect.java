@@ -45,30 +45,30 @@ public class MysqlGenDialect extends StandardGenDialect {
         typeMap.put(Types.FLOAT, MysqlSqlType.FLOAT);
         typeMap.put(Types.INTEGER, MysqlSqlType.INTEGER);
 
-        namedTypeMap.put("bigint unsigned", MysqlColumnType.BIGINT_UNSIGNED);
-        namedTypeMap.put("binary", MysqlColumnType.BINARY);
-        namedTypeMap.put("bit", MysqlColumnType.BIT);
-        namedTypeMap.put("blob", MysqlColumnType.BLOB);
-        namedTypeMap.put("datetime", MysqlColumnType.DATETIME);
-        namedTypeMap.put("decimal", MysqlColumnType.DECIMAL);
-        namedTypeMap.put("double", MysqlColumnType.DOUBLE);
-        namedTypeMap.put("int", MysqlColumnType.INT);
-        namedTypeMap.put("int unsigned", MysqlColumnType.INT_UNSIGNED);
-        namedTypeMap.put("longblob", MysqlColumnType.LONGBLOB);
-        namedTypeMap.put("longtext", MysqlColumnType.LONGTEXT);
-        namedTypeMap.put("mediumblob", MysqlColumnType.MEDIUMBLOB);
-        namedTypeMap.put("mediumint", MysqlColumnType.MEDIUMINT);
-        namedTypeMap.put("mediumint unsigned",
+        columnTypeMap.put("bigint unsigned", MysqlColumnType.BIGINT_UNSIGNED);
+        columnTypeMap.put("binary", MysqlColumnType.BINARY);
+        columnTypeMap.put("bit", MysqlColumnType.BIT);
+        columnTypeMap.put("blob", MysqlColumnType.BLOB);
+        columnTypeMap.put("datetime", MysqlColumnType.DATETIME);
+        columnTypeMap.put("decimal", MysqlColumnType.DECIMAL);
+        columnTypeMap.put("double", MysqlColumnType.DOUBLE);
+        columnTypeMap.put("int", MysqlColumnType.INT);
+        columnTypeMap.put("int unsigned", MysqlColumnType.INT_UNSIGNED);
+        columnTypeMap.put("longblob", MysqlColumnType.LONGBLOB);
+        columnTypeMap.put("longtext", MysqlColumnType.LONGTEXT);
+        columnTypeMap.put("mediumblob", MysqlColumnType.MEDIUMBLOB);
+        columnTypeMap.put("mediumint", MysqlColumnType.MEDIUMINT);
+        columnTypeMap.put("mediumint unsigned",
                 MysqlColumnType.MEDIUMINT_UNSIGNED);
-        namedTypeMap.put("mediumtext", MysqlColumnType.MEDIUMTEXT);
-        namedTypeMap
+        columnTypeMap.put("mediumtext", MysqlColumnType.MEDIUMTEXT);
+        columnTypeMap
                 .put("smallint unsigned", MysqlColumnType.SMALLINT_UNSIGNED);
-        namedTypeMap.put("tinyblob", MysqlColumnType.TINYBLOB);
-        namedTypeMap.put("tinyint", MysqlColumnType.TINYINT);
-        namedTypeMap.put("tinyint unsigned", MysqlColumnType.TINYINT_UNSIGNED);
-        namedTypeMap.put("tinytext", MysqlColumnType.TINYTEXT);
-        namedTypeMap.put("text", MysqlColumnType.TEXT);
-        namedTypeMap.put("year", MysqlColumnType.YEAR);
+        columnTypeMap.put("tinyblob", MysqlColumnType.TINYBLOB);
+        columnTypeMap.put("tinyint", MysqlColumnType.TINYINT);
+        columnTypeMap.put("tinyint unsigned", MysqlColumnType.TINYINT_UNSIGNED);
+        columnTypeMap.put("tinytext", MysqlColumnType.TINYTEXT);
+        columnTypeMap.put("text", MysqlColumnType.TEXT);
+        columnTypeMap.put("year", MysqlColumnType.YEAR);
     }
 
     @Override

@@ -13,22 +13,19 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
+package example.entity;
+
+import java.math.BigInteger;
 
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-public class StringEntity {
+public class BigIntegerEntity {
 
     /** */
-    public String stringProperty;
-
-    /** */
-    @Lob
-    public String clobProperty;
+    public BigInteger bigIntegerProperty;
 }

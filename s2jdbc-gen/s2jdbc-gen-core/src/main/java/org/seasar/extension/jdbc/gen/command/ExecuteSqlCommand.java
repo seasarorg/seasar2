@@ -36,6 +36,7 @@ import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlScriptReaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlScriptTokenizerImpl;
+import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;

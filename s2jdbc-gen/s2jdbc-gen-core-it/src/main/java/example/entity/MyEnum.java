@@ -13,19 +13,16 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
-
-import java.math.BigDecimal;
-
-import javax.persistence.Entity;
+package example.entity;
 
 /**
  * @author taedium
  * 
  */
-@Entity
-public class BigDecimalEntity {
+public enum MyEnum {
 
     /** */
-    public BigDecimal bigDecimalProperty;
+    AAA,
+    /** */
+    BBB;
 }

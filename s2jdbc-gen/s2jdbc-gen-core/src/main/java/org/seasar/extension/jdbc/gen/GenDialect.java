@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.sql.Types;
 import java.util.List;
 
 import javax.persistence.GenerationType;
@@ -46,14 +47,21 @@ public interface GenDialect {
     boolean isUserTable(String tableName);
 
     /**
-     * SQL型に対応する型を返します。
+     * SQL型を返します。
      * 
      * @param sqlType
-     *            SQL型
-     * @return SQL型に対応する型
+     *            JDBCのSQL型
+     * @return SQL型
      */
     SqlType getSqlType(int sqlType);
 
+    /**
+     * カラム型を返します。
+     * 
+     * @param columnTypeName
+     *            カラムの型名
+     * @return カラム型
+     */
     ColumnType getColumnType(String columnTypeName);
 
     /**
@@ -147,19 +155,87 @@ public interface GenDialect {
      */
     boolean isTableNotFound(Throwable throwable);
 
+    /**
+     * SQL型です。
+     * <p>
+     * JDBCのSQL型、つまり{@link Types}の定数に対応します。
+     * </p>
+     * <p>
+     * JavaクラスからDDLを生成する場合に使用できます。
+     * </p>
+     * 
+     * @author taedium
+     */
     public interface SqlType {
 
-        String getColumnDefinition(int length, int precision, int scale, boolean identity);
+        /**
+         * カラム定義を返します。
+         * 
+         * @param length
+         *            長さ
+         * @param precision
+         *            精度
+         * @param scale
+         *            スケール
+         * @param identity
+         *            IDENTITYカラムの場合{@code true}
+         * @return カラム定義
+         */
+        String getColumnDefinition(int length, int precision, int scale,
+                boolean identity);
     }
 
+    /**
+     * カラム型です。
+     * <p>
+     * データベースのメタデータが返すカラムの型名に対応します。
+     * <p>
+     * <p>
+     * データベースのメタデータからJavaコードを生成する場合に使用できます。
+     * </p>
+     * 
+     * @author taedium
+     */
     public interface ColumnType {
 
+        /**
+         * 属性のクラスを返します。
+         * 
+         * @param length
+         *            長さ
+         * @param precision
+         *            精度
+         * @param scale
+         *            スケール
+         * @return 属性のクラス
+         */
         Class<?> getAttributeClass(int length, int precision, int scale);
 
+        /**
+         * カラム定義を返します。
+         * 
+         * @param length
+         *            長さ
+         * @param precision
+         *            精度
+         * @param scale
+         *            スケール
+         * @return カラム定義
+         */
         String getColumnDefinition(int length, int precision, int scale);
 
+        /**
+         * LOBの場合{@code true}
+         * 
+         * @return LOBの場合{@code true}
+         */
         boolean isLob();
 
+        /**
+         * 時制型を返します。
+         * 
+         * @return 時制型、ただしこの型が時制を表さない場合{@code null}
+         */
         TemporalType getTemporalType();
     }
 }

@@ -37,8 +37,8 @@ public class HsqlGenDialect extends StandardGenDialect {
         typeMap.put(Types.BLOB, HsqlSqlType.BLOB);
         typeMap.put(Types.CLOB, HsqlSqlType.CLOB);
 
-        namedTypeMap.put("int", HsqlColumnType.INT);
-        namedTypeMap.put("varchar_ignorecase",
+        columnTypeMap.put("int", HsqlColumnType.INT);
+        columnTypeMap.put("varchar_ignorecase",
                 HsqlColumnType.VARCHAR_IGNORECASE);
     }
 

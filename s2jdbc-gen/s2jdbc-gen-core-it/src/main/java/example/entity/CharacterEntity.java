@@ -13,31 +13,17 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
-
-import java.util.Date;
+package example.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * @author taedium
  * 
  */
 @Entity
-public class DateEntity {
+public class CharacterEntity {
 
     /** */
-    @Temporal(TemporalType.DATE)
-    public Date dateProperty;
-
-    /** */
-    @Temporal(TemporalType.TIME)
-    public Date timeProperty;
-
-    /** */
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date timestampProperty;
-
+    public Character characterProperty;
 }

@@ -13,9 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package example.entity.type;
+package example.entity;
 
-import java.sql.Time;
+import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
@@ -24,8 +24,8 @@ import javax.persistence.Entity;
  * 
  */
 @Entity
-public class TimeEntity {
+public class BigDecimalEntity {
 
     /** */
-    public Time timeProperty;
+    public BigDecimal bigDecimalProperty;
 }

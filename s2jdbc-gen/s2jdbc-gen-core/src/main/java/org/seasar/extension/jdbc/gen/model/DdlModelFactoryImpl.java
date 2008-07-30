@@ -18,18 +18,18 @@ package org.seasar.extension.jdbc.gen.model;
 import java.sql.Types;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.DbModel;
-import org.seasar.extension.jdbc.gen.DbModelFactory;
+import org.seasar.extension.jdbc.gen.DdlModel;
+import org.seasar.extension.jdbc.gen.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 
 /**
- * {@link DbModelFactory}の実装クラスです。
+ * {@link DdlModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
-public class DbModelFactoryImpl implements DbModelFactory {
+public class DdlModelFactoryImpl implements DdlModelFactory {
 
     /** 方言 */
     protected GenDialect dialect;
@@ -56,7 +56,7 @@ public class DbModelFactoryImpl implements DbModelFactory {
      *            スキーマのバージョン番号を格納するカラム名
      * 
      */
-    public DbModelFactoryImpl(GenDialect dialect, char statementDelimiter,
+    public DdlModelFactoryImpl(GenDialect dialect, char statementDelimiter,
             String schemaInfoFullTableName, String schemaInfoColumnName) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
@@ -73,8 +73,8 @@ public class DbModelFactoryImpl implements DbModelFactory {
         this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
-    public DbModel getDbModel(List<TableDesc> tableDescList, int versionNo) {
-        DbModel model = new DbModel();
+    public DdlModel getDdlModel(List<TableDesc> tableDescList, int versionNo) {
+        DdlModel model = new DdlModel();
         model.setDialect(dialect);
         model.setDelimiter(statementDelimiter);
         for (TableDesc tableDesc : tableDescList) {

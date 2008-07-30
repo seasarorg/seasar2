@@ -42,15 +42,15 @@ public class DerbyGenDialect extends StandardGenDialect {
         typeMap.put(Types.DECIMAL, DerbySqlType.DECIMAL);
         typeMap.put(Types.FLOAT, DerbySqlType.FLOAT);
 
-        namedTypeMap.put("blob", DerbyColumnType.BLOB);
-        namedTypeMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);
-        namedTypeMap.put("clob", DerbyColumnType.CLOB);
-        namedTypeMap.put("decimal", DerbyColumnType.DECIMAL);
-        namedTypeMap.put("long varchar bit data",
+        columnTypeMap.put("blob", DerbyColumnType.BLOB);
+        columnTypeMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);
+        columnTypeMap.put("clob", DerbyColumnType.CLOB);
+        columnTypeMap.put("decimal", DerbyColumnType.DECIMAL);
+        columnTypeMap.put("long varchar bit data",
                 DerbyColumnType.LONGVARCHAR_BIT);
-        namedTypeMap.put("long varchar", DerbyColumnType.LONGVARCHAR);
-        namedTypeMap
-                .put("varchar () for bit data", DerbyColumnType.VARCHAR_BIT);
+        columnTypeMap.put("long varchar", DerbyColumnType.LONGVARCHAR);
+        columnTypeMap.put("varchar () for bit data",
+                DerbyColumnType.VARCHAR_BIT);
     }
 
     @Override
@@ -100,6 +100,11 @@ public class DerbyGenDialect extends StandardGenDialect {
         }
     }
 
+    /**
+     * Derby用の{@link ColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class DerbyColumnType extends StandardColumnType {
 
         private static DerbyColumnType BLOB = new DerbyColumnType("blob($l)",
@@ -121,17 +126,43 @@ public class DerbyGenDialect extends StandardGenDialect {
                 "long varchar", String.class);
 
         private static DerbyColumnType VARCHAR_BIT = new DerbyColumnType(
-                "varchar(%d) for bit data", byte[].class);
+                "varchar($l) for bit data", byte[].class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         * @param attributeClass
+         */
         public DerbyColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public DerbyColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public DerbyColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

@@ -42,15 +42,6 @@
 				<file name="teardown-supported.sql"/>
 			</sqlFileList>
 		</exec-sql>
-		<migrate 
-			classpathref="classpath"
-			migrationrootdir="temp/db"
-		/>
-		<migrate 
-			classpathref="classpath"
-			migrationrootdir="temp/db"
-			to="0"
-		/>
 	</target>
 	
 	<target name="testFromEntityToDb" >
@@ -137,14 +128,31 @@
 				<include name="**"/>
 			</fileset>
 		</copy>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="setup-supported.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<gen-entity
+			rootpackagename="example"
+			javafiledestdir="temp/src"
+			overwrite="true"
+			classpathRef="classpath"
+		/>
+		<exec-sql classpathref="classpath">
+			<sqlFileList dir="sql">
+				<file name="teardown-supported.sql"/>
+			</sqlFileList>
+		</exec-sql>
 		<javac 
-			srcdir="../../src/main/java"
 			destdir="temp/build"
 			classpathref="classpath"
 			encoding="UTF-8"
 			fork="true"
-			debug="on"
-		/>
+			debug="on">
+			<src path="temp/src"/>
+			<src path="../../src/main/java"/>
+		</javac>
 		<!-- test -->
 		<gen-ddl 
 			classpathRootDir="temp/build"

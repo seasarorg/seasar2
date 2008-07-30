@@ -20,12 +20,12 @@ import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DbModel;
+import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.model.DbModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -38,7 +38,7 @@ public class GenerateForeignKeyTest {
 
     private GeneratorImplStub generator;
 
-    private DbModel model;
+    private DdlModel model;
 
     /**
      * 
@@ -73,9 +73,9 @@ public class GenerateForeignKeyTest {
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 
-        DbModelFactoryImpl factory = new DbModelFactoryImpl(
+        DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION");
-        model = factory.getDbModel(Arrays.asList(tableDesc), 0);
+        model = factory.getDdlModel(Arrays.asList(tableDesc), 0);
     }
 
     /**

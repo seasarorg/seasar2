@@ -48,18 +48,18 @@ public class OracleGenDialect extends StandardGenDialect {
         typeMap.put(Types.TIME, OracleSqlType.TIME);
         typeMap.put(Types.VARCHAR, OracleSqlType.VARCHAR);
 
-        namedTypeMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
-        namedTypeMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
-        namedTypeMap.put("blob", OracleColumnType.BLOB);
-        namedTypeMap.put("clob", OracleColumnType.CLOB);
-        namedTypeMap.put("long", OracleColumnType.LONG);
-        namedTypeMap.put("long raw", OracleColumnType.LONG_RAW);
-        namedTypeMap.put("nchar", OracleColumnType.NCHAR);
-        namedTypeMap.put("nclob", OracleColumnType.NCLOB);
-        namedTypeMap.put("number", OracleColumnType.NUMBER);
-        namedTypeMap.put("nvarchar2", OracleColumnType.NVARCHAR2);
-        namedTypeMap.put("raw", OracleColumnType.RAW);
-        namedTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
+        columnTypeMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
+        columnTypeMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
+        columnTypeMap.put("blob", OracleColumnType.BLOB);
+        columnTypeMap.put("clob", OracleColumnType.CLOB);
+        columnTypeMap.put("long", OracleColumnType.LONG);
+        columnTypeMap.put("long raw", OracleColumnType.LONG_RAW);
+        columnTypeMap.put("nchar", OracleColumnType.NCHAR);
+        columnTypeMap.put("nclob", OracleColumnType.NCLOB);
+        columnTypeMap.put("number", OracleColumnType.NUMBER);
+        columnTypeMap.put("nvarchar2", OracleColumnType.NVARCHAR2);
+        columnTypeMap.put("raw", OracleColumnType.RAW);
+        columnTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
                 "procedure"));
