@@ -112,7 +112,7 @@ public class SchemaVersionImpl implements SchemaVersion {
             }
         } catch (SQLRuntimeException e) {
             if (dialect.isTableNotFound(e)) {
-                logger.log("IS2JDBCGen0004", new Object[] { sql });
+                logger.log("IS2JDBCGen0004", new Object[] { fullTableName });
                 return 0;
             }
             throw e;

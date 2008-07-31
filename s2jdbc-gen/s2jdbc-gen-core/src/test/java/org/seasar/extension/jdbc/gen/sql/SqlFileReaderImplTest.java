@@ -22,7 +22,7 @@ import java.io.StringReader;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.SqlScriptReader;
+import org.seasar.extension.jdbc.gen.SqlFileReader;
 import org.seasar.extension.jdbc.gen.dialect.MssqlGenDialect;
 
 import static org.junit.Assert.*;
@@ -31,9 +31,9 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class SqlScriptReaderImplTest {
+public class SqlFileReaderImplTest {
 
-    private SqlScriptTokenizerImpl tokenizer;
+    private SqlFileTokenizerImpl tokenizer;
 
     private MssqlGenDialect dialect;
 
@@ -43,7 +43,7 @@ public class SqlScriptReaderImplTest {
     @Before
     public void setUp() {
         dialect = new MssqlGenDialect();
-        tokenizer = new SqlScriptTokenizerImpl(';', "go");
+        tokenizer = new SqlFileTokenizerImpl(';', "go");
     }
 
     /**
@@ -52,7 +52,7 @@ public class SqlScriptReaderImplTest {
      */
     @Test
     public void testReadSql_delimiter() throws Exception {
-        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+        SqlFileReader reader = new SqlFileReaderImpl(new File("dummy"),
                 "UTF-8", tokenizer, dialect) {
 
             @Override
@@ -79,7 +79,7 @@ public class SqlScriptReaderImplTest {
      */
     @Test
     public void testReadSql_sqlBlock() throws Exception {
-        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+        SqlFileReader reader = new SqlFileReaderImpl(new File("dummy"),
                 "UTF-8", tokenizer, dialect) {
 
             @Override
@@ -101,7 +101,7 @@ public class SqlScriptReaderImplTest {
      */
     @Test
     public void testReadSql_notSqlBlock() throws Exception {
-        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+        SqlFileReader reader = new SqlFileReaderImpl(new File("dummy"),
                 "UTF-8", tokenizer, dialect) {
 
             @Override
@@ -123,7 +123,7 @@ public class SqlScriptReaderImplTest {
      */
     @Test
     public void testReadSql_commentBlock() throws Exception {
-        SqlScriptReader reader = new SqlScriptReaderImpl(new File("dummy"),
+        SqlFileReader reader = new SqlFileReaderImpl(new File("dummy"),
                 "UTF-8", tokenizer, dialect) {
 
             @Override

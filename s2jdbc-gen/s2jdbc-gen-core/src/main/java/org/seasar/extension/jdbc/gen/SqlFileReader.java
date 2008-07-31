@@ -13,27 +13,25 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.sql;
-
-import org.junit.Test;
-import org.seasar.framework.mock.sql.MockConnection;
+package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * SQLスクリプトのリーダです。
  * 
+ * @author taedium
  */
-public class SqlExecutorImplTest {
+public interface SqlFileReader {
 
     /**
+     * SQLを返します。
      * 
+     * @return SQLを読み取れる場合はそのSQL、SQLを読み取れない場合は{@code null}
      */
-    @Test
-    public void testExecute() {
-        SqlExecutorImpl executor = new SqlExecutorImpl("aaa", "bbb");
-        MockConnection connection = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(
-                connection, true);
-        executor.execute(context);
-    }
+    String readSql();
+
+    /**
+     * クローズします。
+     */
+    void close();
 
 }

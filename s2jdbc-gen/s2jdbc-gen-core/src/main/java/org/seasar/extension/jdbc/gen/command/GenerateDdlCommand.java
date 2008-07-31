@@ -184,8 +184,10 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
+    /** スキーマ作成用のSQLファイルを格納するディレクトリ名 */
     protected String createDirName = "create";
 
+    /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
     protected String dropDirName = "drop";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
@@ -899,7 +901,8 @@ public class GenerateDdlCommand extends AbstractCommand {
         for (EntityMeta entityMeta : entityMetaList) {
             tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
         }
-        DdlModel model = ddlModelFactory.getDdlModel(tableDescList, nextVersionNo);
+        DdlModel model = ddlModelFactory.getDdlModel(tableDescList,
+                nextVersionNo);
         generateCreateDdl(model, new File(nextVersionDir, createDirName));
         generateDropDdl(model, new File(nextVersionDir, dropDirName));
     }

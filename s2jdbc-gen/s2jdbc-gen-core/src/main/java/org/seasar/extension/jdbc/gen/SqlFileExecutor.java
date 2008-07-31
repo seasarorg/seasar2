@@ -15,23 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.io.File;
+
 /**
- * SQLスクリプトのリーダです。
+ * SQLファイルを実行するインタフェースです。
  * 
  * @author taedium
  */
-public interface SqlScriptReader {
+public interface SqlFileExecutor {
 
     /**
-     * SQLを返します。
+     * SQLファイルを実行します。
      * 
-     * @return SQLを読み取れる場合はそのSQL、SQLを読み取れない場合は{@code null}
+     * @param context
+     *            SQLの実行コンテキスト
+     * @param sqlFile
+     *            SQLファイル
      */
-    String readSql();
-
-    /**
-     * クローズします。
-     */
-    void close();
-
+    void execute(SqlExecutionContext context, File sqlFile);
 }

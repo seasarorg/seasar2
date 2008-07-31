@@ -20,7 +20,7 @@ package org.seasar.extension.jdbc.gen;
  * 
  * @author taedium
  */
-public interface SqlScriptTokenizer {
+public interface SqlFileTokenizer {
 
     /**
      * トークンのタイプを表します。

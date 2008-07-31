@@ -28,14 +28,11 @@ import org.seasar.extension.jdbc.gen.DdlVersion;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SchemaVersion;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlExecutor;
-import org.seasar.extension.jdbc.gen.SqlScriptReader;
-import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
+import org.seasar.extension.jdbc.gen.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlExecutorImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlScriptReaderImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlScriptTokenizerImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
@@ -101,8 +98,10 @@ public class MigrateCommand extends AbstractCommand {
     /** マイグレーション先となるバージョン番号 */
     protected Integer to = null;
 
+    /** スキーマ作成用のSQLファイルを格納するディレクトリ名 */
     protected String createDirName = "create";
 
+    /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
     protected String dropDirName = "drop";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
@@ -114,11 +113,8 @@ public class MigrateCommand extends AbstractCommand {
     /** 方言 */
     protected GenDialect dialect;
 
-    /** SQLスクリプトのリーダ */
-    protected SqlScriptReader sqlScriptReader;
-
-    /** SQLスクリプトのトークナイザ */
-    protected SqlScriptTokenizer sqlScriptTokenizer;
+    /** SQLファイルの実行者 */
+    protected SqlFileExecutor sqlFileExecutor;
 
     /** スキーマのバージョン */
     protected SchemaVersion schemaVersion;
@@ -365,10 +361,9 @@ public class MigrateCommand extends AbstractCommand {
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-
+        sqlFileExecutor = createSqlFileExecutor();
         schemaVersion = createSchemaVersion();
         ddlVersion = createDdlVersion();
-        sqlScriptTokenizer = createScriptTokenizer();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -406,10 +401,13 @@ public class MigrateCommand extends AbstractCommand {
             try {
                 dump(context);
                 for (File sqlFile : getSqlFileList(dropDir)) {
-                    executeSqlFile(context, sqlFile);
+                    sqlFileExecutor.execute(context, sqlFile);
                 }
             } finally {
                 if (!context.getExceptionList().isEmpty()) {
+                    for (SqlFailedException e : context.getExceptionList()) {
+                        logger.error(e.getMessage());
+                    }
                     throw context.getExceptionList().get(0);
                 }
             }
@@ -441,13 +439,16 @@ public class MigrateCommand extends AbstractCommand {
         try {
             try {
                 for (File sqlFile : getSqlFileList(createDir)) {
-                    executeSqlFile(context, sqlFile);
+                    sqlFileExecutor.execute(context, sqlFile);
                     if (sqlFile.getName().equals(createTableDdlFileName)) {
                         load(context);
                     }
                 }
             } finally {
                 if (!context.getExceptionList().isEmpty()) {
+                    for (SqlFailedException e : context.getExceptionList()) {
+                        logger.error(e.getMessage());
+                    }
                     throw context.getExceptionList().get(0);
                 }
             }
@@ -462,27 +463,6 @@ public class MigrateCommand extends AbstractCommand {
      * @param context
      */
     protected void load(SqlExecutionContext context) {
-    }
-
-    /**
-     * SQLファイルを実行します。
-     * 
-     * @param context
-     *            SQLの実行コンテキスト
-     * @param sqlFile
-     *            SQLファイル
-     */
-    protected void executeSqlFile(SqlExecutionContext context, File sqlFile) {
-        SqlScriptReader reader = createSqlScriptReader(sqlFile);
-        try {
-            for (String sql = reader.readSql(); sql != null; sql = reader
-                    .readSql()) {
-                SqlExecutor sqlExecutor = createSqlExecutor(sqlFile, sql);
-                sqlExecutor.execute(context);
-            }
-        } finally {
-            reader.close();
-        }
     }
 
     /**
@@ -552,14 +532,13 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * {@link SqlScriptTokenizer}の実装を作成します。
+     * {@link SqlFileExecutor}の実装を作成します。
      * 
-     * @return {@link SqlScriptTokenizer}の実装
+     * @return {@link SqlFileExecutor}の実装
      */
-    protected SqlScriptTokenizer createScriptTokenizer() {
-        String blockDelimiter = this.blockDelimiter != null ? this.blockDelimiter
-                : dialect.getSqlBlockDelimiter();
-        return new SqlScriptTokenizerImpl(statementDelimiter, blockDelimiter);
+    protected SqlFileExecutor createSqlFileExecutor() {
+        return new SqlFileExecutorImpl(dialect, ddlFileEncoding,
+                statementDelimiter, blockDelimiter);
     }
 
     /**
@@ -570,32 +549,6 @@ public class MigrateCommand extends AbstractCommand {
     protected SqlExecutionContext createSqlExecutionContext() {
         return new SqlExecutionContextImpl(DataSourceUtil
                 .getConnection(dataSource), haltOnError);
-    }
-
-    /**
-     * {@link SqlScriptReader}の実装を作成します。
-     * 
-     * @param sqlFile
-     *            SQLファイル
-     * 
-     * @return {@link SqlScriptReader}の実装
-     */
-    protected SqlScriptReader createSqlScriptReader(File sqlFile) {
-        return new SqlScriptReaderImpl(sqlFile, ddlFileEncoding,
-                sqlScriptTokenizer, dialect);
-    }
-
-    /**
-     * {@link SqlExecutor}の実装を作成します。
-     * 
-     * @param sqlFile
-     *            SQLファイル
-     * @param sql
-     *            SQL
-     * @return {@link SqlExecutor}の実装
-     */
-    protected SqlExecutor createSqlExecutor(File sqlFile, String sql) {
-        return new SqlExecutorImpl(sqlFile.getPath(), sql);
     }
 
     @Override

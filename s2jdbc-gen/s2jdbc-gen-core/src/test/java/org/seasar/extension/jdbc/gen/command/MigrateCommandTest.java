@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Test;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -49,9 +47,7 @@ public class MigrateCommandTest {
         command.init();
         assertNotNull(command.createSchemaVersion());
         assertNotNull(command.createDdlVersion());
-        assertNotNull(command.createScriptTokenizer());
-        assertNotNull(command.createSqlScriptReader(new File("sqlFile")));
-        assertNotNull(command.createSqlExecutor(new File("sqlFile"), "bbb"));
+        assertNotNull(command.createSqlFileExecutor());
         assertNotNull(command.createSqlExecutionContext());
     }
 }

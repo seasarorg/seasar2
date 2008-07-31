@@ -26,16 +26,12 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlExecutor;
-import org.seasar.extension.jdbc.gen.SqlScriptReader;
-import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
+import org.seasar.extension.jdbc.gen.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyEmptyRuntimeException;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlExecutorImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlScriptReaderImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlScriptTokenizerImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
@@ -83,7 +79,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
     protected char statementDelimiter = ';';
 
     /** すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false} */
-    protected boolean transactional = true;
+    protected boolean transactional = false;
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -97,8 +93,8 @@ public class ExecuteSqlCommand extends AbstractCommand {
     /** ユーザトランザクション */
     protected UserTransaction userTransaction;
 
-    /** SQLスクリプトのトークナイザ */
-    protected SqlScriptTokenizer sqlScriptTokenizer;
+    /** SQLファイルの実行者 */
+    protected SqlFileExecutor sqlFileExecutor;
 
     /**
      * インスタンスを構築します。
@@ -298,8 +294,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
             userTransaction = SingletonS2Container
                     .getComponent(UserTransaction.class);
         }
-
-        sqlScriptTokenizer = createScriptTokenizer();
+        sqlFileExecutor = createSqlFileExecutor();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -341,7 +336,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
         SqlExecutionContext context = createSqlExecutionContext();
         try {
             for (File sqlFile : sqlFileList) {
-                executeSqlFile(context, sqlFile);
+                sqlFileExecutor.execute(context, sqlFile);
             }
         } finally {
             if (!context.getExceptionList().isEmpty()) {
@@ -354,60 +349,13 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     /**
-     * SQLファイルを実行します。
+     * {@link SqlFileExecutor}の実装を返します。
      * 
-     * @param context
-     *            SQLの実行コンテキスト
-     * @param sqlFile
-     *            SQLファイル
+     * @return {@link SqlFileExecutor}の実装
      */
-    protected void executeSqlFile(SqlExecutionContext context, File sqlFile) {
-        SqlScriptReader reader = createSqlScriptReader(sqlFile);
-        try {
-            for (String sql = reader.readSql(); sql != null; sql = reader
-                    .readSql()) {
-                SqlExecutor sqlExecutor = createSqlExecutor(sqlFile, sql);
-                sqlExecutor.execute(context);
-            }
-        } finally {
-            reader.close();
-        }
-    }
-
-    /**
-     * {@link SqlExecutor}の実装を作成します。
-     * 
-     * @param sqlFile
-     *            SQLファイル
-     * @param sql
-     *            SQL
-     * @return {@link SqlExecutor}の実装
-     */
-    protected SqlExecutor createSqlExecutor(File sqlFile, String sql) {
-        return new SqlExecutorImpl(sqlFile.getPath(), sql);
-    }
-
-    /**
-     * {@link SqlScriptReader}の実装を作成します。
-     * 
-     * @param sqlFile
-     *            SQLファイル
-     * @return {@link SqlScriptReader}の実装
-     */
-    protected SqlScriptReader createSqlScriptReader(File sqlFile) {
-        return new SqlScriptReaderImpl(sqlFile, sqlFileEncoding,
-                sqlScriptTokenizer, dialect);
-    }
-
-    /**
-     * {@link SqlScriptTokenizer}の実装を作成します。
-     * 
-     * @return {@link SqlScriptTokenizer}の実装
-     */
-    protected SqlScriptTokenizer createScriptTokenizer() {
-        String blockDelimiter = this.blockDelimiter != null ? this.blockDelimiter
-                : dialect.getSqlBlockDelimiter();
-        return new SqlScriptTokenizerImpl(statementDelimiter, blockDelimiter);
+    protected SqlFileExecutor createSqlFileExecutor() {
+        return new SqlFileExecutorImpl(dialect, sqlFileEncoding,
+                statementDelimiter, blockDelimiter);
     }
 
     /**

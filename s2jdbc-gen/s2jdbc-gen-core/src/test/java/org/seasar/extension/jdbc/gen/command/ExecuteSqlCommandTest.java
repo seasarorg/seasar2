@@ -64,9 +64,7 @@ public class ExecuteSqlCommandTest {
         command.getSqlFileList().add(new File("aaa"));
         command.validate();
         command.init();
-        assertNotNull(command.createScriptTokenizer());
-        assertNotNull(command.createSqlScriptReader(new File("sqlFile")));
-        assertNotNull(command.createSqlExecutor(new File("sqlFile"), "bbb"));
+        assertNotNull(command.createSqlFileExecutor());
         assertNotNull(command.createSqlExecutionContext());
     }
 }

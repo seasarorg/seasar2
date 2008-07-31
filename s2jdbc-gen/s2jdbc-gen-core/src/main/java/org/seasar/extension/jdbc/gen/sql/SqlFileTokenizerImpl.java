@@ -15,16 +15,16 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
+import org.seasar.extension.jdbc.gen.SqlFileTokenizer;
 
-import static org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType.*;
+import static org.seasar.extension.jdbc.gen.SqlFileTokenizer.TokenType.*;
 
 /**
- * {@link SqlScriptTokenizer}の実装クラスです。
+ * {@link SqlFileTokenizer}の実装クラスです。
  * 
  * @author taedium
  */
-public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
+public class SqlFileTokenizerImpl implements SqlFileTokenizer {
 
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter;
@@ -61,7 +61,7 @@ public class SqlScriptTokenizerImpl implements SqlScriptTokenizer {
      * @param blockDelimiter
      *            SQLブロックの区切り文字
      */
-    public SqlScriptTokenizerImpl(char statementDelimiter, String blockDelimiter) {
+    public SqlFileTokenizerImpl(char statementDelimiter, String blockDelimiter) {
         if (isOther(statementDelimiter) || statementDelimiter == '\'') {
             throw new IllegalArgumentException("statementDelimiter");
         }

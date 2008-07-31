@@ -25,23 +25,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlScriptReader;
-import org.seasar.extension.jdbc.gen.SqlScriptTokenizer;
-import org.seasar.extension.jdbc.gen.SqlScriptTokenizer.TokenType;
+import org.seasar.extension.jdbc.gen.SqlFileReader;
+import org.seasar.extension.jdbc.gen.SqlFileTokenizer;
+import org.seasar.extension.jdbc.gen.SqlFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
- * {@link SqlScriptReader}の実装クラスです。
+ * {@link SqlFileReader}の実装クラスです。
  * 
  * @author taedium
  */
-public class SqlScriptReaderImpl implements SqlScriptReader {
+public class SqlFileReaderImpl implements SqlFileReader {
 
     /** ロガー */
     protected static Logger logger = Logger
-            .getLogger(SqlScriptReaderImpl.class);
+            .getLogger(SqlFileReaderImpl.class);
 
     /** SQLファイル */
     protected File sqlFile;
@@ -50,7 +50,7 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
     protected String sqlFileEncoding;
 
     /** トークナイザ */
-    protected SqlScriptTokenizer tokenizer;
+    protected SqlFileTokenizer tokenizer;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -71,8 +71,8 @@ public class SqlScriptReaderImpl implements SqlScriptReader {
      * @param dialect
      *            方言
      */
-    public SqlScriptReaderImpl(File sqlFile, String sqlFileEncoding,
-            SqlScriptTokenizer tokenizer, GenDialect dialect) {
+    public SqlFileReaderImpl(File sqlFile, String sqlFileEncoding,
+            SqlFileTokenizer tokenizer, GenDialect dialect) {
         if (sqlFile == null) {
             throw new NullPointerException("sqlFile");
         }
