@@ -16,9 +16,14 @@ create table date_table (date_column date);
 create table time_table (time_column time);
 create table timestamp_table (timestamp_column timestamp);
 
-CREATE PROCEDURE PROC_SIMPLETYPE_PARAM(
-  IN param1 INTEGER)
+CREATE PROCEDURE PROC_DTO_PARAM(
+  IN param1 INTEGER,
+  INOUT param2 INTEGER,
+  OUT param3 INTEGER)
 LANGUAGE SQL
 DYNAMIC RESULT SETS 0
 BEGIN
-END@
+  SET param2 = param2 + param1;
+  SET param3 = param1;
+END
+@

@@ -16,4 +16,4 @@ drop table date_table;
 drop table time_table;
 drop table timestamp_table;
 
-DROP PROCEDURE PROC_SIMPLETYPE_PARAM@
+DROP PROCEDURE PROC_DTO_PARAM;
