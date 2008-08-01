@@ -108,6 +108,9 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** Javaコード生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";
 
+    /** Javaコード生成の対象としないテーブル名の正規表現 */
+    protected String ignoreTableNamePattern = "SCHEMA_INFO";
+
     /** バージョンカラムの名前 */
     protected String versionColumnName = "version";
 
@@ -389,6 +392,25 @@ public class GenerateEntityCommand extends AbstractCommand {
     }
 
     /**
+     * Javaコード生成の対象としないテーブル名の正規表現を返します。
+     * 
+     * @return Javaコード生成の対象としないテーブル名の正規表現
+     */
+    public String getIgnoreTableNamePattern() {
+        return ignoreTableNamePattern;
+    }
+
+    /**
+     * Javaコード生成の対象としないテーブル名の正規表現を設定します。
+     * 
+     * @param ignoreTableNamePattern
+     *            Javaコード生成の対象としないテーブル名の正規表現
+     */
+    public void setIgnoreTableNamePattern(String ignoreTableNamePattern) {
+        this.ignoreTableNamePattern = ignoreTableNamePattern;
+    }
+
+    /**
      * バージョンカラムの名前を返します。
      * 
      * @return バージョンカラムの名前
@@ -460,7 +482,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     protected DbTableMetaReader createDbTableMetaReader() {
         return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
-                tableNamePattern);
+                tableNamePattern, ignoreTableNamePattern);
     }
 
     /**

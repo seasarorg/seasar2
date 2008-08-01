@@ -31,7 +31,10 @@ import freemarker.template.TemplateException;
  */
 public class TemplateUtil {
 
-    private TemplateUtil() {
+    /**
+     * 
+     */
+    protected TemplateUtil() {
     }
 
     /**

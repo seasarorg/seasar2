@@ -35,7 +35,10 @@ import freemarker.template.Template;
  */
 public class ConfigurationUtil {
 
-    private ConfigurationUtil() {
+    /**
+     * 
+     */
+    protected ConfigurationUtil() {
     }
 
     /**

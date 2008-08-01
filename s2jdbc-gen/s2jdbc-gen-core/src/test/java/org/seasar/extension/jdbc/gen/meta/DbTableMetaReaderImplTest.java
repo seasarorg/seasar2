@@ -72,7 +72,7 @@ public class DbTableMetaReaderImplTest {
         };
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "table");
+                "table", "ignoreTable");
         Set<String> list = reader.getPrimaryKeySet(metaData, "catalogName",
                 "schemaName", "table");
         assertEquals(2, list.size());
@@ -128,7 +128,7 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "table");
+                "table", "ignoreTable");
         List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
                 "catalogName", "schemaName", "SchemaInfoTableName");
         assertEquals(2, list.size());
@@ -181,7 +181,7 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "table");
+                ".*", "ignoreTable");
         List<DbTableMeta> list = reader.getDbTableMetaList(metaData,
                 "schemaName");
         assertEquals(2, list.size());
@@ -212,11 +212,10 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "A.*");
-        List<DbTableMeta> result = reader.filterDbTableMetaList(list, "A.*");
-        assertEquals(2, result.size());
+                "A.*", "AB.*");
+        List<DbTableMeta> result = reader.filterDbTableMetaList(list);
+        assertEquals(1, result.size());
         assertEquals("AAA", result.get(0).getName());
-        assertEquals("abc", result.get(1).getName());
     }
 
 }

@@ -25,7 +25,9 @@ import org.seasar.framework.util.StringConversionUtil;
  */
 public class VersionUtil {
 
-    /** */
+    /** 
+     *
+     **/
     protected VersionUtil() {
     }
 

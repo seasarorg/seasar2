@@ -56,7 +56,10 @@ public class AnnotationUtil {
             .getDeclaredField(AnnotationUtil.class, "DEFAULT_TABLE_GENERATOR")
             .getAnnotation(TableGenerator.class);
 
-    private AnnotationUtil() {
+    /**
+     * 
+     */
+    protected AnnotationUtil() {
     }
 
     /**

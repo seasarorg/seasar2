@@ -226,7 +226,7 @@ public class DumpDbMetaCommand extends AbstractCommand {
      */
     protected DbTableMetaReader createDbTableMetaReader() {
         return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
-                tableNamePattern);
+                tableNamePattern, "");
     }
 
     @Override

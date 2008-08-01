@@ -34,7 +34,10 @@ public class EnvUtil {
         VALUE_FIELD.setAccessible(true);
     }
 
-    private EnvUtil() {
+    /**
+     * 
+     */
+    protected EnvUtil() {
     }
 
     /**

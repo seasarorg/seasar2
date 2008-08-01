@@ -27,7 +27,10 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class CloseableUtil {
 
-    private CloseableUtil() {
+    /**
+     * 
+     */
+    protected CloseableUtil() {
     }
 
     /**

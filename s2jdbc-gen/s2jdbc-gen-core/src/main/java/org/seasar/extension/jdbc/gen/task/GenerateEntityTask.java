@@ -137,6 +137,16 @@ public class GenerateEntityTask extends AbstractTask {
     }
 
     /**
+     * Javaコード生成の対象としないテーブル名の正規表現を設定します。
+     * 
+     * @param ignoreTableNamePattern
+     *            Javaコード生成の対象としないテーブル名の正規表現
+     */
+    public void setIgnoreTableNamePattern(String ignoreTableNamePattern) {
+        command.setIgnoreTableNamePattern(ignoreTableNamePattern);
+    }
+
+    /**
      * テンプレートファイルのエンコーディングを設定します。
      * 
      * @param templateFileEncoding
