@@ -17,10 +17,10 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
-import java.util.Arrays;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenDialect.ColumnType;
+import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
 import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
 
 import static org.junit.Assert.*;
@@ -84,11 +84,20 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testIsSqlBlockStartWords() throws Exception {
-        assertTrue(dialect.isSqlBlockStartWords(Arrays.asList("create", "or",
-                "replace", "procedure")));
-        assertFalse(dialect.isSqlBlockStartWords(Arrays.asList("drop",
-                "procedure")));
-        assertTrue(dialect.isSqlBlockStartWords(Arrays.asList("begin")));
+    public void testCreateSqlBlockContext() throws Exception {
+        SqlBlockContext context = dialect.createSqlBlockContext();
+        context.addKeyword("create");
+        context.addKeyword("or");
+        context.addKeyword("replace");
+        context.addKeyword("procedure");
+        assertTrue(context.isInSqlBlock());
+
+        context = dialect.createSqlBlockContext();
+        context.addKeyword("drop");
+        assertFalse(context.isInSqlBlock());
+
+        context = dialect.createSqlBlockContext();
+        context.addKeyword("begin");
+        assertTrue(context.isInSqlBlock());
     }
 }

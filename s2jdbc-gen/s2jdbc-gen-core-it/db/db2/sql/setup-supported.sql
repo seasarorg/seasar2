@@ -15,3 +15,10 @@ create table blob_table (blob_column blob);
 create table date_table (date_column date);
 create table time_table (time_column time);
 create table timestamp_table (timestamp_column timestamp);
+
+CREATE PROCEDURE PROC_SIMPLETYPE_PARAM(
+  IN param1 INTEGER)
+LANGUAGE SQL
+DYNAMIC RESULT SETS 0
+BEGIN
+END@

@@ -100,6 +100,11 @@ public class PostgreGenDialect extends StandardGenDialect {
         return TABLE_NOT_FOUND_SQL_STATE.equals(sqlState);
     }
 
+    @Override
+    public SqlBlockContext createSqlBlockContext() {
+        return new PostgreSqlBlockContext();
+    }
+
     /**
      * PostgreSQL用の{@link SqlType}の実装です。
      * 
@@ -159,8 +164,9 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     /**
-     * @author taedium
+     * PostgreSQL用の{@link ColumnType}の実装です。
      * 
+     * @author taedium
      */
     public static class PostgreColumnType extends StandardColumnType {
 
@@ -279,6 +285,27 @@ public class PostgreGenDialect extends StandardGenDialect {
         public PostgreColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, false, temporalType);
+        }
+    }
+
+    /**
+     * {@link StandardColumnType}の実装クラスです。
+     * 
+     * @author taedium
+     */
+    public static class PostgreSqlBlockContext implements SqlBlockContext {
+
+        /** ブロックの内側の場合{@code true} */
+        protected boolean inSqlBlock;
+
+        public void addKeyword(String keyword) {
+            if ("$$".equals(keyword)) {
+                inSqlBlock = !inSqlBlock;
+            }
+        }
+
+        public boolean isInSqlBlock() {
+            return inSqlBlock;
         }
     }
 }

@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
 import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
 
 import static org.junit.Assert.*;
@@ -50,5 +51,19 @@ public class PostgreGenDialectTest {
         SqlType type = dialect.getSqlType(Types.BIGINT);
         assertEquals("bigserial", type.getColumnDefinition(10, 0, 0, true));
         assertEquals("bigint", type.getColumnDefinition(10, 0, 0, false));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCreateSqlBlockContext() throws Exception {
+        SqlBlockContext context = dialect.createSqlBlockContext();
+        assertFalse(context.isInSqlBlock());
+        context.addKeyword("$$");
+        assertTrue(context.isInSqlBlock());
+        context.addKeyword("$$");
+        assertFalse(context.isInSqlBlock());
     }
 }

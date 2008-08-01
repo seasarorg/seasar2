@@ -60,15 +60,6 @@ public class SybaseGenDialect extends StandardGenDialect {
         columnTypeMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
         columnTypeMap.put("text", SybaseColumnType.TEXT);
         columnTypeMap.put("varbinary", SybaseColumnType.VARBINARY);
-
-        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("declare"));
-        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -84,6 +75,11 @@ public class SybaseGenDialect extends StandardGenDialect {
     @Override
     public String getIdentityColumnDefinition() {
         return "identity not null";
+    }
+
+    @Override
+    public SqlBlockContext createSqlBlockContext() {
+        return new SybaseSqlBlockContext();
     }
 
     /**
@@ -218,6 +214,28 @@ public class SybaseGenDialect extends StandardGenDialect {
         public SybaseColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);
+        }
+    }
+
+    /**
+     * Sybase用の{@link StandardColumnType}の実装クラスです。
+     * 
+     * @author taedium
+     */
+    public static class SybaseSqlBlockContext extends StandardSqlBlockContext {
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected SybaseSqlBlockContext() {
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("declare"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("begin"));
         }
     }
 }

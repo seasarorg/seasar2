@@ -15,3 +15,5 @@ drop table blob_table;
 drop table date_table;
 drop table time_table;
 drop table timestamp_table;
+
+DROP PROCEDURE PROC_SIMPLETYPE_PARAM@

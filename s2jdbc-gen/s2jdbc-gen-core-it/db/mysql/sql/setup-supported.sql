@@ -37,3 +37,11 @@ create table mediumblob_table (mediumblob_column mediumblob);
 create table mediumtext_table (mediumtext_column mediumtext);
 create table longblob_table (longblob_column longblob);
 create table longtext_table (longtext_column longtext);
+
+CREATE FUNCTION FUNC_SIMPLETYPE_PARAM(
+  param1 INTEGER)
+RETURNS INTEGER
+BEGIN
+  RETURN 20;
+END
+/

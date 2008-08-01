@@ -27,6 +27,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlFileReader;
 import org.seasar.extension.jdbc.gen.SqlFileTokenizer;
+import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
 import org.seasar.extension.jdbc.gen.SqlFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.framework.exception.IORuntimeException;
@@ -40,8 +41,7 @@ import org.seasar.framework.log.Logger;
 public class SqlFileReaderImpl implements SqlFileReader {
 
     /** ロガー */
-    protected static Logger logger = Logger
-            .getLogger(SqlFileReaderImpl.class);
+    protected static Logger logger = Logger.getLogger(SqlFileReaderImpl.class);
 
     /** SQLファイル */
     protected File sqlFile;
@@ -159,8 +159,8 @@ public class SqlFileReaderImpl implements SqlFileReader {
         /** SQLのキーワードを管理するリスト */
         protected List<String> wordList = new ArrayList<String>();
 
-        /** SQLブロックの内側を組み立てている場合{@code true} */
-        protected boolean inSqlBlock;
+        /** SQLブロックのコンテキスト */
+        protected SqlBlockContext sqlBlockContext;
 
         /** SQLの区切り文字に到達したい場合{@code true} */
         protected boolean delimited;
@@ -172,6 +172,7 @@ public class SqlFileReaderImpl implements SqlFileReader {
          * インスタンスを構築します
          */
         protected SqlBuilder() {
+            sqlBlockContext = dialect.createSqlBlockContext();
         }
 
         /**
@@ -187,16 +188,13 @@ public class SqlFileReaderImpl implements SqlFileReader {
             switch (tokenType) {
             case WORD:
                 appendWord(token);
-                appendToken(token);
-                setTokenRequired(true);
-                break;
             case QUOTE:
             case OTHER:
                 appendToken(token);
                 setTokenRequired(true);
                 break;
             case END_OF_LINE:
-                if (delimited) {
+                if (isDelimited()) {
                     setCompleted(true);
                 } else {
                     setLineRequired(true);
@@ -206,7 +204,7 @@ public class SqlFileReaderImpl implements SqlFileReader {
                 if (isInSqlBlock()) {
                     appendToken(token);
                 } else {
-                    delimited = true;
+                    setDelimited(true);
                 }
                 setTokenRequired(true);
                 break;
@@ -291,15 +289,32 @@ public class SqlFileReaderImpl implements SqlFileReader {
         }
 
         /**
+         * SQLステートメントがSQLブロックの外側で区切られている場合{@code true}を返します。
+         * 
+         * @return SQLステートメントがSQLブロックの外側で区切られている場合{@code true}
+         */
+        protected boolean isDelimited() {
+            return delimited;
+        }
+
+        /**
+         * SQLステートメントがSQLブロックの外側で区切られている場合{@code true}を設定します。
+         * 
+         * @param delimited
+         *            SQLステートメントがSQLブロックの外側で区切られている場合{@code true}
+         */
+        protected void setDelimited(boolean delimited) {
+            this.delimited = delimited;
+        }
+
+        /**
          * 単語を追加します。
          * 
          * @param word
          *            単語
          */
         protected void appendWord(String word) {
-            if (!inSqlBlock) {
-                wordList.add(word);
-            }
+            sqlBlockContext.addKeyword(word);
         }
 
         /**
@@ -344,11 +359,7 @@ public class SqlFileReaderImpl implements SqlFileReader {
          * @return SQLブロックの内側を組み立てている場合{@code true}
          */
         protected boolean isInSqlBlock() {
-            if (inSqlBlock) {
-                return true;
-            }
-            inSqlBlock = dialect.isSqlBlockStartWords(wordList);
-            return inSqlBlock;
+            return sqlBlockContext.isInSqlBlock();
         }
 
         /**

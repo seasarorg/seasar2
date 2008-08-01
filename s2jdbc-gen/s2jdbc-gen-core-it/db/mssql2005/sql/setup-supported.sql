@@ -23,3 +23,12 @@ create table binary_table (binary_column binary);
 create table varbinary_table (varbinary_column varbinary);
 create table varbinary_max_table (varbinary_max_column varbinary(max));
 create table image_table (image_column image);
+
+CREATE FUNCTION [dbo].[FUNC_SIMPLETYPE_PARAM] (
+    @param1 int)
+RETURNS int
+AS
+BEGIN
+    RETURN 20;
+END
+GO

@@ -54,13 +54,6 @@ public class Db2GenDialect extends StandardGenDialect {
                 Db2ColumnType.LONGVARCHAR_BIT);
         columnTypeMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
         columnTypeMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
-
-        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "triger"));
     }
 
     @Override
@@ -130,6 +123,11 @@ public class Db2GenDialect extends StandardGenDialect {
         return sqlExceptionList;
     }
 
+    @Override
+    public SqlBlockContext createSqlBlockContext() {
+        return new Db2SqlBlockContext();
+    }
+
     /**
      * DB2用の link StandardSqlType}の実装です。
      * 
@@ -162,7 +160,7 @@ public class Db2GenDialect extends StandardGenDialect {
     }
 
     /**
-     * DB2用の link StandardColumnType}の実装です。
+     * DB2用の{@link StandardColumnType}の実装です。
      * 
      * @author taedium
      */
@@ -229,6 +227,26 @@ public class Db2GenDialect extends StandardGenDialect {
         public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
                 TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);
+        }
+    }
+
+    /**
+     * DB2用の{@link SqlBlockContext}の実装クラスです。
+     * 
+     * @author taedium
+     */
+    public static class Db2SqlBlockContext extends StandardSqlBlockContext {
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected Db2SqlBlockContext() {
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "triger"));
         }
     }
 }

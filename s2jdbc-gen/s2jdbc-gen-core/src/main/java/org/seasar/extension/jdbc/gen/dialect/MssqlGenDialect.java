@@ -63,15 +63,6 @@ public class MssqlGenDialect extends StandardGenDialect {
         columnTypeMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
         columnTypeMap.put("text", MssqlColumnType.TEXT);
         columnTypeMap.put("varbinary", MssqlColumnType.VARBINARY);
-
-        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("alter", "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("declare"));
-        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -109,6 +100,11 @@ public class MssqlGenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
+    public SqlBlockContext createSqlBlockContext() {
+        return new MssqlSqlBlockContext();
     }
 
     /**
@@ -242,6 +238,29 @@ public class MssqlGenDialect extends StandardGenDialect {
         public MssqlColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);
+        }
+    }
+
+    /**
+     * MS SQL Server用の{@link StandardColumnType}の実装クラスです。
+     * 
+     * @author taedium
+     * 
+     */
+    public static class MssqlSqlBlockContext extends StandardSqlBlockContext {
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected MssqlSqlBlockContext() {
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("declare"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("begin"));
         }
     }
 }

@@ -60,18 +60,6 @@ public class OracleGenDialect extends StandardGenDialect {
         columnTypeMap.put("nvarchar2", OracleColumnType.NVARCHAR2);
         columnTypeMap.put("raw", OracleColumnType.RAW);
         columnTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
-
-        sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
-                "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
-                "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
-                "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
-        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
-        sqlBlockStartWordsList.add(Arrays.asList("declare"));
-        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -114,6 +102,11 @@ public class OracleGenDialect extends StandardGenDialect {
             return OracleColumnType.TIMESTAMP;
         }
         return super.getColumnType(typeName);
+    }
+
+    @Override
+    public SqlBlockContext createSqlBlockContext() {
+        return new OracleSqlBlockContext();
     }
 
     /**
@@ -299,6 +292,30 @@ public class OracleGenDialect extends StandardGenDialect {
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, false, temporalType);
         }
+    }
 
+    /**
+     * Oracle用の{@link StandardColumnType}の実装クラスです。
+     * 
+     * @author taedium
+     */
+    public static class OracleSqlBlockContext extends StandardSqlBlockContext {
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected OracleSqlBlockContext() {
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "or",
+                    "replace", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "or",
+                    "replace", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "or",
+                    "replace", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "procedure"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "function"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("declare"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("begin"));
+        }
     }
 }

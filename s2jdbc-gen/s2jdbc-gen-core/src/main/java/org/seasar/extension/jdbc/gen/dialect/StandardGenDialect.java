@@ -46,9 +46,6 @@ public class StandardGenDialect implements GenDialect {
     @SuppressWarnings("unchecked")
     protected Map<String, ColumnType> columnTypeMap = new CaseInsensitiveMap();
 
-    /** SQLブロックの開始を表す単語の連なりのリスト */
-    protected List<List<String>> sqlBlockStartWordsList = new ArrayList<List<String>>();
-
     /**
      * インスタンスを構築します。
      */
@@ -138,27 +135,6 @@ public class StandardGenDialect implements GenDialect {
         return null;
     }
 
-    public boolean isSqlBlockStartWords(List<String> words) {
-        boolean equals = false;
-        for (List<String> startWords : sqlBlockStartWordsList) {
-            if (startWords.size() > words.size()) {
-                continue;
-            }
-            for (int i = 0; i < startWords.size(); i++) {
-                String word1 = startWords.get(i);
-                String word2 = words.get(i);
-                equals = word1.equalsIgnoreCase(word2);
-                if (!equals) {
-                    break;
-                }
-            }
-            if (equals) {
-                return true;
-            }
-        }
-        return equals;
-    }
-
     public String getIdentityColumnDefinition() {
         throw new UnsupportedOperationException("getIdentityDefinition");
     }
@@ -173,6 +149,10 @@ public class StandardGenDialect implements GenDialect {
 
     public boolean isTableNotFound(Throwable throwable) {
         return false;
+    }
+
+    public SqlBlockContext createSqlBlockContext() {
+        return new StandardSqlBlockContext();
     }
 
     /**
@@ -515,6 +495,56 @@ public class StandardGenDialect implements GenDialect {
             }
         }
         return buf.toString();
+    }
+
+    /**
+     * 標準の{@link StandardColumnType}の実装クラスです。
+     * 
+     * @author taedium
+     */
+    public static class StandardSqlBlockContext implements SqlBlockContext {
+
+        /** SQLブロックの開始を表すキーワードの連なりのリスト */
+        protected List<List<String>> sqlBlockStartKeywordsList = new ArrayList<List<String>>();
+
+        /** 追加されたキーワードの連なり */
+        protected List<String> keywords = new ArrayList<String>();
+
+        /** SQLブロックの内側の場合{@code true} */
+        protected boolean inSqlBlock;
+
+        public void addKeyword(String keyword) {
+            if (!inSqlBlock) {
+                keywords.add(keyword);
+                check();
+            }
+        }
+
+        /**
+         * ブロックの内側かどうかチェックします。
+         */
+        protected void check() {
+            for (List<String> startKeywords : sqlBlockStartKeywordsList) {
+                if (startKeywords.size() > keywords.size()) {
+                    continue;
+                }
+                for (int i = 0; i < startKeywords.size(); i++) {
+                    String word1 = startKeywords.get(i);
+                    String word2 = keywords.get(i);
+                    inSqlBlock = word1.equalsIgnoreCase(word2);
+                    if (!inSqlBlock) {
+                        break;
+                    }
+                }
+                if (inSqlBlock) {
+                    break;
+                }
+            }
+        }
+
+        public boolean isInSqlBlock() {
+            return inSqlBlock;
+        }
     }
 
 }

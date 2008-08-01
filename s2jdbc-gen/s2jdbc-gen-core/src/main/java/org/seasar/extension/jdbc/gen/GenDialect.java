@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen;
 
 import java.sql.Types;
-import java.util.List;
 
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
@@ -117,15 +116,6 @@ public interface GenDialect {
     String getSqlBlockDelimiter();
 
     /**
-     * SQLブロックの開始を示す単語の場合{@code true}を返します。
-     * 
-     * @param words
-     *            単語のリスト
-     * @return SQLブロックの開始を示す単語の場合{@code true}
-     */
-    boolean isSqlBlockStartWords(List<String> words);
-
-    /**
      * IDENTITYカラムの定義を返します。
      * 
      * @return IDENTITYカラムの定義
@@ -154,6 +144,13 @@ public interface GenDialect {
      * @return テーブルが存在しない例外を表す場合{@code true}
      */
     boolean isTableNotFound(Throwable throwable);
+
+    /**
+     * SQLブロックのコンテキストを作成します。
+     * 
+     * @return SQLブロックのコンテキスト
+     */
+    SqlBlockContext createSqlBlockContext();
 
     /**
      * SQL型です。
@@ -239,4 +236,26 @@ public interface GenDialect {
         TemporalType getTemporalType();
     }
 
+    /**
+     * SQLブロックのコンテキストです。
+     * 
+     * @author taedium
+     */
+    interface SqlBlockContext {
+
+        /**
+         * SQLのキーワードを追加します。
+         * 
+         * @param keyword
+         *            SQLのキーワード
+         */
+        void addKeyword(String keyword);
+
+        /**
+         * SQLブロックの内側と判定できる場合{@code true}
+         * 
+         * @return SQLブロックの内側と判定できる場合{@code true}
+         */
+        boolean isInSqlBlock();
+    }
 }
