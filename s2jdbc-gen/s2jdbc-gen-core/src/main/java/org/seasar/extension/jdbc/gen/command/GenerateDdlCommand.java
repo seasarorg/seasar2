@@ -55,20 +55,20 @@ import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
+import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.StringConversionUtil;
 
 /**
  * DDLのSQLファイルを生成する{@link Command}の実装です。
  * <p>
  * このコマンドは、エンティティクラスのメタデータからDDLのSQLファイルを生成します。 そのため、
  * ココマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります。
- * また、そのディレクトリは、プロパティ{@link #classpathRootDir}に設定しておく必要があります。
+ * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
  * このコマンドが生成するDDLは次の8つです。
@@ -92,7 +92,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected static Logger logger = Logger.getLogger(GenerateDdlCommand.class);
 
     /** クラスパスのルートとなるディレクトリ */
-    protected File classpathRootDir;
+    protected File classpathDir;
 
     /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
@@ -157,8 +157,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
-    /** DDLファイルの出力先ディレクトリ */
-    protected File migrationRootDir = new File("db");
+    /** マイグレーションのディレクトリ */
+    protected File migrateDir = new File("db", "migrate");
 
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
@@ -178,8 +178,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName = "VERSION";
 
-    /** DDLのバージョンを格納するファイル名 */
-    protected String ddlVersionFileName = "ddl-version.txt";
+    /** DDLのバージョンファイル */
+    protected File ddlVersionFile = new File("db", "ddl-version.txt");
 
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
@@ -225,18 +225,18 @@ public class GenerateDdlCommand extends AbstractCommand {
      * 
      * @return クラスパスのルートとなるディレクトリ
      */
-    public File getClasspathRootDir() {
-        return classpathRootDir;
+    public File getClasspathDir() {
+        return classpathDir;
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを設定します。
+     * クラスパスのディレクトリを設定します。
      * 
-     * @param classpathRootDir
-     *            クラスパスのルートとなるディレクトリ
+     * @param classpathDir
+     *            クラスパスのディレクトリ
      */
-    public void setClasspathRootDir(File classpathRootDir) {
-        this.classpathRootDir = classpathRootDir;
+    public void setClasspathDir(File classpathDir) {
+        this.classpathDir = classpathDir;
     }
 
     /**
@@ -666,22 +666,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * DDLファイルの出力先ディレクトリを返します。
+     * マイグレーションのディレクトリを返します。
      * 
-     * @return DDLファイルの出力先ディレクトリ
+     * @return マイグレーションのディレクトリ
      */
-    public File getMigrationRootDir() {
-        return migrationRootDir;
+    public File getMigrateDir() {
+        return migrateDir;
     }
 
     /**
-     * DDLファイルの出力先ディレクトリを設定します。
+     * マイグレーションのディレクトリを設定します。
      * 
-     * @param ddlFileDestDir
-     *            DDLファイルの出力先ディレクトリ
+     * @param migrateDir
+     *            マイグレーションのディレクトリ
      */
-    public void setMigrationRootDir(File ddlFileDestDir) {
-        this.migrationRootDir = ddlFileDestDir;
+    public void setMigrateDir(File migrateDir) {
+        this.migrateDir = migrateDir;
     }
 
     /**
@@ -780,22 +780,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * DDLのバージョンを格納するファイル名を返します。
+     * DDLのバージョンファイル名を返します。
      * 
-     * @return DDLのバージョンを格納するファイル名
+     * @return DDLのバージョンファイル
      */
-    public String getDdlVersionFileName() {
-        return ddlVersionFileName;
+    public File getDdlVersionFile() {
+        return ddlVersionFile;
     }
 
     /**
-     * DDLのバージョンを格納するファイル名を設定します。
+     * DDLのバージョンファイルを設定します。
      * 
-     * @param ddlVersionFileName
-     *            DDLのバージョンを格納するファイル名
+     * @param ddlVersionFile
+     *            DDLのバージョンファイル
      */
-    public void setDdlVersionFileName(String ddlVersionFileName) {
-        this.ddlVersionFileName = ddlVersionFileName;
+    public void setDdlVersionFile(File ddlVersionFile) {
+        this.ddlVersionFile = ddlVersionFile;
     }
 
     /**
@@ -819,8 +819,8 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doValidate() {
-        if (classpathRootDir == null) {
-            throw new RequiredPropertyNullRuntimeException("classpathRootDir");
+        if (classpathDir == null) {
+            throw new RequiredPropertyNullRuntimeException("classpathDir");
         }
     }
 
@@ -848,8 +848,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     @Override
     protected void doExecute() throws Throwable {
         int versionNo = ddlVersion.getVersionNo();
-        File versionDir = new File(migrationRootDir,
-                convertVersionNoToVersionName(versionNo));
+        File versionDir = new File(migrateDir, VersionUtil.toString(versionNo,
+                versionNoPattern));
         if (versionNo == 0) {
             File createDir = new File(versionDir, createDirName);
             createDir.mkdirs();
@@ -858,11 +858,11 @@ public class GenerateDdlCommand extends AbstractCommand {
         }
 
         int nextVersionNo = versionNo + 1;
-        File nextVersionDir = new File(migrationRootDir,
-                convertVersionNoToVersionName(nextVersionNo));
+        File nextVersionDir = new File(migrateDir, VersionUtil.toString(
+                nextVersionNo, versionNoPattern));
         if (nextVersionDir.exists()) {
             throw new NextVersionDirExistsRuntimeException(nextVersionDir
-                    .getPath(), ddlVersionFileName);
+                    .getPath(), ddlVersionFile.getPath());
         }
 
         try {
@@ -965,23 +965,12 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * バージョン番号をバージョン番号名に変換します。
-     * 
-     * @param versionNo
-     *            バージョン番号
-     * @return バージョン番号名
-     */
-    protected String convertVersionNoToVersionName(int versionNo) {
-        return StringConversionUtil.toString(versionNo, versionNoPattern);
-    }
-
-    /**
      * {@link EntityMetaReader}の実装を作成します。
      * 
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathRootDir, ClassUtil.concatName(
+        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory);
     }
 
@@ -1009,8 +998,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DdlVersion}の実装
      */
     protected DdlVersion createDdlVersion() {
-        return new DdlVersionImpl(
-                new File(migrationRootDir, ddlVersionFileName));
+        return new DdlVersionImpl(ddlVersionFile);
     }
 
     /**

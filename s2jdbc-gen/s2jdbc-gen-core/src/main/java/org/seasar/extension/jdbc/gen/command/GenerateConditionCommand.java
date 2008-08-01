@@ -48,7 +48,7 @@ import org.seasar.framework.util.ClassUtil;
  * <p>
  * このコマンドは、エンティティクラスのメタデータから条件クラスのJavaファイルを生成します。 そのため、
  * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります 。
- * また、そのディレクトリは、プロパティ{@link #classpathRootDir}に設定しておく必要があります。
+ * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
  * このコマンドは、エンティティクラス１つにつき１つの条件クラスを生成します。
@@ -63,7 +63,7 @@ public class GenerateConditionCommand extends AbstractCommand {
             .getLogger(GenerateConditionCommand.class);
 
     /** クラスパスのルートとなるディレクトリ */
-    protected File classpathRootDir;
+    protected File classpathDir;
 
     /** 条件クラス名のサフィックス */
     protected String conditionClassNameSuffix = "Condition";
@@ -133,18 +133,18 @@ public class GenerateConditionCommand extends AbstractCommand {
      * 
      * @return クラスパスのルートとなるディレクトリ
      */
-    public File getClasspathRootDir() {
-        return classpathRootDir;
+    public File getClasspathDir() {
+        return classpathDir;
     }
 
     /**
      * クラスパスのルートとなるディレクトリを設定します。
      * 
-     * @param classpathRootDir
+     * @param classpathDir
      *            クラスパスのルートとなるディレクトリ
      */
-    public void setClasspathRootDir(File classpathRootDir) {
-        this.classpathRootDir = classpathRootDir;
+    public void setClasspathDir(File classpathDir) {
+        this.classpathDir = classpathDir;
     }
 
     /**
@@ -396,8 +396,8 @@ public class GenerateConditionCommand extends AbstractCommand {
 
     @Override
     protected void doValidate() {
-        if (classpathRootDir == null) {
-            throw new RequiredPropertyNullRuntimeException("classpathRootDir");
+        if (classpathDir == null) {
+            throw new RequiredPropertyNullRuntimeException("classpathDir");
         }
     }
 
@@ -465,7 +465,7 @@ public class GenerateConditionCommand extends AbstractCommand {
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathRootDir, ClassUtil.concatName(
+        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory);
     }
 

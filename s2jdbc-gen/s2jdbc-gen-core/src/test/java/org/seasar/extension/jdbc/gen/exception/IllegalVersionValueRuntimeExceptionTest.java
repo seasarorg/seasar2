@@ -30,11 +30,24 @@ public class IllegalVersionValueRuntimeExceptionTest {
      * @throws Exception
      */
     @Test
-    public void test() throws Exception {
+    public void test_1arg() throws Exception {
+        IllegalVersionValueRuntimeException e = new IllegalVersionValueRuntimeException(
+                "aaa");
+        System.out.println(e.getMessage());
+        assertNull(e.getVersionFilePath());
+        assertEquals("aaa", e.getIllegalValue());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void test_2args() throws Exception {
         IllegalVersionValueRuntimeException e = new IllegalVersionValueRuntimeException(
                 "aaa", "bbb");
         System.out.println(e.getMessage());
-        assertEquals("aaa", e.getVersionFileName());
+        assertEquals("aaa", e.getVersionFilePath());
         assertEquals("bbb", e.getIllegalValue());
     }
 }

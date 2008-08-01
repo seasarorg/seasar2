@@ -39,13 +39,13 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを設定します。
+     * クラスパスのディレクトリを設定します。
      * 
-     * @param classpathRootDir
-     *            クラスパスのルートとなるディレクトリ
+     * @param classpathDir
+     *            クラスパスのディレクトリ
      */
-    public void setClasspathRootDir(File classpathRootDir) {
-        command.setClasspathRootDir(classpathRootDir);
+    public void setClasspathDir(File classpathDir) {
+        command.setClasspathDir(classpathDir);
     }
 
     /**
@@ -261,13 +261,13 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * DDLファイルの出力先ディレクトリを設定します。
+     * マイグレーションのディレクトリを設定します。
      * 
-     * @param ddlFileDestDir
-     *            DDLファイルの出力先ディレクトリ
+     * @param migrateDir
+     *            マイグレーションのディレクトリ
      */
-    public void setDdlFileDestDir(File ddlFileDestDir) {
-        command.setMigrationRootDir(ddlFileDestDir);
+    public void setMigrateDir(File migrateDir) {
+        command.setMigrateDir(migrateDir);
     }
 
     /**
@@ -278,6 +278,16 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setDdlFileEncoding(String ddlFileEncoding) {
         command.setDdlFileEncoding(ddlFileEncoding);
+    }
+
+    /**
+     * DDLのバージョンファイルを設定します。
+     * 
+     * @param ddlVersionFile
+     *            DDLのバージョンファイル
+     */
+    public void setDdlVersionFile(File ddlVersionFile) {
+        command.setDdlVersionFile(ddlVersionFile);
     }
 
     /**

@@ -62,7 +62,7 @@ public class GenerateDdlCommandTest {
     public void testFactoryMethod() throws Exception {
         GenerateDdlCommand command = new GenerateDdlCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        command.setClasspathRootDir(new File("dir"));
+        command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
         assertNotNull(command.createDdlVersion());

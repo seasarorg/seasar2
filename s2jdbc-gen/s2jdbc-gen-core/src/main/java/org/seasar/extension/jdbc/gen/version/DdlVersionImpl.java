@@ -22,12 +22,11 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 
 import org.seasar.extension.jdbc.gen.DdlVersion;
-import org.seasar.extension.jdbc.gen.exception.IllegalVersionValueRuntimeException;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
+import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;
-import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
 
 /**
@@ -68,11 +67,7 @@ public class DdlVersionImpl implements DdlVersion {
             return 0;
         }
         String value = TextUtil.readUTF8(file).trim();
-        if (!StringUtil.isNumber(value)) {
-            throw new IllegalVersionValueRuntimeException(file.getPath(), value);
-        }
-        versionNo = Integer.valueOf(value);
-        return versionNo;
+        return VersionUtil.toInt(file.getPath(), value);
     }
 
     public void setVersionNo(int versionNo) {

@@ -27,7 +27,7 @@ public class IllegalVersionValueRuntimeException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
     /** バージョン番号を保持するファイル名 */
-    protected String versionFileName;
+    protected String versionFilePath;
 
     /** 不正な値 */
     protected String illegalValue;
@@ -35,25 +35,36 @@ public class IllegalVersionValueRuntimeException extends SRuntimeException {
     /**
      * インスタンスを構築します。
      * 
-     * @param versionFileName
-     *            バージョン番号を保持するファイル名
      * @param illegalValue
      *            不正な値
      */
-    public IllegalVersionValueRuntimeException(String versionFileName,
-            String illegalValue) {
-        super("ES2JDBCGen0006", new Object[] { versionFileName, illegalValue });
-        this.versionFileName = versionFileName;
+    public IllegalVersionValueRuntimeException(String illegalValue) {
+        super("ES2JDBCGen0011", new Object[] { illegalValue });
         this.illegalValue = illegalValue;
     }
 
     /**
-     * バージョン番号を保持するファイル名を返します。
+     * インスタンスを構築します。
      * 
-     * @return バージョン番号を保持するファイル名
+     * @param versionFilePath
+     *            バージョン番号を保持するファイルのパス
+     * @param illegalValue
+     *            不正な値
      */
-    public String getVersionFileName() {
-        return versionFileName;
+    public IllegalVersionValueRuntimeException(String versionFilePath,
+            String illegalValue) {
+        super("ES2JDBCGen0006", new Object[] { versionFilePath, illegalValue });
+        this.versionFilePath = versionFilePath;
+        this.illegalValue = illegalValue;
+    }
+
+    /**
+     * バージョン番号を保持するファイルのパスを返します。
+     * 
+     * @return バージョン番号を保持するファイルのパス
+     */
+    public String getVersionFilePath() {
+        return versionFilePath;
     }
 
     /**

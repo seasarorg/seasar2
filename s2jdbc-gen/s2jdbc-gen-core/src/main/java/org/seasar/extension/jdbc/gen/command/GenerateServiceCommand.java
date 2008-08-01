@@ -46,7 +46,7 @@ import org.seasar.framework.util.ClassUtil;
  * <p>
  * このコマンドは、エンティティクラスのメタデータからサービスクラスのJavaファイルを生成します。 そのため、
  * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります 。
- * また、そのディレクトリは、プロパティ{@link #classpathRootDir}に設定しておく必要があります。
+ * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
  * このコマンドは、エンティティクラス１つにつき１つのサービスクラスを生成します。
@@ -60,8 +60,8 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected static Logger logger = Logger
             .getLogger(GenerateServiceCommand.class);
 
-    /** クラスパスのルートとなるディレクトリ */
-    protected File classpathRootDir;
+    /** クラスパスのディレクトリ */
+    protected File classpathDir;
 
     /** 条件クラス名のサフィックス */
     protected String serviceClassNameSuffix = "Service";
@@ -127,22 +127,22 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを返します。
+     * クラスパスのディレクトリを返します。
      * 
-     * @return クラスパスのルートとなるディレクトリ
+     * @return クラスパスのディレクトリ
      */
-    public File getClasspathRootDir() {
-        return classpathRootDir;
+    public File getClasspathDir() {
+        return classpathDir;
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを設定します。
+     * クラスパスのディレクトリを設定します。
      * 
-     * @param classpathRootDir
-     *            クラスパスのルートとなるディレクトリ
+     * @param classpathDir
+     *            クラスパスのディレクトリ
      */
-    public void setClasspathRootDir(File classpathRootDir) {
-        this.classpathRootDir = classpathRootDir;
+    public void setClasspathDir(File classpathDir) {
+        this.classpathDir = classpathDir;
     }
 
     /**
@@ -394,8 +394,8 @@ public class GenerateServiceCommand extends AbstractCommand {
 
     @Override
     protected void doValidate() {
-        if (classpathRootDir == null) {
-            throw new RequiredPropertyNullRuntimeException("classpathRootDir");
+        if (classpathDir == null) {
+            throw new RequiredPropertyNullRuntimeException("classpathDir");
         }
     }
 
@@ -462,7 +462,7 @@ public class GenerateServiceCommand extends AbstractCommand {
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathRootDir, ClassUtil.concatName(
+        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory);
     }
 

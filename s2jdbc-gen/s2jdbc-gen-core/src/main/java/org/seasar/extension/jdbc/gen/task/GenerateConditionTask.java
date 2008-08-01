@@ -39,13 +39,13 @@ public class GenerateConditionTask extends AbstractTask {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを設定します。
+     * クラスパスのディレクトリを設定します。
      * 
-     * @param classpathRootDir
-     *            クラスパスのルートとなるディレクトリ
+     * @param classpathDir
+     *            クラスパスのディレクトリ
      */
-    public void setClasspathRootDir(File classpathRootDir) {
-        command.setClasspathRootDir(classpathRootDir);
+    public void setClasspathDir(File classpathDir) {
+        command.setClasspathDir(classpathDir);
     }
 
     /**

@@ -35,6 +35,7 @@ import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
+import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.gen.version.SchemaVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -42,7 +43,6 @@ import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.StringConversionUtil;
 
 /**
  * @author taedium
@@ -83,20 +83,17 @@ public class MigrateCommand extends AbstractCommand {
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
 
-    /** マイグレーションのルートとなるディレクトリ */
-    protected File migrationRootDir = new File("db");
+    /** マイグレーションのディレクトリ */
+    protected File migrateDir = new File("db", "migrate");
 
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
-    /** DDLのバージョンファイル名 */
-    protected String ddlVersionFileName = "ddl-version.txt";
+    /** DDLのバージョンファイル */
+    protected File ddlVersionFile = new File("db", "ddl-version.txt");
 
-    /** マイグレーション元となるバージョン番号 */
-    protected Integer from = null;
-
-    /** マイグレーション先となるバージョン番号 */
-    protected Integer to = null;
+    /** マイグレーション先のバージョン */
+    protected String version = "latest";
 
     /** スキーマ作成用のSQLファイルを格納するディレクトリ名 */
     protected String createDirName = "create";
@@ -273,18 +270,18 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the migrationRootDir.
+     * @return Returns the migrateDir.
      */
-    public File getMigrationRootDir() {
-        return migrationRootDir;
+    public File getMigrateDir() {
+        return migrateDir;
     }
 
     /**
-     * @param migrationRootDir
-     *            The migrationRootDir to set.
+     * @param migrateDir
+     *            The migrateDir to set.
      */
-    public void setMigrationRootDir(File migrationRootDir) {
-        this.migrationRootDir = migrationRootDir;
+    public void setMigrateDir(File migrateDir) {
+        this.migrateDir = migrateDir;
     }
 
     /**
@@ -303,48 +300,37 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the ddlVersionFileName.
+     * @return Returns the ddlVersionFile.
      */
-    public String getDdlVersionFileName() {
-        return ddlVersionFileName;
+    public File getDdlVersionFile() {
+        return ddlVersionFile;
     }
 
     /**
-     * @param ddlVersionFileName
+     * @param ddlVersionFile
      *            The ddlVersionFileName to set.
      */
-    public void setDdlVersionFileName(String ddlVersionFileName) {
-        this.ddlVersionFileName = ddlVersionFileName;
+    public void setDdlVersionFile(File ddlVersionFile) {
+        this.ddlVersionFile = ddlVersionFile;
     }
 
     /**
-     * @return Returns the from.
+     * マイグレーション先のバージョンを返します。
+     * 
+     * @return マイグレーション先のバージョン
      */
-    public Integer getFrom() {
-        return from;
+    public String getVersion() {
+        return version;
     }
 
     /**
-     * @param from
-     *            The from to set.
+     * マイグレーション先のバージョンを設定します。
+     * 
+     * @param version
+     *            マイグレーション先のバージョン
      */
-    public void setFrom(Integer from) {
-        this.from = from;
-    }
-
-    /**
-     * @return Returns the to.
-     */
-    public Integer getTo() {
-        return to;
-    }
-
-    /**
-     * @param to
-     *            The to to set.
-     */
-    public void setTo(Integer to) {
-        this.to = to;
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override
@@ -371,12 +357,12 @@ public class MigrateCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() {
-        int fromVersionNo = from != null ? from : schemaVersion.getVersionNo();
-        int toVersionNo = to != null ? to : ddlVersion.getVersionNo();
-        drop(fromVersionNo);
-        create(toVersionNo);
-        logger.log("IS2JDBCGen0005",
-                new Object[] { fromVersionNo, toVersionNo });
+        int from = schemaVersion.getVersionNo();
+        int to = "latest".equalsIgnoreCase(version) ? ddlVersion.getVersionNo()
+                : VersionUtil.toInt(version);
+        drop(from);
+        create(to);
+        logger.log("IS2JDBCGen0005", new Object[] { from, to });
     }
 
     @Override
@@ -393,8 +379,8 @@ public class MigrateCommand extends AbstractCommand {
      *            バージョン番号
      */
     protected void drop(int versionNo) {
-        String versionName = convertVersionNoToVersionName(versionNo);
-        File versionDir = new File(migrationRootDir, versionName);
+        String versionName = VersionUtil.toString(versionNo, versionNoPattern);
+        File versionDir = new File(migrateDir, versionName);
         File dropDir = new File(versionDir, dropDirName);
         SqlExecutionContext context = createSqlExecutionContext();
         try {
@@ -432,8 +418,9 @@ public class MigrateCommand extends AbstractCommand {
      *            バージョン番号
      */
     protected void create(int versionNo) {
-        String versionDirName = convertVersionNoToVersionName(versionNo);
-        File versionDir = new File(migrationRootDir, versionDirName);
+        String versionDirName = VersionUtil.toString(versionNo,
+                versionNoPattern);
+        File versionDir = new File(migrateDir, versionDirName);
         File createDir = new File(versionDir, createDirName);
         SqlExecutionContext context = createSqlExecutionContext();
         try {
@@ -463,17 +450,6 @@ public class MigrateCommand extends AbstractCommand {
      * @param context
      */
     protected void load(SqlExecutionContext context) {
-    }
-
-    /**
-     * バージョン番号をバージョン名に変換します。
-     * 
-     * @param versionNo
-     *            バージョン番号
-     * @return バージョン名
-     */
-    protected String convertVersionNoToVersionName(int versionNo) {
-        return StringConversionUtil.toString(versionNo, versionNoPattern);
     }
 
     /**
@@ -527,8 +503,7 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link DdlVersion}の実装
      */
     protected DdlVersion createDdlVersion() {
-        return new DdlVersionImpl(
-                new File(migrationRootDir, ddlVersionFileName));
+        return new DdlVersionImpl(ddlVersionFile);
     }
 
     /**

@@ -68,11 +68,11 @@ public class MigrateTask extends AbstractTask {
     }
 
     /**
-     * @param ddlVersionFileName
+     * @param ddlVersionFile
      * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDdlVersionFileName(java.lang.String)
      */
-    public void setDdlVersionFileName(String ddlVersionFileName) {
-        command.setDdlVersionFileName(ddlVersionFileName);
+    public void setDdlVersionFile(File ddlVersionFile) {
+        command.setDdlVersionFile(ddlVersionFile);
     }
 
     /**
@@ -81,14 +81,6 @@ public class MigrateTask extends AbstractTask {
      */
     public void setEnv(String env) {
         command.setEnv(env);
-    }
-
-    /**
-     * @param from
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setFrom(java.lang.Integer)
-     */
-    public void setFrom(Integer from) {
-        command.setFrom(from);
     }
 
     /**
@@ -108,11 +100,11 @@ public class MigrateTask extends AbstractTask {
     }
 
     /**
-     * @param migrationRootDir
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setMigrationRootDir(java.io.File)
+     * @param migrateDir
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setMigrateDir(java.io.File)
      */
-    public void setMigrationRootDir(File migrationRootDir) {
-        command.setMigrationRootDir(migrationRootDir);
+    public void setMigrateDir(File migrateDir) {
+        command.setMigrateDir(migrateDir);
     }
 
     /**
@@ -140,11 +132,11 @@ public class MigrateTask extends AbstractTask {
     }
 
     /**
-     * @param to
+     * @param version
      * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setTo(java.lang.Integer)
      */
-    public void setTo(Integer to) {
-        command.setTo(to);
+    public void setVersion(String version) {
+        command.setVersion(version);
     }
 
     /**
