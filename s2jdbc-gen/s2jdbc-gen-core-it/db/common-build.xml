@@ -31,9 +31,10 @@
 			debug="on"
 		/>
 		<gen-ddl 
-			classpathRootDir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
-			ddlfiledestdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
@@ -64,21 +65,21 @@
 		/>
 		<!-- test -->
 		<gen-test
-			classpathrootdir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
 			javafiledestdir="temp/src"
 			overwrite="true"
 			classpathRef="classpath"
 		/>
 		<gen-condition
-			classpathrootdir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
 			javafiledestdir="temp/src"
 			overwrite="true"
 			classpathRef="classpath"
 		/>
 		<gen-service
-			classpathrootdir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
 			javafiledestdir="temp/src"
 			overwrite="true"
@@ -93,14 +94,16 @@
 			debug="on"
 		/>
 		<gen-ddl 
-			classpathRootDir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
-			ddlfiledestdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 			classpathref="classpath"
 		/>
 		<migrate 
 			classpathref="classpath"
-			migrationrootdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 		/>
 		<junit haltonfailure="no" printsummary="true">
 			<formatter type="xml"/>
@@ -114,8 +117,9 @@
 		<!-- tearDown -->
 		<migrate 
 			classpathref="classpath"
-			migrationrootdir="temp/db"
-			to="0"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
+			version="0"
 		/>
 	</target>
 	
@@ -155,30 +159,35 @@
 		</javac>
 		<!-- test -->
 		<gen-ddl 
-			classpathRootDir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
-			ddlfiledestdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 			classpathref="classpath"
 		/>
 		<migrate 
 			classpathref="classpath"
-			migrationrootdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 		/>
 		<gen-ddl 
-			classpathRootDir="temp/build"
+			classpathDir="temp/build"
 			rootpackagename="example"
-			ddlfiledestdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 			classpathref="classpath"
 		/>
 		<migrate 
 			classpathref="classpath"
-			migrationrootdir="temp/db"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
 		/>
 		<!-- tearDown -->
 		<migrate 
 			classpathref="classpath"
-			migrationrootdir="temp/db"
-			to="0"
+			migratedir="temp/db/migrate"
+			ddlversionfile="temp/db/ddl-version.txt"
+			version="0"
 		/>
 	</target>
 
