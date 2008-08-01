@@ -31,8 +31,8 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      * インスタンスを構築します。
      */
     public Mssql2005GenDialect() {
-        typeMap.put(Types.BLOB, Mssql2005SqlType.BLOB);
-        typeMap.put(Types.CLOB, Mssql2005SqlType.CLOB);
+        sqlTypeMap.put(Types.BLOB, Mssql2005SqlType.BLOB);
+        sqlTypeMap.put(Types.CLOB, Mssql2005SqlType.CLOB);
 
         columnTypeMap.put("image", MssqlColumnType.IMAGE);
         columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
@@ -46,18 +46,27 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      */
     public static class Mssql2005SqlType extends StandardSqlType {
 
-        private static Mssql2005SqlType BLOB = new Mssql2005SqlType("varbinary(max)");
+        private static Mssql2005SqlType BLOB = new Mssql2005SqlType(
+                "varbinary(max)");
 
-        private static Mssql2005SqlType CLOB = new Mssql2005SqlType("varchar(max)");
+        private static Mssql2005SqlType CLOB = new Mssql2005SqlType(
+                "varchar(max)");
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
          */
         protected Mssql2005SqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * MS SQL Server 2005用の{@link ColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class MssqlColumnType extends StandardColumnType {
 
         private static MssqlColumnType IMAGE = new MssqlColumnType(
@@ -69,15 +78,43 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
         private static MssqlColumnType TEXT = new MssqlColumnType(
                 "varchar(max)", String.class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
         public MssqlColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public MssqlColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public MssqlColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

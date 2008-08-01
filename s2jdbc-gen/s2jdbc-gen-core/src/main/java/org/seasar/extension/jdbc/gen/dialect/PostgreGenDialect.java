@@ -36,15 +36,15 @@ public class PostgreGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public PostgreGenDialect() {
-        typeMap.put(Types.BIGINT, PostgreSqlType.BIGINT);
-        typeMap.put(Types.BINARY, PostgreSqlType.BINARY);
-        typeMap.put(Types.BOOLEAN, PostgreSqlType.BOOLEAN);
-        typeMap.put(Types.BLOB, PostgreSqlType.BLOB);
-        typeMap.put(Types.CLOB, PostgreSqlType.CLOB);
-        typeMap.put(Types.DECIMAL, PostgreSqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, PostgreSqlType.DOUBLE);
-        typeMap.put(Types.FLOAT, PostgreSqlType.FLOAT);
-        typeMap.put(Types.INTEGER, PostgreSqlType.INTEGER);
+        sqlTypeMap.put(Types.BIGINT, PostgreSqlType.BIGINT);
+        sqlTypeMap.put(Types.BINARY, PostgreSqlType.BINARY);
+        sqlTypeMap.put(Types.BOOLEAN, PostgreSqlType.BOOLEAN);
+        sqlTypeMap.put(Types.BLOB, PostgreSqlType.BLOB);
+        sqlTypeMap.put(Types.CLOB, PostgreSqlType.CLOB);
+        sqlTypeMap.put(Types.DECIMAL, PostgreSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DOUBLE, PostgreSqlType.DOUBLE);
+        sqlTypeMap.put(Types.FLOAT, PostgreSqlType.FLOAT);
+        sqlTypeMap.put(Types.INTEGER, PostgreSqlType.INTEGER);
 
         columnTypeMap.put("bigint", PostgreColumnType.BIGINT);
         columnTypeMap.put("bigserial", PostgreColumnType.BIGSERIAL);
@@ -141,11 +141,17 @@ public class PostgreGenDialect extends StandardGenDialect {
 
         };
 
+        /**
+         * インスタンスを構築します。
+         */
         protected PostgreSqlType() {
         }
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
         protected PostgreSqlType(String columnDefinition) {
             super(columnDefinition);
@@ -232,18 +238,47 @@ public class PostgreGenDialect extends StandardGenDialect {
             }
         };
 
-        public PostgreColumnType(String columnDefinition, Class javaClass) {
-            super(columnDefinition, javaClass);
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
+        public PostgreColumnType(String columnDefinition,
+                Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
         }
 
-        public PostgreColumnType(String columnDefinition, Class<?> javaClass,
-                boolean lob) {
-            super(columnDefinition, javaClass, lob, null);
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
+        public PostgreColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob, null);
         }
 
-        public PostgreColumnType(String columnDefinition, Class<?> javaClass,
-                TemporalType temporalType) {
-            super(columnDefinition, javaClass, false, temporalType);
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
+        public PostgreColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, false, temporalType);
         }
     }
 }

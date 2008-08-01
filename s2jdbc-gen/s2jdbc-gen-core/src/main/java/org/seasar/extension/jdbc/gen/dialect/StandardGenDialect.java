@@ -28,6 +28,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
@@ -39,7 +40,7 @@ import org.seasar.framework.util.StringUtil;
 public class StandardGenDialect implements GenDialect {
 
     /** SQL型をキー、{@link SqlType}を値とするマップ */
-    protected Map<Integer, SqlType> typeMap = new HashMap<Integer, SqlType>();
+    protected Map<Integer, SqlType> sqlTypeMap = new HashMap<Integer, SqlType>();
 
     /** カラムの型名をキー、{@link ColumnType}を値とするマップ */
     @SuppressWarnings("unchecked")
@@ -52,21 +53,21 @@ public class StandardGenDialect implements GenDialect {
      * インスタンスを構築します。
      */
     public StandardGenDialect() {
-        typeMap.put(Types.BIGINT, StandardSqlType.BIGINT);
-        typeMap.put(Types.BINARY, StandardSqlType.BINARY);
-        typeMap.put(Types.BLOB, StandardSqlType.BLOB);
-        typeMap.put(Types.BOOLEAN, StandardSqlType.BOOLEAN);
-        typeMap.put(Types.CHAR, StandardSqlType.CHAR);
-        typeMap.put(Types.CLOB, StandardSqlType.CLOB);
-        typeMap.put(Types.DATE, StandardSqlType.DATE);
-        typeMap.put(Types.DECIMAL, StandardSqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, StandardSqlType.DOUBLE);
-        typeMap.put(Types.FLOAT, StandardSqlType.FLOAT);
-        typeMap.put(Types.INTEGER, StandardSqlType.INTEGER);
-        typeMap.put(Types.SMALLINT, StandardSqlType.SMALLINT);
-        typeMap.put(Types.TIME, StandardSqlType.TIME);
-        typeMap.put(Types.TIMESTAMP, StandardSqlType.TIMESTAMP);
-        typeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
+        sqlTypeMap.put(Types.BIGINT, StandardSqlType.BIGINT);
+        sqlTypeMap.put(Types.BINARY, StandardSqlType.BINARY);
+        sqlTypeMap.put(Types.BLOB, StandardSqlType.BLOB);
+        sqlTypeMap.put(Types.BOOLEAN, StandardSqlType.BOOLEAN);
+        sqlTypeMap.put(Types.CHAR, StandardSqlType.CHAR);
+        sqlTypeMap.put(Types.CLOB, StandardSqlType.CLOB);
+        sqlTypeMap.put(Types.DATE, StandardSqlType.DATE);
+        sqlTypeMap.put(Types.DECIMAL, StandardSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DOUBLE, StandardSqlType.DOUBLE);
+        sqlTypeMap.put(Types.FLOAT, StandardSqlType.FLOAT);
+        sqlTypeMap.put(Types.INTEGER, StandardSqlType.INTEGER);
+        sqlTypeMap.put(Types.SMALLINT, StandardSqlType.SMALLINT);
+        sqlTypeMap.put(Types.TIME, StandardSqlType.TIME);
+        sqlTypeMap.put(Types.TIMESTAMP, StandardSqlType.TIMESTAMP);
+        sqlTypeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
 
         columnTypeMap.put("bigint", StandardColumnType.BIGINT);
         columnTypeMap.put("binary", StandardColumnType.BINARY);
@@ -101,15 +102,15 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public SqlType getSqlType(int sqlType) {
-        return typeMap.get(sqlType);
+        SqlType type = sqlTypeMap.get(sqlType);
+        if (type != null) {
+            return type;
+        }
+        throw new UnsupportedSqlTypeRuntimeException(sqlType);
     }
 
     public ColumnType getColumnType(String typeName) {
-        ColumnType columnType = columnTypeMap.get(typeName);
-        if (columnType != null) {
-            return columnType;
-        }
-        return StandardColumnType.UNKOWN;
+        return columnTypeMap.get(typeName);
     }
 
     public GenerationType getDefaultGenerationType() {
@@ -375,9 +376,6 @@ public class StandardGenDialect implements GenDialect {
 
         private static StandardColumnType VARCHAR = new StandardColumnType(
                 "varchar($l)", String.class);
-
-        private static StandardColumnType UNKOWN = new StandardColumnType(null,
-                String.class);
 
         /** カラム定義 */
         protected String columnDefinition;

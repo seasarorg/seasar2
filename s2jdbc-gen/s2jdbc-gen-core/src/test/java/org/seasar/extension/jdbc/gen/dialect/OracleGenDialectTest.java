@@ -44,7 +44,6 @@ public class OracleGenDialectTest {
         assertEquals(Integer.class, type.getAttributeClass(0, 8, 0));
         assertEquals(BigDecimal.class, type.getAttributeClass(0, 8, 2));
         assertEquals(Long.class, type.getAttributeClass(0, 11, 0));
-
     }
 
     /**
@@ -65,7 +64,8 @@ public class OracleGenDialectTest {
     @Test
     public void testGetSqlType_varchar() throws Exception {
         SqlType type = dialect.getSqlType(Types.VARCHAR);
-        assertEquals("varchar2(4000)", type.getColumnDefinition(4000, 0, 0, false));
+        assertEquals("varchar2(4000)", type.getColumnDefinition(4000, 0, 0,
+                false));
         assertEquals("clob", type.getColumnDefinition(4001, 0, 0, false));
     }
 

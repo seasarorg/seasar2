@@ -35,12 +35,12 @@ public class DerbyGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public DerbyGenDialect() {
-        typeMap.put(Types.BINARY, DerbySqlType.BINARY);
-        typeMap.put(Types.BLOB, DerbySqlType.BLOB);
-        typeMap.put(Types.BOOLEAN, DerbySqlType.BOOLEAN);
-        typeMap.put(Types.CLOB, DerbySqlType.CLOB);
-        typeMap.put(Types.DECIMAL, DerbySqlType.DECIMAL);
-        typeMap.put(Types.FLOAT, DerbySqlType.FLOAT);
+        sqlTypeMap.put(Types.BINARY, DerbySqlType.BINARY);
+        sqlTypeMap.put(Types.BLOB, DerbySqlType.BLOB);
+        sqlTypeMap.put(Types.BOOLEAN, DerbySqlType.BOOLEAN);
+        sqlTypeMap.put(Types.CLOB, DerbySqlType.CLOB);
+        sqlTypeMap.put(Types.DECIMAL, DerbySqlType.DECIMAL);
+        sqlTypeMap.put(Types.FLOAT, DerbySqlType.FLOAT);
 
         columnTypeMap.put("blob", DerbyColumnType.BLOB);
         columnTypeMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);

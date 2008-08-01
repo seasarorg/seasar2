@@ -37,16 +37,16 @@ public class MssqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MssqlGenDialect() {
-        typeMap.put(Types.BINARY, MssqlSqlType.BINARY);
-        typeMap.put(Types.BOOLEAN, MssqlSqlType.BOOLEAN);
-        typeMap.put(Types.BLOB, MssqlSqlType.BLOB);
-        typeMap.put(Types.CLOB, MssqlSqlType.CLOB);
-        typeMap.put(Types.DATE, MssqlSqlType.DATE);
-        typeMap.put(Types.DECIMAL, MssqlSqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, MssqlSqlType.DOUBLE);
-        typeMap.put(Types.INTEGER, MssqlSqlType.INTEGER);
-        typeMap.put(Types.TIME, MssqlSqlType.TIME);
-        typeMap.put(Types.TIMESTAMP, MssqlSqlType.TIMESTAMP);
+        sqlTypeMap.put(Types.BINARY, MssqlSqlType.BINARY);
+        sqlTypeMap.put(Types.BOOLEAN, MssqlSqlType.BOOLEAN);
+        sqlTypeMap.put(Types.BLOB, MssqlSqlType.BLOB);
+        sqlTypeMap.put(Types.CLOB, MssqlSqlType.CLOB);
+        sqlTypeMap.put(Types.DATE, MssqlSqlType.DATE);
+        sqlTypeMap.put(Types.DECIMAL, MssqlSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DOUBLE, MssqlSqlType.DOUBLE);
+        sqlTypeMap.put(Types.INTEGER, MssqlSqlType.INTEGER);
+        sqlTypeMap.put(Types.TIME, MssqlSqlType.TIME);
+        sqlTypeMap.put(Types.TIMESTAMP, MssqlSqlType.TIMESTAMP);
 
         columnTypeMap.put("binary", MssqlColumnType.BINARY);
         columnTypeMap.put("bit", MssqlColumnType.BIT);
@@ -66,6 +66,10 @@ public class MssqlGenDialect extends StandardGenDialect {
 
         sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "triger"));
         sqlBlockStartWordsList.add(Arrays.asList("declare"));
         sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
@@ -137,12 +141,20 @@ public class MssqlGenDialect extends StandardGenDialect {
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
         protected MssqlSqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * MS SQL Server用の{@link ColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class MssqlColumnType extends StandardColumnType {
 
         private static MssqlColumnType BINARY = new MssqlColumnType(
@@ -190,15 +202,43 @@ public class MssqlGenDialect extends StandardGenDialect {
         private static MssqlColumnType VARBINARY = new MssqlColumnType(
                 "varbinary($l)", byte[].class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
         public MssqlColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public MssqlColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public MssqlColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

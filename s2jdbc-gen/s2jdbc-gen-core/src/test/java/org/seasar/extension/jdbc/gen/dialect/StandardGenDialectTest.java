@@ -19,6 +19,7 @@ import java.sql.Types;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
+import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +36,7 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testType_char() throws Exception {
+    public void testGetSqlType_char() throws Exception {
         SqlType type = dialect.getSqlType(Types.CHAR);
         assertEquals("char(1)", type.getColumnDefinition(10, 0, 0, false));
     }
@@ -45,9 +46,31 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testType_varchar() throws Exception {
+    public void testGetSqlType_varchar() throws Exception {
         SqlType type = dialect.getSqlType(Types.VARCHAR);
         assertEquals("varchar(10)", type.getColumnDefinition(10, 0, 0, false));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetSqlType_unsupported() throws Exception {
+        try {
+            dialect.getSqlType(Types.OTHER);
+            fail();
+        } catch (UnsupportedSqlTypeRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_unknown() throws Exception {
+        assertNull(dialect.getColumnType("hoge"));
     }
 
 }

@@ -35,8 +35,8 @@ public class H2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public H2GenDialect() {
-        typeMap.put(Types.BINARY, H2SqlType.BINARY);
-        typeMap.put(Types.DECIMAL, H2SqlType.DECIMAL);
+        sqlTypeMap.put(Types.BINARY, H2SqlType.BINARY);
+        sqlTypeMap.put(Types.DECIMAL, H2SqlType.DECIMAL);
 
         columnTypeMap.put("binary", H2ColumnType.BINARY);
         columnTypeMap.put("decimal", H2ColumnType.DECIMAL);
@@ -88,12 +88,20 @@ public class H2GenDialect extends StandardGenDialect {
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
         protected H2SqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * H2用の{@link ColumType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class H2ColumnType extends StandardColumnType {
 
         private static H2ColumnType BINARY = new H2ColumnType("binary($l)",
@@ -102,15 +110,43 @@ public class H2GenDialect extends StandardGenDialect {
         private static H2ColumnType DECIMAL = new H2ColumnType(
                 "decimal($p,$s)", BigDecimal.class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
         public H2ColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public H2ColumnType(String columnDefinition, Class<?> attributeClass,
                 boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public H2ColumnType(String columnDefinition, Class<?> attributeClass,
                 TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

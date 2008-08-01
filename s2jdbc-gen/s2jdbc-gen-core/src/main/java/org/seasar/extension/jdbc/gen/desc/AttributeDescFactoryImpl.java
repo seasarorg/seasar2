@@ -69,9 +69,6 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         AttributeDesc attributeDesc = new AttributeDesc();
         doName(columnMeta, attributeDesc);
         doId(columnMeta, attributeDesc);
-        doLob(columnMeta, attributeDesc);
-        doAttributeClass(columnMeta, attributeDesc);
-        doTemporalType(columnMeta, attributeDesc);
         doTransient(columnMeta, attributeDesc);
         doVersion(columnMeta, attributeDesc);
         doColumn(columnMeta, attributeDesc);
@@ -104,49 +101,6 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     }
 
     /**
-     * プロパティのクラスを処理します。
-     * 
-     * @param columnMeta
-     *            カラムメタデータ
-     * @param attributeDesc
-     *            属性記述
-     */
-    protected void doAttributeClass(DbColumnMeta columnMeta,
-            AttributeDesc attributeDesc) {
-        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
-        Class<?> clazz = columnType.getAttributeClass(columnMeta.getLength(),
-                columnMeta.getLength(), columnMeta.getScale());
-        attributeDesc.setAttributeClass(clazz);
-    }
-
-    /**
-     * <code>LOB</code>を処理します。
-     * 
-     * @param columnMeta
-     *            カラムメタデータ
-     * @param attributeDesc
-     *            属性記述
-     */
-    protected void doLob(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
-        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
-        attributeDesc.setLob(columnType.isLob());
-    }
-
-    /**
-     * 時制の種別を処理します。
-     * 
-     * @param columnMeta
-     *            カラムメタデータ
-     * @param attributeDesc
-     *            属性記述
-     */
-    protected void doTemporalType(DbColumnMeta columnMeta,
-            AttributeDesc attributeDesc) {
-        ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
-        attributeDesc.setTemporalType(columnType.getTemporalType());
-    }
-
-    /**
      * 一時的なプロパティを処理します。
      * 
      * @param columnMeta
@@ -174,7 +128,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     }
 
     /**
-     * カラムの名前を処理します。
+     * カラムを処理します。
      * 
      * @param columnMeta
      *            カラムメタデータ
@@ -189,9 +143,23 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         attributeDesc.setScale(columnMeta.getScale());
         attributeDesc.setNullable(columnMeta.isNullable());
         ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
-        String definition = columnType.getColumnDefinition(columnMeta
-                .getLength(), columnMeta.getLength(), columnMeta.getScale());
-        attributeDesc.setColumnDefinition(definition);
+        if (columnType != null) {
+            Class<?> clazz = columnType
+                    .getAttributeClass(columnMeta.getLength(), columnMeta
+                            .getLength(), columnMeta.getScale());
+            attributeDesc.setAttributeClass(clazz);
+            String definition = columnType
+                    .getColumnDefinition(columnMeta.getLength(), columnMeta
+                            .getLength(), columnMeta.getScale());
+            attributeDesc.setColumnDefinition(definition);
+            attributeDesc.setLob(columnType.isLob());
+            attributeDesc.setTemporalType(columnType.getTemporalType());
+        } else {
+            attributeDesc.setAttributeClass(String.class);
+            attributeDesc.setColumnDefinition(null);
+            attributeDesc.setLob(false);
+            attributeDesc.setTemporalType(null);
+        }
     }
 
 }

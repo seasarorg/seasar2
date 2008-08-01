@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.GenerationType;
@@ -37,13 +38,13 @@ public class MysqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MysqlGenDialect() {
-        typeMap.put(Types.BINARY, MysqlSqlType.BINARY);
-        typeMap.put(Types.BLOB, MysqlSqlType.BLOB);
-        typeMap.put(Types.CLOB, MysqlSqlType.CLOB);
-        typeMap.put(Types.DECIMAL, MysqlSqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, MysqlSqlType.DOUBLE);
-        typeMap.put(Types.FLOAT, MysqlSqlType.FLOAT);
-        typeMap.put(Types.INTEGER, MysqlSqlType.INTEGER);
+        sqlTypeMap.put(Types.BINARY, MysqlSqlType.BINARY);
+        sqlTypeMap.put(Types.BLOB, MysqlSqlType.BLOB);
+        sqlTypeMap.put(Types.CLOB, MysqlSqlType.CLOB);
+        sqlTypeMap.put(Types.DECIMAL, MysqlSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DOUBLE, MysqlSqlType.DOUBLE);
+        sqlTypeMap.put(Types.FLOAT, MysqlSqlType.FLOAT);
+        sqlTypeMap.put(Types.INTEGER, MysqlSqlType.INTEGER);
 
         columnTypeMap.put("bigint unsigned", MysqlColumnType.BIGINT_UNSIGNED);
         columnTypeMap.put("binary", MysqlColumnType.BINARY);
@@ -61,14 +62,23 @@ public class MysqlGenDialect extends StandardGenDialect {
         columnTypeMap.put("mediumint unsigned",
                 MysqlColumnType.MEDIUMINT_UNSIGNED);
         columnTypeMap.put("mediumtext", MysqlColumnType.MEDIUMTEXT);
-        columnTypeMap
-                .put("smallint unsigned", MysqlColumnType.SMALLINT_UNSIGNED);
+        columnTypeMap.put("smallint unsigned",
+                MysqlColumnType.SMALLINT_UNSIGNED);
         columnTypeMap.put("tinyblob", MysqlColumnType.TINYBLOB);
         columnTypeMap.put("tinyint", MysqlColumnType.TINYINT);
         columnTypeMap.put("tinyint unsigned", MysqlColumnType.TINYINT_UNSIGNED);
         columnTypeMap.put("tinytext", MysqlColumnType.TINYTEXT);
         columnTypeMap.put("text", MysqlColumnType.TEXT);
         columnTypeMap.put("year", MysqlColumnType.YEAR);
+
+        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "triger"));
+        sqlBlockStartWordsList.add(Arrays.asList("declare"));
+        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -152,17 +162,28 @@ public class MysqlGenDialect extends StandardGenDialect {
 
         private static MysqlSqlType INTEGER = new MysqlSqlType("int");
 
+        /**
+         * インスタンスを構築します。
+         */
         protected MysqlSqlType() {
         }
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
         protected MysqlSqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * MySQL用の{@link ColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class MysqlColumnType extends StandardColumnType {
 
         private static MysqlColumnType BIGINT_UNSIGNED = new MysqlColumnType(
@@ -247,15 +268,43 @@ public class MysqlGenDialect extends StandardGenDialect {
         private static MysqlColumnType YEAR = new MysqlColumnType("year",
                 Date.class, TemporalType.DATE);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
         public MysqlColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public MysqlColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public MysqlColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

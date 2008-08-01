@@ -30,6 +30,10 @@ public class PostgreGenDialectTest {
 
     private PostgreGenDialect dialect = new PostgreGenDialect();
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSqlType_integer() throws Exception {
         SqlType type = dialect.getSqlType(Types.INTEGER);
@@ -37,6 +41,10 @@ public class PostgreGenDialectTest {
         assertEquals("integer", type.getColumnDefinition(10, 0, 0, false));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetSqlType_bigint() throws Exception {
         SqlType type = dialect.getSqlType(Types.BIGINT);

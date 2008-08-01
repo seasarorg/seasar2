@@ -38,15 +38,15 @@ public class OracleGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public OracleGenDialect() {
-        typeMap.put(Types.BINARY, OracleSqlType.BINARY);
-        typeMap.put(Types.BOOLEAN, OracleSqlType.BOOLEAN);
-        typeMap.put(Types.BIGINT, OracleSqlType.BIGINT);
-        typeMap.put(Types.DECIMAL, OracleSqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, OracleSqlType.DOUBLE);
-        typeMap.put(Types.INTEGER, OracleSqlType.INTEGER);
-        typeMap.put(Types.SMALLINT, OracleSqlType.SMALLINT);
-        typeMap.put(Types.TIME, OracleSqlType.TIME);
-        typeMap.put(Types.VARCHAR, OracleSqlType.VARCHAR);
+        sqlTypeMap.put(Types.BINARY, OracleSqlType.BINARY);
+        sqlTypeMap.put(Types.BOOLEAN, OracleSqlType.BOOLEAN);
+        sqlTypeMap.put(Types.BIGINT, OracleSqlType.BIGINT);
+        sqlTypeMap.put(Types.DECIMAL, OracleSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DOUBLE, OracleSqlType.DOUBLE);
+        sqlTypeMap.put(Types.INTEGER, OracleSqlType.INTEGER);
+        sqlTypeMap.put(Types.SMALLINT, OracleSqlType.SMALLINT);
+        sqlTypeMap.put(Types.TIME, OracleSqlType.TIME);
+        sqlTypeMap.put(Types.VARCHAR, OracleSqlType.VARCHAR);
 
         columnTypeMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
         columnTypeMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
@@ -65,8 +65,11 @@ public class OracleGenDialect extends StandardGenDialect {
                 "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
                 "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "or", "replace",
+                "triger"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
         sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
         sqlBlockStartWordsList.add(Arrays.asList("declare"));
         sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
@@ -162,11 +165,22 @@ public class OracleGenDialect extends StandardGenDialect {
         protected OracleSqlType() {
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         */
         protected OracleSqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * Oracle用の{@link ColumnType}の実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class OracleColumnType extends StandardColumnType {
 
         private static OracleColumnType BINARY_DOUBLE = new OracleColumnType(
@@ -244,18 +258,46 @@ public class OracleGenDialect extends StandardGenDialect {
         private static OracleColumnType VARCHAR2 = new OracleColumnType(
                 "varchar2($l)", byte[].class);
 
-        public OracleColumnType(String columnDefinition, Class javaClass) {
-            super(columnDefinition, javaClass);
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
+        public OracleColumnType(String columnDefinition, Class<?> attributeClass) {
+            super(columnDefinition, attributeClass);
         }
 
-        public OracleColumnType(String columnDefinition, Class<?> javaClass,
-                boolean lob) {
-            super(columnDefinition, javaClass, lob, null);
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
+        public OracleColumnType(String columnDefinition,
+                Class<?> attributeClass, boolean lob) {
+            super(columnDefinition, attributeClass, lob, null);
         }
 
-        public OracleColumnType(String columnDefinition, Class<?> javaClass,
-                TemporalType temporalType) {
-            super(columnDefinition, javaClass, false, temporalType);
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
+        public OracleColumnType(String columnDefinition,
+                Class<?> attributeClass, TemporalType temporalType) {
+            super(columnDefinition, attributeClass, false, temporalType);
         }
 
     }

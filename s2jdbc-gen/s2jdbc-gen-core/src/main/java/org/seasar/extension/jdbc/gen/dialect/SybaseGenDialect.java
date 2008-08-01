@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.GenerationType;
@@ -33,16 +34,16 @@ public class SybaseGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public SybaseGenDialect() {
-        typeMap.put(Types.BINARY, SybaseSqlType.BINARY);
-        typeMap.put(Types.BOOLEAN, SybaseSqlType.BOOLEAN);
-        typeMap.put(Types.BLOB, SybaseSqlType.BLOB);
-        typeMap.put(Types.CLOB, SybaseSqlType.CLOB);
-        typeMap.put(Types.DATE, SybaseSqlType.DATE);
-        typeMap.put(Types.DECIMAL, SybaseSqlType.DECIMAL);
-        typeMap.put(Types.DOUBLE, SybaseSqlType.DOUBLE);
-        typeMap.put(Types.INTEGER, SybaseSqlType.INTEGER);
-        typeMap.put(Types.TIME, SybaseSqlType.TIME);
-        typeMap.put(Types.TIMESTAMP, SybaseSqlType.TIMESTAMP);
+        sqlTypeMap.put(Types.BINARY, SybaseSqlType.BINARY);
+        sqlTypeMap.put(Types.BOOLEAN, SybaseSqlType.BOOLEAN);
+        sqlTypeMap.put(Types.BLOB, SybaseSqlType.BLOB);
+        sqlTypeMap.put(Types.CLOB, SybaseSqlType.CLOB);
+        sqlTypeMap.put(Types.DATE, SybaseSqlType.DATE);
+        sqlTypeMap.put(Types.DECIMAL, SybaseSqlType.DECIMAL);
+        sqlTypeMap.put(Types.DOUBLE, SybaseSqlType.DOUBLE);
+        sqlTypeMap.put(Types.INTEGER, SybaseSqlType.INTEGER);
+        sqlTypeMap.put(Types.TIME, SybaseSqlType.TIME);
+        sqlTypeMap.put(Types.TIMESTAMP, SybaseSqlType.TIMESTAMP);
 
         columnTypeMap.put("binary", SybaseColumnType.BINARY);
         columnTypeMap.put("bit", SybaseColumnType.BIT);
@@ -59,6 +60,15 @@ public class SybaseGenDialect extends StandardGenDialect {
         columnTypeMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
         columnTypeMap.put("text", SybaseColumnType.TEXT);
         columnTypeMap.put("varbinary", SybaseColumnType.VARBINARY);
+
+        sqlBlockStartWordsList.add(Arrays.asList("create", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("create", "triger"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "procedure"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "function"));
+        sqlBlockStartWordsList.add(Arrays.asList("alter", "triger"));
+        sqlBlockStartWordsList.add(Arrays.asList("declare"));
+        sqlBlockStartWordsList.add(Arrays.asList("begin"));
     }
 
     @Override
@@ -93,9 +103,11 @@ public class SybaseGenDialect extends StandardGenDialect {
 
         private static SybaseSqlType DATE = new SybaseSqlType("datetime");
 
-        private static SybaseSqlType DECIMAL = new SybaseSqlType("decimal($p,$s)");
+        private static SybaseSqlType DECIMAL = new SybaseSqlType(
+                "decimal($p,$s)");
 
-        private static SybaseSqlType DOUBLE = new SybaseSqlType("double precision");
+        private static SybaseSqlType DOUBLE = new SybaseSqlType(
+                "double precision");
 
         private static SybaseSqlType INTEGER = new SybaseSqlType("int");
 
@@ -105,12 +117,20 @@ public class SybaseGenDialect extends StandardGenDialect {
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
         protected SybaseSqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * Sybase用の{@link ColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class SybaseColumnType extends StandardColumnType {
 
         private static SybaseColumnType BINARY = new SybaseColumnType(
@@ -158,15 +178,43 @@ public class SybaseGenDialect extends StandardGenDialect {
         private static SybaseColumnType VARBINARY = new SybaseColumnType(
                 "varbinary($l)", byte[].class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性クラス
+         */
         public SybaseColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         */
         public SybaseColumnType(String columnDefinition,
                 Class<?> attributeClass, boolean lob) {
             super(columnDefinition, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param temporalType
+         *            時制型
+         */
         public SybaseColumnType(String columnDefinition,
                 Class<?> attributeClass, TemporalType temporalType) {
             super(columnDefinition, attributeClass, temporalType);

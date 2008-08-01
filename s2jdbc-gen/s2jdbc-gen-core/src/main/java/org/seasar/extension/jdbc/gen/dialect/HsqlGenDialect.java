@@ -33,9 +33,9 @@ public class HsqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public HsqlGenDialect() {
-        typeMap.put(Types.BINARY, HsqlSqlType.BINARY);
-        typeMap.put(Types.BLOB, HsqlSqlType.BLOB);
-        typeMap.put(Types.CLOB, HsqlSqlType.CLOB);
+        sqlTypeMap.put(Types.BINARY, HsqlSqlType.BINARY);
+        sqlTypeMap.put(Types.BLOB, HsqlSqlType.BLOB);
+        sqlTypeMap.put(Types.CLOB, HsqlSqlType.CLOB);
 
         columnTypeMap.put("int", HsqlColumnType.INT);
         columnTypeMap.put("varchar_ignorecase",
@@ -91,12 +91,20 @@ public class HsqlGenDialect extends StandardGenDialect {
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
          */
         protected HsqlSqlType(String columnDefinition) {
             super(columnDefinition);
         }
     }
 
+    /**
+     * HSQLDB用の{@link ColumnType}の実装です。
+     * 
+     * @author taedium
+     */
     public static class HsqlColumnType extends StandardColumnType {
 
         private static HsqlColumnType INT = new HsqlColumnType("int",
@@ -105,6 +113,14 @@ public class HsqlGenDialect extends StandardGenDialect {
         private static HsqlColumnType VARCHAR_IGNORECASE = new HsqlColumnType(
                 "int", Integer.class);
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param columnDefinition
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         */
         public HsqlColumnType(String columnDefinition, Class<?> attributeClass) {
             super(columnDefinition, attributeClass);
         }

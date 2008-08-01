@@ -60,7 +60,7 @@ public interface GenDialect {
      * 
      * @param columnTypeName
      *            カラムの型名
-     * @return カラム型
+     * @return カラム型、サポートされていないカラムの型名の場合{@code null}
      */
     ColumnType getColumnType(String columnTypeName);
 
@@ -112,7 +112,7 @@ public interface GenDialect {
     /**
      * SQLブロックの区切り文字を返します。
      * 
-     * @return SQLブロックの区切り文字
+     * @return SQLブロックの区切り文字、SQLブロックの区切り文字蛾存在しない場合{@code null}
      */
     String getSqlBlockDelimiter();
 
@@ -166,7 +166,7 @@ public interface GenDialect {
      * 
      * @author taedium
      */
-    public interface SqlType {
+    interface SqlType {
 
         /**
          * カラム定義を返します。
@@ -196,7 +196,7 @@ public interface GenDialect {
      * 
      * @author taedium
      */
-    public interface ColumnType {
+    interface ColumnType {
 
         /**
          * 属性のクラスを返します。
@@ -238,4 +238,5 @@ public interface GenDialect {
          */
         TemporalType getTemporalType();
     }
+
 }
