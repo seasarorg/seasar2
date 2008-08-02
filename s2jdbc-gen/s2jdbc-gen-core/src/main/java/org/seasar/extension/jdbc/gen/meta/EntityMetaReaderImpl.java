@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.meta;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.persistence.Entity;
 
@@ -44,6 +45,12 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
+    /** 読み取り対象とするエンティティ名のパターン */
+    protected Pattern entityNamePattern;
+
+    /** 読み取り非対象とするエンティティ名のパターン */
+    protected Pattern ignoreEntityNamePattern;
+
     /**
      * インタスタンスを構築します。
      * 
@@ -53,18 +60,31 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @param entityMetaFactory
      *            エンティティメタデータのファクトリ
+     * @param entityNamePattern
+     *            対象とするエンティティ名の正規表現
+     * @param ignoreEntityNamePattern
+     *            対象としないエンティティ名の正規表現
      */
     public EntityMetaReaderImpl(File rootDir, String packageName,
-            EntityMetaFactory entityMetaFactory) {
+            EntityMetaFactory entityMetaFactory, String entityNamePattern,
+            String ignoreEntityNamePattern) {
         if (rootDir == null) {
             throw new NullPointerException("rootDir");
         }
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
+        if (entityNamePattern == null) {
+            throw new NullPointerException("entityNamePattern");
+        }
+        if (ignoreEntityNamePattern == null) {
+            throw new NullPointerException("ignoreEntityNamePattern");
+        }
         this.rootDir = rootDir;
         this.packageName = packageName;
         this.entityMetaFactory = entityMetaFactory;
+        this.entityNamePattern = Pattern.compile(entityNamePattern);
+        this.ignoreEntityNamePattern = Pattern.compile(ignoreEntityNamePattern);
     }
 
     public List<EntityMeta> read() {
@@ -73,16 +93,17 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         ClassTraversal.forEach(rootDir, new ClassHandler() {
 
             public void processClass(String packageName, String shortClassName) {
-                if (!isTarget(packageName, shortClassName)) {
-                    return;
-                }
-                String className = ClassUtil.concatName(packageName,
-                        shortClassName);
-                Class<?> clazz = ClassUtil.forName(className);
-                if (clazz.isAnnotationPresent(Entity.class)) {
-                    EntityMeta entityMeta = entityMetaFactory
-                            .getEntityMeta(clazz);
-                    entityMetaList.add(entityMeta);
+                if (isTargetClass(packageName, shortClassName)) {
+                    String className = ClassUtil.concatName(packageName,
+                            shortClassName);
+                    Class<?> clazz = ClassUtil.forName(className);
+                    if (clazz.isAnnotationPresent(Entity.class)) {
+                        EntityMeta entityMeta = entityMetaFactory
+                                .getEntityMeta(clazz);
+                        if (isTargetEntity(entityMeta)) {
+                            entityMetaList.add(entityMeta);
+                        }
+                    }
                 }
             }
         });
@@ -99,7 +120,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      *            クラスの単純名
      * @return 読み取りの対象クラスの場合{@code true}
      */
-    protected boolean isTarget(String packageName, String shortClassName) {
+    protected boolean isTargetClass(String packageName, String shortClassName) {
         if (packageName == null) {
             return true;
         }
@@ -110,5 +131,23 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 読み取り対象エンティティの場合{@code true}を返します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @return 読み取り対象エンティティの場合{@code true}
+     */
+    protected boolean isTargetEntity(EntityMeta entityMeta) {
+        String name = entityMeta.getName();
+        if (!entityNamePattern.matcher(name).matches()) {
+            return false;
+        }
+        if (ignoreEntityNamePattern.matcher(name).matches()) {
+            return false;
+        }
+        return true;
     }
 }

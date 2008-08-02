@@ -69,6 +69,12 @@ public class GenerateTestCommand extends AbstractCommand {
     /** エンティティパッケージ名 */
     protected String entityPackageName = "entity";
 
+    /** 対象とするエンティティ名の正規表現 */
+    protected String entityNamePattern = ".*";
+
+    /** 対象としないエンティティ名の正規表現 */
+    protected String ignoreEntityNamePattern = "";
+
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
 
@@ -153,6 +159,44 @@ public class GenerateTestCommand extends AbstractCommand {
      */
     public void setEntityPackageName(String entityPackageName) {
         this.entityPackageName = entityPackageName;
+    }
+
+    /**
+     * 対象とするエンティティ名の正規表現を返します。
+     * 
+     * @return 対象とするエンティティ名の正規表現
+     */
+    public String getEntityNamePattern() {
+        return entityNamePattern;
+    }
+
+    /**
+     * 対象とするエンティティ名の正規表現を設定します。
+     * 
+     * @param entityNamePattern
+     *            対象とするエンティティ名の正規表現
+     */
+    public void setEntityNamePattern(String entityNamePattern) {
+        this.entityNamePattern = entityNamePattern;
+    }
+
+    /**
+     * 対象としないエンティティ名の正規表現を返します。
+     * 
+     * @return 対象としないエンティティ名の正規表現
+     */
+    public String getIgnoreEntityNamePattern() {
+        return ignoreEntityNamePattern;
+    }
+
+    /**
+     * 対象としないエンティティ名の正規表現を設定します。
+     * 
+     * @param ignoreEntityNamePattern
+     *            対象としないエンティティ名の正規表現
+     */
+    public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
+        this.ignoreEntityNamePattern = ignoreEntityNamePattern;
     }
 
     /**
@@ -413,7 +457,8 @@ public class GenerateTestCommand extends AbstractCommand {
      */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), entityMetaFactory);
+                rootPackageName, entityPackageName), entityMetaFactory,
+                entityNamePattern, ignoreEntityNamePattern);
     }
 
     /**

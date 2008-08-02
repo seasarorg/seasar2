@@ -19,7 +19,6 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +71,7 @@ public class DbTableMetaReaderImplTest {
         };
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "table", "ignoreTable");
+                ".*", "");
         Set<String> list = reader.getPrimaryKeySet(metaData, "catalogName",
                 "schemaName", "table");
         assertEquals(2, list.size());
@@ -128,7 +127,7 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "table", "ignoreTable");
+                ".*", "");
         List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
                 "catalogName", "schemaName", "SchemaInfoTableName");
         assertEquals(2, list.size());
@@ -169,6 +168,12 @@ public class DbTableMetaReaderImplTest {
         rowData.put("TABLE_NAME", "table2");
         resultSet.addRowData(rowData);
 
+        rowData = new ArrayMap();
+        rowData.put("TABLE_CAT", "catalog3");
+        rowData.put("TABLE_SCHEM", "schemaName3");
+        rowData.put("TABLE_NAME", "table3");
+        resultSet.addRowData(rowData);
+
         MockDatabaseMetaData metaData = new MockDatabaseMetaData() {
 
             @Override
@@ -181,7 +186,7 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                ".*", "ignoreTable");
+                ".*", "TABLE3");
         List<DbTableMeta> list = reader.getDbTableMetaList(metaData,
                 "schemaName");
         assertEquals(2, list.size());
@@ -191,31 +196,6 @@ public class DbTableMetaReaderImplTest {
         assertEquals("catalog2", list.get(1).getCatalogName());
         assertEquals("schemaName2", list.get(1).getSchemaName());
         assertEquals("table2", list.get(1).getName());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testFilterDbTableMetaList() throws Exception {
-        List<DbTableMeta> list = new ArrayList<DbTableMeta>();
-        DbTableMeta tableMeta = new DbTableMeta();
-        tableMeta.setName("AAA");
-        list.add(tableMeta);
-        DbTableMeta tableMeta2 = new DbTableMeta();
-        tableMeta2.setName("BBB");
-        list.add(tableMeta2);
-        DbTableMeta tableMeta3 = new DbTableMeta();
-        tableMeta3.setName("abc");
-        list.add(tableMeta3);
-
-        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
-                new MockDataSource(), new StandardGenDialect(), "schemaName",
-                "A.*", "AB.*");
-        List<DbTableMeta> result = reader.filterDbTableMetaList(list);
-        assertEquals(1, result.size());
-        assertEquals("AAA", result.get(0).getName());
     }
 
 }

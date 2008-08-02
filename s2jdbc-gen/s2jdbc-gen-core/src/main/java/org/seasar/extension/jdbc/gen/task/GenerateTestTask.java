@@ -153,6 +153,26 @@ public class GenerateTestTask extends AbstractTask {
     }
 
     /**
+     * 対象とするエンティティ名の正規表現を設定します。
+     * 
+     * @param entityNamePattern
+     *            対象とするエンティティ名の正規表現
+     */
+    public void setEntityNamePattern(String entityNamePattern) {
+        command.setEntityNamePattern(entityNamePattern);
+    }
+
+    /**
+     * 対象としないエンティティ名の正規表現を設定します。
+     * 
+     * @param ignoreEntityNamePattern
+     *            対象としないエンティティ名の正規表現
+     */
+    public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
+        command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
+    }
+
+    /**
      * 環境名を設定します。
      * 
      * @param env

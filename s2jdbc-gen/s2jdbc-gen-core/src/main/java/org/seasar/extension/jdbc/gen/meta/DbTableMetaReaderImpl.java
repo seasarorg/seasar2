@@ -53,11 +53,11 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     /** スキーマ名 */
     protected String schemaName;
 
-    /** 正規表現で表されたテーブル名のパターン */
-    protected String tableNamePattern;
+    /** 読み取り対象とするテーブル名のパターン */
+    protected Pattern tableNamePattern;
 
-    /** 正規表現で表された無視するテーブル名のパターン */
-    protected String ignoreTableNamePattern;
+    /** 読み取り非対象とするテーブル名のパターン */
+    protected Pattern ignoreTableNamePattern;
 
     /**
      * インスタンスを構築します。
@@ -69,9 +69,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * @param schemaName
      *            スキーマ名、デフォルトのスキーマ名を表す場合は{@code null}
      * @param tableNamePattern
-     *            正規表現で表されたテーブル名のパターン
+     *            対象とするテーブル名の正規表現
      * @param ignoreTableNamePattern
-     *            正規表現で表された無視するテーブル名のパターン
+     *            対象としないテーブル名の正規表現
      */
     public DbTableMetaReaderImpl(DataSource dataSource, GenDialect dialect,
             String schemaName, String tableNamePattern,
@@ -91,8 +91,10 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
         this.dataSource = dataSource;
         this.dialect = dialect;
         this.schemaName = schemaName;
-        this.tableNamePattern = tableNamePattern;
-        this.ignoreTableNamePattern = ignoreTableNamePattern;
+        this.tableNamePattern = Pattern.compile(tableNamePattern,
+                Pattern.CASE_INSENSITIVE);
+        this.ignoreTableNamePattern = Pattern.compile(ignoreTableNamePattern,
+                Pattern.CASE_INSENSITIVE);
     }
 
     public List<DbTableMeta> read() {
@@ -103,8 +105,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     : getDefaultSchemaName(metaData);
             List<DbTableMeta> dbTableMetaList = getDbTableMetaList(metaData,
                     schemaName);
-            List<DbTableMeta> filteredDbTableMetaList = filterDbTableMetaList(dbTableMetaList);
-            for (DbTableMeta tm : filteredDbTableMetaList) {
+            for (DbTableMeta tm : dbTableMetaList) {
                 Set<String> primaryKeys = getPrimaryKeySet(metaData, tm
                         .getCatalogName(), tm.getSchemaName(), tm.getName());
                 for (DbColumnMeta cm : getDbColumnMetaList(metaData, tm
@@ -115,7 +116,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     tm.addColumnMeta(cm);
                 }
             }
-            return filteredDbTableMetaList;
+            return dbTableMetaList;
         } finally {
             ConnectionUtil.close(con);
         }
@@ -154,7 +155,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     dbTableMeta.setCatalogName(rs.getString(1));
                     dbTableMeta.setSchemaName(rs.getString(2));
                     dbTableMeta.setName(rs.getString(3));
-                    result.add(dbTableMeta);
+                    if (isTargetTable(dbTableMeta)) {
+                        result.add(dbTableMeta);
+                    }
                 }
                 return result;
             } finally {
@@ -166,36 +169,24 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     }
 
     /**
-     * テーブルメタデータをフィルタリングします。
+     * 読み取り対象のテーブルの場合{@code true}を返します。
      * 
-     * @param dbTableMetaList
-     *            テーブルメタデータのリスト
-     * @param tableNamePattern
-     *            テーブル名のパターン
-     * @param ignoreTableNamePattern
-     *            無視するテーブル名のパターン
-     * @return フィルタリングされたテーブルメタデータのリスト
+     * @param dbTableMeta
+     *            テーブルメタデータ
+     * @return 読み取り対象のテーブルの場合{@code true}
      */
-    protected List<DbTableMeta> filterDbTableMetaList(
-            List<DbTableMeta> dbTableMetaList) {
-        List<DbTableMeta> result = new ArrayList<DbTableMeta>();
-        Pattern pattern = Pattern.compile(tableNamePattern,
-                Pattern.CASE_INSENSITIVE);
-        Pattern ignorePattern = Pattern.compile(ignoreTableNamePattern,
-                Pattern.CASE_INSENSITIVE);
-        for (DbTableMeta dbTableMeta : dbTableMetaList) {
-            if (!pattern.matcher(dbTableMeta.getName()).matches()) {
-                continue;
-            }
-            if (ignorePattern.matcher(dbTableMeta.getName()).matches()) {
-                continue;
-            }
-            if (!dialect.isUserTable(dbTableMeta.getName())) {
-                continue;
-            }
-            result.add(dbTableMeta);
+    protected boolean isTargetTable(DbTableMeta dbTableMeta) {
+        String name = dbTableMeta.getName();
+        if (!dialect.isUserTable(name)) {
+            return false;
         }
-        return result;
+        if (!tableNamePattern.matcher(name).matches()) {
+            return false;
+        }
+        if (ignoreTableNamePattern.matcher(name).matches()) {
+            return false;
+        }
+        return true;
     }
 
     /**
