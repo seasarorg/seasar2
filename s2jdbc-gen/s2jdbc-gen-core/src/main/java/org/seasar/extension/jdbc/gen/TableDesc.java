@@ -18,6 +18,9 @@ package org.seasar.extension.jdbc.gen;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import org.seasar.framework.util.ArrayMap;
 
 /**
  * テーブル記述です。
@@ -40,6 +43,8 @@ public class TableDesc {
 
     /** カラム記述のリスト */
     protected List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
+
+    protected Map<String, ColumnDesc> columnDescMap = new ArrayMap();
 
     /** 主キー記述のリスト */
     protected PrimaryKeyDesc primaryKeyDesc;
@@ -134,6 +139,7 @@ public class TableDesc {
     public void addColumnDesc(ColumnDesc columnDesc) {
         if (!columnDescList.contains(columnDesc)) {
             columnDescList.add(columnDesc);
+            columnDescMap.put(columnDesc.getName(), columnDesc);
         }
     }
 
@@ -252,6 +258,10 @@ public class TableDesc {
             buf.append(schemaName).append(".");
         }
         return buf.append(name).toString();
+    }
+
+    public ColumnDesc getColumnDesc(String columnName) {
+        return columnDescMap.get(columnName);
     }
 
     @Override

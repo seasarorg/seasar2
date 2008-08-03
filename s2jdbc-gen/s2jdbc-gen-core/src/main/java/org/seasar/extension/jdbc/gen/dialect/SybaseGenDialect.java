@@ -23,6 +23,17 @@ import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DateType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
+import org.seasar.extension.jdbc.gen.sqltype.IntegerType;
+import org.seasar.extension.jdbc.gen.sqltype.TimeType;
+import org.seasar.extension.jdbc.gen.sqltype.TimestampType;
+
 /**
  * Sybaseの方言を扱うクラスです。
  * 
@@ -34,16 +45,16 @@ public class SybaseGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public SybaseGenDialect() {
-        sqlTypeMap.put(Types.BINARY, SybaseSqlType.BINARY);
-        sqlTypeMap.put(Types.BOOLEAN, SybaseSqlType.BOOLEAN);
-        sqlTypeMap.put(Types.BLOB, SybaseSqlType.BLOB);
-        sqlTypeMap.put(Types.CLOB, SybaseSqlType.CLOB);
-        sqlTypeMap.put(Types.DATE, SybaseSqlType.DATE);
-        sqlTypeMap.put(Types.DECIMAL, SybaseSqlType.DECIMAL);
-        sqlTypeMap.put(Types.DOUBLE, SybaseSqlType.DOUBLE);
-        sqlTypeMap.put(Types.INTEGER, SybaseSqlType.INTEGER);
-        sqlTypeMap.put(Types.TIME, SybaseSqlType.TIME);
-        sqlTypeMap.put(Types.TIMESTAMP, SybaseSqlType.TIMESTAMP);
+        sqlTypeMap.put(Types.BINARY, new BinaryType("varbinary($l)"));
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType("bit"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("image"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("text"));
+        sqlTypeMap.put(Types.DATE, new DateType("datetime"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
+        sqlTypeMap.put(Types.DOUBLE, new DoubleType("double precision"));
+        sqlTypeMap.put(Types.INTEGER, new IntegerType("int"));
+        sqlTypeMap.put(Types.TIME, new TimeType("datetime"));
+        sqlTypeMap.put(Types.TIMESTAMP, new TimestampType("datetime"));
 
         columnTypeMap.put("binary", SybaseColumnType.BINARY);
         columnTypeMap.put("bit", SybaseColumnType.BIT);
@@ -80,46 +91,6 @@ public class SybaseGenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new SybaseSqlBlockContext();
-    }
-
-    /**
-     * Sybase用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class SybaseSqlType extends StandardSqlType {
-
-        private static SybaseSqlType BINARY = new SybaseSqlType("varbinary($l)");
-
-        private static SybaseSqlType BOOLEAN = new SybaseSqlType("bit");
-
-        private static SybaseSqlType BLOB = new SybaseSqlType("image");
-
-        private static SybaseSqlType CLOB = new SybaseSqlType("text");
-
-        private static SybaseSqlType DATE = new SybaseSqlType("datetime");
-
-        private static SybaseSqlType DECIMAL = new SybaseSqlType(
-                "decimal($p,$s)");
-
-        private static SybaseSqlType DOUBLE = new SybaseSqlType(
-                "double precision");
-
-        private static SybaseSqlType INTEGER = new SybaseSqlType("int");
-
-        private static SybaseSqlType TIME = new SybaseSqlType("datetime");
-
-        private static SybaseSqlType TIMESTAMP = new SybaseSqlType("datetime");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected SybaseSqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

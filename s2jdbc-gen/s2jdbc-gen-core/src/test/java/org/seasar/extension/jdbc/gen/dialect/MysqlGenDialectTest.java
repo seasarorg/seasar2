@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
+import org.seasar.extension.jdbc.gen.SqlType;
 
 import static org.junit.Assert.*;
 
@@ -41,8 +41,10 @@ public class MysqlGenDialectTest {
         assertEquals("blob", type.getColumnDefinition(256, 0, 0, false));
         assertEquals("blob", type.getColumnDefinition(65535, 0, 0, false));
         assertEquals("mediumblob", type.getColumnDefinition(65536, 0, 0, false));
-        assertEquals("mediumblob", type.getColumnDefinition(16777215, 0, 0, false));
-        assertEquals("longblob", type.getColumnDefinition(16777216, 0, 0, false));
+        assertEquals("mediumblob", type.getColumnDefinition(16777215, 0, 0,
+                false));
+        assertEquals("longblob", type
+                .getColumnDefinition(16777216, 0, 0, false));
     }
 
     /**
@@ -56,7 +58,9 @@ public class MysqlGenDialectTest {
         assertEquals("text", type.getColumnDefinition(256, 0, 0, false));
         assertEquals("text", type.getColumnDefinition(65535, 0, 0, false));
         assertEquals("mediumtext", type.getColumnDefinition(65536, 0, 0, false));
-        assertEquals("mediumtext", type.getColumnDefinition(16777215, 0, 0, false));
-        assertEquals("longtext", type.getColumnDefinition(16777216, 0, 0, false));
+        assertEquals("mediumtext", type.getColumnDefinition(16777215, 0, 0,
+                false));
+        assertEquals("longtext", type
+                .getColumnDefinition(16777216, 0, 0, false));
     }
 }

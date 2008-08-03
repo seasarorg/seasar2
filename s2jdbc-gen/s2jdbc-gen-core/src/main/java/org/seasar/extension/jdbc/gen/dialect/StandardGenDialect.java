@@ -28,7 +28,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
+import org.seasar.extension.jdbc.gen.sqltype.BigIntType;
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
+import org.seasar.extension.jdbc.gen.sqltype.CharType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DateType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
+import org.seasar.extension.jdbc.gen.sqltype.FloatType;
+import org.seasar.extension.jdbc.gen.sqltype.IntegerType;
+import org.seasar.extension.jdbc.gen.sqltype.SmallIntType;
+import org.seasar.extension.jdbc.gen.sqltype.TimeType;
+import org.seasar.extension.jdbc.gen.sqltype.TimestampType;
+import org.seasar.extension.jdbc.gen.sqltype.VarcharType;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
@@ -50,21 +66,21 @@ public class StandardGenDialect implements GenDialect {
      * インスタンスを構築します。
      */
     public StandardGenDialect() {
-        sqlTypeMap.put(Types.BIGINT, StandardSqlType.BIGINT);
-        sqlTypeMap.put(Types.BINARY, StandardSqlType.BINARY);
-        sqlTypeMap.put(Types.BLOB, StandardSqlType.BLOB);
-        sqlTypeMap.put(Types.BOOLEAN, StandardSqlType.BOOLEAN);
-        sqlTypeMap.put(Types.CHAR, StandardSqlType.CHAR);
-        sqlTypeMap.put(Types.CLOB, StandardSqlType.CLOB);
-        sqlTypeMap.put(Types.DATE, StandardSqlType.DATE);
-        sqlTypeMap.put(Types.DECIMAL, StandardSqlType.DECIMAL);
-        sqlTypeMap.put(Types.DOUBLE, StandardSqlType.DOUBLE);
-        sqlTypeMap.put(Types.FLOAT, StandardSqlType.FLOAT);
-        sqlTypeMap.put(Types.INTEGER, StandardSqlType.INTEGER);
-        sqlTypeMap.put(Types.SMALLINT, StandardSqlType.SMALLINT);
-        sqlTypeMap.put(Types.TIME, StandardSqlType.TIME);
-        sqlTypeMap.put(Types.TIMESTAMP, StandardSqlType.TIMESTAMP);
-        sqlTypeMap.put(Types.VARCHAR, StandardSqlType.VARCHAR);
+        sqlTypeMap.put(Types.BIGINT, new BigIntType());
+        sqlTypeMap.put(Types.BINARY, new BinaryType());
+        sqlTypeMap.put(Types.BLOB, new BlobType());
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType());
+        sqlTypeMap.put(Types.CHAR, new CharType());
+        sqlTypeMap.put(Types.CLOB, new ClobType());
+        sqlTypeMap.put(Types.DATE, new DateType());
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType());
+        sqlTypeMap.put(Types.DOUBLE, new DoubleType());
+        sqlTypeMap.put(Types.FLOAT, new FloatType());
+        sqlTypeMap.put(Types.INTEGER, new IntegerType());
+        sqlTypeMap.put(Types.SMALLINT, new SmallIntType());
+        sqlTypeMap.put(Types.TIME, new TimeType());
+        sqlTypeMap.put(Types.TIMESTAMP, new TimestampType());
+        sqlTypeMap.put(Types.VARCHAR, new VarcharType());
 
         columnTypeMap.put("bigint", StandardColumnType.BIGINT);
         columnTypeMap.put("binary", StandardColumnType.BINARY);
@@ -217,71 +233,6 @@ public class StandardGenDialect implements GenDialect {
             t = t.getCause();
         }
         return cause;
-    }
-
-    /**
-     * 標準の{@link SqlType}の実装クラスです。
-     * 
-     * @author taedium
-     */
-    public static class StandardSqlType implements SqlType {
-
-        private static StandardSqlType BIGINT = new StandardSqlType("bigint");
-
-        private static StandardSqlType BINARY = new StandardSqlType("binary");
-
-        private static StandardSqlType BLOB = new StandardSqlType("blob");
-
-        private static StandardSqlType BOOLEAN = new StandardSqlType("boolean");
-
-        private static StandardSqlType CHAR = new StandardSqlType("char(1)");
-
-        private static StandardSqlType CLOB = new StandardSqlType("clob");
-
-        private static StandardSqlType DATE = new StandardSqlType("date");
-
-        private static StandardSqlType DECIMAL = new StandardSqlType("decimal");
-
-        private static StandardSqlType DOUBLE = new StandardSqlType("double");
-
-        private static StandardSqlType FLOAT = new StandardSqlType("float");
-
-        private static StandardSqlType INTEGER = new StandardSqlType("integer");
-
-        private static StandardSqlType SMALLINT = new StandardSqlType(
-                "smallint");
-
-        private static StandardSqlType TIME = new StandardSqlType("time");
-
-        private static StandardSqlType TIMESTAMP = new StandardSqlType(
-                "timestamp");
-
-        private static StandardSqlType VARCHAR = new StandardSqlType(
-                "varchar($l)");
-
-        /** カラム定義 */
-        protected String columnDefinition;
-
-        /**
-         * インスタンスを構築します。
-         */
-        protected StandardSqlType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected StandardSqlType(String columnDefinition) {
-            this.columnDefinition = columnDefinition;
-        }
-
-        public String getColumnDefinition(int length, int precision, int scale,
-                boolean identity) {
-            return format(columnDefinition, length, precision, scale);
-        }
     }
 
     /**

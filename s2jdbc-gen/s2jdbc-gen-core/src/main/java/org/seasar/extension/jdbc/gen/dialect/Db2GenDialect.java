@@ -25,6 +25,13 @@ import java.util.List;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.FloatType;
+
 /**
  * DB2の方言を扱うクラスです。
  * 
@@ -39,12 +46,13 @@ public class Db2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public Db2GenDialect() {
-        sqlTypeMap.put(Types.BINARY, Db2SqlType.BINARY);
-        sqlTypeMap.put(Types.BLOB, Db2SqlType.BLOB);
-        sqlTypeMap.put(Types.BOOLEAN, Db2SqlType.BOOLEAN);
-        sqlTypeMap.put(Types.CLOB, Db2SqlType.CLOB);
-        sqlTypeMap.put(Types.DECIMAL, Db2SqlType.DECIMAL);
-        sqlTypeMap.put(Types.FLOAT, Db2SqlType.FLOAT);
+        sqlTypeMap
+                .put(Types.BINARY, new BinaryType("varchar($l) for bit data"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("blob($l)"));
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType("smallint"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("clob($l)"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
+        sqlTypeMap.put(Types.FLOAT, new FloatType("real"));
 
         columnTypeMap.put("blob", Db2ColumnType.BLOB);
         columnTypeMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
@@ -126,37 +134,6 @@ public class Db2GenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new Db2SqlBlockContext();
-    }
-
-    /**
-     * DB2用の link StandardSqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class Db2SqlType extends StandardSqlType {
-
-        private static Db2SqlType BINARY = new Db2SqlType(
-                "varchar($l) for bit data");
-
-        private static Db2SqlType BLOB = new Db2SqlType("blob($l)");
-
-        private static Db2SqlType BOOLEAN = new Db2SqlType("smallint");
-
-        private static Db2SqlType CLOB = new Db2SqlType("clob($l)");
-
-        private static Db2SqlType DECIMAL = new Db2SqlType("decimal($p,$s)");
-
-        private static Db2SqlType FLOAT = new Db2SqlType("real");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected Db2SqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

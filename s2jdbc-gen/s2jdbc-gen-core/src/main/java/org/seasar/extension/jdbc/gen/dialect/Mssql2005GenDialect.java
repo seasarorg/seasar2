@@ -20,6 +20,9 @@ import java.sql.Types;
 
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+
 /**
  * MS SQL Server 2005の方言を扱うクラスです。
  * 
@@ -31,35 +34,12 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
      * インスタンスを構築します。
      */
     public Mssql2005GenDialect() {
-        sqlTypeMap.put(Types.BLOB, Mssql2005SqlType.BLOB);
-        sqlTypeMap.put(Types.CLOB, Mssql2005SqlType.CLOB);
+        sqlTypeMap.put(Types.BLOB, new BlobType("varbinary(max)"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("varchar(max)"));
 
         columnTypeMap.put("image", MssqlColumnType.IMAGE);
         columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
         columnTypeMap.put("text", MssqlColumnType.TEXT);
-    }
-
-    /**
-     * MS SQL Server 2005用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class Mssql2005SqlType extends StandardSqlType {
-
-        private static Mssql2005SqlType BLOB = new Mssql2005SqlType(
-                "varbinary(max)");
-
-        private static Mssql2005SqlType CLOB = new Mssql2005SqlType(
-                "varchar(max)");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         */
-        protected Mssql2005SqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

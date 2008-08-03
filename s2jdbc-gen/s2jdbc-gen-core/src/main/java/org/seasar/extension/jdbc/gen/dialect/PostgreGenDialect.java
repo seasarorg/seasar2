@@ -22,6 +22,16 @@ import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BigIntType;
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
+import org.seasar.extension.jdbc.gen.sqltype.FloatType;
+import org.seasar.extension.jdbc.gen.sqltype.IntegerType;
+
 /**
  * PostgreSQLの方言を扱うクラスです。
  * 
@@ -36,15 +46,30 @@ public class PostgreGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public PostgreGenDialect() {
-        sqlTypeMap.put(Types.BIGINT, PostgreSqlType.BIGINT);
-        sqlTypeMap.put(Types.BINARY, PostgreSqlType.BINARY);
-        sqlTypeMap.put(Types.BOOLEAN, PostgreSqlType.BOOLEAN);
-        sqlTypeMap.put(Types.BLOB, PostgreSqlType.BLOB);
-        sqlTypeMap.put(Types.CLOB, PostgreSqlType.CLOB);
-        sqlTypeMap.put(Types.DECIMAL, PostgreSqlType.DECIMAL);
-        sqlTypeMap.put(Types.DOUBLE, PostgreSqlType.DOUBLE);
-        sqlTypeMap.put(Types.FLOAT, PostgreSqlType.FLOAT);
-        sqlTypeMap.put(Types.INTEGER, PostgreSqlType.INTEGER);
+        sqlTypeMap.put(Types.BIGINT, new BigIntType() {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, boolean identity) {
+                return identity ? "bigserial" : "bigint";
+            }
+        });
+        sqlTypeMap.put(Types.BINARY, new BinaryType("bytea"));
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType("bool"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("oid"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("text"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
+        sqlTypeMap.put(Types.DOUBLE, new DoubleType("float8"));
+        sqlTypeMap.put(Types.FLOAT, new FloatType("float4"));
+        sqlTypeMap.put(Types.INTEGER, new IntegerType() {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, boolean identity) {
+                return identity ? "serial" : "integer";
+            }
+
+        });
 
         columnTypeMap.put("bigint", PostgreColumnType.BIGINT);
         columnTypeMap.put("bigserial", PostgreColumnType.BIGSERIAL);
@@ -103,64 +128,6 @@ public class PostgreGenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new PostgreSqlBlockContext();
-    }
-
-    /**
-     * PostgreSQL用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class PostgreSqlType extends StandardSqlType {
-
-        private static PostgreSqlType BIGINT = new PostgreSqlType() {
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
-                return identity ? "bigserial" : "bigint";
-            }
-        };
-
-        private static PostgreSqlType BINARY = new PostgreSqlType("bytea");
-
-        private static PostgreSqlType BOOLEAN = new PostgreSqlType("bool");
-
-        private static PostgreSqlType BLOB = new PostgreSqlType("oid");
-
-        private static PostgreSqlType CLOB = new PostgreSqlType("text");
-
-        private static PostgreSqlType DECIMAL = new PostgreSqlType(
-                "decimal($p,$s)");
-
-        private static PostgreSqlType DOUBLE = new PostgreSqlType("float8");
-
-        private static PostgreSqlType FLOAT = new PostgreSqlType("float4");
-
-        private static PostgreSqlType INTEGER = new PostgreSqlType() {
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
-                return identity ? "serial" : "integer";
-            }
-
-        };
-
-        /**
-         * インスタンスを構築します。
-         */
-        protected PostgreSqlType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected PostgreSqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

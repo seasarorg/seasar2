@@ -21,6 +21,13 @@ import java.sql.Types;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.FloatType;
+
 /**
  * Derbyの方言を扱うクラスです。
  * 
@@ -35,12 +42,13 @@ public class DerbyGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public DerbyGenDialect() {
-        sqlTypeMap.put(Types.BINARY, DerbySqlType.BINARY);
-        sqlTypeMap.put(Types.BLOB, DerbySqlType.BLOB);
-        sqlTypeMap.put(Types.BOOLEAN, DerbySqlType.BOOLEAN);
-        sqlTypeMap.put(Types.CLOB, DerbySqlType.CLOB);
-        sqlTypeMap.put(Types.DECIMAL, DerbySqlType.DECIMAL);
-        sqlTypeMap.put(Types.FLOAT, DerbySqlType.FLOAT);
+        sqlTypeMap
+                .put(Types.BINARY, new BinaryType("varchar($l) for bit data"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("blob($l)"));
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType("smallint"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("clob($l)"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
+        sqlTypeMap.put(Types.FLOAT, new FloatType("real"));
 
         columnTypeMap.put("blob", DerbyColumnType.BLOB);
         columnTypeMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);
@@ -67,37 +75,6 @@ public class DerbyGenDialect extends StandardGenDialect {
     public boolean isTableNotFound(Throwable throwable) {
         String sqlState = getSQLState(throwable);
         return TABLE_NOT_FOUND_SQL_STATE.equals(sqlState);
-    }
-
-    /**
-     * Derby用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class DerbySqlType extends StandardSqlType {
-
-        private static DerbySqlType BINARY = new DerbySqlType(
-                "varchar($l) for bit data");
-
-        private static DerbySqlType BLOB = new DerbySqlType("blob($l)");
-
-        private static DerbySqlType BOOLEAN = new DerbySqlType("smallint(1)");
-
-        private static DerbySqlType CLOB = new DerbySqlType("clob($l)");
-
-        private static DerbySqlType DECIMAL = new DerbySqlType("decimal($p,$s)");
-
-        private static DerbySqlType FLOAT = new DerbySqlType("real");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected DerbySqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

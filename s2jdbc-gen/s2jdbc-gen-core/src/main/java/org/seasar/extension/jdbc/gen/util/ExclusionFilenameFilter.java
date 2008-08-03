@@ -26,6 +26,11 @@ import java.util.regex.Pattern;
  */
 public class ExclusionFilenameFilter implements FilenameFilter {
 
+    /** デフォルトの除外名の配列 */
+    protected static String[] defaultExclusionNames = new String[] { ".*~", "#.*#",
+            "\\.#.*", "%.*%", "\\._.*", "CVS", "\\.cvsignore", "SCCS",
+            "vssver\\.scc", "\\.svn", "\\.DS_Store" };
+
     /** 除外パターン */
     protected Pattern exclusionPattern;
 
@@ -33,12 +38,9 @@ public class ExclusionFilenameFilter implements FilenameFilter {
      * インスタンスを構築します。
      */
     public ExclusionFilenameFilter() {
-        String[] exclution = new String[] { ".*~", "#.*#", "\\.#.*", "%.*%",
-                "\\._.*", "CVS", "\\.cvsignore", "SCCS", "vssver\\.scc",
-                "\\.svn", "\\.DS_Store" };
         StringBuilder buf = new StringBuilder();
         buf.append("(");
-        for (String s : exclution) {
+        for (String s : defaultExclusionNames) {
             buf.append(s);
             buf.append("|");
         }
@@ -48,10 +50,7 @@ public class ExclusionFilenameFilter implements FilenameFilter {
     }
 
     public boolean accept(File dir, String name) {
-        if (exclusionPattern.matcher(name).matches()) {
-            return false;
-        }
-        return true;
+        return !exclusionPattern.matcher(name).matches();
     }
 
 }

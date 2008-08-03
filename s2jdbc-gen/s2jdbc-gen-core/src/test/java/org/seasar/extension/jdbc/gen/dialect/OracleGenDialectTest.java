@@ -19,9 +19,9 @@ import java.math.BigDecimal;
 import java.sql.Types;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.GenDialect.ColumnType;
 import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
 
 import static org.junit.Assert.*;
 
@@ -54,7 +54,6 @@ public class OracleGenDialectTest {
     public void testGetSqlType_binary() throws Exception {
         SqlType type = dialect.getSqlType(Types.BINARY);
         assertEquals("raw(2000)", type.getColumnDefinition(2000, 0, 0, false));
-        assertEquals("blob", type.getColumnDefinition(2001, 0, 0, false));
     }
 
     /**
@@ -66,7 +65,6 @@ public class OracleGenDialectTest {
         SqlType type = dialect.getSqlType(Types.VARCHAR);
         assertEquals("varchar2(4000)", type.getColumnDefinition(4000, 0, 0,
                 false));
-        assertEquals("clob", type.getColumnDefinition(4001, 0, 0, false));
     }
 
     /**

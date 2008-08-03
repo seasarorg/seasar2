@@ -24,6 +24,14 @@ import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
+import org.seasar.extension.jdbc.gen.sqltype.FloatType;
+import org.seasar.extension.jdbc.gen.sqltype.IntegerType;
+
 /**
  * MySQLの方言を扱うクラスです。
  * 
@@ -38,13 +46,41 @@ public class MysqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MysqlGenDialect() {
-        sqlTypeMap.put(Types.BINARY, MysqlSqlType.BINARY);
-        sqlTypeMap.put(Types.BLOB, MysqlSqlType.BLOB);
-        sqlTypeMap.put(Types.CLOB, MysqlSqlType.CLOB);
-        sqlTypeMap.put(Types.DECIMAL, MysqlSqlType.DECIMAL);
-        sqlTypeMap.put(Types.DOUBLE, MysqlSqlType.DOUBLE);
-        sqlTypeMap.put(Types.FLOAT, MysqlSqlType.FLOAT);
-        sqlTypeMap.put(Types.INTEGER, MysqlSqlType.INTEGER);
+        sqlTypeMap.put(Types.BINARY, new BinaryType("binary($l)"));
+        sqlTypeMap.put(Types.BLOB, new BlobType() {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, boolean identity) {
+                if (length <= 0xFF) {
+                    return "tinyblob";
+                } else if (length <= 0xFFFF) {
+                    return "blob";
+                } else if (length <= 0xFFFFFF) {
+                    return "mediumblob";
+                }
+                return "longblob";
+            }
+        });
+        sqlTypeMap.put(Types.CLOB, new ClobType() {
+
+            @Override
+            public String getColumnDefinition(int length, int precision,
+                    int scale, boolean identity) {
+                if (length <= 0xFF) {
+                    return "tinytext";
+                } else if (length <= 0xFFFF) {
+                    return "text";
+                } else if (length <= 0xFFFFFF) {
+                    return "mediumtext";
+                }
+                return "longtext";
+            }
+        });
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
+        sqlTypeMap.put(Types.DOUBLE, new DoubleType("double($p,$s)"));
+        sqlTypeMap.put(Types.FLOAT, new FloatType("float($p,$s)"));
+        sqlTypeMap.put(Types.INTEGER, new IntegerType("int"));
 
         columnTypeMap.put("bigint unsigned", MysqlColumnType.BIGINT_UNSIGNED);
         columnTypeMap.put("binary", MysqlColumnType.BINARY);
@@ -107,72 +143,6 @@ public class MysqlGenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new MysqlSqlBlockContext();
-    }
-
-    /**
-     * MySQL用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class MysqlSqlType extends StandardSqlType {
-
-        private static MysqlSqlType BINARY = new MysqlSqlType("binary($l)");
-
-        private static MysqlSqlType BLOB = new MysqlSqlType() {
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
-                if (length <= 0xFF) {
-                    return "tinyblob";
-                } else if (length <= 0xFFFF) {
-                    return "blob";
-                } else if (length <= 0xFFFFFF) {
-                    return "mediumblob";
-                }
-                return "longblob";
-            }
-        };
-
-        private static MysqlSqlType CLOB = new MysqlSqlType() {
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
-                if (length <= 0xFF) {
-                    return "tinytext";
-                } else if (length <= 0xFFFF) {
-                    return "text";
-                } else if (length <= 0xFFFFFF) {
-                    return "mediumtext";
-                }
-                return "longtext";
-            }
-        };
-
-        private static MysqlSqlType DECIMAL = new MysqlSqlType("decimal($p,$s)");
-
-        private static MysqlSqlType DOUBLE = new MysqlSqlType("double($p,$s)");
-
-        private static MysqlSqlType FLOAT = new MysqlSqlType("float($p,$s)");
-
-        private static MysqlSqlType INTEGER = new MysqlSqlType("int");
-
-        /**
-         * インスタンスを構築します。
-         */
-        protected MysqlSqlType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected MysqlSqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

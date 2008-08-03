@@ -24,6 +24,17 @@ import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BigIntType;
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
+import org.seasar.extension.jdbc.gen.sqltype.IntegerType;
+import org.seasar.extension.jdbc.gen.sqltype.SmallIntType;
+import org.seasar.extension.jdbc.gen.sqltype.TimeType;
+import org.seasar.extension.jdbc.gen.sqltype.VarcharType;
+
 /**
  * Oracleの方言を扱うクラスです。
  * 
@@ -38,15 +49,16 @@ public class OracleGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public OracleGenDialect() {
-        sqlTypeMap.put(Types.BINARY, OracleSqlType.BINARY);
-        sqlTypeMap.put(Types.BOOLEAN, OracleSqlType.BOOLEAN);
-        sqlTypeMap.put(Types.BIGINT, OracleSqlType.BIGINT);
-        sqlTypeMap.put(Types.DECIMAL, OracleSqlType.DECIMAL);
-        sqlTypeMap.put(Types.DOUBLE, OracleSqlType.DOUBLE);
-        sqlTypeMap.put(Types.INTEGER, OracleSqlType.INTEGER);
-        sqlTypeMap.put(Types.SMALLINT, OracleSqlType.SMALLINT);
-        sqlTypeMap.put(Types.TIME, OracleSqlType.TIME);
-        sqlTypeMap.put(Types.VARCHAR, OracleSqlType.VARCHAR);
+        sqlTypeMap.put(Types.BINARY, new BinaryType("raw($l)"));
+        sqlTypeMap.put(Types.BIGINT, new BigIntType("number($p,0)"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("blob"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("clob"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("number($p,$s)"));
+        sqlTypeMap.put(Types.DOUBLE, new DoubleType("double precision"));
+        sqlTypeMap.put(Types.INTEGER, new IntegerType("number(10,0)"));
+        sqlTypeMap.put(Types.SMALLINT, new SmallIntType("number(5,0)"));
+        sqlTypeMap.put(Types.TIME, new TimeType("date"));
+        sqlTypeMap.put(Types.VARCHAR, new VarcharType("varchar2($l)"));
 
         columnTypeMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
         columnTypeMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
@@ -110,66 +122,6 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     /**
-     * Oracle用の{@link SqlType}の実装クラスです。
-     * 
-     * @author taedium
-     */
-    public static class OracleSqlType extends StandardSqlType {
-
-        private static SqlType BIGINT = new OracleSqlType("number($p,0)");
-
-        private static SqlType BINARY = new OracleSqlType() {
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
-                columnDefinition = length > 2000 ? "blob" : "raw($l)";
-                return super.getColumnDefinition(length, precision, scale,
-                        identity);
-            }
-        };
-
-        private static SqlType BOOLEAN = new OracleSqlType("number(1,0)");
-
-        private static SqlType DECIMAL = new OracleSqlType("number($p,$s)");
-
-        private static SqlType DOUBLE = new OracleSqlType("double precision");
-
-        private static SqlType INTEGER = new OracleSqlType("number(10,0)");
-
-        private static SqlType SMALLINT = new OracleSqlType("number(5,0)");
-
-        private static SqlType TIME = new OracleSqlType("date");
-
-        private static SqlType VARCHAR = new OracleSqlType() {
-
-            @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
-                columnDefinition = length > 4000 ? "clob" : "varchar2($l)";
-                return super.getColumnDefinition(length, precision, scale,
-                        identity);
-            }
-        };
-
-        /**
-         * インスタンスを構築します。
-         */
-        protected OracleSqlType() {
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected OracleSqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
-    }
-
-    /**
      * Oracle用の{@link ColumnType}の実装クラスです。
      * 
      * @author taedium
@@ -215,9 +167,6 @@ public class OracleGenDialect extends StandardGenDialect {
                     int scale) {
                 if (scale != 0) {
                     return BigDecimal.class;
-                }
-                if (precision == 1) {
-                    return Boolean.class;
                 }
                 if (precision <= 5) {
                     return Short.class;

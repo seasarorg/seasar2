@@ -21,6 +21,9 @@ import java.sql.Types;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+
 /**
  * H2の方言を扱うクラスです。
  * 
@@ -35,8 +38,8 @@ public class H2GenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public H2GenDialect() {
-        sqlTypeMap.put(Types.BINARY, H2SqlType.BINARY);
-        sqlTypeMap.put(Types.DECIMAL, H2SqlType.DECIMAL);
+        sqlTypeMap.put(Types.BINARY, new BinaryType("binary($l)"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
 
         columnTypeMap.put("binary", H2ColumnType.BINARY);
         columnTypeMap.put("decimal", H2ColumnType.DECIMAL);
@@ -73,28 +76,6 @@ public class H2GenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
-    }
-
-    /**
-     * H2用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class H2SqlType extends StandardSqlType {
-
-        private static H2SqlType BINARY = new H2SqlType("binary($l)");
-
-        private static H2SqlType DECIMAL = new H2SqlType("decimal($p,$s)");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected H2SqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

@@ -1,0 +1,3 @@
+"column1"	"column2"	"column3"
+"hoge"	"100"	"200"
+"foo"		"2000"

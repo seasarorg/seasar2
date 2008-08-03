@@ -52,7 +52,7 @@ public class GenerationContextImpl implements GenerationContext {
      *            生成するファイル
      * @param templateName
      *            テンプレート名
-     * @param encoding
+     * @param dumpFileEncoding
      *            生成するファイルのエンコーディング
      * @param overwrite
      *            上書きする場合{@code true}、しない場合{@code false}
@@ -72,7 +72,7 @@ public class GenerationContextImpl implements GenerationContext {
             throw new NullPointerException("templateName");
         }
         if (encoding == null) {
-            throw new NullPointerException("encoding");
+            throw new NullPointerException("dumpFileEncoding");
         }
         this.model = model;
         this.dir = dir;

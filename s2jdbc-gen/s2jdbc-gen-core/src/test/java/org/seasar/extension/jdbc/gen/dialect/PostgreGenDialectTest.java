@@ -18,8 +18,8 @@ package org.seasar.extension.jdbc.gen.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
 
 import static org.junit.Assert.*;
 

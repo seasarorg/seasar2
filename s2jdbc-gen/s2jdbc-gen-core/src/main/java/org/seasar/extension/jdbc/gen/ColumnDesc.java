@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+
 /**
  * カラム記述です。
  * 
@@ -39,6 +40,8 @@ public class ColumnDesc {
 
     /** 一意ならば{@code true} */
     protected boolean unique;
+
+    protected SqlType sqlType;
 
     /**
      * 名前を返します。
@@ -134,6 +137,21 @@ public class ColumnDesc {
      */
     public void setIdentity(boolean identity) {
         this.identity = identity;
+    }
+
+    /**
+     * @return Returns the sqlType.
+     */
+    public SqlType getSqlType() {
+        return sqlType;
+    }
+
+    /**
+     * @param sqlType
+     *            The sqlType to set.
+     */
+    public void setSqlType(SqlType sqlType) {
+        this.sqlType = sqlType;
     }
 
     @Override

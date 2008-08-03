@@ -25,7 +25,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlType;
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -63,6 +63,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         doDefinition(propertyMeta, columnDesc, column);
         doNullable(propertyMeta, columnDesc, column);
         doUnique(propertyMeta, columnDesc, column);
+        doSqlType(propertyMeta, columnDesc, column);
         return columnDesc;
     }
 
@@ -162,6 +163,12 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     protected void doUnique(PropertyMeta propertyMeta, ColumnDesc columnDesc,
             Column column) {
         columnDesc.setUnique(column.unique());
+    }
+
+    protected void doSqlType(PropertyMeta propertyMeta, ColumnDesc columnDesc,
+            Column column) {
+        int sqlType = propertyMeta.getValueType().getSqlType();
+        columnDesc.setSqlType(dialect.getSqlType(sqlType));
     }
 
     /**

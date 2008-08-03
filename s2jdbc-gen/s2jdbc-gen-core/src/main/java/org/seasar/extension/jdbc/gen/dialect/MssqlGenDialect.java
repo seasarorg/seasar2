@@ -23,6 +23,17 @@ import java.util.Date;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+import org.seasar.extension.jdbc.gen.sqltype.DateType;
+import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
+import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
+import org.seasar.extension.jdbc.gen.sqltype.IntegerType;
+import org.seasar.extension.jdbc.gen.sqltype.TimeType;
+import org.seasar.extension.jdbc.gen.sqltype.TimestampType;
+
 /**
  * MS SQL Serverの方言を扱うクラスです。
  * 
@@ -37,16 +48,16 @@ public class MssqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public MssqlGenDialect() {
-        sqlTypeMap.put(Types.BINARY, MssqlSqlType.BINARY);
-        sqlTypeMap.put(Types.BOOLEAN, MssqlSqlType.BOOLEAN);
-        sqlTypeMap.put(Types.BLOB, MssqlSqlType.BLOB);
-        sqlTypeMap.put(Types.CLOB, MssqlSqlType.CLOB);
-        sqlTypeMap.put(Types.DATE, MssqlSqlType.DATE);
-        sqlTypeMap.put(Types.DECIMAL, MssqlSqlType.DECIMAL);
-        sqlTypeMap.put(Types.DOUBLE, MssqlSqlType.DOUBLE);
-        sqlTypeMap.put(Types.INTEGER, MssqlSqlType.INTEGER);
-        sqlTypeMap.put(Types.TIME, MssqlSqlType.TIME);
-        sqlTypeMap.put(Types.TIMESTAMP, MssqlSqlType.TIMESTAMP);
+        sqlTypeMap.put(Types.BINARY, new BinaryType("varbinary($l)"));
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType("bit"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("image"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("text"));
+        sqlTypeMap.put(Types.DATE, new DateType("datetime"));
+        sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
+        sqlTypeMap.put(Types.DOUBLE, new DoubleType("double precision"));
+        sqlTypeMap.put(Types.INTEGER, new IntegerType("int"));
+        sqlTypeMap.put(Types.TIME, new TimeType("datetime"));
+        sqlTypeMap.put(Types.TIMESTAMP, new TimestampType("datetime"));
 
         columnTypeMap.put("binary", MssqlColumnType.BINARY);
         columnTypeMap.put("bit", MssqlColumnType.BIT);
@@ -105,45 +116,6 @@ public class MssqlGenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new MssqlSqlBlockContext();
-    }
-
-    /**
-     * MS SQL Server用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class MssqlSqlType extends StandardSqlType {
-
-        private static MssqlSqlType BINARY = new MssqlSqlType("varbinary($l)");
-
-        private static MssqlSqlType BOOLEAN = new MssqlSqlType("bit");
-
-        private static MssqlSqlType BLOB = new MssqlSqlType("image");
-
-        private static MssqlSqlType CLOB = new MssqlSqlType("text");
-
-        private static MssqlSqlType DATE = new MssqlSqlType("datetime");
-
-        private static MssqlSqlType DECIMAL = new MssqlSqlType("decimal($p,$s)");
-
-        private static MssqlSqlType DOUBLE = new MssqlSqlType(
-                "double precision");
-
-        private static MssqlSqlType INTEGER = new MssqlSqlType("int");
-
-        private static MssqlSqlType TIME = new MssqlSqlType("datetime");
-
-        private static MssqlSqlType TIMESTAMP = new MssqlSqlType("datetime");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected MssqlSqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
     }
 
     /**

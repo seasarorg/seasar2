@@ -26,6 +26,7 @@ import javax.sql.DataSource;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.DdlVersion;
 import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.SchemaVersion;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
@@ -101,6 +102,8 @@ public class MigrateCommand extends AbstractCommand {
     /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
     protected String dropDirName = "drop";
 
+    protected String dumpTemplateFileName = "tsv.ftl";
+
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
@@ -118,6 +121,8 @@ public class MigrateCommand extends AbstractCommand {
 
     /** DDLのバージョン */
     protected DdlVersion ddlVersion;
+
+    protected Generator generator;
 
     /**
      * @return Returns the statementDelimiter.

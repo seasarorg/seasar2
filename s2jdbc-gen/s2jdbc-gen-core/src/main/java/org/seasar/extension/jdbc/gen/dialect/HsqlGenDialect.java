@@ -19,6 +19,10 @@ import java.sql.Types;
 
 import javax.persistence.GenerationType;
 
+import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
+import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.ClobType;
+
 /**
  * HSQLDBの方言を扱うクラスです。
  * 
@@ -33,9 +37,9 @@ public class HsqlGenDialect extends StandardGenDialect {
      * インスタンスを構築します。
      */
     public HsqlGenDialect() {
-        sqlTypeMap.put(Types.BINARY, HsqlSqlType.BINARY);
-        sqlTypeMap.put(Types.BLOB, HsqlSqlType.BLOB);
-        sqlTypeMap.put(Types.CLOB, HsqlSqlType.CLOB);
+        sqlTypeMap.put(Types.BINARY, new BinaryType("varbinary($l)"));
+        sqlTypeMap.put(Types.BLOB, new BlobType("longvarbinary"));
+        sqlTypeMap.put(Types.CLOB, new ClobType("longvarchar"));
 
         columnTypeMap.put("int", HsqlColumnType.INT);
         columnTypeMap.put("varchar_ignorecase",
@@ -77,30 +81,6 @@ public class HsqlGenDialect extends StandardGenDialect {
     }
 
     /**
-     * HSQLDB用の{@link SqlType}の実装です。
-     * 
-     * @author taedium
-     */
-    public static class HsqlSqlType extends StandardSqlType {
-
-        private static HsqlSqlType BINARY = new HsqlSqlType("varbinary($l)");
-
-        private static HsqlSqlType BLOB = new HsqlSqlType("longvarbinary");
-
-        private static HsqlSqlType CLOB = new HsqlSqlType("longvarchar");
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param columnDefinition
-         *            カラム定義
-         */
-        protected HsqlSqlType(String columnDefinition) {
-            super(columnDefinition);
-        }
-    }
-
-    /**
      * HSQLDB用の{@link ColumnType}の実装です。
      * 
      * @author taedium
@@ -111,7 +91,7 @@ public class HsqlGenDialect extends StandardGenDialect {
                 Integer.class);
 
         private static HsqlColumnType VARCHAR_IGNORECASE = new HsqlColumnType(
-                "int", Integer.class);
+                "varchar_ignorecase", String.class);
 
         /**
          * インスタンスを構築します。

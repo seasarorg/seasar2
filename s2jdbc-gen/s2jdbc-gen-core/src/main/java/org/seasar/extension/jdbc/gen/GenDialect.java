@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.sql.Types;
-
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
@@ -151,36 +149,6 @@ public interface GenDialect {
      * @return SQLブロックのコンテキスト
      */
     SqlBlockContext createSqlBlockContext();
-
-    /**
-     * SQL型です。
-     * <p>
-     * JDBCのSQL型、つまり{@link Types}の定数に対応します。
-     * </p>
-     * <p>
-     * JavaクラスからDDLを生成する場合に使用できます。
-     * </p>
-     * 
-     * @author taedium
-     */
-    interface SqlType {
-
-        /**
-         * カラム定義を返します。
-         * 
-         * @param length
-         *            長さ
-         * @param precision
-         *            精度
-         * @param scale
-         *            スケール
-         * @param identity
-         *            IDENTITYカラムの場合{@code true}
-         * @return カラム定義
-         */
-        String getColumnDefinition(int length, int precision, int scale,
-                boolean identity);
-    }
 
     /**
      * カラム型です。
