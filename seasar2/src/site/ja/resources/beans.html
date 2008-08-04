@@ -55,6 +55,9 @@ Beansクラスを使うには、S2-Tigerが必要です。
 <li><a href="#createAndCopy">オブジェクトの生成とプロパティのコピー</a></li>
 <li><a href="#converter">コンバータ</a></li>
 <li><a href="#dateConverter">日付コンバータ</a></li>
+<li><a href="#sqlDateConverter">SQL用の日付コンバータ</a></li>
+<li><a href="#timeConverter">時間コンバータ</a></li>
+<li><a href="#timestampConverter">日時コンバータ</a></li>
 <li><a href="#numberConverter">数値コンバータ</a></li>
 <li><a href="#includes">特定のプロパティだけを対象にする</a></li>
 <li><a href="#excludes">特定のプロパティだけを対象外にする</a></li>
@@ -137,15 +140,45 @@ propertyNamesでプロパティが指定された場合は、そのプロパテ�
 </p>
 <p>
 標準のコンバータとして、org.seasar.framework.beans.converterに
-DateConverterとNumberConverterが用意されています。
+DateConverter、SqlDateConverter、TimeConverter、TimestampConverter、
+NumberConverterが用意されています。
 どちらのコンバータもコンストラクタで、日付あるいは数値のパターンを指定します。
-パターンの書式は、DateFormat、DecimalFormatのものを指定します。。
+パターンの書式は、DateFormat、DecimalFormatのものを指定します。
+dateConverter()、sqlDateConverter()、timeConverter()、timestampConverter()、
+numberConverter()のショートカットも用意されています。
 </p>
 
 <h2><a name="dateConverter">日付コンバータ</a></h2>
 <p>
 日付用のコンバータの指定は、
 <code>dateConverter(String pattern, String... propertyNames)</code>を使います。
+</p>
+<p>
+patternは、DateFormatのパターンを指定します。
+</p>
+
+<h2><a name="sqlDateConverter">SQL用の日付コンバータ</a></h2>
+<p>
+SQL用の日付用のコンバータの指定は、
+<code>sqlDateConverter(String pattern, String... propertyNames)</code>を使います。
+</p>
+<p>
+patternは、DateFormatのパターンを指定します。
+</p>
+
+<h2><a name="timeConverter">時間コンバータ</a></h2>
+<p>
+時間用のコンバータの指定は、
+<code>timeConverter(String pattern, String... propertyNames)</code>を使います。
+</p>
+<p>
+patternは、DateFormatのパターンを指定します。
+</p>
+
+<h2><a name="timestampConverter">日時コンバータ</a></h2>
+<p>
+日時用のコンバータの指定は、
+<code>timestampConverter(String pattern, String... propertyNames)</code>を使います。
 </p>
 <p>
 patternは、DateFormatのパターンを指定します。
