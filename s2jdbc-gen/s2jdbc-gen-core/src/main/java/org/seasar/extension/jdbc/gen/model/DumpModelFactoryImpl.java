@@ -15,27 +15,24 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.DumpModel;
 import org.seasar.extension.jdbc.gen.DumpModelFactory;
+import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.util.DumpUtil;
-import org.seasar.extension.jdbc.util.ConnectionUtil;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.extension.jdbc.gen.util.StatementUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
-import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ResultSetUtil;
-import org.seasar.framework.util.StatementUtil;
 
 /**
  * @author taedium
@@ -43,52 +40,55 @@ import org.seasar.framework.util.StatementUtil;
  */
 public class DumpModelFactoryImpl implements DumpModelFactory {
 
-    protected DataSource dataSource;
+    /** ロガー */
+    protected static Logger logger = Logger
+            .getLogger(DumpModelFactoryImpl.class);
 
-    protected String delimiter;
+    protected GenDialect dialect;
+
+    protected char delimiter;
 
     /**
      * @param dataSource
      */
-    public DumpModelFactoryImpl(DataSource dataSource, String delimiter) {
-        this.dataSource = dataSource;
+    public DumpModelFactoryImpl(GenDialect dialect, char delimiter) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        this.dialect = dialect;
         this.delimiter = delimiter;
     }
 
-    public DumpModel getDumpModel(TableDesc tableDesc) {
+    public DumpModel getDumpModel(TableDesc tableDesc,
+            SqlExecutionContext sqlExecutionContext) {
         DumpModel dumpModel = new DumpModel();
+        dumpModel.setName(tableDesc.getFullName());
         dumpModel.setDelimiter(delimiter);
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            dumpModel.addColumnName(columnDesc.getName());
+            dumpModel.addColumnName(DumpUtil.encode(columnDesc.getName()));
         }
-        doRow(dumpModel, tableDesc);
+        doRow(dumpModel, tableDesc, sqlExecutionContext);
         return dumpModel;
     }
 
-    protected void doRow(DumpModel dumpModel, TableDesc tableDesc) {
-        SqlType[] sqlTypes = new SqlType[tableDesc.getColumnDescList().size()];
-        for (int i = 0; i < tableDesc.getColumnDescList().size(); i++) {
-            ColumnDesc columnDesc = tableDesc.getColumnDescList().get(i);
-            sqlTypes[i] = columnDesc.getSqlType();
-        }
-        String sql = buildSql(tableDesc);
-        Connection conn = DataSourceUtil.getConnection(dataSource);
+    protected void doRow(DumpModel dumpModel, TableDesc tableDesc,
+            SqlExecutionContext sqlExecutionContext) {
+        SqlType[] sqlTypes = createSqlTypes(tableDesc);
+        Statement statement = sqlExecutionContext.getStatement();
         try {
-            PreparedStatement ps = ConnectionUtil.prepareStatement(conn, sql);
+            ResultSet rs = StatementUtil.executeQuery(statement,
+                    buildSql(tableDesc));
             try {
-                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
-                try {
-                    addRows(dumpModel, sqlTypes, rs);
-                } catch (SQLException e) {
-                    throw new SQLRuntimeException(e);
-                } finally {
-                    ResultSetUtil.close(rs);
-                }
+                addRows(dumpModel, sqlTypes, rs);
             } finally {
-                StatementUtil.close(ps);
+                ResultSetUtil.close(rs);
             }
-        } finally {
-            ConnectionUtil.close(conn);
+        } catch (SQLRuntimeException e) {
+            sqlExecutionContext.notifyException();
+            if (!dialect.isTableNotFound(e)) {
+                logger.log(e);
+                throw e;
+            }
         }
     }
 
@@ -107,17 +107,29 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         return buf.toString();
     }
 
-    protected void addRows(DumpModel dumpModel, SqlType[] sqlTypes, ResultSet rs)
-            throws SQLException {
-        for (; rs.next();) {
+    protected void addRows(DumpModel dumpModel, SqlType[] sqlTypes, ResultSet rs) {
+        for (; ResultSetUtil.next(rs);) {
             List<String> row = new ArrayList<String>();
             for (int i = 0; i < sqlTypes.length; i++) {
                 SqlType sqlType = sqlTypes[i];
-                String value = sqlType.getValue(rs, i + 1);
+                String value = null;
+                try {
+                    value = sqlType.getValue(rs, i + 1);
+                } catch (SQLException e) {
+                    logger.log(e);
+                }
                 row.add(DumpUtil.encode(value));
             }
             dumpModel.addRow(row);
         }
     }
 
+    protected SqlType[] createSqlTypes(TableDesc tableDesc) {
+        SqlType[] sqlTypes = new SqlType[tableDesc.getColumnDescList().size()];
+        for (int i = 0; i < tableDesc.getColumnDescList().size(); i++) {
+            ColumnDesc columnDesc = tableDesc.getColumnDescList().get(i);
+            sqlTypes[i] = columnDesc.getSqlType();
+        }
+        return sqlTypes;
+    }
 }

@@ -19,6 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -27,6 +29,7 @@ import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.DdlVersion;
+import org.seasar.extension.jdbc.gen.Dumper;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -35,6 +38,7 @@ import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.IdTableDescFactory;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
 import org.seasar.extension.jdbc.gen.SequenceDescFactory;
+import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.TableDescFactory;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
@@ -52,12 +56,15 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.sql.DumperImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
@@ -196,6 +203,11 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
     protected String dropDirName = "drop";
 
+    /** ダンプファイルのエンコーディング */
+    protected String dumpFileEncoding = "UTF-8";
+
+    protected String dumpTemplateFileName = "dump/dump.ftl";
+
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
@@ -204,6 +216,8 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** 方言 */
     protected GenDialect dialect;
+
+    protected DataSource dataSource;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
@@ -877,12 +891,12 @@ public class GenerateDdlCommand extends AbstractCommand {
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
+        dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-
         ddlVersion = createDdlVersion();
         entityMetaReader = createEntityMetaReader();
         tableDescFactory = createTableDescFactory();
-        ddlModelFactory = createDbModelFactory();
+        ddlModelFactory = createDdlModelFactory();
         generator = createGenerator();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
@@ -914,7 +928,7 @@ public class GenerateDdlCommand extends AbstractCommand {
                 FileUtil.copyDirectory(versionDir, nextVersionDir,
                         new ExclusionFilenameFilter());
             }
-            generateDdl(nextVersionDir, nextVersionNo);
+            generate(nextVersionDir, nextVersionNo);
             ddlVersion.setVersionNo(nextVersionNo);
         } catch (Throwable t) {
             if (nextVersionDir.exists()) {
@@ -939,16 +953,47 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param nextVersionNo
      *            次のバージョン番号
      */
-    public void generateDdl(File nextVersionDir, int nextVersionNo) {
+    protected void generate(File nextVersionDir, int nextVersionNo) {
+        List<TableDesc> tableDescList = getTableDescList();
+        DdlModel model = ddlModelFactory.getDdlModel(tableDescList,
+                nextVersionNo);
+
+        File createDir = new File(nextVersionDir, createDirName);
+        generateCreateDdl(model, createDir);
+
+        File dropDir = new File(nextVersionDir, dropDirName);
+        generateDropDdl(model, dropDir);
+
+        File dumpDir = new File(createDir, "025-dump");
+        Dumper dumper = createDumper(dumpDir, tableDescList);
+        SqlExecutionContext context = createSqlExecutionContext();
+        try {
+            dumper.dump(context);
+        } finally {
+            if (!context.getExceptionList().isEmpty()) {
+                for (Exception e : context.getExceptionList()) {
+                    logger.error(e.getMessage());
+                }
+                throw context.getExceptionList().get(0);
+            }
+        }
+    }
+
+    protected List<TableDesc> getTableDescList() {
         List<EntityMeta> entityMetaList = entityMetaReader.read();
         List<TableDesc> tableDescList = new ArrayList<TableDesc>();
         for (EntityMeta entityMeta : entityMetaList) {
-            tableDescList.add(tableDescFactory.getTableDesc(entityMeta));
+            TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
+            if (!tableDescList.contains(tableDesc)) {
+                tableDescList.add(tableDesc);
+            }
+            for (TableDesc idTableDesc : tableDesc.getIdTableDescList()) {
+                if (!tableDescList.contains(idTableDesc)) {
+                    tableDescList.add(idTableDesc);
+                }
+            }
         }
-        DdlModel model = ddlModelFactory.getDdlModel(tableDescList,
-                nextVersionNo);
-        generateCreateDdl(model, new File(nextVersionDir, createDirName));
-        generateDropDdl(model, new File(nextVersionDir, dropDirName));
+        return tableDescList;
     }
 
     /**
@@ -1051,9 +1096,19 @@ public class GenerateDdlCommand extends AbstractCommand {
      * 
      * @return {@link DdlModelFactory}の実装
      */
-    protected DdlModelFactory createDbModelFactory() {
+    protected DdlModelFactory createDdlModelFactory() {
         return new DdlModelFactoryImpl(dialect, statementDelimiter,
                 schemaInfoFullTableName, schemaInfoColumnName);
+    }
+
+    protected Dumper createDumper(File dumpDir, List<TableDesc> tableDescList) {
+        return new DumperImpl(dumpDir, dumpFileEncoding, dumpTemplateFileName,
+                generator, dialect, tableDescList);
+    }
+
+    protected SqlExecutionContext createSqlExecutionContext() {
+        return new SqlExecutionContextImpl(DataSourceUtil
+                .getConnection(dataSource), false);
     }
 
     /**

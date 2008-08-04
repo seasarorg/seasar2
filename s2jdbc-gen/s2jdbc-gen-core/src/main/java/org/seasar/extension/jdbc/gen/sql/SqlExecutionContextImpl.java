@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.sql;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
+import org.seasar.extension.jdbc.gen.util.StatementUtil;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.log.Logger;
 
@@ -38,8 +39,8 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     protected static final Logger logger = Logger
             .getLogger(SqlExecutionContextImpl.class);
 
-    /** {@link SqlFailedException}のリスト */
-    protected List<SqlFailedException> exceptionList = new ArrayList<SqlFailedException>();
+    /** {@link RuntimeException}のリスト */
+    protected List<RuntimeException> exceptionList = new ArrayList<RuntimeException>();
 
     /** コネクション */
     protected Connection connection;
@@ -49,6 +50,8 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
 
     /** ステートメント */
     protected Statement statement;
+
+    protected PreparedStatement preparedStatement;
 
     /**
      * @param connection
@@ -72,37 +75,35 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         return statement;
     }
 
-    public List<SqlFailedException> getExceptionList() {
+    public PreparedStatement getPreparedStatement(String sql) {
+        if (preparedStatement != null) {
+            StatementUtil.close(preparedStatement);
+        }
+        preparedStatement = ConnectionUtil.prepareStatement(connection, sql);
+        return preparedStatement;
+    }
+
+    public List<RuntimeException> getExceptionList() {
         return Collections.unmodifiableList(exceptionList);
     }
 
-    public void addException(SqlFailedException exception) {
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                logger.log(e);
-            }
-            statement = null;
-        }
+    public void addException(RuntimeException exception) {
+        closeStatements();
         if (haltOnError) {
             throw exception;
         }
         exceptionList.add(exception);
     }
 
+    public void notifyException() {
+        closeStatements();
+    }
+
     public void destroy() {
         if (connection == null) {
             return;
         }
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                logger.log(e);
-            }
-            statement = null;
-        }
+        closeStatements();
         try {
             connection.close();
         } catch (SQLException e) {
@@ -112,4 +113,22 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         exceptionList.clear();
     }
 
+    protected void closeStatements() {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                logger.log(e);
+            }
+            statement = null;
+        }
+        if (preparedStatement != null) {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                logger.log(e);
+            }
+            preparedStatement = null;
+        }
+    }
 }

@@ -31,7 +31,6 @@ import org.seasar.extension.jdbc.gen.SchemaVersion;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
@@ -396,7 +395,7 @@ public class MigrateCommand extends AbstractCommand {
                 }
             } finally {
                 if (!context.getExceptionList().isEmpty()) {
-                    for (SqlFailedException e : context.getExceptionList()) {
+                    for (Exception e : context.getExceptionList()) {
                         logger.error(e.getMessage());
                     }
                     throw context.getExceptionList().get(0);
@@ -438,7 +437,7 @@ public class MigrateCommand extends AbstractCommand {
                 }
             } finally {
                 if (!context.getExceptionList().isEmpty()) {
-                    for (SqlFailedException e : context.getExceptionList()) {
+                    for (Exception e : context.getExceptionList()) {
                         logger.error(e.getMessage());
                     }
                     throw context.getExceptionList().get(0);

@@ -59,7 +59,7 @@ public class SqlExecutionContextImplTest {
         SqlFailedException exception = new SqlFailedException(
                 new SQLException(), "aaa", "bbb");
         context.addException(exception);
-        List<SqlFailedException> list = context.getExceptionList();
+        List<RuntimeException> list = context.getExceptionList();
         assertEquals(1, list.size());
     }
 

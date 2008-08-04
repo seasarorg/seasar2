@@ -15,13 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
 
@@ -31,25 +29,17 @@ import static org.junit.Assert.*;
  */
 public class DumpFileReaderTest {
 
-    private DumpFileTokenizer tokenizer = new DumpFileTokenizer('\t');
+    private DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
 
     @Test
     public void test() throws Exception {
-        DumpFileReader reader = new DumpFileReader(new File("file"), "UTF-8",
-                tokenizer) {
-
-            @Override
-            protected BufferedReader createBufferedReader() throws IOException {
-                StringBuilder buf = new StringBuilder();
-                buf.append("\"aaa\"\t\"bbb\"\t\"c\"\"cc\"\n");
-                buf.append("\"ddd\"\t\t\"eee\"");
-                StringReader reader = new StringReader(buf.toString());
-                return new BufferedReader(reader);
-            }
-        };
-
-        assertEquals(Arrays.asList("aaa", "bbb", "c\"cc"), reader.readLine());
-        assertEquals(Arrays.asList("ddd", null, "eee"), reader.readLine());
-        assertNull(reader.readLine());
+        String path = getClass().getName().replace('.', '/') + ".csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "CITY"), reader.readRow());
+        assertEquals(Arrays.asList("1", "aaa"), reader.readRow());
+        assertEquals(Arrays.asList("2", "bbb"), reader.readRow());
+        assertEquals(Arrays.asList("3", "ccc"), reader.readRow());
+        assertNull(reader.readRow());
     }
 }

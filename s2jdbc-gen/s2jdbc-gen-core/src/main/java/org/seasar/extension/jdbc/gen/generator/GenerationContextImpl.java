@@ -52,7 +52,7 @@ public class GenerationContextImpl implements GenerationContext {
      *            生成するファイル
      * @param templateName
      *            テンプレート名
-     * @param dumpFileEncoding
+     * @param encoding
      *            生成するファイルのエンコーディング
      * @param overwrite
      *            上書きする場合{@code true}、しない場合{@code false}

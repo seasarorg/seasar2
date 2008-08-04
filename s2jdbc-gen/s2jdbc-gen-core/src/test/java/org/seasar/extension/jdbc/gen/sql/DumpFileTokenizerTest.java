@@ -26,16 +26,16 @@ import static org.seasar.extension.jdbc.gen.sql.DumpFileTokenizer.TokenType.*;
  */
 public class DumpFileTokenizerTest {
 
-    private DumpFileTokenizer tokenizer = new DumpFileTokenizer('\t');
+    private DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
 
     @Test
     public void test() throws Exception {
-        String s = "\"aaa\"\t\"bbb\"\n";
+        String s = "\"aaa\",\"bbb\"\n";
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"aaa\"", tokenizer.getToken());
         assertEquals(DELIMETER, tokenizer.nextToken());
-        assertEquals("\t", tokenizer.getToken());
+        assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"bbb\"", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
@@ -61,28 +61,28 @@ public class DumpFileTokenizerTest {
         assertEquals(END_OF_BUFFER, tokenizer.nextToken());
         assertEquals("\"aa", tokenizer.getToken());
 
-        s = "a\"\t\"bbb\"\n";
+        s = "a\",\"bbb\"\n";
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"aaa\"", tokenizer.getToken());
         assertEquals(DELIMETER, tokenizer.nextToken());
-        assertEquals("\t", tokenizer.getToken());
+        assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"bbb\"", tokenizer.getToken());
     }
 
     @Test
     public void test_nullValue() throws Exception {
-        String s = "\"aaa\"\t\t\"bbb\"\n";
+        String s = "\"aaa\",,\"bbb\"\n";
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"aaa\"", tokenizer.getToken());
         assertEquals(DELIMETER, tokenizer.nextToken());
-        assertEquals("\t", tokenizer.getToken());
+        assertEquals(",", tokenizer.getToken());
         assertEquals(NULLVALUE, tokenizer.nextToken());
         assertNull(tokenizer.getToken());
         assertEquals(DELIMETER, tokenizer.nextToken());
-        assertEquals("\t", tokenizer.getToken());
+        assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"bbb\"", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
@@ -93,12 +93,12 @@ public class DumpFileTokenizerTest {
 
     @Test
     public void test_nullValueAtFirstPoint() throws Exception {
-        String s = "\t\"bbb\"\n";
+        String s = ",\"bbb\"\n";
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(NULLVALUE, tokenizer.nextToken());
         assertNull(tokenizer.getToken());
         assertEquals(DELIMETER, tokenizer.nextToken());
-        assertEquals("\t", tokenizer.getToken());
+        assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"bbb\"", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
@@ -109,7 +109,7 @@ public class DumpFileTokenizerTest {
 
     @Test
     public void test_endOfLine() throws Exception {
-        String s = "\"aaa\"\n\"bbb\"\r";
+        String s = "\"aaa\"\n\"bbb\"\r\n\"ccc\"\r\"ddd\"\r";
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"aaa\"", tokenizer.getToken());
@@ -118,6 +118,14 @@ public class DumpFileTokenizerTest {
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"bbb\"", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r\n", tokenizer.getToken());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("\"ccc\"", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r", tokenizer.getToken());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("\"ddd\"", tokenizer.getToken());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
         assertEquals("\r", tokenizer.getToken());
     }
 }

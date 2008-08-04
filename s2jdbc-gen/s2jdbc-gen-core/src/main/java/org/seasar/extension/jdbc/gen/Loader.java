@@ -19,8 +19,7 @@ package org.seasar.extension.jdbc.gen;
  * @author taedium
  * 
  */
-public interface DumpModelFactory {
+public interface Loader {
 
-    DumpModel getDumpModel(TableDesc tableDesc,
-            SqlExecutionContext sqlExecutionContext);
+    void load(SqlExecutionContext sqlExecutionContext);
 }

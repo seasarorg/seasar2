@@ -63,9 +63,9 @@ public class DumpFileReader {
         this.tokenizer = tokenizer;
     }
 
-    public List<String> readLine() {
+    public List<String> readRow() {
         try {
-            List<String> line = new ArrayList<String>();
+            List<String> row = new ArrayList<String>();
             if (reader == null) {
                 reader = createBufferedReader();
                 read();
@@ -77,7 +77,7 @@ public class DumpFileReader {
                 switch (tokenizer.nextToken()) {
                 case VALUE:
                 case NULLVALUE:
-                    line.add(DumpUtil.decode(tokenizer.getToken()));
+                    row.add(DumpUtil.decode(tokenizer.getToken()));
                     break;
                 case END_OF_BUFFER:
                     read();
@@ -86,7 +86,7 @@ public class DumpFileReader {
                         if (StringUtil.isEmpty(token)) {
                             return null;
                         }
-                        line.add(DumpUtil.decode(token));
+                        row.add(DumpUtil.decode(token));
                         break nextTokenLoop;
                     }
                     break;
@@ -96,7 +96,7 @@ public class DumpFileReader {
                     break;
                 }
             }
-            return line;
+            return row;
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }

@@ -1,3 +1,5 @@
+package org.seasar.extension.jdbc.gen;
+
 /*
  * Copyright 2004-2008 the Seasar Foundation and the Others.
  *
@@ -13,14 +15,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
 
 /**
  * @author taedium
  * 
  */
-public interface DumpModelFactory {
+public interface Dumper {
 
-    DumpModel getDumpModel(TableDesc tableDesc,
-            SqlExecutionContext sqlExecutionContext);
+    void dump(SqlExecutionContext sqlExecutionContext);
 }

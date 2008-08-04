@@ -63,9 +63,9 @@ public class DumpFileTokenizer {
 
     protected void peek(int index) {
         if (index < length) {
+            pos = index;
             char c = buf.charAt(index);
             if (c == '"') {
-                pos = index;
                 for (int i = index + 1; i < length; i++) {
                     c = buf.charAt(i);
                     if (c == '"') {
@@ -84,17 +84,27 @@ public class DumpFileTokenizer {
             } else if (c == delimiter) {
                 if (type == END_OF_LINE) {
                     type = NULLVALUE;
-                    pos = index;
                     nextPos = index;
                 } else {
                     type = DELIMETER;
-                    pos = index;
                     nextPos = index + 1;
                 }
-            } else if (c == '\n' || c == '\r') {
+            } else if (c == '\n') {
                 type = END_OF_LINE;
-                pos = index;
                 nextPos = index + 1;
+            } else if (c == '\r') {
+                int i = index + 1;
+                if (i >= length) {
+                    type = END_OF_BUFFER;
+                } else if (buf.charAt(i) == '\n') {
+                    type = END_OF_LINE;
+                    nextPos = i + 1;
+                } else {
+                    type = END_OF_LINE;
+                    nextPos = i;
+                }
+            } else {
+                throw new IllegalStateException(Character.toString(c));
             }
         } else {
             type = END_OF_BUFFER;

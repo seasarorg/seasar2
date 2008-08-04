@@ -16,57 +16,108 @@
 package org.seasar.extension.jdbc.gen.sql;
 
 import java.io.File;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
+import java.util.Map;
 
 import org.seasar.extension.jdbc.gen.ColumnDesc;
+import org.seasar.extension.jdbc.gen.Loader;
+import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.util.ConnectionUtil;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.PreparedStatementUtil;
-import org.seasar.framework.util.StatementUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author taedium
  * 
  */
-public class LoaderImpl {
+public class LoaderImpl implements Loader {
 
-    protected DataSource dataSource;
+    protected File dumpDir;
 
-    protected char delimiter;
+    protected String dumpFileEncoding;
 
-    protected String encoding;
+    protected List<TableDesc> tableDescList;
 
-    public void load(TableDesc tableDesc, File dumpFile) {
-        DumpFileReader dumpFileReader = null;
+    protected Map<String, File> dumpFileMap;
+
+    protected DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
+
+    protected char delimiter = ',';
+
+    protected String extension = ".csv";
+
+    public LoaderImpl(File dumpDir, String dumpFileEncoding,
+            List<TableDesc> tableDescList) {
+        if (dumpDir == null) {
+            throw new NullPointerException("dumpDir");
+        }
+        if (dumpFileEncoding == null) {
+            throw new NullPointerException("dumpFileEncoding");
+        }
+        if (tableDescList == null) {
+            throw new NullPointerException("tableDescList");
+        }
+        this.dumpDir = dumpDir;
+        this.dumpFileEncoding = dumpFileEncoding;
+        this.tableDescList = tableDescList;
+        dumpFileMap = createDumpFileMap();
+    }
+
+    protected Map<String, File> createDumpFileMap() {
+        File[] dumpFiles = dumpDir.listFiles(new ExclusionFilenameFilter() {
+
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(extension);
+            }
+        });
+
+        Map<String, File> map = new CaseInsensitiveMap();
+        if (dumpFiles != null) {
+            for (File file : dumpFiles) {
+                String fileName = file.getName();
+                String tableName = StringUtil.trimSuffix(fileName, extension);
+                map.put(tableName, file);
+            }
+        }
+        return map;
+    }
+
+    public void load(SqlExecutionContext sqlExecutionContext) {
+        for (TableDesc tableDesc : tableDescList) {
+            File dumpFile = dumpFileMap.get(tableDesc.getFullName());
+            if (dumpFile != null) {
+                loadDumpFile(sqlExecutionContext, tableDesc, dumpFile);
+            }
+        }
+    }
+
+    protected void loadDumpFile(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc, File dumpFile) {
+        DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
+                tokenizer);
         try {
-            List<String> columnNameList = dumpFileReader.readLine();
-            String sql = buildSql(tableDesc, columnNameList);
+            List<String> columnNameList = reader.readRow();
+            if (columnNameList == null) {
+                return;
+            }
             SqlType[] sqlTypes = getSqlTypes(tableDesc, columnNameList);
-            Connection conn = DataSourceUtil.getConnection(dataSource);
-            try {
-                PreparedStatement ps = ConnectionUtil.prepareStatement(conn,
-                        sql);
-                try {
-                    for (List<String> line = dumpFileReader.readLine(); line != null; line = dumpFileReader
-                            .readLine()) {
-                        executeUpdate(ps, sqlTypes, line);
-                    }
-                } finally {
-                    StatementUtil.close(ps);
-                }
-            } finally {
-                ConnectionUtil.close(conn);
+            String sql = buildSql(tableDesc, columnNameList);
+            PreparedStatement ps = sqlExecutionContext
+                    .getPreparedStatement(sql);
+            for (List<String> valueList = reader.readRow(); valueList != null; valueList = reader
+                    .readRow()) {
+                executeUpdate(ps, sqlTypes, valueList);
             }
         } finally {
-            dumpFileReader.close();
+            reader.close();
         }
     }
 
@@ -94,13 +145,17 @@ public class LoaderImpl {
         buf.append(tableDesc.getFullName());
         buf.append(" (");
         for (String columnName : columnNameList) {
-            buf.append(columnName);
-            buf.append(", ");
+            if (tableDesc.getColumnDesc(columnName) != null) {
+                buf.append(columnName);
+                buf.append(", ");
+            }
         }
         buf.setLength(buf.length() - 2);
         buf.append(") values (");
-        for (int i = 0; i < columnNameList.size(); i++) {
-            buf.append("?, ");
+        for (String columnName : columnNameList) {
+            if (tableDesc.getColumnDesc(columnName) != null) {
+                buf.append("?, ");
+            }
         }
         buf.setLength(buf.length() - 2);
         buf.append(")");
@@ -109,12 +164,14 @@ public class LoaderImpl {
 
     protected SqlType[] getSqlTypes(TableDesc tableDesc,
             List<String> columnNameList) {
-        SqlType[] sqlTypes = new SqlType[columnNameList.size()];
+        List<SqlType> sqlTypes = new ArrayList<SqlType>();
         for (int i = 0; i < columnNameList.size(); i++) {
             String columnName = columnNameList.get(i);
             ColumnDesc columnDesc = tableDesc.getColumnDesc(columnName);
-            sqlTypes[i] = columnDesc.getSqlType();
+            if (columnDesc != null) {
+                sqlTypes.add(columnDesc.getSqlType());
+            }
         }
-        return sqlTypes;
+        return sqlTypes.toArray(new SqlType[sqlTypes.size()]);
     }
 }

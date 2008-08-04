@@ -15,10 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
-
-import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 
 /**
  * SQLの実行コンテキストです。
@@ -34,12 +33,14 @@ public interface SqlExecutionContext {
      */
     Statement getStatement();
 
+    PreparedStatement getPreparedStatement(String sql);
+
     /**
      * 例外のリストを返します。
      * 
      * @return 例外のリスト
      */
-    List<SqlFailedException> getExceptionList();
+    List<RuntimeException> getExceptionList();
 
     /**
      * 例外を追加します。
@@ -47,7 +48,9 @@ public interface SqlExecutionContext {
      * @param exception
      *            例外
      */
-    void addException(SqlFailedException exception);
+    void addException(RuntimeException exception);
+
+    void notifyException();
 
     /**
      * 破棄します。

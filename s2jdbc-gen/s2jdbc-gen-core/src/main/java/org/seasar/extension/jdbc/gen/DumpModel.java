@@ -25,17 +25,27 @@ import java.util.List;
  */
 public class DumpModel {
 
-    protected String delimiter;
+    protected String name;
+
+    protected char delimiter;
 
     protected List<String> columnNameList = new ArrayList<String>();
 
     protected List<List<String>> rowList = new ArrayList<List<String>>();
 
-    public String getDelimiter() {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public char getDelimiter() {
         return delimiter;
     }
 
-    public void setDelimiter(String delimiter) {
+    public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
     }
 

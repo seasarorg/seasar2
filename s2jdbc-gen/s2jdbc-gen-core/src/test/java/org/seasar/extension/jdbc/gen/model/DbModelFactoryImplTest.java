@@ -86,26 +86,4 @@ public class DbModelFactoryImplTest {
         assertEquals(1, model.getSequenceDescList().size());
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetDdlModel_idTableDesc() throws Exception {
-        TableDesc tableDesc = new TableDesc();
-        tableDesc.setName("AAA");
-
-        TableDesc idTableDesc = new TableDesc();
-        idTableDesc.setName("CCC");
-
-        TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setName("BBB");
-        tableDesc2.addIdTableDesc(idTableDesc);
-
-        DdlModel model = factory.getDdlModel(Arrays.asList(tableDesc,
-                tableDesc2), 0);
-        assertNotNull(model);
-        assertNotNull(model.getDialect());
-        assertEquals(3, model.getTableDescList().size());
-    }
 }

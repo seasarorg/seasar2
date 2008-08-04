@@ -82,9 +82,6 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
             for (SequenceDesc sequenceDesc : tableDesc.getSequenceDescList()) {
                 model.addSequenceDesc(sequenceDesc);
             }
-            for (TableDesc idTableDesc : tableDesc.getIdTableDescList()) {
-                model.addTableDesc(idTableDesc);
-            }
         }
         model.setSchemaInfoFullTableName(schemaInfoFullTableName);
         model.setSchemaInfoColumnName(schemaInfoColumnName);

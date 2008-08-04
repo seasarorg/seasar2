@@ -16,9 +16,11 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -68,10 +70,14 @@ public class GenerateDdlCommandTest {
         assertNotNull(command.createDdlVersion());
         assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createGenerator());
-        assertNotNull(command.createDbModelFactory());
+        assertNotNull(command.createDdlModelFactory());
         assertNotNull(command.createTableDescFactory());
         assertNotNull(command.createGenerationContext(new Object(), new File(
                 "xxx"), "aaa", "bbb"));
+        assertNotNull(command.createDumper(new File("dir"),
+                new ArrayList<TableDesc>()));
+        assertNotNull(command.createSqlExecutionContext());
+
     }
 
 }

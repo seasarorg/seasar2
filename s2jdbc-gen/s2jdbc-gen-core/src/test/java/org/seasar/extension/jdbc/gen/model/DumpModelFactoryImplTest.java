@@ -26,7 +26,6 @@ import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
 
@@ -45,7 +44,7 @@ public class DumpModelFactoryImplTest {
     @Before
     public void setUp() {
         dialect = new StandardGenDialect();
-        factory = new DumpModelFactoryImpl(new MockDataSource(), "\t");
+        factory = new DumpModelFactoryImpl(dialect, '\t');
     }
 
     @Test

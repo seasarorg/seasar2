@@ -50,7 +50,7 @@ public class GenerateDumpTest {
     @Test
     public void test() throws Exception {
         DumpModel model = new DumpModel();
-        model.setDelimiter("\t");
+        model.setDelimiter(',');
         model.addColumnName("\"column1\"");
         model.addColumnName("\"column2\"");
         model.addColumnName("\"column3\"");

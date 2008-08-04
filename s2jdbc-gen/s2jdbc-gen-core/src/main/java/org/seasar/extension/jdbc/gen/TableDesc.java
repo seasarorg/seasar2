@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.seasar.framework.util.ArrayMap;
+import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
  * テーブル記述です。
@@ -44,7 +44,7 @@ public class TableDesc {
     /** カラム記述のリスト */
     protected List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
 
-    protected Map<String, ColumnDesc> columnDescMap = new ArrayMap();
+    protected Map<String, ColumnDesc> columnDescMap = new CaseInsensitiveMap();
 
     /** 主キー記述のリスト */
     protected PrimaryKeyDesc primaryKeyDesc;
