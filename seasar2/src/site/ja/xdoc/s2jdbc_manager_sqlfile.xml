@@ -108,11 +108,10 @@
 			</p>
 			<p>
 				SQLファイルは、クラスパス上にあるならどこにおいてもかまいませんが、
-				<code>ルートパッケージ.sql.テーブル名</code>
+				<code>ルートパッケージ.entity.エンティティ名</code>
 				のパッケージに対応したディレクトリ配下に置くことを推奨します。 例えば、
-				<code>employee</code>
-				テーブルに関するSQLファイルは、
-				<code>examples/sql/employee</code>
+				Employeeに関するSQLファイルは、
+				<code>examples/entity/Employee</code>
 				ディレクトリにおくと良いでしょう。
 			</p>
 			<p>
