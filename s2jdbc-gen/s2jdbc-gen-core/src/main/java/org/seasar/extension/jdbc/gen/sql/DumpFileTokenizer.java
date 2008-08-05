@@ -32,7 +32,9 @@ public class DumpFileTokenizer {
 
         END_OF_LINE,
 
-        END_OF_BUFFER
+        END_OF_BUFFER,
+
+        UNKOWN
     }
 
     protected StringBuilder buf = new StringBuilder(200);
@@ -56,8 +58,6 @@ public class DumpFileTokenizer {
     public void addChars(char[] chars, int charsLength) {
         buf.append(chars, 0, charsLength);
         length = buf.length();
-        pos = 0;
-        nextPos = 0;
         peek(pos);
     }
 
@@ -132,6 +132,7 @@ public class DumpFileTokenizer {
         case END_OF_LINE:
             token = buf.substring(pos, nextPos);
             buf.delete(0, nextPos);
+            buf.trimToSize();
             length = buf.length();
             pos = 0;
             nextPos = 0;
@@ -139,6 +140,7 @@ public class DumpFileTokenizer {
             return END_OF_LINE;
         case END_OF_BUFFER:
             token = buf.substring(pos);
+            type = UNKOWN;
             return END_OF_BUFFER;
         }
 
