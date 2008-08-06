@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.util;
 
-import org.seasar.framework.util.StringUtil;
+import java.util.regex.Pattern;
 
 /**
  * @author taedium
@@ -23,9 +23,14 @@ import org.seasar.framework.util.StringUtil;
  */
 public class DumpUtil {
 
-    protected static String ONE_QUOTE = "\"";
+    protected static String QUOTE = "\"";
 
-    protected static String TWO_QUOTES = "\"\"";
+    protected static String ESCAPED_QUOTE = "\"\"";
+
+    protected static Pattern ENCODE_TARGET_PATTERN = Pattern
+            .compile(".*(\"|\\r\\n|,).*");
+
+    protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile("^\".+\"");
 
     /**
      * 
@@ -37,16 +42,20 @@ public class DumpUtil {
         if (value == null) {
             return null;
         }
-        return ONE_QUOTE + value.replace(ONE_QUOTE, TWO_QUOTES) + ONE_QUOTE;
+        if (ENCODE_TARGET_PATTERN.matcher(value).matches()) {
+            return QUOTE + value.replace(QUOTE, ESCAPED_QUOTE) + QUOTE;
+        }
+        return value;
     }
 
     public static String decode(String value) {
         if (value == null) {
             return null;
         }
-        value = StringUtil.trimPrefix(value, ONE_QUOTE);
-        value = StringUtil.trimSuffix(value, ONE_QUOTE);
-        return value.replace(TWO_QUOTES, ONE_QUOTE);
+        if (DECODE_TARGET_PATTERN.matcher(value).matches()) {
+            String s = value.substring(1, value.length() - 1);
+            return s.replace(ESCAPED_QUOTE, QUOTE);
+        }
+        return value;
     }
-
 }

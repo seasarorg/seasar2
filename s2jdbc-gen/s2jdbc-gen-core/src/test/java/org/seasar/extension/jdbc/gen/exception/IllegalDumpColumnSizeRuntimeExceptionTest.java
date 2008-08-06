@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.util;
+package org.seasar.extension.jdbc.gen.exception;
 
 import org.junit.Test;
 
@@ -23,21 +23,16 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DumpUtilTest {
+public class IllegalDumpColumnSizeRuntimeExceptionTest {
 
     @Test
-    public void testEncode() {
-        assertEquals("aaa", DumpUtil.encode("aaa"));
-        assertEquals("\"aa\"\"a\"", DumpUtil.encode("aa\"a"));
-        assertEquals("\"aa\r\na\"", DumpUtil.encode("aa\r\na"));
-        assertEquals("\"aa,a\"", DumpUtil.encode("aa,a"));
-        assertNull(DumpUtil.encode(null));
+    public void test() throws Exception {
+        IllegalDumpColumnSizeRuntimeException e = new IllegalDumpColumnSizeRuntimeException(
+                "aaa", 1, 2, 3);
+        assertEquals("aaa", e.getPath());
+        assertEquals(1, e.getRowNo());
+        assertEquals(2, e.getDataColumnSize());
+        assertEquals(3, e.getHeaderColumnSize());
+        System.out.println(e.getMessage());
     }
-
-    @Test
-    public void testDecode() {
-        assertEquals("aa\"a", DumpUtil.decode("\"aa\"\"a\""));
-        assertNull(DumpUtil.decode(null));
-    }
-
 }

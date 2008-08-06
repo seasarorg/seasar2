@@ -24,10 +24,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.seasar.extension.jdbc.gen.exception.IllegalDumpColumnSizeRuntimeException;
+import org.seasar.extension.jdbc.gen.sql.DumpFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.util.DumpUtil;
 import org.seasar.framework.exception.IORuntimeException;
-import org.seasar.framework.util.StringUtil;
 
 /**
  * @author taedium
@@ -45,11 +46,15 @@ public class DumpFileReader {
 
     protected BufferedReader reader;
 
-    protected boolean endOfFile;
+    protected char[] buf = new char[BUF_SIZE];
 
-    char[] chars = new char[BUF_SIZE];
+    protected int bufLength;
 
-    int readSize = 0;
+    protected TokenType tokenType = null;
+
+    protected int rowNo = -1;
+
+    protected int headerColumnSize;
 
     /**
      * @param dumpFile
@@ -58,42 +63,33 @@ public class DumpFileReader {
      */
     public DumpFileReader(File dumpFile, String dumpFileEncoding,
             DumpFileTokenizer tokenizer) {
+        if (dumpFile == null) {
+            throw new NullPointerException("dumpFile");
+        }
+        if (dumpFileEncoding == null) {
+            throw new NullPointerException("dumpFileEncoding");
+        }
+        if (tokenizer == null) {
+            throw new NullPointerException("tokenizer");
+        }
         this.dumpFile = dumpFile;
         this.dumpFileEncoding = dumpFileEncoding;
         this.tokenizer = tokenizer;
     }
 
     public List<String> readRow() {
+        if (isEndOfFile()) {
+            return null;
+        }
         try {
-            List<String> row = new ArrayList<String>();
-            if (reader == null) {
-                reader = createBufferedReader();
-                read();
-            }
-            if (endOfFile) {
-                return null;
-            }
-            nextTokenLoop: for (;;) {
-                switch (tokenizer.nextToken()) {
-                case VALUE:
-                case NULLVALUE:
-                    row.add(DumpUtil.decode(tokenizer.getToken()));
-                    break;
-                case END_OF_BUFFER:
-                    read();
-                    if (endOfFile) {
-                        String token = tokenizer.getToken();
-                        if (StringUtil.isEmpty(token)) {
-                            return null;
-                        }
-                        row.add(DumpUtil.decode(token));
-                        break nextTokenLoop;
-                    }
-                    break;
-                case END_OF_LINE:
-                    break nextTokenLoop;
-                default:
-                    break;
+            List<String> row = readRowInternal();
+            rowNo++;
+            if (rowNo == 0) {
+                headerColumnSize = row.size();
+            } else {
+                if (headerColumnSize != row.size()) {
+                    throw new IllegalDumpColumnSizeRuntimeException(dumpFile
+                            .getPath(), rowNo, row.size(), headerColumnSize);
                 }
             }
             return row;
@@ -102,17 +98,61 @@ public class DumpFileReader {
         }
     }
 
-    protected void read() throws IOException {
-        if ((readSize = reader.read(chars)) > -1) {
-            tokenizer.addChars(chars, readSize);
-        } else {
-            endOfFile = true;
+    protected List<String> readRowInternal() throws IOException {
+        if (reader == null) {
+            reader = createBufferedReader();
         }
+        List<String> row = new ArrayList<String>(30);
+        readLoop: for (; read();) {
+            nextTokenLoop: for (;;) {
+                tokenType = tokenizer.nextToken();
+                switch (tokenType) {
+                case VALUE:
+                    String token = tokenizer.getToken();
+                    row.add(DumpUtil.decode(token));
+                    break;
+                case NULL:
+                    row.add(null);
+                    break;
+                case END_OF_BUFFER:
+                    break nextTokenLoop;
+                case END_OF_LINE:
+                    break readLoop;
+                default:
+                    break;
+                }
+            }
+        }
+        if (isEndOfFile()) {
+            if (tokenType == TokenType.END_OF_BUFFER) {
+                String token = tokenizer.getToken();
+                row.add(DumpUtil.decode(token));
+            }
+        }
+        return row;
+    }
+
+    protected boolean read() throws IOException {
+        if (tokenType == null || tokenType == TokenType.END_OF_BUFFER) {
+            bufLength = reader.read(buf);
+            if (bufLength > -1) {
+                tokenizer.addChars(buf, bufLength);
+            }
+        }
+        return bufLength > -1;
     }
 
     protected BufferedReader createBufferedReader() throws IOException {
         InputStream is = new FileInputStream(dumpFile);
         return new BufferedReader(new InputStreamReader(is, dumpFileEncoding));
+    }
+
+    protected boolean isEndOfFile() {
+        return bufLength == -1;
+    }
+
+    public int getRowNo() {
+        return rowNo;
     }
 
     public void close() {

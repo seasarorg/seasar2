@@ -45,6 +45,7 @@ import org.seasar.extension.jdbc.gen.sqltype.SmallIntType;
 import org.seasar.extension.jdbc.gen.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.sqltype.VarcharType;
+import org.seasar.extension.jdbc.gen.util.ColumnDefinitionUtil;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 
@@ -384,7 +385,8 @@ public class StandardGenDialect implements GenDialect {
         }
 
         public String getColumnDefinition(int length, int precision, int scale) {
-            return format(columnDefinition, length, precision, scale);
+            return ColumnDefinitionUtil.format(columnDefinition, length,
+                    precision, scale);
         }
 
         public Class<?> getAttributeClass(int length, int precision, int scale) {
@@ -399,53 +401,6 @@ public class StandardGenDialect implements GenDialect {
             return temporalType;
         }
 
-    }
-
-    /**
-     * フォーマットします。
-     * 
-     * @param format
-     *            フォーマット文字列
-     * @param length
-     *            長さ
-     * @param precision
-     *            精度
-     * @param scale
-     *            スケール
-     * @return フォーマットされた文字列
-     */
-    protected static String format(String format, int length, int precision,
-            int scale) {
-        StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < format.length(); i++) {
-            char c = format.charAt(i);
-            if (c == '$') {
-                i++;
-                if (i < format.length()) {
-                    c = format.charAt(i);
-                    switch (c) {
-                    case 'l':
-                        buf.append(length);
-                        break;
-                    case 'p':
-                        buf.append(precision);
-                        break;
-                    case 's':
-                        buf.append(scale);
-                        break;
-                    default:
-                        buf.append('$');
-                        buf.append(c);
-                        break;
-                    }
-                } else {
-                    buf.append(c);
-                }
-            } else {
-                buf.append(c);
-            }
-        }
-        return buf.toString();
     }
 
     /**

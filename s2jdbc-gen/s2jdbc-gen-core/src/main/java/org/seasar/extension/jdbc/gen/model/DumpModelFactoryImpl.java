@@ -65,7 +65,7 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         dumpModel.setName(tableDesc.getFullName());
         dumpModel.setDelimiter(delimiter);
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            dumpModel.addColumnName(DumpUtil.encode(columnDesc.getName()));
+            dumpModel.addColumnName(columnDesc.getName());
         }
         doRow(dumpModel, tableDesc, sqlExecutionContext);
         return dumpModel;

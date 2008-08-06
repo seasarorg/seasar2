@@ -44,7 +44,7 @@ public class DumpModelFactoryImplTest {
     @Before
     public void setUp() {
         dialect = new StandardGenDialect();
-        factory = new DumpModelFactoryImpl(dialect, '\t');
+        factory = new DumpModelFactoryImpl(dialect, ',');
     }
 
     @Test
@@ -86,9 +86,9 @@ public class DumpModelFactoryImplTest {
                 dialect.getSqlType(Types.INTEGER) }, rs);
 
         assertEquals(2, dumpModel.getRowList().size());
-        assertEquals(Arrays.asList("\"hoge\"", "\"100\""), dumpModel
-                .getRowList().get(0));
-        assertEquals(Arrays.asList("\"f\"\"oo\"", "\"200\""), dumpModel
+        assertEquals(Arrays.asList("hoge", "100"), dumpModel.getRowList()
+                .get(0));
+        assertEquals(Arrays.asList("\"f\"\"oo\"", "200"), dumpModel
                 .getRowList().get(1));
     }
 }

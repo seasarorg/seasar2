@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.exception.IllegalDumpColumnSizeRuntimeException;
 import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
@@ -36,10 +37,40 @@ public class DumpFileReaderTest {
         String path = getClass().getName().replace('.', '/') + ".csv";
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
-        assertEquals(Arrays.asList("ID", "CITY"), reader.readRow());
-        assertEquals(Arrays.asList("1", "aaa"), reader.readRow());
-        assertEquals(Arrays.asList("2", "bbb"), reader.readRow());
-        assertEquals(Arrays.asList("3", "ccc"), reader.readRow());
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readRow());
+        assertEquals(0, reader.getRowNo());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readRow());
+        assertEquals(1, reader.getRowNo());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readRow());
+        assertEquals(2, reader.getRowNo());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readRow());
+        assertEquals(3, reader.getRowNo());
         assertNull(reader.readRow());
+    }
+
+    @Test
+    public void testHeaderOnly() throws Exception {
+        String path = getClass().getName().replace('.', '/')
+                + "_headerOnly.csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readRow());
+        assertEquals(0, reader.getRowNo());
+        assertNull(reader.readRow());
+    }
+
+    @Test
+    public void testIllegalColumnSize() throws Exception {
+        String path = getClass().getName().replace('.', '/')
+                + "_illegalColumnSize.csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readRow());
+        assertEquals(0, reader.getRowNo());
+        try {
+            reader.readRow();
+            fail();
+        } catch (IllegalDumpColumnSizeRuntimeException expected) {
+        }
     }
 }

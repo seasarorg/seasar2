@@ -26,7 +26,7 @@ public class DumpFileTokenizer {
     enum TokenType {
         VALUE,
 
-        NULLVALUE,
+        NULL,
 
         DELIMETER,
 
@@ -55,8 +55,8 @@ public class DumpFileTokenizer {
         this.delimiter = delimiter;
     }
 
-    public void addChars(char[] chars, int charsLength) {
-        buf.append(chars, 0, charsLength);
+    public void addChars(char[] chars, int len) {
+        buf.append(chars, 0, len);
         length = buf.length();
         peek(pos);
     }
@@ -82,29 +82,43 @@ public class DumpFileTokenizer {
                 }
                 type = END_OF_BUFFER;
             } else if (c == delimiter) {
-                if (type == END_OF_LINE) {
-                    type = NULLVALUE;
+                if (type == END_OF_LINE || type == DELIMETER) {
+                    type = NULL;
                     nextPos = index;
                 } else {
                     type = DELIMETER;
                     nextPos = index + 1;
                 }
-            } else if (c == '\n') {
-                type = END_OF_LINE;
-                nextPos = index + 1;
             } else if (c == '\r') {
                 int i = index + 1;
                 if (i >= length) {
                     type = END_OF_BUFFER;
                 } else if (buf.charAt(i) == '\n') {
-                    type = END_OF_LINE;
-                    nextPos = i + 1;
-                } else {
-                    type = END_OF_LINE;
-                    nextPos = i;
+                    if (type == END_OF_LINE || type == DELIMETER) {
+                        type = NULL;
+                        nextPos = index;
+                    } else {
+                        type = END_OF_LINE;
+                        nextPos = i + 1;
+                    }
                 }
             } else {
-                throw new IllegalStateException(Character.toString(c));
+                for (int i = index; i < length; i++) {
+                    c = buf.charAt(i);
+                    if (c == delimiter) {
+                        type = VALUE;
+                        nextPos = i;
+                        return;
+                    } else if (c == '\r') {
+                        int j = i + 1;
+                        if (j < length && buf.charAt(j) == '\n') {
+                            type = VALUE;
+                            nextPos = i;
+                            return;
+                        }
+                    }
+                }
+                type = END_OF_BUFFER;
             }
         } else {
             type = END_OF_BUFFER;
@@ -117,17 +131,13 @@ public class DumpFileTokenizer {
             token = buf.substring(pos, nextPos);
             peek(nextPos);
             return VALUE;
-        case NULLVALUE:
-            token = null;
+        case NULL:
+            token = buf.substring(pos, nextPos);
             peek(nextPos);
-            return NULLVALUE;
+            return NULL;
         case DELIMETER:
             token = buf.substring(pos, nextPos);
-            if (buf.charAt(nextPos) == delimiter) {
-                type = NULLVALUE;
-            } else {
-                peek(nextPos);
-            }
+            peek(nextPos);
             return DELIMETER;
         case END_OF_LINE:
             token = buf.substring(pos, nextPos);
