@@ -29,6 +29,7 @@ import org.seasar.extension.jdbc.gen.sql.DumpFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.util.DumpUtil;
 import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * @author taedium
@@ -83,6 +84,9 @@ public class DumpFileReader {
         }
         try {
             List<String> row = readRowInternal();
+            if (row == null) {
+                return null;
+            }
             rowNo++;
             if (rowNo == 0) {
                 headerColumnSize = row.size();
@@ -126,10 +130,12 @@ public class DumpFileReader {
         if (isEndOfFile()) {
             if (tokenType == TokenType.END_OF_BUFFER) {
                 String token = tokenizer.getToken();
-                row.add(DumpUtil.decode(token));
+                if (!StringUtil.isEmpty(token)) {
+                    row.add(DumpUtil.decode(token));
+                }
             }
         }
-        return row;
+        return !row.isEmpty() ? row : null;
     }
 
     protected boolean read() throws IOException {
