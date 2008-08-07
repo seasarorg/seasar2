@@ -28,6 +28,7 @@ import java.util.zip.ZipFile;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ArrayUtil;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
@@ -51,6 +52,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     private static final char PACKAGE_SEPARATOR = '_';
 
     private static final String PACKAGE_SEPARATOR_STR = "_";
+
+    private static final Logger logger = Logger
+            .getLogger(NamingConventionImpl.class);
 
     private boolean initialized;
 
@@ -891,7 +895,12 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
                 list.add(new ZipExistChecker(url, rootPackageName));
             } else if ("code-source".equals(protocol)) {
                 list.add(new CodeSourceExistChecker(url, rootPackageName));
+            } else {
+                logger.log("WSSR0013", new Object[] { rootPackageName, url });
             }
+        }
+        if (list.isEmpty()) {
+            logger.log("WSSR0014", new Object[] { rootPackageName });
         }
         return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
     }
