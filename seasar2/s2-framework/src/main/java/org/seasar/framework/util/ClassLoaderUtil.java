@@ -38,6 +38,9 @@ public abstract class ClassLoaderUtil {
 
     private static final Method definePackageMethod = getDefinePackageMethod();
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ClassLoaderUtil() {
     }
 

@@ -30,6 +30,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class FileUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected FileUtil() {
     }
 

@@ -270,6 +270,9 @@ public class ValueTypes {
         initialize();
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ValueTypes() {
     }
 

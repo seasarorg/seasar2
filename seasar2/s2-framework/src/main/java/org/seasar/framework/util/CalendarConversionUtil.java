@@ -27,6 +27,9 @@ import java.util.TimeZone;
  */
 public class CalendarConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected CalendarConversionUtil() {
     }
 

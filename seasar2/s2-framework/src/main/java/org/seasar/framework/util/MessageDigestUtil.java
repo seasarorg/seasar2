@@ -24,6 +24,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MessageDigestUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected MessageDigestUtil() {
     }
 

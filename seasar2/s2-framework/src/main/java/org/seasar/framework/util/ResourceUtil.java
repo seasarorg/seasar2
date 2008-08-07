@@ -32,6 +32,9 @@ import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
  */
 public class ResourceUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ResourceUtil() {
     }
 

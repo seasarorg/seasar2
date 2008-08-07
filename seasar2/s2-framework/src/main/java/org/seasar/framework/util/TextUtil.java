@@ -29,6 +29,9 @@ public class TextUtil {
 
     private static final String UTF8 = "UTF-8";
 
+    /**
+     * インスタンスを構築します。
+     */
     protected TextUtil() {
     }
 

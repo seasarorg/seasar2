@@ -31,6 +31,9 @@ public class ReaderUtil {
 
     private static final int BUF_SIZE = 8192;
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ReaderUtil() {
     }
 

@@ -31,6 +31,9 @@ public class ModifierUtil {
 
     static final int SYNTHETIC = 0x00001000;
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ModifierUtil() {
     }
 

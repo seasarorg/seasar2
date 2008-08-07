@@ -29,6 +29,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class PropertiesUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected PropertiesUtil() {
     }
 

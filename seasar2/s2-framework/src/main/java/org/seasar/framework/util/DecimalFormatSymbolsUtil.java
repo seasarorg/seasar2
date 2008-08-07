@@ -29,6 +29,9 @@ public class DecimalFormatSymbolsUtil {
 
     private static Map cache = MapUtil.createHashMap();
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DecimalFormatSymbolsUtil() {
     }
 

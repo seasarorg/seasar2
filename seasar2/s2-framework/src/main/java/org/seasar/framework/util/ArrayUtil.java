@@ -29,6 +29,9 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  */
 public class ArrayUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ArrayUtil() {
     }
 

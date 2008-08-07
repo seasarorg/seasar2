@@ -30,6 +30,9 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class DataSourceUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DataSourceUtil() {
     }
 

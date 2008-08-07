@@ -42,6 +42,9 @@ public class ResourceTraversal {
         void processResource(String path, InputStream is);
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ResourceTraversal() {
     }
 

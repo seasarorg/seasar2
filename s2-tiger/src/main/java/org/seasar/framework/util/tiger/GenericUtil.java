@@ -33,6 +33,9 @@ import java.util.Set;
  */
 public abstract class GenericUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected GenericUtil() {
     }
 

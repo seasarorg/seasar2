@@ -28,6 +28,9 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class ResultSetUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ResultSetUtil() {
     }
 

@@ -29,6 +29,9 @@ import org.seasar.framework.exception.NamingRuntimeException;
  */
 public class InitialContextUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected InitialContextUtil() {
     }
 

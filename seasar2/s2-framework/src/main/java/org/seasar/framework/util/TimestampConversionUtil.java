@@ -26,6 +26,9 @@ import java.util.Date;
  */
 public class TimestampConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected TimestampConversionUtil() {
     }
 

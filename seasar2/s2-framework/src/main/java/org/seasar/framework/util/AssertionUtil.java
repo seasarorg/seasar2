@@ -24,6 +24,9 @@ import org.seasar.framework.exception.EmptyRuntimeException;
  */
 public class AssertionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected AssertionUtil() {
     }
 

@@ -44,6 +44,9 @@ public class URLUtil {
         CANONICAL_PROTOCOLS.put("wsjar", "jar"); // WebSphereがJarファイルのために使用する固有のプロトコル
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected URLUtil() {
     }
 

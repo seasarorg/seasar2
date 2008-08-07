@@ -33,6 +33,9 @@ import org.xml.sax.SAXException;
  */
 public class SAXParserFactoryUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected SAXParserFactoryUtil() {
     }
 

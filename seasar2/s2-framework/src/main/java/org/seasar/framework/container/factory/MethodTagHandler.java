@@ -25,6 +25,9 @@ import org.seasar.framework.xml.TagHandlerContext;
  * @author higa
  */
 public abstract class MethodTagHandler extends AbstractTagHandler {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * 指定された{@link org.seasar.framework.container.MethodDef メソッド定義}に対して、
      * {@link org.seasar.framework.container.Expression 式}を設定します。

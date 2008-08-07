@@ -33,6 +33,9 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SAXParserUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected SAXParserUtil() {
     }
 

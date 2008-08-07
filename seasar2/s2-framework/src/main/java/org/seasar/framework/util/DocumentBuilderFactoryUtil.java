@@ -29,6 +29,9 @@ import org.seasar.framework.exception.ParserConfigurationRuntimeException;
  */
 public class DocumentBuilderFactoryUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DocumentBuilderFactoryUtil() {
     }
 

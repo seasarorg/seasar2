@@ -32,6 +32,9 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class ConnectionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ConnectionUtil() {
     }
 

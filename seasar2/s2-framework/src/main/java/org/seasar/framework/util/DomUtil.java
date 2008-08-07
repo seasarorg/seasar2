@@ -38,6 +38,9 @@ import org.w3c.dom.Text;
  */
 public class DomUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DomUtil() {
     }
 

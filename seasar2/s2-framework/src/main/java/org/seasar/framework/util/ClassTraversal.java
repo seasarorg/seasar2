@@ -46,6 +46,9 @@ public class ClassTraversal {
         void processClass(String packageName, String shortClassName);
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ClassTraversal() {
     }
 

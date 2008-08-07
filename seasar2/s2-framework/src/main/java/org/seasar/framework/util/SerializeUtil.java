@@ -34,6 +34,9 @@ public class SerializeUtil {
 
     private static final int BYTE_ARRAY_SIZE = 8 * 1024;
 
+    /**
+     * インスタンスを構築します。
+     */
     protected SerializeUtil() {
     }
 

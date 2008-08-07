@@ -39,6 +39,9 @@ public class BeanDescFactory {
         initialize();
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected BeanDescFactory() {
     }
 

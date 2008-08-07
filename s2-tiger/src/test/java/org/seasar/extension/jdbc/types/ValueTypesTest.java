@@ -90,6 +90,9 @@ public class ValueTypesTest extends TestCase {
         assertSame(valueType, ValueTypes.getValueType(MyEnum.class));
     }
 
+    /**
+     * @throws Exception
+     */
     public void tearDownEnum_CustomValueType() throws Exception {
         ValueTypes.setEnumDefaultValueType(EnumOrdinalType.class);
     }

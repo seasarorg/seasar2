@@ -29,6 +29,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class FileOutputStreamUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected FileOutputStreamUtil() {
     }
 

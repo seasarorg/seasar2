@@ -25,6 +25,9 @@ import java.text.SimpleDateFormat;
  */
 public class FloatConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected FloatConversionUtil() {
     }
 

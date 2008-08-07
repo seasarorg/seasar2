@@ -29,6 +29,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class JarInputStreamUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected JarInputStreamUtil() {
     }
 

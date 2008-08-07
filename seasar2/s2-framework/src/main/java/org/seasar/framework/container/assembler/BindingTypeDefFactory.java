@@ -62,6 +62,9 @@ public class BindingTypeDefFactory {
         addBindingTypeDef(NONE);
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected BindingTypeDefFactory() {
     }
 

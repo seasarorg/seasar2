@@ -31,11 +31,21 @@ import org.seasar.framework.util.StringUtil;
  */
 public class PropertyTypeUtil {
 
+    /** カラム名に含まれるアンダースコアを維持してプロパティ名とする場合は<code>true</code>です。 */
     protected static boolean preserveUnderscore = false;
 
+    /**
+     * インスタンスを構築します。
+     */
     protected PropertyTypeUtil() {
     }
 
+    /**
+     * カラム名に含まれるアンダースコアを維持してプロパティ名とする場合は<code>true</code>を設定します。
+     * 
+     * @param preserve
+     *            カラム名に含まれるアンダースコアを維持してプロパティ名とする場合は<code>true</code>
+     */
     public static void setPreserveUnderscore(final boolean preserve) {
         preserveUnderscore = preserve;
     }

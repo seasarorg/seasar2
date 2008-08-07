@@ -25,6 +25,9 @@ import java.text.SimpleDateFormat;
  */
 public class ByteConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ByteConversionUtil() {
     }
 

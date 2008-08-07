@@ -32,6 +32,9 @@ import org.seasar.framework.exception.ParseRuntimeException;
  */
 public class DateConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DateConversionUtil() {
     }
 

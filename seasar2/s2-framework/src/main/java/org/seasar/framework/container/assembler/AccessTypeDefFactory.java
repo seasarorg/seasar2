@@ -39,6 +39,9 @@ public class AccessTypeDefFactory {
      */
     public static final AccessTypeDef FIELD = new AccessTypeFieldDef();
 
+    /**
+     * インスタンスを構築します。
+     */
     protected AccessTypeDefFactory() {
     }
 

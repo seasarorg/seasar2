@@ -35,6 +35,9 @@ public class UUID {
     private static String _base = StringUtil.toHex(getAddress())
             + StringUtil.toHex(System.identityHashCode(_random));
 
+    /**
+     * インスタンスを構築します。
+     */
     protected UUID() {
     }
 

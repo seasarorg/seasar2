@@ -52,6 +52,9 @@ import java.util.concurrent.PriorityBlockingQueue;
  */
 public abstract class CollectionsUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected CollectionsUtil() {
     }
 

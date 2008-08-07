@@ -23,6 +23,9 @@ package org.seasar.framework.beans.util;
  */
 public class Beans {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected Beans() {
     }
 

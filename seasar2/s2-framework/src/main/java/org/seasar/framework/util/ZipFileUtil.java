@@ -31,6 +31,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class ZipFileUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ZipFileUtil() {
     }
 

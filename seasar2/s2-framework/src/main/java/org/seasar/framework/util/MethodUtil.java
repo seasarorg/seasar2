@@ -69,6 +69,9 @@ public class MethodUtil {
      */
     protected static final Method GET_ELEMENT_TYPE_OF_SET_FROM_RETURN_METHOD = getElementTypeFromReturnMethod("Set");
 
+    /**
+     * インスタンスを構築します。
+     */
     protected MethodUtil() {
     }
 

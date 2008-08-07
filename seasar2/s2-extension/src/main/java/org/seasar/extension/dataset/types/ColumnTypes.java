@@ -129,6 +129,9 @@ public class ColumnTypes {
         registerColumnType(Types.VARCHAR, STRING);
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ColumnTypes() {
     }
 

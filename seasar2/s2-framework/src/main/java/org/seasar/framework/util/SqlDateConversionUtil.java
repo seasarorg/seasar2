@@ -25,6 +25,9 @@ import java.sql.Date;
  */
 public class SqlDateConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected SqlDateConversionUtil() {
     }
 

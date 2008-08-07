@@ -29,6 +29,9 @@ import org.seasar.framework.exception.SQLRuntimeException;
  */
 public class PreparedStatementUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected PreparedStatementUtil() {
     }
 

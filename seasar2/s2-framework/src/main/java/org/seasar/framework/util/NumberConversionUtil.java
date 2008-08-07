@@ -28,6 +28,9 @@ import java.util.Locale;
  */
 public class NumberConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected NumberConversionUtil() {
     }
 

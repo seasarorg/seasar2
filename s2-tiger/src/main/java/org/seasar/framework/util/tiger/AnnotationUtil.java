@@ -31,6 +31,9 @@ import org.seasar.framework.util.MethodUtil;
  */
 public class AnnotationUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected AnnotationUtil() {
     }
 

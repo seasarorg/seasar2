@@ -32,6 +32,9 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  */
 public class BeanUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected BeanUtil() {
     }
 

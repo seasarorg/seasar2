@@ -32,6 +32,9 @@ import org.seasar.framework.exception.SystemRuntimeException;
  */
 public class TransactionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected TransactionUtil() {
     }
 

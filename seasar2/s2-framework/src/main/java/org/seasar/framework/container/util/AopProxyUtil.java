@@ -31,6 +31,9 @@ import org.seasar.framework.container.ContainerConstants;
  */
 public class AopProxyUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected AopProxyUtil() {
     }
 

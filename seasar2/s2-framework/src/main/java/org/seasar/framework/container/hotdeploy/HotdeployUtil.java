@@ -38,6 +38,9 @@ public class HotdeployUtil {
 
     private static Boolean hotdeploy;
 
+    /**
+     * インスタンスを構築します。
+     */
     protected HotdeployUtil() {
     }
 

@@ -69,6 +69,9 @@ public class AutoBindingDefFactory {
         addAutoBindingDef(SEMIAUTO);
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected AutoBindingDefFactory() {
     }
 

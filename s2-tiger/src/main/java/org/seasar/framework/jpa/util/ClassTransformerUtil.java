@@ -29,6 +29,9 @@ import org.seasar.framework.exception.IllegalClassFormatRuntimeException;
  */
 public class ClassTransformerUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ClassTransformerUtil() {
     }
 

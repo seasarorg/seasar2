@@ -25,6 +25,9 @@ import java.util.Locale;
  */
 public class LocaleUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected LocaleUtil() {
     }
 

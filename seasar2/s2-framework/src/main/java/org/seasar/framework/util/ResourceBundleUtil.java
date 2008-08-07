@@ -30,6 +30,9 @@ import java.util.ResourceBundle;
  */
 public class ResourceBundleUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ResourceBundleUtil() {
     }
 

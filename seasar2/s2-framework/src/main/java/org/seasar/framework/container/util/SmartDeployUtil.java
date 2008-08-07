@@ -34,6 +34,9 @@ import org.seasar.framework.util.FieldUtil;
  */
 public class SmartDeployUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected SmartDeployUtil() {
     }
 

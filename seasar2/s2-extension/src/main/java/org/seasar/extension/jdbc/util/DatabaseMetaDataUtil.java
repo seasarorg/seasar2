@@ -34,6 +34,9 @@ import org.seasar.framework.util.CaseInsensitiveSet;
  */
 public class DatabaseMetaDataUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DatabaseMetaDataUtil() {
     }
 

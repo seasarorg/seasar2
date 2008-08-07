@@ -29,6 +29,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class InputStreamReaderUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected InputStreamReaderUtil() {
     }
 

@@ -43,6 +43,9 @@ public class BigDecimalConversionUtil {
         }
     }
 
+    /**
+     * インスタンスを構築します。
+     */
     protected BigDecimalConversionUtil() {
     }
 

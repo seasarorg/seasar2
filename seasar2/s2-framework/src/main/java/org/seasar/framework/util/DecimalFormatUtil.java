@@ -27,6 +27,9 @@ import java.util.Locale;
  */
 public class DecimalFormatUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DecimalFormatUtil() {
     }
 

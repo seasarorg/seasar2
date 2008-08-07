@@ -30,6 +30,9 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  */
 public class ConstructorUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected ConstructorUtil() {
     }
 

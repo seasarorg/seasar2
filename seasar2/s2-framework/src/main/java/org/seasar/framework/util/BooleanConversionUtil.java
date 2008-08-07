@@ -23,6 +23,9 @@ package org.seasar.framework.util;
  */
 public class BooleanConversionUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected BooleanConversionUtil() {
     }
 

@@ -32,6 +32,9 @@ import org.seasar.framework.exception.OgnlRuntimeException;
  */
 public class OgnlUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected OgnlUtil() {
     }
 

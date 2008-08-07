@@ -35,6 +35,9 @@ public class BindVariableUtil {
 
     private static final String NULL = "null";
 
+    /**
+     * インスタンスを構築します。
+     */
     protected BindVariableUtil() {
     }
 

@@ -33,6 +33,9 @@ import org.xml.sax.SAXException;
  */
 public class DocumentBuilderUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected DocumentBuilderUtil() {
     }
 

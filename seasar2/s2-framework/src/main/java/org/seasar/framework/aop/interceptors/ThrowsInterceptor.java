@@ -33,6 +33,8 @@ import org.seasar.framework.util.MethodUtil;
  */
 public abstract class ThrowsInterceptor extends AbstractInterceptor {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * {@link ThrowsInterceptor}の実装クラスが実装しなければいけないメソッド名です。
      */

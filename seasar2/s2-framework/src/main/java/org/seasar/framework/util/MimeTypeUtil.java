@@ -28,6 +28,9 @@ import org.seasar.framework.exception.IORuntimeException;
  */
 public class MimeTypeUtil {
 
+    /**
+     * インスタンスを構築します。
+     */
     protected MimeTypeUtil() {
     }
 
