@@ -36,6 +36,13 @@ public class PropertyTypeUtilTest extends S2TestCase {
         include("j2ee.dicon");
     }
 
+    
+    protected void tearDown() throws Exception {
+        PropertyTypeUtil.setPreserveUnderscore(false);
+        super.tearDown();
+    }
+
+
     /**
      * 
      * @throws Exception
@@ -51,6 +58,35 @@ public class PropertyTypeUtilTest extends S2TestCase {
                 assertEquals(2, propertyTypes.length);
                 PropertyType p = propertyTypes[0];
                 assertEquals("dname", p.getPropertyName().toLowerCase());
+                assertEquals("d_name", p.getColumnName().toLowerCase());
+                p = propertyTypes[1];
+                assertEquals("active", p.getPropertyName().toLowerCase());
+                assertEquals("active", p.getColumnName().toLowerCase());
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+        } finally {
+            ps.close();
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testCreatePropertyTypes_preserveUnderscore() throws Exception {
+        PropertyTypeUtil.setPreserveUnderscore(true);
+
+        PreparedStatement ps = ConnectionUtil.prepareStatement(getConnection(),
+                "select d_name, active from dept3");
+        try {
+            ResultSet rs = ps.executeQuery();
+            try {
+                PropertyType[] propertyTypes = PropertyTypeUtil
+                        .createPropertyTypes(rs.getMetaData());
+                assertEquals(2, propertyTypes.length);
+                PropertyType p = propertyTypes[0];
+                assertEquals("d_name", p.getPropertyName().toLowerCase());
                 assertEquals("d_name", p.getColumnName().toLowerCase());
                 p = propertyTypes[1];
                 assertEquals("active", p.getPropertyName().toLowerCase());

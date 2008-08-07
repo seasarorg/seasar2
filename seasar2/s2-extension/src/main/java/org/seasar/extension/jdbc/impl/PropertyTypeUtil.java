@@ -31,7 +31,13 @@ import org.seasar.framework.util.StringUtil;
  */
 public class PropertyTypeUtil {
 
+    protected static boolean preserveUnderscore = false;
+
     protected PropertyTypeUtil() {
+    }
+
+    public static void setPreserveUnderscore(final boolean preserve) {
+        preserveUnderscore = preserve;
     }
 
     /**
@@ -50,7 +56,8 @@ public class PropertyTypeUtil {
         PropertyType[] propertyTypes = new PropertyType[count];
         for (int i = 0; i < count; ++i) {
             String columnName = rsmd.getColumnLabel(i + 1);
-            String propertyName = StringUtil.replace(columnName, "_", "");
+            String propertyName = preserveUnderscore ? columnName : StringUtil
+                    .replace(columnName, "_", "");
             ValueType valueType = ValueTypes.getValueType(rsmd
                     .getColumnType(i + 1));
             propertyTypes[i] = new PropertyTypeImpl(propertyName, valueType,
