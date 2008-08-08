@@ -19,8 +19,6 @@ import java.sql.Statement;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.sql.DataSource;
-
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
@@ -35,11 +33,14 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 public abstract class AbstractPreAllocateIdGenerator extends
         AbstractIdGenerator {
 
+    /** {@link #idContextMap}に対するデフォルトのキー */
+    protected static String DEFAULT_ID_CONTEXT_KEY = IdContext.class.getName();
+
     /** 割り当てサイズ */
     protected final long allocationSize;
 
     /** IDコンテキストの{@link Map} */
-    protected ConcurrentMap<DataSource, IdContext> idContextMap = CollectionsUtil
+    protected ConcurrentMap<String, IdContext> idContextMap = CollectionsUtil
             .newConcurrentHashMap();
 
     /**
@@ -91,12 +92,13 @@ public abstract class AbstractPreAllocateIdGenerator extends
      * @return IDコンテキスト
      */
     protected IdContext getIdContext(final JdbcManagerImplementor jdbcManager) {
-        final DataSource ds = jdbcManager.getDataSource();
-        final IdContext context = idContextMap.get(ds);
+        final String dsName = jdbcManager.getSelectableDataSourceName();
+        final String key = dsName != null ? dsName : DEFAULT_ID_CONTEXT_KEY;
+        final IdContext context = idContextMap.get(key);
         if (context != null) {
             return context;
         }
-        return CollectionsUtil.putIfAbsent(idContextMap, ds, new IdContext());
+        return CollectionsUtil.putIfAbsent(idContextMap, key, new IdContext());
     }
 
     /**

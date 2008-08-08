@@ -24,6 +24,7 @@ import javax.transaction.Status;
 import javax.transaction.Synchronization;
 import javax.transaction.TransactionSynchronizationRegistry;
 
+import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.extension.jdbc.AutoBatchDelete;
 import org.seasar.extension.jdbc.AutoBatchInsert;
 import org.seasar.extension.jdbc.AutoBatchUpdate;
@@ -69,6 +70,8 @@ import org.seasar.extension.jdbc.query.SqlProcedureCallImpl;
 import org.seasar.extension.jdbc.query.SqlSelectImpl;
 import org.seasar.extension.jdbc.query.SqlUpdateImpl;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.framework.container.annotation.tiger.Binding;
+import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
 
@@ -85,6 +88,11 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
      * トランザクション同期レジストリです。
      */
     protected TransactionSynchronizationRegistry syncRegistry;
+
+    /**
+     * データソースのファクトリです。
+     */
+    protected DataSourceFactory dataSourceFactory;
 
     /**
      * データソースです。
@@ -374,6 +382,13 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
         return ctx;
     }
 
+    public String getSelectableDataSourceName() {
+        if (dataSourceFactory == null) {
+            return null;
+        }
+        return dataSourceFactory.getSelectableDataSourceName();
+    }
+
     /**
      * 現在のトランザクションに関連づけられたJDBCコンテキストを返します。
      * 
@@ -381,8 +396,9 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
      */
     protected JdbcContext getTxBoundJdbcContext() {
         if (hasTransaction()) {
+            final JdbcContextRegistryKey key = createJdbcContextRegistryKey();
             final JdbcContext ctx = JdbcContext.class.cast(syncRegistry
-                    .getResource(this));
+                    .getResource(key));
             if (ctx != null) {
                 return ctx;
             }
@@ -397,9 +413,19 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
      *            現在のトランザクションに関連づけるJDBCコンテキスト
      */
     protected void setTxBoundJdbcContext(final JdbcContext ctx) {
-        syncRegistry.putResource(this, ctx);
+        final JdbcContextRegistryKey key = createJdbcContextRegistryKey();
+        syncRegistry.putResource(key, ctx);
         syncRegistry.registerInterposedSynchronization(new SynchronizationImpl(
                 ctx));
+    }
+
+    /**
+     * JDBCコンテキストの登録キーを作成します。
+     * 
+     * @return JDBCコンテキストの登録キー
+     */
+    protected JdbcContextRegistryKey createJdbcContextRegistryKey() {
+        return new JdbcContextRegistryKey(getSelectableDataSourceName());
     }
 
     /**
@@ -532,6 +558,25 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
     }
 
     /**
+     * データソースファクトリを返します。
+     * 
+     * @return 存在する場合はデータソースファクトリ、存在しない場合は <code>null</code>
+     */
+    public DataSourceFactory getDataSourceFactory() {
+        return dataSourceFactory;
+    }
+
+    /**
+     * データソースファクトリを設定します。
+     * 
+     * @param dataSourceFactory
+     */
+    @Binding(bindingType = BindingType.MAY)
+    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
+        this.dataSourceFactory = dataSourceFactory;
+    }
+
+    /**
      * データベースの方言を返します。
      * 
      * @return データベースの方言
@@ -609,6 +654,68 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
 
         public void afterCompletion(final int status) {
             context.destroy();
+        }
+
+    }
+
+    /**
+     * JDBCコンテキストを{@link TransactionSynchronizationRegistry}に登録する際のキーです。
+     * 
+     * @author taedium
+     */
+    public class JdbcContextRegistryKey {
+
+        /** データソース名 */
+        protected String dataSourceName;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param dataSourceName
+         *            データソース名
+         */
+        public JdbcContextRegistryKey(String dataSourceName) {
+            this.dataSourceName = dataSourceName;
+        }
+
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + getOuterType().hashCode();
+            result = prime
+                    * result
+                    + ((dataSourceName == null) ? 0 : dataSourceName.hashCode());
+            return result;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            JdbcContextRegistryKey other = (JdbcContextRegistryKey) obj;
+            if (!getOuterType().equals(other.getOuterType())) {
+                return false;
+            }
+            if (dataSourceName == null) {
+                if (other.dataSourceName != null) {
+                    return false;
+                }
+            } else if (!dataSourceName.equals(other.dataSourceName)) {
+                return false;
+            }
+            return true;
+        }
+
+        private JdbcManagerImpl getOuterType() {
+            return JdbcManagerImpl.this;
         }
 
     }

@@ -22,6 +22,7 @@ import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.datasource.impl.DataSourceFactoryImpl;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
@@ -503,6 +504,40 @@ public class JdbcManagerImplTest extends TestCase {
         SynchronizationImpl sync = SynchronizationImpl.class.cast(tx
                 .getInterposedSynchronizations().get(0));
         assertSame(manager.getJdbcContext(), sync.context);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testGetJdbcContext_tx_dataSourceFactory() throws Exception {
+        DataSourceFactoryImpl dataSourceFactory = new DataSourceFactoryImpl();
+        manager.setDataSourceFactory(dataSourceFactory);
+        transactionManager.begin();
+
+        dataSourceFactory.setSelectableDataSourceName("hoge");
+        JdbcContext hogeCtx = manager.getJdbcContext();
+        assertNotNull(hogeCtx);
+        assertTrue(hogeCtx.isTransactional());
+        assertSame(hogeCtx, manager.getJdbcContext());
+        assertEquals("hoge", manager.getSelectableDataSourceName());
+
+        dataSourceFactory.setSelectableDataSourceName("foo");
+        JdbcContext fooCtx = manager.getJdbcContext();
+        assertNotNull(fooCtx);
+        assertTrue(fooCtx.isTransactional());
+        assertSame(fooCtx, manager.getJdbcContext());
+        assertEquals("foo", manager.getSelectableDataSourceName());
+
+        TransactionImpl tx = (TransactionImpl) transactionManager
+                .getTransaction();
+        assertEquals(2, tx.getInterposedSynchronizations().size());
+        SynchronizationImpl sync = SynchronizationImpl.class.cast(tx
+                .getInterposedSynchronizations().get(0));
+        assertSame(hogeCtx, sync.context);
+        sync = SynchronizationImpl.class.cast(tx
+                .getInterposedSynchronizations().get(1));
+        assertSame(fooCtx, sync.context);
     }
 
     /**

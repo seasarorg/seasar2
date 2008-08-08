@@ -45,6 +45,13 @@ public interface JdbcManagerImplementor {
     DataSource getDataSource();
 
     /**
+     * 動的なデータソース名を返します。
+     * 
+     * @return 存在する場合は動的なデータソース名、存在しない場合は <code>null</code>
+     */
+    String getSelectableDataSourceName();
+
+    /**
      * データベースの方言を返します。
      * 
      * @return データベースの方言
