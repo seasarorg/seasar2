@@ -23,6 +23,7 @@ import java.sql.Statement;
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
@@ -110,10 +111,16 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
                 entityMeta.getTableMeta().getName(),
                 propertyMeta.getColumnMeta().getName());
         sqlLogger.logSql(sql);
-        final PreparedStatement ps = jdbcManager.getJdbcContext()
-                .getPreparedStatement(sql);
-        final ResultSet rs = PreparedStatementUtil.executeQuery(ps);
-        return getGeneratedId(rs);
+        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
+        try {
+            final PreparedStatement ps = jdbcContext.getPreparedStatement(sql);
+            final ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+            return getGeneratedId(rs);
+        } finally {
+            if (!jdbcContext.isTransactional()) {
+                jdbcContext.destroy();
+            }
+        }
     }
 
 }

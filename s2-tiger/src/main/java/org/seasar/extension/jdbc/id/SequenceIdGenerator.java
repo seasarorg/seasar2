@@ -22,6 +22,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -62,13 +63,19 @@ public class SequenceIdGenerator extends AbstractPreAllocateIdGenerator {
         final String sql = jdbcManager.getDialect().getSequenceNextValString(
                 sequenceName, (int) allocationSize);
         sqlLogger.logSql(sql);
-        final PreparedStatement ps = jdbcManager.getJdbcContext()
-                .getPreparedStatement(sql);
-        final ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+        final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
-            return getGeneratedId(rs);
+            final PreparedStatement ps = jdbcContext.getPreparedStatement(sql);
+            final ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+            try {
+                return getGeneratedId(rs);
+            } finally {
+                ResultSetUtil.close(rs);
+            }
         } finally {
-            ResultSetUtil.close(rs);
+            if (!jdbcContext.isTransactional()) {
+                jdbcContext.destroy();
+            }
         }
     }
 
