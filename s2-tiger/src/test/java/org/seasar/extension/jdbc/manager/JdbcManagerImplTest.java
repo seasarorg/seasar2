@@ -18,11 +18,14 @@ package org.seasar.extension.jdbc.manager;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
+import org.seasar.extension.datasource.DataSourceFactory;
 import org.seasar.extension.datasource.impl.DataSourceFactoryImpl;
+import org.seasar.extension.datasource.impl.SelectableDataSourceProxy;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
@@ -510,9 +513,13 @@ public class JdbcManagerImplTest extends TestCase {
      * 
      * @throws Exception
      */
-    public void testGetJdbcContext_tx_dataSourceFactory() throws Exception {
-        DataSourceFactoryImpl dataSourceFactory = new DataSourceFactoryImpl();
+    public void testGetJdbcContext_tx_selectableDataSource() throws Exception {
+        DataSourceFactory dataSourceFactory = new MockDataSourceFactory();
+        SelectableDataSourceProxy dataSource = new SelectableDataSourceProxy();
+        dataSource.setDataSourceFactory(dataSourceFactory);
+        manager.setDataSource(dataSource);
         manager.setDataSourceFactory(dataSourceFactory);
+
         transactionManager.begin();
 
         dataSourceFactory.setSelectableDataSourceName("hoge");
@@ -563,5 +570,17 @@ public class JdbcManagerImplTest extends TestCase {
         assertNotNull(ctx);
         assertFalse(ctx.isTransactional());
         assertNotSame(ctx, manager.getJdbcContext());
+    }
+
+    /**
+     * 
+     * @author taedium
+     */
+    public static class MockDataSourceFactory extends DataSourceFactoryImpl {
+
+        @Override
+        public DataSource getDataSource(String name) {
+            return new MockDataSource();
+        }
     }
 }

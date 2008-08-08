@@ -25,6 +25,7 @@ import javax.transaction.Synchronization;
 import javax.transaction.TransactionSynchronizationRegistry;
 
 import org.seasar.extension.datasource.DataSourceFactory;
+import org.seasar.extension.datasource.impl.SelectableDataSourceProxy;
 import org.seasar.extension.jdbc.AutoBatchDelete;
 import org.seasar.extension.jdbc.AutoBatchInsert;
 import org.seasar.extension.jdbc.AutoBatchUpdate;
@@ -383,10 +384,21 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
     }
 
     public String getSelectableDataSourceName() {
-        if (dataSourceFactory == null) {
-            return null;
+        return getSelectableDataSourceNameInternal();
+    }
+
+    /**
+     * 動的なデータソース名を返します。
+     * 
+     * @return 存在する場合は動的なデータソース名、存在しない場合は <code>null</code>
+     */
+    protected String getSelectableDataSourceNameInternal() {
+        if (dataSource instanceof SelectableDataSourceProxy) {
+            if (dataSourceFactory != null) {
+                return dataSourceFactory.getSelectableDataSourceName();
+            }
         }
-        return dataSourceFactory.getSelectableDataSourceName();
+        return null;
     }
 
     /**
@@ -425,7 +437,7 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
      * @return JDBCコンテキストの登録キー
      */
     protected JdbcContextRegistryKey createJdbcContextRegistryKey() {
-        return new JdbcContextRegistryKey(getSelectableDataSourceName());
+        return new JdbcContextRegistryKey(getSelectableDataSourceNameInternal());
     }
 
     /**
