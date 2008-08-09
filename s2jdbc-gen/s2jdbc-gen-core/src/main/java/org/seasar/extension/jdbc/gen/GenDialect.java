@@ -150,6 +150,12 @@ public interface GenDialect {
      */
     SqlBlockContext createSqlBlockContext();
 
+    boolean supportsIdentityInsert();
+
+    String getIdentityInsertOnStatement(String tableName);
+
+    String getIdentityInsertOffStatement(String tableName);
+
     /**
      * カラム型です。
      * <p>

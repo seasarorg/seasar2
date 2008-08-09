@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.sql;
 import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.util.StatementUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -106,12 +108,12 @@ public class LoaderImpl implements Loader {
         for (TableDesc tableDesc : tableDescList) {
             File dumpFile = dumpFileMap.get(tableDesc.getFullName());
             if (dumpFile != null) {
-                loadDumpFile(sqlExecutionContext, tableDesc, dumpFile);
+                loadFile(sqlExecutionContext, tableDesc, dumpFile);
             }
         }
     }
 
-    protected void loadDumpFile(SqlExecutionContext sqlExecutionContext,
+    protected void loadFile(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, File dumpFile) {
         DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
                 tokenizer);
@@ -124,24 +126,9 @@ public class LoaderImpl implements Loader {
                     columnNameList);
             String sql = buildSql(tableDesc, columnNameList);
             try {
-                PreparedStatement ps = sqlExecutionContext
-                        .getPreparedStatement(sql);
-                List<String> valueList = null;
-                boolean remaining = false;
-                for (int i = 0; (valueList = reader.readLine()) != null; i++) {
-                    logger.log("DS2JDBCGen0007", new Object[] { sql });
-                    bindArgs(ps, sqlTypeList, valueList);
-                    PreparedStatementUtil.addBatch(ps);
-                    if (batchSize > 0 && (i + 1) % batchSize == 0) {
-                        PreparedStatementUtil.executeBatch(ps);
-                        remaining = false;
-                    } else {
-                        remaining = true;
-                    }
-                }
-                if (remaining) {
-                    PreparedStatementUtil.executeBatch(ps);
-                }
+                preLoadData(sqlExecutionContext, tableDesc);
+                loadData(sqlExecutionContext, reader, sqlTypeList, sql);
+                postLoadData(sqlExecutionContext, tableDesc);
             } catch (SQLRuntimeException e) {
                 sqlExecutionContext.notifyException();
                 if (dialect.isTableNotFound(e)) {
@@ -154,6 +141,67 @@ public class LoaderImpl implements Loader {
         } finally {
             reader.close();
         }
+    }
+
+    /**
+     * @param sqlExecutionContext
+     * @param tableDesc
+     */
+    private void preLoadData(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc) {
+        if (tableDesc.hasIdentityColumn() && dialect.supportsIdentityInsert()) {
+            Statement statement = sqlExecutionContext.getStatement();
+            String sql = dialect.getIdentityInsertOnStatement(tableDesc
+                    .getFullName());
+            logSql(sql);
+            StatementUtil.execute(statement, sql);
+        }
+    }
+
+    /**
+     * @param sqlExecutionContext
+     * @param reader
+     * @param sqlTypeList
+     * @param sql
+     */
+    private void loadData(SqlExecutionContext sqlExecutionContext,
+            DumpFileReader reader, List<SqlType> sqlTypeList, String sql) {
+        PreparedStatement ps = sqlExecutionContext.getPreparedStatement(sql);
+        List<String> valueList = null;
+        boolean remaining = false;
+        for (int i = 0; (valueList = reader.readLine()) != null; i++) {
+            logSql(sql);
+            bindArgs(ps, sqlTypeList, valueList);
+            PreparedStatementUtil.addBatch(ps);
+            if (batchSize > 0 && (i + 1) % batchSize == 0) {
+                PreparedStatementUtil.executeBatch(ps);
+                remaining = false;
+            } else {
+                remaining = true;
+            }
+        }
+        if (remaining) {
+            PreparedStatementUtil.executeBatch(ps);
+        }
+    }
+
+    /**
+     * @param sqlExecutionContext
+     * @param tableDesc
+     */
+    private void postLoadData(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc) {
+        if (tableDesc.hasIdentityColumn() && dialect.supportsIdentityInsert()) {
+            Statement statement = sqlExecutionContext.getStatement();
+            String sql = dialect.getIdentityInsertOffStatement(tableDesc
+                    .getFullName());
+            logSql(sql);
+            StatementUtil.execute(statement, sql);
+        }
+    }
+
+    protected void logSql(String sql) {
+        logger.log("DS2JDBCGen0007", new Object[] { sql });
     }
 
     protected void bindArgs(PreparedStatement ps, List<SqlType> sqlTypeList,

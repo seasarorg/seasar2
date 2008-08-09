@@ -118,6 +118,21 @@ public class MssqlGenDialect extends StandardGenDialect {
         return new MssqlSqlBlockContext();
     }
 
+    @Override
+    public boolean supportsIdentityInsert() {
+        return true;
+    }
+
+    @Override
+    public String getIdentityInsertOnStatement(String tableName) {
+        return "set identity_insert " + tableName + " on";
+    }
+
+    @Override
+    public String getIdentityInsertOffStatement(String tableName) {
+        return "set identity_insert " + tableName + " off";
+    }
+
     /**
      * MS SQL Server用の{@link ColumnType}の実装です。
      * 

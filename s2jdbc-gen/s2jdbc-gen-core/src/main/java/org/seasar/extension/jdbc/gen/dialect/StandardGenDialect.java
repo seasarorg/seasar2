@@ -172,6 +172,18 @@ public class StandardGenDialect implements GenDialect {
         return new StandardSqlBlockContext();
     }
 
+    public boolean supportsIdentityInsert() {
+        return false;
+    }
+
+    public String getIdentityInsertOnStatement(String tableName) {
+        throw new UnsupportedOperationException("getIdentityInsertOnStatement");
+    }
+
+    public String getIdentityInsertOffStatement(String tableName) {
+        throw new UnsupportedOperationException("getIdentityInsertOffStatement");
+    }
+
     /**
      * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
      * <p>

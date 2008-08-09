@@ -268,6 +268,15 @@ public class TableDesc {
         throw new ColumnDescNotFoundRuntimeException(columnName, getFullName());
     }
 
+    public boolean hasIdentityColumn() {
+        for (ColumnDesc columnDesc : columnDescList) {
+            if (columnDesc.isIdentity()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public int hashCode() {
         return key.hashCode();
