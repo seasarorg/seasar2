@@ -132,7 +132,6 @@ public class SqlFileReaderImpl implements SqlFileReader {
      * @throws IOException
      */
     protected BufferedReader createBufferedReader() throws IOException {
-        logger.log("DS2JDBCGen0006", new Object[] { sqlFile.getName() });
         InputStream is = new FileInputStream(sqlFile);
         return new BufferedReader(new InputStreamReader(is, sqlFileEncoding));
     }

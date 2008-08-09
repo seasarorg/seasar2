@@ -15,8 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -41,13 +44,32 @@ public class MigrateCommandTest {
      * @throws Exception
      */
     @Test
+    public void testValidate() throws Exception {
+        MigrateCommand command = new MigrateCommand();
+        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        try {
+            command.validate();
+            fail();
+        } catch (RequiredPropertyNullRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testFactoryMethod() throws Exception {
         MigrateCommand command = new MigrateCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        command.setClasspathDir(new File("dir"));
+        command.validate();
         command.init();
         assertNotNull(command.createSchemaVersion());
         assertNotNull(command.createDdlVersion());
         assertNotNull(command.createSqlFileExecutor());
         assertNotNull(command.createSqlExecutionContext());
+        assertNotNull(command.createEntityMetaReader());
+        assertNotNull(command.createTableDescFactory());
     }
 }

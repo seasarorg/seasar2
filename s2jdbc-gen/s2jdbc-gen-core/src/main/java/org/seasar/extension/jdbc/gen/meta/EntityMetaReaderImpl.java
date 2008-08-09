@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
@@ -36,8 +37,12 @@ import org.seasar.framework.util.ClassTraversal.ClassHandler;
  */
 public class EntityMetaReaderImpl implements EntityMetaReader {
 
+    /** ロガー */
+    protected static Logger logger = Logger
+            .getLogger(EntityMetaReaderImpl.class);
+
     /** ルートディレクトリ */
-    protected File rootDir;
+    protected File classpathDir;
 
     /** 読み取り対象とするパッケージ名 */
     protected String packageName;
@@ -54,7 +59,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     /**
      * インタスタンスを構築します。
      * 
-     * @param rootDir
+     * @param classpathDir
      *            ルートディレクトリ
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
@@ -65,11 +70,11 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      * @param ignoreEntityNamePattern
      *            対象としないエンティティ名の正規表現
      */
-    public EntityMetaReaderImpl(File rootDir, String packageName,
+    public EntityMetaReaderImpl(File classpathDir, String packageName,
             EntityMetaFactory entityMetaFactory, String entityNamePattern,
             String ignoreEntityNamePattern) {
-        if (rootDir == null) {
-            throw new NullPointerException("rootDir");
+        if (classpathDir == null) {
+            throw new NullPointerException("classpathDir");
         }
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
@@ -80,7 +85,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (ignoreEntityNamePattern == null) {
             throw new NullPointerException("ignoreEntityNamePattern");
         }
-        this.rootDir = rootDir;
+        this.classpathDir = classpathDir;
         this.packageName = packageName;
         this.entityMetaFactory = entityMetaFactory;
         this.entityNamePattern = Pattern.compile(entityNamePattern);
@@ -90,7 +95,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     public List<EntityMeta> read() {
         final List<EntityMeta> entityMetaList = new ArrayList<EntityMeta>();
 
-        ClassTraversal.forEach(rootDir, new ClassHandler() {
+        ClassTraversal.forEach(classpathDir, new ClassHandler() {
 
             public void processClass(String packageName, String shortClassName) {
                 if (isTargetClass(packageName, shortClassName)) {
@@ -108,6 +113,11 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
             }
         });
 
+        if (entityMetaList.isEmpty()) {
+            logger.log("ES2JDBCGen0014", new Object[] { classpathDir.getPath(),
+                    packageName, entityNamePattern.pattern(),
+                    ignoreEntityNamePattern.pattern() });
+        }
         return entityMetaList;
     }
 

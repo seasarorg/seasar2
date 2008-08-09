@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,14 +24,39 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.DdlVersion;
+import org.seasar.extension.jdbc.gen.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.FileHandler;
+import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Generator;
+import org.seasar.extension.jdbc.gen.IdTableDescFactory;
+import org.seasar.extension.jdbc.gen.Loader;
+import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
 import org.seasar.extension.jdbc.gen.SchemaVersion;
+import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
+import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.TableDescFactory;
+import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.IdTableDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.SequenceDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.TableDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.migration.DumpFileHandler;
+import org.seasar.extension.jdbc.gen.migration.SqlFileHandler;
+import org.seasar.extension.jdbc.gen.sql.LoaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
@@ -42,6 +68,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * @author taedium
@@ -51,6 +78,21 @@ public class MigrateCommand extends AbstractCommand {
 
     /** ロガー */
     protected Logger logger = Logger.getLogger(MigrateCommand.class);
+
+    /** クラスパスのルートとなるディレクトリ */
+    protected File classpathDir;
+
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
+
+    /** エンティティクラスのパッケージ名 */
+    protected String entityPackageName = "entity";
+
+    /** 対象とするエンティティ名の正規表現 */
+    protected String entityNamePattern = ".*";
+
+    /** 対象としないエンティティ名の正規表現 */
+    protected String ignoreEntityNamePattern = "";
 
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
@@ -100,7 +142,8 @@ public class MigrateCommand extends AbstractCommand {
     /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
     protected String dropDirName = "drop";
 
-    protected String dumpTemplateFileName = "tsv.ftl";
+    /** ダンプファイルのエンコーディング */
+    protected String dumpFileEncoding = "UTF-8";
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -121,6 +164,17 @@ public class MigrateCommand extends AbstractCommand {
     protected DdlVersion ddlVersion;
 
     protected Generator generator;
+
+    /** エンティティメタデータのファクトリ */
+    protected EntityMetaFactory entityMetaFactory;
+
+    /** エンティティメタデータのリーダ */
+    protected EntityMetaReader entityMetaReader;
+
+    /** テーブル記述のファクトリ */
+    protected TableDescFactory tableDescFactory;
+
+    protected List<TableDesc> tableDescList;
 
     /**
      * @return Returns the statementDelimiter.
@@ -336,8 +390,101 @@ public class MigrateCommand extends AbstractCommand {
         this.version = version;
     }
 
+    /**
+     * @return Returns the classpathDir.
+     */
+    public File getClasspathDir() {
+        return classpathDir;
+    }
+
+    /**
+     * @param classpathDir
+     *            The classpathDir to set.
+     */
+    public void setClasspathDir(File classpathDir) {
+        this.classpathDir = classpathDir;
+    }
+
+    /**
+     * @return Returns the rootPackageName.
+     */
+    public String getRootPackageName() {
+        return rootPackageName;
+    }
+
+    /**
+     * @param rootPackageName
+     *            The rootPackageName to set.
+     */
+    public void setRootPackageName(String rootPackageName) {
+        this.rootPackageName = rootPackageName;
+    }
+
+    /**
+     * @return Returns the entityPackageName.
+     */
+    public String getEntityPackageName() {
+        return entityPackageName;
+    }
+
+    /**
+     * @param entityPackageName
+     *            The entityPackageName to set.
+     */
+    public void setEntityPackageName(String entityPackageName) {
+        this.entityPackageName = entityPackageName;
+    }
+
+    /**
+     * @return Returns the entityNamePattern.
+     */
+    public String getEntityNamePattern() {
+        return entityNamePattern;
+    }
+
+    /**
+     * @param entityNamePattern
+     *            The entityNamePattern to set.
+     */
+    public void setEntityNamePattern(String entityNamePattern) {
+        this.entityNamePattern = entityNamePattern;
+    }
+
+    /**
+     * @return Returns the ignoreEntityNamePattern.
+     */
+    public String getIgnoreEntityNamePattern() {
+        return ignoreEntityNamePattern;
+    }
+
+    /**
+     * @param ignoreEntityNamePattern
+     *            The ignoreEntityNamePattern to set.
+     */
+    public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
+        this.ignoreEntityNamePattern = ignoreEntityNamePattern;
+    }
+
+    /**
+     * @return Returns the dumpFileEncoding.
+     */
+    public String getDumpFileEncoding() {
+        return dumpFileEncoding;
+    }
+
+    /**
+     * @param dumpFileEncoding
+     *            The dumpFileEncoding to set.
+     */
+    public void setDumpFileEncoding(String dumpFileEncoding) {
+        this.dumpFileEncoding = dumpFileEncoding;
+    }
+
     @Override
     protected void doValidate() {
+        if (classpathDir == null) {
+            throw new RequiredPropertyNullRuntimeException("classpathDir");
+        }
     }
 
     @Override
@@ -348,11 +495,14 @@ public class MigrateCommand extends AbstractCommand {
 
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
+        entityMetaFactory = jdbcManager.getEntityMetaFactory();
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         sqlFileExecutor = createSqlFileExecutor();
         schemaVersion = createSchemaVersion();
         ddlVersion = createDdlVersion();
+        entityMetaReader = createEntityMetaReader();
+        tableDescFactory = createTableDescFactory();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -363,8 +513,8 @@ public class MigrateCommand extends AbstractCommand {
         int from = schemaVersion.getVersionNo();
         int to = "latest".equalsIgnoreCase(version) ? ddlVersion.getVersionNo()
                 : VersionUtil.toInt(version);
-        drop(from);
-        create(to);
+        dropSchema(from);
+        createSchema(to);
         logger.log("IS2JDBCGen0005", new Object[] { from, to });
     }
 
@@ -381,37 +531,11 @@ public class MigrateCommand extends AbstractCommand {
      * @param versionNo
      *            バージョン番号
      */
-    protected void drop(int versionNo) {
+    protected void dropSchema(int versionNo) {
         String versionName = VersionUtil.toString(versionNo, versionNoPattern);
         File versionDir = new File(migrateDir, versionName);
         File dropDir = new File(versionDir, dropDirName);
-        SqlExecutionContext context = createSqlExecutionContext();
-        try {
-            try {
-                dump(context);
-                for (File sqlFile : getSqlFileList(dropDir)) {
-                    sqlFileExecutor.execute(context, sqlFile);
-                }
-            } finally {
-                if (!context.getExceptionList().isEmpty()) {
-                    for (Exception e : context.getExceptionList()) {
-                        logger.error(e.getMessage());
-                    }
-                    throw context.getExceptionList().get(0);
-                }
-            }
-        } finally {
-            context.destroy();
-        }
-    }
-
-    /**
-     * データをダンプします。
-     * 
-     * @param context
-     *            SQLの実行コンテキスト
-     */
-    protected void dump(SqlExecutionContext context) {
+        handleDir(dropDir);
     }
 
     /**
@@ -420,19 +544,19 @@ public class MigrateCommand extends AbstractCommand {
      * @param versionNo
      *            バージョン番号
      */
-    protected void create(int versionNo) {
-        String versionDirName = VersionUtil.toString(versionNo,
-                versionNoPattern);
-        File versionDir = new File(migrateDir, versionDirName);
+    protected void createSchema(int versionNo) {
+        String versionName = VersionUtil.toString(versionNo, versionNoPattern);
+        File versionDir = new File(migrateDir, versionName);
         File createDir = new File(versionDir, createDirName);
+        handleDir(createDir);
+    }
+
+    protected void handleDir(File dir) {
         SqlExecutionContext context = createSqlExecutionContext();
         try {
             try {
-                for (File sqlFile : getSqlFileList(createDir)) {
-                    sqlFileExecutor.execute(context, sqlFile);
-                    if (sqlFile.getName().equals(createTableDdlFileName)) {
-                        load(context);
-                    }
+                for (FileHandler handler : createFileHandlerList(dir)) {
+                    handler.handle(context);
                 }
             } finally {
                 if (!context.getExceptionList().isEmpty()) {
@@ -447,47 +571,86 @@ public class MigrateCommand extends AbstractCommand {
         }
     }
 
-    /**
-     * データをロードします。
-     * 
-     * @param context
-     */
-    protected void load(SqlExecutionContext context) {
-    }
-
-    /**
-     * ディレクトリに存在するSQLファイルをリストとして返します。
-     * 
-     * @param dir
-     *            ディレクトリ
-     * @return SQLファイルのリスト
-     */
-    protected List<File> getSqlFileList(File dir) {
+    protected List<FileHandler> createFileHandlerList(File dir) {
         if (!dir.exists()) {
             logger.log("DS2JDBCGen0010", new Object[] { dir.getPath() });
             return Collections.emptyList();
         }
-        logger.log("DS2JDBCGen0011", new Object[] { dir.getPath() });
 
-        File[] files = dir.listFiles(new ExclusionFilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                if (super.accept(dir, name)) {
-                    return name.endsWith(".sql") || name.endsWith(".ddl");
-                }
-                return false;
-            }
-        });
-
-        List<File> list = Arrays.asList(files);
-        Collections.sort(list, new Comparator<File>() {
+        File[] files = dir.listFiles(new ExclusionFilenameFilter());
+        List<File> fileList = Arrays.asList(files);
+        Collections.sort(fileList, new Comparator<File>() {
 
             public int compare(File file1, File file2) {
                 return file1.getName().compareTo(file2.getName());
             }
         });
-        return list;
+
+        List<FileHandler> handlerList = new ArrayList<FileHandler>();
+        for (File file : fileList) {
+            if (file.isDirectory()) {
+                List<FileHandler> list = createFileHandlerList(file);
+                handlerList.addAll(list);
+            }
+            String name = file.getName();
+            if (name.endsWith(".sql") || name.endsWith(".ddl")) {
+                handlerList.add(new SqlFileHandler(file, sqlFileExecutor));
+            }
+            if (name.endsWith(".csv")) {
+                handlerList.add(new DumpFileHandler(file,
+                        createLoader(getTableDescList())));
+            }
+        }
+        return handlerList;
+    }
+
+    protected List<TableDesc> getTableDescList() {
+        if (tableDescList != null) {
+            return tableDescList;
+        }
+        List<EntityMeta> entityMetaList = entityMetaReader.read();
+        tableDescList = new ArrayList<TableDesc>();
+        for (EntityMeta entityMeta : entityMetaList) {
+            TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
+            if (!tableDescList.contains(tableDesc)) {
+                tableDescList.add(tableDesc);
+            }
+            for (TableDesc idTableDesc : tableDesc.getIdTableDescList()) {
+                if (!tableDescList.contains(idTableDesc)) {
+                    tableDescList.add(idTableDesc);
+                }
+            }
+        }
+        return tableDescList;
+    }
+
+    /**
+     * {@link EntityMetaReader}の実装を作成します。
+     * 
+     * @return {@link EntityMetaReader}の実装
+     */
+    protected EntityMetaReader createEntityMetaReader() {
+        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
+                rootPackageName, entityPackageName), entityMetaFactory,
+                entityNamePattern, ignoreEntityNamePattern);
+    }
+
+    /**
+     * {@link TableDescFactory}の実装を作成します。
+     * 
+     * @return {@link TableDescFactory}の実装
+     */
+    protected TableDescFactory createTableDescFactory() {
+        ColumnDescFactory colFactory = new ColumnDescFactoryImpl(dialect);
+        PrimaryKeyDescFactory pkFactory = new PrimaryKeyDescFactoryImpl(dialect);
+        UniqueKeyDescFactory ukFactory = new UniqueKeyDescFactoryImpl();
+        ForeignKeyDescFactory fkFactory = new ForeignKeyDescFactoryImpl(
+                entityMetaFactory);
+        SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
+        IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
+                colFactory, pkFactory, ukFactory);
+        return new TableDescFactoryImpl(colFactory, pkFactory, ukFactory,
+                fkFactory, seqFactory, idTabFactory);
     }
 
     /**
@@ -526,6 +689,10 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected SqlExecutionContext createSqlExecutionContext() {
         return new SqlExecutionContextImpl(dataSource, haltOnError);
+    }
+
+    protected Loader createLoader(List<TableDesc> tableDescList) {
+        return new LoaderImpl(dialect, dumpFileEncoding, tableDescList);
     }
 
     @Override

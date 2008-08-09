@@ -15,13 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
 
 /**
  * @author taedium
  * 
  */
-public interface Loader {
+public interface FileHandler {
 
-    void load(SqlExecutionContext sqlExecutionContext, File dumpFile);
+    void handle(SqlExecutionContext sqlExecutionContext);
 }

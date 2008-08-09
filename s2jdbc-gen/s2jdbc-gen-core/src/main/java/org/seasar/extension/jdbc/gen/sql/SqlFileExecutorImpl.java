@@ -79,6 +79,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
     }
 
     public void execute(SqlExecutionContext context, File sqlFile) {
+        logger.log("DS2JDBCGen0006", new Object[] { sqlFile.getPath() });
         SqlFileReader reader = createSqlFileReader(sqlFile);
         try {
             for (String sql = reader.readSql(); sql != null; sql = reader

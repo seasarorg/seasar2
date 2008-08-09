@@ -15,16 +15,13 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import java.io.File;
 import java.util.Arrays;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
-import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
 
@@ -41,38 +38,7 @@ public class LoaderImplTest {
     }
 
     /**
-     * Test method for
-     * {@link org.seasar.extension.jdbc.gen.sql.dump.LoaderImpl#createDumpFileMap()}
-     * .
-     */
-    @Test
-    public void testCreateDumpFileMap() {
-        TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
-        tableDesc.setName("HOGE");
-
-        TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setCatalogName("AAA");
-        tableDesc2.setSchemaName("BBB");
-        tableDesc2.setName("FOO");
-
-        String path = getClass().getPackage().getName().replace('.', '/')
-                + "/dump";
-        File dumpDir = ResourceUtil.getResourceAsFile(path);
-
-        LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), dumpDir,
-                "UTF-8", Arrays.asList(tableDesc, tableDesc2));
-        Map<String, File> map = loader.createDumpFileMap();
-        assertEquals(2, map.size());
-        assertEquals("aaa.bbb.hoge.csv", map.get("AAA.BBB.HOGE").getName());
-        assertEquals("AAA.BBB.FOO.csv", map.get("AAA.BBB.FOO").getName());
-    }
-
-    /**
-     * Test method for
-     * {@link org.seasar.extension.jdbc.gen.sql.dump.LoaderImpl#buildSql(org.seasar.extension.jdbc.gen.TableDesc, java.util.List)}
-     * .
+     * 
      */
     @Test
     public void testBuildSql() {
@@ -89,10 +55,9 @@ public class LoaderImplTest {
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 
-        LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), new File(
-                "dumpDir"), "UTF-8", Arrays.asList(tableDesc));
+        LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), "UTF-8",
+                Arrays.asList(tableDesc));
         String sql = loader.buildSql(tableDesc, Arrays.asList("FOO", "BAR"));
         assertEquals("insert into AAA.BBB.HOGE (FOO, BAR) values (?, ?)", sql);
     }
-
 }

@@ -147,6 +147,54 @@ public class MigrateTask extends AbstractTask {
         command.setVersionNoPattern(versionNoPattern);
     }
 
+    /**
+     * @param classpathDir
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setClasspathDir(java.io.File)
+     */
+    public void setClasspathDir(File classpathDir) {
+        command.setClasspathDir(classpathDir);
+    }
+
+    /**
+     * @param dumpFileEncoding
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDumpFileEncoding(java.lang.String)
+     */
+    public void setDumpFileEncoding(String dumpFileEncoding) {
+        command.setDumpFileEncoding(dumpFileEncoding);
+    }
+
+    /**
+     * @param entityNamePattern
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setEntityNamePattern(java.lang.String)
+     */
+    public void setEntityNamePattern(String entityNamePattern) {
+        command.setEntityNamePattern(entityNamePattern);
+    }
+
+    /**
+     * @param entityPackageName
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setEntityPackageName(java.lang.String)
+     */
+    public void setEntityPackageName(String entityPackageName) {
+        command.setEntityPackageName(entityPackageName);
+    }
+
+    /**
+     * @param ignoreEntityNamePattern
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setIgnoreEntityNamePattern(java.lang.String)
+     */
+    public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
+        command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
+    }
+
+    /**
+     * @param rootPackageName
+     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setRootPackageName(java.lang.String)
+     */
+    public void setRootPackageName(String rootPackageName) {
+        command.setRootPackageName(rootPackageName);
+    }
+
     @Override
     protected Command getCommand() {
         return command;

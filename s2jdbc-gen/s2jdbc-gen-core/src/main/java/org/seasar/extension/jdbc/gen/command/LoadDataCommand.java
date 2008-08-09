@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -26,6 +29,7 @@ import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.FileHandler;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Generator;
@@ -47,8 +51,10 @@ import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.migration.DumpFileHandler;
 import org.seasar.extension.jdbc.gen.sql.LoaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
+import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -330,10 +336,11 @@ public class LoadDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         List<TableDesc> tableDescList = getTableDescList();
-        Loader loader = createLoader(tableDescList);
         SqlExecutionContext context = createSqlExecutionContext();
         try {
-            loader.load(context);
+            for (FileHandler handler : createFileHandlerList(dumpDir)) {
+                handler.handle(context);
+            }
         } finally {
             if (!context.getExceptionList().isEmpty()) {
                 for (Exception e : context.getExceptionList()) {
@@ -344,11 +351,61 @@ public class LoadDataCommand extends AbstractCommand {
         }
     }
 
+    protected void handleDir(File dir) {
+        SqlExecutionContext context = createSqlExecutionContext();
+        try {
+            try {
+                for (FileHandler handler : createFileHandlerList(dir)) {
+                    handler.handle(context);
+                }
+            } finally {
+                if (!context.getExceptionList().isEmpty()) {
+                    for (Exception e : context.getExceptionList()) {
+                        logger.error(e.getMessage());
+                    }
+                    throw context.getExceptionList().get(0);
+                }
+            }
+        } finally {
+            context.destroy();
+        }
+    }
+
     @Override
     protected void doDestroy() {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
         }
+    }
+
+    protected List<FileHandler> createFileHandlerList(File dir) {
+        if (!dir.exists()) {
+            logger.log("DS2JDBCGen0010", new Object[] { dir.getPath() });
+            return Collections.emptyList();
+        }
+
+        File[] files = dir.listFiles(new ExclusionFilenameFilter());
+        List<File> fileList = Arrays.asList(files);
+        Collections.sort(fileList, new Comparator<File>() {
+
+            public int compare(File file1, File file2) {
+                return file1.getName().compareTo(file2.getName());
+            }
+        });
+
+        List<FileHandler> handlerList = new ArrayList<FileHandler>();
+        for (File file : fileList) {
+            if (file.isDirectory()) {
+                List<FileHandler> list = createFileHandlerList(file);
+                handlerList.addAll(list);
+            }
+            String name = file.getName();
+            if (name.endsWith(".csv")) {
+                handlerList.add(new DumpFileHandler(file,
+                        createLoader(getTableDescList())));
+            }
+        }
+        return handlerList;
     }
 
     protected List<TableDesc> getTableDescList() {
@@ -397,12 +454,12 @@ public class LoadDataCommand extends AbstractCommand {
                 fkFactory, seqFactory, idTabFactory);
     }
 
-    protected Loader createLoader(List<TableDesc> tableDescList) {
-        return new LoaderImpl(dialect, dumpDir, dumpFileEncoding, tableDescList);
-    }
-
     protected SqlExecutionContext createSqlExecutionContext() {
         return new SqlExecutionContextImpl(dataSource, false);
+    }
+
+    protected Loader createLoader(List<TableDesc> tableDescList) {
+        return new LoaderImpl(dialect, dumpFileEncoding, tableDescList);
     }
 
     @Override

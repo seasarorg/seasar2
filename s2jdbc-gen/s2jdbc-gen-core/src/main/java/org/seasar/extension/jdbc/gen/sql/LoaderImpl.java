@@ -29,7 +29,6 @@ import org.seasar.extension.jdbc.gen.Loader;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
@@ -47,11 +46,9 @@ public class LoaderImpl implements Loader {
 
     protected GenDialect dialect;
 
-    protected File dumpDir;
-
     protected String dumpFileEncoding;
 
-    protected List<TableDesc> tableDescList;
+    protected Map<String, TableDesc> tableDescMap = new CaseInsensitiveMap();
 
     protected Map<String, File> dumpFileMap;
 
@@ -63,13 +60,10 @@ public class LoaderImpl implements Loader {
 
     protected int batchSize = 10;
 
-    public LoaderImpl(GenDialect dialect, File dumpDir,
-            String dumpFileEncoding, List<TableDesc> tableDescList) {
+    public LoaderImpl(GenDialect dialect, String dumpFileEncoding,
+            List<TableDesc> tableDescList) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
-        }
-        if (dumpDir == null) {
-            throw new NullPointerException("dumpDir");
         }
         if (dumpFileEncoding == null) {
             throw new NullPointerException("dumpFileEncoding");
@@ -78,43 +72,19 @@ public class LoaderImpl implements Loader {
             throw new NullPointerException("tableDescList");
         }
         this.dialect = dialect;
-        this.dumpDir = dumpDir;
         this.dumpFileEncoding = dumpFileEncoding;
-        this.tableDescList = tableDescList;
-        dumpFileMap = createDumpFileMap();
-    }
-
-    protected Map<String, File> createDumpFileMap() {
-        File[] dumpFiles = dumpDir.listFiles(new ExclusionFilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(extension);
-            }
-        });
-
-        Map<String, File> map = new CaseInsensitiveMap();
-        if (dumpFiles != null) {
-            for (File file : dumpFiles) {
-                String fileName = file.getName();
-                String tableName = StringUtil.trimSuffix(fileName, extension);
-                map.put(tableName, file);
-            }
-        }
-        return map;
-    }
-
-    public void load(SqlExecutionContext sqlExecutionContext) {
         for (TableDesc tableDesc : tableDescList) {
-            File dumpFile = dumpFileMap.get(tableDesc.getFullName());
-            if (dumpFile != null) {
-                loadFile(sqlExecutionContext, tableDesc, dumpFile);
-            }
+            tableDescMap.put(tableDesc.getFullName(), tableDesc);
         }
     }
 
-    protected void loadFile(SqlExecutionContext sqlExecutionContext,
-            TableDesc tableDesc, File dumpFile) {
+    public void load(SqlExecutionContext sqlExecutionContext, File dumpFile) {
+        logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath() });
+        String name = StringUtil.trimSuffix(dumpFile.getName(), extension);
+        if (!tableDescMap.containsKey(name)) {
+            return;
+        }
+        TableDesc tableDesc = tableDescMap.get(name);
         DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
                 tokenizer);
         try {
@@ -147,7 +117,7 @@ public class LoaderImpl implements Loader {
      * @param sqlExecutionContext
      * @param tableDesc
      */
-    private void preLoadData(SqlExecutionContext sqlExecutionContext,
+    protected void preLoadData(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc) {
         if (tableDesc.hasIdentityColumn() && dialect.supportsIdentityInsert()) {
             Statement statement = sqlExecutionContext.getStatement();
@@ -164,7 +134,7 @@ public class LoaderImpl implements Loader {
      * @param sqlTypeList
      * @param sql
      */
-    private void loadData(SqlExecutionContext sqlExecutionContext,
+    protected void loadData(SqlExecutionContext sqlExecutionContext,
             DumpFileReader reader, List<SqlType> sqlTypeList, String sql) {
         PreparedStatement ps = sqlExecutionContext.getPreparedStatement(sql);
         List<String> valueList = null;
@@ -189,7 +159,7 @@ public class LoaderImpl implements Loader {
      * @param sqlExecutionContext
      * @param tableDesc
      */
-    private void postLoadData(SqlExecutionContext sqlExecutionContext,
+    protected void postLoadData(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc) {
         if (tableDesc.hasIdentityColumn() && dialect.supportsIdentityInsert()) {
             Statement statement = sqlExecutionContext.getStatement();

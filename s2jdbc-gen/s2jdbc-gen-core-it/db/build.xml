@@ -115,8 +115,10 @@
 			ddlversionfile="${ddl-version}"
 		/>
 		<migrate 
+			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlversionfile="${ddl-version}"
+			rootpackagename="${rootpackagename}"
 		/>
 		<junit haltonfailure="no" printsummary="true">
 			<formatter type="xml"/>
@@ -129,9 +131,11 @@
 		</junit>
 		<!-- tearDown -->
 		<migrate 
+			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlversionfile="${ddl-version}"
 			version="0"
+			rootpackagename="${rootpackagename}"
 		/>
 	</target>
 
@@ -153,9 +157,16 @@
 			ddlversionfile="${ddl-version}"
 		/>
 		<migrate 
+			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlversionfile="${ddl-version}"
+			rootpackagename="${rootpackagename}"
 		/>
+		<exec-sql>
+			<sqlFileList dir="${sql}/testDumpData">
+				<file name="insert.sql"/>
+			</sqlFileList>
+		</exec-sql>
 		<gen-ddl 
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
@@ -163,14 +174,18 @@
 			ddlversionfile="${ddl-version}"
 		/>
 		<migrate 
+			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlversionfile="${ddl-version}"
+			rootpackagename="${rootpackagename}"
 		/>
 		<!-- tearDown -->
 		<migrate 
+			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlversionfile="${ddl-version}"
 			version="0"
+			rootpackagename="${rootpackagename}"
 		/>
 	</target>
 
