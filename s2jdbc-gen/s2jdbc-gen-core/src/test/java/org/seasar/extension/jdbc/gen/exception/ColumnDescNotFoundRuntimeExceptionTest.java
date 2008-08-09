@@ -23,16 +23,14 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class IllegalDumpColumnSizeRuntimeExceptionTest {
+public class ColumnDescNotFoundRuntimeExceptionTest {
 
     @Test
     public void test() throws Exception {
-        IllegalDumpColumnSizeRuntimeException e = new IllegalDumpColumnSizeRuntimeException(
-                "aaa", 1, 2, 3);
-        assertEquals("aaa", e.getPath());
-        assertEquals(1, e.getLineNumber());
-        assertEquals(2, e.getLineColumnSize());
-        assertEquals(3, e.getHeaderColumnSize());
+        ColumnDescNotFoundRuntimeException e = new ColumnDescNotFoundRuntimeException(
+                "aaa", "bbb");
+        assertEquals("aaa", e.getColumnName());
+        assertEquals("bbb", e.getFullTableName());
         System.out.println(e.getMessage());
     }
 }

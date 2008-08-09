@@ -1,3 +1,4 @@
+-- supported
 create table integer_table (integer_column integer);
 create table int_table (int_column int);
 create table double_table (double_column double);
@@ -22,3 +23,7 @@ create table bigint_table (bigint_column bigint);
 create table real_table (real_column real);
 create table varbinary_table (varbinary_column varbinary);
 create table longvarbinary_table (longvarbinary_column longvarbinary);
+
+-- unsupported
+create table other_table (other_column other);
+create table object_table (object_column object);

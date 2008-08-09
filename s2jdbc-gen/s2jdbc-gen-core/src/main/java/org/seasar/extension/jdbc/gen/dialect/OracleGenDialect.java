@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 import org.seasar.extension.jdbc.gen.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.sqltype.BlobType;
+import org.seasar.extension.jdbc.gen.sqltype.BooleanType;
 import org.seasar.extension.jdbc.gen.sqltype.ClobType;
 import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
 import org.seasar.extension.jdbc.gen.sqltype.DoubleType;
@@ -52,6 +53,7 @@ public class OracleGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BINARY, new BinaryType("raw($l)"));
         sqlTypeMap.put(Types.BIGINT, new BigIntType("number($p,0)"));
         sqlTypeMap.put(Types.BLOB, new BlobType("blob"));
+        sqlTypeMap.put(Types.BOOLEAN, new BooleanType("number(1,0)"));
         sqlTypeMap.put(Types.CLOB, new ClobType("clob"));
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("number($p,$s)"));
         sqlTypeMap.put(Types.DOUBLE, new DoubleType("double precision"));

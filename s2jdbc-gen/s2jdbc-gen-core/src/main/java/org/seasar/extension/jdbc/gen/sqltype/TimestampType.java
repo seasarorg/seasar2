@@ -43,20 +43,30 @@ public class TimestampType extends AbstractSqlType {
         if (value == null) {
             ps.setNull(index, Types.TIMESTAMP);
         }
-        Timestamp timestamp = TimestampConversionUtil.toTimestamp(value,
-                "yyyy-MM-dd hh:mm:ss");
-        int pos = value.indexOf('.');
-        if (pos > -1) {
-            int nanos = IntegerConversionUtil.toPrimitiveInt(value
-                    .substring(pos));
-            timestamp.setNanos(nanos);
-        }
-        ps.setTimestamp(index, timestamp);
+        ps.setTimestamp(index, toTimestamp(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
         Timestamp value = resultSet.getTimestamp(index);
         return value != null ? value.toString() : null;
+    }
+
+    protected Timestamp toTimestamp(String value) {
+        Timestamp timestamp = TimestampConversionUtil.toTimestamp(value,
+                "yyyy-MM-dd hh:mm:ss");
+        int pos = value.indexOf('.');
+        if (pos > -1) {
+            int nanos = IntegerConversionUtil.toPrimitiveInt(value
+                    .substring(pos + 1));
+            if (nanos > 0) {
+                int n = (int) Math.log10(nanos);
+                if (n < 8) {
+                    nanos *= (int) Math.pow(10, 8 - n);
+                }
+            }
+            timestamp.setNanos(nanos);
+        }
+        return timestamp;
     }
 
 }

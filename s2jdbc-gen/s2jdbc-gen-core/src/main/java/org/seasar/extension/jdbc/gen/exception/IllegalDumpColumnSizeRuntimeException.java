@@ -27,19 +27,19 @@ public class IllegalDumpColumnSizeRuntimeException extends SRuntimeException {
 
     protected String path;
 
-    protected int rowNo;
+    protected int lineNumber;
 
-    protected int dataColumnSize;
+    protected int lineColumnSize;
 
     protected int headerColumnSize;
 
-    public IllegalDumpColumnSizeRuntimeException(String path, int rowNo,
-            int rowColumnSize, int headerColumnSize) {
-        super("ES2JDBCGen0012", new Object[] { path, rowNo, rowColumnSize,
+    public IllegalDumpColumnSizeRuntimeException(String path, int lineNumber,
+            int lineColumnSize, int headerColumnSize) {
+        super("ES2JDBCGen0012", new Object[] { path, lineNumber, lineColumnSize,
                 headerColumnSize });
         this.path = path;
-        this.rowNo = rowNo;
-        this.dataColumnSize = rowColumnSize;
+        this.lineNumber = lineNumber;
+        this.lineColumnSize = lineColumnSize;
         this.headerColumnSize = headerColumnSize;
     }
 
@@ -51,17 +51,17 @@ public class IllegalDumpColumnSizeRuntimeException extends SRuntimeException {
     }
 
     /**
-     * @return Returns the rowNo.
+     * @return Returns the lineNumber.
      */
-    public int getRowNo() {
-        return rowNo;
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**
-     * @return Returns the dataColumnSize.
+     * @return Returns the lineColumnSize.
      */
-    public int getDataColumnSize() {
-        return dataColumnSize;
+    public int getLineColumnSize() {
+        return lineColumnSize;
     }
 
     /**

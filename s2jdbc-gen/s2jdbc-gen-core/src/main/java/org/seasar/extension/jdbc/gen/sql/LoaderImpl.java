@@ -23,12 +23,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.gen.ColumnDesc;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Loader;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StringUtil;
@@ -38,6 +40,10 @@ import org.seasar.framework.util.StringUtil;
  * 
  */
 public class LoaderImpl implements Loader {
+
+    protected static Logger logger = Logger.getLogger(LoaderImpl.class);
+
+    protected GenDialect dialect;
 
     protected File dumpDir;
 
@@ -53,8 +59,13 @@ public class LoaderImpl implements Loader {
 
     protected String extension = ".csv";
 
-    public LoaderImpl(File dumpDir, String dumpFileEncoding,
-            List<TableDesc> tableDescList) {
+    protected int batchSize = 10;
+
+    public LoaderImpl(GenDialect dialect, File dumpDir,
+            String dumpFileEncoding, List<TableDesc> tableDescList) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         if (dumpDir == null) {
             throw new NullPointerException("dumpDir");
         }
@@ -64,6 +75,7 @@ public class LoaderImpl implements Loader {
         if (tableDescList == null) {
             throw new NullPointerException("tableDescList");
         }
+        this.dialect = dialect;
         this.dumpDir = dumpDir;
         this.dumpFileEncoding = dumpFileEncoding;
         this.tableDescList = tableDescList;
@@ -104,38 +116,56 @@ public class LoaderImpl implements Loader {
         DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
                 tokenizer);
         try {
-            List<String> columnNameList = reader.readRow();
+            List<String> columnNameList = reader.readLine();
             if (columnNameList == null) {
                 return;
             }
-            SqlType[] sqlTypes = getSqlTypes(tableDesc, columnNameList);
+            List<SqlType> sqlTypeList = getSqlTypeList(tableDesc,
+                    columnNameList);
             String sql = buildSql(tableDesc, columnNameList);
-            PreparedStatement ps = sqlExecutionContext
-                    .getPreparedStatement(sql);
-            for (List<String> valueList = reader.readRow(); valueList != null; valueList = reader
-                    .readRow()) {
-                executeUpdate(ps, sqlTypes, valueList);
+            try {
+                PreparedStatement ps = sqlExecutionContext
+                        .getPreparedStatement(sql);
+                List<String> valueList = null;
+                boolean remaining = false;
+                for (int i = 0; (valueList = reader.readLine()) != null; i++) {
+                    logger.log("DS2JDBCGen0007", new Object[] { sql });
+                    bindArgs(ps, sqlTypeList, valueList);
+                    PreparedStatementUtil.addBatch(ps);
+                    if (batchSize > 0 && (i + 1) % batchSize == 0) {
+                        PreparedStatementUtil.executeBatch(ps);
+                        remaining = false;
+                    } else {
+                        remaining = true;
+                    }
+                }
+                if (remaining) {
+                    PreparedStatementUtil.executeBatch(ps);
+                }
+            } catch (SQLRuntimeException e) {
+                sqlExecutionContext.notifyException();
+                if (dialect.isTableNotFound(e)) {
+                    logger.log("DS2JDBCGen0012", new Object[] { tableDesc
+                            .getFullName() });
+                    return;
+                }
+                throw e;
             }
         } finally {
             reader.close();
         }
     }
 
-    protected void executeUpdate(PreparedStatement ps, SqlType[] sqlTypes,
+    protected void bindArgs(PreparedStatement ps, List<SqlType> sqlTypeList,
             List<String> valueList) {
         try {
-            bindArgs(ps, sqlTypes, valueList);
-            PreparedStatementUtil.executeUpdate(ps);
+            for (int i = 0; i < sqlTypeList.size(); i++) {
+                SqlType sqlType = sqlTypeList.get(i);
+                String value = valueList.get(i);
+                sqlType.bindValue(ps, i + 1, value);
+            }
         } catch (SQLException e) {
             throw new SQLRuntimeException(e);
-        }
-    }
-
-    protected void bindArgs(PreparedStatement ps, SqlType[] sqlTypes,
-            List<String> valueList) throws SQLException {
-        for (int i = 0; i < sqlTypes.length; i++) {
-            String value = valueList.get(i);
-            sqlTypes[i].bindValue(ps, i + 1, value);
         }
     }
 
@@ -145,33 +175,27 @@ public class LoaderImpl implements Loader {
         buf.append(tableDesc.getFullName());
         buf.append(" (");
         for (String columnName : columnNameList) {
-            if (tableDesc.getColumnDesc(columnName) != null) {
-                buf.append(columnName);
-                buf.append(", ");
-            }
+            buf.append(columnName);
+            buf.append(", ");
         }
         buf.setLength(buf.length() - 2);
         buf.append(") values (");
-        for (String columnName : columnNameList) {
-            if (tableDesc.getColumnDesc(columnName) != null) {
-                buf.append("?, ");
-            }
+        for (int i = 0; i < columnNameList.size(); i++) {
+            buf.append("?, ");
         }
         buf.setLength(buf.length() - 2);
         buf.append(")");
         return buf.toString();
     }
 
-    protected SqlType[] getSqlTypes(TableDesc tableDesc,
+    protected List<SqlType> getSqlTypeList(TableDesc tableDesc,
             List<String> columnNameList) {
-        List<SqlType> sqlTypes = new ArrayList<SqlType>();
+        List<SqlType> sqlTypeList = new ArrayList<SqlType>();
         for (int i = 0; i < columnNameList.size(); i++) {
             String columnName = columnNameList.get(i);
             ColumnDesc columnDesc = tableDesc.getColumnDesc(columnName);
-            if (columnDesc != null) {
-                sqlTypes.add(columnDesc.getSqlType());
-            }
+            sqlTypeList.add(columnDesc.getSqlType());
         }
-        return sqlTypes.toArray(new SqlType[sqlTypes.size()]);
+        return sqlTypeList;
     }
 }

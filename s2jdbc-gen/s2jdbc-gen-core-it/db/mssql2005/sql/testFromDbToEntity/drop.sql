@@ -1,0 +1,27 @@
+drop table bigint_table;
+drop table int_table;
+drop table smallint_table;
+drop table tinyint_table;
+drop table bit_table;
+drop table decimal_table;
+drop table numeric_table;
+drop table money_table;
+drop table smallmoney_table;
+drop table float_table;
+drop table real_table;
+drop table datetime_table;
+drop table smalldatetime_table;
+drop table char_table;
+drop table varchar_table;
+drop table varchar_max_table;
+drop table text_table;
+drop table nchar_table;
+drop table nvarchar_table;
+drop table nvarchar_max_table;
+drop table ntext_table;
+drop table binary_table;
+drop table varbinary_table;
+drop table varbinary_max_table;
+drop table image_table;
+
+DROP FUNCTION FUNC_SIMPLETYPE_PARAM;

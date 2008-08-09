@@ -65,6 +65,9 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         dumpModel.setName(tableDesc.getFullName());
         dumpModel.setDelimiter(delimiter);
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (columnDesc.isIdentity()) {
+                continue;
+            }
             dumpModel.addColumnName(columnDesc.getName());
         }
         doRow(dumpModel, tableDesc, sqlExecutionContext);
@@ -73,7 +76,7 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
 
     protected void doRow(DumpModel dumpModel, TableDesc tableDesc,
             SqlExecutionContext sqlExecutionContext) {
-        SqlType[] sqlTypes = createSqlTypes(tableDesc);
+        List<SqlType> sqlTypes = getSqlTypeList(tableDesc);
         Statement statement = sqlExecutionContext.getStatement();
         try {
             ResultSet rs = StatementUtil.executeQuery(statement,
@@ -96,6 +99,9 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         StringBuilder buf = new StringBuilder(200);
         buf.append("select ");
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (columnDesc.isIdentity()) {
+                continue;
+            }
             buf.append(columnDesc.getName());
             buf.append(", ");
         }
@@ -107,13 +113,14 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         return buf.toString();
     }
 
-    protected void addRows(DumpModel dumpModel, SqlType[] sqlTypes, ResultSet rs) {
+    protected void addRows(DumpModel dumpModel, List<SqlType> sqlTypeList,
+            ResultSet rs) {
         for (; ResultSetUtil.next(rs);) {
             List<String> row = new ArrayList<String>();
-            for (int i = 0; i < sqlTypes.length; i++) {
-                SqlType sqlType = sqlTypes[i];
+            for (int i = 0; i < sqlTypeList.size(); i++) {
                 String value = null;
                 try {
+                    SqlType sqlType = sqlTypeList.get(i);
                     value = sqlType.getValue(rs, i + 1);
                 } catch (SQLException e) {
                     logger.log(e);
@@ -124,12 +131,16 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         }
     }
 
-    protected SqlType[] createSqlTypes(TableDesc tableDesc) {
-        SqlType[] sqlTypes = new SqlType[tableDesc.getColumnDescList().size()];
+    protected List<SqlType> getSqlTypeList(TableDesc tableDesc) {
+        int size = tableDesc.getColumnDescList().size();
+        List<SqlType> sqlTypeList = new ArrayList<SqlType>(size);
         for (int i = 0; i < tableDesc.getColumnDescList().size(); i++) {
             ColumnDesc columnDesc = tableDesc.getColumnDescList().get(i);
-            sqlTypes[i] = columnDesc.getSqlType();
+            if (columnDesc.isIdentity()) {
+                continue;
+            }
+            sqlTypeList.add(columnDesc.getSqlType());
         }
-        return sqlTypes;
+        return sqlTypeList;
     }
 }

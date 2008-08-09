@@ -39,7 +39,6 @@ import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.gen.version.SchemaVersionImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
@@ -526,8 +525,7 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link SqlExecutionContext}の実装
      */
     protected SqlExecutionContext createSqlExecutionContext() {
-        return new SqlExecutionContextImpl(DataSourceUtil
-                .getConnection(dataSource), haltOnError);
+        return new SqlExecutionContextImpl(dataSource, haltOnError);
     }
 
     @Override

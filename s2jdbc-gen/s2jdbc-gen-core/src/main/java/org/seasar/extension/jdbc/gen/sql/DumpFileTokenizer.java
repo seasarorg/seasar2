@@ -70,13 +70,18 @@ public class DumpFileTokenizer {
                     c = buf.charAt(i);
                     if (c == '"') {
                         i++;
-                        if (i >= length) {
-                            type = END_OF_BUFFER;
-                            return;
-                        } else if (buf.charAt(i) != '"') {
-                            type = VALUE;
-                            nextPos = i;
-                            return;
+                        if (i < length) {
+                            c = buf.charAt(i);
+                            if (c != '"') {
+                                for (int j = i; j < length; j++) {
+                                    c = buf.charAt(j);
+                                    if (c == delimiter || isEndOfLine(j)) {
+                                        type = VALUE;
+                                        nextPos = j;
+                                        return;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -89,33 +94,21 @@ public class DumpFileTokenizer {
                     type = DELIMETER;
                     nextPos = index + 1;
                 }
-            } else if (c == '\r') {
-                int i = index + 1;
-                if (i >= length) {
-                    type = END_OF_BUFFER;
-                } else if (buf.charAt(i) == '\n') {
-                    if (type == END_OF_LINE || type == DELIMETER) {
-                        type = NULL;
-                        nextPos = index;
-                    } else {
-                        type = END_OF_LINE;
-                        nextPos = i + 1;
-                    }
+            } else if (isEndOfLine(index)) {
+                if (type == END_OF_LINE || type == DELIMETER) {
+                    type = NULL;
+                    nextPos = index;
+                } else {
+                    type = END_OF_LINE;
+                    nextPos = index + 2;
                 }
             } else {
                 for (int i = index; i < length; i++) {
                     c = buf.charAt(i);
-                    if (c == delimiter) {
+                    if (c == delimiter || isEndOfLine(i)) {
                         type = VALUE;
                         nextPos = i;
                         return;
-                    } else if (c == '\r') {
-                        int j = i + 1;
-                        if (j < length && buf.charAt(j) == '\n') {
-                            type = VALUE;
-                            nextPos = i;
-                            return;
-                        }
                     }
                 }
                 type = END_OF_BUFFER;
@@ -123,6 +116,17 @@ public class DumpFileTokenizer {
         } else {
             type = END_OF_BUFFER;
         }
+    }
+
+    protected boolean isEndOfLine(int index) {
+        char c = buf.charAt(index);
+        if (c == '\r') {
+            int i = index + 1;
+            if (i < length && buf.charAt(i) == '\n') {
+                return true;
+            }
+        }
+        return false;
     }
 
     public TokenType nextToken() {

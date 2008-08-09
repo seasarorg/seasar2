@@ -59,6 +59,20 @@ public class DumpFileTokenizerTest {
     }
 
     @Test
+    public void testValue_escaped_extraWhitespace() throws Exception {
+        String s = "\"a\" , \"b\" \r\n";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("\"a\" ", tokenizer.getToken());
+        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(",", tokenizer.getToken());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals(" \"b\" ", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r\n", tokenizer.getToken());
+    }
+
+    @Test
     public void testEndOfBuffer() throws Exception {
         String s = "aa";
         tokenizer.addChars(s.toCharArray(), s.length());

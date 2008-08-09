@@ -43,12 +43,12 @@ public class TimeType extends AbstractSqlType {
         if (value == null) {
             ps.setNull(index, Types.TIME);
         }
-        ps.setTime(index, TimeConversionUtil.toTime(value, "hh-mm-ss"));
+        ps.setTime(index, TimeConversionUtil.toTime(value, "hh:mm:ss"));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
         Time value = resultSet.getTime(index);
-        return value != null ? StringConversionUtil.toString(value, "hh-mm-ss")
+        return value != null ? StringConversionUtil.toString(value, "hh:mm:ss")
                 : null;
     }
 

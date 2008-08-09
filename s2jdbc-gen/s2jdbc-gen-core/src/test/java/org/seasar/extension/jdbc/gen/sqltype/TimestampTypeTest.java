@@ -13,7 +13,9 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.exception;
+package org.seasar.extension.jdbc.gen.sqltype;
+
+import java.sql.Timestamp;
 
 import org.junit.Test;
 
@@ -23,16 +25,21 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class IllegalDumpColumnSizeRuntimeExceptionTest {
+public class TimestampTypeTest {
 
     @Test
-    public void test() throws Exception {
-        IllegalDumpColumnSizeRuntimeException e = new IllegalDumpColumnSizeRuntimeException(
-                "aaa", 1, 2, 3);
-        assertEquals("aaa", e.getPath());
-        assertEquals(1, e.getLineNumber());
-        assertEquals(2, e.getLineColumnSize());
-        assertEquals(3, e.getHeaderColumnSize());
-        System.out.println(e.getMessage());
+    public void testToTimestamp() throws Exception {
+        TimestampType timestampType = new TimestampType();
+        Timestamp timestamp = timestampType
+                .toTimestamp("2008-01-01 12:11:10.123456");
+        assertEquals(123456000, timestamp.getNanos());
+    }
+
+    @Test
+    public void testToTimestamp_zero() throws Exception {
+        TimestampType timestampType = new TimestampType();
+        Timestamp timestamp = timestampType
+                .toTimestamp("2008-01-01 12:11:10.000");
+        assertEquals(0, timestamp.getNanos());
     }
 }

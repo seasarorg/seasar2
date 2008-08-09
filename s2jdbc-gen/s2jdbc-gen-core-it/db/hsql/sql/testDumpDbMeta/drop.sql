@@ -1,3 +1,4 @@
+-- supported
 drop table integer_table;
 drop table int_table;
 drop table double_table;
@@ -22,3 +23,7 @@ drop table bigint_table;
 drop table real_table;
 drop table varbinary_table;
 drop table longvarbinary_table;
+
+-- unsupported
+drop table other_table;
+drop table object_table;

@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.model;
 
 import java.sql.Types;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -81,9 +82,9 @@ public class DumpModelFactoryImplTest {
         rs.addRowData(row);
 
         DumpModel dumpModel = new DumpModel();
-        factory.addRows(dumpModel, new SqlType[] {
-                dialect.getSqlType(Types.VARCHAR),
-                dialect.getSqlType(Types.INTEGER) }, rs);
+        List<SqlType> sqlTypeList = Arrays.asList(dialect
+                .getSqlType(Types.VARCHAR), dialect.getSqlType(Types.INTEGER));
+        factory.addRows(dumpModel, sqlTypeList, rs);
 
         assertEquals(2, dumpModel.getRowList().size());
         assertEquals(Arrays.asList("hoge", "100"), dumpModel.getRowList()

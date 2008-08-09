@@ -42,8 +42,8 @@
 	<target name="testFromDbToEntity" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<exec-sql>
-			<sqlFileList dir="${sql}">
-				<file name="setup-supported.sql"/>
+			<sqlFileList dir="${sql}/testFromDbToEntity">
+				<file name="create.sql"/>
 			</sqlFileList>
 		</exec-sql>
 		<!-- test -->
@@ -67,8 +67,8 @@
 		/>
 		<!-- tearDown -->
 		<exec-sql>
-			<sqlFileList dir="${sql}">
-				<file name="teardown-supported.sql"/>
+			<sqlFileList dir="${sql}/testFromDbToEntity">
+				<file name="drop.sql"/>
 			</sqlFileList>
 		</exec-sql>
 	</target>
@@ -137,27 +137,12 @@
 
 	<target name="testMigrate" depends="showRdbmsName, clean">
 		<!-- setUp -->
-		<exec-sql>
-			<sqlFileList dir="${sql}">
-				<file name="setup-supported.sql"/>
-			</sqlFileList>
-		</exec-sql>
-		<gen-entity
-			rootpackagename="${rootpackagename}"
-			javafiledestdir="${src}"
-		/>
-		<exec-sql>
-			<sqlFileList dir="${sql}">
-				<file name="teardown-supported.sql"/>
-			</sqlFileList>
-		</exec-sql>
 		<javac 
 			destdir="${build}"
 			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
 			debug="on">
-			<src path="${src}"/>
 			<src path="../src/main/java"/>
 		</javac>
 		<!-- test -->
@@ -192,18 +177,16 @@
 	<target name="testDumpDbMeta" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<exec-sql>
-			<sqlFileList dir="${sql}">
-				<file name="setup-supported.sql"/>
-				<file name="setup-unsupported.sql"/>
+			<sqlFileList dir="${sql}/testDumpDbMeta">
+				<file name="create.sql"/>
 			</sqlFileList>
 		</exec-sql>
 		<!-- test -->
 		<dump-db-meta/>
 		<!-- tearDown -->
 		<exec-sql>
-			<sqlFileList dir="${sql}">
-				<file name="teardown-supported.sql"/>
-				<file name="teardown-unsupported.sql"/>
+			<sqlFileList dir="${sql}/testDumpDbMeta">
+				<file name="drop.sql"/>
 			</sqlFileList>
 		</exec-sql>
 	</target>
@@ -218,6 +201,12 @@
 			fork="true"
 			debug="on"
 		/>
+		<exec-sql>
+			<sqlFileList dir="${sql}/testDumpData">
+				<file name="create.sql"/>
+				<file name="insert.sql"/>
+			</sqlFileList>
+		</exec-sql>
 		<!-- test -->
 		<dump-data
 			classpathDir="${build}"
@@ -225,6 +214,11 @@
 			dumpdir="${dump}"
 		/>
 		<!-- tearDown -->
+		<exec-sql>
+			<sqlFileList dir="${sql}/testDumpData">
+				<file name="drop.sql"/>
+			</sqlFileList>
+		</exec-sql>
 	</target>
 
 	<target name="testLoadData" depends="showRdbmsName, clean">
@@ -237,18 +231,35 @@
 			fork="true"
 			debug="on"
 		/>
-		<!-- test -->
+		<exec-sql>
+			<sqlFileList dir="${sql}/testDumpData">
+				<file name="create.sql"/>
+				<file name="insert.sql"/>
+			</sqlFileList>
+		</exec-sql>
 		<dump-data
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			dumpdir="${dump}"
 		/>
+		<exec-sql>
+			<sqlFileList dir="${sql}/testDumpData">
+				<file name="drop.sql"/>
+				<file name="create.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<!-- test -->
 		<load-data
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			dumpdir="${dump}"
 		/>
 		<!-- tearDown -->
+		<exec-sql>
+			<sqlFileList dir="${sql}/testDumpData">
+				<file name="drop.sql"/>
+			</sqlFileList>
+		</exec-sql>
 	</target>
 
 	<target name="clean">

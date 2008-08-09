@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.seasar.extension.jdbc.gen.exception.ColumnDescNotFoundRuntimeException;
 import org.seasar.framework.util.CaseInsensitiveMap;
 
 /**
@@ -261,7 +262,10 @@ public class TableDesc {
     }
 
     public ColumnDesc getColumnDesc(String columnName) {
-        return columnDescMap.get(columnName);
+        if (columnDescMap.containsKey(columnName)) {
+            return columnDescMap.get(columnName);
+        }
+        throw new ColumnDescNotFoundRuntimeException(columnName, getFullName());
     }
 
     @Override

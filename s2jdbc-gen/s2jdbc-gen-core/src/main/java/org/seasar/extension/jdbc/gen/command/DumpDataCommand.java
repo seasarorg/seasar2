@@ -52,7 +52,6 @@ import org.seasar.extension.jdbc.gen.sql.DumperImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
@@ -467,8 +466,7 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     protected SqlExecutionContext createSqlExecutionContext() {
-        return new SqlExecutionContextImpl(DataSourceUtil
-                .getConnection(dataSource), false);
+        return new SqlExecutionContextImpl(dataSource, false);
     }
 
     /**

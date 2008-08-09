@@ -22,6 +22,7 @@ import java.util.List;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 import org.seasar.framework.mock.sql.MockConnection;
+import org.seasar.framework.mock.sql.MockDataSource;
 
 import static org.junit.Assert.*;
 
@@ -36,9 +37,8 @@ public class SqlExecutionContextImplTest {
      */
     @Test
     public void testGetStatement() {
-        MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
-                false);
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(
+                new MockDataSource(), false);
         Statement statement = context.getStatement();
         assertNotNull(statement);
         assertSame(statement, context.getStatement());
@@ -53,8 +53,8 @@ public class SqlExecutionContextImplTest {
     @Test
     public void testAddException() {
         MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
-                false);
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(
+                new MockDataSource(), false);
         assertTrue(context.getExceptionList().isEmpty());
         SqlFailedException exception = new SqlFailedException(
                 new SQLException(), "aaa", "bbb");
@@ -69,8 +69,8 @@ public class SqlExecutionContextImplTest {
     @Test
     public void testAddException_haltOnError() {
         MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
-                true);
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(
+                new MockDataSource(), true);
         assertTrue(context.getExceptionList().isEmpty());
         SqlFailedException exception = new SqlFailedException(
                 new SQLException(), "aaa", "bbb");
@@ -87,8 +87,8 @@ public class SqlExecutionContextImplTest {
     @Test
     public void testDestroy() {
         MockConnection conn = new MockConnection();
-        SqlExecutionContextImpl context = new SqlExecutionContextImpl(conn,
-                false);
+        SqlExecutionContextImpl context = new SqlExecutionContextImpl(
+                new MockDataSource(), false);
         assertNotNull(context.getStatement());
         assertNotNull(context.connection);
         assertNotNull(context.statement);

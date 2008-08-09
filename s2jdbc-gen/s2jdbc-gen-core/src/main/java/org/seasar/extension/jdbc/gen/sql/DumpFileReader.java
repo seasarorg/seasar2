@@ -53,7 +53,7 @@ public class DumpFileReader {
 
     protected TokenType tokenType = null;
 
-    protected int rowNo = -1;
+    protected int lineNumber = -1;
 
     protected int headerColumnSize;
 
@@ -78,31 +78,32 @@ public class DumpFileReader {
         this.tokenizer = tokenizer;
     }
 
-    public List<String> readRow() {
+    public List<String> readLine() {
         if (isEndOfFile()) {
             return null;
         }
         try {
-            List<String> row = readRowInternal();
-            if (row == null) {
+            List<String> valueList = readLineInternal();
+            if (valueList == null) {
                 return null;
             }
-            rowNo++;
-            if (rowNo == 0) {
-                headerColumnSize = row.size();
+            lineNumber++;
+            if (lineNumber == 0) {
+                headerColumnSize = valueList.size();
             } else {
-                if (headerColumnSize != row.size()) {
+                if (headerColumnSize != valueList.size()) {
                     throw new IllegalDumpColumnSizeRuntimeException(dumpFile
-                            .getPath(), rowNo, row.size(), headerColumnSize);
+                            .getPath(), lineNumber, valueList.size(),
+                            headerColumnSize);
                 }
             }
-            return row;
+            return valueList;
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
     }
 
-    protected List<String> readRowInternal() throws IOException {
+    protected List<String> readLineInternal() throws IOException {
         if (reader == null) {
             reader = createBufferedReader();
         }
@@ -141,11 +142,11 @@ public class DumpFileReader {
     protected boolean read() throws IOException {
         if (tokenType == null || tokenType == TokenType.END_OF_BUFFER) {
             bufLength = reader.read(buf);
-            if (bufLength > -1) {
+            if (!isEndOfFile()) {
                 tokenizer.addChars(buf, bufLength);
             }
         }
-        return bufLength > -1;
+        return !isEndOfFile();
     }
 
     protected BufferedReader createBufferedReader() throws IOException {
@@ -154,11 +155,11 @@ public class DumpFileReader {
     }
 
     protected boolean isEndOfFile() {
-        return bufLength == -1;
+        return bufLength < 0;
     }
 
-    public int getRowNo() {
-        return rowNo;
+    public int getLineNo() {
+        return lineNumber;
     }
 
     public void close() {
