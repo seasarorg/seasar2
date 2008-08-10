@@ -20,6 +20,10 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.FileInputStreamUtil;
@@ -165,5 +169,51 @@ public class FileUtil {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    /**
+     * ディレクトリを横断します。
+     * 
+     * @param dir
+     * @param filter
+     * @param handler
+     */
+    public static void traverseDirectory(File dir, FilenameFilter filter,
+            FileHandler handler) {
+        if (!dir.exists()) {
+            return;
+        }
+
+        File[] files = dir.listFiles(filter);
+        List<File> fileList = Arrays.asList(files);
+        Collections.sort(fileList, new Comparator<File>() {
+
+            public int compare(File file1, File file2) {
+                return file1.getName().compareTo(file2.getName());
+            }
+        });
+
+        for (File file : fileList) {
+            if (file.isDirectory()) {
+                traverseDirectory(file, filter, handler);
+            }
+            handler.handle(file);
+        }
+
+    }
+
+    /**
+     * ファイルを扱うインタフェースです・
+     * 
+     * @author taedium
+     */
+    public interface FileHandler {
+
+        /**
+         * 処理します。
+         * 
+         * @param file
+         */
+        void handle(File file);
     }
 }

@@ -25,6 +25,10 @@ import static org.junit.Assert.*;
  */
 public class ColumnDescNotFoundRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         ColumnDescNotFoundRuntimeException e = new ColumnDescNotFoundRuntimeException(

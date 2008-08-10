@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class MigrateCommandTest {
+public class DumpDataCommandTest {
 
     /**
      * 
@@ -45,8 +45,7 @@ public class MigrateCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        MigrateCommand command = new MigrateCommand();
-        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        DumpDataCommand command = new DumpDataCommand();
         try {
             command.validate();
             fail();
@@ -60,17 +59,15 @@ public class MigrateCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        MigrateCommand command = new MigrateCommand();
+        DumpDataCommand command = new DumpDataCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createSchemaVersion());
-        assertNotNull(command.createDdlVersion());
-        assertNotNull(command.createSqlFileExecutor());
         assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createDatabaseDescFactory());
-        assertNotNull(command.createLoader());
+        assertNotNull(command.createDumper());
+        assertNotNull(command.createEntityMetaReader());
+        assertNotNull(command.createGenerator());
     }
 }

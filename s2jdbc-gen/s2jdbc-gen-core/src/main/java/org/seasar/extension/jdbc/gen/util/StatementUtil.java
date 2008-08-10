@@ -22,8 +22,9 @@ import java.sql.Statement;
 import org.seasar.framework.exception.SQLRuntimeException;
 
 /**
- * @author taedium
+ * {@link Statement}に関するユーティリティクラスです。
  * 
+ * @author taedium
  */
 public class StatementUtil {
 
@@ -33,6 +34,17 @@ public class StatementUtil {
     protected StatementUtil() {
     }
 
+    /**
+     * 実行します。
+     * 
+     * @param statement
+     *            ステートメント
+     * @param sql
+     *            SQL
+     * @return 最初の実行結果が結果セットをもつならば{@code true}
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static boolean execute(Statement statement, String sql)
             throws SQLRuntimeException {
         try {
@@ -42,6 +54,17 @@ public class StatementUtil {
         }
     }
 
+    /**
+     * 実行します。
+     * 
+     * @param statement
+     *            ステートメント
+     * @param sql
+     *            SQL
+     * @return 結果セット
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static ResultSet executeQuery(Statement statement, String sql)
             throws SQLRuntimeException {
         try {
@@ -51,6 +74,14 @@ public class StatementUtil {
         }
     }
 
+    /**
+     * クローズします。
+     * 
+     * @param statement
+     *            ステートメント
+     * @throws SQLRuntimeException
+     *             SQL例外が発生した場合
+     */
     public static void close(Statement statement) throws SQLRuntimeException {
         if (statement == null) {
             return;

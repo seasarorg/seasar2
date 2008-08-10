@@ -20,18 +20,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.BooleanConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#BOOLEAN}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class BooleanType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public BooleanType() {
         this("boolean");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public BooleanType(String columnDefinition) {
         super(columnDefinition);
     }

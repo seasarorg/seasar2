@@ -21,19 +21,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.SqlDateConversionUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#DATE}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class DateType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public DateType() {
         this("date");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public DateType(String columnDefinition) {
         super(columnDefinition);
     }

@@ -20,16 +20,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
+
 /**
- * @author taedium
+ * {@link Types#CHAR}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class CharType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public CharType() {
         this("char(1)");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public CharType(String columnDefinition) {
         super(columnDefinition);
     }

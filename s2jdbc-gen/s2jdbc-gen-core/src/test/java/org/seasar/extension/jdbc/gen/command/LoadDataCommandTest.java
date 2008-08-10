@@ -17,10 +17,8 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 
-import org.junit.After;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
 
@@ -28,16 +26,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class MigrateCommandTest {
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        SingletonS2ContainerFactory.destroy();
-    }
+public class LoadDataCommandTest {
 
     /**
      * 
@@ -45,8 +34,7 @@ public class MigrateCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        MigrateCommand command = new MigrateCommand();
-        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        LoadDataCommand command = new LoadDataCommand();
         try {
             command.validate();
             fail();
@@ -60,17 +48,14 @@ public class MigrateCommandTest {
      */
     @Test
     public void testFactoryMethod() throws Exception {
-        MigrateCommand command = new MigrateCommand();
+        LoadDataCommand command = new LoadDataCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createSchemaVersion());
-        assertNotNull(command.createDdlVersion());
-        assertNotNull(command.createSqlFileExecutor());
         assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createDatabaseDescFactory());
         assertNotNull(command.createLoader());
+        assertNotNull(command.createEntityMetaReader());
     }
 }

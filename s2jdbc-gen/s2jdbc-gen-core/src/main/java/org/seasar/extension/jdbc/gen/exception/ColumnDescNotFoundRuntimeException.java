@@ -15,24 +15,31 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
+import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * {@link ColumnDesc}が見つからない場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class ColumnDescNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /** カラム名 */
     protected String columnName;
 
+    /** 完全なテーブル名 */
     protected String fullTableName;
 
     /**
-     * @param messageCode
+     * インスタンスを構築します。
+     * 
      * @param columnName
+     *            カラム名
      * @param fullTableName
+     *            完全なテーブル名
      */
     public ColumnDescNotFoundRuntimeException(String columnName,
             String fullTableName) {
@@ -42,14 +49,18 @@ public class ColumnDescNotFoundRuntimeException extends SRuntimeException {
     }
 
     /**
-     * @return Returns the columnName.
+     * カラム名を返します。
+     * 
+     * @return カラム名
      */
     public String getColumnName() {
         return columnName;
     }
 
     /**
-     * @return Returns the fullTableName.
+     * 完全なテーブル名を返します。
+     * 
+     * @return 完全なテーブル名
      */
     public String getFullTableName() {
         return fullTableName;

@@ -16,11 +16,11 @@
 package org.seasar.extension.jdbc.gen.generator;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
@@ -116,10 +116,14 @@ public class GenerateTableTest {
         tableDesc3.addColumnDesc(no3);
         tableDesc3.addColumnDesc(name3);
 
+        DatabaseDesc databaseDesc = new DatabaseDesc();
+        databaseDesc.addTableDesc(tableDesc);
+        databaseDesc.addTableDesc(tableDesc2);
+        databaseDesc.addTableDesc(tableDesc3);
+
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
-        model = factory.getDdlModel(Arrays.asList(tableDesc, tableDesc2,
-                tableDesc3), 0);
+        model = factory.getDdlModel(databaseDesc, 0);
     }
 
     /**

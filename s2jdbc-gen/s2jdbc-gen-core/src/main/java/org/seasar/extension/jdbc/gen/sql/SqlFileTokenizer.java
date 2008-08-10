@@ -15,16 +15,54 @@
  */
 package org.seasar.extension.jdbc.gen.sql;
 
-import org.seasar.extension.jdbc.gen.SqlFileTokenizer;
-
-import static org.seasar.extension.jdbc.gen.SqlFileTokenizer.TokenType.*;
+import static org.seasar.extension.jdbc.gen.sql.SqlFileTokenizer.TokenType.*;
 
 /**
  * {@link SqlFileTokenizer}の実装クラスです。
  * 
  * @author taedium
  */
-public class SqlFileTokenizerImpl implements SqlFileTokenizer {
+public class SqlFileTokenizer {
+
+    /**
+     * トークンのタイプを表します。
+     * 
+     * @author taedium
+     */
+    public static enum TokenType {
+        /** 引用符に囲まれたトークン */
+        QUOTE,
+
+        /** 1行コメントのトークン */
+        LINE_COMMENT,
+
+        /** ブロックコメントの始まりを表すトークン */
+        START_OF_BLOCK_COMMENT,
+
+        /** ブロックコメントのトークン */
+        BLOCK_COMMENT,
+
+        /** ブロックコメントの終わりを表すトークン */
+        END_OF_BLOCK_COMMENT,
+
+        /** SQLステートメントの区切りを表すトークン */
+        STATEMENT_DELIMITER,
+
+        /** SQLブロックの区切りを表すトークン */
+        BLOCK_DELIMITER,
+
+        /** SQL内の単語を表すトークン */
+        WORD,
+
+        /** 空白など単語以外を表すトークン */
+        OTHER,
+
+        /** 一行の終わりを表すトークン */
+        END_OF_LINE,
+
+        /** ファイルの終わりを表すトークン */
+        END_OF_FILE
+    }
 
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter;
@@ -61,15 +99,21 @@ public class SqlFileTokenizerImpl implements SqlFileTokenizer {
      * @param blockDelimiter
      *            SQLブロックの区切り文字
      */
-    public SqlFileTokenizerImpl(char statementDelimiter, String blockDelimiter) {
+    public SqlFileTokenizer(char statementDelimiter, String blockDelimiter) {
         if (isOther(statementDelimiter) || statementDelimiter == '\'') {
             throw new IllegalArgumentException("statementDelimiter");
         }
         this.statementDelimiter = statementDelimiter;
         this.blockDelimiter = blockDelimiter;
-        type = END_OF_LINE;
+        type = TokenType.END_OF_LINE;
     }
 
+    /**
+     * 一行の文字列を追加します。
+     * 
+     * @param line
+     *            一行の文字列
+     */
     public void addLine(String line) {
         if (line == null) {
             type = END_OF_FILE;
@@ -149,6 +193,11 @@ public class SqlFileTokenizerImpl implements SqlFileTokenizer {
         nextPos = index + 1;
     }
 
+    /**
+     * 次のトークンタイプを返します。
+     * 
+     * @return 次のトークンタイプ
+     */
     public TokenType nextToken() {
         switch (type) {
         case END_OF_FILE:
@@ -250,6 +299,11 @@ public class SqlFileTokenizerImpl implements SqlFileTokenizer {
                 || c == '-' || c == ',';
     }
 
+    /**
+     * トークンを返します。
+     * 
+     * @return トークン
+     */
     public String getToken() {
         return token;
     }

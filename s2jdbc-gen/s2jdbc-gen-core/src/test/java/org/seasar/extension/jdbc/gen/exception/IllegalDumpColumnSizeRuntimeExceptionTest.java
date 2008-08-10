@@ -25,11 +25,15 @@ import static org.junit.Assert.*;
  */
 public class IllegalDumpColumnSizeRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         IllegalDumpColumnSizeRuntimeException e = new IllegalDumpColumnSizeRuntimeException(
                 "aaa", 1, 2, 3);
-        assertEquals("aaa", e.getPath());
+        assertEquals("aaa", e.getDumpFilePath());
         assertEquals(1, e.getLineNumber());
         assertEquals(2, e.getLineColumnSize());
         assertEquals(3, e.getHeaderColumnSize());

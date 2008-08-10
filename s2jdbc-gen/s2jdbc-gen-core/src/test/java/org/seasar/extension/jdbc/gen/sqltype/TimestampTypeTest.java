@@ -27,6 +27,10 @@ import static org.junit.Assert.*;
  */
 public class TimestampTypeTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testToTimestamp() throws Exception {
         TimestampType timestampType = new TimestampType();
@@ -35,6 +39,10 @@ public class TimestampTypeTest {
         assertEquals(123456000, timestamp.getNanos());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testToTimestamp_zero() throws Exception {
         TimestampType timestampType = new TimestampType();

@@ -18,49 +18,88 @@ package org.seasar.extension.jdbc.gen.sql;
 import static org.seasar.extension.jdbc.gen.sql.DumpFileTokenizer.TokenType.*;
 
 /**
- * @author taedium
+ * ダンプファイル内のトークンを認識するクラスです。
  * 
+ * @author taedium
  */
 public class DumpFileTokenizer {
 
-    enum TokenType {
+    /**
+     * トークンタイプ
+     * 
+     * @author taedium
+     */
+    public enum TokenType {
+        /** 値 */
         VALUE,
 
+        /** null */
         NULL,
 
+        /** 区切り文字 */
         DELIMETER,
 
+        /** 行の終端 */
         END_OF_LINE,
 
+        /** バッファーの終端 */
         END_OF_BUFFER,
 
+        /** 未知 */
         UNKOWN
     }
 
+    /** バッファ */
     protected StringBuilder buf = new StringBuilder(200);
 
+    /** バッファ内の現在位置 */
     protected int pos;
 
+    /** バッファ内の次の位置 */
     protected int nextPos;
 
+    /** バッファの長さ */
     protected int length;
 
+    /** 区切り文字 */
     protected char delimiter;
 
+    /** トークンのタイプ */
     protected TokenType type = END_OF_LINE;
 
+    /** トークン */
     protected String token;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param delimiter
+     *            区切り文字
+     */
     public DumpFileTokenizer(char delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * 文字をchar配列としてを追加します。
+     * 
+     * @param chars
+     *            char配列としての文字
+     * @param len
+     *            有効な文字の長さ
+     */
     public void addChars(char[] chars, int len) {
         buf.append(chars, 0, len);
         length = buf.length();
         peek(pos);
     }
 
+    /**
+     * 次のトークンを前もって調べます。
+     * 
+     * @param index
+     *            開始インデックス
+     */
     protected void peek(int index) {
         if (index < length) {
             pos = index;
@@ -118,6 +157,13 @@ public class DumpFileTokenizer {
         }
     }
 
+    /**
+     * 行の終端の場合{@code true}を返します。
+     * 
+     * @param index
+     *            開始インデックス
+     * @return 行の終端の場合{@code true}
+     */
     protected boolean isEndOfLine(int index) {
         char c = buf.charAt(index);
         if (c == '\r') {
@@ -129,6 +175,11 @@ public class DumpFileTokenizer {
         return false;
     }
 
+    /**
+     * 次のトークンタイプを返します。
+     * 
+     * @return 次のトークンタイプ
+     */
     public TokenType nextToken() {
         switch (type) {
         case VALUE:
@@ -161,6 +212,11 @@ public class DumpFileTokenizer {
         throw new IllegalStateException(type.name());
     }
 
+    /**
+     * トークンを返します。
+     * 
+     * @return トークン
+     */
     public String getToken() {
         return token;
     }

@@ -22,8 +22,6 @@ import java.sql.Statement;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
-import org.seasar.extension.jdbc.gen.SqlFileReader;
-import org.seasar.extension.jdbc.gen.SqlFileTokenizer;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
 import org.seasar.framework.log.Logger;
 
@@ -104,7 +102,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
      * @return {@link SqlFileTokenizer}
      */
     protected SqlFileTokenizer createSqlFileTokenizer() {
-        return new SqlFileTokenizerImpl(statementDelimiter,
+        return new SqlFileTokenizer(statementDelimiter,
                 blockDelimiter != null ? blockDelimiter : dialect
                         .getSqlBlockDelimiter());
     }
@@ -118,8 +116,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
      * @return {@link SqlFileReader}の実装
      */
     protected SqlFileReader createSqlFileReader(File sqlFile) {
-        return new SqlFileReaderImpl(sqlFile, sqlFileEncoding, tokenizer,
-                dialect);
+        return new SqlFileReader(sqlFile, sqlFileEncoding, tokenizer, dialect);
     }
 
 }

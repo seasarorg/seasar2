@@ -18,10 +18,22 @@ package org.seasar.extension.jdbc.gen;
 import java.io.File;
 
 /**
- * @author taedium
+ * ダンプデータをロードするインタフェースです。
  * 
+ * @author taedium
  */
 public interface Loader {
 
-    void load(SqlExecutionContext sqlExecutionContext, File dumpFile);
+    /**
+     * ロードします。
+     * 
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     * @param databaseDesc
+     *            データベース記述
+     * @param dumpFile
+     *            ダンプファイル
+     */
+    void load(SqlExecutionContext sqlExecutionContext,
+            DatabaseDesc databaseDesc, File dumpFile);
 }

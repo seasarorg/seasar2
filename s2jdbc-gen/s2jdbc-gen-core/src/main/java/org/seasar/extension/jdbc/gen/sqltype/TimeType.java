@@ -21,19 +21,30 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.StringConversionUtil;
 import org.seasar.framework.util.TimeConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#TIME}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class TimeType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public TimeType() {
         this("time");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public TimeType(String columnDefinition) {
         super(columnDefinition);
     }

@@ -65,6 +65,6 @@ public class ExecuteSqlCommandTest {
         command.validate();
         command.init();
         assertNotNull(command.createSqlFileExecutor());
-        assertNotNull(command.createSqlExecutionContext());
+        assertNotNull(command.createSqlUnitExecutor());
     }
 }

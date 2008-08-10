@@ -16,40 +16,27 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.ColumnDescFactory;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
+import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.Dumper;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Generator;
-import org.seasar.extension.jdbc.gen.IdTableDescFactory;
-import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
-import org.seasar.extension.jdbc.gen.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.gen.TableDescFactory;
-import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
-import org.seasar.extension.jdbc.gen.desc.ColumnDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.IdTableDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.SequenceDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.TableDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
+import org.seasar.extension.jdbc.gen.SqlUnitExecutor.ExecutionUnit;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.sql.DumperImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -106,22 +93,25 @@ public class DumpDataCommand extends AbstractCommand {
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
-    /** エンティティメタデータのファクトリ */
-    protected EntityMetaFactory entityMetaFactory;
-
     /** 方言 */
     protected GenDialect dialect;
 
     protected DataSource dataSource;
 
+    /** エンティティメタデータのファクトリ */
+    protected EntityMetaFactory entityMetaFactory;
+
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
-    /** テーブル記述のファクトリ */
-    protected TableDescFactory tableDescFactory;
+    protected DatabaseDescFactory databaseDescFactory;
 
     /** ジェネレータ */
     protected Generator generator;
+
+    protected SqlUnitExecutor sqlUnitExecutor;
+
+    protected Dumper dumper;
 
     /**
      * インスタンスを構築します。
@@ -382,9 +372,11 @@ public class DumpDataCommand extends AbstractCommand {
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-        entityMetaReader = createEntityMetaReader();
-        tableDescFactory = createTableDescFactory();
         generator = createGenerator();
+        entityMetaReader = createEntityMetaReader();
+        databaseDescFactory = createDatabaseDescFactory();
+        sqlUnitExecutor = createSqlUnitExecutor();
+        dumper = createDumper();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -392,19 +384,14 @@ public class DumpDataCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() {
-        List<TableDesc> tableDescList = getTableDescList();
-        Dumper dumper = createDumper(tableDescList);
-        SqlExecutionContext context = createSqlExecutionContext();
-        try {
-            dumper.dump(context);
-        } finally {
-            if (!context.getExceptionList().isEmpty()) {
-                for (Exception e : context.getExceptionList()) {
-                    logger.error(e.getMessage());
-                }
-                throw context.getExceptionList().get(0);
+        final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
+        sqlUnitExecutor.execute(new ExecutionUnit<Void>() {
+
+            public Void execute(SqlExecutionContext context) {
+                dumper.dump(context, databaseDesc, dumpDir);
+                return null;
             }
-        }
+        });
     }
 
     @Override
@@ -414,59 +401,24 @@ public class DumpDataCommand extends AbstractCommand {
         }
     }
 
-    protected List<TableDesc> getTableDescList() {
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        List<TableDesc> tableDescList = new ArrayList<TableDesc>();
-        for (EntityMeta entityMeta : entityMetaList) {
-            TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
-            if (!tableDescList.contains(tableDesc)) {
-                tableDescList.add(tableDesc);
-            }
-            for (TableDesc idTableDesc : tableDesc.getIdTableDescList()) {
-                if (!tableDescList.contains(idTableDesc)) {
-                    tableDescList.add(idTableDesc);
-                }
-            }
-        }
-        return tableDescList;
-    }
-
-    /**
-     * {@link EntityMetaReader}の実装を作成します。
-     * 
-     * @return {@link EntityMetaReader}の実装
-     */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory,
                 entityNamePattern, ignoreEntityNamePattern);
     }
 
-    /**
-     * {@link TableDescFactory}の実装を作成します。
-     * 
-     * @return {@link TableDescFactory}の実装
-     */
-    protected TableDescFactory createTableDescFactory() {
-        ColumnDescFactory colFactory = new ColumnDescFactoryImpl(dialect);
-        PrimaryKeyDescFactory pkFactory = new PrimaryKeyDescFactoryImpl(dialect);
-        UniqueKeyDescFactory ukFactory = new UniqueKeyDescFactoryImpl();
-        ForeignKeyDescFactory fkFactory = new ForeignKeyDescFactoryImpl(
-                entityMetaFactory);
-        SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
-        IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
-                colFactory, pkFactory, ukFactory);
-        return new TableDescFactoryImpl(colFactory, pkFactory, ukFactory,
-                fkFactory, seqFactory, idTabFactory);
+    protected DatabaseDescFactory createDatabaseDescFactory() {
+        return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
+                dialect);
     }
 
-    protected Dumper createDumper(List<TableDesc> tableDescList) {
-        return new DumperImpl(dumpDir, dumpFileEncoding, dumpTemplateFileName,
-                generator, dialect, tableDescList);
+    protected Dumper createDumper() {
+        return new DumperImpl(dumpFileEncoding, dumpTemplateFileName,
+                generator, dialect);
     }
 
-    protected SqlExecutionContext createSqlExecutionContext() {
-        return new SqlExecutionContextImpl(dataSource, false);
+    protected SqlUnitExecutor createSqlUnitExecutor() {
+        return new SqlUnitExecutorImpl(dataSource, false);
     }
 
     /**

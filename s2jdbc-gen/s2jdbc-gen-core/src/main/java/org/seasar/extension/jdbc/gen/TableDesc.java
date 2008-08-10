@@ -45,6 +45,8 @@ public class TableDesc {
     /** カラム記述のリスト */
     protected List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
 
+    /** カラム名ーをキー、カラム記述を値とするマップ */
+    @SuppressWarnings("unchecked")
     protected Map<String, ColumnDesc> columnDescMap = new CaseInsensitiveMap();
 
     /** 主キー記述のリスト */
@@ -261,13 +263,28 @@ public class TableDesc {
         return buf.append(name).toString();
     }
 
-    public ColumnDesc getColumnDesc(String columnName) {
+    /**
+     * カラム記述を取得します。
+     * 
+     * @param columnName
+     *            カラム名
+     * @return カラム記述
+     * @throws ColumnDescNotFoundRuntimeException
+     *             カラム記述が存在しない場合
+     */
+    public ColumnDesc getColumnDesc(String columnName)
+            throws ColumnDescNotFoundRuntimeException {
         if (columnDescMap.containsKey(columnName)) {
             return columnDescMap.get(columnName);
         }
         throw new ColumnDescNotFoundRuntimeException(columnName, getFullName());
     }
 
+    /**
+     * IDENTITYカラムを持っている場合{@code true}
+     * 
+     * @return IDENTITYカラムを持っている場合{@code true}
+     */
     public boolean hasIdentityColumn() {
         for (ColumnDesc columnDesc : columnDescList) {
             if (columnDesc.isIdentity()) {

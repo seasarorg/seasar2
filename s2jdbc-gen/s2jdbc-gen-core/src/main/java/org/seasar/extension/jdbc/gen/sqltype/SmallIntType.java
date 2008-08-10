@@ -20,19 +20,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.ShortConversionUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#SMALLINT}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class SmallIntType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public SmallIntType() {
         this("smallint");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public SmallIntType(String columnDefinition) {
         super(columnDefinition);
     }

@@ -25,6 +25,9 @@ import static org.junit.Assert.*;
  */
 public class DumpUtilTest {
 
+    /**
+     * 
+     */
     @Test
     public void testEncode() {
         assertEquals("aaa", DumpUtil.encode("aaa"));
@@ -34,6 +37,9 @@ public class DumpUtilTest {
         assertNull(DumpUtil.encode(null));
     }
 
+    /**
+     * 
+     */
     @Test
     public void testDecode() {
         assertEquals("aa\"a", DumpUtil.decode("\"aa\"\"a\""));

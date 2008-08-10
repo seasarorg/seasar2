@@ -16,8 +16,8 @@
 package org.seasar.extension.jdbc.gen.sql;
 
 import java.io.File;
-import java.util.List;
 
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DumpModel;
 import org.seasar.extension.jdbc.gen.DumpModelFactory;
 import org.seasar.extension.jdbc.gen.Dumper;
@@ -30,35 +30,47 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.model.DumpModelFactoryImpl;
 
 /**
- * @author taedium
+ * {@link Dumper}の実装クラスです。
  * 
+ * @author taedium
  */
 public class DumperImpl implements Dumper {
 
-    protected File dumpDir;
-
+    /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding;
 
+    /** ダンプのテンプレートファイル名 */
     protected String dumpTemplateFileName;
 
+    /** ジェネレータ */
     protected Generator generator;
 
+    /** 方言 */
     protected GenDialect dialect;
 
-    protected List<TableDesc> tableDescList;
-
+    /** ダンプモデルのファクトリ */
     protected DumpModelFactory dumpModelFactory;
 
+    /** 拡張子 */
     protected String extension = ".csv";
 
+    /** 区切り文字 */
     protected char delimiter = ',';
 
-    public DumperImpl(File dumpDir, String dumpFileEncoding,
-            String dumpTemplateFileName, Generator generator,
-            GenDialect dialect, List<TableDesc> tableDescList) {
-        if (dumpDir == null) {
-            throw new NullPointerException("dumpDir");
-        }
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dumpFileEncoding
+     *            ダンプファイルのエンコーディング
+     * @param dumpTemplateFileName
+     *            ダンプのテンプレートファイル名
+     * @param generator
+     *            ジェネレータ
+     * @param dialect
+     *            方言
+     */
+    public DumperImpl(String dumpFileEncoding, String dumpTemplateFileName,
+            Generator generator, GenDialect dialect) {
         if (dumpFileEncoding == null) {
             throw new NullPointerException("dumpFileEncoding");
         }
@@ -71,20 +83,16 @@ public class DumperImpl implements Dumper {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
-        if (tableDescList == null) {
-            throw new NullPointerException("tableDescList");
-        }
-        this.dumpDir = dumpDir;
         this.dumpFileEncoding = dumpFileEncoding;
         this.dumpTemplateFileName = dumpTemplateFileName;
         this.generator = generator;
         this.dialect = dialect;
-        this.tableDescList = tableDescList;
         dumpModelFactory = createDumpModelFactory();
     }
 
-    public void dump(SqlExecutionContext sqlExecutionContext) {
-        for (TableDesc tableDesc : tableDescList) {
+    public void dump(SqlExecutionContext sqlExecutionContext,
+            DatabaseDesc databaseDesc, File dumpDir) {
+        for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
             DumpModel dumpModel = dumpModelFactory.getDumpModel(tableDesc,
                     sqlExecutionContext);
             GenerationContext genContext = createGenerationContext(dumpModel,
@@ -93,6 +101,15 @@ public class DumperImpl implements Dumper {
         }
     }
 
+    /**
+     * {@link GenerationContext}を作成します。
+     * 
+     * @param model
+     *            ダンプモデル
+     * @param dumpDir
+     *            ダンプ先のディレクトリ
+     * @return {@link GenerationContext}
+     */
     protected GenerationContext createGenerationContext(DumpModel model,
             File dumpDir) {
         String fileName = model.getName() + extension;
@@ -100,6 +117,11 @@ public class DumperImpl implements Dumper {
                 fileName), dumpTemplateFileName, dumpFileEncoding, true);
     }
 
+    /**
+     * {@link DumpModelFactory}の実装を作成します。
+     * 
+     * @return {@link DumpModelFactory}の実装
+     */
     protected DumpModelFactory createDumpModelFactory() {
         return new DumpModelFactoryImpl(dialect, delimiter);
     }

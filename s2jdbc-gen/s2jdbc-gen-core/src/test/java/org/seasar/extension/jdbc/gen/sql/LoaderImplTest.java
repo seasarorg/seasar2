@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.sql;
 
 import java.util.Arrays;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
@@ -30,12 +29,6 @@ import static org.junit.Assert.*;
  * 
  */
 public class LoaderImplTest {
-
-    private LoaderImpl loader;
-
-    @Before
-    public void setUp() {
-    }
 
     /**
      * 
@@ -55,8 +48,7 @@ public class LoaderImplTest {
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 
-        LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), "UTF-8",
-                Arrays.asList(tableDesc));
+        LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), "UTF-8");
         String sql = loader.buildSql(tableDesc, Arrays.asList("FOO", "BAR"));
         assertEquals("insert into AAA.BBB.HOGE (FOO, BAR) values (?, ?)", sql);
     }

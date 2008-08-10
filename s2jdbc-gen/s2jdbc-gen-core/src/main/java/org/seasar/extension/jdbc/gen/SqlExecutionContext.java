@@ -33,6 +33,13 @@ public interface SqlExecutionContext {
      */
     Statement getStatement();
 
+    /**
+     * 準備されたステートメントを返します。
+     * 
+     * @param sql
+     *            SQL
+     * @return 準備されたステートメント
+     */
     PreparedStatement getPreparedStatement(String sql);
 
     /**
@@ -50,6 +57,9 @@ public interface SqlExecutionContext {
      */
     void addException(RuntimeException exception);
 
+    /**
+     * 例外を通知します。
+     */
     void notifyException();
 
     /**

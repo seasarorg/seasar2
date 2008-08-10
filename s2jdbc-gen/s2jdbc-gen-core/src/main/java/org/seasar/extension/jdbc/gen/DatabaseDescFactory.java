@@ -15,12 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-
 /**
- * @author taedium
+ * {@link DatabaseDesc}のファクトリです。
  * 
+ * @author taedium
  */
-public interface FileHandler {
+public interface DatabaseDescFactory {
 
-    void handle(SqlExecutionContext sqlExecutionContext);
+    /**
+     * データベース記述を返します。
+     * 
+     * @return データベース記述
+     */
+    DatabaseDesc getDatabaseDesc();
 }

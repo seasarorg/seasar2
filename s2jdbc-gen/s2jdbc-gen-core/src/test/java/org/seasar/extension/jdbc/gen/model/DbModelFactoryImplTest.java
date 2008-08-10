@@ -15,9 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.Arrays;
-
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
@@ -52,8 +51,11 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        DdlModel model = factory.getDdlModel(Arrays.asList(tableDesc,
-                tableDesc2), 0);
+        DatabaseDesc databaseDesc = new DatabaseDesc();
+        databaseDesc.addTableDesc(tableDesc);
+        databaseDesc.addTableDesc(tableDesc2);
+
+        DdlModel model = factory.getDdlModel(databaseDesc, 0);
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());
@@ -78,8 +80,11 @@ public class DbModelFactoryImplTest {
         tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
-        DdlModel model = factory.getDdlModel(Arrays.asList(tableDesc,
-                tableDesc2), 0);
+        DatabaseDesc databaseDesc = new DatabaseDesc();
+        databaseDesc.addTableDesc(tableDesc);
+        databaseDesc.addTableDesc(tableDesc2);
+
+        DdlModel model = factory.getDdlModel(databaseDesc, 0);
         assertNotNull(model);
         assertNotNull(model.getDialect());
         assertEquals(2, model.getTableDescList().size());

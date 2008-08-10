@@ -35,8 +35,9 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ResultSetUtil;
 
 /**
- * @author taedium
+ * {@link DumpModelFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class DumpModelFactoryImpl implements DumpModelFactory {
 
@@ -44,12 +45,19 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
     protected static Logger logger = Logger
             .getLogger(DumpModelFactoryImpl.class);
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** 区切り文字 */
     protected char delimiter;
 
     /**
-     * @param dataSource
+     * インスタンスを構築します。
+     * 
+     * @param dialect
+     *            方言
+     * @param delimiter
+     *            区切り文字
      */
     public DumpModelFactoryImpl(GenDialect dialect, char delimiter) {
         if (dialect == null) {
@@ -74,6 +82,16 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         return dumpModel;
     }
 
+    /**
+     * データ行を処理します。
+     * 
+     * @param dumpModel
+     *            ダンプモデル
+     * @param tableDesc
+     *            テーブル記述
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     */
     protected void doRow(DumpModel dumpModel, TableDesc tableDesc,
             SqlExecutionContext sqlExecutionContext) {
         List<SqlType> sqlTypes = getSqlTypeList(tableDesc);
@@ -95,6 +113,13 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         }
     }
 
+    /**
+     * SQLを組み立てます。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return SQL
+     */
     protected String buildSql(TableDesc tableDesc) {
         StringBuilder buf = new StringBuilder(200);
         buf.append("select ");
@@ -113,6 +138,16 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         return buf.toString();
     }
 
+    /**
+     * データ行を追加します。
+     * 
+     * @param dumpModel
+     *            ダンプモデル
+     * @param sqlTypeList
+     *            {@link SqlType}のリスト
+     * @param rs
+     *            結果セット
+     */
     protected void addRows(DumpModel dumpModel, List<SqlType> sqlTypeList,
             ResultSet rs) {
         for (; ResultSetUtil.next(rs);) {
@@ -131,6 +166,13 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         }
     }
 
+    /**
+     * {@link SqlType}のリストを返します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return {@link SqlType}のリスト
+     */
     protected List<SqlType> getSqlTypeList(TableDesc tableDesc) {
         int size = tableDesc.getColumnDescList().size();
         List<SqlType> sqlTypeList = new ArrayList<SqlType>(size);

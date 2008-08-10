@@ -20,47 +20,96 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author taedium
+ * ダンプファイルのモデルです。
  * 
+ * @author taedium
  */
 public class DumpModel {
 
+    /** 名前 */
     protected String name;
 
+    /** データの区切り文字 */
     protected char delimiter;
 
+    /** カラム名のリスト */
     protected List<String> columnNameList = new ArrayList<String>();
 
+    /** 行のリスト */
     protected List<List<String>> rowList = new ArrayList<List<String>>();
 
+    /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * 区切り文字を返します。
+     * 
+     * @return 区切り文字
+     */
     public char getDelimiter() {
         return delimiter;
     }
 
+    /**
+     * 区切り文字を設定します。
+     * 
+     * @param delimiter
+     *            区切り文字
+     */
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
     }
 
+    /**
+     * カラム名のリストを返します。
+     * 
+     * @return カラム名のリスト
+     */
     public List<String> getColumnNameList() {
         return Collections.unmodifiableList(columnNameList);
     }
 
+    /**
+     * カラム名を追加します。
+     * 
+     * @param columnName
+     *            カラム名
+     */
     public void addColumnName(String columnName) {
         columnNameList.add(columnName);
     }
 
+    /**
+     * 行を追加します。
+     * 
+     * @param row
+     *            行
+     */
     public void addRow(List<String> row) {
         this.rowList.add(row);
     }
 
+    /**
+     * 行のリストを返します。
+     * 
+     * @return 行のリスト
+     */
     public List<List<String>> getRowList() {
         return Collections.unmodifiableList(rowList);
     }

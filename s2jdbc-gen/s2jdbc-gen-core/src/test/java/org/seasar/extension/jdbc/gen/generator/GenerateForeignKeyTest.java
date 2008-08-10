@@ -16,10 +16,10 @@
 package org.seasar.extension.jdbc.gen.generator;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.GenerationContext;
@@ -73,9 +73,12 @@ public class GenerateForeignKeyTest {
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 
+        DatabaseDesc databaseDesc = new DatabaseDesc();
+        databaseDesc.addTableDesc(tableDesc);
+
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION");
-        model = factory.getDdlModel(Arrays.asList(tableDesc), 0);
+        model = factory.getDdlModel(databaseDesc, 0);
     }
 
     /**

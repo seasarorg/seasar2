@@ -20,16 +20,28 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
+
 /**
- * @author taedium
+ * {@link Types#VARCHAR}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class VarcharType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public VarcharType() {
         this("varchar($l)");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public VarcharType(String columnDefinition) {
         super(columnDefinition);
     }

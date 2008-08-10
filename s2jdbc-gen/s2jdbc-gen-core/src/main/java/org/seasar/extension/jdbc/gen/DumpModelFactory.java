@@ -16,11 +16,21 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * @author taedium
+ * {@link DumpModel}のファクトリです。
  * 
+ * @author taedium
  */
 public interface DumpModelFactory {
 
+    /**
+     * ダンプモデルを返します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     * @return ダンプモデル
+     */
     DumpModel getDumpModel(TableDesc tableDesc,
             SqlExecutionContext sqlExecutionContext);
 }

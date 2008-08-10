@@ -21,19 +21,30 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.IntegerConversionUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#TIMESTAMP}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class TimestampType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public TimestampType() {
         this("timestamp");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public TimestampType(String columnDefinition) {
         super(columnDefinition);
     }
@@ -51,6 +62,16 @@ public class TimestampType extends AbstractSqlType {
         return value != null ? value.toString() : null;
     }
 
+    /**
+     * {@link Timestamp}へ変換します。
+     * <p>
+     * nano秒を考慮した変換を行います。
+     * </p>
+     * 
+     * @param value
+     *            yyyy-MM-dd hh:mm:ss.fffffffff 形式の文字列
+     * @return {@link Timestamp}の値
+     */
     protected Timestamp toTimestamp(String value) {
         Timestamp timestamp = TimestampConversionUtil.toTimestamp(value,
                 "yyyy-MM-dd hh:mm:ss");

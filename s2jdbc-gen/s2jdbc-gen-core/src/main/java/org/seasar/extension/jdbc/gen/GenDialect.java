@@ -150,10 +150,29 @@ public interface GenDialect {
      */
     SqlBlockContext createSqlBlockContext();
 
+    /**
+     * IDENTITYカラムに対するinsertをサポートしている場合{@code true}
+     * 
+     * @return IDENTITYカラムに対するinsertをサポートしている場合{@code true}
+     */
     boolean supportsIdentityInsert();
 
+    /**
+     * IDENTITYカラムに対するinsertを有効化するステートメントを返します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return IDENTITYカラムに対するinsertを有効化するステートメント
+     */
     String getIdentityInsertOnStatement(String tableName);
 
+    /**
+     * IDENTITYカラムに対するinsertを無効化するステートメントを返します。
+     * 
+     * @param tableName
+     *            テーブル名
+     * @return IDENTITYカラムに対するinsertを無効化するステートメント
+     */
     String getIdentityInsertOffStatement(String tableName);
 
     /**

@@ -32,35 +32,51 @@ import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author taedium
+ * ダンプファイルのリーダです。
  * 
+ * @author taedium
  */
 public class DumpFileReader {
 
+    /** バッファのサイズ */
     protected static final int BUF_SIZE = 8192;
 
+    /** ダンプファイル */
     protected File dumpFile;
 
+    /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding;
 
+    /** トークナイザ */
     protected DumpFileTokenizer tokenizer;
 
+    /** リーダ */
     protected BufferedReader reader;
 
+    /** バッファ */
     protected char[] buf = new char[BUF_SIZE];
 
-    protected int bufLength;
+    /** バッファ内の値の長さ */
+    protected int length;
 
+    /** トークンタイプ */
     protected TokenType tokenType = null;
 
+    /** 行番号 */
     protected int lineNumber = -1;
 
+    /** ヘッダーの列数 */
     protected int headerColumnSize;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param dumpFile
+     *            ダンプファイル
      * @param dumpFileEncoding
+     *            ダンプファイルのエンコーディング
      * @param tokenizer
+     *            トークナイザ
      */
     public DumpFileReader(File dumpFile, String dumpFileEncoding,
             DumpFileTokenizer tokenizer) {
@@ -78,6 +94,11 @@ public class DumpFileReader {
         this.tokenizer = tokenizer;
     }
 
+    /**
+     * 一行を読みます。
+     * 
+     * @return ファイルの終端に達していなければ一行を表すリスト、ファイルの終端に達していれば{@code null}
+     */
     public List<String> readLine() {
         if (isEndOfFile()) {
             return null;
@@ -103,6 +124,13 @@ public class DumpFileReader {
         }
     }
 
+    /**
+     * 内部的に一行を読みます。
+     * 
+     * @return ファイルの終端に達していなければ一行を表すリスト、ファイルの終端に達していれば{@code null}
+     * @throws IOException
+     *             何らかのIO例外が発生した場合
+     */
     protected List<String> readLineInternal() throws IOException {
         if (reader == null) {
             reader = createBufferedReader();
@@ -139,29 +167,56 @@ public class DumpFileReader {
         return !row.isEmpty() ? row : null;
     }
 
+    /**
+     * バッファにデータを読み込みます。
+     * 
+     * @return ファイルの終端でない場合{@code true}、ファイルの終端の場合{@code false}
+     * @throws IOException
+     *             何らかのIO例外が発生した場合
+     */
     protected boolean read() throws IOException {
         if (tokenType == null || tokenType == TokenType.END_OF_BUFFER) {
-            bufLength = reader.read(buf);
+            length = reader.read(buf);
             if (!isEndOfFile()) {
-                tokenizer.addChars(buf, bufLength);
+                tokenizer.addChars(buf, length);
             }
         }
         return !isEndOfFile();
     }
 
+    /**
+     * {@link BufferedReader}を作成します。
+     * 
+     * @return {@link BufferedReader}
+     * @throws IOException
+     *             何らかのIO例外が発生した場合
+     */
     protected BufferedReader createBufferedReader() throws IOException {
         InputStream is = new FileInputStream(dumpFile);
         return new BufferedReader(new InputStreamReader(is, dumpFileEncoding));
     }
 
+    /**
+     * ファイルの終端に達している場合{@code true}
+     * 
+     * @return ファイルの終端に達している場合{@code true}
+     */
     protected boolean isEndOfFile() {
-        return bufLength < 0;
+        return length < 0;
     }
 
-    public int getLineNo() {
+    /**
+     * 読み込んだ行番号を返します。
+     * 
+     * @return 行番号
+     */
+    public int getLineNumber() {
         return lineNumber;
     }
 
+    /**
+     * クローズします。
+     */
     public void close() {
         CloseableUtil.close(reader);
     }

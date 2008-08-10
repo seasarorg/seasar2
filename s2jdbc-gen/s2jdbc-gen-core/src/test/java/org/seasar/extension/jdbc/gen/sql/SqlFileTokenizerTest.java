@@ -19,15 +19,15 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
-import static org.seasar.extension.jdbc.gen.SqlFileTokenizer.TokenType.*;
+import static org.seasar.extension.jdbc.gen.sql.SqlFileTokenizer.TokenType.*;
 
 /**
  * @author taedium
  * 
  */
-public class SqlFileTokenizerImplTest {
+public class SqlFileTokenizerTest {
 
-    private SqlFileTokenizerImpl tokenizer;
+    private SqlFileTokenizer tokenizer;
 
     /**
      * 
@@ -35,7 +35,7 @@ public class SqlFileTokenizerImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        tokenizer = new SqlFileTokenizerImpl(';', "/");
+        tokenizer = new SqlFileTokenizer(';', "/");
     }
 
     /**

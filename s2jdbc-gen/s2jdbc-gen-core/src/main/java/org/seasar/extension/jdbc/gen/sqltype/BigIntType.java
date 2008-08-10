@@ -21,20 +21,31 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.BigDecimalConversionUtil;
 import org.seasar.framework.util.BigIntegerConversionUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#BIGINT}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class BigIntType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public BigIntType() {
         this("bigint");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public BigIntType(String columnDefinition) {
         super(columnDefinition);
     }

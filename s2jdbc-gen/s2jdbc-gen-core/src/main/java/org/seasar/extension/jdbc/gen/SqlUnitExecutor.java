@@ -15,25 +15,34 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
-
 /**
- * データベースのデータをダンプするインタフェースです。
+ * SQLの一まとまりを実行するインタフェースです。
  * 
  * @author taedium
  */
-public interface Dumper {
+public interface SqlUnitExecutor {
 
     /**
-     * ダンプします。
+     * 実行します。
      * 
-     * @param sqlExecutionContext
-     *            SQL実行コンテキスト
-     * @param databaseDesc
-     *            データベース記述
-     * @param dumpDir
-     *            ダンプ先のディレクトリ
+     * @param <T>
+     *            実行結果の型
+     * @param unit
+     *            一まとまり
+     * @return 実行結果
      */
-    void dump(SqlExecutionContext sqlExecutionContext,
-            DatabaseDesc databaseDesc, File dumpDir);
+    <T> T execute(ExecutionUnit<T> unit);
+
+    /**
+     * 一まとまりを表すインタフェースです。
+     * 
+     * @author taedium
+     * 
+     * @param <T>
+     *            実行結果の型
+     */
+    interface ExecutionUnit<T> {
+
+        T execute(SqlExecutionContext context);
+    }
 }

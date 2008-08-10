@@ -16,10 +16,10 @@
 package org.seasar.extension.jdbc.gen.generator;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.SequenceDesc;
@@ -61,14 +61,20 @@ public class GenerateSequenceTest {
         sequenceDesc2.setDataType("integer");
 
         TableDesc tableDesc = new TableDesc();
+        tableDesc.setName("AAA");
         tableDesc.addSequenceDesc(sequenceDesc);
 
         TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.setName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
+
+        DatabaseDesc databaseDesc = new DatabaseDesc();
+        databaseDesc.addTableDesc(tableDesc);
+        databaseDesc.addTableDesc(tableDesc2);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new HsqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
-        model = factory.getDdlModel(Arrays.asList(tableDesc, tableDesc2), 0);
+        model = factory.getDdlModel(databaseDesc, 0);
     }
 
     /**

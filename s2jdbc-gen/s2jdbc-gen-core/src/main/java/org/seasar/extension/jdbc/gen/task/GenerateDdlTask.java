@@ -350,6 +350,14 @@ public class GenerateDdlTask extends AbstractTask {
         command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
     }
 
+    /**
+     * @param dumpDirName
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDumpDirName(java.lang.String)
+     */
+    public void setDumpDirName(String dumpDirName) {
+        command.setDumpDirName(dumpDirName);
+    }
+
     @Override
     protected Command getCommand() {
         return command;

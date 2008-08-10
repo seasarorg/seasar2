@@ -28,6 +28,10 @@ public class DumpFileTokenizerTest {
 
     private DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testValue() throws Exception {
         String s = "aaa, bbb, \r\n";
@@ -48,6 +52,10 @@ public class DumpFileTokenizerTest {
         assertEquals("", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testValue_escaped() throws Exception {
         String s = "\"a\"\"a,a\"\r\n";
@@ -58,6 +66,10 @@ public class DumpFileTokenizerTest {
         assertEquals("\r\n", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testValue_escaped_extraWhitespace() throws Exception {
         String s = "\"a\" , \"b\" \r\n";
@@ -72,6 +84,10 @@ public class DumpFileTokenizerTest {
         assertEquals("\r\n", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEndOfBuffer() throws Exception {
         String s = "aa";
@@ -89,6 +105,10 @@ public class DumpFileTokenizerTest {
         assertEquals("bbb", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNull() throws Exception {
         String s = "aaa,,bbb\r\n";
@@ -109,6 +129,10 @@ public class DumpFileTokenizerTest {
         assertEquals("", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNull_afterStartOfLine() throws Exception {
         String s = ",bbb\r\n";
@@ -125,6 +149,10 @@ public class DumpFileTokenizerTest {
         assertEquals("", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testNull_BeforeEndOfLine() throws Exception {
         String s = "aaa,\r\n";
@@ -141,6 +169,10 @@ public class DumpFileTokenizerTest {
         assertEquals("", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEndOfLine() throws Exception {
         String s = "aaa\r\nbbb\r";
@@ -164,6 +196,10 @@ public class DumpFileTokenizerTest {
         assertEquals("\r\n", tokenizer.getToken());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEndOfLine_escaped() throws Exception {
         String s = "\"aaa\r\nbbb\"\r\n";

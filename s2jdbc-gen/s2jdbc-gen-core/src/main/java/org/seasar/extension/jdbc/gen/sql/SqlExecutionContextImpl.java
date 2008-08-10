@@ -45,6 +45,7 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     /** {@link RuntimeException}のリスト */
     protected List<RuntimeException> exceptionList = new ArrayList<RuntimeException>();
 
+    /** データソース */
     protected DataSource dataSource;
 
     /** コネクション */
@@ -56,6 +57,7 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     /** ステートメント */
     protected Statement statement;
 
+    /** 準備されたステートメント */
     protected PreparedStatement preparedStatement;
 
     /**
@@ -118,6 +120,9 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         exceptionList.clear();
     }
 
+    /**
+     * ステートメントをクローズします。
+     */
     protected void closeStatements() {
         if (statement != null) {
             try {
@@ -137,6 +142,9 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         }
     }
 
+    /**
+     * コネクションをクローズします。
+     */
     protected void closeConnection() {
         if (connection != null) {
             try {
@@ -148,6 +156,9 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         }
     }
 
+    /**
+     * コネクションをオープンします。
+     */
     protected void openConnection() {
         connection = DataSourceUtil.getConnection(dataSource);
     }

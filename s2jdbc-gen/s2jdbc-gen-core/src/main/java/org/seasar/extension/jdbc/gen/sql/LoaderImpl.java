@@ -21,9 +21,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.seasar.extension.jdbc.gen.ColumnDesc;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Loader;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
@@ -31,60 +31,65 @@ import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.StatementUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author taedium
+ * {@link Loader}の実装クラスです。
  * 
+ * @author taedium
  */
 public class LoaderImpl implements Loader {
 
+    /** ロガー */
     protected static Logger logger = Logger.getLogger(LoaderImpl.class);
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding;
 
-    protected Map<String, TableDesc> tableDescMap = new CaseInsensitiveMap();
-
-    protected Map<String, File> dumpFileMap;
-
+    /** トークナイザ */
     protected DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
 
+    /** 区切り文字 */
     protected char delimiter = ',';
 
+    /** 拡張子 */
     protected String extension = ".csv";
 
+    /** バッチサイズ */
     protected int batchSize = 10;
 
-    public LoaderImpl(GenDialect dialect, String dumpFileEncoding,
-            List<TableDesc> tableDescList) {
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param dialect
+     *            方言
+     * @param dumpFileEncoding
+     *            ダンプファイルのエンコーディング
+     */
+    public LoaderImpl(GenDialect dialect, String dumpFileEncoding) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
         if (dumpFileEncoding == null) {
             throw new NullPointerException("dumpFileEncoding");
         }
-        if (tableDescList == null) {
-            throw new NullPointerException("tableDescList");
-        }
         this.dialect = dialect;
         this.dumpFileEncoding = dumpFileEncoding;
-        for (TableDesc tableDesc : tableDescList) {
-            tableDescMap.put(tableDesc.getFullName(), tableDesc);
-        }
     }
 
-    public void load(SqlExecutionContext sqlExecutionContext, File dumpFile) {
+    public void load(SqlExecutionContext sqlExecutionContext,
+            DatabaseDesc databaseDesc, File dumpFile) {
         logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath() });
         String name = StringUtil.trimSuffix(dumpFile.getName(), extension);
-        if (!tableDescMap.containsKey(name)) {
+        TableDesc tableDesc = databaseDesc.getTableDesc(name);
+        if (tableDesc == null) {
             return;
         }
-        TableDesc tableDesc = tableDescMap.get(name);
         DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
                 tokenizer);
         try {
@@ -114,8 +119,12 @@ public class LoaderImpl implements Loader {
     }
 
     /**
+     * データのロード前に処理します。
+     * 
      * @param sqlExecutionContext
+     *            SQL実行コンテキスト
      * @param tableDesc
+     *            テーブル記述
      */
     protected void preLoadData(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc) {
@@ -129,10 +138,16 @@ public class LoaderImpl implements Loader {
     }
 
     /**
+     * データをロードします。
+     * 
      * @param sqlExecutionContext
+     *            SQL実行コンテキスト
      * @param reader
+     *            リーダ
      * @param sqlTypeList
+     *            {@link SqlType}のリスト
      * @param sql
+     *            SQL
      */
     protected void loadData(SqlExecutionContext sqlExecutionContext,
             DumpFileReader reader, List<SqlType> sqlTypeList, String sql) {
@@ -156,8 +171,12 @@ public class LoaderImpl implements Loader {
     }
 
     /**
+     * データのロード後に処理します。
+     * 
      * @param sqlExecutionContext
+     *            SQL実行コンテキスト
      * @param tableDesc
+     *            テーブル記述
      */
     protected void postLoadData(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc) {
@@ -170,10 +189,26 @@ public class LoaderImpl implements Loader {
         }
     }
 
+    /**
+     * ログを出力します。
+     * 
+     * @param sql
+     *            SQL
+     */
     protected void logSql(String sql) {
         logger.log("DS2JDBCGen0007", new Object[] { sql });
     }
 
+    /**
+     * 引数をバインドします。
+     * 
+     * @param ps
+     *            準備されたステートメント
+     * @param sqlTypeList
+     *            {@link SqlType}のリスト
+     * @param valueList
+     *            値のリスト
+     */
     protected void bindArgs(PreparedStatement ps, List<SqlType> sqlTypeList,
             List<String> valueList) {
         try {
@@ -187,6 +222,15 @@ public class LoaderImpl implements Loader {
         }
     }
 
+    /**
+     * SQLを組み立てます。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @param columnNameList
+     *            カラム名のリスト
+     * @return SQL
+     */
     protected String buildSql(TableDesc tableDesc, List<String> columnNameList) {
         StringBuilder buf = new StringBuilder();
         buf.append("insert into ");
@@ -206,6 +250,15 @@ public class LoaderImpl implements Loader {
         return buf.toString();
     }
 
+    /**
+     * {@link SqlType}のリストを返します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @param columnNameList
+     *            カラム名のリスト
+     * @return {@link SqlType}のリストを返します。
+     */
     protected List<SqlType> getSqlTypeList(TableDesc tableDesc,
             List<String> columnNameList) {
         List<SqlType> sqlTypeList = new ArrayList<SqlType>();

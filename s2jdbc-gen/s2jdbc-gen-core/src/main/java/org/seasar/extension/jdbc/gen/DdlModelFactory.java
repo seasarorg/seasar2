@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.util.List;
-
 /**
  * {@link DdlModel DDLのモデル}のファクトリです。
  * 
@@ -27,11 +25,11 @@ public interface DdlModelFactory {
     /**
      * DDLのモデルを返します。
      * 
-     * @param tableDesclist
-     *            テーブル記述のリスト
+     * @param databaseDesc
+     *            データベース記述
      * @param versionNo
      *            バージョン番号
      * @return DDLのモデル
      */
-    DdlModel getDdlModel(List<TableDesc> tableDesclist, int versionNo);
+    DdlModel getDdlModel(DatabaseDesc databaseDesc, int versionNo);
 }

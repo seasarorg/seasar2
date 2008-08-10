@@ -25,10 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlFileReader;
-import org.seasar.extension.jdbc.gen.SqlFileTokenizer;
 import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
-import org.seasar.extension.jdbc.gen.SqlFileTokenizer.TokenType;
+import org.seasar.extension.jdbc.gen.sql.SqlFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
@@ -38,10 +36,10 @@ import org.seasar.framework.log.Logger;
  * 
  * @author taedium
  */
-public class SqlFileReaderImpl implements SqlFileReader {
+public class SqlFileReader {
 
     /** ロガー */
-    protected static Logger logger = Logger.getLogger(SqlFileReaderImpl.class);
+    protected static Logger logger = Logger.getLogger(SqlFileReader.class);
 
     /** SQLファイル */
     protected File sqlFile;
@@ -71,7 +69,7 @@ public class SqlFileReaderImpl implements SqlFileReader {
      * @param dialect
      *            方言
      */
-    public SqlFileReaderImpl(File sqlFile, String sqlFileEncoding,
+    public SqlFileReader(File sqlFile, String sqlFileEncoding,
             SqlFileTokenizer tokenizer, GenDialect dialect) {
         if (sqlFile == null) {
             throw new NullPointerException("sqlFile");
@@ -91,6 +89,11 @@ public class SqlFileReaderImpl implements SqlFileReader {
         this.dialect = dialect;
     }
 
+    /**
+     * SQLステートメントもしくはSQLブロックを読み取ります。
+     * 
+     * @return ファイルの終端に達していなければSQL、ファイルの終端に達していれば{@code null}
+     */
     public String readSql() {
         if (endOfFile) {
             return null;
@@ -121,6 +124,9 @@ public class SqlFileReaderImpl implements SqlFileReader {
         }
     }
 
+    /**
+     * クローズします。
+     */
     public void close() {
         CloseableUtil.close(reader);
     }

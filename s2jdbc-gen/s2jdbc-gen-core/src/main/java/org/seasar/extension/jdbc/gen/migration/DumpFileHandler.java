@@ -17,33 +17,55 @@ package org.seasar.extension.jdbc.gen.migration;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.FileHandler;
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.Loader;
+import org.seasar.extension.jdbc.gen.MigrationFileHandler;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 
 /**
- * @author taedium
+ * ダンプファイルを処理します。
  * 
+ * @author taedium
  */
-public class DumpFileHandler implements FileHandler {
+public class DumpFileHandler implements MigrationFileHandler {
 
+    /** データベース記述 */
+    protected DatabaseDesc databaseDesc;
+
+    /** ダンプファイル */
     protected File dumpFile;
 
+    /** ローダ */
     protected Loader loader;
 
-    public DumpFileHandler(File dumpFile, Loader loader) {
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param databaseDesc
+     *            データベース記述
+     * @param dumpFile
+     *            ダンプファイル
+     * @param loader
+     *            ローダ
+     */
+    public DumpFileHandler(DatabaseDesc databaseDesc, File dumpFile,
+            Loader loader) {
+        if (databaseDesc == null) {
+            throw new NullPointerException("databaseDesc");
+        }
         if (dumpFile == null) {
             throw new NullPointerException("dumpFile");
         }
         if (loader == null) {
             throw new NullPointerException("loader");
         }
+        this.databaseDesc = databaseDesc;
         this.dumpFile = dumpFile;
         this.loader = loader;
     }
 
     public void handle(SqlExecutionContext sqlExecutionContext) {
-        loader.load(sqlExecutionContext, dumpFile);
+        loader.load(sqlExecutionContext, databaseDesc, dumpFile);
     }
 
 }

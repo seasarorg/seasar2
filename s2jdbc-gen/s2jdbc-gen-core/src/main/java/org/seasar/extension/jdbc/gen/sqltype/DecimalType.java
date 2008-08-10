@@ -21,19 +21,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.BigDecimalConversionUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#DECIMAL}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class DecimalType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public DecimalType() {
         this("decimal");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public DecimalType(String columnDefinition) {
         super(columnDefinition);
     }

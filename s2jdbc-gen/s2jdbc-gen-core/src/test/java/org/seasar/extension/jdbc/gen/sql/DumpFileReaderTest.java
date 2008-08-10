@@ -32,22 +32,30 @@ public class DumpFileReaderTest {
 
     private DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         String path = getClass().getName().replace('.', '/') + ".csv";
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNo());
+        assertEquals(0, reader.getLineNumber());
         assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
-        assertEquals(1, reader.getLineNo());
+        assertEquals(1, reader.getLineNumber());
         assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
-        assertEquals(2, reader.getLineNo());
+        assertEquals(2, reader.getLineNumber());
         assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
-        assertEquals(3, reader.getLineNo());
+        assertEquals(3, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testEndWithCRLF() throws Exception {
         String path = getClass().getName().replace('.', '/')
@@ -55,16 +63,20 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNo());
+        assertEquals(0, reader.getLineNumber());
         assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
-        assertEquals(1, reader.getLineNo());
+        assertEquals(1, reader.getLineNumber());
         assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
-        assertEquals(2, reader.getLineNo());
+        assertEquals(2, reader.getLineNumber());
         assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
-        assertEquals(3, reader.getLineNo());
+        assertEquals(3, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testHeaderOnly() throws Exception {
         String path = getClass().getName().replace('.', '/')
@@ -72,10 +84,14 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNo());
+        assertEquals(0, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testIllegalColumnSize() throws Exception {
         String path = getClass().getName().replace('.', '/')
@@ -83,7 +99,7 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNo());
+        assertEquals(0, reader.getLineNumber());
         try {
             reader.readLine();
             fail();

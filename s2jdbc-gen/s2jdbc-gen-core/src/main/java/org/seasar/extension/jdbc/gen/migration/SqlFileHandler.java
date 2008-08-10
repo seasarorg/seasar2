@@ -17,23 +17,30 @@ package org.seasar.extension.jdbc.gen.migration;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.FileHandler;
+import org.seasar.extension.jdbc.gen.MigrationFileHandler;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
 
 /**
- * @author taedium
+ * SQLファイルを処理します。
  * 
+ * @author taedium
  */
-public class SqlFileHandler implements FileHandler {
+public class SqlFileHandler implements MigrationFileHandler {
 
+    /** SQLファイル */
     protected File sqlFile;
 
+    /** SQLファイルの実行者 */
     protected SqlFileExecutor sqlFileExecutor;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param sqlFile
+     *            SQLファイル
      * @param sqlFileExecutor
+     *            SQLファイルの実行者
      */
     public SqlFileHandler(File sqlFile, SqlFileExecutor sqlFileExecutor) {
         if (sqlFile == null) {
@@ -46,11 +53,6 @@ public class SqlFileHandler implements FileHandler {
         this.sqlFileExecutor = sqlFileExecutor;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.FileHandler#handle()
-     */
     public void handle(SqlExecutionContext sqlExecutionContext) {
         sqlFileExecutor.execute(sqlExecutionContext, sqlFile);
     }

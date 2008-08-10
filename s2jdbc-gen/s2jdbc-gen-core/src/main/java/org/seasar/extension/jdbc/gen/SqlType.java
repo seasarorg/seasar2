@@ -46,8 +46,31 @@ public interface SqlType {
     String getColumnDefinition(int length, int precision, int scale,
             boolean identity);
 
+    /**
+     * {@link ResultSet}から値を文字列として取得します。
+     * 
+     * @param resultSet
+     *            結果セット
+     * @param index
+     *            順序
+     * @return 値の文字列
+     * @throws SQLException
+     *             結果セットから取得できない場合
+     */
     String getValue(ResultSet resultSet, int index) throws SQLException;
 
+    /**
+     * {@link PreparedStatement}に値をバインドします。
+     * 
+     * @param ps
+     *            準備されたステートメント
+     * @param index
+     *            順序
+     * @param value
+     *            文字列としての値
+     * @throws SQLException
+     *             バインドできない場合
+     */
     void bindValue(PreparedStatement ps, int index, String value)
             throws SQLException;
 }

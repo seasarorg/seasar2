@@ -26,10 +26,12 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
+import org.seasar.extension.jdbc.gen.SqlUnitExecutor.ExecutionUnit;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyEmptyRuntimeException;
-import org.seasar.extension.jdbc.gen.sql.SqlExecutionContextImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -93,6 +95,8 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     /** SQLファイルの実行者 */
     protected SqlFileExecutor sqlFileExecutor;
+
+    protected SqlUnitExecutor sqlUnitExecutor;
 
     /**
      * インスタンスを構築します。
@@ -293,6 +297,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
                     .getComponent(UserTransaction.class);
         }
         sqlFileExecutor = createSqlFileExecutor();
+        sqlUnitExecutor = createSqlUnitExecutor();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -331,19 +336,15 @@ public class ExecuteSqlCommand extends AbstractCommand {
      * SQLファイルのリストを実行します。
      */
     protected void executeSqlFileList() {
-        SqlExecutionContext context = createSqlExecutionContext();
-        try {
-            for (File sqlFile : sqlFileList) {
-                sqlFileExecutor.execute(context, sqlFile);
-            }
-        } finally {
-            if (!context.getExceptionList().isEmpty()) {
-                for (Exception e : context.getExceptionList()) {
-                    logger.error(e.getMessage());
+        sqlUnitExecutor.execute(new ExecutionUnit<Void>() {
+
+            public Void execute(SqlExecutionContext context) {
+                for (File sqlFile : sqlFileList) {
+                    sqlFileExecutor.execute(context, sqlFile);
                 }
-                throw context.getExceptionList().get(0);
+                return null;
             }
-        }
+        });
     }
 
     /**
@@ -356,13 +357,8 @@ public class ExecuteSqlCommand extends AbstractCommand {
                 statementDelimiter, blockDelimiter);
     }
 
-    /**
-     * {@link SqlExecutionContext}の実装を作成します。
-     * 
-     * @return {@link SqlExecutionContext}の実装
-     */
-    protected SqlExecutionContext createSqlExecutionContext() {
-        return new SqlExecutionContextImpl(dataSource, haltOnError);
+    protected SqlUnitExecutor createSqlUnitExecutor() {
+        return new SqlUnitExecutorImpl(dataSource, haltOnError);
     }
 
     @Override

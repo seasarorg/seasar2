@@ -20,18 +20,29 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.Base64Util;
 
 /**
- * @author taedium
+ * {@link Types#BIGINT}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class BinaryType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public BinaryType() {
         this("binary");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public BinaryType(String columnDefinition) {
         super(columnDefinition);
     }

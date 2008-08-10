@@ -16,8 +16,8 @@
 package org.seasar.extension.jdbc.gen.model;
 
 import java.sql.Types;
-import java.util.List;
 
+import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -73,11 +73,11 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
         this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
-    public DdlModel getDdlModel(List<TableDesc> tableDescList, int versionNo) {
+    public DdlModel getDdlModel(DatabaseDesc databaseDesc, int versionNo) {
         DdlModel model = new DdlModel();
         model.setDialect(dialect);
         model.setDelimiter(statementDelimiter);
-        for (TableDesc tableDesc : tableDescList) {
+        for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
             model.addTableDesc(tableDesc);
             for (SequenceDesc sequenceDesc : tableDesc.getSequenceDescList()) {
                 model.addSequenceDesc(sequenceDesc);

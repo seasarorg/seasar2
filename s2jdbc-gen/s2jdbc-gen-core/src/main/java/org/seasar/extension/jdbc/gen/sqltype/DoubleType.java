@@ -20,19 +20,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.DoubleConversionUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#DOUBLE}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class DoubleType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public DoubleType() {
         this("double");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public DoubleType(String columnDefinition) {
         super(columnDefinition);
     }

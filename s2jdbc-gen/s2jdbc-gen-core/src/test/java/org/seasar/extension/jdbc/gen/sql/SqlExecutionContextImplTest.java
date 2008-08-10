@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedException;
-import org.seasar.framework.mock.sql.MockConnection;
 import org.seasar.framework.mock.sql.MockDataSource;
 
 import static org.junit.Assert.*;
@@ -52,7 +51,6 @@ public class SqlExecutionContextImplTest {
      */
     @Test
     public void testAddException() {
-        MockConnection conn = new MockConnection();
         SqlExecutionContextImpl context = new SqlExecutionContextImpl(
                 new MockDataSource(), false);
         assertTrue(context.getExceptionList().isEmpty());
@@ -68,7 +66,6 @@ public class SqlExecutionContextImplTest {
      */
     @Test
     public void testAddException_haltOnError() {
-        MockConnection conn = new MockConnection();
         SqlExecutionContextImpl context = new SqlExecutionContextImpl(
                 new MockDataSource(), true);
         assertTrue(context.getExceptionList().isEmpty());
@@ -86,7 +83,6 @@ public class SqlExecutionContextImplTest {
      */
     @Test
     public void testDestroy() {
-        MockConnection conn = new MockConnection();
         SqlExecutionContextImpl context = new SqlExecutionContextImpl(
                 new MockDataSource(), false);
         assertNotNull(context.getStatement());

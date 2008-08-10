@@ -16,23 +16,48 @@
 package org.seasar.extension.jdbc.gen.util;
 
 /**
- * @author taedium
+ * カラム定義に関するユーティリティクラスです。
  * 
+ * @author taedium
  */
 public class ColumnDefinitionUtil {
 
+    /**
+     * 
+     */
     protected ColumnDefinitionUtil() {
     }
 
-    public static String format(String format, int length, int precision,
-            int scale) {
+    /**
+     * カラム定義の文字列をフォーマットします。
+     * <p>
+     * カラム定義の文字列に含まる次の値が変換されます。
+     * <ul>
+     * <li>$lが長さで置き換えられます。</li>
+     * <li>$pが精度で置き換えられます。</li>
+     * <li>$sがスケールで置き換えられます。</li>
+     * </ul>
+     * </p>
+     * 
+     * @param columnDefinition
+     *            カラム定義の文字列
+     * @param length
+     *            長さ
+     * @param precision
+     *            精度
+     * @param scale
+     *            スケール
+     * @return フォーマットされた文字列
+     */
+    public static String format(String columnDefinition, int length,
+            int precision, int scale) {
         StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < format.length(); i++) {
-            char c = format.charAt(i);
+        for (int i = 0; i < columnDefinition.length(); i++) {
+            char c = columnDefinition.charAt(i);
             if (c == '$') {
                 i++;
-                if (i < format.length()) {
-                    c = format.charAt(i);
+                if (i < columnDefinition.length()) {
+                    c = columnDefinition.charAt(i);
                     switch (c) {
                     case 'l':
                         buf.append(length);

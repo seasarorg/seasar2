@@ -22,18 +22,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.ReaderUtil;
 
 /**
- * @author taedium
+ * {@link Types#CLOB}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class ClobType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public ClobType() {
+
         this("clob");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public ClobType(String columnDefinition) {
         super(columnDefinition);
     }

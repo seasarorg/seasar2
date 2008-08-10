@@ -165,6 +165,16 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         columnDesc.setUnique(column.unique());
     }
 
+    /**
+     * SQL型を処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param columnDesc
+     *            カラム記述
+     * @param column
+     *            カラム
+     */
     protected void doSqlType(PropertyMeta propertyMeta, ColumnDesc columnDesc,
             Column column) {
         int sqlType = propertyMeta.getValueType().getSqlType();

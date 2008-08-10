@@ -20,19 +20,30 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.IntegerConversionUtil;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link Types#INTEGER}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class IntegerType extends AbstractSqlType {
 
+    /**
+     * インスタンスを構築します。
+     */
     public IntegerType() {
         this("integer");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public IntegerType(String columnDefinition) {
         super(columnDefinition);
     }

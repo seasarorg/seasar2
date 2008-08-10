@@ -38,16 +38,22 @@ import static org.junit.Assert.*;
  */
 public class DumpModelFactoryImplTest {
 
-    protected GenDialect dialect;
+    private GenDialect dialect;
 
-    protected DumpModelFactoryImpl factory;
+    private DumpModelFactoryImpl factory;
 
+    /**
+     * 
+     */
     @Before
     public void setUp() {
         dialect = new StandardGenDialect();
         factory = new DumpModelFactoryImpl(dialect, ',');
     }
 
+    /**
+     * 
+     */
     @Test
     public void testBuildSql() {
         ColumnDesc columnDesc1 = new ColumnDesc();
@@ -69,6 +75,10 @@ public class DumpModelFactoryImplTest {
                 .buildSql(tableDesc));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testAddRows() throws Exception {
         MockResultSet rs = new MockResultSet();

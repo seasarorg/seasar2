@@ -22,20 +22,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.framework.util.Base64Util;
 
 /**
- * @author taedium
+ * {@link Types#BLOB}に対応する{@link SqlType}です。
  * 
+ * @author taedium
  */
 public class BlobType extends AbstractSqlType {
 
+    /** 空のバイト配列 */
     protected static byte[] EMPTY_BYTES = new byte[] {};
 
+    /**
+     * インスタンスを構築します。
+     */
     public BlobType() {
         this("blob");
     }
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param columnDefinition
+     *            カラム定義
+     */
     public BlobType(String columnDefinition) {
         super(columnDefinition);
     }

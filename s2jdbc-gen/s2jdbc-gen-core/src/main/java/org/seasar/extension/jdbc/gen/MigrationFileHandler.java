@@ -16,22 +16,17 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * SQLスクリプトのリーダです。
+ * マイグレーション用のファイルを扱うインタフェースです。
  * 
  * @author taedium
  */
-public interface SqlFileReader {
+public interface MigrationFileHandler {
 
     /**
-     * SQLを返します。
+     * 処理します。
      * 
-     * @return SQLを読み取れる場合はそのSQL、SQLを読み取れない場合は{@code null}
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
      */
-    String readSql();
-
-    /**
-     * クローズします。
-     */
-    void close();
-
+    void handle(SqlExecutionContext sqlExecutionContext);
 }
