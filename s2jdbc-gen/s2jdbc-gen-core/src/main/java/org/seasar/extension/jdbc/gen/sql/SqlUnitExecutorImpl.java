@@ -54,13 +54,12 @@ public class SqlUnitExecutorImpl implements SqlUnitExecutor {
         this.haltOnError = haltOnError;
     }
 
-    public <T> T execute(ExecutionUnit<T> unit) {
-        T ret = null;
+    public void execute(ExecutionUnit unit) {
         SqlExecutionContext context = new SqlExecutionContextImpl(dataSource,
                 haltOnError);
         try {
             try {
-                ret = unit.execute(context);
+                unit.execute(context);
             } finally {
                 for (Exception e : context.getExceptionList()) {
                     logger.error(e.getMessage());
@@ -69,7 +68,6 @@ public class SqlUnitExecutorImpl implements SqlUnitExecutor {
             if (!context.getExceptionList().isEmpty()) {
                 throw context.getExceptionList().get(0);
             }
-            return ret;
         } finally {
             context.destroy();
         }

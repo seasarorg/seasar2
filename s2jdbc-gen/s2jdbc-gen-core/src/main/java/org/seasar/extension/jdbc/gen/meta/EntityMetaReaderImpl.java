@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.exception.EntityClassNotFoundRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
@@ -114,9 +115,9 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         });
 
         if (entityMetaList.isEmpty()) {
-            logger.log("ES2JDBCGen0014", new Object[] { classpathDir.getPath(),
+            throw new EntityClassNotFoundRuntimeException(classpathDir,
                     packageName, entityNamePattern.pattern(),
-                    ignoreEntityNamePattern.pattern() });
+                    ignoreEntityNamePattern.pattern());
         }
         return entityMetaList;
     }

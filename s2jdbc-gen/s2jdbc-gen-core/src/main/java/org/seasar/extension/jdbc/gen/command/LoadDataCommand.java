@@ -32,7 +32,6 @@ import org.seasar.extension.jdbc.gen.Loader;
 import org.seasar.extension.jdbc.gen.MigrationFileHandler;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor.ExecutionUnit;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
@@ -342,13 +341,12 @@ public class LoadDataCommand extends AbstractCommand {
                     }
                 });
 
-        sqlUnitExecutor.execute(new ExecutionUnit<Void>() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
 
-            public Void execute(SqlExecutionContext context) {
+            public void execute(SqlExecutionContext context) {
                 for (MigrationFileHandler handler : handlerList) {
                     handler.handle(context);
                 }
-                return null;
             }
         });
     }

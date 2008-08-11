@@ -29,7 +29,6 @@ import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor.ExecutionUnit;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
@@ -385,11 +384,10 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        sqlUnitExecutor.execute(new ExecutionUnit<Void>() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
 
-            public Void execute(SqlExecutionContext context) {
+            public void execute(SqlExecutionContext context) {
                 dumper.dump(context, databaseDesc, dumpDir);
-                return null;
             }
         });
     }

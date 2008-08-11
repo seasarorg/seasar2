@@ -26,13 +26,12 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor.ExecutionUnit;
+import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyEmptyRuntimeException;
-import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
@@ -336,13 +335,12 @@ public class ExecuteSqlCommand extends AbstractCommand {
      * SQLファイルのリストを実行します。
      */
     protected void executeSqlFileList() {
-        sqlUnitExecutor.execute(new ExecutionUnit<Void>() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
 
-            public Void execute(SqlExecutionContext context) {
+            public void execute(SqlExecutionContext context) {
                 for (File sqlFile : sqlFileList) {
                     sqlFileExecutor.execute(context, sqlFile);
                 }
-                return null;
             }
         });
     }

@@ -25,24 +25,19 @@ public interface SqlUnitExecutor {
     /**
      * 実行します。
      * 
-     * @param <T>
-     *            実行結果の型
      * @param unit
      *            一まとまり
      * @return 実行結果
      */
-    <T> T execute(ExecutionUnit<T> unit);
+    void execute(ExecutionUnit unit);
 
     /**
      * 一まとまりを表すインタフェースです。
      * 
      * @author taedium
-     * 
-     * @param <T>
-     *            実行結果の型
      */
-    interface ExecutionUnit<T> {
+    interface ExecutionUnit {
 
-        T execute(SqlExecutionContext context);
+        void execute(SqlExecutionContext context);
     }
 }

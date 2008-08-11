@@ -18,26 +18,31 @@ package org.seasar.extension.jdbc.gen;
 import java.io.File;
 
 /**
- * DDLファイルのバージョンを表すインタフェースです。
+ * ファイルをバージョン付けするインタフェースです。
  * 
  * @author taedium
  */
-public interface DdlVersion {
+public interface Versionizer {
+
+    File getCreateDir(int versionNo);
+
+    File getDropDir(int versionNo);
 
     /**
-     * バージョン番号を返します。
+     * バージョンを増分します。
      * 
-     * @return バージョン番号
+     * @param incrementUnit
      */
-    int getVersionNo();
+    void increment(IncrementUnit incrementUnit);
 
     /**
-     * バージョン番号を設定します。
+     * バージョンを増分する際の一まとまりを表すインタフェースです。
      * 
-     * @param versionNo
-     *            バージョン番号
+     * @author taedium
      */
-    void setVersionNo(int versionNo);
+    interface IncrementUnit {
 
-    File getVersionFile();
+        void increment(File createDir, File dropDir, int versionNo);
+    }
+
 }

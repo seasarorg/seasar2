@@ -74,6 +74,6 @@ public class GenerateDdlCommandTest {
                 "xxx"), "aaa", "bbb"));
         assertNotNull(command.createDumper());
         assertNotNull(command.createSqlUnitExecutor());
-
+        assertNotNull(command.createVersionizer());
     }
 }

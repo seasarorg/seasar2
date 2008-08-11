@@ -83,4 +83,9 @@ public class DdlVersionImpl implements DdlVersion {
         }
         this.versionNo = null;
     }
+
+    public File getVersionFile() {
+        return file;
+    }
+
 }

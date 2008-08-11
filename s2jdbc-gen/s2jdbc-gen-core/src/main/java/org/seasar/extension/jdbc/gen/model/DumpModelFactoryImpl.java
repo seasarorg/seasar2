@@ -105,10 +105,12 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
                 ResultSetUtil.close(rs);
             }
         } catch (SQLRuntimeException e) {
-            sqlExecutionContext.notifyException();
-            if (!dialect.isTableNotFound(e)) {
-                logger.log(e);
-                throw e;
+            if (dialect.isTableNotFound(e)) {
+                logger.log("DS2JDBCGen0012", new Object[] { tableDesc
+                        .getFullName() });
+                sqlExecutionContext.notifyException();
+            } else {
+                sqlExecutionContext.addException(e);
             }
         }
     }

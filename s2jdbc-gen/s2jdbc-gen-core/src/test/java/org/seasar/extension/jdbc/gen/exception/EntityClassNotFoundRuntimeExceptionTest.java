@@ -13,31 +13,32 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.exception;
 
 import java.io.File;
 
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 /**
- * DDLファイルのバージョンを表すインタフェースです。
- * 
  * @author taedium
+ * 
  */
-public interface DdlVersion {
+public class EntityClassNotFoundRuntimeExceptionTest {
 
     /**
-     * バージョン番号を返します。
      * 
-     * @return バージョン番号
+     * @throws Exception
      */
-    int getVersionNo();
-
-    /**
-     * バージョン番号を設定します。
-     * 
-     * @param versionNo
-     *            バージョン番号
-     */
-    void setVersionNo(int versionNo);
-
-    File getVersionFile();
+    @Test
+    public void test() throws Exception {
+        EntityClassNotFoundRuntimeException e = new EntityClassNotFoundRuntimeException(
+                new File("dir"), "aaa", "bbb", "ccc");
+        assertNotNull(e.getClasspathDir());
+        assertEquals("aaa", e.getPackageName());
+        assertEquals("bbb", e.getEntityNamePattern());
+        assertEquals("ccc", e.getIgnoreEntityNamePattern());
+        System.out.println(e.getMessage());
+    }
 }

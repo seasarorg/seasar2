@@ -16,6 +16,8 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -34,10 +36,9 @@ import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor.ExecutionUnit;
+import org.seasar.extension.jdbc.gen.Versionizer;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.exception.NextVersionDirExistsRuntimeException;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
@@ -45,11 +46,9 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.sql.DumperImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
-import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
+import org.seasar.extension.jdbc.gen.version.VersionizerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -185,12 +184,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
-    /** スキーマ作成用のSQLファイルを格納するディレクトリ名 */
-    protected String createDirName = "create";
-
-    /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
-    protected String dropDirName = "drop";
-
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
@@ -218,6 +211,8 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** DDLのバージョン */
     protected DdlVersion ddlVersion;
+
+    protected Versionizer versionizer;
 
     protected DatabaseDescFactory databaseDescFactory;
 
@@ -899,6 +894,7 @@ public class GenerateDdlCommand extends AbstractCommand {
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         ddlVersion = createDdlVersion();
+        versionizer = createVersionizer();
         ddlModelFactory = createDdlModelFactory();
         generator = createGenerator();
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
@@ -913,37 +909,26 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() throws Throwable {
-        int versionNo = ddlVersion.getVersionNo();
-        File versionDir = new File(migrateDir, VersionUtil.toString(versionNo,
-                versionNoPattern));
-        if (versionNo == 0) {
-            File createDir = new File(versionDir, createDirName);
-            createDir.mkdirs();
-            File dropDir = new File(versionDir, dropDirName);
-            dropDir.mkdirs();
-        }
+        versionizer.increment(new Versionizer.IncrementUnit() {
 
-        int nextVersionNo = versionNo + 1;
-        File nextVersionDir = new File(migrateDir, VersionUtil.toString(
-                nextVersionNo, versionNoPattern));
-        if (nextVersionDir.exists()) {
-            throw new NextVersionDirExistsRuntimeException(nextVersionDir
-                    .getPath(), ddlVersionFile.getPath());
-        }
+            public void increment(final File createDir, File dropDir,
+                    int versionNo) {
+                final DatabaseDesc databaseDesc = databaseDescFactory
+                        .getDatabaseDesc();
+                DdlModel model = ddlModelFactory.getDdlModel(databaseDesc,
+                        versionNo);
+                generateCreateDdl(model, createDir);
+                generateDropDdl(model, dropDir);
 
-        try {
-            if (versionDir.exists()) {
-                FileUtil.copyDirectory(versionDir, nextVersionDir,
-                        new ExclusionFilenameFilter());
+                sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
+
+                    public void execute(SqlExecutionContext context) {
+                        dumper.dump(context, databaseDesc, new File(createDir,
+                                dumpDirName));
+                    }
+                });
             }
-            generate(nextVersionDir, nextVersionNo);
-            ddlVersion.setVersionNo(nextVersionNo);
-        } catch (Throwable t) {
-            if (nextVersionDir.exists()) {
-                FileUtil.deleteDirectory(nextVersionDir);
-            }
-            throw t;
-        }
+        });
     }
 
     @Override
@@ -951,35 +936,6 @@ public class GenerateDdlCommand extends AbstractCommand {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
         }
-    }
-
-    /**
-     * DDLファイルを生成します。
-     * 
-     * @param nextVersionDir
-     *            次のバージョンのディレクトリ
-     * @param nextVersionNo
-     *            次のバージョン番号
-     */
-    protected void generate(File nextVersionDir, int nextVersionNo) {
-        final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        final DdlModel model = ddlModelFactory.getDdlModel(databaseDesc,
-                nextVersionNo);
-
-        final File createDir = new File(nextVersionDir, createDirName);
-        generateCreateDdl(model, createDir);
-
-        final File dropDir = new File(nextVersionDir, dropDirName);
-        generateDropDdl(model, dropDir);
-
-        sqlUnitExecutor.execute(new ExecutionUnit<Void>() {
-
-            public Void execute(SqlExecutionContext context) {
-                dumper.dump(context, databaseDesc, new File(createDir,
-                        dumpDirName));
-                return null;
-            }
-        });
     }
 
     /**
@@ -1062,6 +1018,17 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected DdlVersion createDdlVersion() {
         return new DdlVersionImpl(ddlVersionFile);
+    }
+
+    protected Versionizer createVersionizer() {
+        List<String> createFileNameList = Arrays.asList(createTableDdlFileName,
+                createUniqueKeyDdlFileName, createSequenceDdlFileName,
+                createForeignKeyDdlFileName, dumpDirName);
+        List<String> dropFileNameList = Arrays.asList(dropTableDdlFileName,
+                dropUniqueKeyDdlFileName, dropSequenceDdlFileName,
+                dropForeignKeyDdlFileName);
+        return new VersionizerImpl(ddlVersion, migrateDir, versionNoPattern,
+                createFileNameList, dropFileNameList);
     }
 
     /**
