@@ -106,6 +106,11 @@ public class Db2GenDialect extends StandardGenDialect {
         return false;
     }
 
+    @Override
+    public boolean supportsIdentityInsert() {
+        return true;
+    }
+
     /**
      * 原因となった、もしくは関連付けられたすべての{@link SQLException}を取得します。
      * 

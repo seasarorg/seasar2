@@ -73,7 +73,7 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         dumpModel.setName(tableDesc.getFullName());
         dumpModel.setDelimiter(delimiter);
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            if (columnDesc.isIdentity() && !dialect.supportsIdentityInsert()) {
+            if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
             dumpModel.addColumnName(columnDesc.getName());
@@ -126,7 +126,7 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         StringBuilder buf = new StringBuilder(200);
         buf.append("select ");
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            if (columnDesc.isIdentity() && !dialect.supportsIdentityInsert()) {
+            if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
             buf.append(columnDesc.getName());
@@ -180,11 +180,19 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
         List<SqlType> sqlTypeList = new ArrayList<SqlType>(size);
         for (int i = 0; i < tableDesc.getColumnDescList().size(); i++) {
             ColumnDesc columnDesc = tableDesc.getColumnDescList().get(i);
-            if (columnDesc.isIdentity() && !dialect.supportsIdentityInsert()) {
+            if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
             sqlTypeList.add(columnDesc.getSqlType());
         }
         return sqlTypeList;
+    }
+
+    /**
+     * @param columnDesc
+     * @return
+     */
+    private boolean isIgnoreColumn(ColumnDesc columnDesc) {
+        return columnDesc.isIdentity() && !dialect.supportsIdentityInsert();
     }
 }

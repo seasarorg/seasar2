@@ -572,7 +572,7 @@ public class MigrateCommand extends AbstractCommand {
 
     protected void processMigrationFiles(
             final List<MigrationFileHandler> handlerList) {
-        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
                 for (MigrationFileHandler handler : handlerList) {

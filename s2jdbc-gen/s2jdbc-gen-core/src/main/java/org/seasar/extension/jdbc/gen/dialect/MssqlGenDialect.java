@@ -124,12 +124,17 @@ public class MssqlGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getIdentityInsertOnStatement(String tableName) {
+    public boolean supportsIdentityInsertControlStatement() {
+        return true;
+    }
+
+    @Override
+    public String getIdentityInsertEnableStatement(String tableName) {
         return "set identity_insert " + tableName + " on";
     }
 
     @Override
-    public String getIdentityInsertOffStatement(String tableName) {
+    public String getIdentityInsertDisableStatement(String tableName) {
         return "set identity_insert " + tableName + " off";
     }
 

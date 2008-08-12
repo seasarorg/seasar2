@@ -1,3 +1,4 @@
+drop table EMPLOYEE ;
 drop table ADDRESS ;
 drop table BIG_DECIMAL_ENTITY ;
 drop table BIG_INTEGER_ENTITY ;
@@ -9,7 +10,6 @@ drop table CHARACTER_ENTITY ;
 drop table DATE_ENTITY ;
 drop table DEPARTMENT ;
 drop table DOUBLE_ENTITY ;
-drop table EMPLOYEE ;
 drop table ENUM_ENTITY ;
 drop table FLOAT_ENTITY ;
 drop table INTEGER_ENTITY ;

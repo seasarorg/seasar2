@@ -176,11 +176,15 @@ public class StandardGenDialect implements GenDialect {
         return false;
     }
 
-    public String getIdentityInsertOnStatement(String tableName) {
+    public boolean supportsIdentityInsertControlStatement() {
+        return false;
+    }
+
+    public String getIdentityInsertEnableStatement(String tableName) {
         throw new UnsupportedOperationException("getIdentityInsertOnStatement");
     }
 
-    public String getIdentityInsertOffStatement(String tableName) {
+    public String getIdentityInsertDisableStatement(String tableName) {
         throw new UnsupportedOperationException("getIdentityInsertOffStatement");
     }
 

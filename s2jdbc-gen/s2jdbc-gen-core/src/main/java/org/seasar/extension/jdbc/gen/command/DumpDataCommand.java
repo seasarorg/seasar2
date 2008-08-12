@@ -384,7 +384,7 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
                 dumper.dump(context, databaseDesc, dumpDir);

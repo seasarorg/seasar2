@@ -341,7 +341,7 @@ public class LoadDataCommand extends AbstractCommand {
                     }
                 });
 
-        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
                 for (MigrationFileHandler handler : handlerList) {

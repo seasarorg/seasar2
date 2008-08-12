@@ -31,18 +31,19 @@ public interface Versionizer {
     /**
      * バージョンを増分します。
      * 
-     * @param incrementUnit
+     * @param callback
+     *            コールバック
      */
-    void increment(IncrementUnit incrementUnit);
+    void increment(Callback callback);
 
     /**
-     * バージョンを増分する際の一まとまりを表すインタフェースです。
+     * コールバックのインタフェースです。
      * 
      * @author taedium
      */
-    interface IncrementUnit {
+    interface Callback {
 
-        void increment(File createDir, File dropDir, int versionNo);
+        void execute(File createDir, File dropDir, int versionNo);
     }
 
 }

@@ -909,9 +909,9 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() throws Throwable {
-        versionizer.increment(new Versionizer.IncrementUnit() {
+        versionizer.increment(new Versionizer.Callback() {
 
-            public void increment(final File createDir, File dropDir,
+            public void execute(final File createDir, File dropDir,
                     int versionNo) {
                 final DatabaseDesc databaseDesc = databaseDescFactory
                         .getDatabaseDesc();
@@ -920,7 +920,7 @@ public class GenerateDdlCommand extends AbstractCommand {
                 generateCreateDdl(model, createDir);
                 generateDropDdl(model, dropDir);
 
-                sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
+                sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
                     public void execute(SqlExecutionContext context) {
                         dumper.dump(context, databaseDesc, new File(createDir,

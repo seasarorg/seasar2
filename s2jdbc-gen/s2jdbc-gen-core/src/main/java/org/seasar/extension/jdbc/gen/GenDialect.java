@@ -158,13 +158,20 @@ public interface GenDialect {
     boolean supportsIdentityInsert();
 
     /**
+     * IDENTITYカラムに対するinsertの有効/無効を制御するステートメントをサポートしている場合{@code true}
+     * 
+     * @return IDENTITYカラムに対するinsertをサポートしている場合{@code true}
+     */
+    boolean supportsIdentityInsertControlStatement();
+
+    /**
      * IDENTITYカラムに対するinsertを有効化するステートメントを返します。
      * 
      * @param tableName
      *            テーブル名
      * @return IDENTITYカラムに対するinsertを有効化するステートメント
      */
-    String getIdentityInsertOnStatement(String tableName);
+    String getIdentityInsertEnableStatement(String tableName);
 
     /**
      * IDENTITYカラムに対するinsertを無効化するステートメントを返します。
@@ -173,7 +180,7 @@ public interface GenDialect {
      *            テーブル名
      * @return IDENTITYカラムに対するinsertを無効化するステートメント
      */
-    String getIdentityInsertOffStatement(String tableName);
+    String getIdentityInsertDisableStatement(String tableName);
 
     /**
      * カラム型です。

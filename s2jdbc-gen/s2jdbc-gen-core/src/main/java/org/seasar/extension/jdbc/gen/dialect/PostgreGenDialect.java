@@ -130,6 +130,11 @@ public class PostgreGenDialect extends StandardGenDialect {
         return new PostgreSqlBlockContext();
     }
 
+    @Override
+    public boolean supportsIdentityInsert() {
+        return true;
+    }
+
     /**
      * PostgreSQL用の{@link ColumnType}の実装です。
      * 

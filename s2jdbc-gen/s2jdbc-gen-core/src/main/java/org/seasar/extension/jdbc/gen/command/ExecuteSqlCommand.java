@@ -335,7 +335,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
      * SQLファイルのリストを実行します。
      */
     protected void executeSqlFileList() {
-        sqlUnitExecutor.execute(new SqlUnitExecutor.ExecutionUnit() {
+        sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
                 for (File sqlFile : sqlFileList) {

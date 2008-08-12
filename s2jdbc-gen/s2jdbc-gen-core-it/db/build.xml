@@ -123,9 +123,9 @@
 		<junit haltonfailure="no" printsummary="true">
 			<formatter type="xml"/>
 			<classpath refid="s2jdbc-gen-classpath"/>
-			<batchtest todir="${testresult}">
+			<batchtest todir="${testresult}" fork="true">
 				<fileset dir="${src}">
-					<include name="**/*Test.java"/>
+					<include name="**/AddressTest.java"/>
 				</fileset>
 			</batchtest>
 		</junit>

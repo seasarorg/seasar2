@@ -128,9 +128,10 @@ public class LoaderImpl implements Loader {
      */
     protected void preLoadData(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc) {
-        if (tableDesc.hasIdentityColumn() && dialect.supportsIdentityInsert()) {
+        if (tableDesc.hasIdentityColumn()
+                && dialect.supportsIdentityInsertControlStatement()) {
             Statement statement = sqlExecutionContext.getStatement();
-            String sql = dialect.getIdentityInsertOnStatement(tableDesc
+            String sql = dialect.getIdentityInsertEnableStatement(tableDesc
                     .getFullName());
             logSql(sql);
             StatementUtil.execute(statement, sql);
@@ -180,9 +181,10 @@ public class LoaderImpl implements Loader {
      */
     protected void postLoadData(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc) {
-        if (tableDesc.hasIdentityColumn() && dialect.supportsIdentityInsert()) {
+        if (tableDesc.hasIdentityColumn()
+                && dialect.supportsIdentityInsertControlStatement()) {
             Statement statement = sqlExecutionContext.getStatement();
-            String sql = dialect.getIdentityInsertOffStatement(tableDesc
+            String sql = dialect.getIdentityInsertDisableStatement(tableDesc
                     .getFullName());
             logSql(sql);
             StatementUtil.execute(statement, sql);

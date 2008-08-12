@@ -54,12 +54,12 @@ public class SqlUnitExecutorImpl implements SqlUnitExecutor {
         this.haltOnError = haltOnError;
     }
 
-    public void execute(ExecutionUnit unit) {
+    public void execute(Callback callback) {
         SqlExecutionContext context = new SqlExecutionContextImpl(dataSource,
                 haltOnError);
         try {
             try {
-                unit.execute(context);
+                callback.execute(context);
             } finally {
                 for (Exception e : context.getExceptionList()) {
                     logger.error(e.getMessage());

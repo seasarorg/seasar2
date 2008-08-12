@@ -134,7 +134,7 @@ public class VersionizerImpl implements Versionizer {
         return new File(vresionDir, DROP_DIR_NAME);
     }
 
-    public void increment(IncrementUnit incrementUnit) {
+    public void increment(Callback callback) {
         try {
             makeCurrentVersionDirs();
             FileUtil.copyDirectory(currentVersionDir, nextVersionDir,
@@ -142,7 +142,7 @@ public class VersionizerImpl implements Versionizer {
             makedDirList.add(nextVersionDir);
             File createDir = new File(nextVersionDir, CREATE_DIR_NAME);
             File dropDir = new File(nextVersionDir, DROP_DIR_NAME);
-            incrementUnit.increment(createDir, dropDir, nextVersionNo);
+            callback.execute(createDir, dropDir, nextVersionNo);
             ddlVersion.setVersionNo(nextVersionNo);
         } catch (RuntimeException e) {
             recover();

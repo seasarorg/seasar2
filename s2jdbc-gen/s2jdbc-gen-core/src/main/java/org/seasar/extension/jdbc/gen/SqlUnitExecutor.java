@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * SQLの一まとまりを実行するインタフェースです。
+ * SQLの一まとまり処理を実行するインタフェースです。
  * 
  * @author taedium
  */
@@ -25,18 +25,17 @@ public interface SqlUnitExecutor {
     /**
      * 実行します。
      * 
-     * @param unit
-     *            一まとまり
-     * @return 実行結果
+     * @param callback
+     *            コールバック
      */
-    void execute(ExecutionUnit unit);
+    void execute(Callback callback);
 
     /**
-     * 一まとまりを表すインタフェースです。
+     * コールバックのインタフェースです。
      * 
      * @author taedium
      */
-    interface ExecutionUnit {
+    interface Callback {
 
         void execute(SqlExecutionContext context);
     }

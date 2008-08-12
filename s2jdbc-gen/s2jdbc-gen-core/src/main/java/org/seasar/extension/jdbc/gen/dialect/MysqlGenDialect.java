@@ -145,6 +145,11 @@ public class MysqlGenDialect extends StandardGenDialect {
         return new MysqlSqlBlockContext();
     }
 
+    @Override
+    public boolean supportsIdentityInsert() {
+        return true;
+    }
+
     /**
      * MySQL用の{@link ColumnType}の実装です。
      * 
