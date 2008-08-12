@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.IdTableDescFactory;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
@@ -50,6 +51,9 @@ public class TableDescFactoryImpl implements TableDescFactory {
     protected ConcurrentMap<String, TableDesc> tableDescMap = new ConcurrentHashMap<String, TableDesc>(
             200);
 
+    /** 方言 */
+    protected GenDialect dialect;
+
     /** カラム記述のファクトリ */
     protected ColumnDescFactory columnDescFactory;
 
@@ -71,6 +75,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
     /**
      * インスタンスを構築します。
      * 
+     * @param dialect
+     *            方言
      * @param columnDescFactory
      *            カラム記述のファクトリ
      * @param primaryKeyDescFactory
@@ -84,12 +90,16 @@ public class TableDescFactoryImpl implements TableDescFactory {
      * @param idTableDescFactory
      *            識別子生成用のテーブル記述のファクトリ
      */
-    public TableDescFactoryImpl(ColumnDescFactory columnDescFactory,
+    public TableDescFactoryImpl(GenDialect dialect,
+            ColumnDescFactory columnDescFactory,
             PrimaryKeyDescFactory primaryKeyDescFactory,
             UniqueKeyDescFactory uniqueKeyDescFactory,
             ForeignKeyDescFactory foreignKeyDescFactory,
             SequenceDescFactory sequenceDescFactory,
             IdTableDescFactory idTableDescFactory) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         if (columnDescFactory == null) {
             throw new NullPointerException("columnDescFactory");
         }
@@ -108,6 +118,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
         if (idTableDescFactory == null) {
             throw new NullPointerException("idTableDescFactory");
         }
+        this.dialect = dialect;
         this.columnDescFactory = columnDescFactory;
         this.primaryKeyDescFactory = primaryKeyDescFactory;
         this.uniqueKeyDescFactory = uniqueKeyDescFactory;
@@ -160,9 +171,9 @@ public class TableDescFactoryImpl implements TableDescFactory {
     protected void doName(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
         TableMeta tableMeta = entityMeta.getTableMeta();
-        tableDesc.setCatalogName(tableMeta.getCatalog());
-        tableDesc.setSchemaName(tableMeta.getSchema());
-        tableDesc.setName(tableMeta.getName());
+        tableDesc.setCatalogName(dialect.unquote(tableMeta.getCatalog()));
+        tableDesc.setSchemaName(dialect.unquote(tableMeta.getSchema()));
+        tableDesc.setName(dialect.unquote(tableMeta.getName()));
     }
 
     /**

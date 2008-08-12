@@ -22,6 +22,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
+import org.seasar.extension.jdbc.gen.GenDialect;
 
 /**
  * {@link ForeignKeyDescFactory}の実装クラスです。
@@ -30,18 +31,28 @@ import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
  */
 public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
 
+    /** 方言 */
+    protected GenDialect dialect;
+
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
     /**
      * インスタンスを構築します。
      * 
+     * @param dialect
+     *            方言
      * @param entityMetaFactory
      */
-    public ForeignKeyDescFactoryImpl(EntityMetaFactory entityMetaFactory) {
+    public ForeignKeyDescFactoryImpl(GenDialect dialect,
+            EntityMetaFactory entityMetaFactory) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
+        this.dialect = dialect;
         this.entityMetaFactory = entityMetaFactory;
     }
 
@@ -67,9 +78,9 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
     protected void doColumn(PropertyMeta propertyMeta,
             ForeignKeyDesc foreignKeyDesc) {
         for (JoinColumnMeta jcm : propertyMeta.getJoinColumnMetaList()) {
-            foreignKeyDesc.addColumnName(jcm.getName());
-            foreignKeyDesc.addReferencedColumnName(jcm
-                    .getReferencedColumnName());
+            foreignKeyDesc.addColumnName(dialect.unquote(jcm.getName()));
+            foreignKeyDesc.addReferencedColumnName(dialect.unquote(jcm
+                    .getReferencedColumnName()));
         }
     }
 

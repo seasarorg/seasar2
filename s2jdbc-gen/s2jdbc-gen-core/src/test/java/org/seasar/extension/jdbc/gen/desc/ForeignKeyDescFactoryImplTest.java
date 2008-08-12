@@ -30,6 +30,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
+import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -69,7 +71,9 @@ public class ForeignKeyDescFactoryImplTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        foreignKeyDescFactory = new ForeignKeyDescFactoryImpl(entityMetaFactory);
+        GenDialect dialect = new StandardGenDialect();
+        foreignKeyDescFactory = new ForeignKeyDescFactoryImpl(dialect,
+                entityMetaFactory);
     }
 
     /**

@@ -82,6 +82,10 @@ public interface GenDialect {
      */
     String getCloseQuote();
 
+    String quote(String value);
+
+    String unquote(String value);
+
     /**
      * シーケンスをサポートする場合{@code true}、しない場合{@code false}を返します。
      * 

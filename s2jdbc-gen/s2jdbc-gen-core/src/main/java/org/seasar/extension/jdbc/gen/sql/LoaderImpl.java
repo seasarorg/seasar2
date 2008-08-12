@@ -236,10 +236,10 @@ public class LoaderImpl implements Loader {
     protected String buildSql(TableDesc tableDesc, List<String> columnNameList) {
         StringBuilder buf = new StringBuilder();
         buf.append("insert into ");
-        buf.append(tableDesc.getFullName());
+        buf.append(dialect.quote(tableDesc.getFullName()));
         buf.append(" (");
         for (String columnName : columnNameList) {
-            buf.append(columnName);
+            buf.append(dialect.quote(columnName));
             buf.append(", ");
         }
         buf.setLength(buf.length() - 2);

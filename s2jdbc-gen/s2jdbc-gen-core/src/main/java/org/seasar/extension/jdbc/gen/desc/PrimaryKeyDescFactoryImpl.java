@@ -68,7 +68,7 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
             PrimaryKeyDesc primaryKeyDesc) {
         for (PropertyMeta propertyMeta : idPropertyMetaList) {
             ColumnMeta columnMeta = propertyMeta.getColumnMeta();
-            primaryKeyDesc.addColumnName(columnMeta.getName());
+            primaryKeyDesc.addColumnName(dialect.unquote(columnMeta.getName()));
         }
     }
 }

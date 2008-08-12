@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
+import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 
 import static org.junit.Assert.*;
 
@@ -39,7 +40,7 @@ public class UniqueKeyDescFactoryImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new UniqueKeyDescFactoryImpl();
+        factory = new UniqueKeyDescFactoryImpl(new StandardGenDialect());
     }
 
     /**

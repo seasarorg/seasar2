@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.desc;
 import javax.persistence.UniqueConstraint;
 
 import org.seasar.extension.jdbc.gen.ColumnDesc;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
 
@@ -28,16 +29,27 @@ import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
  */
 public class UniqueKeyDescFactoryImpl implements UniqueKeyDescFactory {
 
+    /** 方言 */
+    protected GenDialect dialect;
+
     /**
      * インスタンスを構築します。
+     * 
+     * @param dialect
+     *            方言
      */
-    public UniqueKeyDescFactoryImpl() {
+    public UniqueKeyDescFactoryImpl(GenDialect dialect) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        this.dialect = dialect;
     }
 
-    public UniqueKeyDesc getCompositeUniqueKeyDesc(UniqueConstraint uniqueConstraint) {
+    public UniqueKeyDesc getCompositeUniqueKeyDesc(
+            UniqueConstraint uniqueConstraint) {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         for (String columnName : uniqueConstraint.columnNames()) {
-            uniqueKeyDesc.addColumnName(columnName);
+            uniqueKeyDesc.addColumnName(dialect.unquote(columnName));
         }
         if (uniqueKeyDesc.getColumnNameList().isEmpty()) {
             return null;
@@ -48,7 +60,8 @@ public class UniqueKeyDescFactoryImpl implements UniqueKeyDescFactory {
     public UniqueKeyDesc getSingleUniqueKeyDesc(ColumnDesc columnDesc) {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         if (columnDesc.isUnique()) {
-            uniqueKeyDesc.addColumnName(columnDesc.getName());
+            String columnName = columnDesc.getName();
+            uniqueKeyDesc.addColumnName(dialect.unquote(columnName));
         }
         if (uniqueKeyDesc.getColumnNameList().isEmpty()) {
             return null;

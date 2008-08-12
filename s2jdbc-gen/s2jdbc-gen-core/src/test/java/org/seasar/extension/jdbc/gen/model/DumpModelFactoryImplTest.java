@@ -71,8 +71,9 @@ public class DumpModelFactoryImplTest {
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 
-        assertEquals("select column1, column2 from AAA.BBB.HOGE", factory
-                .buildSql(tableDesc));
+        assertEquals(
+                "select \"column1\", \"column2\" from \"AAA\".\"BBB\".\"HOGE\"",
+                factory.buildSql(tableDesc));
     }
 
     /**

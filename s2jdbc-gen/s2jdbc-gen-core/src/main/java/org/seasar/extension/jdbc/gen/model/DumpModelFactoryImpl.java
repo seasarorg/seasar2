@@ -76,7 +76,7 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
             if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
-            dumpModel.addColumnName(columnDesc.getName());
+            dumpModel.addColumnName(DumpUtil.quote(columnDesc.getName()));
         }
         doRow(dumpModel, tableDesc, sqlExecutionContext);
         return dumpModel;
@@ -129,14 +129,16 @@ public class DumpModelFactoryImpl implements DumpModelFactory {
             if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
-            buf.append(columnDesc.getName());
+            String columnName = dialect.quote(columnDesc.getName());
+            buf.append(columnName);
             buf.append(", ");
         }
         if (!tableDesc.getColumnDescList().isEmpty()) {
             buf.setLength(buf.length() - 2);
         }
         buf.append(" from ");
-        buf.append(tableDesc.getFullName());
+        String tableName = dialect.quote(tableDesc.getFullName());
+        buf.append(tableName);
         return buf.toString();
     }
 

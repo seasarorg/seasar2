@@ -50,6 +50,8 @@ public class LoaderImplTest {
 
         LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), "UTF-8");
         String sql = loader.buildSql(tableDesc, Arrays.asList("FOO", "BAR"));
-        assertEquals("insert into AAA.BBB.HOGE (FOO, BAR) values (?, ?)", sql);
+        assertEquals(
+                "insert into \"AAA\".\"BBB\".\"HOGE\" (\"FOO\", \"BAR\") values (?, ?)",
+                sql);
     }
 }

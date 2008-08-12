@@ -139,6 +139,50 @@ public class StandardGenDialect implements GenDialect {
         return "\"";
     }
 
+    public String quote(String value) {
+        if (value == null) {
+            return null;
+        }
+        String[] values = null;
+        if (value.indexOf(".") > -1) {
+            values = value.split("\\.");
+        } else {
+            values = new String[1];
+            values[0] = value;
+        }
+        StringBuilder buf = new StringBuilder();
+        for (String s : values) {
+            buf.append(getOpenQuote());
+            buf.append(s);
+            buf.append(getCloseQuote());
+            buf.append(".");
+        }
+        buf.setLength(buf.length() - 1);
+        return buf.toString();
+    }
+
+    public String unquote(String value) {
+        if (value == null) {
+            return null;
+        }
+        String[] values = null;
+        if (value.indexOf(".") > -1) {
+            values = value.split("\\.");
+        } else {
+            values = new String[1];
+            values[0] = value;
+        }
+        StringBuilder buf = new StringBuilder();
+        for (String s : values) {
+            s = StringUtil.ltrim(s, getOpenQuote());
+            s = StringUtil.rtrim(s, getCloseQuote());
+            buf.append(s);
+            buf.append(".");
+        }
+        buf.setLength(buf.length() - 1);
+        return buf.toString();
+    }
+
     public boolean supportsSequence() {
         return false;
     }

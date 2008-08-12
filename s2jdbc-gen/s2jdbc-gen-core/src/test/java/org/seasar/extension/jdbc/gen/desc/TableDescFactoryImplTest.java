@@ -72,16 +72,17 @@ public class TableDescFactoryImplTest {
         ColumnDescFactoryImpl colFactory = new ColumnDescFactoryImpl(dialect);
         PrimaryKeyDescFactoryImpl pkFactory = new PrimaryKeyDescFactoryImpl(
                 dialect);
-        UniqueKeyDescFactoryImpl ukFactory = new UniqueKeyDescFactoryImpl();
+        UniqueKeyDescFactoryImpl ukFactory = new UniqueKeyDescFactoryImpl(
+                dialect);
         ForeignKeyDescFactoryImpl fkFactory = new ForeignKeyDescFactoryImpl(
-                entityMetaFactory);
+                dialect, entityMetaFactory);
         SequenceDescFactoryImpl seqFactory = new SequenceDescFactoryImpl(
                 dialect);
         IdTableDescFactoryImpl idTabFactory = new IdTableDescFactoryImpl(
                 dialect, colFactory, pkFactory, ukFactory);
 
-        tableDescFactory = new TableDescFactoryImpl(colFactory, pkFactory,
-                ukFactory, fkFactory, seqFactory, idTabFactory);
+        tableDescFactory = new TableDescFactoryImpl(dialect, colFactory,
+                pkFactory, ukFactory, fkFactory, seqFactory, idTabFactory);
     }
 
     /**

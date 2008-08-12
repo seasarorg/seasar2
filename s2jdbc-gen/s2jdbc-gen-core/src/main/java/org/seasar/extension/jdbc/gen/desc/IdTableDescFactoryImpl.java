@@ -138,9 +138,9 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
             tableName = TableIdGenerator.DEFAULT_TABLE;
         }
 
-        tableDesc.setCatalogName(catalogName);
-        tableDesc.setSchemaName(schemaName);
-        tableDesc.setName(tableName);
+        tableDesc.setCatalogName(dialect.unquote(catalogName));
+        tableDesc.setSchemaName(dialect.unquote(schemaName));
+        tableDesc.setName(dialect.unquote(tableName));
     }
 
     /**

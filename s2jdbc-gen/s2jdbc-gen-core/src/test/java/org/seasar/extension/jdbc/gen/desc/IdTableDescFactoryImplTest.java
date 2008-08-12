@@ -74,7 +74,7 @@ public class IdTableDescFactoryImplTest {
         GenDialect dialect = new StandardGenDialect();
         ColumnDescFactoryImpl cdf = new ColumnDescFactoryImpl(dialect);
         PrimaryKeyDescFactoryImpl pkdf = new PrimaryKeyDescFactoryImpl(dialect);
-        UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl();
+        UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl(dialect);
         idTableDescFactory = new IdTableDescFactoryImpl(dialect, cdf, pkdf,
                 ukdf);
     }

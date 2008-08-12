@@ -55,7 +55,8 @@ public class DumpUtil {
             return null;
         }
         if (ENCODE_TARGET_PATTERN.matcher(value).matches()) {
-            return QUOTE + value.replace(QUOTE, ESCAPED_QUOTE) + QUOTE;
+            String s = value.replace(QUOTE, ESCAPED_QUOTE);
+            return quote(s);
         }
         return value;
     }
@@ -76,5 +77,16 @@ public class DumpUtil {
             return s.replace(ESCAPED_QUOTE, QUOTE);
         }
         return value;
+    }
+
+    /**
+     * 引用符で囲みます。
+     * 
+     * @param value
+     *            値
+     * @return 引用符で囲まれた値
+     */
+    public static String quote(String value) {
+        return QUOTE + value + QUOTE;
     }
 }

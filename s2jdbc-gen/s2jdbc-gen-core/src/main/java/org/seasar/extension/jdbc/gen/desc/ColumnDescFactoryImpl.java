@@ -80,7 +80,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     protected void doName(PropertyMeta propertyMeta, ColumnDesc columnDesc,
             Column column) {
         ColumnMeta columnMeta = propertyMeta.getColumnMeta();
-        columnDesc.setName(columnMeta.getName());
+        columnDesc.setName(dialect.unquote(columnMeta.getName()));
     }
 
     /**

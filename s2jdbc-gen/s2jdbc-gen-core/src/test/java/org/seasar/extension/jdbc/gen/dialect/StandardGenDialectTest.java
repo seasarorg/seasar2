@@ -73,4 +73,24 @@ public class StandardGenDialectTest {
         assertNull(dialect.getColumnType("hoge"));
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testQuoteIdentifier() throws Exception {
+        assertEquals("\"aaa\"", dialect.quote("aaa"));
+        assertEquals("\"aaa\".\"bbb\".\"ccc\"", dialect.quote("aaa.bbb.ccc"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testUnquoteIdentifier() throws Exception {
+        assertEquals("aaa", dialect.unquote("\"aaa\""));
+        assertEquals("aaa.bbb.ccc", dialect.unquote("\"aaa\".\"bbb\".\"ccc\""));
+    }
+
 }

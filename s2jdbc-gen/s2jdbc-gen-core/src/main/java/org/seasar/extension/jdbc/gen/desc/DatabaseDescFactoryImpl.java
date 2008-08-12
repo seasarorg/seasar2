@@ -90,14 +90,14 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
     protected TableDescFactory createTableDescFactory() {
         ColumnDescFactory colFactory = new ColumnDescFactoryImpl(dialect);
         PrimaryKeyDescFactory pkFactory = new PrimaryKeyDescFactoryImpl(dialect);
-        UniqueKeyDescFactory ukFactory = new UniqueKeyDescFactoryImpl();
+        UniqueKeyDescFactory ukFactory = new UniqueKeyDescFactoryImpl(dialect);
         ForeignKeyDescFactory fkFactory = new ForeignKeyDescFactoryImpl(
-                entityMetaFactory);
+                dialect, entityMetaFactory);
         SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
         IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
                 colFactory, pkFactory, ukFactory);
-        return new TableDescFactoryImpl(colFactory, pkFactory, ukFactory,
-                fkFactory, seqFactory, idTabFactory);
+        return new TableDescFactoryImpl(dialect, colFactory, pkFactory,
+                ukFactory, fkFactory, seqFactory, idTabFactory);
     }
 
 }
