@@ -39,10 +39,10 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.migration.DumpFileHandler;
 import org.seasar.extension.jdbc.gen.sql.LoaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
+import org.seasar.extension.jdbc.gen.util.EnvAwareFileComparator;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.gen.util.FileUtil.FileHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -331,7 +331,7 @@ public class LoadDataCommand extends AbstractCommand {
         final List<MigrationFileHandler> handlerList = new ArrayList<MigrationFileHandler>();
 
         FileUtil.traverseDirectory(dumpDir, new ExclusionFilenameFilter(),
-                new FileHandler() {
+                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
                         if (file.getName().endsWith(".csv")) {

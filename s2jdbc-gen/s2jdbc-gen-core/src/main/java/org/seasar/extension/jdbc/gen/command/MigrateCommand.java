@@ -44,11 +44,11 @@ import org.seasar.extension.jdbc.gen.migration.SqlFileHandler;
 import org.seasar.extension.jdbc.gen.sql.LoaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
+import org.seasar.extension.jdbc.gen.util.EnvAwareFileComparator;
 import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.util.VersionUtil;
-import org.seasar.extension.jdbc.gen.util.FileUtil.FileHandler;
 import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
 import org.seasar.extension.jdbc.gen.version.SchemaVersionImpl;
 import org.seasar.extension.jdbc.gen.version.VersionizerImpl;
@@ -527,7 +527,7 @@ public class MigrateCommand extends AbstractCommand {
         final List<MigrationFileHandler> handlerList = new ArrayList<MigrationFileHandler>();
 
         FileUtil.traverseDirectory(dropDir, new ExclusionFilenameFilter(),
-                new FileHandler() {
+                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
                         String name = file.getName();
@@ -552,7 +552,7 @@ public class MigrateCommand extends AbstractCommand {
         final List<MigrationFileHandler> handlerList = new ArrayList<MigrationFileHandler>();
 
         FileUtil.traverseDirectory(createDir, new ExclusionFilenameFilter(),
-                new FileHandler() {
+                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
                         String name = file.getName();
@@ -637,11 +637,6 @@ public class MigrateCommand extends AbstractCommand {
     @Override
     protected Logger getLogger() {
         return logger;
-    }
-
-    public interface FileListHandler {
-
-        void handle(File file);
     }
 
 }
