@@ -44,7 +44,8 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * </p>
  * <ul>
  * <li>クラスが{@link NamingConvention#getEntityPackageName()}で決定されるパッケージの階層に含まれる</li>
- * <li>クラスに{@link Entity}、{@link MappedSuperclass}、{@link Embeddable}のいずれかのアノテーションが指定されている</li>
+ * <li>クラスに{@link Entity}、{@link MappedSuperclass}、{@link Embeddable}
+ * のいずれかのアノテーションが指定されている</li>
  * </ul>
  * 
  * @author taedium
@@ -127,7 +128,8 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
         for (int i = 0; i < getTargetPackageNameSize(); i++) {
             final String packageName = getTargetPackageName(i);
             for (final Iterator<URL> it = ClassLoaderUtil
-                    .getResources(packageName.replace('.', '/')); it.hasNext();) {
+                    .getResources(packageName.replace('.', '/') + '/'); it
+                    .hasNext();) {
                 detect(handler, packageName, it.next());
             }
         }

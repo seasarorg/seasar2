@@ -880,7 +880,7 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         if (StringUtil.isEmpty(rootPackageName)) {
             return new ExistChecker[0];
         }
-        final String s = rootPackageName.replace('.', '/');
+        final String s = rootPackageName.replace('.', '/') + '/';
         final List list = new ArrayList();
         for (final Iterator it = ClassLoaderUtil.getResources(this.getClass(),
                 s); it.hasNext();) {

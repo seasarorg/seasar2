@@ -174,7 +174,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
             if (rootPackageNames != null) {
                 for (int i = 0; i < rootPackageNames.length; ++i) {
                     final String rootDir = rootPackageNames[i]
-                            .replace('.', '/');
+                            .replace('.', '/') + '/';
                     for (final Iterator it = ClassLoaderUtil
                             .getResources(rootDir); it.hasNext();) {
                         final URL url = (URL) it.next();

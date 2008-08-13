@@ -95,7 +95,7 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
                 .getRootPackageNames()) {
             final String concatedPackageName = ClassUtil.concatName(
                     rootPackageName, packageName);
-            addTargetDirPath(concatedPackageName.replace(".", "/"));
+            addTargetDirPath(concatedPackageName.replace('.', '/') + '/');
         }
     }
 
