@@ -70,14 +70,16 @@ public class S2ContainerFilter implements Filter {
         if (externalContext == null) {
             throw new EmptyRuntimeException("externalContext");
         }
-        externalContext.setRequest(request);
-        externalContext.setResponse(response);
-
+        
+        final Object originalRequest = externalContext.getRequest();
+        final Object originalResponse = externalContext.getResponse();
         try {
+            externalContext.setRequest(request);
+            externalContext.setResponse(response);
             chain.doFilter(request, response);
         } finally {
-            externalContext.setRequest(null);
-            externalContext.setResponse(null);
+            externalContext.setRequest(originalRequest);
+            externalContext.setResponse(originalResponse);
             invalidateSession(request);
         }
     }
