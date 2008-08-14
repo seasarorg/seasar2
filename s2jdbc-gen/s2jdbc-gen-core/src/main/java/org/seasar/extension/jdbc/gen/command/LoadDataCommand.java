@@ -332,9 +332,7 @@ public class LoadDataCommand extends AbstractCommand {
                 new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
-                        if (file.getName().endsWith(".csv")) {
-                            fileList.add(file);
-                        }
+                        fileList.add(file);
                     }
                 });
 
