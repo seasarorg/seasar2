@@ -15,23 +15,11 @@
  */
 package org.seasar.framework.autodetector.impl;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.jar.JarFile;
 import java.util.regex.Pattern;
 
 import org.seasar.framework.autodetector.ResourceAutoDetector;
-import org.seasar.framework.util.JarFileUtil;
-import org.seasar.framework.util.ResourceTraversal;
-import org.seasar.framework.util.ResourceUtil;
-import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.URLUtil;
-import org.seasar.framework.util.ZipFileUtil;
-import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
  * {@link ResourceAutoDetector}の抽象クラスです。
@@ -41,8 +29,6 @@ import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
  */
 public abstract class AbstractResourceAutoDetector implements
         ResourceAutoDetector {
-
-    private Map strategies = new HashMap();
 
     private List targetDirPaths = new ArrayList();
 
@@ -54,30 +40,6 @@ public abstract class AbstractResourceAutoDetector implements
      * {@link AbstractResourceAutoDetector}のデフォルトコンストラクタです。
      */
     public AbstractResourceAutoDetector() {
-        strategies.put("file", new FileSystemStrategy());
-        strategies.put("jar", new JarFileStrategy());
-        strategies.put("zip", new ZipFileStrategy());
-        strategies.put("code-source", new CodeSourceFileStrategy());
-    }
-
-    /**
-     * {@link Strategy}を追加します。
-     * 
-     * @param protocol
-     * @param strategy
-     */
-    public void addStrategy(final String protocol, final Strategy strategy) {
-        strategies.put(protocol, strategy);
-    }
-
-    /**
-     * {@link Strategy}を返します。
-     * 
-     * @param protocol
-     * @return {@link Strategy}
-     */
-    public Strategy getStrategy(final String protocol) {
-        return (Strategy) strategies.get(URLUtil.toCanonicalProtocol(protocol));
     }
 
     /**
@@ -198,128 +160,4 @@ public abstract class AbstractResourceAutoDetector implements
         return false;
     }
 
-    /**
-     * 戦略をあらわすインターフェースです。
-     * 
-     */
-    protected interface Strategy {
-
-        /**
-         * リソースを認識します。
-         * 
-         * @param path
-         * @param url
-         * @param handler
-         */
-        void detect(String path, URL url, ResourceHandler handler);
-    }
-
-    /**
-     * ファイルシステム用の戦略です。
-     * 
-     */
-    protected static class FileSystemStrategy implements Strategy {
-
-        public void detect(final String path, final URL url,
-                final ResourceHandler handler) {
-
-            final File rootDir = getRootDir(path, url);
-            ResourceTraversal.forEach(rootDir, path, handler);
-        }
-
-        /**
-         * ルートディレクトリを返します。
-         * 
-         * @param path
-         *            パス
-         * @param url
-         *            URL
-         * @return ルートディレクトリ
-         */
-        protected File getRootDir(final String path, final URL url) {
-            File file = ResourceUtil.getFile(url);
-            final String[] names = StringUtil.split(path, "/");
-            for (int i = 0; i < names.length; ++i) {
-                file = file.getParentFile();
-            }
-            return file;
-        }
-    }
-
-    /**
-     * jarファイル用の戦略を返します。
-     * 
-     */
-    protected static class JarFileStrategy implements Strategy {
-
-        public void detect(final String path, final URL url,
-                final ResourceHandler handler) {
-
-            final JarFile jarFile = createJarFile(url);
-            ResourceTraversal.forEach(jarFile, handler);
-        }
-
-        /**
-         * jarファイルを作成します。
-         * 
-         * @param url
-         *            URL
-         * @return jarファイル
-         */
-        protected JarFile createJarFile(final URL url) {
-            return JarFileUtil.toJarFile(url);
-        }
-    }
-
-    /**
-     * zipファイル用の戦略です。
-     * 
-     */
-    protected static class ZipFileStrategy implements Strategy {
-
-        public void detect(final String path, final URL url,
-                final ResourceHandler handler) {
-
-            final JarFile jarFile = createJarFile(url);
-            ResourceTraversal.forEach(jarFile, handler);
-        }
-
-        /**
-         * jarファイルを作成します。
-         * 
-         * @param url
-         *            URL
-         * @return jarファイル
-         */
-        protected JarFile createJarFile(final URL url) {
-            final String jarFileName = ZipFileUtil.toZipFilePath(url);
-            return JarFileUtil.create(new File(jarFileName));
-        }
-    }
-
-    /**
-     * OC4J用の戦略です。
-     * 
-     */
-    protected static class CodeSourceFileStrategy implements Strategy {
-
-        public void detect(final String path, final URL url,
-                final ResourceHandler handler) {
-
-            final JarFile jarFile = createJarFile(url);
-            ResourceTraversal.forEach(jarFile, handler);
-        }
-
-        /**
-         * jarファイルを作成します。
-         * 
-         * @param url
-         *            URL
-         * @return jarファイル
-         */
-        protected JarFile createJarFile(final URL url) {
-            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
-            return JarFileUtil.toJarFile(jarUrl);
-        }
-    }
 }

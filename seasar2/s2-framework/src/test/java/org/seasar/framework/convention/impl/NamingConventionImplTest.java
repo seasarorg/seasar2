@@ -18,8 +18,6 @@ package org.seasar.framework.convention.impl;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import org.seasar.framework.convention.impl.NamingConventionImpl.ExistChecker;
-import org.seasar.framework.convention.impl.NamingConventionImpl.FileExistChecker;
 import org.seasar.framework.convention.impl.dao.AaaDao;
 import org.seasar.framework.convention.impl.dao.BbbDao;
 import org.seasar.framework.convention.impl.dao.impl.BbbDaoImpl;
@@ -30,6 +28,8 @@ import org.seasar.framework.convention.impl.web.add.DddPage;
 import org.seasar.framework.convention.impl.web.add.xxx.AddXxxPage;
 import org.seasar.framework.convention.impl.web.web.foo.FffPage;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourcesUtil.FileSystemResources;
+import org.seasar.framework.util.ResourcesUtil.Resources;
 
 /**
  * @author higa
@@ -52,10 +52,10 @@ public class NamingConventionImplTest extends TestCase {
      * @throws Exception
      */
     public void testAddAndGetRootPackageName() throws Exception {
-        ExistChecker[] checkers = convention
+        Resources[] checkers = convention
                 .getExistCheckerArray(rootPackageName);
         assertNotNull(checkers);
-        assertEquals(FileExistChecker.class, checkers[0].getClass());
+        assertEquals(FileSystemResources.class, checkers[0].getClass());
     }
 
     /**

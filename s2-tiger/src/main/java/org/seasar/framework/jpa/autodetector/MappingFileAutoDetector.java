@@ -16,8 +16,6 @@
 package org.seasar.framework.jpa.autodetector;
 
 import java.io.InputStream;
-import java.net.URL;
-import java.util.Iterator;
 
 import org.seasar.framework.autodetector.impl.AbstractResourceAutoDetector;
 import org.seasar.framework.container.annotation.tiger.Binding;
@@ -25,9 +23,10 @@ import org.seasar.framework.container.annotation.tiger.BindingType;
 import org.seasar.framework.container.annotation.tiger.Component;
 import org.seasar.framework.container.annotation.tiger.InitMethod;
 import org.seasar.framework.convention.NamingConvention;
-import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ResourcesUtil;
 import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
+import org.seasar.framework.util.ResourcesUtil.Resources;
 
 /**
  * 規約を利用してJPAのマッピングファイルを自動検出するクラスです。
@@ -37,7 +36,7 @@ import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
  * </p>
  * <ul>
  * <li>ファイルが{@link NamingConvention#getEntityPackageName()}で決定されるパッケージ、もしくは
- * {@link NamingConvention#getDaoPackageName()}}で決定されるパッケージの階層に含まれる</li>
+ * {@link NamingConvention#getDaoPackageName()} で決定されるパッケージの階層に含まれる</li>
  * <li>ファイルの名称が正規表現 {@code .*Orm.xml} にマッチする</li>
  * </ul>
  * 
@@ -95,7 +94,7 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
                 .getRootPackageNames()) {
             final String concatedPackageName = ClassUtil.concatName(
                     rootPackageName, packageName);
-            addTargetDirPath(concatedPackageName.replace('.', '/') + '/');
+            addTargetDirPath(concatedPackageName.replace('.', '/'));
         }
     }
 
@@ -103,36 +102,24 @@ public class MappingFileAutoDetector extends AbstractResourceAutoDetector {
     public void detect(final ResourceHandler handler) {
         for (int i = 0; i < getTargetDirPathSize(); i++) {
             final String targetDirPath = getTargetDirPath(i);
-            for (final Iterator<URL> it = ClassLoaderUtil
-                    .getResources(targetDirPath); it.hasNext();) {
-                final URL targetDirUrl = it.next();
-                detect(handler, targetDirPath, targetDirUrl);
-            }
-        }
-    }
+            for (final Resources resources : ResourcesUtil
+                    .getResourcesTypes(targetDirPath)) {
+                try {
+                    resources.forEach(new ResourceHandler() {
 
-    /**
-     * マッピングファイルの検出を実行します。
-     * 
-     * @param handler
-     *            リソースのハンドラ
-     * @param targetDirPath
-     *            検出対象のディレクトリを表わすパス
-     * @param targetDirUrl
-     *            検出対象のディレクトリを表わすURL
-     */
-    protected void detect(final ResourceHandler handler,
-            final String targetDirPath, final URL targetDirUrl) {
-        final Strategy strategy = getStrategy(targetDirUrl.getProtocol());
-        strategy.detect(targetDirPath, targetDirUrl, new ResourceHandler() {
-
-            public void processResource(final String path, final InputStream is) {
-                if (path.startsWith(targetDirPath) && isApplied(path)
-                        && !isIgnored(path)) {
-                    handler.processResource(path, is);
+                        public void processResource(final String path,
+                                final InputStream is) {
+                            if (path.startsWith(targetDirPath)
+                                    && isApplied(path) && !isIgnored(path)) {
+                                handler.processResource(path, is);
+                            }
+                        }
+                    });
+                } finally {
+                    resources.close();
                 }
             }
-        });
+        }
     }
 
 }

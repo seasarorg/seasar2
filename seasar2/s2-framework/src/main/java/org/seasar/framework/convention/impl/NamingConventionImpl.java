@@ -15,31 +15,22 @@
  */
 package org.seasar.framework.convention.impl;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.jar.JarFile;
-import java.util.zip.ZipFile;
 
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.exception.EmptyRuntimeException;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ArrayUtil;
-import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
-import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.MapUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.ResourcesUtil;
 import org.seasar.framework.util.StringUtil;
-import org.seasar.framework.util.URLUtil;
-import org.seasar.framework.util.ZipFileUtil;
+import org.seasar.framework.util.ResourcesUtil.Resources;
 
 /**
  * {@link NamingConvention}の実装クラスです。
@@ -52,9 +43,6 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     private static final char PACKAGE_SEPARATOR = '_';
 
     private static final String PACKAGE_SEPARATOR_STR = "_";
-
-    private static final Logger logger = Logger
-            .getLogger(NamingConventionImpl.class);
 
     private boolean initialized;
 
@@ -123,6 +111,13 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     }
 
     public void dispose() {
+        for (final Iterator it = existCheckerArrays.values().iterator(); it
+                .hasNext();) {
+            final Resources[] array = (Resources[]) it.next();
+            for (int i = 0; i < array.length; ++i) {
+                array[i].close();
+            }
+        }
         existCheckerArrays.clear();
         initialized = false;
     }
@@ -837,9 +832,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      */
     protected boolean isExist(final String rootPackageName,
             final String lastClassName) {
-        final ExistChecker[] checkerArray = getExistCheckerArray(rootPackageName);
+        final Resources[] checkerArray = getExistCheckerArray(rootPackageName);
         for (int i = 0; i < checkerArray.length; ++i) {
-            if (checkerArray[i].isExist(lastClassName)) {
+            if (checkerArray[i].isExistClass(lastClassName)) {
                 return true;
             }
         }
@@ -853,8 +848,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      *            ルートパッケージ名
      * @return 存在チェッカの配列
      */
-    protected ExistChecker[] getExistCheckerArray(final String rootPackageName) {
-        return (ExistChecker[]) existCheckerArrays.get(rootPackageName);
+    protected Resources[] getExistCheckerArray(final String rootPackageName) {
+        return (Resources[]) existCheckerArrays.get(rootPackageName);
     }
 
     /**
@@ -864,196 +859,9 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      *            ルートパッケージ名
      */
     protected void addExistChecker(final String rootPackageName) {
-        ExistChecker[] checkerArray = createExistCheckerArray(rootPackageName);
+        Resources[] checkerArray = ResourcesUtil
+                .getResourcesTypes(rootPackageName);
         existCheckerArrays.put(rootPackageName, checkerArray);
-    }
-
-    /**
-     * 存在チェッカの配列を作成します。
-     * 
-     * @param rootPackageName
-     *            ルートパッケージ名
-     * @return 存在チェッカの配列
-     */
-    protected ExistChecker[] createExistCheckerArray(
-            final String rootPackageName) {
-        if (StringUtil.isEmpty(rootPackageName)) {
-            return new ExistChecker[0];
-        }
-        final String s = rootPackageName.replace('.', '/') + '/';
-        final List list = new ArrayList();
-        for (final Iterator it = ClassLoaderUtil.getResources(this.getClass(),
-                s); it.hasNext();) {
-            final URL url = (URL) it.next();
-            final String protocol = URLUtil.toCanonicalProtocol(url
-                    .getProtocol());
-            if ("file".equals(protocol)) {
-                list.add(new FileExistChecker(url));
-            } else if ("jar".equals(protocol)) {
-                list.add(new JarExistChecker(url, rootPackageName));
-            } else if ("zip".equals(protocol)) {
-                list.add(new ZipExistChecker(url, rootPackageName));
-            } else if ("code-source".equals(protocol)) {
-                list.add(new CodeSourceExistChecker(url, rootPackageName));
-            } else {
-                logger.log("WSSR0013", new Object[] { rootPackageName, url });
-            }
-        }
-        if (list.isEmpty()) {
-            logger.log("WSSR0014", new Object[] { rootPackageName });
-        }
-        return (ExistChecker[]) list.toArray(new ExistChecker[list.size()]);
-    }
-
-    /**
-     * パス名を返します。
-     * 
-     * @param lastClassName
-     *            クラス名の最後
-     * @return パス名
-     */
-    protected static String getPathName(final String lastClassName) {
-        return lastClassName.replace('.', '/') + ".class";
-    }
-
-    /**
-     * 存在チェッカのインターフェースです。
-     * 
-     */
-    protected static interface ExistChecker {
-        /**
-         * クラスが存在するかどうかを返します。
-         * 
-         * @param lastClassName
-         * @return クラスが存在するかどうか
-         */
-        boolean isExist(String lastClassName);
-
-        /**
-         * リソースを開放します。
-         */
-        void close();
-    }
-
-    /**
-     * ファイル用の存在チェッカです。
-     * 
-     */
-    protected static class FileExistChecker implements ExistChecker {
-        private File rootFile;
-
-        /**
-         * インスタンスを作成します。
-         * 
-         * @param rootUrl
-         *            ルートURL
-         */
-        public FileExistChecker(final URL rootUrl) {
-            rootFile = URLUtil.toFile(rootUrl);
-        }
-
-        public boolean isExist(final String lastClassName) {
-            final File file = new File(rootFile, getPathName(lastClassName));
-            return file.exists();
-        }
-
-        public void close() {
-        }
-    }
-
-    /**
-     * jar用の存在チェッカです。
-     * 
-     */
-    protected static class JarExistChecker implements ExistChecker {
-        private JarFile jarFile;
-
-        private String rootPath;
-
-        /**
-         * インスタンスを作成します。
-         * 
-         * @param jarUrl
-         *            jar URL
-         * @param rootPackageName
-         *            ルートパッケージ名
-         */
-        public JarExistChecker(final URL jarUrl, final String rootPackageName) {
-            jarFile = JarFileUtil.toJarFile(jarUrl);
-            this.rootPath = rootPackageName.replace('.', '/') + "/";
-        }
-
-        public boolean isExist(final String lastClassName) {
-            return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
-        }
-
-        public void close() {
-            JarFileUtil.close(jarFile);
-        }
-    }
-
-    /**
-     * zip用の存在チェッカです。
-     * 
-     */
-    protected static class ZipExistChecker implements ExistChecker {
-        private ZipFile zipFile;
-
-        private String rootPath;
-
-        /**
-         * インスタンスを作成します。
-         * 
-         * @param zipUrl
-         *            zip URL
-         * @param rootPackageName
-         *            ルートパッケージ名
-         */
-        public ZipExistChecker(final URL zipUrl, final String rootPackageName) {
-            zipFile = ZipFileUtil.toZipFile(zipUrl);
-            this.rootPath = rootPackageName.replace('.', '/') + "/";
-        }
-
-        public boolean isExist(final String lastClassName) {
-            return zipFile.getEntry(rootPath + getPathName(lastClassName)) != null;
-        }
-
-        public void close() {
-            ZipFileUtil.close(zipFile);
-        }
-    }
-
-    /**
-     * OC4J用の存在チェッカです。
-     * 
-     */
-    protected static class CodeSourceExistChecker implements ExistChecker {
-        private JarFile jarFile;
-
-        private String rootPath;
-
-        /**
-         * インスタンスを作成します。
-         * 
-         * @param url
-         *            URL
-         * @param rootPackageName
-         *            ルートパッケージ名
-         */
-        public CodeSourceExistChecker(final URL url,
-                final String rootPackageName) {
-            final URL jarUrl = URLUtil.create("jar:file:" + url.getPath());
-            jarFile = JarFileUtil.toJarFile(jarUrl);
-            this.rootPath = rootPackageName.replace('.', '/') + "/";
-        }
-
-        public boolean isExist(final String lastClassName) {
-            return jarFile.getEntry(rootPath + getPathName(lastClassName)) != null;
-        }
-
-        public void close() {
-            JarFileUtil.close(jarFile);
-        }
     }
 
 }
