@@ -20,21 +20,38 @@ import java.io.File;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * @author taedium
+ * 条件に合うエンティティクラスが1つも見つからない場合にスローされる例外です。
  * 
+ * @author taedium
  */
 public class EntityClassNotFoundRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
+    /** クラスパスのディレクトリ */
     protected File classpathDir;
 
+    /** パッケージ名 */
     protected String packageName;
 
+    /** 対象とするエンティティ名の正規表現 */
     protected String entityNamePattern;
 
+    /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param classpathDir
+     *            クラスパスのディレクトリ
+     * @param packageName
+     *            パッケージ名
+     * @param entityNamePattern
+     *            対象とするエンティティ名の正規表現
+     * @param ignoreEntityNamePattern
+     *            対象としないエンティティ名の正規表現
+     */
     public EntityClassNotFoundRuntimeException(File classpathDir,
             String packageName, String entityNamePattern,
             String ignoreEntityNamePattern) {
@@ -47,28 +64,36 @@ public class EntityClassNotFoundRuntimeException extends SRuntimeException {
     }
 
     /**
-     * @return Returns the classpathDir.
+     * クラスパスのディレクトリを返します。
+     * 
+     * @return クラスパスのディレクトリ
      */
     public File getClasspathDir() {
         return classpathDir;
     }
 
     /**
-     * @return Returns the packageName.
+     * パッケージ名を返します。
+     * 
+     * @return パッケージ名
      */
     public String getPackageName() {
         return packageName;
     }
 
     /**
-     * @return Returns the entityNamePattern.
+     * 対象とするエンティティ名の正規表現を返します。
+     * 
+     * @return 対象とするエンティティ名の正規表現
      */
     public String getEntityNamePattern() {
         return entityNamePattern;
     }
 
     /**
-     * @return Returns the ignoreEntityNamePattern.
+     * 対象としないエンティティ名の正規表現を返します。
+     * 
+     * @return 対象としないエンティティ名の正規表現
      */
     public String getIgnoreEntityNamePattern() {
         return ignoreEntityNamePattern;

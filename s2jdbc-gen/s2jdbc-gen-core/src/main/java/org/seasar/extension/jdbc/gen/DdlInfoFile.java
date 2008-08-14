@@ -15,14 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen;
 
-import java.io.File;
-
 /**
- * DDLファイルのバージョンを表すインタフェースです。
+ * DDL情報を管理するファイルを表すインタフェースです。
  * 
  * @author taedium
  */
-public interface DdlVersion {
+public interface DdlInfoFile {
 
     /**
      * バージョン番号を返します。
@@ -32,6 +30,13 @@ public interface DdlVersion {
     int getVersionNo();
 
     /**
+     * 次のバージョン番号を返します。
+     * 
+     * @return 次のバージョン番号
+     */
+    int getNextVersionNo();
+
+    /**
      * バージョン番号を設定します。
      * 
      * @param versionNo
@@ -39,5 +44,4 @@ public interface DdlVersion {
      */
     void setVersionNo(int versionNo);
 
-    File getVersionFile();
 }

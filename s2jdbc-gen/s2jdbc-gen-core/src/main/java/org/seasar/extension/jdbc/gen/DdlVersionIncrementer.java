@@ -15,17 +15,31 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import java.io.File;
+
 /**
- * スキーマのバージョンを表すインタフェースです。
+ * DDLのバージョンを増分するインタフェースです。
  * 
  * @author taedium
  */
-public interface SchemaVersion {
+public interface DdlVersionIncrementer {
 
     /**
-     * バージョン番号を返します。
+     * バージョンを増分します。
      * 
-     * @return バージョン番号
+     * @param callback
+     *            コールバック
      */
-    public int getVersionNo();
+    void increment(Callback callback);
+
+    /**
+     * コールバックのインタフェースです。
+     * 
+     * @author taedium
+     */
+    interface Callback {
+
+        void execute(File createDir, File dropDir, int versionNo);
+    }
+
 }

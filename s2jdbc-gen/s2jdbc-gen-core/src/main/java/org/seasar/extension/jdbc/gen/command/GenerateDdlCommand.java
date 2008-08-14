@@ -28,7 +28,8 @@ import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.DdlModel;
 import org.seasar.extension.jdbc.gen.DdlModelFactory;
-import org.seasar.extension.jdbc.gen.DdlVersion;
+import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.Dumper;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
@@ -36,7 +37,6 @@ import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.Versionizer;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
@@ -47,8 +47,8 @@ import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.sql.DumperImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
-import org.seasar.extension.jdbc.gen.version.VersionizerImpl;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryImpl;
+import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -179,7 +179,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected String schemaInfoColumnName = "VERSION";
 
     /** DDLのバージョンファイル */
-    protected File ddlVersionFile = new File("db", "ddl-version.txt");
+    protected File ddlVersionFile = new File("db", "ddl-info.txt");
 
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
@@ -209,10 +209,9 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ジェネレータ */
     protected Generator generator;
 
-    /** DDLのバージョン */
-    protected DdlVersion ddlVersion;
+    protected DdlVersionDirectory ddlVersionDirectory;
 
-    protected Versionizer versionizer;
+    protected DdlVersionIncrementer ddlVersionIncrementer;
 
     protected DatabaseDescFactory databaseDescFactory;
 
@@ -893,8 +892,8 @@ public class GenerateDdlCommand extends AbstractCommand {
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-        ddlVersion = createDdlVersion();
-        versionizer = createVersionizer();
+        ddlVersionDirectory = createDdlVersionDirectory();
+        ddlVersionIncrementer = createDdlVersionIncrementer();
         ddlModelFactory = createDdlModelFactory();
         generator = createGenerator();
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
@@ -909,10 +908,11 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() throws Throwable {
-        versionizer.increment(new Versionizer.Callback() {
+        ddlVersionIncrementer.increment(new DdlVersionIncrementer.Callback() {
 
             public void execute(final File createDir, File dropDir,
                     int versionNo) {
+
                 final DatabaseDesc databaseDesc = databaseDescFactory
                         .getDatabaseDesc();
                 DdlModel model = ddlModelFactory.getDdlModel(databaseDesc,
@@ -1011,23 +1011,19 @@ public class GenerateDdlCommand extends AbstractCommand {
                 dialect);
     }
 
-    /**
-     * {@link DdlVersion}の実装を作成します。
-     * 
-     * @return {@link DdlVersion}の実装
-     */
-    protected DdlVersion createDdlVersion() {
-        return new DdlVersionImpl(ddlVersionFile);
+    protected DdlVersionDirectory createDdlVersionDirectory() {
+        return new DdlVersionDirectoryImpl(migrateDir, ddlVersionFile,
+                versionNoPattern);
     }
 
-    protected Versionizer createVersionizer() {
+    protected DdlVersionIncrementer createDdlVersionIncrementer() {
         List<String> createFileNameList = Arrays.asList(createTableDdlFileName,
                 createUniqueKeyDdlFileName, createSequenceDdlFileName,
                 createForeignKeyDdlFileName, dumpDirName);
         List<String> dropFileNameList = Arrays.asList(dropTableDdlFileName,
                 dropUniqueKeyDdlFileName, dropSequenceDdlFileName,
                 dropForeignKeyDdlFileName);
-        return new VersionizerImpl(ddlVersion, migrateDir, versionNoPattern,
+        return new DdlVersionIncrementerImpl(ddlVersionDirectory,
                 createFileNameList, dropFileNameList);
     }
 

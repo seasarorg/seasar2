@@ -19,11 +19,17 @@ import java.io.File;
 import java.util.Comparator;
 
 /**
- * @author taedium
+ * 環境名を考慮してファイルを比較する{@link Comparator}の実装クラスです。
+ * <p>
+ * 環境名が「ut」でhoge.txtという名前のファイルとhoge_ut.txtという名前のファイルを比較した場合、hoge_ut.
+ * txtという名前をもつファイルがより小さいと判定されます。
+ * </p>
  * 
+ * @author taedium
  */
 public class EnvAwareFileComparator implements Comparator<File> {
 
+    /** 環境名のサフィックス */
     protected String envSuffix;
 
     /**
@@ -36,8 +42,8 @@ public class EnvAwareFileComparator implements Comparator<File> {
     public int compare(File file1, File file2) {
         String envIncludedName1 = removeExtension(file1.getName());
         String envIncludedName2 = removeExtension(file2.getName());
-        String envExcludedName1 = removeEnv(envIncludedName1);
-        String envExcludedName2 = removeEnv(envIncludedName2);
+        String envExcludedName1 = removeEnvSuffix(envIncludedName1);
+        String envExcludedName2 = removeEnvSuffix(envIncludedName2);
 
         int result = envExcludedName1.compareTo(envExcludedName2);
         if (result == 0) {
@@ -49,6 +55,13 @@ public class EnvAwareFileComparator implements Comparator<File> {
         return result;
     }
 
+    /**
+     * 拡張子を除去します。
+     * 
+     * @param name
+     *            名前
+     * @return 拡張子が除去された値
+     */
     protected String removeExtension(String name) {
         int pos = name.lastIndexOf('.');
         if (pos > -1) {
@@ -57,7 +70,14 @@ public class EnvAwareFileComparator implements Comparator<File> {
         return name;
     }
 
-    protected String removeEnv(String name) {
+    /**
+     * 環境名のサフィックスを除去します。
+     * 
+     * @param name
+     *            名前
+     * @return 環境名のサフィックスが除去された値
+     */
+    protected String removeEnvSuffix(String name) {
         if (name.endsWith(envSuffix)) {
             return name.substring(0, name.length() - envSuffix.length());
         }

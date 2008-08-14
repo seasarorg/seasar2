@@ -29,18 +29,16 @@ import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.Loader;
-import org.seasar.extension.jdbc.gen.MigrationFileHandler;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.migration.DumpFileHandler;
 import org.seasar.extension.jdbc.gen.sql.LoaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.util.EnvAwareFileComparator;
-import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
+import org.seasar.extension.jdbc.gen.util.ExcludeFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -328,15 +326,14 @@ public class LoadDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        final List<MigrationFileHandler> handlerList = new ArrayList<MigrationFileHandler>();
+        final List<File> fileList = new ArrayList<File>();
 
-        FileUtil.traverseDirectory(dumpDir, new ExclusionFilenameFilter(),
+        FileUtil.traverseDirectory(dumpDir, new ExcludeFilenameFilter(),
                 new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
                         if (file.getName().endsWith(".csv")) {
-                            handlerList.add(new DumpFileHandler(databaseDesc,
-                                    file, loader));
+                            fileList.add(file);
                         }
                     }
                 });
@@ -344,8 +341,10 @@ public class LoadDataCommand extends AbstractCommand {
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
-                for (MigrationFileHandler handler : handlerList) {
-                    handler.handle(context);
+                for (File file : fileList) {
+                    if (loader.isTarget(file)) {
+                        loader.load(context, databaseDesc, file);
+                    }
                 }
             }
         });

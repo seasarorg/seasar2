@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 
-import org.seasar.extension.jdbc.gen.DdlVersion;
+import org.seasar.extension.jdbc.gen.DdlInfoFile;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.framework.exception.IORuntimeException;
@@ -30,14 +30,14 @@ import org.seasar.framework.util.FileOutputStreamUtil;
 import org.seasar.framework.util.TextUtil;
 
 /**
- * {@link DdlVersion}の実装クラスです。
+ * {@link DdlInfoFile}の実装クラスです。
  * 
  * @author taedium
  */
-public class DdlVersionImpl implements DdlVersion {
+public class DdlInfoFileImpl implements DdlInfoFile {
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(DdlVersionImpl.class);
+    protected Logger logger = Logger.getLogger(DdlInfoFileImpl.class);
 
     /** DDLファイル */
     protected File file;
@@ -51,7 +51,7 @@ public class DdlVersionImpl implements DdlVersion {
      * @param file
      *            ファイル
      */
-    public DdlVersionImpl(File file) {
+    public DdlInfoFileImpl(File file) {
         if (file == null) {
             throw new NullPointerException("file");
         }
@@ -64,10 +64,15 @@ public class DdlVersionImpl implements DdlVersion {
         }
         if (!file.exists()) {
             logger.log("IS2JDBCGen0003", new Object[] { file.getPath() });
-            return 0;
+            versionNo = 0;
+            return versionNo;
         }
         String value = TextUtil.readUTF8(file).trim();
         return VersionUtil.toInt(file.getPath(), value);
+    }
+
+    public int getNextVersionNo() {
+        return getVersionNo() + 1;
     }
 
     public void setVersionNo(int versionNo) {
@@ -82,10 +87,6 @@ public class DdlVersionImpl implements DdlVersion {
             CloseableUtil.close(writer);
         }
         this.versionNo = null;
-    }
-
-    public File getVersionFile() {
-        return file;
     }
 
 }

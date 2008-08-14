@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.util;
 import java.io.File;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.util.EnvAwareFileComparator;
 
 import static org.junit.Assert.*;
 
@@ -28,20 +27,28 @@ import static org.junit.Assert.*;
  */
 public class EnvAwareFileComparatorTest {
 
-    private EnvAwareFileComparator comparator = new EnvAwareFileComparator(
-            "ut");
+    private EnvAwareFileComparator comparator = new EnvAwareFileComparator("ut");
 
+    /**
+     * 
+     */
     @Test
     public void testRemoveExtension() {
         assertEquals("hoge", comparator.removeExtension("hoge.txt"));
     }
 
+    /**
+     * 
+     */
     @Test
     public void testRemoveEnv() {
-        assertEquals("hoge", comparator.removeEnv("hoge_ut"));
+        assertEquals("hoge", comparator.removeEnvSuffix("hoge_ut"));
     }
 
-    public void testCompareTo() throws Exception {
+    /**
+     * 
+     */
+    public void testCompareTo() {
         File file1 = new File("hoge_ut.txt");
         File file2 = new File("hoge.txt");
         assertTrue(comparator.compare(file1, file2) < 0);

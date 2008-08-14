@@ -20,15 +20,15 @@ import java.io.FilenameFilter;
 import java.util.regex.Pattern;
 
 /**
- * 一般的に除外すべき名前を除外する{@link ExclusionFilenameFilter}の実装クラスです。
+ * 一般的に除外すべき名前をフィルタする{@link ExcludeFilenameFilter}の実装クラスです。
  * 
  * @author taedium
  */
-public class ExclusionFilenameFilter implements FilenameFilter {
+public class ExcludeFilenameFilter implements FilenameFilter {
 
     /** デフォルトの除外名の配列 */
-    protected static String[] defaultExclusionNames = new String[] { ".*~", "#.*#",
-            "\\.#.*", "%.*%", "\\._.*", "CVS", "\\.cvsignore", "SCCS",
+    protected static String[] defaultExclusionNames = new String[] { ".*~",
+            "#.*#", "\\.#.*", "%.*%", "\\._.*", "CVS", "\\.cvsignore", "SCCS",
             "vssver\\.scc", "\\.svn", "\\.DS_Store" };
 
     /** 除外パターン */
@@ -37,7 +37,7 @@ public class ExclusionFilenameFilter implements FilenameFilter {
     /**
      * インスタンスを構築します。
      */
-    public ExclusionFilenameFilter() {
+    public ExcludeFilenameFilter() {
         StringBuilder buf = new StringBuilder();
         buf.append("(");
         for (String s : defaultExclusionNames) {

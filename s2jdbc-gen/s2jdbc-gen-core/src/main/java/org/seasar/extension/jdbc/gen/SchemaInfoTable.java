@@ -16,17 +16,16 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * マイグレーション用のファイルを扱うインタフェースです。
+ * スキーマ情報を管理するテーブルを表すインタフェースです。
  * 
  * @author taedium
  */
-public interface MigrationFileHandler {
+public interface SchemaInfoTable {
 
     /**
-     * 処理します。
+     * バージョン番号を返します。
      * 
-     * @param sqlExecutionContext
-     *            SQL実行コンテキスト
+     * @return バージョン番号
      */
-    void handle(SqlExecutionContext sqlExecutionContext);
+    public int getVersionNo();
 }

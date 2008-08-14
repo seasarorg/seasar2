@@ -36,4 +36,13 @@ public interface Loader {
      */
     void load(SqlExecutionContext sqlExecutionContext,
             DatabaseDesc databaseDesc, File dumpFile);
+
+    /**
+     * ダンプファイルの場合{@code true}を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return ダンプファイルの場合{@code true}
+     */
+    boolean isTarget(File file);
 }

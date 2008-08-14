@@ -65,8 +65,8 @@ public class MigrateCommandTest {
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createSchemaVersion());
-        assertNotNull(command.createDdlVersion());
+        assertNotNull(command.createSchemaInfoTable());
+        assertNotNull(command.createDdlVersionDirectory());
         assertNotNull(command.createSqlFileExecutor());
         assertNotNull(command.createSqlUnitExecutor());
         assertNotNull(command.createEntityMetaReader());

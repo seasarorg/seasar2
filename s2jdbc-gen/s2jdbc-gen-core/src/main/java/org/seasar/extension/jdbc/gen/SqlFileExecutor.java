@@ -33,4 +33,13 @@ public interface SqlFileExecutor {
      *            SQLファイル
      */
     void execute(SqlExecutionContext context, File sqlFile);
+
+    /**
+     * SQLファイルの場合{@code true}を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return SQLファイルの場合{@code true}
+     */
+    boolean isTarget(File file);
 }

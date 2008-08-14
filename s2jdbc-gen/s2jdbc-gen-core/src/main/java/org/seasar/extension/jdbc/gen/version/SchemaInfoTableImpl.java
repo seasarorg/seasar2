@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SchemaVersion;
+import org.seasar.extension.jdbc.gen.SchemaInfoTable;
 import org.seasar.extension.jdbc.gen.exception.NoResultRuntimeException;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
@@ -34,14 +34,14 @@ import org.seasar.framework.util.ResultSetUtil;
 import org.seasar.framework.util.StatementUtil;
 
 /**
- * {@link SchemaVersion}の実装クラスです。
+ * {@link SchemaInfoTable}の実装クラスです。
  * 
  * @author taedium
  */
-public class SchemaVersionImpl implements SchemaVersion {
+public class SchemaInfoTableImpl implements SchemaInfoTable {
 
     /** ロガー */
-    protected static Logger logger = Logger.getLogger(SchemaVersionImpl.class);
+    protected static Logger logger = Logger.getLogger(SchemaInfoTableImpl.class);
 
     /** データソース */
     protected DataSource dataSource;
@@ -70,7 +70,7 @@ public class SchemaVersionImpl implements SchemaVersion {
      * @param columnName
      *            カラム名
      */
-    public SchemaVersionImpl(DataSource dataSource, GenDialect dialect,
+    public SchemaInfoTableImpl(DataSource dataSource, GenDialect dialect,
             String fullTableName, String columnName) {
         if (dataSource == null) {
             throw new NullPointerException("dataSource");

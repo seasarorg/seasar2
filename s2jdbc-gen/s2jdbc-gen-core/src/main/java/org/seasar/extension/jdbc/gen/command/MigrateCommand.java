@@ -16,8 +16,6 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -25,33 +23,26 @@ import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
-import org.seasar.extension.jdbc.gen.DdlVersion;
+import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.Loader;
-import org.seasar.extension.jdbc.gen.MigrationFileHandler;
-import org.seasar.extension.jdbc.gen.SchemaVersion;
+import org.seasar.extension.jdbc.gen.Migrater;
+import org.seasar.extension.jdbc.gen.SchemaInfoTable;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.Versionizer;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.migration.DumpFileHandler;
-import org.seasar.extension.jdbc.gen.migration.SqlFileHandler;
 import org.seasar.extension.jdbc.gen.sql.LoaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.util.EnvAwareFileComparator;
-import org.seasar.extension.jdbc.gen.util.ExclusionFilenameFilter;
-import org.seasar.extension.jdbc.gen.util.FileUtil;
 import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.gen.util.VersionUtil;
-import org.seasar.extension.jdbc.gen.version.DdlVersionImpl;
-import org.seasar.extension.jdbc.gen.version.SchemaVersionImpl;
-import org.seasar.extension.jdbc.gen.version.VersionizerImpl;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryImpl;
+import org.seasar.extension.jdbc.gen.version.MigraterImpl;
+import org.seasar.extension.jdbc.gen.version.SchemaInfoTableImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -119,7 +110,7 @@ public class MigrateCommand extends AbstractCommand {
     protected String versionNoPattern = "0000";
 
     /** DDLのバージョンファイル */
-    protected File ddlVersionFile = new File("db", "ddl-version.txt");
+    protected File ddlVersionFile = new File("db", "ddl-info.txt");
 
     /** マイグレーション先のバージョン */
     protected String version = "latest";
@@ -152,12 +143,11 @@ public class MigrateCommand extends AbstractCommand {
     protected SqlFileExecutor sqlFileExecutor;
 
     /** スキーマのバージョン */
-    protected SchemaVersion schemaVersion;
+    protected SchemaInfoTable schemaInfoTable;
 
-    /** DDLのバージョン */
-    protected DdlVersion ddlVersion;
+    protected DdlVersionDirectory ddlVersionDirectory;
 
-    protected Versionizer versionizer;
+    protected Migrater migrater;
 
     protected DatabaseDescFactory databaseDescFactory;
 
@@ -488,13 +478,13 @@ public class MigrateCommand extends AbstractCommand {
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         sqlFileExecutor = createSqlFileExecutor();
-        schemaVersion = createSchemaVersion();
-        ddlVersion = createDdlVersion();
-        versionizer = createVersionizer();
+        schemaInfoTable = createSchemaInfoTable();
+        ddlVersionDirectory = createDdlVersionDirectory();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         loader = createLoader();
+        migrater = createMigrater();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
                 .getName() });
@@ -502,12 +492,26 @@ public class MigrateCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() {
-        int from = schemaVersion.getVersionNo();
-        int to = "latest".equalsIgnoreCase(version) ? ddlVersion.getVersionNo()
-                : VersionUtil.toInt(version);
-        dropSchema(versionizer.getDropDir(from));
-        createSchema(versionizer.getCreateDir(to));
-        logger.log("IS2JDBCGen0005", new Object[] { from, to });
+        final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
+
+        migrater.migrate(new Migrater.Callback() {
+
+            public void drop(SqlExecutionContext sqlExecutionContext, File file) {
+                if (sqlFileExecutor.isTarget(file)) {
+                    sqlFileExecutor.execute(sqlExecutionContext, file);
+                }
+            }
+
+            public void create(SqlExecutionContext sqlExecutionContext,
+                    File file) {
+                if (sqlFileExecutor.isTarget(file)) {
+                    sqlFileExecutor.execute(sqlExecutionContext, file);
+                }
+                if (loader.isTarget(file)) {
+                    loader.load(sqlExecutionContext, databaseDesc, file);
+                }
+            }
+        });
     }
 
     @Override
@@ -515,71 +519,6 @@ public class MigrateCommand extends AbstractCommand {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
         }
-    }
-
-    /**
-     * スキーマからオブジェクトを削除します。
-     * 
-     * @param dropDir
-     *            dropディレクトリ
-     */
-    protected void dropSchema(File dropDir) {
-        final List<MigrationFileHandler> handlerList = new ArrayList<MigrationFileHandler>();
-
-        FileUtil.traverseDirectory(dropDir, new ExclusionFilenameFilter(),
-                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
-
-                    public void handle(File file) {
-                        String name = file.getName();
-                        if (name.endsWith(".sql") || name.endsWith(".ddl")) {
-                            handlerList.add(new SqlFileHandler(file,
-                                    sqlFileExecutor));
-                        }
-                    }
-                });
-
-        processMigrationFiles(handlerList);
-    }
-
-    /**
-     * スキーマにオブジェクトを作成します。
-     * 
-     * @param createDir
-     *            createディレクトリ
-     */
-    protected void createSchema(File createDir) {
-        final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        final List<MigrationFileHandler> handlerList = new ArrayList<MigrationFileHandler>();
-
-        FileUtil.traverseDirectory(createDir, new ExclusionFilenameFilter(),
-                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
-
-                    public void handle(File file) {
-                        String name = file.getName();
-                        if (name.endsWith(".sql") || name.endsWith(".ddl")) {
-                            handlerList.add(new SqlFileHandler(file,
-                                    sqlFileExecutor));
-                        }
-                        if (name.endsWith(".csv")) {
-                            handlerList.add(new DumpFileHandler(databaseDesc,
-                                    file, loader));
-                        }
-                    }
-                });
-
-        processMigrationFiles(handlerList);
-    }
-
-    protected void processMigrationFiles(
-            final List<MigrationFileHandler> handlerList) {
-        sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
-
-            public void execute(SqlExecutionContext context) {
-                for (MigrationFileHandler handler : handlerList) {
-                    handler.handle(context);
-                }
-            }
-        });
     }
 
     protected EntityMetaReader createEntityMetaReader() {
@@ -594,26 +533,23 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * {@link SchemaVersion}の実装を作成します。
+     * {@link SchemaInfoTable}の実装を作成します。
      * 
-     * @return {@link SchemaVersion}の実装
+     * @return {@link SchemaInfoTable}の実装
      */
-    protected SchemaVersion createSchemaVersion() {
-        return new SchemaVersionImpl(dataSource, dialect,
+    protected SchemaInfoTable createSchemaInfoTable() {
+        return new SchemaInfoTableImpl(dataSource, dialect,
                 schemaInfoFullTableName, schemaInfoColumnName);
     }
 
-    /**
-     * {@link DdlVersion}の実装を作成します。
-     * 
-     * @return {@link DdlVersion}の実装
-     */
-    protected DdlVersion createDdlVersion() {
-        return new DdlVersionImpl(ddlVersionFile);
+    protected DdlVersionDirectory createDdlVersionDirectory() {
+        return new DdlVersionDirectoryImpl(migrateDir, ddlVersionFile,
+                versionNoPattern);
     }
 
-    protected Versionizer createVersionizer() {
-        return new VersionizerImpl(ddlVersion, migrateDir, versionNoPattern);
+    protected Migrater createMigrater() {
+        return new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
+                ddlVersionDirectory, version, env);
     }
 
     /**

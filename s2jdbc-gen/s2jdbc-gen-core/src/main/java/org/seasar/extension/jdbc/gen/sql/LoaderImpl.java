@@ -118,6 +118,10 @@ public class LoaderImpl implements Loader {
         }
     }
 
+    public boolean isTarget(File file) {
+        return file != null && file.getName().endsWith(extension);
+    }
+
     /**
      * データのロード前に処理します。
      * 

@@ -18,23 +18,19 @@ package org.seasar.extension.jdbc.gen;
 import java.io.File;
 
 /**
- * ファイルをバージョン付けするインタフェースです。
+ * スキーマのマイグレーションを実行するインタフェースです。
  * 
  * @author taedium
  */
-public interface Versionizer {
-
-    File getCreateDir(int versionNo);
-
-    File getDropDir(int versionNo);
+public interface Migrater {
 
     /**
-     * バージョンを増分します。
+     * マイグレーションを実行します。
      * 
      * @param callback
      *            コールバック
      */
-    void increment(Callback callback);
+    void migrate(Callback callback);
 
     /**
      * コールバックのインタフェースです。
@@ -43,7 +39,8 @@ public interface Versionizer {
      */
     interface Callback {
 
-        void execute(File createDir, File dropDir, int versionNo);
-    }
+        void drop(SqlExecutionContext sqlExecutionContext, File file);
 
+        void create(SqlExecutionContext sqlExecutionContext, File file);
+    }
 }

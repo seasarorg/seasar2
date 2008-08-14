@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen;
 
 /**
- * SQLの一まとまり処理を実行するインタフェースです。
+ * SQLのひとまとまり処理を実行するインタフェースです。
  * 
  * @author taedium
  */

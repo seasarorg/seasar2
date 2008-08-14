@@ -65,7 +65,7 @@ public class GenerateDdlCommandTest {
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createDdlVersion());
+        assertNotNull(command.createDdlVersionIncrementer());
         assertNotNull(command.createEntityMetaReader());
         assertNotNull(command.createGenerator());
         assertNotNull(command.createDdlModelFactory());
@@ -74,6 +74,6 @@ public class GenerateDdlCommandTest {
                 "xxx"), "aaa", "bbb"));
         assertNotNull(command.createDumper());
         assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createVersionizer());
+        assertNotNull(command.createDdlVersionIncrementer());
     }
 }

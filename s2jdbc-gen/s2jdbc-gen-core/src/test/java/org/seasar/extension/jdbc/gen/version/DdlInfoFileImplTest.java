@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DdlVersionImplTest {
+public class DdlInfoFileImplTest {
 
     /**
      * 
@@ -36,9 +36,9 @@ public class DdlVersionImplTest {
     public void testGetVersionNo() {
         String path = getClass().getName().replace('.', '/') + "_version.txt";
         File file = ResourceUtil.getResourceAsFile(path);
-        DdlVersionImpl ddlVersion = new DdlVersionImpl(file);
-        assertEquals(10, ddlVersion.getVersionNo());
-        assertEquals(10, ddlVersion.getVersionNo());
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(file);
+        assertEquals(10, ddlInfoFile.getVersionNo());
+        assertEquals(10, ddlInfoFile.getVersionNo());
     }
 
     /**
@@ -46,8 +46,9 @@ public class DdlVersionImplTest {
      */
     @Test
     public void testGetVersionNo_fileNotExistent() {
-        DdlVersionImpl ddlVersion = new DdlVersionImpl(new File("notExistent"));
-        assertEquals(0, ddlVersion.getVersionNo());
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File(
+                "notExistent"));
+        assertEquals(0, ddlInfoFile.getVersionNo());
     }
 
     /**
@@ -58,9 +59,9 @@ public class DdlVersionImplTest {
         String fileName = getClass().getName().replace('.', '/')
                 + "_illegalVersion.txt";
         File file = ResourceUtil.getResourceAsFile(fileName);
-        DdlVersionImpl ddlVersion = new DdlVersionImpl(file);
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(file);
         try {
-            ddlVersion.getVersionNo();
+            ddlInfoFile.getVersionNo();
             fail();
         } catch (IllegalVersionValueRuntimeException expected) {
         }

@@ -82,8 +82,22 @@ public interface GenDialect {
      */
     String getCloseQuote();
 
+    /**
+     * クォートで囲みます。
+     * 
+     * @param value
+     *            値
+     * @return クォートで囲まれた値
+     */
     String quote(String value);
 
+    /**
+     * クォートを取り除きます。
+     * 
+     * @param value
+     *            値
+     * @return クォートが取り除かれた値
+     */
     String unquote(String value);
 
     /**

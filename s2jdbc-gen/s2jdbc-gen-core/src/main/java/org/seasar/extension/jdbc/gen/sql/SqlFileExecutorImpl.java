@@ -96,6 +96,14 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
         }
     }
 
+    public boolean isTarget(File file) {
+        if (file == null) {
+            return false;
+        }
+        String name = file.getName();
+        return name.endsWith(".sql") || name.endsWith(".ddl");
+    }
+
     /**
      * {@link SqlFileTokenizer}の実装を作成します。
      * 
