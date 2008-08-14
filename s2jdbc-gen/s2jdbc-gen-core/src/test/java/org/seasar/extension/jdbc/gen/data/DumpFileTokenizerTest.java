@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.sql;
+package org.seasar.extension.jdbc.gen.data;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.data.DumpFileTokenizer;
 
 import static org.junit.Assert.*;
-import static org.seasar.extension.jdbc.gen.sql.DumpFileTokenizer.TokenType.*;
+import static org.seasar.extension.jdbc.gen.data.DumpFileTokenizer.TokenType.*;
 
 /**
  * @author taedium

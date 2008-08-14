@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.sql;
+package org.seasar.extension.jdbc.gen.data;
 
 import java.io.File;
 import java.sql.PreparedStatement;
@@ -29,6 +29,8 @@ import org.seasar.extension.jdbc.gen.Loader;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.exception.DumpFileEmptyRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.LoadFailedRuntimeException;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -84,18 +86,18 @@ public class LoaderImpl implements Loader {
 
     public void load(SqlExecutionContext sqlExecutionContext,
             DatabaseDesc databaseDesc, File dumpFile) {
-        logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath() });
         String name = StringUtil.trimSuffix(dumpFile.getName(), extension);
         TableDesc tableDesc = databaseDesc.getTableDesc(name);
         if (tableDesc == null) {
             return;
         }
+        logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath() });
         DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
                 tokenizer);
         try {
             List<String> columnNameList = reader.readLine();
             if (columnNameList == null) {
-                return;
+                throw new DumpFileEmptyRuntimeException(dumpFile.getPath());
             }
             List<SqlType> sqlTypeList = getSqlTypeList(tableDesc,
                     columnNameList);
@@ -110,12 +112,15 @@ public class LoaderImpl implements Loader {
                             .getFullName() });
                     sqlExecutionContext.notifyException();
                 } else {
-                    sqlExecutionContext.addException(e);
+                    LoadFailedRuntimeException ex = new LoadFailedRuntimeException(
+                            dumpFile.getPath(), reader.getLineNumber(), e);
+                    sqlExecutionContext.addException(ex);
                 }
             }
         } finally {
             reader.close();
         }
+        logger.log("DS2JDBCGen0014", new Object[] { dumpFile.getPath() });
     }
 
     public boolean isTarget(File file) {
@@ -137,7 +142,6 @@ public class LoaderImpl implements Loader {
             Statement statement = sqlExecutionContext.getStatement();
             String sql = dialect.getIdentityInsertEnableStatement(tableDesc
                     .getFullName());
-            logSql(sql);
             StatementUtil.execute(statement, sql);
         }
     }
@@ -160,7 +164,6 @@ public class LoaderImpl implements Loader {
         List<String> valueList = null;
         boolean remaining = false;
         for (int i = 0; (valueList = reader.readLine()) != null; i++) {
-            logSql(sql);
             bindArgs(ps, sqlTypeList, valueList);
             PreparedStatementUtil.addBatch(ps);
             if (batchSize > 0 && (i + 1) % batchSize == 0) {
@@ -190,19 +193,8 @@ public class LoaderImpl implements Loader {
             Statement statement = sqlExecutionContext.getStatement();
             String sql = dialect.getIdentityInsertDisableStatement(tableDesc
                     .getFullName());
-            logSql(sql);
             StatementUtil.execute(statement, sql);
         }
-    }
-
-    /**
-     * ログを出力します。
-     * 
-     * @param sql
-     *            SQL
-     */
-    protected void logSql(String sql) {
-        logger.log("DS2JDBCGen0007", new Object[] { sql });
     }
 
     /**

@@ -13,13 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.sql;
+package org.seasar.extension.jdbc.gen.data;
 
 import java.util.Arrays;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.data.LoaderImpl;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
 
 import static org.junit.Assert.*;

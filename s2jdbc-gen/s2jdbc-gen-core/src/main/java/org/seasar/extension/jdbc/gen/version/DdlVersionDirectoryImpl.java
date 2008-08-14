@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.seasar.extension.jdbc.gen.DdlInfoFile;
 import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
-import org.seasar.extension.jdbc.gen.exception.NextVersionDirExistsRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.NextVersionDirectoryExistsRuntimeException;
 import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.framework.log.Logger;
 
@@ -86,7 +86,7 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
                 .getNextVersionNo(), versionNoPattern);
         nextVersionDir = new File(baseDir, nextVersionDirName);
         if (nextVersionDir.exists()) {
-            throw new NextVersionDirExistsRuntimeException(nextVersionDir
+            throw new NextVersionDirectoryExistsRuntimeException(nextVersionDir
                     .getPath(), versionFile.getPath());
         }
     }

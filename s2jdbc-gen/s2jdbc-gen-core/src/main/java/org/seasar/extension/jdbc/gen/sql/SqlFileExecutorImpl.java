@@ -82,7 +82,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
         try {
             for (String sql = reader.readSql(); sql != null; sql = reader
                     .readSql()) {
-                logger.log("DS2JDBCGen0007", new Object[] { sql });
+                logger.debug(sql);
                 Statement statement = context.getStatement();
                 try {
                     statement.execute(sql);
@@ -94,6 +94,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
         } finally {
             reader.close();
         }
+        logger.log("DS2JDBCGen0007", new Object[] { sqlFile.getPath() });
     }
 
     public boolean isTarget(File file) {

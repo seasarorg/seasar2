@@ -22,7 +22,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author taedium
  */
-public class NextVersionDirExistsRuntimeException extends SRuntimeException {
+public class NextVersionDirectoryExistsRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,7 +40,7 @@ public class NextVersionDirExistsRuntimeException extends SRuntimeException {
      * @param versionFilePath
      *            バージョンファイルのパス
      */
-    public NextVersionDirExistsRuntimeException(String versionDirPath,
+    public NextVersionDirectoryExistsRuntimeException(String versionDirPath,
             String versionFilePath) {
         super("ES2JDBCGen0008",
                 new Object[] { versionDirPath, versionFilePath });

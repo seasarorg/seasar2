@@ -23,19 +23,13 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class NextVersionDirExistsRuntimeExceptionTest {
+public class DumpFileEmptyRuntimeExceptionTest {
 
-    /**
-     * 
-     * @throws Exception
-     */
     @Test
     public void test() throws Exception {
-        NextVersionDirExistsRuntimeException e = new NextVersionDirExistsRuntimeException(
-                "aaa", "bbb");
-        assertEquals("aaa", e.getVersionDirPath());
-        assertEquals("bbb", e.getVersionFilePath());
+        DumpFileEmptyRuntimeException e = new DumpFileEmptyRuntimeException(
+                "aaa");
+        assertEquals("aaa", e.getDumpFilePath());
         System.out.println(e.getMessage());
     }
-
 }
