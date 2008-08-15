@@ -44,31 +44,31 @@ public class ResourcesUtil {
     /** URLのプロトコルをキー、{@link ResourceTypeFactory}を値とするマッピングです。 */
     protected static final Map resourcesTypeFactories = new HashMap();
     static {
-        addResourcesTypeFactory("file", new ResourcesFactory() {
+        addResourcesFactory("file", new ResourcesFactory() {
             public Resources create(final URL url, final String rootPackage,
-                    final String baseName) {
-                return new FileSystemResources(getBaseDir(url, baseName),
-                        rootPackage, baseName);
+                    final String rootDir) {
+                return new FileSystemResources(getBaseDir(url, rootDir),
+                        rootPackage, rootDir);
             }
         });
-        addResourcesTypeFactory("jar", new ResourcesFactory() {
+        addResourcesFactory("jar", new ResourcesFactory() {
             public Resources create(final URL url, final String rootPackage,
-                    final String baseName) {
-                return new JarFileResources(url, rootPackage, baseName);
+                    final String rootDir) {
+                return new JarFileResources(url, rootPackage, rootDir);
             }
         });
-        addResourcesTypeFactory("zip", new ResourcesFactory() {
+        addResourcesFactory("zip", new ResourcesFactory() {
             public Resources create(final URL url, final String rootPackage,
-                    final String baseName) {
+                    final String rootDir) {
                 return new JarFileResources(JarFileUtil.create(new File(
-                        ZipFileUtil.toZipFilePath(url))), rootPackage, baseName);
+                        ZipFileUtil.toZipFilePath(url))), rootPackage, rootDir);
             }
         });
-        addResourcesTypeFactory("code-source", new ResourcesFactory() {
+        addResourcesFactory("code-source", new ResourcesFactory() {
             public Resources create(final URL url, final String rootPackage,
-                    final String baseName) {
+                    final String rootDir) {
                 return new JarFileResources(URLUtil.create("jar:file:"
-                        + url.getPath()), rootPackage, baseName);
+                        + url.getPath()), rootPackage, rootDir);
             }
         });
     }
@@ -81,17 +81,22 @@ public class ResourcesUtil {
      * @param factory
      *            プロトコルに対応する{@link Resources}のファクトリ
      */
-    public static void addResourcesTypeFactory(final String protocol,
+    public static void addResourcesFactory(final String protocol,
             ResourcesFactory factory) {
         resourcesTypeFactories.put(protocol, factory);
     }
 
     /**
-     * 指定のクラスを基点とするリソースの集まりを扱う{@link ResourceType}を返します。
+     * 指定のクラスを基点とするリソースの集まりを扱う{@link Resources}を返します。
+     * <p>
+     * このメソッドが返す{@link Resources}は、指定されたクラスをFQNで参照可能なパスをルートとします。 例えば指定されたクラスが
+     * <code>foo.Bar</code>で、そのクラスファイルが<code>classes/foo/Bar.class</code>の場合、
+     * このメソッドが返す{@link Resources}は<code>classes</code>ディレクトリ以下のリソースの集合を扱います。
+     * </p>
      * 
      * @param referenceClass
      *            基点となるクラス
-     * @return 指定のクラスを基点とするリソースの集まりを扱う{@link ResourceType}
+     * @return 指定のクラスを基点とするリソースの集まりを扱う{@link Resources}
      */
     public static Resources getResourcesType(final Class referenceClass) {
         final URL url = ResourceUtil.getResource(toClassFile(referenceClass
@@ -108,14 +113,14 @@ public class ResourcesUtil {
     /**
      * 指定のディレクトリを基点とするリソースの集まりを扱う{@link ResourceType}を返します。
      * 
-     * @param baseDir
-     *            基点となるディレクトリ
+     * @param rootDir
+     *            ルートディレクトリ
      * @return 指定のディレクトリを基点とするリソースの集まりを扱う{@link ResourceType}
      */
-    public static Resources getResourcesType(final String baseDir) {
+    public static Resources getResourcesType(final String rootDir) {
         final URL url = ResourceUtil
-                .getResource(baseDir.endsWith("/") ? baseDir : baseDir + '/');
-        return getResourcesType(url, null, baseDir);
+                .getResource(rootDir.endsWith("/") ? rootDir : rootDir + '/');
+        return getResourcesType(url, null, rootDir);
     }
 
     /**
@@ -158,16 +163,16 @@ public class ResourcesUtil {
      *            リソースのURL
      * @param rootPackage
      *            ルートパッケージ
-     * @param baseName
-     *            ベース名
+     * @param rootDir
+     *            ルートディレクトリ
      * @return URLを扱う{@link Resources}
      */
     protected static Resources getResourcesType(final URL url,
-            final String rootPackage, final String baseName) {
+            final String rootPackage, final String rootDir) {
         final ResourcesFactory factory = (ResourcesFactory) resourcesTypeFactories
                 .get(URLUtil.toCanonicalProtocol(url.getProtocol()));
         if (factory != null) {
-            return factory.create(url, rootPackage, baseName);
+            return factory.create(url, rootPackage, rootDir);
         }
         logger.log("WSSR0013", new Object[] { rootPackage, url });
         return null;
@@ -229,11 +234,11 @@ public class ResourcesUtil {
          *            リソースを表すURL
          * @param rootPackage
          *            ルートパッケージ
-         * @param baseName
-         *            ベース名
+         * @param rootDir
+         *            ルートディレクトリ
          * @return URLで表されたリソースを扱う{@link Resources}
          */
-        Resources create(URL url, String rootPackage, String baseName);
+        Resources create(URL url, String rootPackage, String rootDir);
     }
 
     /**
@@ -273,7 +278,7 @@ public class ResourcesUtil {
          * {@link ResourceHandler#processResource(String, java.io.InputStream)
          * ハンドラ}をコールバックします。
          * <p>
-         * インスタンス構築時にベース名が指定されている場合は、 ベース名以下のリソースのみが対象となります。
+         * インスタンス構築時にルートディレクトリが指定されている場合は、 ルートディレクトリ以下のリソースのみが対象となります。
          * </p>
          * 
          * @param handler
@@ -301,8 +306,8 @@ public class ResourcesUtil {
         /** ルートパッケージです。 */
         protected final String rootPackage;
 
-        /** エントリのベース名です。 */
-        protected final String baseName;
+        /** ルートディレクトリです。 */
+        protected final String rootDir;
 
         /**
          * インスタンスを構築します。
@@ -311,14 +316,14 @@ public class ResourcesUtil {
          *            ベースディレクトリ
          * @param rootPackage
          *            ルートパッケージ
-         * @param baseName
-         *            ベース名
+         * @param rootDir
+         *            ルートディレクトリ
          */
         public FileSystemResources(final File baseDir,
-                final String rootPackage, final String baseName) {
+                final String rootPackage, final String rootDir) {
             this.baseDir = baseDir;
             this.rootPackage = rootPackage;
-            this.baseName = baseName;
+            this.rootDir = rootDir;
         }
 
         /**
@@ -328,12 +333,12 @@ public class ResourcesUtil {
          *            ディレクトリを表すURL
          * @param rootPackage
          *            ルートパッケージ
-         * @param baseName
-         *            ベース名
+         * @param rootDir
+         *            ルートディレクトリ
          */
         public FileSystemResources(final URL url, final String rootPackage,
-                final String baseName) {
-            this(URLUtil.toFile(url), rootPackage, baseName);
+                final String rootDir) {
+            this(URLUtil.toFile(url), rootPackage, rootDir);
         }
 
         public boolean isExistClass(final String className) {
@@ -347,7 +352,7 @@ public class ResourcesUtil {
         }
 
         public void forEach(final ResourceHandler handler) {
-            ResourceTraversal.forEach(baseDir, baseName, handler);
+            ResourceTraversal.forEach(baseDir, rootDir, handler);
         }
 
         public void close() {
@@ -368,8 +373,8 @@ public class ResourcesUtil {
         /** ルートパッケージです。 */
         protected final String rootPackage;
 
-        /** エントリのベース名です。 */
-        final protected String baseName;
+        /** ルートディレクトリです。 */
+        final protected String rootDir;
 
         /**
          * インスタンスを構築します。
@@ -378,14 +383,14 @@ public class ResourcesUtil {
          *            Jarファイル
          * @param rootPackage
          *            ルートパッケージ
-         * @param baseName
-         *            ベース名
+         * @param rootDir
+         *            ルートディレクトリ
          */
         public JarFileResources(final JarFile jarFile,
-                final String rootPackage, final String baseName) {
+                final String rootPackage, final String rootDir) {
             this.jarFile = jarFile;
             this.rootPackage = rootPackage;
-            this.baseName = baseName;
+            this.rootDir = rootDir;
         }
 
         /**
@@ -395,12 +400,12 @@ public class ResourcesUtil {
          *            Jarファイルを表すURL
          * @param rootPackage
          *            ルートパッケージ
-         * @param baseName
-         *            ベース名
+         * @param rootDir
+         *            ルートディレクトリ
          */
         public JarFileResources(final URL url, final String rootPackage,
-                final String baseName) {
-            this(JarFileUtil.toJarFile(url), rootPackage, baseName);
+                final String rootDir) {
+            this(JarFileUtil.toJarFile(url), rootPackage, rootDir);
         }
 
         public boolean isExistClass(final String className) {
@@ -423,7 +428,7 @@ public class ResourcesUtil {
         public void forEach(final ResourceHandler handler) {
             ResourceTraversal.forEach(jarFile, new ResourceHandler() {
                 public void processResource(String path, InputStream is) {
-                    if (baseName == null || path.startsWith(baseName)) {
+                    if (rootDir == null || path.startsWith(rootDir)) {
                         handler.processResource(path, is);
                     }
                 }
