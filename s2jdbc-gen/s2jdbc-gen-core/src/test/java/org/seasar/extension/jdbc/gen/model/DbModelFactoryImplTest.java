@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class DbModelFactoryImplTest {
 
     private DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-            new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION");
+            new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
 
     /**
      * 

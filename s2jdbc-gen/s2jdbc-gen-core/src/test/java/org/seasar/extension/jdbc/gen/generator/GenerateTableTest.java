@@ -122,7 +122,7 @@ public class GenerateTableTest {
         databaseDesc.addTableDesc(tableDesc3);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
+                new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 
@@ -138,6 +138,54 @@ public class GenerateTableTest {
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCreate_tableOption() throws Exception {
+        ColumnDesc no = new ColumnDesc();
+        no.setName("no");
+        no.setDefinition("integer");
+        no.setIdentity(true);
+        no.setNullable(false);
+        no.setUnique(true);
+
+        ColumnDesc name = new ColumnDesc();
+        name.setName("name");
+        name.setDefinition("varchar");
+        name.setNullable(false);
+        name.setUnique(false);
+
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        primaryKeyDesc.addColumnName("no");
+
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
+        tableDesc.addColumnDesc(no);
+        tableDesc.addColumnDesc(name);
+        tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
+
+        DatabaseDesc databaseDesc = new DatabaseDesc();
+        databaseDesc.addTableDesc(tableDesc);
+
+        DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
+                new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION",
+                "ENGINE = INNODB");
+        model = factory.getDdlModel(databaseDesc, 0);
+
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "sql/create-table.ftl", "UTF-8",
+                false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_Create_tableOption.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 

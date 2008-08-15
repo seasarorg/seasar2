@@ -77,7 +77,7 @@ public class GenerateForeignKeyTest {
         databaseDesc.addTableDesc(tableDesc);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION");
+                new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

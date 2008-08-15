@@ -189,6 +189,8 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     protected String dumpTemplateFileName = "dump/dump.ftl";
 
+    protected String tableOption = null;
+
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
 
@@ -875,6 +877,21 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.dumpDirName = dumpDirName;
     }
 
+    /**
+     * @return Returns the tableOption.
+     */
+    public String getTableOption() {
+        return tableOption;
+    }
+
+    /**
+     * @param tableOption
+     *            The tableOption to set.
+     */
+    public void setTableOption(String tableOption) {
+        this.tableOption = tableOption;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -1034,7 +1051,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected DdlModelFactory createDdlModelFactory() {
         return new DdlModelFactoryImpl(dialect, statementDelimiter,
-                schemaInfoFullTableName, schemaInfoColumnName);
+                schemaInfoFullTableName, schemaInfoColumnName, tableOption);
     }
 
     protected Dumper createDumper() {

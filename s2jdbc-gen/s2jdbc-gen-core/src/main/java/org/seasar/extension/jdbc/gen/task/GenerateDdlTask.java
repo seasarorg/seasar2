@@ -358,6 +358,38 @@ public class GenerateDdlTask extends AbstractTask {
         command.setDumpDirName(dumpDirName);
     }
 
+    /**
+     * @param schemaInfoColumnName
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setSchemaInfoColumnName(java.lang.String)
+     */
+    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
+        command.setSchemaInfoColumnName(schemaInfoColumnName);
+    }
+
+    /**
+     * @param schemaInfoFullTableName
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setSchemaInfoFullTableName(java.lang.String)
+     */
+    public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
+        command.setSchemaInfoFullTableName(schemaInfoFullTableName);
+    }
+
+    /**
+     * @param tableOption
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setTableOption(java.lang.String)
+     */
+    public void setTableOption(String tableOption) {
+        command.setTableOption(tableOption);
+    }
+
+    /**
+     * @param versionNoPattern
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setVersionNoPattern(java.lang.String)
+     */
+    public void setVersionNoPattern(String versionNoPattern) {
+        command.setVersionNoPattern(versionNoPattern);
+    }
+
     @Override
     protected Command getCommand() {
         return command;

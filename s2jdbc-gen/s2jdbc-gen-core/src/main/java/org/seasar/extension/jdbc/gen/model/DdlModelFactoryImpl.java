@@ -43,6 +43,9 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
     /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName;
 
+    /** テーブルオプション */
+    protected String tableOption;
+
     /**
      * インスタンスを構築します。
      * 
@@ -54,10 +57,13 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
      *            スキーマ情報を格納するテーブル名
      * @param schemaInfoColumnName
      *            スキーマのバージョン番号を格納するカラム名
+     * @param tableOption
+     *            テーブルオプション、存在しない場合は{@code null}
      * 
      */
     public DdlModelFactoryImpl(GenDialect dialect, char statementDelimiter,
-            String schemaInfoFullTableName, String schemaInfoColumnName) {
+            String schemaInfoFullTableName, String schemaInfoColumnName,
+            String tableOption) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
@@ -68,15 +74,17 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
             throw new NullPointerException("schemaInfoColumnName");
         }
         this.dialect = dialect;
-        this.statementDelimiter = statementDelimiter;
         this.schemaInfoFullTableName = schemaInfoFullTableName;
         this.schemaInfoColumnName = schemaInfoColumnName;
+        this.statementDelimiter = statementDelimiter;
+        this.tableOption = tableOption;
     }
 
     public DdlModel getDdlModel(DatabaseDesc databaseDesc, int versionNo) {
         DdlModel model = new DdlModel();
         model.setDialect(dialect);
         model.setDelimiter(statementDelimiter);
+        model.setTableOption(tableOption);
         for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
             model.addTableDesc(tableDesc);
             for (SequenceDesc sequenceDesc : tableDesc.getSequenceDescList()) {

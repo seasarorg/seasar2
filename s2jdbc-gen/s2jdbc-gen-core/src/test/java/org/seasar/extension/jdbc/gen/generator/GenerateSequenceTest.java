@@ -73,7 +73,7 @@ public class GenerateSequenceTest {
         databaseDesc.addTableDesc(tableDesc2);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new HsqlGenDialect(), ';', "SCHEMA_INFO", "VERSION");
+                new HsqlGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

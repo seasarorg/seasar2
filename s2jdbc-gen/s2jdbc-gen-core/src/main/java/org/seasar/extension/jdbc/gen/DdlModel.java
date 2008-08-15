@@ -32,6 +32,9 @@ public class DdlModel {
     /** 区切り文字 */
     protected char delimiter;
 
+    /** テーブルオプション */
+    protected String tableOption;
+
     /** スキーマ情報を格納するテーブル名 */
     protected String schemaInfoFullTableName;
 
@@ -86,6 +89,25 @@ public class DdlModel {
      */
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
+    }
+
+    /**
+     * テーブルオプションを返します。
+     * 
+     * @return 存在する場合テーブルオプション、存在しない場合{@code null}
+     */
+    public String getTableOption() {
+        return tableOption;
+    }
+
+    /**
+     * テーブルオプションを設定します。
+     * 
+     * @param tableOption
+     *            テーブルオプション
+     */
+    public void setTableOption(String tableOption) {
+        this.tableOption = tableOption;
     }
 
     /**
