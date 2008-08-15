@@ -10,7 +10,7 @@
 	<property name="db" value="${temp}/db"/>
 	<property name="migrate" value="${db}/migrate"/>
 	<property name="dump" value="${db}/dump"/>	
-	<property name="ddl-version" value="${db}/ddl-version.txt"/>
+	<property name="ddl-info" value="${db}/ddl-info.txt"/>
 	<property name="sql" value="${rdbms}/sql"/>	
 	<property name="rootpackagename" value="example"/>
 	
@@ -63,7 +63,7 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 		/>
 		<!-- tearDown -->
 		<exec-sql>
@@ -112,12 +112,12 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 		/>
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
 		/>
 		<junit haltonfailure="no" printsummary="true">
@@ -133,7 +133,7 @@
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 			version="0"
 			rootpackagename="${rootpackagename}"
 		/>
@@ -154,12 +154,12 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 		/>
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
 		/>
 		<exec-sql>
@@ -171,19 +171,19 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 		/>
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
 		/>
 		<!-- tearDown -->
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
-			ddlversionfile="${ddl-version}"
+			ddlInfofile="${ddl-info}"
 			version="0"
 			rootpackagename="${rootpackagename}"
 		/>
