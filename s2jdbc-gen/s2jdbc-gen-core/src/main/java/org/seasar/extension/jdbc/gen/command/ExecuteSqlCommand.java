@@ -95,6 +95,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
     /** SQLファイルの実行者 */
     protected SqlFileExecutor sqlFileExecutor;
 
+    /** SQLのひとまとまりの処理の実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
 
     /**
@@ -355,6 +356,11 @@ public class ExecuteSqlCommand extends AbstractCommand {
                 statementDelimiter, blockDelimiter);
     }
 
+    /**
+     * {@link SqlUnitExecutor}の実装を返します。
+     * 
+     * @return {@link SqlUnitExecutor}の実装
+     */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return new SqlUnitExecutorImpl(dataSource, haltOnError);
     }

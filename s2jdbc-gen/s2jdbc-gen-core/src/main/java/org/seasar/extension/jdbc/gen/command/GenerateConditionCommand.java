@@ -62,7 +62,7 @@ public class GenerateConditionCommand extends AbstractCommand {
     protected static Logger logger = Logger
             .getLogger(GenerateConditionCommand.class);
 
-    /** クラスパスのルートとなるディレクトリ */
+    /** クラスパスのディレクトリ */
     protected File classpathDir;
 
     /** 条件クラス名のサフィックス */
@@ -135,19 +135,19 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを返します。
+     * クラスパスのディレクトリを返します。
      * 
-     * @return クラスパスのルートとなるディレクトリ
+     * @return クラスパスのディレクトリ
      */
     public File getClasspathDir() {
         return classpathDir;
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを設定します。
+     * クラスパスのディレクトリを設定します。
      * 
      * @param classpathDir
-     *            クラスパスのルートとなるディレクトリ
+     *            クラスパスのディレクトリ
      */
     public void setClasspathDir(File classpathDir) {
         this.classpathDir = classpathDir;
@@ -467,25 +467,15 @@ public class GenerateConditionCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         List<EntityMeta> entityMetaList = entityMetaReader.read();
-        generate(entityMetaList);
+        for (EntityMeta entityMeta : entityMetaList) {
+            generateCondition(entityMeta);
+        }
     }
 
     @Override
     protected void doDestroy() {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
-        }
-    }
-
-    /**
-     * 生成します。
-     * 
-     * @param entityMetaList
-     *            エンティティメタデータのリスト
-     */
-    protected void generate(List<EntityMeta> entityMetaList) {
-        for (EntityMeta entityMeta : entityMetaList) {
-            generateCondition(entityMeta);
         }
     }
 

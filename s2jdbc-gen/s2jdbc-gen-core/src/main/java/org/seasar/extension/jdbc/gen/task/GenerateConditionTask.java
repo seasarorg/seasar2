@@ -38,6 +38,11 @@ public class GenerateConditionTask extends AbstractTask {
     public GenerateConditionTask() {
     }
 
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
+
     /**
      * クラスパスのディレクトリを設定します。
      * 
@@ -198,10 +203,4 @@ public class GenerateConditionTask extends AbstractTask {
     public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
         command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
     }
-
-    @Override
-    protected Command getCommand() {
-        return command;
-    }
-
 }

@@ -17,12 +17,16 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.apache.tools.ant.Task;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.DumpDataCommand;
 
 /**
- * @author taedium
+ * エンティティに対応するデータベースのデータをテキストファイルにダンプする{@link Task}です。
  * 
+ * @author taedium
+ * @see DumpDataCommand
  */
 public class DumpDataTask extends AbstractTask {
 
@@ -30,112 +34,144 @@ public class DumpDataTask extends AbstractTask {
     protected DumpDataCommand command = new DumpDataCommand();
 
     /**
+     * インスタンスを構築します。
+     */
+    public DumpDataTask() {
+    }
+
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
+
+    /**
+     * クラスパスのディレクトリを設定します。
+     * 
      * @param classpathDir
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setClasspathDir(java.io.File)
+     *            クラスパスのディレクトリ
      */
     public void setClasspathDir(File classpathDir) {
         command.setClasspathDir(classpathDir);
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setConfigPath(java.lang.String)
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }
 
     /**
+     * ダンプディレクトリを設定します。
+     * 
      * @param dumpDir
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setDumpDir(java.io.File)
+     *            ダンプディレクトリ
      */
     public void setDumpDir(File dumpDir) {
         command.setDumpDir(dumpDir);
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setDumpFileEncoding(java.lang.String)
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         command.setDumpFileEncoding(dumpFileEncoding);
     }
 
     /**
+     * ダンプのテンプレートファイル名を設定します。
+     * 
      * @param dumpTemplateFileName
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setDumpTemplateFileName(java.lang.String)
+     *            ダンプのテンプレートファイル名
      */
     public void setDumpTemplateFileName(String dumpTemplateFileName) {
         command.setDumpTemplateFileName(dumpTemplateFileName);
     }
 
     /**
+     * 対象とするエンティティ名の正規表現を設定します。
+     * 
      * @param entityNamePattern
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setEntityNamePattern(java.lang.String)
+     *            対象とするエンティティ名の正規表現
      */
     public void setEntityNamePattern(String entityNamePattern) {
         command.setEntityNamePattern(entityNamePattern);
     }
 
     /**
+     * エンティティクラスのパッケージ名を設定します。
+     * 
      * @param entityPackageName
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setEntityPackageName(java.lang.String)
+     *            エンティティクラスのパッケージ名
      */
     public void setEntityPackageName(String entityPackageName) {
         command.setEntityPackageName(entityPackageName);
     }
 
     /**
+     * 環境名を設定します。
+     * 
      * @param env
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setEnv(java.lang.String)
+     *            環境名
      */
     public void setEnv(String env) {
         command.setEnv(env);
     }
 
     /**
+     * 対象としないエンティティ名の正規表現を設定します。
+     * 
      * @param ignoreEntityNamePattern
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setIgnoreEntityNamePattern(java.lang.String)
+     *            対象としないエンティティ名の正規表現
      */
     public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
         command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setJdbcManagerName(java.lang.String)
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**
+     * ルートパッケージ名を設定します。
+     * 
      * @param rootPackageName
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setRootPackageName(java.lang.String)
+     *            ルートパッケージ名
      */
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
 
     /**
+     * テンプレートファイルのエンコーディングを設定します。
+     * 
      * @param templateFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setTemplateFileEncoding(java.lang.String)
+     *            テンプレートファイルのエンコーディング
      */
     public void setTemplateFileEncoding(String templateFileEncoding) {
         command.setTemplateFileEncoding(templateFileEncoding);
     }
 
     /**
+     * テンプレートファイルを格納するプライマリディレクトリを設定します。
+     * 
      * @param templateFilePrimaryDir
-     * @see org.seasar.extension.jdbc.gen.command.DumpDataCommand#setTemplateFilePrimaryDir(java.io.File)
+     *            テンプレートファイルを格納するプライマリディレクトリ
      */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
-    }
-
-    @Override
-    protected Command getCommand() {
-        return command;
     }
 
 }

@@ -56,7 +56,7 @@ public class LoadDataCommand extends AbstractCommand {
     /** ロガー */
     protected static Logger logger = Logger.getLogger(LoadDataCommand.class);
 
-    /** クラスパスのルートとなるディレクトリ */
+    /** クラスパスのディレクトリ */
     protected File classpathDir;
 
     /** 設定ファイルのパス */
@@ -115,9 +115,9 @@ public class LoadDataCommand extends AbstractCommand {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを返します。
+     * クラスパスのディレクトリを返します。
      * 
-     * @return クラスパスのルートとなるディレクトリ
+     * @return クラスパスのディレクトリ
      */
     public File getClasspathDir() {
         return classpathDir;

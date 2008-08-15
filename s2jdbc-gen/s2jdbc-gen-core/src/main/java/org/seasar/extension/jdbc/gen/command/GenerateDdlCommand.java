@@ -83,7 +83,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ロガー */
     protected static Logger logger = Logger.getLogger(GenerateDdlCommand.class);
 
-    /** クラスパスのルートとなるディレクトリ */
+    /** クラスパスのディレクトリ */
     protected File classpathDir;
 
     /** 設定ファイルのパス */
@@ -98,6 +98,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** シーケンスを生成するDDLファイル */
     protected String createSequenceDdlFileName = "030-create-sequence.sql";
 
+    /** ダンプディレクトリ名 */
     protected String dumpDirName = "040-dump";
 
     /** 外部キーを作成するDDLファイル名 */
@@ -187,10 +188,13 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
+    /** ダンプのテンプレートファイル名 */
     protected String dumpTemplateFileName = "data/dump.ftl";
 
+    /** テーブルオプション */
     protected String tableOption = null;
 
+    /** データをダンプする場合{@code true}、しない場合{@code false} */
     protected boolean dump = true;
 
     /** {@link SingletonS2ContainerFactory}のサポート */
@@ -199,6 +203,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** データソース */
     protected DataSource dataSource;
 
     /** エンティティメタデータのファクトリ */
@@ -213,14 +218,19 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ジェネレータ */
     protected Generator generator;
 
+    /** DDLのバージョンを管理するディレクトリ */
     protected DdlVersionDirectory ddlVersionDirectory;
 
+    /** DDLのバージョンのインクリメンタ */
     protected DdlVersionIncrementer ddlVersionIncrementer;
 
+    /** データベース記述ファクトリ */
     protected DatabaseDescFactory databaseDescFactory;
 
+    /** SQLのひとまとまりの処理の実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
 
+    /** ダンパ */
     protected Dumper dumper;
 
     /**
@@ -230,9 +240,9 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを返します。
+     * クラスパスのディレクトリを返します。
      * 
-     * @return クラスパスのルートとなるディレクトリ
+     * @return クラスパスのディレクトリ
      */
     public File getClasspathDir() {
         return classpathDir;
@@ -865,60 +875,76 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the dumpDirName.
+     * ダンプディレクトリ名を返します。
+     * 
+     * @return ダンプディレクトリ名
      */
     public String getDumpDirName() {
         return dumpDirName;
     }
 
     /**
+     * ダンプディレクトリ名を設定します。
+     * 
      * @param dumpDirName
-     *            The dumpDirName to set.
+     *            ダンプディレクトリ名
      */
     public void setDumpDirName(String dumpDirName) {
         this.dumpDirName = dumpDirName;
     }
 
     /**
-     * @return Returns the tableOption.
+     * テーブルオプションを返します。
+     * 
+     * @return テーブルオプション
      */
     public String getTableOption() {
         return tableOption;
     }
 
     /**
+     * テーブルオプションを設定します。
+     * 
      * @param tableOption
-     *            The tableOption to set.
+     *            テーブルオプション
      */
     public void setTableOption(String tableOption) {
         this.tableOption = tableOption;
     }
 
     /**
-     * @return Returns the dumpFileEncoding.
+     * ダンプファイルのエンコーディングを返します。
+     * 
+     * @return ダンプファイルのエンコーディング
      */
     public String getDumpFileEncoding() {
         return dumpFileEncoding;
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     *            The dumpFileEncoding to set.
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         this.dumpFileEncoding = dumpFileEncoding;
     }
 
     /**
-     * @return Returns the dump.
+     * データをダンプする場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return データをダンプする場合{@code true}、しない場合{@code false}
      */
     public boolean isDump() {
         return dump;
     }
 
     /**
+     * データをダンプする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param dump
-     *            The dump to set.
+     *            データをダンプする場合{@code true}、しない場合{@code false}
      */
     public void setDump(boolean dump) {
         this.dump = dump;
@@ -1059,16 +1085,31 @@ public class GenerateDdlCommand extends AbstractCommand {
                 entityNamePattern, ignoreEntityNamePattern);
     }
 
+    /**
+     * {@link DatabaseDescFactory}の実装を作成します。
+     * 
+     * @return {@link DatabaseDescFactory}の実装
+     */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
                 dialect);
     }
 
+    /**
+     * {@link DdlVersionDirectory}の実装を作成します。
+     * 
+     * @return {@link DdlVersionDirectory}の実装
+     */
     protected DdlVersionDirectory createDdlVersionDirectory() {
         return new DdlVersionDirectoryImpl(migrateDir, ddlInfoFile,
                 versionNoPattern);
     }
 
+    /**
+     * {@link DdlVersionIncrementer}の実装を作成します。
+     * 
+     * @return {@link DdlVersionIncrementer}の実装
+     */
     protected DdlVersionIncrementer createDdlVersionIncrementer() {
         List<String> createFileNameList = Arrays.asList(createTableDdlFileName,
                 createUniqueKeyDdlFileName, createSequenceDdlFileName,
@@ -1090,11 +1131,21 @@ public class GenerateDdlCommand extends AbstractCommand {
                 schemaInfoFullTableName, schemaInfoColumnName, tableOption);
     }
 
+    /**
+     * {@link Dumper}の実装を作成します。
+     * 
+     * @return {@link Dumper}の実装
+     */
     protected Dumper createDumper() {
         return new DumperImpl(dumpFileEncoding, dumpTemplateFileName,
                 generator, dialect);
     }
 
+    /**
+     * {@link SqlUnitExecutor}の実装を返します。
+     * 
+     * @return {@link SqlUnitExecutor}の実装
+     */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return new SqlUnitExecutorImpl(dataSource, false);
     }

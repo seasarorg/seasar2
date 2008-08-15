@@ -38,6 +38,11 @@ public class GenerateDdlTask extends AbstractTask {
     public GenerateDdlTask() {
     }
 
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
+
     /**
      * クラスパスのディレクトリを設定します。
      * 
@@ -351,72 +356,83 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
+     * ダンプディレクトリ名を設定します。
+     * 
      * @param dumpDirName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDumpDirName(java.lang.String)
+     *            ダンプディレクトリ名
      */
     public void setDumpDirName(String dumpDirName) {
         command.setDumpDirName(dumpDirName);
     }
 
     /**
+     * スキーマのバージョン番号を格納するカラム名を設定します。
+     * 
      * @param schemaInfoColumnName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setSchemaInfoColumnName(java.lang.String)
+     *            スキーマのバージョン番号を格納するカラム名
      */
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         command.setSchemaInfoColumnName(schemaInfoColumnName);
     }
 
     /**
+     * スキーマ情報を格納する完全なテーブル名を設定します。
+     * 
      * @param schemaInfoFullTableName
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setSchemaInfoFullTableName(java.lang.String)
+     *            スキーマ情報を格納する完全なテーブル名
      */
     public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
         command.setSchemaInfoFullTableName(schemaInfoFullTableName);
     }
 
     /**
+     * テーブルオプションを設定します。
+     * 
      * @param tableOption
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setTableOption(java.lang.String)
+     *            テーブルオプション
      */
     public void setTableOption(String tableOption) {
         command.setTableOption(tableOption);
     }
 
     /**
+     * バージョン番号のパターンを設定します。
+     * 
      * @param versionNoPattern
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setVersionNoPattern(java.lang.String)
+     *            バージョン番号のパターン
      */
     public void setVersionNoPattern(String versionNoPattern) {
         command.setVersionNoPattern(versionNoPattern);
     }
 
     /**
+     * DDL情報ファイルを設定します。
+     * 
      * @param ddlInfoFile
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDdlInfoFile(java.io.File)
+     *            DDL情報ファイル
      */
     public void setDdlInfoFile(File ddlInfoFile) {
         command.setDdlInfoFile(ddlInfoFile);
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDumpFileEncoding(java.lang.String)
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         command.setDumpFileEncoding(dumpFileEncoding);
     }
 
     /**
+     * データをダンプする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param dump
-     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDump(boolean)
+     *            データをダンプする場合{@code true}、しない場合{@code false}
      */
     public void setDump(boolean dump) {
         command.setDump(dump);
-    }
-
-    @Override
-    protected Command getCommand() {
-        return command;
     }
 
 }

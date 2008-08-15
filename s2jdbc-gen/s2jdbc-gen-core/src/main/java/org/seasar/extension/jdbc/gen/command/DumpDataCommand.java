@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.Dumper;
@@ -44,15 +45,16 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * エンティティに対応するデータベースのデータをテキストファイルにダンプする{@link Command}の実装です。
  * 
+ * @author taedium
  */
 public class DumpDataCommand extends AbstractCommand {
 
     /** ロガー */
     protected static Logger logger = Logger.getLogger(DumpDataCommand.class);
 
-    /** クラスパスのルートとなるディレクトリ */
+    /** クラスパスのディレクトリ */
     protected File classpathDir = null;
 
     /** 設定ファイルのパス */
@@ -76,11 +78,13 @@ public class DumpDataCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    /** ダンプディレクトリ */
     protected File dumpDir = new File("db", "dump");
 
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
+    /** ダンプのテンプレートファイル名 */
     protected String dumpTemplateFileName = "data/dump.ftl";
 
     /** テンプレートファイルのエンコーディング */
@@ -95,6 +99,7 @@ public class DumpDataCommand extends AbstractCommand {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** データソース */
     protected DataSource dataSource;
 
     /** エンティティメタデータのファクトリ */
@@ -103,13 +108,16 @@ public class DumpDataCommand extends AbstractCommand {
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
+    /** データベース記述ファクトリ */
     protected DatabaseDescFactory databaseDescFactory;
 
     /** ジェネレータ */
     protected Generator generator;
 
+    /** SQLのひとまとまりの処理の実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
 
+    /** ダンパー */
     protected Dumper dumper;
 
     /**
@@ -119,9 +127,9 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * クラスパスのルートとなるディレクトリを返します。
+     * クラスパスのディレクトリを返します。
      * 
-     * @return クラスパスのルートとなるディレクトリ
+     * @return クラスパスのディレクトリ
      */
     public File getClasspathDir() {
         return classpathDir;
@@ -309,45 +317,57 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the dumpDir.
+     * ダンプディレクトリを返します。
+     * 
+     * @return ダンプディレクトリ
      */
     public File getDumpDir() {
         return dumpDir;
     }
 
     /**
+     * ダンプディレクトリを設定します。
+     * 
      * @param dumpDir
-     *            The dumpDir to set.
+     *            ダンプディレクトリ
      */
     public void setDumpDir(File dumpDir) {
         this.dumpDir = dumpDir;
     }
 
     /**
-     * @return Returns the dumpFileEncoding.
+     * ダンプファイルのエンコーディングを返します。
+     * 
+     * @return ダンプファイルのエンコーディング
      */
     public String getDumpFileEncoding() {
         return dumpFileEncoding;
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     *            The dumpFileEncoding to set.
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         this.dumpFileEncoding = dumpFileEncoding;
     }
 
     /**
-     * @return Returns the dumpTemplateFileName.
+     * ダンプファイルのエンコーディングを返します。
+     * 
+     * @return ダンプファイルのエンコーディング
      */
     public String getDumpTemplateFileName() {
         return dumpTemplateFileName;
     }
 
     /**
+     * ダンプのテンプレートファイル名を設定します。
+     * 
      * @param dumpTemplateFileName
-     *            The dumpTemplateFileName to set.
+     *            ダンプのテンプレートファイル名
      */
     public void setDumpTemplateFileName(String dumpTemplateFileName) {
         this.dumpTemplateFileName = dumpTemplateFileName;
@@ -399,22 +419,42 @@ public class DumpDataCommand extends AbstractCommand {
         }
     }
 
+    /**
+     * {@link EntityMetaReader}の実装を返します。
+     * 
+     * @return {@link EntityMetaReader}の実装
+     */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory,
                 entityNamePattern, ignoreEntityNamePattern);
     }
 
+    /**
+     * {@link DatabaseDescFactory}の実装を返します。
+     * 
+     * @return {@link DatabaseDescFactory}の実装
+     */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
                 dialect);
     }
 
+    /**
+     * {@link Dumper}の実装を返します。
+     * 
+     * @return {@link Dumper}の実装
+     */
     protected Dumper createDumper() {
         return new DumperImpl(dumpFileEncoding, dumpTemplateFileName,
                 generator, dialect);
     }
 
+    /**
+     * {@link SqlUnitExecutor}の実装を返します。
+     * 
+     * @return {@link SqlUnitExecutor}の実装
+     */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return new SqlUnitExecutorImpl(dataSource, false);
     }

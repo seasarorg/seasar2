@@ -34,14 +34,19 @@ public class ExecuteSqlTask extends AbstractTask {
     /** コマンド */
     protected ExecuteSqlCommand command = new ExecuteSqlCommand();
 
+    /** SQLファイルのリスト */
+    protected FileList sqlFileList;
+
     /**
      * インスタンスを構築します。
      */
     public ExecuteSqlTask() {
     }
 
-    /** SQLファイルのリスト */
-    protected FileList sqlFileList;
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
 
     /**
      * すでに値が設定された{@link FileList}を追加します。
@@ -135,11 +140,6 @@ public class ExecuteSqlTask extends AbstractTask {
      */
     public void setEnv(String env) {
         command.setEnv(env);
-    }
-
-    @Override
-    protected Command getCommand() {
-        return command;
     }
 
 }

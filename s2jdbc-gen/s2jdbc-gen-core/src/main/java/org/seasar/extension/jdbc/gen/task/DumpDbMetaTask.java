@@ -24,11 +24,23 @@ import org.seasar.extension.jdbc.gen.command.DumpDbMetaCommand;
  * データベースのメタデータをダンプする{@link Task}です。
  * 
  * @author taedium
+ * @see DumpDbMetaCommand
  */
 public class DumpDbMetaTask extends AbstractTask {
 
     /** コマンド */
     protected DumpDbMetaCommand command = new DumpDbMetaCommand();
+
+    /**
+     * インスタンスを構築します。
+     */
+    public DumpDbMetaTask() {
+    }
+
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
 
     /**
      * 設定ファイルのパスを設定します。
@@ -79,8 +91,4 @@ public class DumpDbMetaTask extends AbstractTask {
         command.setEnv(env);
     }
 
-    @Override
-    protected Command getCommand() {
-        return command;
-    }
 }

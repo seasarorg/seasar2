@@ -58,7 +58,7 @@ public class MigrateCommand extends AbstractCommand {
     /** ロガー */
     protected Logger logger = Logger.getLogger(MigrateCommand.class);
 
-    /** クラスパスのルートとなるディレクトリ */
+    /** クラスパスのディレクトリ */
     protected File classpathDir;
 
     /** ルートパッケージ名 */
