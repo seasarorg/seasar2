@@ -53,7 +53,7 @@ public class DumpDataCommand extends AbstractCommand {
     protected static Logger logger = Logger.getLogger(DumpDataCommand.class);
 
     /** クラスパスのルートとなるディレクトリ */
-    protected File classpathDir;
+    protected File classpathDir = null;
 
     /** 設定ファイルのパス */
     protected String configPath = "s2jdbc.dicon";
@@ -81,7 +81,7 @@ public class DumpDataCommand extends AbstractCommand {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
-    protected String dumpTemplateFileName = "dump/dump.ftl";
+    protected String dumpTemplateFileName = "data/dump.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";

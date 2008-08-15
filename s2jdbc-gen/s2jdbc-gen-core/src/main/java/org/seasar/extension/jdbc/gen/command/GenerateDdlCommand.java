@@ -179,7 +179,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected String schemaInfoColumnName = "VERSION";
 
     /** DDLのバージョンファイル */
-    protected File ddlVersionFile = new File("db", "ddl-info.txt");
+    protected File ddlInfoFile = new File("db", "ddl-info.txt");
 
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
@@ -187,9 +187,11 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
-    protected String dumpTemplateFileName = "dump/dump.ftl";
+    protected String dumpTemplateFileName = "data/dump.ftl";
 
     protected String tableOption = null;
+
+    protected boolean dump = true;
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
@@ -825,22 +827,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * DDLのバージョンファイル名を返します。
+     * DDL情報ファイル名を返します。
      * 
-     * @return DDLのバージョンファイル
+     * @return DDL情報ファイル
      */
-    public File getDdlVersionFile() {
-        return ddlVersionFile;
+    public File getDdlInfoFile() {
+        return ddlInfoFile;
     }
 
     /**
-     * DDLのバージョンファイルを設定します。
+     * DDL情報ファイルを設定します。
      * 
-     * @param ddlVersionFile
-     *            DDLのバージョンファイル
+     * @param ddlInfoFile
+     *            DDL情報ファイル
      */
-    public void setDdlVersionFile(File ddlVersionFile) {
-        this.ddlVersionFile = ddlVersionFile;
+    public void setDdlInfoFile(File ddlInfoFile) {
+        this.ddlInfoFile = ddlInfoFile;
     }
 
     /**
@@ -892,6 +894,36 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.tableOption = tableOption;
     }
 
+    /**
+     * @return Returns the dumpFileEncoding.
+     */
+    public String getDumpFileEncoding() {
+        return dumpFileEncoding;
+    }
+
+    /**
+     * @param dumpFileEncoding
+     *            The dumpFileEncoding to set.
+     */
+    public void setDumpFileEncoding(String dumpFileEncoding) {
+        this.dumpFileEncoding = dumpFileEncoding;
+    }
+
+    /**
+     * @return Returns the dump.
+     */
+    public boolean isDump() {
+        return dump;
+    }
+
+    /**
+     * @param dump
+     *            The dump to set.
+     */
+    public void setDump(boolean dump) {
+        this.dump = dump;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -937,6 +969,9 @@ public class GenerateDdlCommand extends AbstractCommand {
                 generateCreateDdl(model, createDir);
                 generateDropDdl(model, dropDir);
 
+                if (!dump) {
+                    return;
+                }
                 sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
                     public void execute(SqlExecutionContext context) {
@@ -944,6 +979,7 @@ public class GenerateDdlCommand extends AbstractCommand {
                                 dumpDirName));
                     }
                 });
+
             }
         });
     }
@@ -1029,7 +1065,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     protected DdlVersionDirectory createDdlVersionDirectory() {
-        return new DdlVersionDirectoryImpl(migrateDir, ddlVersionFile,
+        return new DdlVersionDirectoryImpl(migrateDir, ddlInfoFile,
                 versionNoPattern);
     }
 

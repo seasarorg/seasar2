@@ -57,7 +57,7 @@ public class GenerateDumpTest {
         model.addRow(Arrays.asList("\"hoge\"", "\"100\"", "\"200\""));
         model.addRow(Arrays.asList("\"foo\"", null, "\"2000\""));
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "dump/dump.ftl", "UTF-8", false);
+                "dir"), new File("file"), "data/dump.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + ".txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

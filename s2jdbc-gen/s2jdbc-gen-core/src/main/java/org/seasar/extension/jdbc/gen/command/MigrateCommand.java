@@ -97,9 +97,6 @@ public class MigrateCommand extends AbstractCommand {
     /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName = "VERSION";
 
-    /** テーブルを作成するDDLファイル名 */
-    protected String createTableDdlFileName = "010-create-table.sql";
-
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
 
@@ -109,8 +106,8 @@ public class MigrateCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
-    /** DDLのバージョンファイル */
-    protected File ddlVersionFile = new File("db", "ddl-info.txt");
+    /** DDL情報ファイル */
+    protected File ddlInfoFile = new File("db", "ddl-info.txt");
 
     /** マイグレーション先のバージョン */
     protected String version = "latest";
@@ -276,21 +273,6 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the createTableDdlFileName.
-     */
-    public String getCreateTableDdlFileName() {
-        return createTableDdlFileName;
-    }
-
-    /**
-     * @param createTableDdlFileName
-     *            The createTableDdlFileName to set.
-     */
-    public void setCreateTableDdlFileName(String createTableDdlFileName) {
-        this.createTableDdlFileName = createTableDdlFileName;
-    }
-
-    /**
      * @return Returns the ddlFileEncoding.
      */
     public String getDdlFileEncoding() {
@@ -336,18 +318,18 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the ddlVersionFile.
+     * @return Returns the ddlInfoFile.
      */
-    public File getDdlVersionFile() {
-        return ddlVersionFile;
+    public File getDdlInfoFile() {
+        return ddlInfoFile;
     }
 
     /**
-     * @param ddlVersionFile
-     *            The ddlVersionFileName to set.
+     * @param ddlInfoFile
+     *            The ddlInfoFile to set.
      */
-    public void setDdlVersionFile(File ddlVersionFile) {
-        this.ddlVersionFile = ddlVersionFile;
+    public void setDdlInfoFile(File ddlInfoFile) {
+        this.ddlInfoFile = ddlInfoFile;
     }
 
     /**
@@ -543,7 +525,7 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     protected DdlVersionDirectory createDdlVersionDirectory() {
-        return new DdlVersionDirectoryImpl(migrateDir, ddlVersionFile,
+        return new DdlVersionDirectoryImpl(migrateDir, ddlInfoFile,
                 versionNoPattern);
     }
 

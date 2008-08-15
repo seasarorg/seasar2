@@ -53,7 +53,7 @@ public class DumpDbMetaCommand extends AbstractCommand {
     protected String jdbcManagerName = "jdbcManager";
 
     /** スキーマ名 */
-    protected String schemaName;
+    protected String schemaName = null;
 
     /** Javaコード生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";

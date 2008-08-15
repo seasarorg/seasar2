@@ -97,7 +97,7 @@ public class GenerateTestCommand extends AbstractCommand {
     protected String testClassNameSuffix = "Test";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaFileDestDir = new File("src/test/java");
+    protected File javaFileDestDir = new File(new File("src", "test"), "java");
 
     /** テストクラスのテンプレート名 */
     protected String templateFileName = "java/test.ftl";

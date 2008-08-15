@@ -281,13 +281,13 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * DDLのバージョンファイルを設定します。
+     * DDL情報ファイルを設定します。
      * 
-     * @param ddlVersionFile
-     *            DDLのバージョンファイル
+     * @param ddlInfoFile
+     *            DDL情報ファイル
      */
-    public void setDdlVersionFile(File ddlVersionFile) {
-        command.setDdlVersionFile(ddlVersionFile);
+    public void setDdlVersionFile(File ddlInfoFile) {
+        command.setDdlInfoFile(ddlInfoFile);
     }
 
     /**
@@ -388,6 +388,30 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setVersionNoPattern(String versionNoPattern) {
         command.setVersionNoPattern(versionNoPattern);
+    }
+
+    /**
+     * @param ddlInfoFile
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDdlInfoFile(java.io.File)
+     */
+    public void setDdlInfoFile(File ddlInfoFile) {
+        command.setDdlInfoFile(ddlInfoFile);
+    }
+
+    /**
+     * @param dumpFileEncoding
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDumpFileEncoding(java.lang.String)
+     */
+    public void setDumpFileEncoding(String dumpFileEncoding) {
+        command.setDumpFileEncoding(dumpFileEncoding);
+    }
+
+    /**
+     * @param dump
+     * @see org.seasar.extension.jdbc.gen.command.GenerateDdlCommand#setDump(boolean)
+     */
+    public void setDump(boolean dump) {
+        command.setDump(dump);
     }
 
     @Override

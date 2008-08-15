@@ -52,14 +52,6 @@ public class MigrateTask extends AbstractTask {
     }
 
     /**
-     * @param createTableDdlFileName
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setCreateTableDdlFileName(java.lang.String)
-     */
-    public void setCreateTableDdlFileName(String createTableDdlFileName) {
-        command.setCreateTableDdlFileName(createTableDdlFileName);
-    }
-
-    /**
      * @param ddlFileEncoding
      * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDdlFileEncoding(java.lang.String)
      */
@@ -68,11 +60,11 @@ public class MigrateTask extends AbstractTask {
     }
 
     /**
-     * @param ddlVersionFile
+     * @param ddlInfoFile
      * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDdlVersionFileName(java.lang.String)
      */
-    public void setDdlVersionFile(File ddlVersionFile) {
-        command.setDdlVersionFile(ddlVersionFile);
+    public void setDdlInfoFile(File ddlInfoFile) {
+        command.setDdlInfoFile(ddlInfoFile);
     }
 
     /**

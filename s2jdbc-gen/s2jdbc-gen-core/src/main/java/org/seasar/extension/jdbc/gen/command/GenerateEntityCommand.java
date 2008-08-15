@@ -82,7 +82,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String env = "ut";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaFileDestDir = new File("src/main/java");
+    protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
@@ -97,7 +97,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String rootPackageName = "";
 
     /** スキーマ名 */
-    protected String schemaName;
+    protected String schemaName = null;
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";

@@ -88,7 +88,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected String env = "ut";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaFileDestDir = new File("src/main/java");
+    protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
