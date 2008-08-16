@@ -7,12 +7,12 @@
 	<component name="xaDataSource"
 		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
 		<property name="driverClassName">
-			"org.hsqldb.jdbcDriver"
+			"org.h2.Driver"
 		</property>
 		<property name="URL">
-			"jdbc:hsqldb:file:"
+			"jdbc:h2:file:"
 				+ @org.seasar.framework.util.ResourceUtil@getBuildDir('jdbc.dicon').getCanonicalPath()
-				+ "/data/demo;shutdown=true"
+				+ "/data/demo;DB_CLOSE_ON_EXIT=FALSE"
 		</property>
 		<property name="user">"sa"</property>
 		<property name="password">""</property>

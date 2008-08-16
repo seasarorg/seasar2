@@ -32,7 +32,7 @@ import org.seasar.extension.jdbc.gen.sqltype.DecimalType;
 public class H2GenDialect extends StandardGenDialect {
 
     /** テーブルが見つからないことを示すエラーコード */
-    protected static int TABLE_NOT_FOUND_ERROR_CODE = 42101;
+    protected static int TABLE_NOT_FOUND_ERROR_CODE = 42102;
 
     /**
      * インスタンスを構築します。
@@ -43,6 +43,9 @@ public class H2GenDialect extends StandardGenDialect {
 
         columnTypeMap.put("binary", H2ColumnType.BINARY);
         columnTypeMap.put("decimal", H2ColumnType.DECIMAL);
+        columnTypeMap.put("uuid", H2ColumnType.UUID);
+        columnTypeMap
+                .put("varchar_ignorecase", H2ColumnType.VARCHAR_IGNORECASE);
     }
 
     @Override
@@ -78,6 +81,11 @@ public class H2GenDialect extends StandardGenDialect {
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
     }
 
+    @Override
+    public boolean supportsIdentityInsert() {
+        return true;
+    }
+
     /**
      * H2用の{@link ColumType}の実装です。
      * 
@@ -90,6 +98,12 @@ public class H2GenDialect extends StandardGenDialect {
 
         private static H2ColumnType DECIMAL = new H2ColumnType(
                 "decimal($p,$s)", BigDecimal.class);
+
+        private static H2ColumnType UUID = new H2ColumnType("uuid",
+                byte[].class);
+
+        private static H2ColumnType VARCHAR_IGNORECASE = new H2ColumnType(
+                "varchar_ignorecase", String.class);
 
         /**
          * インスタンスを構築します。
