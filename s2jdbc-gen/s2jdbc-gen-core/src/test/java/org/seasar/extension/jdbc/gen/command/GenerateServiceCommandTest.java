@@ -60,7 +60,7 @@ public class GenerateServiceCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         GenerateServiceCommand command = new GenerateServiceCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));

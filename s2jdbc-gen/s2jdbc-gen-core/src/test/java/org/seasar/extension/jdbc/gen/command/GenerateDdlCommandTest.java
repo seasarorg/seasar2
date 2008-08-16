@@ -59,21 +59,20 @@ public class GenerateDdlCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         GenerateDdlCommand command = new GenerateDdlCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createDdlVersionIncrementer());
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createGenerator());
-        assertNotNull(command.createDdlModelFactory());
-        assertNotNull(command.createDatabaseDescFactory());
-        assertNotNull(command.createGenerationContext(new Object(), new File(
-                "xxx"), "aaa", "bbb"));
-        assertNotNull(command.createDumper());
-        assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createDdlVersionIncrementer());
+        assertNotNull(command.dialect);
+        assertNotNull(command.ddlVersionDirectory);
+        assertNotNull(command.ddlVersionIncrementer);
+        assertNotNull(command.ddlModelFactory);
+        assertNotNull(command.generator);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.databaseDescFactory);
+        assertNotNull(command.sqlUnitExecutor);
+        assertNotNull(command.generator);
     }
 }

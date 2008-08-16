@@ -17,10 +17,6 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 
-import javax.sql.DataSource;
-
-import org.seasar.extension.jdbc.EntityMetaFactory;
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
@@ -40,13 +36,9 @@ import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeExcept
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryImpl;
 import org.seasar.extension.jdbc.gen.version.MigraterImpl;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTableImpl;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -86,15 +78,6 @@ public class MigrateCommand extends AbstractCommand {
     /** SQLブロックの区切り文字 */
     protected String blockDelimiter = null;
 
-    /** 設定ファイルのパス */
-    protected String configPath = "s2jdbc.dicon";
-
-    /** {@link JdbcManager}のコンポーネント名 */
-    protected String jdbcManagerName = "jdbcManager";
-
-    /** 環境名 */
-    protected String env = "ut";
-
     /** エラー発生時に処理を中止する場合{@code true} */
     protected boolean haltOnError = false;
 
@@ -128,17 +111,8 @@ public class MigrateCommand extends AbstractCommand {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
-    /** {@link SingletonS2ContainerFactory}のサポート */
-    protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
-    /** データソース */
-    protected DataSource dataSource;
-
     /** 方言 */
     protected GenDialect dialect;
-
-    /** エンティティメタデータのファクトリ */
-    protected EntityMetaFactory entityMetaFactory;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
@@ -200,63 +174,6 @@ public class MigrateCommand extends AbstractCommand {
      */
     public void setBlockDelimiter(String blockDelimiter) {
         this.blockDelimiter = blockDelimiter;
-    }
-
-    /**
-     * 設定ファイルのパスを返します。
-     * 
-     * @return 設定ファイルのパス
-     */
-    public String getConfigPath() {
-        return configPath;
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を返します。
-     * 
-     * @return {@link JdbcManager}のコンポーネント名
-     */
-    public String getJdbcManagerName() {
-        return jdbcManagerName;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        this.jdbcManagerName = jdbcManagerName;
-    }
-
-    /**
-     * 環境名を返します。
-     * 
-     * @return 環境名
-     */
-    public String getEnv() {
-        return env;
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        this.env = env;
     }
 
     /**
@@ -534,14 +451,6 @@ public class MigrateCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath, env);
-        containerFactorySupport.init();
-
-        JdbcManagerImplementor jdbcManager = SingletonS2Container
-                .getComponent(jdbcManagerName);
-        entityMetaFactory = jdbcManager.getEntityMetaFactory();
-        dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         sqlFileExecutor = createSqlFileExecutor();
         schemaInfoTable = createSchemaInfoTable();
@@ -552,8 +461,7 @@ public class MigrateCommand extends AbstractCommand {
         loader = createLoader();
         migrater = createMigrater();
 
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
+        logRdbmsAndGenDialect(dialect);
     }
 
     @Override
@@ -582,9 +490,6 @@ public class MigrateCommand extends AbstractCommand {
 
     @Override
     protected void doDestroy() {
-        if (containerFactorySupport != null) {
-            containerFactorySupport.destory();
-        }
     }
 
     /**
@@ -594,8 +499,9 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), entityMetaFactory,
-                entityNamePattern, ignoreEntityNamePattern);
+                rootPackageName, entityPackageName), jdbcManager
+                .getEntityMetaFactory(), entityNamePattern,
+                ignoreEntityNamePattern);
     }
 
     /**
@@ -604,8 +510,8 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link DatabaseDescFactory}の実装
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
-        return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect);
+        return new DatabaseDescFactoryImpl(jdbcManager.getEntityMetaFactory(),
+                entityMetaReader, dialect);
     }
 
     /**
@@ -614,7 +520,7 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link SchemaInfoTable}の実装
      */
     protected SchemaInfoTable createSchemaInfoTable() {
-        return new SchemaInfoTableImpl(dataSource, dialect,
+        return new SchemaInfoTableImpl(jdbcManager.getDataSource(), dialect,
                 schemaInfoFullTableName, schemaInfoColumnName);
     }
 
@@ -654,7 +560,7 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link SqlUnitExecutor}の実装
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
-        return new SqlUnitExecutorImpl(dataSource, haltOnError);
+        return new SqlUnitExecutorImpl(jdbcManager.getDataSource(), haltOnError);
     }
 
     /**

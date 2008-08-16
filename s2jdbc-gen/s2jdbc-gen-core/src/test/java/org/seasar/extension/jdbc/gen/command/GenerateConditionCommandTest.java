@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.ConditionModel;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -60,18 +59,14 @@ public class GenerateConditionCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         GenerateConditionCommand command = new GenerateConditionCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createConditionModelFactory());
-        assertNotNull(command.createGenerator());
-        ConditionModel conditionModel = new ConditionModel();
-        conditionModel.setPackageName("aaa");
-        conditionModel.setShortClassName("bbb");
-        assertNotNull(command.createGenerationContext(conditionModel, "ccc"));
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.conditionModelFactory);
+        assertNotNull(command.generator);
     }
 }

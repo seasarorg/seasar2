@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.command;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.EntityModel;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -53,17 +52,14 @@ public class GenerateEntityCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         GenerateEntityCommand command = new GenerateEntityCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.init();
-        assertNotNull(command.createEntityDescFactory());
-        assertNotNull(command.createEntityModelFactory());
-        assertNotNull(command.createGenerator());
-        assertNotNull(command.createDbTableMetaReader());
-        EntityModel entityModel = new EntityModel();
-        entityModel.setPackageName("aaa");
-        entityModel.setShortClassName("bbb");
-        assertNotNull(command.createGenerationContext(entityModel, "ccc"));
+        assertNotNull(command.entityDescFactory);
+        assertNotNull(command.entityModelFactory);
+        assertNotNull(command.generator);
+        assertNotNull(command.dbTableMetaReader);
+        assertNotNull(command.dialect);
     }
 }

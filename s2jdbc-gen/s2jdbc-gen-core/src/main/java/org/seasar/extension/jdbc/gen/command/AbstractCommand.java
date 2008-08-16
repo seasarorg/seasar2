@@ -15,11 +15,23 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
+import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.container.SingletonS2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -29,10 +41,82 @@ import org.seasar.framework.log.Logger;
  */
 public abstract class AbstractCommand implements Command {
 
+    /** 設定ファイルのパス */
+    protected String configPath = "s2jdbc.dicon";
+
+    /** 環境名 */
+    protected String env = "ut";
+
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName = "jdbcManager";
+
+    /** {@link SingletonS2ContainerFactory}のサポート */
+    protected SingletonS2ContainerFactorySupport containerFactorySupport;
+
+    /** 内部的なJDBCマネージャ */
+    protected JdbcManagerImplementor jdbcManager;
+
     /**
      * インスタンスを構築します。
      */
     public AbstractCommand() {
+    }
+
+    /**
+     * 設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
+     */
+    public String getConfigPath() {
+        return configPath;
+    }
+
+    /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
+    public void setConfigPath(String configPath) {
+        this.configPath = configPath;
+    }
+
+    /**
+     * 環境名を返します。
+     * 
+     * @return 環境名
+     */
+    public String getEnv() {
+        return env;
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        this.env = env;
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
+     */
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
     }
 
     public final void execute() {
@@ -50,13 +134,6 @@ public abstract class AbstractCommand implements Command {
         }
         getLogger().log("DS2JDBCGen0008", new Object[] { commandClassName });
     }
-
-    /**
-     * サブクラスで実行します。
-     * 
-     * @throws Throwable
-     */
-    protected abstract void doExecute() throws Throwable;
 
     /**
      * 設定可能なプロパティの値をログ出力します。
@@ -82,16 +159,56 @@ public abstract class AbstractCommand implements Command {
     }
 
     /**
-     * サブクラスで検証します。
-     */
-    protected abstract void doValidate();
-
-    /**
      * 初期化します。
      */
     protected final void init() {
+        containerFactorySupport = new SingletonS2ContainerFactorySupport(
+                configPath, env);
+        containerFactorySupport.init();
+        jdbcManager = SingletonS2Container.getComponent(jdbcManagerName);
         doInit();
     }
+
+    /**
+     * 破棄します。
+     */
+    protected final void destroy() {
+        doDestroy();
+        if (containerFactorySupport != null) {
+            containerFactorySupport.destory();
+        }
+    }
+
+    /**
+     * RDBMSとRDBMSに対する方言をログ出力します。
+     * 
+     * @param dialect
+     */
+    protected void logRdbmsAndGenDialect(GenDialect dialect) {
+        getLogger().log("DS2JDBCGen0005",
+                new Object[] { getRdbmsName(), dialect.getClass().getName() });
+    }
+
+    /**
+     * RDBMSの名前を返します。
+     * 
+     * @return RDBMSの名前
+     */
+    protected String getRdbmsName() {
+        Connection conn = DataSourceUtil.getConnection(jdbcManager
+                .getDataSource());
+        try {
+            DatabaseMetaData metaData = ConnectionUtil.getMetaData(conn);
+            return DatabaseMetaDataUtil.getDatabaseProductName(metaData);
+        } finally {
+            ConnectionUtil.close(conn);
+        }
+    }
+
+    /**
+     * サブクラスで検証します。
+     */
+    protected abstract void doValidate();
 
     /**
      * サブクラスで初期化します。
@@ -99,11 +216,11 @@ public abstract class AbstractCommand implements Command {
     protected abstract void doInit();
 
     /**
-     * 破棄します。
+     * サブクラスで実行します。
+     * 
+     * @throws Throwable
      */
-    protected final void destroy() {
-        doDestroy();
-    }
+    protected abstract void doExecute() throws Throwable;
 
     /**
      * サブクラスで破棄します。

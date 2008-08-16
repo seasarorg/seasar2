@@ -19,10 +19,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.seasar.extension.jdbc.EntityMetaFactory;
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
@@ -46,12 +42,8 @@ import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryImpl;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementerImpl;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -88,9 +80,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** クラスパスのディレクトリ */
     protected File classpathDir;
-
-    /** 設定ファイルのパス */
-    protected String configPath = "s2jdbc.dicon";
 
     /** テーブルを作成するDDLファイル名 */
     protected String createTableDdlFileName = "010-create-table.sql";
@@ -152,12 +141,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
-    /** 環境名 */
-    protected String env = "ut";
-
-    /** {@link JdbcManager}のコンポーネント名 */
-    protected String jdbcManagerName = "jdbcManager";
-
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
@@ -200,17 +183,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** データをダンプする場合{@code true}、しない場合{@code false} */
     protected boolean dump = true;
 
-    /** {@link SingletonS2ContainerFactory}のサポート */
-    protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
     /** 方言 */
     protected GenDialect dialect;
-
-    /** データソース */
-    protected DataSource dataSource;
-
-    /** エンティティメタデータのファクトリ */
-    protected EntityMetaFactory entityMetaFactory;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
@@ -259,25 +233,6 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     public void setClasspathDir(File classpathDir) {
         this.classpathDir = classpathDir;
-    }
-
-    /**
-     * 設定ファイルのパスを返します。
-     * 
-     * @return 設定ファイルのパス
-     */
-    public String getConfigPath() {
-        return configPath;
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
     }
 
     /**
@@ -650,44 +605,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 環境名を返します。
-     * 
-     * @return 環境名
-     */
-    public String getEnv() {
-        return env;
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        this.env = env;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を返します。
-     * 
-     * @return {@link JdbcManager}のコンポーネント名
-     */
-    public String getJdbcManagerName() {
-        return jdbcManagerName;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        this.jdbcManagerName = jdbcManagerName;
-    }
-
-    /**
      * SQLステートメントの区切り文字を返します。
      * 
      * @return SQLステートメントの区切り文字
@@ -962,26 +879,17 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath, env);
-        containerFactorySupport.init();
-
-        JdbcManagerImplementor jdbcManager = SingletonS2Container
-                .getComponent(jdbcManagerName);
-        dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         ddlVersionDirectory = createDdlVersionDirectory();
         ddlVersionIncrementer = createDdlVersionIncrementer();
         ddlModelFactory = createDdlModelFactory();
         generator = createGenerator();
-        entityMetaFactory = jdbcManager.getEntityMetaFactory();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         dumper = createDumper();
 
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
+        logRdbmsAndGenDialect(dialect);
     }
 
     @Override
@@ -1015,9 +923,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doDestroy() {
-        if (containerFactorySupport != null) {
-            containerFactorySupport.destory();
-        }
     }
 
     /**
@@ -1084,8 +989,9 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), entityMetaFactory,
-                entityNamePattern, ignoreEntityNamePattern);
+                rootPackageName, entityPackageName), jdbcManager
+                .getEntityMetaFactory(), entityNamePattern,
+                ignoreEntityNamePattern);
     }
 
     /**
@@ -1094,8 +1000,8 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DatabaseDescFactory}の実装
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
-        return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect);
+        return new DatabaseDescFactoryImpl(jdbcManager.getEntityMetaFactory(),
+                entityMetaReader, dialect);
     }
 
     /**
@@ -1150,7 +1056,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link SqlUnitExecutor}の実装
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
-        return new SqlUnitExecutorImpl(dataSource, false);
+        return new SqlUnitExecutorImpl(jdbcManager.getDataSource(), false);
     }
 
     /**

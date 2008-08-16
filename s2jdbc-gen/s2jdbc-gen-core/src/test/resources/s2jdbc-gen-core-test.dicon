@@ -12,7 +12,7 @@
 		<property name="dialect">oracleDialect</property>
 	</component>
 	<component name="dataSource"
-		class="org.seasar.framework.mock.sql.MockDataSource"
+		class="org.seasar.extension.jdbc.gen.mock.sql.GenMockDataSource"
 	/>
 	<component 
 		class="org.seasar.framework.convention.impl.PersistenceConventionImpl"

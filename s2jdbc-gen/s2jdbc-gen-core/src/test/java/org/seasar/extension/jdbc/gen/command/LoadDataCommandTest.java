@@ -47,15 +47,16 @@ public class LoadDataCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         LoadDataCommand command = new LoadDataCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createDatabaseDescFactory());
-        assertNotNull(command.createLoader());
-        assertNotNull(command.createEntityMetaReader());
+        assertNotNull(command.sqlUnitExecutor);
+        assertNotNull(command.databaseDescFactory);
+        assertNotNull(command.loader);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.dialect);
     }
 }

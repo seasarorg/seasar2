@@ -58,13 +58,13 @@ public class ExecuteSqlCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         ExecuteSqlCommand command = new ExecuteSqlCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.getSqlFileList().add(new File("aaa"));
         command.validate();
         command.init();
-        assertNotNull(command.createSqlFileExecutor());
-        assertNotNull(command.createSqlUnitExecutor());
+        assertNotNull(command.sqlFileExecutor);
+        assertNotNull(command.sqlUnitExecutor);
     }
 }

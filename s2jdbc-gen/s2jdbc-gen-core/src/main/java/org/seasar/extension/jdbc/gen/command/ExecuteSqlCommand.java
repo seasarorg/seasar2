@@ -19,10 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
@@ -32,10 +30,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyEmptyRuntimeException;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
 
@@ -56,17 +51,8 @@ public class ExecuteSqlCommand extends AbstractCommand {
     /** SQLブロックの区切り文字 */
     protected String blockDelimiter = null;
 
-    /** 設定ファイルのパス */
-    protected String configPath = "s2jdbc.dicon";
-
-    /** 環境名 */
-    protected String env = "ut";
-
     /** エラー発生時に処理を中止する場合{@code true} */
     protected boolean haltOnError = false;
-
-    /** {@link JdbcManager}のコンポーネント名 */
-    protected String jdbcManagerName = "jdbcManager";
 
     /** SQLファイルのエンコーディング */
     protected String sqlFileEncoding = "UTF-8";
@@ -79,12 +65,6 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     /** すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false} */
     protected boolean transactional = false;
-
-    /** {@link SingletonS2ContainerFactory}のサポート */
-    protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
-    /** データソース */
-    protected DataSource dataSource;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -124,44 +104,6 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     /**
-     * 設定ファイルのパスを返します。
-     * 
-     * @return 設定ファイルのパス
-     */
-    public String getConfigPath() {
-        return configPath;
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
-    }
-
-    /**
-     * 環境名を返します。
-     * 
-     * @return 環境名
-     */
-    public String getEnv() {
-        return env;
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        this.env = env;
-    }
-
-    /**
      * エラー発生時に処理を中止する場合{@code true}を返します。
      * 
      * @return エラー発生時に処理を中止する場合{@code true}
@@ -178,25 +120,6 @@ public class ExecuteSqlCommand extends AbstractCommand {
      */
     public void setHaltOnError(boolean haltOnError) {
         this.haltOnError = haltOnError;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を返します。
-     * 
-     * @return {@link JdbcManager}のコンポーネント名
-     */
-    public String getJdbcManagerName() {
-        return jdbcManagerName;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
@@ -284,13 +207,6 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath, env);
-        containerFactorySupport.init();
-
-        JdbcManagerImplementor jdbcManager = SingletonS2Container
-                .getComponent(jdbcManagerName);
-        dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         if (transactional) {
             userTransaction = SingletonS2Container
@@ -299,8 +215,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
         sqlFileExecutor = createSqlFileExecutor();
         sqlUnitExecutor = createSqlUnitExecutor();
 
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
+        logRdbmsAndGenDialect(dialect);
     }
 
     @Override
@@ -327,9 +242,6 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     @Override
     protected void doDestroy() {
-        if (containerFactorySupport != null) {
-            containerFactorySupport.destory();
-        }
     }
 
     /**
@@ -362,7 +274,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
      * @return {@link SqlUnitExecutor}の実装
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
-        return new SqlUnitExecutorImpl(dataSource, haltOnError);
+        return new SqlUnitExecutorImpl(jdbcManager.getDataSource(), haltOnError);
     }
 
     @Override

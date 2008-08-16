@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.mock.sql.GenMockDatabaseMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
@@ -60,7 +61,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("COLUMN_NAME", "pk2");
         resultSet.addRowData(rowData);
 
-        MockDatabaseMetaData metaData = new MockDatabaseMetaData() {
+        GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
 
             @Override
             public ResultSet getPrimaryKeys(String catalog, String schema,
@@ -115,7 +116,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("NULLABLE ", DatabaseMetaData.columnNullable);
         resultSet.addRowData(rowData);
 
-        MockDatabaseMetaData metaData = new MockDatabaseMetaData() {
+        GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
 
             @Override
             public ResultSet getColumns(String catalog, String schemaPattern,
@@ -174,7 +175,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("TABLE_NAME", "table3");
         resultSet.addRowData(rowData);
 
-        MockDatabaseMetaData metaData = new MockDatabaseMetaData() {
+        GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
 
             @Override
             public ResultSet getTables(String catalog, String schemaPattern,

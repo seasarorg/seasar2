@@ -58,16 +58,16 @@ public class DumpDataCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         DumpDataCommand command = new DumpDataCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createDatabaseDescFactory());
-        assertNotNull(command.createDumper());
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createGenerator());
+        assertNotNull(command.dialect);
+        assertNotNull(command.generator);
+        assertNotNull(command.sqlUnitExecutor);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.databaseDescFactory);
     }
 }

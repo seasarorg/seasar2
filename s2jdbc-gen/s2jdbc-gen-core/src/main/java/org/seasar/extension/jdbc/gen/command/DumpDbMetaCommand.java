@@ -17,9 +17,6 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
@@ -27,10 +24,6 @@ import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -43,26 +36,11 @@ public class DumpDbMetaCommand extends AbstractCommand {
     /** ロガー */
     protected static Logger logger = Logger.getLogger(DumpDbMetaCommand.class);
 
-    /** 設定ファイルのパス */
-    protected String configPath = "s2jdbc.dicon";
-
-    /** 環境名 */
-    protected String env = "ut";
-
-    /** {@link JdbcManager}のコンポーネント名 */
-    protected String jdbcManagerName = "jdbcManager";
-
     /** スキーマ名 */
     protected String schemaName = null;
 
     /** Javaコード生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";
-
-    /** {@link SingletonS2ContainerFactory}のサポート */
-    protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
-    /** データソース */
-    protected DataSource dataSource;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -74,63 +52,6 @@ public class DumpDbMetaCommand extends AbstractCommand {
      * インスタンスを構築します。
      */
     public DumpDbMetaCommand() {
-    }
-
-    /**
-     * 設定ファイルのパスを返します。
-     * 
-     * @return 設定ファイルのパス
-     */
-    public String getConfigPath() {
-        return configPath;
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @return 環境名
-     */
-    public String getEnv() {
-        return env;
-    }
-
-    /**
-     * 環境名を返します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        this.env = env;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を返します。
-     * 
-     * @return {@link JdbcManager}のコンポーネント名
-     */
-    public String getJdbcManagerName() {
-        return jdbcManagerName;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
@@ -180,18 +101,10 @@ public class DumpDbMetaCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath, env);
-        containerFactorySupport.init();
-
-        JdbcManagerImplementor jdbcManager = SingletonS2Container
-                .getComponent(jdbcManagerName);
-        dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         dbTableMetaReader = createDbTableMetaReader();
 
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
+        logRdbmsAndGenDialect(dialect);
     }
 
     @Override
@@ -213,9 +126,6 @@ public class DumpDbMetaCommand extends AbstractCommand {
 
     @Override
     protected void doDestroy() {
-        if (containerFactorySupport != null) {
-            containerFactorySupport.destory();
-        }
     }
 
     /**
@@ -224,8 +134,8 @@ public class DumpDbMetaCommand extends AbstractCommand {
      * @return {@link DbTableMetaReader}の実装
      */
     protected DbTableMetaReader createDbTableMetaReader() {
-        return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
-                tableNamePattern, "");
+        return new DbTableMetaReaderImpl(jdbcManager.getDataSource(), dialect,
+                schemaName, tableNamePattern, "");
     }
 
     @Override

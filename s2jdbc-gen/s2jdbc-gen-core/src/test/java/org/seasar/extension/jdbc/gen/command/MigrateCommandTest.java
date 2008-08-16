@@ -59,18 +59,20 @@ public class MigrateCommandTest {
      * @throws Exception
      */
     @Test
-    public void testFactoryMethod() throws Exception {
+    public void testInit() throws Exception {
         MigrateCommand command = new MigrateCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createSchemaInfoTable());
-        assertNotNull(command.createDdlVersionDirectory());
-        assertNotNull(command.createSqlFileExecutor());
-        assertNotNull(command.createSqlUnitExecutor());
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createDatabaseDescFactory());
-        assertNotNull(command.createLoader());
+        assertNotNull(command.dialect);
+        assertNotNull(command.sqlFileExecutor);
+        assertNotNull(command.schemaInfoTable);
+        assertNotNull(command.ddlVersionDirectory);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.databaseDescFactory);
+        assertNotNull(command.sqlUnitExecutor);
+        assertNotNull(command.loader);
+        assertNotNull(command.migrater);
     }
 }

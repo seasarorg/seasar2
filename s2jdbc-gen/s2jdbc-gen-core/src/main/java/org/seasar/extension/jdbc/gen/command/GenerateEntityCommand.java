@@ -19,9 +19,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.DataSource;
-
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
@@ -41,11 +38,6 @@ import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.util.SingletonS2ContainerFactorySupport;
-import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
-import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
-import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -69,26 +61,17 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected static Logger logger = Logger
             .getLogger(GenerateEntityCommand.class);
 
-    /** 設定ファイルのパス */
-    protected String configPath = "s2jdbc.dicon";
-
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
 
     /** エンティティクラスのテンプレート名 */
     protected String entityTemplateFileName = "java/entity.ftl";
 
-    /** 環境名 */
-    protected String env = "ut";
-
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
-
-    /** {@link JdbcManager}のコンポーネント名 */
-    protected String jdbcManagerName = "jdbcManager";
 
     /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
@@ -114,17 +97,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** バージョンカラムの名前 */
     protected String versionColumnName = "version";
 
-    /** {@link SingletonS2ContainerFactory}のサポート */
-    protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
-    /** データソース */
-    protected DataSource dataSource;
-
     /** 方言 */
     protected GenDialect dialect;
-
-    /** 永続化層の命名規約 */
-    protected PersistenceConvention persistenceConvention;
 
     /** テーブルメタデータのリーダ */
     protected DbTableMetaReader dbTableMetaReader;
@@ -142,25 +116,6 @@ public class GenerateEntityCommand extends AbstractCommand {
      * インスタンスを構築します。
      */
     public GenerateEntityCommand() {
-    }
-
-    /**
-     * 設定ファイルのパスを返します。
-     * 
-     * @return 設定ファイルのパス
-     */
-    public String getConfigPath() {
-        return configPath;
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
     }
 
     /**
@@ -202,25 +157,6 @@ public class GenerateEntityCommand extends AbstractCommand {
     }
 
     /**
-     * 環境名を設定します。
-     * 
-     * @return 環境名
-     */
-    public String getEnv() {
-        return env;
-    }
-
-    /**
-     * 環境名を返します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        this.env = env;
-    }
-
-    /**
      * 生成するJavaファイルの出力先ディレクトリを返します。
      * 
      * @return 生成するJavaファイルの出力先ディレクトリ
@@ -256,25 +192,6 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     public void setJavaFileEncoding(String javaFileEncoding) {
         this.javaFileEncoding = javaFileEncoding;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を返します。
-     * 
-     * @return {@link JdbcManager}のコンポーネント名
-     */
-    public String getJdbcManagerName() {
-        return jdbcManagerName;
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
@@ -438,22 +355,13 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        containerFactorySupport = new SingletonS2ContainerFactorySupport(
-                configPath, env);
-        containerFactorySupport.init();
-
-        JdbcManagerImplementor jdbcManager = SingletonS2Container
-                .getComponent(jdbcManagerName);
-        dataSource = jdbcManager.getDataSource();
-        persistenceConvention = jdbcManager.getPersistenceConvention();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         dbTableMetaReader = createDbTableMetaReader();
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
 
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
+        logRdbmsAndGenDialect(dialect);
     }
 
     @Override
@@ -470,9 +378,6 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     @Override
     protected void doDestroy() {
-        if (containerFactorySupport != null) {
-            containerFactorySupport.destory();
-        }
     }
 
     /**
@@ -494,8 +399,8 @@ public class GenerateEntityCommand extends AbstractCommand {
      * @return {@link DbTableMetaReader}の実装
      */
     protected DbTableMetaReader createDbTableMetaReader() {
-        return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
-                tableNamePattern, ignoreTableNamePattern);
+        return new DbTableMetaReaderImpl(jdbcManager.getDataSource(), dialect,
+                schemaName, tableNamePattern, ignoreTableNamePattern);
     }
 
     /**
@@ -505,9 +410,11 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     protected EntityDescFactory createEntityDescFactory() {
         AttributeDescFactory attributeDescFactory = new AttributeDescFactoryImpl(
-                persistenceConvention, dialect, versionColumnName);
-        return new EntityDescFactoryImpl(persistenceConvention,
-                attributeDescFactory, schemaName != null);
+                jdbcManager.getPersistenceConvention(), dialect,
+                versionColumnName);
+        return new EntityDescFactoryImpl(
+                jdbcManager.getPersistenceConvention(), attributeDescFactory,
+                schemaName != null);
     }
 
     /**

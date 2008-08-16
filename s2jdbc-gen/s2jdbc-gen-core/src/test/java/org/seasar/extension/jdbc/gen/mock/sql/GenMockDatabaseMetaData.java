@@ -13,7 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.meta;
+package org.seasar.extension.jdbc.gen.mock.sql;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -24,7 +24,7 @@ import java.sql.SQLException;
  * @author taedium
  * 
  */
-public class MockDatabaseMetaData implements DatabaseMetaData {
+public class GenMockDatabaseMetaData implements DatabaseMetaData {
 
     public boolean allProceduresAreCallable() throws SQLException {
 
@@ -121,7 +121,7 @@ public class MockDatabaseMetaData implements DatabaseMetaData {
 
     public String getDatabaseProductName() throws SQLException {
 
-        return null;
+        return "Mock Database";
     }
 
     public String getDatabaseProductVersion() throws SQLException {
