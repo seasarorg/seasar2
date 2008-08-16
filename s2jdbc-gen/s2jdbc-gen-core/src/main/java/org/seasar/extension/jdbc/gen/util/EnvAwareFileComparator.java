@@ -21,8 +21,8 @@ import java.util.Comparator;
 /**
  * 環境名を考慮してファイルを比較する{@link Comparator}の実装クラスです。
  * <p>
- * 環境名が「ut」でhoge.txtという名前のファイルとhoge_ut.txtという名前のファイルを比較した場合、hoge_ut.
- * txtという名前をもつファイルがより小さいと判定されます。
+ * 環境名が「ut」でhoge.txtという名前のファイルとhoge_ut.txtという名前のファイルを比較した場合、hoge.
+ * txtがhoge_ut.txtより小さいと判定されます。
  * </p>
  * 
  * @author taedium

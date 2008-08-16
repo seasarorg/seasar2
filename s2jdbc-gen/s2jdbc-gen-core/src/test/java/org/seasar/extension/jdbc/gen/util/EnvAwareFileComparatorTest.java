@@ -48,10 +48,11 @@ public class EnvAwareFileComparatorTest {
     /**
      * 
      */
+    @Test
     public void testCompareTo() {
         File file1 = new File("hoge_ut.txt");
         File file2 = new File("hoge.txt");
-        assertTrue(comparator.compare(file1, file2) < 0);
+        assertTrue(comparator.compare(file1, file2) > 0);
     }
 
 }
