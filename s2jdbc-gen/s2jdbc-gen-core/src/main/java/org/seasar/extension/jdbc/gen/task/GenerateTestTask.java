@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateTestCommand;
 
 /**
- * テストクラスのJavaファイルを生成する{@link Task}です。
+ * エンティティに対するテストクラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
  * @see GenerateTestCommand
@@ -31,6 +31,11 @@ public class GenerateTestTask extends AbstractTask {
 
     /** コマンド */
     protected GenerateTestCommand command = new GenerateTestCommand();
+
+    @Override
+    protected Command getCommand() {
+        return command;
+    }
 
     /**
      * クラスパスのディレクトリを設定します。
@@ -181,10 +186,4 @@ public class GenerateTestTask extends AbstractTask {
     public void setEnv(String env) {
         command.setEnv(env);
     }
-
-    @Override
-    protected Command getCommand() {
-        return command;
-    }
-
 }

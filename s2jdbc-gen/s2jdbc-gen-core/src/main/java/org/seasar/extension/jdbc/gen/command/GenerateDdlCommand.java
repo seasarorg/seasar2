@@ -58,7 +58,7 @@ import org.seasar.framework.util.ClassUtil;
 /**
  * DDLのSQLファイルを生成する{@link Command}の実装です。
  * <p>
- * このコマンドは、エンティティクラスのメタデータからDDLのSQLファイルを生成します。 そのため、
+ * このコマンドは、エンティティクラスのメタデータからDDLのSQLファイルを生成し、データをダンプします。 そのため、
  * ココマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります。
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
@@ -74,6 +74,9 @@ import org.seasar.framework.util.ClassUtil;
  * <li>シーケンスを作成するDDL</li>
  * <li>シーケンスを削除するDDL</li>
  * </ul>
+ * </p>
+ * <p>
+ * このコマンドは、{@link #dump}が{@code true}の場合データベースのデータをテーブルごとにダンプします。
  * </p>
  * 
  * @author taedium

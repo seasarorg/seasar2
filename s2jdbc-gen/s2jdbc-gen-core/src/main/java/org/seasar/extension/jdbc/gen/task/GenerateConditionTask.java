@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateConditionCommand;
 
 /**
- * 条件クラスのJavaファイルを生成する{@link Task}です。
+ * エンティティの条件クラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
  * @see GenerateConditionCommand
@@ -31,12 +31,6 @@ public class GenerateConditionTask extends AbstractTask {
 
     /** コマンド */
     protected GenerateConditionCommand command = new GenerateConditionCommand();
-
-    /**
-     * インスタンスを構築します。
-     */
-    public GenerateConditionTask() {
-    }
 
     @Override
     protected Command getCommand() {

@@ -41,7 +41,8 @@ import org.seasar.framework.util.StatementUtil;
 public class SchemaInfoTableImpl implements SchemaInfoTable {
 
     /** ロガー */
-    protected static Logger logger = Logger.getLogger(SchemaInfoTableImpl.class);
+    protected static Logger logger = Logger
+            .getLogger(SchemaInfoTableImpl.class);
 
     /** データソース */
     protected DataSource dataSource;
@@ -88,7 +89,8 @@ public class SchemaInfoTableImpl implements SchemaInfoTable {
         this.dialect = dialect;
         this.fullTableName = fullTableName;
         this.columnName = columnName;
-        sql = "select " + columnName + " from " + fullTableName;
+        sql = "select " + dialect.quote(columnName) + " from "
+                + dialect.quote(fullTableName);
     }
 
     public int getVersionNo() {

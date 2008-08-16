@@ -58,7 +58,7 @@ import org.seasar.framework.util.ClassUtil;
  * テーブル1つにつき、1つのエンティティクラスのJavaファイルを生成します。
  * </p>
  * <p>
- * 主キーやカラムのNOT NULL制約は認識してJavaコードに反映しますが、一意キーや外部キーは認識しません。
+ * 主キーやカラムのNOT NULL制約は認識してJavaコードに反映しますが、一意キーや外部キーは反映しません。
  * </p>
  * 
  * @author taedium
@@ -447,7 +447,6 @@ public class GenerateEntityCommand extends AbstractCommand {
         dataSource = jdbcManager.getDataSource();
         persistenceConvention = jdbcManager.getPersistenceConvention();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-
         dbTableMetaReader = createDbTableMetaReader();
         entityDescFactory = createEntityDescFactory();
         generator = createGenerator();
@@ -459,13 +458,14 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() {
-        List<DbTableMeta> tableMetaList = dbTableMetaReader.read();
         List<EntityDesc> entityDescList = new ArrayList<EntityDesc>();
-        for (DbTableMeta tableMeta : tableMetaList) {
+        for (DbTableMeta tableMeta : dbTableMetaReader.read()) {
             EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
             entityDescList.add(entityDesc);
         }
-        generate(entityDescList);
+        for (EntityDesc entityDesc : entityDescList) {
+            generateEntity(entityDesc);
+        }
     }
 
     @Override
@@ -473,6 +473,19 @@ public class GenerateEntityCommand extends AbstractCommand {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
         }
+    }
+
+    /**
+     * エンティティクラスのJavaファイルを生成します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void generateEntity(EntityDesc entityDesc) {
+        EntityModel model = entityModelFactory.getEntityModel(entityDesc);
+        GenerationContext context = createGenerationContext(model,
+                entityTemplateFileName);
+        generator.generate(context);
     }
 
     /**
@@ -516,31 +529,6 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     protected Generator createGenerator() {
         return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
-    }
-
-    /**
-     * 生成します。
-     * 
-     * @param entityDescList
-     *            エンティティ記述のリスト
-     */
-    protected void generate(List<EntityDesc> entityDescList) {
-        for (EntityDesc entityDesc : entityDescList) {
-            generateEntity(entityDesc);
-        }
-    }
-
-    /**
-     * エンティティクラスのJavaファイルを生成します。
-     * 
-     * @param entityDesc
-     *            エンティティ記述
-     */
-    protected void generateEntity(EntityDesc entityDesc) {
-        EntityModel model = entityModelFactory.getEntityModel(entityDesc);
-        GenerationContext context = createGenerationContext(model,
-                entityTemplateFileName);
-        generator.generate(context);
     }
 
     /**

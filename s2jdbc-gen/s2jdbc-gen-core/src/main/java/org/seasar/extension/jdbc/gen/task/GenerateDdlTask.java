@@ -32,12 +32,6 @@ public class GenerateDdlTask extends AbstractTask {
     /** コマンド */
     protected GenerateDdlCommand command = new GenerateDdlCommand();
 
-    /**
-     * インスタンスを構築します。
-     */
-    public GenerateDdlTask() {
-    }
-
     @Override
     protected Command getCommand() {
         return command;

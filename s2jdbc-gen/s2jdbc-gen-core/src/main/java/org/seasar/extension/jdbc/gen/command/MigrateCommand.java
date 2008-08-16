@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
@@ -50,8 +51,14 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * データベースのスキーマとデータを移行する{@link Command}の実装クラスです。
+ * <p>
+ * このコマンドは、エンティティクラスのメタデータからデータベースの情報を取得します。 そのため、
+ * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります。
+ * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
+ * </p>
  * 
+ * @author taedium
  */
 public class MigrateCommand extends AbstractCommand {
 
@@ -142,191 +149,244 @@ public class MigrateCommand extends AbstractCommand {
     /** スキーマのバージョン */
     protected SchemaInfoTable schemaInfoTable;
 
+    /** バージョン管理のディレクトリ */
     protected DdlVersionDirectory ddlVersionDirectory;
 
+    /** マイグレータ */
     protected Migrater migrater;
 
+    /** データベース記述のファクトリ */
     protected DatabaseDescFactory databaseDescFactory;
 
+    /** SQLのひとまとまりの実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
 
+    /** ローダ */
     protected Loader loader;
 
     /**
-     * @return Returns the statementDelimiter.
+     * SQLステートメントの区切り文字を返します。
+     * 
+     * @return SQLステートメントの区切り文字
      */
     public char getStatementDelimiter() {
         return statementDelimiter;
     }
 
     /**
+     * SQLステートメントの区切り文字を設定します。
+     * 
      * @param statementDelimiter
-     *            The statementDelimiter to set.
+     *            SQLステートメントの区切り文字
      */
     public void setStatementDelimiter(char statementDelimiter) {
         this.statementDelimiter = statementDelimiter;
     }
 
     /**
-     * @return Returns the blockDelimiter.
+     * SQLブロックの区切り文字を返します。
+     * 
+     * @return SQLブロックの区切り文字
      */
     public String getBlockDelimiter() {
         return blockDelimiter;
     }
 
     /**
+     * SQLブロックの区切り文字を設定します。
+     * 
      * @param blockDelimiter
-     *            The blockDelimiter to set.
+     *            SQLブロックの区切り文字
      */
     public void setBlockDelimiter(String blockDelimiter) {
         this.blockDelimiter = blockDelimiter;
     }
 
     /**
-     * @return Returns the configPath.
+     * 設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
      */
     public String getConfigPath() {
         return configPath;
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     *            The configPath to set.
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         this.configPath = configPath;
     }
 
     /**
-     * @return Returns the jdbcManagerName.
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
      */
     public String getJdbcManagerName() {
         return jdbcManagerName;
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     *            The jdbcManagerName to set.
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         this.jdbcManagerName = jdbcManagerName;
     }
 
     /**
-     * @return Returns the env.
+     * 環境名を返します。
+     * 
+     * @return 環境名
      */
     public String getEnv() {
         return env;
     }
 
     /**
+     * 環境名を設定します。
+     * 
      * @param env
-     *            The env to set.
+     *            環境名
      */
     public void setEnv(String env) {
         this.env = env;
     }
 
     /**
-     * @return Returns the haltOnError.
+     * エラー発生時に処理を中止する場合{@code true}、中止しない場合{@code false}を返します。
+     * 
+     * @return エラー発生時に処理を中止する場合{@code true}、中止しない場合{@code false}
      */
     public boolean isHaltOnError() {
         return haltOnError;
     }
 
     /**
+     * エラー発生時に処理を中止する場合{@code true}、中止しない場合{@code false}を設定します。
+     * 
      * @param haltOnError
-     *            The haltOnError to set.
+     *            エラー発生時に処理を中止する場合{@code true}、中止しない場合{@code false}
      */
     public void setHaltOnError(boolean haltOnError) {
         this.haltOnError = haltOnError;
     }
 
     /**
-     * @return Returns the schemaInfoFullTableName.
+     * スキーマ情報を格納するテーブル名を返します。
+     * 
+     * @return スキーマ情報を格納するテーブル名
      */
     public String getSchemaInfoFullTableName() {
         return schemaInfoFullTableName;
     }
 
     /**
+     * スキーマ情報を格納するテーブル名を設定します。
+     * 
      * @param schemaInfoFullTableName
-     *            The schemaInfoFullTableName to set.
+     *            スキーマ情報を格納するテーブル名
      */
     public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
         this.schemaInfoFullTableName = schemaInfoFullTableName;
     }
 
     /**
-     * @return Returns the schemaInfoColumnName.
+     * スキーマのバージョン番号を格納するカラム名を返します。
+     * 
+     * @return スキーマのバージョン番号を格納するカラム名
      */
     public String getSchemaInfoColumnName() {
         return schemaInfoColumnName;
     }
 
     /**
+     * スキーマのバージョン番号を格納するカラム名を設定します。
+     * 
      * @param schemaInfoColumnName
-     *            The schemaInfoColumnName to set.
+     *            スキーマのバージョン番号を格納するカラム名
      */
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
     /**
-     * @return Returns the ddlFileEncoding.
+     * DDLファイルのエンコーディングを返します。
+     * 
+     * @return DDLファイルのエンコーディング
      */
     public String getDdlFileEncoding() {
         return ddlFileEncoding;
     }
 
     /**
+     * DDLファイルのエンコーディングを設定します。
+     * 
      * @param ddlFileEncoding
-     *            The ddlFileEncoding to set.
+     *            DDLファイルのエンコーディング
      */
     public void setDdlFileEncoding(String ddlFileEncoding) {
         this.ddlFileEncoding = ddlFileEncoding;
     }
 
     /**
-     * @return Returns the migrateDir.
+     * マイグレーションのディレクトリを返します。
+     * 
+     * @return マイグレーションのディレクトリ
      */
     public File getMigrateDir() {
         return migrateDir;
     }
 
     /**
+     * マイグレーションのディレクトリを設定します。
+     * 
      * @param migrateDir
-     *            The migrateDir to set.
+     *            マイグレーションのディレクトリ
      */
     public void setMigrateDir(File migrateDir) {
         this.migrateDir = migrateDir;
     }
 
     /**
-     * @return Returns the versionNoPattern.
+     * バージョン番号のパターンを返します。
+     * 
+     * @return バージョン番号のパターン
      */
     public String getVersionNoPattern() {
         return versionNoPattern;
     }
 
     /**
+     * バージョン番号のパターンを設定します。
+     * 
      * @param versionNoPattern
-     *            The versionNoPattern to set.
+     *            バージョン番号のパターン
      */
     public void setVersionNoPattern(String versionNoPattern) {
         this.versionNoPattern = versionNoPattern;
     }
 
     /**
-     * @return Returns the ddlInfoFile.
+     * DDL情報ファイルを返します。
+     * 
+     * @return DDL情報ファイル
      */
     public File getDdlInfoFile() {
         return ddlInfoFile;
     }
 
     /**
+     * DDL情報ファイルを設定します。
+     * 
      * @param ddlInfoFile
-     *            The ddlInfoFile to set.
+     *            DDL情報ファイル
      */
     public void setDdlInfoFile(File ddlInfoFile) {
         this.ddlInfoFile = ddlInfoFile;
@@ -352,90 +412,114 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the classpathDir.
+     * クラスパスのディレクトリを返します。
+     * 
+     * @return クラスパスのディレクトリ
      */
     public File getClasspathDir() {
         return classpathDir;
     }
 
     /**
+     * クラスパスのディレクトリを設定します。
+     * 
      * @param classpathDir
-     *            The classpathDir to set.
+     *            クラスパスのディレクトリ
      */
     public void setClasspathDir(File classpathDir) {
         this.classpathDir = classpathDir;
     }
 
     /**
-     * @return Returns the rootPackageName.
+     * ルートパッケージ名を返します。
+     * 
+     * @return ルートパッケージ名
      */
     public String getRootPackageName() {
         return rootPackageName;
     }
 
     /**
+     * ルートパッケージ名を設定します。
+     * 
      * @param rootPackageName
-     *            The rootPackageName to set.
+     *            ルートパッケージ名
      */
     public void setRootPackageName(String rootPackageName) {
         this.rootPackageName = rootPackageName;
     }
 
     /**
-     * @return Returns the entityPackageName.
+     * エンティティクラスのパッケージ名を返します。
+     * 
+     * @return エンティティクラスのパッケージ名
      */
     public String getEntityPackageName() {
         return entityPackageName;
     }
 
     /**
+     * エンティティクラスのパッケージ名を設定します。
+     * 
      * @param entityPackageName
-     *            The entityPackageName to set.
+     *            エンティティクラスのパッケージ名
      */
     public void setEntityPackageName(String entityPackageName) {
         this.entityPackageName = entityPackageName;
     }
 
     /**
-     * @return Returns the entityNamePattern.
+     * 対象とするエンティティ名の正規表現を返します。
+     * 
+     * @return 対象とするエンティティ名の正規表現
      */
     public String getEntityNamePattern() {
         return entityNamePattern;
     }
 
     /**
+     * 対象とするエンティティ名の正規表現を設定します。
+     * 
      * @param entityNamePattern
-     *            The entityNamePattern to set.
+     *            対象とするエンティティ名の正規表現
      */
     public void setEntityNamePattern(String entityNamePattern) {
         this.entityNamePattern = entityNamePattern;
     }
 
     /**
-     * @return Returns the ignoreEntityNamePattern.
+     * 対象としないエンティティ名の正規表現を返します。
+     * 
+     * @return 対象としないエンティティ名の正規表現
      */
     public String getIgnoreEntityNamePattern() {
         return ignoreEntityNamePattern;
     }
 
     /**
+     * 対象としないエンティティ名の正規表現を設定します。
+     * 
      * @param ignoreEntityNamePattern
-     *            The ignoreEntityNamePattern to set.
+     *            対象としないエンティティ名の正規表現
      */
     public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
         this.ignoreEntityNamePattern = ignoreEntityNamePattern;
     }
 
     /**
-     * @return Returns the dumpFileEncoding.
+     * ダンプファイルのエンコーディングを返します。
+     * 
+     * @return ダンプファイルのエンコーディング
      */
     public String getDumpFileEncoding() {
         return dumpFileEncoding;
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     *            The dumpFileEncoding to set.
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         this.dumpFileEncoding = dumpFileEncoding;
@@ -503,12 +587,22 @@ public class MigrateCommand extends AbstractCommand {
         }
     }
 
+    /**
+     * {@link EntityMetaReader}の実装を作成します。
+     * 
+     * @return {@link EntityMetaReader}の実装
+     */
     protected EntityMetaReader createEntityMetaReader() {
         return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
                 rootPackageName, entityPackageName), entityMetaFactory,
                 entityNamePattern, ignoreEntityNamePattern);
     }
 
+    /**
+     * {@link DatabaseDescFactory}の実装を作成します。
+     * 
+     * @return {@link DatabaseDescFactory}の実装
+     */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
                 dialect);
@@ -524,11 +618,21 @@ public class MigrateCommand extends AbstractCommand {
                 schemaInfoFullTableName, schemaInfoColumnName);
     }
 
+    /**
+     * {@link DdlVersionDirectory}の実装を作成します。
+     * 
+     * @return {@link DdlVersionDirectory}の実装
+     */
     protected DdlVersionDirectory createDdlVersionDirectory() {
         return new DdlVersionDirectoryImpl(migrateDir, ddlInfoFile,
                 versionNoPattern);
     }
 
+    /**
+     * {@link Migrater}の実装を作成します。
+     * 
+     * @return {@link Migrater}の実装
+     */
     protected Migrater createMigrater() {
         return new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
                 ddlVersionDirectory, version, env);
@@ -544,10 +648,20 @@ public class MigrateCommand extends AbstractCommand {
                 statementDelimiter, blockDelimiter);
     }
 
+    /**
+     * {@link SqlUnitExecutor}の実装を作成します。
+     * 
+     * @return {@link SqlUnitExecutor}の実装
+     */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return new SqlUnitExecutorImpl(dataSource, haltOnError);
     }
 
+    /**
+     * {@link Loader}の実装を作成します。
+     * 
+     * @return {@link Loader}の実装
+     */
     protected Loader createLoader() {
         return new LoaderImpl(dialect, dumpFileEncoding);
     }

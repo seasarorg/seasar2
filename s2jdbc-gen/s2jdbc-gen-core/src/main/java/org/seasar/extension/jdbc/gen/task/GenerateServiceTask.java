@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateServiceCommand;
 
 /**
- * サービスクラスのJavaファイルを生成する{@link Task}です。
+ * エンティティに対するサービスクラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
  * @see GenerateServiceCommand
@@ -31,12 +31,6 @@ public class GenerateServiceTask extends AbstractTask {
 
     /** コマンド */
     protected GenerateServiceCommand command = new GenerateServiceCommand();
-
-    /**
-     * インスタンスを構築します。
-     */
-    public GenerateServiceTask() {
-    }
 
     /**
      * クラスパスのディレクトリを設定します。

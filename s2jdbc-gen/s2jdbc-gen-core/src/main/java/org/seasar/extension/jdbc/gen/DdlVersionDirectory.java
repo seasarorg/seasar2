@@ -66,9 +66,9 @@ public interface DdlVersionDirectory {
     File getDropDir(File versionDir);
 
     /**
-     * DDLのバージョンを返します。
+     * DDL情報ファイルを返します。
      * 
      * @return DDLのバージョン
      */
-    DdlInfoFile getDdlVersion();
+    DdlInfoFile getDdlInfoFile();
 }

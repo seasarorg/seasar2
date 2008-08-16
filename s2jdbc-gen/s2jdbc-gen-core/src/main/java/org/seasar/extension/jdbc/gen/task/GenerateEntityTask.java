@@ -33,12 +33,6 @@ public class GenerateEntityTask extends AbstractTask {
     protected GenerateEntityCommand command = new GenerateEntityCommand();
 
     /**
-     * インスタンスを構築します。
-     */
-    public GenerateEntityTask() {
-    }
-
-    /**
      * 設定ファイルのパスを設定します。
      * 
      * @param configPath

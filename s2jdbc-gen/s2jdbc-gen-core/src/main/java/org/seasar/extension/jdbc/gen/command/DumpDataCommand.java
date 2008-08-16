@@ -45,7 +45,7 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * エンティティに対応するデータベースのデータをテキストファイルにダンプする{@link Command}の実装です。
+ * エンティティに対応するデータベースのデータをテーブルごとにダンプする{@link Command}の実装です。
  * 
  * @author taedium
  */
@@ -117,7 +117,7 @@ public class DumpDataCommand extends AbstractCommand {
     /** SQLのひとまとまりの処理の実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
 
-    /** ダンパー */
+    /** ダンパ */
     protected Dumper dumper;
 
     /**

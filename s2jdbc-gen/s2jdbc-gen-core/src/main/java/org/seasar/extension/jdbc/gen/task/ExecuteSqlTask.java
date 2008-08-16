@@ -37,12 +37,6 @@ public class ExecuteSqlTask extends AbstractTask {
     /** SQLファイルのリスト */
     protected FileList sqlFileList;
 
-    /**
-     * インスタンスを構築します。
-     */
-    public ExecuteSqlTask() {
-    }
-
     @Override
     protected Command getCommand() {
         return command;

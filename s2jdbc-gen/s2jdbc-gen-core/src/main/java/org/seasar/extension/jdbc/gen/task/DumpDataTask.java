@@ -33,12 +33,6 @@ public class DumpDataTask extends AbstractTask {
     /** コマンド */
     protected DumpDataCommand command = new DumpDataCommand();
 
-    /**
-     * インスタンスを構築します。
-     */
-    public DumpDataTask() {
-    }
-
     @Override
     protected Command getCommand() {
         return command;

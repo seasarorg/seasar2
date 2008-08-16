@@ -37,11 +37,8 @@ public interface DdlInfoFile {
     int getNextVersionNo();
 
     /**
-     * バージョン番号を設定します。
-     * 
-     * @param versionNo
-     *            バージョン番号
+     * バージョン番号を次のバージョン番号に増分させます。
      */
-    void setVersionNo(int versionNo);
+    void incrementVersionNo();
 
 }

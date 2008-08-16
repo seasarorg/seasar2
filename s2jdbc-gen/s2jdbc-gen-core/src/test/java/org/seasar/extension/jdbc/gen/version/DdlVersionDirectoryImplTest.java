@@ -94,7 +94,7 @@ public class DdlVersionDirectoryImplTest {
      */
     @Test
     public void testGetDdlVersion() {
-        assertNotNull(directory.getDdlVersion());
+        assertNotNull(directory.getDdlInfoFile());
     }
 
 }

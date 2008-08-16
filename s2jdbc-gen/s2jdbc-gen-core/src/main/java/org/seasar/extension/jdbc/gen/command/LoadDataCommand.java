@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
@@ -48,8 +49,14 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * @author taedium
+ * ダンプファイルをロードする{@link Command}の実装クラスです。
+ * <p>
+ * このコマンドは、エンティティクラスのメタデータからデータベースの情報を取得します。 そのため、
+ * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります。
+ * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
+ * </p>
  * 
+ * @author taedium
  */
 public class LoadDataCommand extends AbstractCommand {
 
@@ -80,6 +87,7 @@ public class LoadDataCommand extends AbstractCommand {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName = "jdbcManager";
 
+    /** ダンプファイルのディレクトリ */
     protected File dumpDir = new File("db", "dump");
 
     /** ダンプファイルのエンコーディング */
@@ -91,6 +99,7 @@ public class LoadDataCommand extends AbstractCommand {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** データソース */
     protected DataSource dataSource;
 
     /** エンティティメタデータのファクトリ */
@@ -99,13 +108,16 @@ public class LoadDataCommand extends AbstractCommand {
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
+    /** データベース記述のファクトリ */
     protected DatabaseDescFactory databaseDescFactory;
 
     /** ジェネレータ */
     protected Generator generator;
 
+    /** SQLのひとまとまりの処理の実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
 
+    /** ローダ */
     protected Loader loader;
 
     /**
@@ -267,30 +279,38 @@ public class LoadDataCommand extends AbstractCommand {
     }
 
     /**
-     * @return Returns the dumpDir.
+     * ダンプファイルのディレクトリを設定します。
+     * 
+     * @return ダンプファイルのディレクトリ
      */
     public File getDumpDir() {
         return dumpDir;
     }
 
     /**
+     * ダンプファイルのディレクトリを返します。
+     * 
      * @param dumpDir
-     *            The dumpDir to set.
+     *            ダンプファイルのディレクトリ
      */
     public void setDumpDir(File dumpDir) {
         this.dumpDir = dumpDir;
     }
 
     /**
-     * @return Returns the dumpFileEncoding.
+     * ダンプファイルのエンコーディングを返します。
+     * 
+     * @return ダンプファイルのエンコーディング
      */
     public String getDumpFileEncoding() {
         return dumpFileEncoding;
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     *            The dumpFileEncoding to set.
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         this.dumpFileEncoding = dumpFileEncoding;
@@ -366,15 +386,30 @@ public class LoadDataCommand extends AbstractCommand {
                 entityNamePattern, ignoreEntityNamePattern);
     }
 
+    /**
+     * {@link DatabaseDescFactory}の実装を作成します。
+     * 
+     * @return {@link DatabaseDescFactory}の実装
+     */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
                 dialect);
     }
 
+    /**
+     * {@link SqlUnitExecutor}の実装を作成します。
+     * 
+     * @return {@link SqlUnitExecutor}の実装
+     */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return new SqlUnitExecutorImpl(dataSource, false);
     }
 
+    /**
+     * {@link Loader}の実装を作成します。
+     * 
+     * @return {@link Loader}の実装
+     */
     protected Loader createLoader() {
         return new LoaderImpl(dialect, dumpFileEncoding);
     }

@@ -100,7 +100,7 @@ public class MigraterImpl implements Migrater {
     public void migrate(Callback callback) {
         int from = schemaInfoTable.getVersionNo();
         int to = LATEST_VERSION.equalsIgnoreCase(version) ? ddlVersionDirectory
-                .getDdlVersion().getVersionNo() : VersionUtil.toInt(version);
+                .getDdlInfoFile().getVersionNo() : VersionUtil.toInt(version);
 
         drop(callback, from);
         create(callback, to);
@@ -117,17 +117,9 @@ public class MigraterImpl implements Migrater {
      *            バージョン番号
      */
     protected void drop(final Callback callback, int versionNo) {
-        final List<File> fileList = new ArrayList<File>();
         File versionDir = ddlVersionDirectory.getVersionDir(versionNo);
         File dropDir = ddlVersionDirectory.getDropDir(versionDir);
-
-        FileUtil.traverseDirectory(dropDir, new ExcludeFilenameFilter(),
-                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
-
-                    public void handle(File file) {
-                        fileList.add(file);
-                    }
-                });
+        final List<File> fileList = getFileList(dropDir);
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
@@ -148,17 +140,9 @@ public class MigraterImpl implements Migrater {
      *            バージョン番号
      */
     protected void create(final Callback callback, int versionNo) {
-        final List<File> fileList = new ArrayList<File>();
         File versionDir = ddlVersionDirectory.getVersionDir(versionNo);
         File createDir = ddlVersionDirectory.getCreateDir(versionDir);
-
-        FileUtil.traverseDirectory(createDir, new ExcludeFilenameFilter(),
-                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
-
-                    public void handle(File file) {
-                        fileList.add(file);
-                    }
-                });
+        final List<File> fileList = getFileList(createDir);
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
@@ -168,6 +152,25 @@ public class MigraterImpl implements Migrater {
                 }
             }
         });
+    }
+
+    /**
+     * ディレクトリに含まれるファイルを返します。
+     * 
+     * @param dir
+     *            ディレクトリ
+     * @return ファイルのリスト
+     */
+    protected List<File> getFileList(File dir) {
+        final List<File> fileList = new ArrayList<File>();
+        FileUtil.traverseDirectory(dir, new ExcludeFilenameFilter(),
+                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
+
+                    public void handle(File file) {
+                        fileList.add(file);
+                    }
+                });
+        return fileList;
     }
 
 }

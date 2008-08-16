@@ -59,6 +59,15 @@ public class DdlInfoFileImpl implements DdlInfoFile {
     }
 
     public int getVersionNo() {
+        return getVersionNoInternal();
+    }
+
+    /**
+     * バージョン番号を返します。
+     * 
+     * @return バージョン番号
+     */
+    protected int getVersionNoInternal() {
         if (versionNo != null) {
             return versionNo;
         }
@@ -72,10 +81,20 @@ public class DdlInfoFileImpl implements DdlInfoFile {
     }
 
     public int getNextVersionNo() {
-        return getVersionNo() + 1;
+        return getNextVersionNoInternal();
     }
 
-    public void setVersionNo(int versionNo) {
+    /**
+     * 次のバージョン番号を返します。
+     * 
+     * @return 次のバージョン番号
+     */
+    protected int getNextVersionNoInternal() {
+        return getVersionNoInternal() + 1;
+    }
+
+    public void incrementVersionNo() {
+        int versionNo = getNextVersionNoInternal();
         OutputStream os = FileOutputStreamUtil.create(file);
         Writer writer = null;
         try {

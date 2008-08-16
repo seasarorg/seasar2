@@ -123,7 +123,7 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         return new File(versionDir, DROP_DIR_NAME);
     }
 
-    public DdlInfoFile getDdlVersion() {
+    public DdlInfoFile getDdlInfoFile() {
         return ddlInfoFile;
     }
 

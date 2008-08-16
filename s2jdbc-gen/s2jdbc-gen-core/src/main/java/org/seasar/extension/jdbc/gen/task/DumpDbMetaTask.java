@@ -31,12 +31,6 @@ public class DumpDbMetaTask extends AbstractTask {
     /** コマンド */
     protected DumpDbMetaCommand command = new DumpDbMetaCommand();
 
-    /**
-     * インスタンスを構築します。
-     */
-    public DumpDbMetaTask() {
-    }
-
     @Override
     protected Command getCommand() {
         return command;

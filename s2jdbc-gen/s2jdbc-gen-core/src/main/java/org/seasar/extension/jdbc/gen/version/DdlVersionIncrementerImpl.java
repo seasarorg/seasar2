@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.DdlInfoFile;
 import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.util.ExcludeFilenameFilter;
@@ -86,7 +85,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             File createDir = ddlVersionDirectory.getCreateDir(nextVersionDir);
             File dropDir = ddlVersionDirectory.getDropDir(nextVersionDir);
             callback.execute(createDir, dropDir, ddlVersionDirectory
-                    .getDdlVersion().getNextVersionNo());
+                    .getDdlInfoFile().getNextVersionNo());
             incrementVersionNo();
         } catch (RuntimeException e) {
             recover();
@@ -144,9 +143,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * バージョン番号を増分します。
      */
     protected void incrementVersionNo() {
-        DdlInfoFile ddlInfoFile = ddlVersionDirectory.getDdlVersion();
-        int nextVersionNo = ddlInfoFile.getNextVersionNo();
-        ddlInfoFile.setVersionNo(nextVersionNo);
+        ddlVersionDirectory.getDdlInfoFile().incrementVersionNo();
     }
 
     /**

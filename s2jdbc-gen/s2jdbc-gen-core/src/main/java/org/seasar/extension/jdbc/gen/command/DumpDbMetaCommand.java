@@ -188,7 +188,6 @@ public class DumpDbMetaCommand extends AbstractCommand {
                 .getComponent(jdbcManagerName);
         dataSource = jdbcManager.getDataSource();
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-
         dbTableMetaReader = createDbTableMetaReader();
 
         logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()

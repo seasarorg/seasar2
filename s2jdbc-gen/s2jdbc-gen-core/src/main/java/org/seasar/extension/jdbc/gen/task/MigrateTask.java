@@ -17,179 +17,213 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.command.MigrateCommand;
 
 /**
- * @author taedium
+ * データベースのスキーマとデータを移行する{@link Task}です。
  * 
+ * @author taedium
+ * @see MigrateCommand
  */
 public class MigrateTask extends AbstractTask {
 
     /** コマンド */
     protected MigrateCommand command = new MigrateCommand();
 
-    /**
-     * インスタンスを構築します。
-     */
-    public MigrateTask() {
+    @Override
+    protected Command getCommand() {
+        return command;
     }
 
     /**
+     * SQLブロックの区切り文字を設定します。
+     * 
      * @param blockDelimiter
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setBlockDelimiter(java.lang.String)
+     *            SQLブロックの区切り文字
      */
     public void setBlockDelimiter(String blockDelimiter) {
         command.setBlockDelimiter(blockDelimiter);
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
      * @param configPath
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setConfigPath(java.lang.String)
+     *            設定ファイルのパス
      */
     public void setConfigPath(String configPath) {
         command.setConfigPath(configPath);
     }
 
     /**
+     * DDLファイルのエンコーディングを設定します。
+     * 
      * @param ddlFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDdlFileEncoding(java.lang.String)
+     *            DDLファイルのエンコーディング
      */
     public void setDdlFileEncoding(String ddlFileEncoding) {
         command.setDdlFileEncoding(ddlFileEncoding);
     }
 
     /**
+     * DDL情報ファイルを設定します。
+     * 
      * @param ddlInfoFile
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDdlVersionFileName(java.lang.String)
+     *            DDL情報ファイル
      */
     public void setDdlInfoFile(File ddlInfoFile) {
         command.setDdlInfoFile(ddlInfoFile);
     }
 
     /**
+     * 環境名を設定します。
+     * 
      * @param env
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setEnv(java.lang.String)
+     *            環境名
      */
     public void setEnv(String env) {
         command.setEnv(env);
     }
 
     /**
+     * エラー発生時に処理を中止する場合{@code true}、中止しない場合{@code false}を設定します。
+     * 
      * @param haltOnError
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setHaltOnError(boolean)
+     *            エラー発生時に処理を中止する場合{@code true}、中止しない場合{@code false}
      */
     public void setHaltOnError(boolean haltOnError) {
         command.setHaltOnError(haltOnError);
     }
 
     /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
      * @param jdbcManagerName
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setJdbcManagerName(java.lang.String)
+     *            {@link JdbcManager}のコンポーネント名
      */
     public void setJdbcManagerName(String jdbcManagerName) {
         command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**
+     * マイグレーションのディレクトリを設定します。
+     * 
      * @param migrateDir
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setMigrateDir(java.io.File)
+     *            マイグレーションのディレクトリ
      */
     public void setMigrateDir(File migrateDir) {
         command.setMigrateDir(migrateDir);
     }
 
     /**
+     * スキーマのバージョン番号を格納するカラム名を設定します。
+     * 
      * @param schemaInfoColumnName
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setSchemaInfoColumnName(java.lang.String)
+     *            スキーマのバージョン番号を格納するカラム名
      */
     public void setSchemaInfoColumnName(String schemaInfoColumnName) {
         command.setSchemaInfoColumnName(schemaInfoColumnName);
     }
 
     /**
+     * スキーマ情報を格納するテーブル名を設定します。
+     * 
      * @param schemaInfoFullTableName
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setSchemaInfoFullTableName(java.lang.String)
+     *            スキーマ情報を格納するテーブル名
      */
     public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
         command.setSchemaInfoFullTableName(schemaInfoFullTableName);
     }
 
     /**
+     * SQLステートメントの区切り文字を設定します。
+     * 
      * @param statementDelimiter
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setStatementDelimiter(char)
+     *            SQLステートメントの区切り文字
      */
     public void setStatementDelimiter(char statementDelimiter) {
         command.setStatementDelimiter(statementDelimiter);
     }
 
     /**
+     * マイグレーション先のバージョンを設定します。
+     * 
      * @param version
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setTo(java.lang.Integer)
+     *            マイグレーション先のバージョン
      */
     public void setVersion(String version) {
         command.setVersion(version);
     }
 
     /**
+     * バージョン番号のパターンを設定します。
+     * 
      * @param versionNoPattern
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setVersionNoPattern(java.lang.String)
+     *            バージョン番号のパターン
      */
     public void setVersionNoPattern(String versionNoPattern) {
         command.setVersionNoPattern(versionNoPattern);
     }
 
     /**
+     * クラスパスのディレクトリを設定します。
+     * 
      * @param classpathDir
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setClasspathDir(java.io.File)
+     *            クラスパスのディレクトリ
      */
     public void setClasspathDir(File classpathDir) {
         command.setClasspathDir(classpathDir);
     }
 
     /**
+     * ダンプファイルのエンコーディングを設定します。
+     * 
      * @param dumpFileEncoding
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setDumpFileEncoding(java.lang.String)
+     *            ダンプファイルのエンコーディング
      */
     public void setDumpFileEncoding(String dumpFileEncoding) {
         command.setDumpFileEncoding(dumpFileEncoding);
     }
 
     /**
+     * 対象とするエンティティ名の正規表現を設定します。
+     * 
      * @param entityNamePattern
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setEntityNamePattern(java.lang.String)
+     *            対象とするエンティティ名の正規表現
      */
     public void setEntityNamePattern(String entityNamePattern) {
         command.setEntityNamePattern(entityNamePattern);
     }
 
     /**
+     * エンティティクラスのパッケージ名を設定します。
+     * 
      * @param entityPackageName
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setEntityPackageName(java.lang.String)
+     *            エンティティクラスのパッケージ名
      */
     public void setEntityPackageName(String entityPackageName) {
         command.setEntityPackageName(entityPackageName);
     }
 
     /**
+     * 対象としないエンティティ名の正規表現を設定します。
+     * 
      * @param ignoreEntityNamePattern
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setIgnoreEntityNamePattern(java.lang.String)
+     *            対象としないエンティティ名の正規表現
      */
     public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
         command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
     }
 
     /**
+     * ルートパッケージ名を設定します。
+     * 
      * @param rootPackageName
-     * @see org.seasar.extension.jdbc.gen.command.MigrateCommand#setRootPackageName(java.lang.String)
+     *            ルートパッケージ名
      */
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
-
-    @Override
-    protected Command getCommand() {
-        return command;
-    }
-
 }

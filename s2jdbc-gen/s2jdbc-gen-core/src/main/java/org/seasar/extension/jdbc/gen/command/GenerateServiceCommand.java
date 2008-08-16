@@ -16,19 +16,16 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
-import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.ServiceModel;
 import org.seasar.extension.jdbc.gen.ServiceModelFactory;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
@@ -49,7 +46,7 @@ import org.seasar.framework.util.ClassUtil;
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは、エンティティクラス１つにつき１つのサービスクラスを生成します。
+ * このコマンドは、エンティティクラス１つにつき１つのサービスクラスのJavaファイルを生成します。
  * </p>
  * 
  * @author taedium
@@ -110,9 +107,6 @@ public class GenerateServiceCommand extends AbstractCommand {
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
-    /** 方言 */
-    protected GenDialect dialect;
 
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
@@ -452,38 +446,22 @@ public class GenerateServiceCommand extends AbstractCommand {
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
-        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-
         entityMetaReader = createEntityMetaReader();
         serviceModelFactory = createServiceModelFactory();
         generator = createGenerator();
-
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
     }
 
     @Override
     protected void doExecute() {
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        generate(entityMetaList);
+        for (EntityMeta entityMeta : entityMetaReader.read()) {
+            generateService(entityMeta);
+        }
     }
 
     @Override
     protected void doDestroy() {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
-        }
-    }
-
-    /**
-     * 生成します。
-     * 
-     * @param entityMetaList
-     *            エンティティメタデータのリスト
-     */
-    protected void generate(List<EntityMeta> entityMetaList) {
-        for (EntityMeta entityMeta : entityMetaList) {
-            generateService(entityMeta);
         }
     }
 

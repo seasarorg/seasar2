@@ -25,6 +25,10 @@ import static org.junit.Assert.*;
  */
 public class DumpFileEmptyRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         DumpFileEmptyRuntimeException e = new DumpFileEmptyRuntimeException(

@@ -25,6 +25,10 @@ import static org.junit.Assert.*;
  */
 public class LoadFailedRuntimeExceptionTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void test() throws Exception {
         LoadFailedRuntimeException e = new LoadFailedRuntimeException("aaa", 1,

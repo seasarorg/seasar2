@@ -39,12 +39,6 @@ public abstract class AbstractTask extends Task {
     /** クラスローダー */
     protected static AntClassLoader classLoader;
 
-    /**
-     * インスタンスを構築します。
-     */
-    public AbstractTask() {
-    }
-
     @Override
     public void execute() throws BuildException {
         Object path = getProject().getReference(CLASSPATH_REFID);

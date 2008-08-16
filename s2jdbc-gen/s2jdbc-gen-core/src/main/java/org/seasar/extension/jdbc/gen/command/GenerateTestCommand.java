@@ -16,19 +16,16 @@
 package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
-import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.TestModel;
 import org.seasar.extension.jdbc.gen.TestModelFactory;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
@@ -42,14 +39,14 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * テストクラスのJavaファイルを生成する{@link Command}の実装です。
+ * エンティティに対するテストクラスのJavaファイルを生成する{@link Command}の実装です。
  * <p>
  * このコマンドは、エンティティクラスのメタデータからテストクラスのJavaファイルを生成します。 そのため、
  * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります。
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは、エンティティクラス１つにつき１つのテストクラスを生成します。
+ * このコマンドは、エンティティクラス１つにつき１つのテストクラスのJavaファイルを生成します。
  * </p>
  * 
  * @author taedium
@@ -102,20 +99,17 @@ public class GenerateTestCommand extends AbstractCommand {
     /** テストクラスのテンプレート名 */
     protected String templateFileName = "java/test.ftl";
 
+    /** 環境名 */
+    protected String env = "ut";
+
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;
-
-    /** 方言 */
-    protected GenDialect dialect;
 
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
-
-    /** 環境名 */
-    protected String env = "ut";
 
     /** テストのモデルのファクトリ */
     protected TestModelFactory testModelFactory;
@@ -427,20 +421,16 @@ public class GenerateTestCommand extends AbstractCommand {
         JdbcManagerImplementor jdbcManager = SingletonS2Container
                 .getComponent(jdbcManagerName);
         entityMetaFactory = jdbcManager.getEntityMetaFactory();
-        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
-
         entityMetaReader = createEntityMetaReader();
         testModelFactory = createTestModelFactory();
         generator = createGenerator();
-
-        logger.log("DS2JDBCGen0005", new Object[] { dialect.getClass()
-                .getName() });
     }
 
     @Override
     protected void doExecute() {
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        generate(entityMetaList);
+        for (EntityMeta entityMeta : entityMetaReader.read()) {
+            generateTest(entityMeta);
+        }
     }
 
     @Override
@@ -448,6 +438,19 @@ public class GenerateTestCommand extends AbstractCommand {
         if (containerFactorySupport != null) {
             containerFactorySupport.destory();
         }
+    }
+
+    /**
+     * テストクラスのJavaファイルを生成します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void generateTest(EntityMeta entityMeta) {
+        TestModel testModel = testModelFactory.getEntityTestModel(entityMeta);
+        GenerationContext context = createGenerationContext(testModel,
+                templateFileName);
+        generator.generate(context);
     }
 
     /**
@@ -478,31 +481,6 @@ public class GenerateTestCommand extends AbstractCommand {
      */
     protected Generator createGenerator() {
         return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
-    }
-
-    /**
-     * 生成します。
-     * 
-     * @param entityMetaList
-     *            エンティティメタデータのリスト
-     */
-    protected void generate(List<EntityMeta> entityMetaList) {
-        for (EntityMeta entityMeta : entityMetaList) {
-            generateEntityTest(entityMeta);
-        }
-    }
-
-    /**
-     * テストクラスのJavaファイルを生成します。
-     * 
-     * @param entityMeta
-     *            エンティティメタデータ
-     */
-    protected void generateEntityTest(EntityMeta entityMeta) {
-        TestModel testModel = testModelFactory.getEntityTestModel(entityMeta);
-        GenerationContext context = createGenerationContext(testModel,
-                templateFileName);
-        generator.generate(context);
     }
 
     /**
