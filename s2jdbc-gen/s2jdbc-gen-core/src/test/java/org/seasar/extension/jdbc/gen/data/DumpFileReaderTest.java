@@ -19,8 +19,6 @@ import java.io.File;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.data.DumpFileReader;
-import org.seasar.extension.jdbc.gen.data.DumpFileTokenizer;
 import org.seasar.extension.jdbc.gen.exception.IllegalDumpColumnSizeRuntimeException;
 import org.seasar.framework.util.ResourceUtil;
 
@@ -41,6 +39,46 @@ public class DumpFileReaderTest {
     @Test
     public void test() throws Exception {
         String path = getClass().getName().replace('.', '/') + ".csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
+        assertEquals(0, reader.getLineNumber());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
+        assertEquals(1, reader.getLineNumber());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(2, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(3, reader.getLineNumber());
+        assertNull(reader.readLine());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndWithCR() throws Exception {
+        String path = getClass().getName().replace('.', '/') + "_endWithCR.csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
+        assertEquals(0, reader.getLineNumber());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
+        assertEquals(1, reader.getLineNumber());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(2, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(3, reader.getLineNumber());
+        assertNull(reader.readLine());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndWithLF() throws Exception {
+        String path = getClass().getName().replace('.', '/') + "_endWithLF.csv";
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());

@@ -16,18 +16,22 @@
 package org.seasar.extension.jdbc.gen.data;
 
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.seasar.extension.jdbc.gen.ColumnDesc;
 import org.seasar.extension.jdbc.gen.DatabaseDesc;
-import org.seasar.extension.jdbc.gen.DumpModel;
-import org.seasar.extension.jdbc.gen.DumpModelFactory;
 import org.seasar.extension.jdbc.gen.Dumper;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
-import org.seasar.extension.jdbc.gen.model.DumpModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.util.StatementUtil;
+import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ResultSetUtil;
 
 /**
  * {@link Dumper}の実装クラスです。
@@ -36,20 +40,14 @@ import org.seasar.extension.jdbc.gen.model.DumpModelFactoryImpl;
  */
 public class DumperImpl implements Dumper {
 
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(DumperImpl.class);
+
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding;
 
-    /** ダンプのテンプレートファイル名 */
-    protected String dumpTemplateFileName;
-
-    /** ジェネレータ */
-    protected Generator generator;
-
     /** 方言 */
     protected GenDialect dialect;
-
-    /** ダンプモデルのファクトリ */
-    protected DumpModelFactory dumpModelFactory;
 
     /** 拡張子 */
     protected String extension = ".csv";
@@ -60,70 +58,156 @@ public class DumperImpl implements Dumper {
     /**
      * インスタンスを構築します。
      * 
-     * @param dumpFileEncoding
-     *            ダンプファイルのエンコーディング
-     * @param dumpTemplateFileName
-     *            ダンプのテンプレートファイル名
-     * @param generator
-     *            ジェネレータ
      * @param dialect
      *            方言
+     * @param dumpFileEncoding
+     *            ダンプファイルのエンコーディング
      */
-    public DumperImpl(String dumpFileEncoding, String dumpTemplateFileName,
-            Generator generator, GenDialect dialect) {
-        if (dumpFileEncoding == null) {
-            throw new NullPointerException("dumpFileEncoding");
-        }
-        if (dumpTemplateFileName == null) {
-            throw new NullPointerException("dumpTemplateFileName");
-        }
-        if (generator == null) {
-            throw new NullPointerException("generator");
-        }
+    public DumperImpl(GenDialect dialect, String dumpFileEncoding) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
-        this.dumpFileEncoding = dumpFileEncoding;
-        this.dumpTemplateFileName = dumpTemplateFileName;
-        this.generator = generator;
+        if (dumpFileEncoding == null) {
+            throw new NullPointerException("dumpFileEncoding");
+        }
         this.dialect = dialect;
-        dumpModelFactory = createDumpModelFactory();
+        this.dumpFileEncoding = dumpFileEncoding;
     }
 
     public void dump(SqlExecutionContext sqlExecutionContext,
             DatabaseDesc databaseDesc, File dumpDir) {
         for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
-            DumpModel dumpModel = dumpModelFactory.getDumpModel(tableDesc,
-                    sqlExecutionContext);
-            GenerationContext genContext = createGenerationContext(dumpModel,
-                    dumpDir);
-            generator.generate(genContext);
+            DumpFileWriter writer = createDumpFileWriter(dumpDir, tableDesc);
+            try {
+                dumpTable(sqlExecutionContext, tableDesc, writer);
+            } finally {
+                writer.close();
+            }
         }
     }
 
     /**
-     * {@link GenerationContext}を作成します。
-     * 
-     * @param model
-     *            ダンプモデル
-     * @param dumpDir
-     *            ダンプ先のディレクトリ
-     * @return {@link GenerationContext}
+     * @param sqlExecutionContext
+     * @param tableDesc
+     * @param writer
      */
-    protected GenerationContext createGenerationContext(DumpModel model,
-            File dumpDir) {
-        String fileName = model.getName() + extension;
-        return new GenerationContextImpl(model, dumpDir, new File(dumpDir,
-                fileName), dumpTemplateFileName, dumpFileEncoding, true);
+    private void dumpTable(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc, DumpFileWriter writer) {
+        List<String> columnNameList = getColumnNameList(tableDesc);
+        writer.writeHeader(columnNameList);
+        String sql = buildSql(tableDesc);
+        Statement statement = sqlExecutionContext.getStatement();
+        try {
+            ResultSet rs = StatementUtil.executeQuery(statement, sql);
+            try {
+                for (; ResultSetUtil.next(rs);) {
+                    writer.writeRowData(rs);
+                }
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+        } catch (SQLRuntimeException e) {
+            if (dialect.isTableNotFound(e)) {
+                logger.log("DS2JDBCGen0012", new Object[] { tableDesc
+                        .getFullName() });
+                sqlExecutionContext.notifyException();
+            } else {
+                sqlExecutionContext.addException(e);
+            }
+        }
     }
 
     /**
-     * {@link DumpModelFactory}の実装を作成します。
+     * SQLを組み立てます。
      * 
-     * @return {@link DumpModelFactory}の実装
+     * @param tableDesc
+     *            テーブル記述
+     * @return SQL
      */
-    protected DumpModelFactory createDumpModelFactory() {
-        return new DumpModelFactoryImpl(dialect, delimiter);
+    protected String buildSql(TableDesc tableDesc) {
+        StringBuilder buf = new StringBuilder(200);
+        buf.append("select ");
+        for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (isIgnoreColumn(columnDesc)) {
+                continue;
+            }
+            String columnName = dialect.quote(columnDesc.getName());
+            buf.append(columnName);
+            buf.append(", ");
+        }
+        if (!tableDesc.getColumnDescList().isEmpty()) {
+            buf.setLength(buf.length() - 2);
+        }
+        buf.append(" from ");
+        String tableName = dialect.quote(tableDesc.getFullName());
+        buf.append(tableName);
+        return buf.toString();
     }
 
+    /**
+     * カラム名のリストを返します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return カラム名のリスト
+     */
+    protected List<String> getColumnNameList(TableDesc tableDesc) {
+        List<String> columnNameList = new ArrayList<String>();
+        for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (isIgnoreColumn(columnDesc)) {
+                continue;
+            }
+            columnNameList.add(columnDesc.getName());
+        }
+        return columnNameList;
+    }
+
+    /**
+     * 無視すべきカラムの場合{@code true}を返します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @return 無視すべきカラムの場合{@code true}
+     */
+    protected boolean isIgnoreColumn(ColumnDesc columnDesc) {
+        return columnDesc.isIdentity() && !dialect.supportsIdentityInsert();
+    }
+
+    /**
+     * ダンプファイルのライタを返します。
+     * 
+     * @param dumpDir
+     *            ダンプファイルのディレクトリ
+     * @param tableDesc
+     *            テーブル記述
+     * @return ダンプファイルのライタ
+     */
+    protected DumpFileWriter createDumpFileWriter(File dumpDir,
+            TableDesc tableDesc) {
+        String fileName = tableDesc.getFullName() + extension;
+        File dumpFile = new File(dumpDir, fileName);
+        List<SqlType> sqlTypeList = getSqlTypeList(tableDesc);
+        return new DumpFileWriter(dumpFile, sqlTypeList, dumpFileEncoding,
+                delimiter);
+    }
+
+    /**
+     * SQL型のリスト
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return SQL型のリスト
+     */
+    protected List<SqlType> getSqlTypeList(TableDesc tableDesc) {
+        int size = tableDesc.getColumnDescList().size();
+        List<SqlType> sqlTypeList = new ArrayList<SqlType>(size);
+        for (int i = 0; i < tableDesc.getColumnDescList().size(); i++) {
+            ColumnDesc columnDesc = tableDesc.getColumnDescList().get(i);
+            if (isIgnoreColumn(columnDesc)) {
+                continue;
+            }
+            sqlTypeList.add(columnDesc.getSqlType());
+        }
+        return sqlTypeList;
+    }
 }

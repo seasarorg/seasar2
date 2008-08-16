@@ -106,7 +106,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
     }
 
     /**
-     * {@link SqlFileTokenizer}の実装を作成します。
+     * SQLファイルのトークナイザを作成します。
      * 
      * @return {@link SqlFileTokenizer}
      */
@@ -117,7 +117,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
     }
 
     /**
-     * {@link SqlFileReader}の実装を作成します。
+     * SQLファイルのリーダを作成します。
      * 
      * @param sqlFile
      *            SQLファイル

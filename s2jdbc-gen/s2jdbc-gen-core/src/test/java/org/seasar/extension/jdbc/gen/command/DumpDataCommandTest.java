@@ -65,7 +65,6 @@ public class DumpDataCommandTest {
         command.validate();
         command.init();
         assertNotNull(command.dialect);
-        assertNotNull(command.generator);
         assertNotNull(command.sqlUnitExecutor);
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.databaseDescFactory);

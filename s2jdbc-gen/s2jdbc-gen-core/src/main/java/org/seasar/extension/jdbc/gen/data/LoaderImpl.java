@@ -54,7 +54,7 @@ public class LoaderImpl implements Loader {
     protected String dumpFileEncoding;
 
     /** トークナイザ */
-    protected DumpFileTokenizer tokenizer = new DumpFileTokenizer(',');
+    protected DumpFileTokenizer tokenizer;
 
     /** 区切り文字 */
     protected char delimiter = ',';
@@ -63,7 +63,7 @@ public class LoaderImpl implements Loader {
     protected String extension = ".csv";
 
     /** バッチサイズ */
-    protected int batchSize = 10;
+    protected int batchSize;
 
     /**
      * インスタンスを構築します。
@@ -72,16 +72,23 @@ public class LoaderImpl implements Loader {
      *            方言
      * @param dumpFileEncoding
      *            ダンプファイルのエンコーディング
+     * @param batchSize
+     *            バッチサイズ
      */
-    public LoaderImpl(GenDialect dialect, String dumpFileEncoding) {
+    public LoaderImpl(GenDialect dialect, String dumpFileEncoding, int batchSize) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
         if (dumpFileEncoding == null) {
             throw new NullPointerException("dumpFileEncoding");
         }
+        if (batchSize < 0) {
+            throw new IllegalArgumentException("batchSize");
+        }
         this.dialect = dialect;
         this.dumpFileEncoding = dumpFileEncoding;
+        this.batchSize = batchSize;
+        tokenizer = createDumpFileTokenizer();
     }
 
     public void load(SqlExecutionContext sqlExecutionContext,
@@ -92,8 +99,7 @@ public class LoaderImpl implements Loader {
             return;
         }
         logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath() });
-        DumpFileReader reader = new DumpFileReader(dumpFile, dumpFileEncoding,
-                tokenizer);
+        DumpFileReader reader = createDumpFileReader(dumpFile);
         try {
             List<String> columnNameList = reader.readLine();
             if (columnNameList == null) {
@@ -266,5 +272,25 @@ public class LoaderImpl implements Loader {
             sqlTypeList.add(columnDesc.getSqlType());
         }
         return sqlTypeList;
+    }
+
+    /**
+     * ダンプファイルのトークナイザを作成します。
+     * 
+     * @return ダンプファイルのトークナイザ
+     */
+    protected DumpFileTokenizer createDumpFileTokenizer() {
+        return new DumpFileTokenizer(delimiter);
+    }
+
+    /**
+     * ダンプファイルのリーダを作成します。
+     * 
+     * @param dumpFile
+     *            ダンプファイル
+     * @return ダンプファイルのリーダ
+     */
+    protected DumpFileReader createDumpFileReader(File dumpFile) {
+        return new DumpFileReader(dumpFile, dumpFileEncoding, tokenizer);
     }
 }

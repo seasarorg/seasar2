@@ -33,8 +33,11 @@ public class DumpUtilTest {
         assertEquals("aaa", DumpUtil.encode("aaa"));
         assertEquals("\"aa\"\"a\"", DumpUtil.encode("aa\"a"));
         assertEquals("\"aa\r\na\"", DumpUtil.encode("aa\r\na"));
+        assertEquals("\"aa\ra\"", DumpUtil.encode("aa\ra"));
+        assertEquals("\"aa\na\"", DumpUtil.encode("aa\na"));
         assertEquals("\"aa,a\"", DumpUtil.encode("aa,a"));
-        assertNull(DumpUtil.encode(null));
+        assertEquals("", DumpUtil.encode(""));
+        assertEquals("", DumpUtil.encode(null));
     }
 
     /**
@@ -43,6 +46,7 @@ public class DumpUtilTest {
     @Test
     public void testDecode() {
         assertEquals("aa\"a", DumpUtil.decode("\"aa\"\"a\""));
+        assertNull(DumpUtil.decode(""));
         assertNull(DumpUtil.decode(null));
     }
 

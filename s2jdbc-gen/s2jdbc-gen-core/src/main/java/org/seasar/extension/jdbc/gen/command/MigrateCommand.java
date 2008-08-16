@@ -111,6 +111,9 @@ public class MigrateCommand extends AbstractCommand {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
+    /** データをロードする際のバッチサイズ */
+    protected int loadBatchSize = 10;
+
     /** 方言 */
     protected GenDialect dialect;
 
@@ -442,6 +445,25 @@ public class MigrateCommand extends AbstractCommand {
         this.dumpFileEncoding = dumpFileEncoding;
     }
 
+    /**
+     * データをロードする際のバッチサイズを返します。
+     * 
+     * @return データをロードする際のバッチサイズ
+     */
+    public int getLoadBatchSize() {
+        return loadBatchSize;
+    }
+
+    /**
+     * データをロードする際のバッチサイズを設定します。
+     * 
+     * @param loadBatchSize
+     *            データをロードする際のバッチサイズ
+     */
+    public void setLoadBatchSize(int loadBatchSize) {
+        this.loadBatchSize = loadBatchSize;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -569,7 +591,7 @@ public class MigrateCommand extends AbstractCommand {
      * @return {@link Loader}の実装
      */
     protected Loader createLoader() {
-        return new LoaderImpl(dialect, dumpFileEncoding);
+        return new LoaderImpl(dialect, dumpFileEncoding, loadBatchSize);
     }
 
     @Override

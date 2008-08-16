@@ -139,7 +139,7 @@ public class DumpFileTokenizer {
                     nextPos = index;
                 } else {
                     type = END_OF_LINE;
-                    nextPos = index + 2;
+                    nextPos = isCRLF(index) ? index + 2 : index + 1;
                 }
             } else {
                 for (int i = index; i < length; i++) {
@@ -167,10 +167,27 @@ public class DumpFileTokenizer {
     protected boolean isEndOfLine(int index) {
         char c = buf.charAt(index);
         if (c == '\r') {
-            int i = index + 1;
-            if (i < length && buf.charAt(i) == '\n') {
+            if (index + 1 < length) {
                 return true;
             }
+        } else if (c == '\n') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * CRLFを表す場合{@code true}
+     * 
+     * @param index
+     *            開始インデックス
+     * @return CRLFを表す場合{@code true}
+     */
+    protected boolean isCRLF(int index) {
+        char c = buf.charAt(index);
+        if (c == '\r') {
+            int i = index + 1;
+            return i < length && buf.charAt(i) == '\n';
         }
         return false;
     }

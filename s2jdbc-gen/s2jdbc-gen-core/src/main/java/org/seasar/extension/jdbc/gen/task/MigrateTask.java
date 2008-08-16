@@ -226,4 +226,14 @@ public class MigrateTask extends AbstractTask {
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
     }
+
+    /**
+     * データをロードする際のバッチサイズを設定します。
+     * 
+     * @param loadBatchSize
+     *            データをロードする際のバッチサイズ
+     */
+    public void setLoadBatchSize(int loadBatchSize) {
+        command.setLoadBatchSize(loadBatchSize);
+    }
 }

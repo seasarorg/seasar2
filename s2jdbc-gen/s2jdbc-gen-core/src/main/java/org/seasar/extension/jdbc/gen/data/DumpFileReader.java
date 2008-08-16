@@ -141,11 +141,9 @@ public class DumpFileReader {
                 tokenType = tokenizer.nextToken();
                 switch (tokenType) {
                 case VALUE:
+                case NULL:
                     String token = tokenizer.getToken();
                     row.add(DumpUtil.decode(token));
-                    break;
-                case NULL:
-                    row.add(null);
                     break;
                 case END_OF_BUFFER:
                     break nextTokenLoop;
@@ -158,9 +156,12 @@ public class DumpFileReader {
         }
         if (isEndOfFile()) {
             if (tokenType == TokenType.END_OF_BUFFER) {
-                String token = tokenizer.getToken();
-                if (!StringUtil.isEmpty(token)) {
-                    row.add(DumpUtil.decode(token));
+                String value = tokenizer.getToken();
+                if (value.endsWith("\r")) {
+                    value = StringUtil.rtrim(value, "\r");
+                }
+                if (!StringUtil.isEmpty(value)) {
+                    row.add(DumpUtil.decode(value));
                 }
             }
         }

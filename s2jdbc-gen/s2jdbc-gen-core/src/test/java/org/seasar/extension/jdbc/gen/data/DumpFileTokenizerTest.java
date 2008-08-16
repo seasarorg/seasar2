@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.data;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.data.DumpFileTokenizer;
 
 import static org.junit.Assert.*;
 import static org.seasar.extension.jdbc.gen.data.DumpFileTokenizer.TokenType.*;
@@ -175,7 +174,7 @@ public class DumpFileTokenizerTest {
      * @throws Exception
      */
     @Test
-    public void testEndOfLine() throws Exception {
+    public void testEndOfLine_CRLF() throws Exception {
         String s = "aaa\r\nbbb\r";
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
@@ -195,6 +194,58 @@ public class DumpFileTokenizerTest {
         assertEquals("ccc", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("\r\n", tokenizer.getToken());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndOfLine_CR() throws Exception {
+        String s = "aaa\rbbb";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r", tokenizer.getToken());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
+        assertEquals("bbb", tokenizer.getToken());
+
+        s = "\rccc\r";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("bbb", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r", tokenizer.getToken());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
+        assertEquals("ccc\r", tokenizer.getToken());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndOfLine_LF() throws Exception {
+        String s = "aaa\nbbb";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\n", tokenizer.getToken());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
+        assertEquals("bbb", tokenizer.getToken());
+
+        s = "\nccc\n";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("bbb", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\n", tokenizer.getToken());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("ccc", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\n", tokenizer.getToken());
     }
 
     /**

@@ -174,9 +174,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
 
-    /** ダンプのテンプレートファイル名 */
-    protected String dumpTemplateFileName = "data/dump.ftl";
-
     /** テーブルオプション */
     protected String tableOption = null;
 
@@ -1046,8 +1043,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link Dumper}の実装
      */
     protected Dumper createDumper() {
-        return new DumperImpl(dumpFileEncoding, dumpTemplateFileName,
-                generator, dialect);
+        return new DumperImpl(dialect, dumpFileEncoding);
     }
 
     /**

@@ -79,16 +79,6 @@ public class DumpDataTask extends AbstractTask {
     }
 
     /**
-     * ダンプのテンプレートファイル名を設定します。
-     * 
-     * @param dumpTemplateFileName
-     *            ダンプのテンプレートファイル名
-     */
-    public void setDumpTemplateFileName(String dumpTemplateFileName) {
-        command.setDumpTemplateFileName(dumpTemplateFileName);
-    }
-
-    /**
      * 対象とするエンティティ名の正規表現を設定します。
      * 
      * @param entityNamePattern
@@ -146,26 +136,6 @@ public class DumpDataTask extends AbstractTask {
      */
     public void setRootPackageName(String rootPackageName) {
         command.setRootPackageName(rootPackageName);
-    }
-
-    /**
-     * テンプレートファイルのエンコーディングを設定します。
-     * 
-     * @param templateFileEncoding
-     *            テンプレートファイルのエンコーディング
-     */
-    public void setTemplateFileEncoding(String templateFileEncoding) {
-        command.setTemplateFileEncoding(templateFileEncoding);
-    }
-
-    /**
-     * テンプレートファイルを格納するプライマリディレクトリを設定します。
-     * 
-     * @param templateFilePrimaryDir
-     *            テンプレートファイルを格納するプライマリディレクトリ
-     */
-    public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
-        command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
     }
 
 }

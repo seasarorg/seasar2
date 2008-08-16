@@ -32,7 +32,7 @@ public class DumpUtil {
 
     /** エンード対象の文字列を判別するための正規表現 */
     protected static Pattern ENCODE_TARGET_PATTERN = Pattern
-            .compile(".*(\"|\\r\\n|,).*");
+            .compile(".*(\"|\\r\\n|\\r|\\n|,).*");
 
     /** デコード対象の文字列を判別するための正規表現 */
     protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile("^\".+\"");
@@ -52,7 +52,7 @@ public class DumpUtil {
      */
     public static String encode(String value) {
         if (value == null) {
-            return null;
+            return "";
         }
         if (ENCODE_TARGET_PATTERN.matcher(value).matches()) {
             String s = value.replace(QUOTE, ESCAPED_QUOTE);
@@ -69,7 +69,7 @@ public class DumpUtil {
      * @return デコードされた値
      */
     public static String decode(String value) {
-        if (value == null) {
+        if (value == null || value.equals("")) {
             return null;
         }
         if (DECODE_TARGET_PATTERN.matcher(value).matches()) {
