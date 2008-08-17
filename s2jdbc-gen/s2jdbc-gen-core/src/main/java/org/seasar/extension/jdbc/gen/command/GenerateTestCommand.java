@@ -24,11 +24,11 @@ import org.seasar.extension.jdbc.gen.GenerationContext;
 import org.seasar.extension.jdbc.gen.Generator;
 import org.seasar.extension.jdbc.gen.TestModel;
 import org.seasar.extension.jdbc.gen.TestModelFactory;
-import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.generator.GenerationContextImpl;
-import org.seasar.extension.jdbc.gen.generator.GeneratorImpl;
-import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.model.TestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
+import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
+import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 

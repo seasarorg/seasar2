@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.gen;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
+
 /**
  * RDBMSごとの方言を扱うインタフェースです。
  * 
@@ -49,8 +51,10 @@ public interface GenDialect {
      * @param sqlType
      *            JDBCのSQL型
      * @return SQL型
+     * @throws UnsupportedSqlTypeRuntimeException
+     *             サポートしていないJDBCのSQL型が渡された場合
      */
-    SqlType getSqlType(int sqlType);
+    SqlType getSqlType(int sqlType) throws UnsupportedSqlTypeRuntimeException;
 
     /**
      * カラム型を返します。

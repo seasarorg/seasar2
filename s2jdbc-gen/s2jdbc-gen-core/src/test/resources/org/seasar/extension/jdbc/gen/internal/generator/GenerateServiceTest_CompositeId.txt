@@ -1,0 +1,25 @@
+package hoge.service;
+
+import java.math.BigDecimal;
+import org.seasar.extension.jdbc.gen.internal.generator.Ccc;
+import org.seasar.extension.jdbc.service.S2AbstractService;
+
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
+public class CccService extends S2AbstractService<Ccc> {
+
+    /**
+     * 識別子でエンティティを検索します。
+     * 
+     * @param id1
+     *            識別子
+     * @param id2
+     *            識別子
+     * @return エンティティ
+     */
+    public Ccc findById(String id1, BigDecimal id2) {
+        return select().id(id1, id2).getSingleResult();
+    }
+}

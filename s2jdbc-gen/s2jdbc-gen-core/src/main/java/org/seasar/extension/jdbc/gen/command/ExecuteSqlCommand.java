@@ -28,10 +28,10 @@ import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.exception.RequiredPropertyEmptyRuntimeException;
-import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
+import org.seasar.extension.jdbc.gen.internal.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyEmptyRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
+import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 

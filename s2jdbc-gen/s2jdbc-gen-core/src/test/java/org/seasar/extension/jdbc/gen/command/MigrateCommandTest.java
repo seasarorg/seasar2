@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;

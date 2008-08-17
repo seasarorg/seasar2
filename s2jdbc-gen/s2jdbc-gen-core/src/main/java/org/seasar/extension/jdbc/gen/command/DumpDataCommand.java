@@ -25,12 +25,12 @@ import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.data.DumperImpl;
-import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
+import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
+import org.seasar.extension.jdbc.gen.internal.desc.DatabaseDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 

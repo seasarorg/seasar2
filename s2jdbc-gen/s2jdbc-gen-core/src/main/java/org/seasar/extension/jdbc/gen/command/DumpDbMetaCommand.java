@@ -22,8 +22,8 @@ import org.seasar.extension.jdbc.gen.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.meta.DbTableMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.internal.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
 import org.seasar.framework.log.Logger;
 
 /**

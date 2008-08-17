@@ -17,8 +17,10 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 
+import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
 
@@ -27,6 +29,15 @@ import static org.junit.Assert.*;
  * 
  */
 public class LoadDataCommandTest {
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        SingletonS2ContainerFactory.destroy();
+    }
 
     /**
      * 

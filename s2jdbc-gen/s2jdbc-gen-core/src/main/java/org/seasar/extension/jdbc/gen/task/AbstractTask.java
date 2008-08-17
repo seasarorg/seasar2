@@ -22,7 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.util.BeanUtil;
+import org.seasar.extension.jdbc.gen.internal.util.BeanUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.MethodUtil;
 
