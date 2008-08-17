@@ -71,6 +71,15 @@ public class DumpFileWriter {
      */
     public DumpFileWriter(File dumpFile, List<SqlType> sqlTypeList,
             String encoding, char delimiter) {
+        if (dumpFile == null) {
+            throw new NullPointerException("dumpFile");
+        }
+        if (sqlTypeList == null) {
+            throw new NullPointerException("sqlTypeList");
+        }
+        if (encoding == null) {
+            throw new NullPointerException("encoding");
+        }
         this.dumpFile = dumpFile;
         this.sqlTypeList = sqlTypeList;
         this.encoding = encoding;

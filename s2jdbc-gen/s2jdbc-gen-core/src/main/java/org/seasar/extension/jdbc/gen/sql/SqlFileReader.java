@@ -60,6 +60,8 @@ public class SqlFileReader {
     protected boolean endOfFile;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param sqlFile
      *            SQLファイル
      * @param sqlFileEncoding

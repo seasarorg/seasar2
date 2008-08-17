@@ -97,8 +97,11 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         EntityMeta inverseEntityMeta = entityMetaFactory
                 .getEntityMeta(propertyMeta.getRelationshipClass());
         TableMeta tableMeta = inverseEntityMeta.getTableMeta();
-        foreignKeyDesc.setReferencedCatalogName(tableMeta.getCatalog());
-        foreignKeyDesc.setReferencedSchemaName(tableMeta.getSchema());
-        foreignKeyDesc.setReferencedTableName(tableMeta.getName());
+        foreignKeyDesc.setReferencedCatalogName(dialect.unquote(tableMeta
+                .getCatalog()));
+        foreignKeyDesc.setReferencedSchemaName(dialect.unquote(tableMeta
+                .getSchema()));
+        foreignKeyDesc.setReferencedTableName(dialect.unquote(tableMeta
+                .getName()));
     }
 }

@@ -270,4 +270,14 @@ public class DdlModel {
         return dialect.getDropUniqueKeySyntax();
     }
 
+    /**
+     * クォートで囲みます。
+     * 
+     * @param value
+     *            値
+     * @return クォートで囲まれた値
+     */
+    public String quote(String value) {
+        return dialect.quote(value);
+    }
 }
