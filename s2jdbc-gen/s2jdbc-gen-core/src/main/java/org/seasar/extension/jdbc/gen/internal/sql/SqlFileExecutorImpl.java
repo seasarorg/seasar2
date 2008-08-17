@@ -19,10 +19,10 @@ import java.io.File;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlFileExecutor;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.framework.log.Logger;
 
 /**

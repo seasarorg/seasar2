@@ -17,13 +17,13 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.DbTableMeta;
-import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.desc.EntityDesc;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 

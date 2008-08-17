@@ -23,15 +23,14 @@ import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
-import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlFileExecutor;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.internal.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyEmptyRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 

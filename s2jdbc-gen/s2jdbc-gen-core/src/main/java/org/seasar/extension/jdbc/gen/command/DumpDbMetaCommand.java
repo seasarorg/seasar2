@@ -17,13 +17,12 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.DbTableMeta;
-import org.seasar.extension.jdbc.gen.DbTableMetaReader;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.framework.log.Logger;
 
 /**

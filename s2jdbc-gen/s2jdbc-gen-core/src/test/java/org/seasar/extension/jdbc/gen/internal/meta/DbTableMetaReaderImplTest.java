@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.DbTableMeta;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.mock.sql.GenMockDatabaseMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;

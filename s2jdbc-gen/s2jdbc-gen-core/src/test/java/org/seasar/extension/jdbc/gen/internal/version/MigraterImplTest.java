@@ -21,12 +21,12 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.Migrater;
-import org.seasar.extension.jdbc.gen.SchemaInfoTable;
-import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
 import org.seasar.extension.jdbc.gen.internal.version.MigraterImpl;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.version.Migrater;
+import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.util.ResourceUtil;
 

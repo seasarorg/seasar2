@@ -17,7 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.generator;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 
 /**
  * @author taedium

@@ -19,9 +19,9 @@ import java.sql.Types;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 

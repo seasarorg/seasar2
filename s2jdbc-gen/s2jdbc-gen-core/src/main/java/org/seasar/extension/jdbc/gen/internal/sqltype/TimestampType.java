@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
-import org.seasar.extension.jdbc.gen.SqlType;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.IntegerConversionUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 

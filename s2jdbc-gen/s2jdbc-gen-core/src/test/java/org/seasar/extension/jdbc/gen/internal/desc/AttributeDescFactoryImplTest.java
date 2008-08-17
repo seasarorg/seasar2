@@ -19,11 +19,11 @@ import javax.persistence.TemporalType;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 

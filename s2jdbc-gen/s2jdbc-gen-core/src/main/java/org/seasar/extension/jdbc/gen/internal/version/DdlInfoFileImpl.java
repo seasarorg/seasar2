@@ -23,10 +23,10 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.seasar.extension.jdbc.gen.DdlInfoFile;
 import org.seasar.extension.jdbc.gen.internal.exception.IllegalVersionRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.NextVersionExceededRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
+import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileInputStreamUtil;

@@ -17,20 +17,19 @@ package org.seasar.extension.jdbc.gen.command;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.DatabaseDesc;
-import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
-import org.seasar.extension.jdbc.gen.Dumper;
-import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
+import org.seasar.extension.jdbc.gen.data.Dumper;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
 import org.seasar.extension.jdbc.gen.internal.desc.DatabaseDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
+import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 

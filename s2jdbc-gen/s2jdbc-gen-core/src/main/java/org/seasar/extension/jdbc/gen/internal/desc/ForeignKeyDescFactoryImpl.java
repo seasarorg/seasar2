@@ -20,9 +20,9 @@ import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
-import org.seasar.extension.jdbc.gen.ForeignKeyDesc;
-import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
-import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
+import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 
 /**
  * {@link ForeignKeyDescFactory}の実装クラスです。

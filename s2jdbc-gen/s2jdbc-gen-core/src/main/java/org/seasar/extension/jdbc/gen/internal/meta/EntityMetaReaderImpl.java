@@ -24,8 +24,8 @@ import javax.persistence.Entity;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
-import org.seasar.extension.jdbc.gen.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.internal.exception.EntityClassNotFoundRuntimeException;
+import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;

@@ -22,9 +22,9 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SchemaInfoTable;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.exception.NoResultRuntimeException;
+import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.exception.SQLRuntimeException;

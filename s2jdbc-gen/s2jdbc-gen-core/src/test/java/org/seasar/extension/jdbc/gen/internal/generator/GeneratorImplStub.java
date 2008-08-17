@@ -19,7 +19,7 @@ import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.seasar.extension.jdbc.gen.GenerationContext;
+import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
 
 /**

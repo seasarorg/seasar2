@@ -25,9 +25,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.internal.util.DumpUtil;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;

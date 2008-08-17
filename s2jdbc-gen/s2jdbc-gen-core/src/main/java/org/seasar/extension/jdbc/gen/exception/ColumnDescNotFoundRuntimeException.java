@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
-import org.seasar.extension.jdbc.gen.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**

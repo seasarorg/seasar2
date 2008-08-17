@@ -25,8 +25,8 @@ import java.util.Date;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.TestModel;
-import org.seasar.extension.jdbc.gen.TestModelFactory;
+import org.seasar.extension.jdbc.gen.model.TestModel;
+import org.seasar.extension.jdbc.gen.model.TestModelFactory;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.util.ClassUtil;
 

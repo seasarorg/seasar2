@@ -17,8 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.ServiceModel;
-import org.seasar.extension.jdbc.gen.ServiceModelFactory;
+import org.seasar.extension.jdbc.gen.model.ServiceModel;
+import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.service.S2AbstractService;
 import org.seasar.framework.util.ClassUtil;
 

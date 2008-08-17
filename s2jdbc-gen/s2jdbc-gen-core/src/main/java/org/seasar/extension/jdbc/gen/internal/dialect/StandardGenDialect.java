@@ -27,8 +27,7 @@ import java.util.Map;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SqlType;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
@@ -46,6 +45,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
 import org.seasar.extension.jdbc.gen.internal.util.ColumnDefinitionUtil;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
 

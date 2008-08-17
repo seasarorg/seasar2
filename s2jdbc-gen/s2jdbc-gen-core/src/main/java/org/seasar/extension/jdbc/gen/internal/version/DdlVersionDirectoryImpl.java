@@ -17,9 +17,9 @@ package org.seasar.extension.jdbc.gen.internal.version;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.DdlInfoFile;
-import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.internal.exception.NextVersionDirectoryExistsRuntimeException;
+import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringConversionUtil;
 

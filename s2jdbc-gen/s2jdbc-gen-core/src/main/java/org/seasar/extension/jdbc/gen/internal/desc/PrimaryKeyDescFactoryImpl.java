@@ -19,9 +19,9 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
-import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
+import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 
 /**
  * {@link PrimaryKeyDescFactory}の実装クラスです。

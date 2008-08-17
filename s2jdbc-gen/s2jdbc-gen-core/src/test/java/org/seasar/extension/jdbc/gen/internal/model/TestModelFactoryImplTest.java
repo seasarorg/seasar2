@@ -25,7 +25,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.TestModel;
+import org.seasar.extension.jdbc.gen.model.TestModel;
 
 import static org.junit.Assert.*;
 

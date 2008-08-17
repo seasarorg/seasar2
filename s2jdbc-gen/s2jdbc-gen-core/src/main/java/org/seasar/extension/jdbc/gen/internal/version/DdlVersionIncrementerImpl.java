@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
-import org.seasar.extension.jdbc.gen.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.internal.util.ExcludeFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.log.Logger;
 
 /**

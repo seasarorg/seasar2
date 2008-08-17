@@ -23,8 +23,8 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.Generator;
+import org.seasar.extension.jdbc.gen.generator.GenerationContext;
+import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.internal.util.ConfigurationUtil;
 import org.seasar.extension.jdbc.gen.internal.util.TemplateUtil;

@@ -19,14 +19,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
-import org.seasar.extension.jdbc.gen.Migrater;
-import org.seasar.extension.jdbc.gen.SchemaInfoTable;
-import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
 import org.seasar.extension.jdbc.gen.internal.util.ExcludeFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.Migrater;
+import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.framework.log.Logger;
 
 /**

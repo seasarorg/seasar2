@@ -15,11 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.AttributeDescFactory;
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenDialect.ColumnType;
+import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect.ColumnType;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**

@@ -24,8 +24,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.framework.exception.IORuntimeException;

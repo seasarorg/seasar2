@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.seasar.extension.jdbc.gen.SqlType;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
  * {@link Types#VARCHAR}に対応する{@link SqlType}です。

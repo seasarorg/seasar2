@@ -18,8 +18,8 @@ package org.seasar.extension.jdbc.gen.internal.data;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.internal.data.LoaderImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 

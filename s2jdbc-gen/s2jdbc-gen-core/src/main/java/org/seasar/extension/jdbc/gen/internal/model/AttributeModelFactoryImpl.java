@@ -15,9 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
-import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.AttributeModel;
-import org.seasar.extension.jdbc.gen.AttributeModelFactory;
+import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.model.AttributeModel;
+import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
 
 /**
  * {@link AttributeModelFactory}の実装クラスです。

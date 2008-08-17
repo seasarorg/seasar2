@@ -17,12 +17,12 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.ConditionAttributeModel;
-import org.seasar.extension.jdbc.gen.ConditionAttributeModelFactory;
-import org.seasar.extension.jdbc.gen.ConditionMethodModel;
-import org.seasar.extension.jdbc.gen.ConditionMethodModelFactory;
-import org.seasar.extension.jdbc.gen.ConditionModel;
-import org.seasar.extension.jdbc.gen.ConditionModelFactory;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModel;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactory;
+import org.seasar.extension.jdbc.gen.model.ConditionMethodModel;
+import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactory;
+import org.seasar.extension.jdbc.gen.model.ConditionModel;
+import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.framework.util.ClassUtil;

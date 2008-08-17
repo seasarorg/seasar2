@@ -17,10 +17,10 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import javax.persistence.UniqueConstraint;
 
-import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
-import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
+import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 
 /**
  * {@link UniqueKeyDescFactory}の実装クラスです。

@@ -23,10 +23,10 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.internal.data.DumpFileWriter;
 import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.util.ArrayMap;
 

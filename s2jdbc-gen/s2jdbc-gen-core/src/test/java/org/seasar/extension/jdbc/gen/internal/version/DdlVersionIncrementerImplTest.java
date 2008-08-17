@@ -20,9 +20,9 @@ import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
 import org.seasar.extension.jdbc.gen.internal.version.DdlVersionIncrementerImpl;
+import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;

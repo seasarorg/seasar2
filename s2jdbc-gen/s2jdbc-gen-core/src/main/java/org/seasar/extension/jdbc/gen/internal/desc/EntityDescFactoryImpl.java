@@ -15,12 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import org.seasar.extension.jdbc.gen.AttributeDesc;
-import org.seasar.extension.jdbc.gen.AttributeDescFactory;
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.DbTableMeta;
-import org.seasar.extension.jdbc.gen.EntityDesc;
-import org.seasar.extension.jdbc.gen.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
+import org.seasar.extension.jdbc.gen.desc.EntityDesc;
+import org.seasar.extension.jdbc.gen.desc.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**

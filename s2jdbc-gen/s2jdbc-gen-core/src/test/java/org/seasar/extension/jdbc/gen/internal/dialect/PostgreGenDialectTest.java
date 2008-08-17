@@ -18,9 +18,9 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.SqlType;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.PostgreGenDialect;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 import static org.junit.Assert.*;
 

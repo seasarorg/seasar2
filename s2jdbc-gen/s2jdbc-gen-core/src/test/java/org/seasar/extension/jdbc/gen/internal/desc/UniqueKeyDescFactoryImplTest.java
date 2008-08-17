@@ -20,8 +20,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.ColumnDesc;
-import org.seasar.extension.jdbc.gen.UniqueKeyDesc;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.internal.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 

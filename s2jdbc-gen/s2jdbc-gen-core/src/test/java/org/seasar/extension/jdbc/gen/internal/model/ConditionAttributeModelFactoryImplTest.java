@@ -17,8 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.ConditionAttributeModel;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModel;
 import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 
 import static org.junit.Assert.*;

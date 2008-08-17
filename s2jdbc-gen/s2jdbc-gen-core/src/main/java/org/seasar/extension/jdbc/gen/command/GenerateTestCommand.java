@@ -18,17 +18,16 @@ package org.seasar.extension.jdbc.gen.command;
 import java.io.File;
 
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.Command;
-import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.Generator;
-import org.seasar.extension.jdbc.gen.TestModel;
-import org.seasar.extension.jdbc.gen.TestModelFactory;
+import org.seasar.extension.jdbc.gen.generator.GenerationContext;
+import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.model.TestModel;
+import org.seasar.extension.jdbc.gen.model.TestModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 

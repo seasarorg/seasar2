@@ -15,8 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.sqltype;
 
-import org.seasar.extension.jdbc.gen.SqlType;
 import org.seasar.extension.jdbc.gen.internal.util.ColumnDefinitionUtil;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
  * @author taedium

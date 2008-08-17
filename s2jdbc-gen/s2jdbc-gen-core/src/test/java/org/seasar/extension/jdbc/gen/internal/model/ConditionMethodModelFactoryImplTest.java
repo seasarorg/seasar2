@@ -17,8 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.ConditionMethodModel;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionMethodModel;
 
 import static org.junit.Assert.*;
 

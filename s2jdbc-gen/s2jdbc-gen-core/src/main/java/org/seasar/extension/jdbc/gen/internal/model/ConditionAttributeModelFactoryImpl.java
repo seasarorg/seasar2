@@ -20,9 +20,9 @@ import java.lang.reflect.Field;
 import javax.persistence.Column;
 
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.ConditionAttributeModel;
-import org.seasar.extension.jdbc.gen.ConditionAttributeModelFactory;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModel;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactory;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;

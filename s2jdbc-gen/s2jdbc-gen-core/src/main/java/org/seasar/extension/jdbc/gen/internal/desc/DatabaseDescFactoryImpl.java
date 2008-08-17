@@ -19,18 +19,18 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
-import org.seasar.extension.jdbc.gen.ColumnDescFactory;
-import org.seasar.extension.jdbc.gen.DatabaseDesc;
-import org.seasar.extension.jdbc.gen.DatabaseDescFactory;
-import org.seasar.extension.jdbc.gen.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.ForeignKeyDescFactory;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.IdTableDescFactory;
-import org.seasar.extension.jdbc.gen.PrimaryKeyDescFactory;
-import org.seasar.extension.jdbc.gen.SequenceDescFactory;
-import org.seasar.extension.jdbc.gen.TableDesc;
-import org.seasar.extension.jdbc.gen.TableDescFactory;
-import org.seasar.extension.jdbc.gen.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ColumnDescFactory;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.IdTableDescFactory;
+import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDescFactory;
+import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 
 /**
  * {@link DatabaseDescFactory}の実装です。

@@ -17,12 +17,12 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import java.sql.Types;
 
-import org.seasar.extension.jdbc.gen.DatabaseDesc;
-import org.seasar.extension.jdbc.gen.DdlModel;
-import org.seasar.extension.jdbc.gen.DdlModelFactory;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SequenceDesc;
-import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
+import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 
 /**
  * {@link DdlModelFactory}の実装クラスです。

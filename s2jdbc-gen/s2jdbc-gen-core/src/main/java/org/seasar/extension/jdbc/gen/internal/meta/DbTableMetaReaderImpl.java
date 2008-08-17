@@ -27,10 +27,10 @@ import java.util.regex.Pattern;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.gen.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.DbTableMeta;
-import org.seasar.extension.jdbc.gen.DbTableMetaReader;
-import org.seasar.extension.jdbc.gen.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;

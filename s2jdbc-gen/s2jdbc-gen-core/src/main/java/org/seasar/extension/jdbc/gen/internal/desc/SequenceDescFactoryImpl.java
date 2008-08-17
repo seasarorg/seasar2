@@ -22,9 +22,9 @@ import javax.persistence.SequenceGenerator;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.SequenceDesc;
-import org.seasar.extension.jdbc.gen.SequenceDescFactory;
+import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
+import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
 

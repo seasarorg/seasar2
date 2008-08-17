@@ -19,14 +19,14 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DatabaseDesc;
-import org.seasar.extension.jdbc.gen.DdlModel;
-import org.seasar.extension.jdbc.gen.GenerationContext;
-import org.seasar.extension.jdbc.gen.SequenceDesc;
-import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
+import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;

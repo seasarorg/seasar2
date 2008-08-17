@@ -16,12 +16,12 @@
 package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.DatabaseDesc;
-import org.seasar.extension.jdbc.gen.DdlModel;
-import org.seasar.extension.jdbc.gen.SequenceDesc;
-import org.seasar.extension.jdbc.gen.TableDesc;
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
+import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.DdlModel;
 
 import static org.junit.Assert.*;
 

@@ -21,7 +21,7 @@ import javax.persistence.Id;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.PrimaryKeyDesc;
+import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.internal.desc.PrimaryKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;

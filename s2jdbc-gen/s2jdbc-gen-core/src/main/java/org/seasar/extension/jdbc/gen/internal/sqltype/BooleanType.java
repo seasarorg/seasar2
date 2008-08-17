@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.seasar.extension.jdbc.gen.SqlType;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.BooleanConversionUtil;
 
 /**

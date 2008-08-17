@@ -19,10 +19,10 @@ import java.math.BigDecimal;
 import java.sql.Types;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.SqlType;
-import org.seasar.extension.jdbc.gen.GenDialect.ColumnType;
-import org.seasar.extension.jdbc.gen.GenDialect.SqlBlockContext;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect.ColumnType;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 import static org.junit.Assert.*;
 

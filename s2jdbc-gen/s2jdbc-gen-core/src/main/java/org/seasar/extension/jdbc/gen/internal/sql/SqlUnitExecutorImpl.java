@@ -17,8 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.sql;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.gen.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
+import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
+import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.framework.log.Logger;
 
 /**
