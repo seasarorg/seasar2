@@ -42,7 +42,7 @@ public class SqlExecutionContextImplTest {
         assertNotNull(statement);
         assertSame(statement, context.getStatement());
         context.addException(new SqlFailedException(new SQLException(), "aaa",
-                "bbb"));
+                1, "bbb"));
         assertNotSame(statement, context.getStatement());
     }
 
@@ -55,7 +55,7 @@ public class SqlExecutionContextImplTest {
                 new MockDataSource(), false);
         assertTrue(context.getExceptionList().isEmpty());
         SqlFailedException exception = new SqlFailedException(
-                new SQLException(), "aaa", "bbb");
+                new SQLException(), "aaa", 1, "bbb");
         context.addException(exception);
         List<RuntimeException> list = context.getExceptionList();
         assertEquals(1, list.size());
@@ -70,7 +70,7 @@ public class SqlExecutionContextImplTest {
                 new MockDataSource(), true);
         assertTrue(context.getExceptionList().isEmpty());
         SqlFailedException exception = new SqlFailedException(
-                new SQLException(), "aaa", "bbb");
+                new SQLException(), "aaa", 1, "bbb");
         try {
             context.addException(exception);
             fail();

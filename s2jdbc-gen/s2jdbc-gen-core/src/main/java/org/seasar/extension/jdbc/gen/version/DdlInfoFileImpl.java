@@ -17,17 +17,22 @@ package org.seasar.extension.jdbc.gen.version;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.Writer;
 
 import org.seasar.extension.jdbc.gen.DdlInfoFile;
+import org.seasar.extension.jdbc.gen.exception.IllegalVersionRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.NextVersionExceededRuntimeException;
 import org.seasar.extension.jdbc.gen.util.CloseableUtil;
-import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.FileInputStreamUtil;
 import org.seasar.framework.util.FileOutputStreamUtil;
-import org.seasar.framework.util.TextUtil;
+import org.seasar.framework.util.InputStreamReaderUtil;
+import org.seasar.framework.util.ReaderUtil;
 
 /**
  * {@link DdlInfoFile}の実装クラスです。
@@ -37,7 +42,13 @@ import org.seasar.framework.util.TextUtil;
 public class DdlInfoFileImpl implements DdlInfoFile {
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(DdlInfoFileImpl.class);
+    protected static Logger logger = Logger.getLogger(DdlInfoFileImpl.class);
+
+    /** エンコーディング */
+    protected static final String ENCODING = "UTF-8";
+
+    /** 最新バージョンを表す文字列 */
+    protected static String LATEST_VERSION = "latest";
 
     /** DDLファイル */
     protected File file;
@@ -58,8 +69,8 @@ public class DdlInfoFileImpl implements DdlInfoFile {
         this.file = file;
     }
 
-    public int getVersionNo() {
-        return getVersionNoInternal();
+    public int getCurrentVersionNo() {
+        return getCurrentVersionNoInternal();
     }
 
     /**
@@ -67,7 +78,7 @@ public class DdlInfoFileImpl implements DdlInfoFile {
      * 
      * @return バージョン番号
      */
-    protected int getVersionNoInternal() {
+    protected int getCurrentVersionNoInternal() {
         if (versionNo != null) {
             return versionNo;
         }
@@ -76,8 +87,10 @@ public class DdlInfoFileImpl implements DdlInfoFile {
             versionNo = 0;
             return versionNo;
         }
-        String value = TextUtil.readUTF8(file).trim();
-        return VersionUtil.toInt(file.getPath(), value);
+        InputStream is = FileInputStreamUtil.create(file);
+        Reader reader = InputStreamReaderUtil.create(is, ENCODING);
+        String value = ReaderUtil.readText(reader).trim();
+        return convertToInt(value);
     }
 
     public int getNextVersionNo() {
@@ -90,15 +103,26 @@ public class DdlInfoFileImpl implements DdlInfoFile {
      * @return 次のバージョン番号
      */
     protected int getNextVersionNoInternal() {
-        return getVersionNoInternal() + 1;
+        long nextVersionNo = (long) getCurrentVersionNoInternal() + 1;
+        if (nextVersionNo > Integer.MAX_VALUE) {
+            throw new NextVersionExceededRuntimeException(file.getPath());
+        }
+        return (int) nextVersionNo;
     }
 
-    public void incrementVersionNo() {
+    public int getVersionNo(String version) {
+        if (LATEST_VERSION.equalsIgnoreCase(version)) {
+            return getCurrentVersionNoInternal();
+        }
+        return convertToInt(version);
+    }
+
+    public void applyNextVersionNo() {
         int versionNo = getNextVersionNoInternal();
         OutputStream os = FileOutputStreamUtil.create(file);
         Writer writer = null;
         try {
-            writer = new OutputStreamWriter(os, "UTF-8");
+            writer = new OutputStreamWriter(os, ENCODING);
             writer.write(String.valueOf(versionNo));
         } catch (IOException e) {
             throw new IORuntimeException(e);
@@ -106,6 +130,26 @@ public class DdlInfoFileImpl implements DdlInfoFile {
             CloseableUtil.close(writer);
         }
         this.versionNo = null;
+    }
+
+    /**
+     * バージョン番号を表す文字列をint型に変換します。
+     * 
+     * @param value
+     *            バージョン番号を表す文字列
+     * @return バージョン番号
+     */
+    protected int convertToInt(String value) {
+        int versionNo;
+        try {
+            versionNo = Integer.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalVersionRuntimeException(value);
+        }
+        if (versionNo < 0) {
+            throw new IllegalVersionRuntimeException(value);
+        }
+        return versionNo;
     }
 
 }

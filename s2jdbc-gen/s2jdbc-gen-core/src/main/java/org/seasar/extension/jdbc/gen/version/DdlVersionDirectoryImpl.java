@@ -20,8 +20,8 @@ import java.io.File;
 import org.seasar.extension.jdbc.gen.DdlInfoFile;
 import org.seasar.extension.jdbc.gen.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.exception.NextVersionDirectoryExistsRuntimeException;
-import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.StringConversionUtil;
 
 /**
  * @author taedium
@@ -36,7 +36,8 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
     protected static String DROP_DIR_NAME = "drop";
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(DdlVersionDirectoryImpl.class);
+    protected static Logger logger = Logger
+            .getLogger(DdlVersionDirectoryImpl.class);
 
     /** バージョン管理のベースディレクトリ */
     protected File baseDir;
@@ -78,11 +79,11 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         this.versionNoPattern = versionNoPattern;
         ddlInfoFile = createDdlInfoFile(versionFile);
 
-        String currentVersionDirName = VersionUtil.toString(ddlInfoFile
-                .getVersionNo(), versionNoPattern);
+        String currentVersionDirName = getVersionDirName(ddlInfoFile
+                .getCurrentVersionNo(), versionNoPattern);
         currentVersionDir = new File(baseDir, currentVersionDirName);
 
-        String nextVersionDirName = VersionUtil.toString(ddlInfoFile
+        String nextVersionDirName = getVersionDirName(ddlInfoFile
                 .getNextVersionNo(), versionNoPattern);
         nextVersionDir = new File(baseDir, nextVersionDirName);
         if (nextVersionDir.exists()) {
@@ -102,6 +103,19 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         return new DdlInfoFileImpl(file);
     }
 
+    /**
+     * バージョンディレクトリの名前を返します。
+     * 
+     * @param versionNo
+     *            バージョン番号
+     * @param pattern
+     *            バージョン番号のパターン
+     * @return バージョンディレクトリの名前
+     */
+    public static String getVersionDirName(int versionNo, String pattern) {
+        return StringConversionUtil.toString(versionNo, pattern);
+    }
+
     public File getCurrentVersionDir() {
         return currentVersionDir;
     }
@@ -111,8 +125,7 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
     }
 
     public File getVersionDir(int versionNo) {
-        return new File(baseDir, VersionUtil.toString(versionNo,
-                versionNoPattern));
+        return new File(baseDir, getVersionDirName(versionNo, versionNoPattern));
     }
 
     public File getCreateDir(File versionDir) {

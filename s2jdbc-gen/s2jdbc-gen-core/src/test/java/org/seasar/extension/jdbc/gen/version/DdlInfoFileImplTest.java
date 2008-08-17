@@ -18,7 +18,8 @@ package org.seasar.extension.jdbc.gen.version;
 import java.io.File;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.exception.IllegalVersionValueRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.IllegalVersionRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.NextVersionExceededRuntimeException;
 import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
@@ -37,8 +38,8 @@ public class DdlInfoFileImplTest {
         String path = getClass().getName().replace('.', '/') + "_version.txt";
         File file = ResourceUtil.getResourceAsFile(path);
         DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(file);
-        assertEquals(10, ddlInfoFile.getVersionNo());
-        assertEquals(10, ddlInfoFile.getVersionNo());
+        assertEquals(10, ddlInfoFile.getCurrentVersionNo());
+        assertEquals(10, ddlInfoFile.getCurrentVersionNo());
     }
 
     /**
@@ -48,7 +49,7 @@ public class DdlInfoFileImplTest {
     public void testGetVersionNo_fileNotExistent() {
         DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File(
                 "notExistent"));
-        assertEquals(0, ddlInfoFile.getVersionNo());
+        assertEquals(0, ddlInfoFile.getCurrentVersionNo());
     }
 
     /**
@@ -61,9 +62,88 @@ public class DdlInfoFileImplTest {
         File file = ResourceUtil.getResourceAsFile(fileName);
         DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(file);
         try {
-            ddlInfoFile.getVersionNo();
+            ddlInfoFile.getCurrentVersionNo();
             fail();
-        } catch (IllegalVersionValueRuntimeException expected) {
+        } catch (IllegalVersionRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetNextVersion_maxVersionNo() throws Exception {
+        String path = getClass().getName().replace('.', '/')
+                + "_maxVersion.txt";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(file);
+        try {
+            ddlInfoFile.getNextVersionNo();
+            fail();
+        } catch (NextVersionExceededRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testConvertToInt() {
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File("file"));
+        assertEquals(10, ddlInfoFile.convertToInt("10"));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testConvertToInt_null() {
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File("file"));
+        try {
+            ddlInfoFile.convertToInt(null);
+            fail();
+        } catch (IllegalVersionRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testConvertToInt_notNumber() {
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File("file"));
+        try {
+            ddlInfoFile.convertToInt("aaa");
+            fail();
+        } catch (IllegalVersionRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testConvertToInt_minus() {
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File("file"));
+        try {
+            ddlInfoFile.convertToInt("-10");
+            fail();
+        } catch (IllegalVersionRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testToInt_greaterThanInteger() {
+        DdlInfoFileImpl ddlInfoFile = new DdlInfoFileImpl(new File("file"));
+        long value = (long) Integer.MAX_VALUE + 1;
+        try {
+            ddlInfoFile.convertToInt(String.valueOf(value));
+            fail();
+        } catch (IllegalVersionRuntimeException expected) {
         }
     }
 }

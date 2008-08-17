@@ -35,7 +35,8 @@ import org.seasar.framework.log.Logger;
 public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(DdlVersionIncrementerImpl.class);
+    protected static Logger logger = Logger
+            .getLogger(DdlVersionIncrementerImpl.class);
 
     /** DDLのバージョンを管理するディレクトリ */
     protected DdlVersionDirectory ddlVersionDirectory;
@@ -143,7 +144,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * バージョン番号を増分します。
      */
     protected void incrementVersionNo() {
-        ddlVersionDirectory.getDdlInfoFile().incrementVersionNo();
+        ddlVersionDirectory.getDdlInfoFile().applyNextVersionNo();
     }
 
     /**

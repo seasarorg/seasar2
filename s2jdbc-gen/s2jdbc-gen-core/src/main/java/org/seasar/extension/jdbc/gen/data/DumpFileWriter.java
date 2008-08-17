@@ -122,8 +122,8 @@ public class DumpFileWriter {
                 try {
                     SqlType sqlType = sqlTypeList.get(i);
                     value = sqlType.getValue(resultSet, i + 1);
-                } catch (SQLException e) {
-                    logger.log(e);
+                } catch (SQLException ignore) {
+                    logger.log(ignore);
                 }
                 buf.append(DumpUtil.encode(value));
                 buf.append(delimiter);

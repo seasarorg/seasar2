@@ -119,7 +119,7 @@ public class LoaderImpl implements Loader {
                     sqlExecutionContext.notifyException();
                 } else {
                     LoadFailedRuntimeException ex = new LoadFailedRuntimeException(
-                            dumpFile.getPath(), reader.getLineNumber(), e);
+                            e, dumpFile.getPath(), reader.getLineNumber());
                     sqlExecutionContext.addException(ex);
                 }
             }

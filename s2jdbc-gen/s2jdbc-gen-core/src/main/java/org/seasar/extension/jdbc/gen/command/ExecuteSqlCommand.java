@@ -19,6 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.seasar.extension.jdbc.gen.Command;
@@ -31,7 +33,6 @@ import org.seasar.extension.jdbc.gen.exception.RequiredPropertyEmptyRuntimeExcep
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutorImpl;
 import org.seasar.framework.container.SingletonS2Container;
-import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -219,29 +220,64 @@ public class ExecuteSqlCommand extends AbstractCommand {
     }
 
     @Override
-    protected void doExecute() {
+    protected void doExecute() throws Throwable {
+        boolean began = begin();
         try {
-            if (transactional) {
-                userTransaction.begin();
-            }
             executeSqlFileList();
-            if (transactional) {
-                userTransaction.commit();
+        } finally {
+            if (began) {
+                end();
             }
-        } catch (Throwable t) {
-            if (transactional) {
-                try {
-                    userTransaction.rollback();
-                } catch (Throwable th) {
-                    logger.log(th);
-                }
-            }
-            throw new SRuntimeException("ES2JDBCGen0002", new Object[] { t }, t);
         }
     }
 
     @Override
     protected void doDestroy() {
+    }
+
+    /**
+     * トランザクションを開始します。
+     * 
+     * @return トランザクションが開始された場合{@code true}
+     * @throws Exception
+     *             トランザクションの開始で何らかの例外が発生した場合
+     */
+    protected boolean begin() throws Exception {
+        if (transactional && !hasTransaction()) {
+            userTransaction.begin();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>を、それ以外の場合は<code>false</code>
+     * を返します。
+     * 
+     * @return 現在のスレッド上でトランザクションがアクティブな場合は<code>true</code>
+     * @throws SystemException
+     *             ユーザトランザクションで例外が発生した場合
+     */
+    protected boolean hasTransaction() throws SystemException {
+        final int status = userTransaction.getStatus();
+        return status != Status.STATUS_NO_TRANSACTION
+                && status != Status.STATUS_UNKNOWN;
+    }
+
+    /**
+     * トランザクションを終了します。
+     * 
+     * @throws Exception
+     *             トランザクションの終了で何らかの例外が発生した場合
+     */
+    protected void end() throws Exception {
+        if (transactional) {
+            if (userTransaction.getStatus() == Status.STATUS_ACTIVE) {
+                userTransaction.commit();
+            } else {
+                userTransaction.rollback();
+            }
+        }
     }
 
     /**

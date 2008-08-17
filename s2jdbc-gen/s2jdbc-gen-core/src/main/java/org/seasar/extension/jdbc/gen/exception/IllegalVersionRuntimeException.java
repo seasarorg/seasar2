@@ -22,12 +22,12 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author taedium
  */
-public class IllegalVersionValueRuntimeException extends SRuntimeException {
+public class IllegalVersionRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    /** バージョン番号を保持するファイル名 */
-    protected String versionFilePath;
+    /** DDL情報ファイルのパス */
+    protected String ddInfoFilePath;
 
     /** 不正な値 */
     protected String illegalValue;
@@ -38,7 +38,7 @@ public class IllegalVersionValueRuntimeException extends SRuntimeException {
      * @param illegalValue
      *            不正な値
      */
-    public IllegalVersionValueRuntimeException(String illegalValue) {
+    public IllegalVersionRuntimeException(String illegalValue) {
         super("ES2JDBCGen0011", new Object[] { illegalValue });
         this.illegalValue = illegalValue;
     }
@@ -46,25 +46,25 @@ public class IllegalVersionValueRuntimeException extends SRuntimeException {
     /**
      * インスタンスを構築します。
      * 
-     * @param versionFilePath
-     *            バージョン番号を保持するファイルのパス
+     * @param ddInfoFilePath
+     *            DDL情報ファイルのパス
      * @param illegalValue
      *            不正な値
      */
-    public IllegalVersionValueRuntimeException(String versionFilePath,
+    public IllegalVersionRuntimeException(String ddInfoFilePath,
             String illegalValue) {
-        super("ES2JDBCGen0006", new Object[] { versionFilePath, illegalValue });
-        this.versionFilePath = versionFilePath;
+        super("ES2JDBCGen0006", new Object[] { ddInfoFilePath, illegalValue });
+        this.ddInfoFilePath = ddInfoFilePath;
         this.illegalValue = illegalValue;
     }
 
     /**
-     * バージョン番号を保持するファイルのパスを返します。
+     * DDL情報ファイルのパスを返します。
      * 
-     * @return バージョン番号を保持するファイルのパス
+     * @return DDL情報ファイルのパス
      */
-    public String getVersionFilePath() {
-        return versionFilePath;
+    public String getDdInfoFilePath() {
+        return ddInfoFilePath;
     }
 
     /**

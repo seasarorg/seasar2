@@ -59,6 +59,9 @@ public class SqlFileReader {
     /** ファイルの最後まで達した場合に{@code true} */
     protected boolean endOfFile;
 
+    /** 行番号 */
+    protected int lineNumber;
+
     /**
      * インスタンスを構築します。
      * 
@@ -106,6 +109,7 @@ public class SqlFileReader {
             }
             SqlBuilder builder = new SqlBuilder();
             readLineLoop: for (;;) {
+                lineNumber++;
                 tokenizer.addLine(reader.readLine());
                 builder.notifyLineChanged();
                 nextTokenLoop: for (;;) {
@@ -124,6 +128,18 @@ public class SqlFileReader {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    /**
+     * 読み込んだ行番号を返します。
+     * <p>
+     * 行番号は1から始まります。
+     * </p>
+     * 
+     * @return 行番号
+     */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**

@@ -31,8 +31,8 @@ public class LoadFailedRuntimeExceptionTest {
      */
     @Test
     public void test() throws Exception {
-        LoadFailedRuntimeException e = new LoadFailedRuntimeException("aaa", 1,
-                new Exception());
+        LoadFailedRuntimeException e = new LoadFailedRuntimeException(
+                new Exception(), "aaa", 1);
         assertEquals("aaa", e.getDumpFilePath());
         assertEquals(1, e.getLineNumber());
         System.out.println(e.getMessage());

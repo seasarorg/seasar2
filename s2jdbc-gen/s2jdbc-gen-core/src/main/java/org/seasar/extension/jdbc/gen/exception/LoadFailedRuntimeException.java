@@ -35,15 +35,15 @@ public class LoadFailedRuntimeException extends SRuntimeException {
     /**
      * インスタンスを構築します。
      * 
+     * @param cause
+     *            原因
      * @param dumpFilePath
      *            ダンプファイルのパス
      * @param lineNumber
      *            行番号
-     * @param cause
-     *            原因
      */
-    public LoadFailedRuntimeException(String dumpFilePath, int lineNumber,
-            Throwable cause) {
+    public LoadFailedRuntimeException(Throwable cause, String dumpFilePath,
+            int lineNumber) {
         super("ES2JDBCGen0015", new Object[] { dumpFilePath,
                 String.valueOf(lineNumber), cause }, cause);
         this.dumpFilePath = dumpFilePath;

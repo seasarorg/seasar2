@@ -88,7 +88,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
                     statement.execute(sql);
                 } catch (SQLException e) {
                     context.addException(new SqlFailedException(e, sqlFile
-                            .getPath(), sql));
+                            .getPath(), reader.getLineNumber(), sql));
                 }
             }
         } finally {

@@ -42,13 +42,13 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNumber());
-        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(1, reader.getLineNumber());
-        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(2, reader.getLineNumber());
-        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
         assertEquals(3, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
@@ -62,13 +62,13 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNumber());
-        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(1, reader.getLineNumber());
-        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(2, reader.getLineNumber());
-        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
         assertEquals(3, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
@@ -82,13 +82,13 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNumber());
-        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(1, reader.getLineNumber());
-        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(2, reader.getLineNumber());
-        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
         assertEquals(3, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
@@ -103,13 +103,13 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNumber());
-        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(1, reader.getLineNumber());
-        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(Arrays.asList("1", "aaa", "10"), reader.readLine());
         assertEquals(2, reader.getLineNumber());
-        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
         assertEquals(3, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
@@ -124,7 +124,7 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNumber());
+        assertEquals(1, reader.getLineNumber());
         assertNull(reader.readLine());
     }
 
@@ -139,7 +139,7 @@ public class DumpFileReaderTest {
         File file = ResourceUtil.getResourceAsFile(path);
         DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
-        assertEquals(0, reader.getLineNumber());
+        assertEquals(1, reader.getLineNumber());
         try {
             reader.readLine();
             fail();

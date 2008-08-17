@@ -27,7 +27,6 @@ import org.seasar.extension.jdbc.gen.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.util.EnvAwareFileComparator;
 import org.seasar.extension.jdbc.gen.util.ExcludeFilenameFilter;
 import org.seasar.extension.jdbc.gen.util.FileUtil;
-import org.seasar.extension.jdbc.gen.util.VersionUtil;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -39,9 +38,6 @@ public class MigraterImpl implements Migrater {
 
     /** ロガー */
     protected static Logger logger = Logger.getLogger(MigraterImpl.class);
-
-    /** 最新バージョンを表す文字列 */
-    protected static String LATEST_VERSION = "latest";
 
     /** SQLのひとまとまりの実行者 */
     protected SqlUnitExecutor sqlUnitExecutor;
@@ -99,13 +95,12 @@ public class MigraterImpl implements Migrater {
 
     public void migrate(Callback callback) {
         int from = schemaInfoTable.getVersionNo();
-        int to = LATEST_VERSION.equalsIgnoreCase(version) ? ddlVersionDirectory
-                .getDdlInfoFile().getVersionNo() : VersionUtil.toInt(version);
-
-        drop(callback, from);
-        create(callback, to);
+        int to = ddlVersionDirectory.getDdlInfoFile().getVersionNo(version);
 
         logger.log("IS2JDBCGen0005", new Object[] { from, to });
+        drop(callback, from);
+        create(callback, to);
+        logger.log("IS2JDBCGen0006", new Object[] { from, to });
     }
 
     /**

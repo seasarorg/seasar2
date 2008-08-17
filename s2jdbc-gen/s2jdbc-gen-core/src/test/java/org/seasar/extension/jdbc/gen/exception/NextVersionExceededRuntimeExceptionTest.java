@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
-import java.sql.SQLException;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -25,7 +23,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class SqlFailedExceptionTest {
+public class NextVersionExceededRuntimeExceptionTest {
 
     /**
      * 
@@ -33,12 +31,9 @@ public class SqlFailedExceptionTest {
      */
     @Test
     public void test() throws Exception {
-        SQLException cause = new SQLException();
-        SqlFailedException e = new SqlFailedException(cause, "aaa", 1, "bbb");
-        assertSame(cause, e.getCause());
-        assertEquals("aaa", e.getSqlFilePath());
-        assertEquals(1, e.getLineNumber());
-        assertEquals("bbb", e.getSql());
+        NextVersionExceededRuntimeException e = new NextVersionExceededRuntimeException(
+                "aaa");
+        assertEquals("aaa", e.getDdlInfoFilePath());
         System.out.println(e.getMessage());
     }
 }

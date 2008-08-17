@@ -127,16 +127,16 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         if (statement != null) {
             try {
                 statement.close();
-            } catch (SQLException e) {
-                logger.log(e);
+            } catch (SQLException ignore) {
+                logger.log(ignore);
             }
             statement = null;
         }
         if (preparedStatement != null) {
             try {
                 preparedStatement.close();
-            } catch (SQLException e) {
-                logger.log(e);
+            } catch (SQLException ignore) {
+                logger.log(ignore);
             }
             preparedStatement = null;
         }
@@ -149,8 +149,8 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         if (connection != null) {
             try {
                 connection.close();
-            } catch (SQLException e) {
-                logger.log(e);
+            } catch (SQLException ignore) {
+                logger.log(ignore);
             }
             connection = null;
         }

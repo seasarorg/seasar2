@@ -55,7 +55,7 @@ import org.seasar.framework.util.ClassUtil;
 public class MigrateCommand extends AbstractCommand {
 
     /** ロガー */
-    protected Logger logger = Logger.getLogger(MigrateCommand.class);
+    protected static Logger logger = Logger.getLogger(MigrateCommand.class);
 
     /** クラスパスのディレクトリ */
     protected File classpathDir;

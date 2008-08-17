@@ -60,10 +60,10 @@ public class DumpFileReader {
     protected int length;
 
     /** トークンタイプ */
-    protected TokenType tokenType = null;
+    protected TokenType tokenType;
 
     /** 行番号 */
-    protected int lineNumber = -1;
+    protected int lineNumber;
 
     /** ヘッダーの列数 */
     protected int headerColumnSize;
@@ -109,7 +109,7 @@ public class DumpFileReader {
                 return null;
             }
             lineNumber++;
-            if (lineNumber == 0) {
+            if (lineNumber == 1) {
                 headerColumnSize = valueList.size();
             } else {
                 if (headerColumnSize != valueList.size()) {
@@ -208,6 +208,9 @@ public class DumpFileReader {
 
     /**
      * 読み込んだ行番号を返します。
+     * <p>
+     * 行番号は1から始まります。
+     * </p>
      * 
      * @return 行番号
      */

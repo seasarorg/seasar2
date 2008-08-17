@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class IllegalVersionValueRuntimeExceptionTest {
+public class IllegalVersionRuntimeExceptionTest {
 
     /**
      * 
@@ -31,10 +31,10 @@ public class IllegalVersionValueRuntimeExceptionTest {
      */
     @Test
     public void test_1arg() throws Exception {
-        IllegalVersionValueRuntimeException e = new IllegalVersionValueRuntimeException(
+        IllegalVersionRuntimeException e = new IllegalVersionRuntimeException(
                 "aaa");
         System.out.println(e.getMessage());
-        assertNull(e.getVersionFilePath());
+        assertNull(e.getDdInfoFilePath());
         assertEquals("aaa", e.getIllegalValue());
     }
 
@@ -44,10 +44,10 @@ public class IllegalVersionValueRuntimeExceptionTest {
      */
     @Test
     public void test_2args() throws Exception {
-        IllegalVersionValueRuntimeException e = new IllegalVersionValueRuntimeException(
+        IllegalVersionRuntimeException e = new IllegalVersionRuntimeException(
                 "aaa", "bbb");
         System.out.println(e.getMessage());
-        assertEquals("aaa", e.getVersionFilePath());
+        assertEquals("aaa", e.getDdInfoFilePath());
         assertEquals("bbb", e.getIllegalValue());
     }
 }

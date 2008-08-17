@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * SQLの実行に失敗した場合にスローされる例外です。
+ * SQLファイル内に記述されたSQLの実行に失敗した場合にスローされる例外です。
  * 
  * @author taedium
  */
@@ -29,7 +29,10 @@ public class SqlFailedException extends SRuntimeException {
     private static final long serialVersionUID = 1L;
 
     /** ファイルのパス */
-    protected String filePath;
+    protected String sqlFilePath;
+
+    /** 行番号 */
+    protected int lineNumber;
 
     /** SQL */
     protected String sql;
@@ -39,14 +42,19 @@ public class SqlFailedException extends SRuntimeException {
      * 
      * @param cause
      *            原因
-     * @param filePath
+     * @param sqlFilePath
      *            ファイルのパス
+     * @param lineNumber
+     *            行番号
      * @param sql
      *            SQL
      */
-    public SqlFailedException(SQLException cause, String filePath, String sql) {
-        super("ES2JDBCGen0003", new Object[] { filePath, sql, cause }, cause);
-        this.filePath = filePath;
+    public SqlFailedException(SQLException cause, String sqlFilePath,
+            int lineNumber, String sql) {
+        super("ES2JDBCGen0003", new Object[] { sqlFilePath, lineNumber, sql,
+                cause }, cause);
+        this.sqlFilePath = sqlFilePath;
+        this.lineNumber = lineNumber;
         this.sql = sql;
     }
 
@@ -55,8 +63,8 @@ public class SqlFailedException extends SRuntimeException {
      * 
      * @return ファイルのパス
      */
-    public String getFilePath() {
-        return filePath;
+    public String getSqlFilePath() {
+        return sqlFilePath;
     }
 
     /**
@@ -66,6 +74,15 @@ public class SqlFailedException extends SRuntimeException {
      */
     public String getSql() {
         return sql;
+    }
+
+    /**
+     * 行番号を返します。
+     * 
+     * @return 行番号
+     */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
 }

@@ -23,11 +23,11 @@ package org.seasar.extension.jdbc.gen;
 public interface DdlInfoFile {
 
     /**
-     * バージョン番号を返します。
+     * 現在のバージョン番号を返します。
      * 
      * @return バージョン番号
      */
-    int getVersionNo();
+    int getCurrentVersionNo();
 
     /**
      * 次のバージョン番号を返します。
@@ -37,8 +37,17 @@ public interface DdlInfoFile {
     int getNextVersionNo();
 
     /**
-     * バージョン番号を次のバージョン番号に増分させます。
+     * 文字列に対応するバージョン番号を返します。
+     * 
+     * @param version
+     *            文字列で表されたバージョン
+     * @return バージョン番号
      */
-    void incrementVersionNo();
+    int getVersionNo(String version);
+
+    /**
+     * 次のバージョン番号を適用します。
+     */
+    void applyNextVersionNo();
 
 }
