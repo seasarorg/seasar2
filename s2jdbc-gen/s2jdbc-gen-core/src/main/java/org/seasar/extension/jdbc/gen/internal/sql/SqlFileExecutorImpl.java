@@ -22,7 +22,7 @@ import java.sql.Statement;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
-import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.SqlFailedRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**

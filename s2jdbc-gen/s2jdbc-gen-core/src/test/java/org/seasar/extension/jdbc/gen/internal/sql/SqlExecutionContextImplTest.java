@@ -20,7 +20,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.SqlFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlExecutionContextImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 

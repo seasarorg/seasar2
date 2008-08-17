@@ -13,12 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.exception;
+package org.seasar.extension.jdbc.gen.exception;
 
 import java.sql.SQLException;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.SqlFailedRuntimeException;
 
 import static org.junit.Assert.*;
 
