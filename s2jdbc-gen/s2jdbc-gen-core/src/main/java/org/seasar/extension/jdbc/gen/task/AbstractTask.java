@@ -36,9 +36,6 @@ public abstract class AbstractTask extends Task {
     /** クラスパスの参照ID */
     protected static String CLASSPATH_REFID = "s2jdbc-gen-classpath";
 
-    /** クラスローダー */
-    protected static AntClassLoader classLoader;
-
     @Override
     public void execute() throws BuildException {
         Object path = getProject().getReference(CLASSPATH_REFID);
@@ -50,42 +47,42 @@ public abstract class AbstractTask extends Task {
             throw new BuildException("reference type '" + CLASSPATH_REFID
                     + "' is not instance of '" + Path.class.getName() + "'.");
         }
-        setupClassLoader(Path.class.cast(path));
-
-        Class<?> targetClass = null;
-        classLoader.setThreadContextLoader();
+        TaskClassLoader taskClassLoader = createTaskClassLoader(Path.class
+                .cast(path));
+        ClassLoader original = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(taskClassLoader);
         try {
+            Class<?> commandClass = null;
             try {
-                targetClass = classLoader.forceLoadClass(getCommand()
+                commandClass = taskClassLoader.forceLoadClass(getCommand()
                         .getClass().getName());
             } catch (ClassNotFoundException e) {
                 throw new BuildException(getCommand().getClass().getName()
                         + " not found.", e);
             }
-            Object targetCommand = ClassUtil.newInstance(targetClass);
-            copyProperties(getCommand(), targetCommand);
-            Method method = ClassUtil.getMethod(targetClass, "execute", null);
-            MethodUtil.invoke(method, targetCommand, null);
+            Object command = ClassUtil.newInstance(commandClass);
+            copyProperties(getCommand(), command);
+            Method method = ClassUtil.getMethod(commandClass, "execute", null);
+            MethodUtil.invoke(method, command, null);
         } finally {
-            classLoader.resetThreadContextLoader();
+            Thread.currentThread().setContextClassLoader(original);
         }
     }
 
     /**
-     * クラスローダをセットアップします。
+     * {@link TaskClassLoader}を作成します。
      * 
      * @param path
      *            パス
+     * @return クラスローダ
      */
-    protected void setupClassLoader(Path path) {
-        if (classLoader != null) {
-            return;
-        }
-        classLoader = getProject().createClassLoader(
+    protected TaskClassLoader createTaskClassLoader(Path path) {
+        AntClassLoader classLoader = getProject().createClassLoader(
                 ClassLoader.getSystemClassLoader(), path);
         classLoader.setParentFirst(false);
         classLoader.addJavaLibraries();
         classLoader.setIsolated(true);
+        return new TaskClassLoader(classLoader);
     }
 
     /**
