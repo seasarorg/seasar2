@@ -20,7 +20,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
-import org.seasar.extension.jdbc.gen.internal.data.LoaderImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 
 import static org.junit.Assert.*;
@@ -43,17 +42,13 @@ public class LoaderImplTest {
         columnDesc2.setName("BAR");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
-        tableDesc.setName("HOGE");
+        tableDesc.setFullName("AAA.BBB.HOGE");
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 
         LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), "UTF-8",
                 10);
         String sql = loader.buildSql(tableDesc, Arrays.asList("FOO", "BAR"));
-        assertEquals(
-                "insert into \"AAA\".\"BBB\".\"HOGE\" (\"FOO\", \"BAR\") values (?, ?)",
-                sql);
+        assertEquals("insert into AAA.BBB.HOGE (FOO, BAR) values (?, ?)", sql);
     }
 }

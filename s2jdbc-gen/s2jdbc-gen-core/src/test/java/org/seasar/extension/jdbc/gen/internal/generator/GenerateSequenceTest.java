@@ -24,7 +24,6 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.HsqlGenDialect;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.framework.util.TextUtil;
@@ -62,11 +61,13 @@ public class GenerateSequenceTest {
         sequenceDesc2.setDataType("integer");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setName("AAA");
+        tableDesc.setFullName("AAA");
+        tableDesc.setCanonicalName("aaa");
         tableDesc.addSequenceDesc(sequenceDesc);
 
         TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setName("BBB");
+        tableDesc2.setFullName("BBB");
+        tableDesc2.setCanonicalName("bbb");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
         DatabaseDesc databaseDesc = new DatabaseDesc();

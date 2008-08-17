@@ -25,7 +25,6 @@ import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.MssqlGenDialect;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.framework.util.TextUtil;
@@ -67,9 +66,9 @@ public class GenerateTableTest {
         primaryKeyDesc.addColumnName("no");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
+        tableDesc.setFullName("AAA.BBB.HOGE");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addColumnDesc(no);
         tableDesc.addColumnDesc(name);
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
@@ -91,9 +90,9 @@ public class GenerateTableTest {
         primaryKeyDesc2.addColumnName("name");
 
         TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setCatalogName("AAA");
-        tableDesc2.setSchemaName("BBB");
         tableDesc2.setName("FOO");
+        tableDesc2.setFullName("AAA.BBB.FOO");
+        tableDesc2.setCanonicalName("aaa.bbb.foo");
         tableDesc2.addColumnDesc(no2);
         tableDesc2.addColumnDesc(name2);
         tableDesc2.setPrimaryKeyDesc(primaryKeyDesc2);
@@ -111,9 +110,9 @@ public class GenerateTableTest {
         name3.setUnique(false);
 
         TableDesc tableDesc3 = new TableDesc();
-        tableDesc3.setCatalogName("AAA");
-        tableDesc3.setSchemaName("BBB");
         tableDesc3.setName("BAR");
+        tableDesc3.setFullName("AAA.BBB.BAR");
+        tableDesc3.setCanonicalName("aaa.bbb.bar");
         tableDesc3.addColumnDesc(no3);
         tableDesc3.addColumnDesc(name3);
 
@@ -165,9 +164,9 @@ public class GenerateTableTest {
         primaryKeyDesc.addColumnName("no");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
+        tableDesc.setFullName("AAA.BBB.HOGE");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addColumnDesc(no);
         tableDesc.addColumnDesc(name);
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);

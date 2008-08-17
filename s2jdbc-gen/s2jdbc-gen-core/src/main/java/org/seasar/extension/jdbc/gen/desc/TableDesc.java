@@ -42,6 +42,12 @@ public class TableDesc {
     /** 名前 */
     protected String name;
 
+    /** カタログ名、スキーマ名、名前をピリオドで連結した完全な名前 */
+    protected String fullName;
+
+    /** 一意性をもつ標準名 */
+    protected String canonicalName;
+
     /** カラム記述のリスト */
     protected List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
 
@@ -81,7 +87,6 @@ public class TableDesc {
      */
     public void setCatalogName(String catalogName) {
         this.catalogName = catalogName;
-        key.setCatalogName(catalogName);
     }
 
     /**
@@ -101,7 +106,6 @@ public class TableDesc {
      */
     public void setSchemaName(String schemaName) {
         this.schemaName = schemaName;
-        key.setSchemaName(schemaName);
     }
 
     /**
@@ -121,7 +125,45 @@ public class TableDesc {
      */
     public void setName(String name) {
         this.name = name;
-        key.setName(name);
+    }
+
+    /**
+     * 完全な名前を返します。
+     * 
+     * @return 完全な名前
+     */
+    public String getFullName() {
+        return fullName;
+    }
+
+    /**
+     * 完全な名前を設定します。
+     * 
+     * @param fullName
+     *            完全な名前
+     */
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    /**
+     * 標準名を返します。
+     * 
+     * @return 標準名
+     */
+    public String getCanonicalName() {
+        return canonicalName;
+    }
+
+    /**
+     * 標準名を設定します。
+     * 
+     * @param canonicalName
+     *            標準名
+     */
+    public void setCanonicalName(String canonicalName) {
+        this.canonicalName = canonicalName;
+        key.setCanonicalName(canonicalName);
     }
 
     /**
@@ -248,22 +290,6 @@ public class TableDesc {
     }
 
     /**
-     * テーブルの完全な名前を返します。
-     * 
-     * @return テーブルの完全な名前
-     */
-    public String getFullName() {
-        StringBuilder buf = new StringBuilder();
-        if (catalogName != null) {
-            buf.append(catalogName).append(".");
-        }
-        if (schemaName != null) {
-            buf.append(schemaName).append(".");
-        }
-        return buf.append(name).toString();
-    }
-
-    /**
      * カラム記述を取得します。
      * 
      * @param columnName
@@ -321,49 +347,17 @@ public class TableDesc {
      */
     protected static class Key {
 
-        /** カタログ名 */
-        protected String catalogName;
-
-        /** スキーマ名 */
-        protected String schemaName;
-
-        /** 名前 */
-        protected String name;
+        /** 標準名 */
+        protected String canonicalName;
 
         /**
-         * カタログ名を設定します。
+         * 標準名を設定します。
          * 
-         * @param catalogName
-         *            カタログ名
+         * @param canonicalName
+         *            標準名
          */
-        public void setCatalogName(String catalogName) {
-            if (catalogName != null) {
-                this.catalogName = catalogName.toLowerCase();
-            }
-        }
-
-        /**
-         * スキーマ名を設定します。
-         * 
-         * @param schemaName
-         *            スキーマ名
-         */
-        public void setSchemaName(String schemaName) {
-            if (schemaName != null) {
-                this.schemaName = schemaName.toLowerCase();
-            }
-        }
-
-        /**
-         * 名前を設定します。
-         * 
-         * @param name
-         *            名前
-         */
-        public void setName(String name) {
-            if (name != null) {
-                this.name = name.toLowerCase();
-            }
+        public void setCanonicalName(String canonicalName) {
+            this.canonicalName = canonicalName;
         }
 
         @Override
@@ -371,10 +365,7 @@ public class TableDesc {
             final int prime = 31;
             int result = 1;
             result = prime * result
-                    + ((catalogName == null) ? 0 : catalogName.hashCode());
-            result = prime * result
-                    + ((schemaName == null) ? 0 : schemaName.hashCode());
-            result = prime * result + ((name == null) ? 0 : name.hashCode());
+                    + ((canonicalName == null) ? 0 : canonicalName.hashCode());
             return result;
         }
 
@@ -390,25 +381,11 @@ public class TableDesc {
                 return false;
             }
             final Key other = (Key) obj;
-            if (catalogName == null) {
-                if (other.catalogName != null) {
+            if (canonicalName == null) {
+                if (other.canonicalName != null) {
                     return false;
                 }
-            } else if (!catalogName.equals(other.catalogName)) {
-                return false;
-            }
-            if (name == null) {
-                if (other.name != null) {
-                    return false;
-                }
-            } else if (!name.equals(other.name)) {
-                return false;
-            }
-            if (schemaName == null) {
-                if (other.schemaName != null) {
-                    return false;
-                }
-            } else if (!schemaName.equals(other.schemaName)) {
+            } else if (!canonicalName.equals(other.canonicalName)) {
                 return false;
             }
             return true;

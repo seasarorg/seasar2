@@ -77,12 +77,18 @@ public class DumperImpl implements Dumper {
     public void dump(SqlExecutionContext sqlExecutionContext,
             DatabaseDesc databaseDesc, File dumpDir) {
         for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
-            DumpFileWriter writer = createDumpFileWriter(dumpDir, tableDesc);
+            String fileName = tableDesc.getCanonicalName() + extension;
+            File dumpFile = new File(dumpDir, fileName);
+            logger.log("DS2JDBCGen0015", new Object[] {
+                    tableDesc.getFullName(), dumpFile.getPath() });
+            DumpFileWriter writer = createDumpFileWriter(dumpFile, tableDesc);
             try {
                 dumpTable(sqlExecutionContext, tableDesc, writer);
             } finally {
                 writer.close();
             }
+            logger.log("DS2JDBCGen0016", new Object[] {
+                    tableDesc.getFullName(), dumpFile.getPath() });
         }
     }
 
@@ -131,16 +137,14 @@ public class DumperImpl implements Dumper {
             if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
-            String columnName = dialect.quote(columnDesc.getName());
-            buf.append(columnName);
+            buf.append(columnDesc.getName());
             buf.append(", ");
         }
         if (!tableDesc.getColumnDescList().isEmpty()) {
             buf.setLength(buf.length() - 2);
         }
         buf.append(" from ");
-        String tableName = dialect.quote(tableDesc.getFullName());
-        buf.append(tableName);
+        buf.append(tableDesc.getFullName());
         return buf.toString();
     }
 
@@ -176,16 +180,14 @@ public class DumperImpl implements Dumper {
     /**
      * ダンプファイルのライタを返します。
      * 
-     * @param dumpDir
-     *            ダンプファイルのディレクトリ
+     * @param dumpFile
+     *            ダンプファイル
      * @param tableDesc
      *            テーブル記述
      * @return ダンプファイルのライタ
      */
-    protected DumpFileWriter createDumpFileWriter(File dumpDir,
+    protected DumpFileWriter createDumpFileWriter(File dumpFile,
             TableDesc tableDesc) {
-        String fileName = tableDesc.getFullName() + extension;
-        File dumpFile = new File(dumpDir, fileName);
         List<SqlType> sqlTypeList = getSqlTypeList(tableDesc);
         return new DumpFileWriter(dumpFile, sqlTypeList, dumpFileEncoding,
                 delimiter);

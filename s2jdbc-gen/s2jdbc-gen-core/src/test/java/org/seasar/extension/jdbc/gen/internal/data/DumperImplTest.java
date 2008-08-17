@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 
 import static org.junit.Assert.*;
@@ -60,14 +59,11 @@ public class DumperImplTest {
         columnDesc2.setSqlType(dialect.getSqlType(Types.INTEGER));
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
-        tableDesc.setName("HOGE");
+        tableDesc.setFullName("AAA.BBB.HOGE");
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 
-        assertEquals(
-                "select \"column1\", \"column2\" from \"AAA\".\"BBB\".\"HOGE\"",
-                dumper.buildSql(tableDesc));
+        assertEquals("select column1, column2 from AAA.BBB.HOGE", dumper
+                .buildSql(tableDesc));
     }
 }

@@ -49,7 +49,7 @@ public class UniqueKeyDescFactoryImpl implements UniqueKeyDescFactory {
             UniqueConstraint uniqueConstraint) {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         for (String columnName : uniqueConstraint.columnNames()) {
-            uniqueKeyDesc.addColumnName(dialect.unquote(columnName));
+            uniqueKeyDesc.addColumnName(columnName);
         }
         if (uniqueKeyDesc.getColumnNameList().isEmpty()) {
             return null;
@@ -61,7 +61,7 @@ public class UniqueKeyDescFactoryImpl implements UniqueKeyDescFactory {
         UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
         if (columnDesc.isUnique()) {
             String columnName = columnDesc.getName();
-            uniqueKeyDesc.addColumnName(dialect.unquote(columnName));
+            uniqueKeyDesc.addColumnName(columnName);
         }
         if (uniqueKeyDesc.getColumnNameList().isEmpty()) {
             return null;

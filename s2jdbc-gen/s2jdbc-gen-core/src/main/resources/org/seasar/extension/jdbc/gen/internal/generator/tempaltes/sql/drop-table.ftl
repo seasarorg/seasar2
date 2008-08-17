@@ -1,5 +1,5 @@
 <#list tableDescList as table>
-drop table ${quote(table.fullName)}${delimiter}
+drop table ${table.fullName}${delimiter}
 </#list>
 
-drop table ${quote(schemaInfoFullTableName)}${delimiter}
+drop table ${schemaInfoFullTableName}${delimiter}

@@ -125,22 +125,72 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
      */
     protected void doName(EntityMeta entityMeta, TableDesc tableDesc,
             TableGenerator generator) {
-        String catalogName = generator.catalog();
-        if (StringUtil.isEmpty(catalogName)) {
-            catalogName = entityMeta.getTableMeta().getCatalog();
+        String catalog = generator.catalog();
+        if (StringUtil.isEmpty(catalog)) {
+            catalog = entityMeta.getTableMeta().getCatalog();
         }
-        String schemaName = generator.schema();
-        if (StringUtil.isEmpty(schemaName)) {
-            schemaName = entityMeta.getTableMeta().getSchema();
+        String schema = generator.schema();
+        if (StringUtil.isEmpty(schema)) {
+            schema = entityMeta.getTableMeta().getSchema();
         }
-        String tableName = generator.table();
-        if (StringUtil.isEmpty(tableName)) {
-            tableName = TableIdGenerator.DEFAULT_TABLE;
+        String name = generator.table();
+        if (StringUtil.isEmpty(name)) {
+            name = TableIdGenerator.DEFAULT_TABLE;
         }
 
-        tableDesc.setCatalogName(dialect.unquote(catalogName));
-        tableDesc.setSchemaName(dialect.unquote(schemaName));
-        tableDesc.setName(dialect.unquote(tableName));
+        tableDesc.setCatalogName(catalog);
+        tableDesc.setSchemaName(schema);
+        tableDesc.setName(name);
+        tableDesc.setFullName(buildFullName(catalog, schema, name));
+        tableDesc.setCanonicalName(buildCanonicalName(catalog, schema, name));
+    }
+
+    /**
+     * 完全な名前を組み立てます。
+     * 
+     * @param catalog
+     *            カタログ名
+     * @param schema
+     *            スキーマ名
+     * @param name
+     *            テーブル名
+     * @return 完全な名前
+     */
+    protected String buildFullName(String catalog, String schema, String name) {
+        StringBuilder buf = new StringBuilder();
+        if (catalog != null) {
+            buf.append(catalog).append(".");
+        }
+        if (schema != null) {
+            buf.append(schema).append(".");
+        }
+        return buf.append(name).toString();
+    }
+
+    /**
+     * 標準名を組み立てます。
+     * 
+     * @param catalog
+     *            カタログ名
+     * @param schema
+     *            スキーマ名
+     * @param name
+     *            テーブル名
+     * @return 完全な名前
+     */
+    protected String buildCanonicalName(String catalog, String schema,
+            String name) {
+        StringBuilder buf = new StringBuilder();
+        if (catalog != null) {
+            String s = dialect.unquote(catalog);
+            buf.append(s.toLowerCase()).append(".");
+        }
+        if (schema != null) {
+            String s = dialect.unquote(schema);
+            buf.append(s.toLowerCase()).append(".");
+        }
+        String s = dialect.unquote(name);
+        return buf.append(s.toLowerCase()).toString();
     }
 
     /**

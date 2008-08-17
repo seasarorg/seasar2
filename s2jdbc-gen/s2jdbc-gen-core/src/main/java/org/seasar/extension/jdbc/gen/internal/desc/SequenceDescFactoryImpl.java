@@ -59,7 +59,7 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
             SequenceDesc sequenceDesc = new SequenceDesc();
             String sequenceName = getSequenceName(entityMeta, propertyMeta,
                     generator);
-            sequenceDesc.setSequenceName(dialect.unquote(sequenceName));
+            sequenceDesc.setSequenceName(sequenceName);
             sequenceDesc.setInitialValue(generator.initialValue());
             sequenceDesc.setAllocationSize(generator.allocationSize());
             sequenceDesc.setDataType(getDataType(propertyMeta));

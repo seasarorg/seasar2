@@ -32,7 +32,7 @@ public class DatabaseDesc {
     /** テーブル記述のリスト */
     protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
 
-    /** 完全なテーブル名をキー、テーブル記述を値としたマップ */
+    /** テーブルの標準名をキー、テーブル記述を値としたマップ */
     @SuppressWarnings("unchecked")
     protected Map<String, TableDesc> tableDescMap = new CaseInsensitiveMap();
 
@@ -54,18 +54,18 @@ public class DatabaseDesc {
     public void addTableDesc(TableDesc tableDesc) {
         if (!tableDescList.contains(tableDesc)) {
             tableDescList.add(tableDesc);
-            tableDescMap.put(tableDesc.getFullName(), tableDesc);
+            tableDescMap.put(tableDesc.getCanonicalName(), tableDesc);
         }
     }
 
     /**
      * テーブル記述を返します。
      * 
-     * @param fullTableName
-     *            完全なテーブル名
+     * @param canonicalTableName
+     *            標準のテーブル名
      * @return 存在する場合テーブル記述、存在しない場合{@code null}
      */
-    public TableDesc getTableDesc(String fullTableName) {
-        return tableDescMap.get(fullTableName);
+    public TableDesc getTableDesc(String canonicalTableName) {
+        return tableDescMap.get(canonicalTableName);
     }
 }

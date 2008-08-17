@@ -19,7 +19,6 @@ import java.sql.Types;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 import static org.junit.Assert.*;
@@ -79,9 +78,8 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testQuoteIdentifier() throws Exception {
+    public void testQuote() throws Exception {
         assertEquals("\"aaa\"", dialect.quote("aaa"));
-        assertEquals("\"aaa\".\"bbb\".\"ccc\"", dialect.quote("aaa.bbb.ccc"));
     }
 
     /**
@@ -89,9 +87,8 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testUnquoteIdentifier() throws Exception {
+    public void testUnquote() throws Exception {
         assertEquals("aaa", dialect.unquote("\"aaa\""));
-        assertEquals("aaa.bbb.ccc", dialect.unquote("\"aaa\".\"bbb\".\"ccc\""));
     }
 
 }

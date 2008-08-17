@@ -20,7 +20,6 @@ import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 
 import static org.junit.Assert.*;
@@ -29,7 +28,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DbModelFactoryImplTest {
+public class DdlModelFactoryImplTest {
 
     private DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
             new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
@@ -44,12 +43,14 @@ public class DbModelFactoryImplTest {
         sequenceDesc.setSequenceName("HOGE");
         TableDesc tableDesc = new TableDesc();
         tableDesc.setName("AAA");
+        tableDesc.setCanonicalName("aaa");
         tableDesc.addSequenceDesc(sequenceDesc);
 
         SequenceDesc sequenceDesc2 = new SequenceDesc();
         sequenceDesc2.setSequenceName("FOO");
         TableDesc tableDesc2 = new TableDesc();
         tableDesc2.setName("BBB");
+        tableDesc2.setCanonicalName("bbb");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
         DatabaseDesc databaseDesc = new DatabaseDesc();
@@ -73,12 +74,14 @@ public class DbModelFactoryImplTest {
         sequenceDesc.setSequenceName("HOGE");
         TableDesc tableDesc = new TableDesc();
         tableDesc.setName("AAA");
+        tableDesc.setCanonicalName("aaa");
         tableDesc.addSequenceDesc(sequenceDesc);
 
         SequenceDesc sequenceDesc2 = new SequenceDesc();
         sequenceDesc2.setSequenceName("HOGE");
         TableDesc tableDesc2 = new TableDesc();
         tableDesc2.setName("BBB");
+        tableDesc2.setCanonicalName("BBB");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
         DatabaseDesc databaseDesc = new DatabaseDesc();

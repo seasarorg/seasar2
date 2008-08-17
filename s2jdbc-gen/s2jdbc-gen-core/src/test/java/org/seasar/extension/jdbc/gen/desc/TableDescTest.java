@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.desc;
 import junitx.framework.Assert;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.TableDesc;
 
 import static org.junit.Assert.*;
 
@@ -35,15 +34,11 @@ public class TableDescTest {
     @Test
     public void testEquals() throws Exception {
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
-        tableDesc.setName("CCC");
+        tableDesc.setCanonicalName("aaa.bbb.ccc");
         TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setCatalogName("aaa");
-        tableDesc2.setSchemaName("bbb");
-        tableDesc2.setName("ccc");
+        tableDesc2.setCanonicalName("aaa.bbb.ccc");
         TableDesc tableDesc3 = new TableDesc();
-        tableDesc3.setCatalogName("XXX");
+        tableDesc3.setCanonicalName("aaa.bbb.ddd");
 
         assertEquals(tableDesc, tableDesc2);
         assertEquals(tableDesc.hashCode(), tableDesc2.hashCode());

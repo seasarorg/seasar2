@@ -1,4 +1,4 @@
-create table [AAA].[BBB].[HOGE] ([no] integer identity not null, [name] varchar not null, constraint HOGE_PK primary key([no])) ENGINE = INNODB;
+create table AAA.BBB.HOGE (no integer identity not null, name varchar not null, constraint HOGE_PK primary key(no)) ENGINE = INNODB;
 
-create table [SCHEMA_INFO] ([VERSION] int);
-insert into [SCHEMA_INFO] ([VERSION]) values (0);
+create table SCHEMA_INFO (VERSION int);
+insert into SCHEMA_INFO (VERSION) values (0);

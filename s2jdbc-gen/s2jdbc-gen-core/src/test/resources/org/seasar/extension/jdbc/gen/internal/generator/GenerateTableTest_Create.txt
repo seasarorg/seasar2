@@ -1,6 +1,6 @@
-create table [AAA].[BBB].[HOGE] ([no] integer identity not null, [name] varchar not null, constraint HOGE_PK primary key([no]));
-create table [AAA].[BBB].[FOO] ([no] integer not null, [name] varchar not null, constraint FOO_PK primary key([no], [name]));
-create table [AAA].[BBB].[BAR] ([no] integer, [name] varchar);
+create table AAA.BBB.HOGE (no integer identity not null, name varchar not null, constraint HOGE_PK primary key(no));
+create table AAA.BBB.FOO (no integer not null, name varchar not null, constraint FOO_PK primary key(no, name));
+create table AAA.BBB.BAR (no integer, name varchar);
 
-create table [SCHEMA_INFO] ([VERSION] int);
-insert into [SCHEMA_INFO] ([VERSION]) values (0);
+create table SCHEMA_INFO (VERSION int);
+insert into SCHEMA_INFO (VERSION) values (0);

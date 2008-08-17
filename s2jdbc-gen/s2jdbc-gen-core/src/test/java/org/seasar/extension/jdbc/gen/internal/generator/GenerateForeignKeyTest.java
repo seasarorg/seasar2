@@ -24,7 +24,6 @@ import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.framework.util.TextUtil;
@@ -68,9 +67,9 @@ public class GenerateForeignKeyTest {
         foreignKeyDesc2.addReferencedColumnName("REF2-2");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
+        tableDesc.setFullName("AAA.BBB.HOGE");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 

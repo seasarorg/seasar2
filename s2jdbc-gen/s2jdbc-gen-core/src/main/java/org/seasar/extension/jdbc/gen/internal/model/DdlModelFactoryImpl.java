@@ -99,4 +99,5 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
         model.setSchemaInfoColumnDefinition(columnDefinition);
         return model;
     }
+
 }

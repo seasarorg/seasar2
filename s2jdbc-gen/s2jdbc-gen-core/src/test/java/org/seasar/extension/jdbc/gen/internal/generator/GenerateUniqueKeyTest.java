@@ -24,7 +24,6 @@ import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.framework.util.TextUtil;
@@ -58,9 +57,9 @@ public class GenerateUniqueKeyTest {
         uniqueKeyDesc2.addColumnName("UK2-2");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
+        tableDesc.setFullName("AAA.BBB.HOGE");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
         tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
 

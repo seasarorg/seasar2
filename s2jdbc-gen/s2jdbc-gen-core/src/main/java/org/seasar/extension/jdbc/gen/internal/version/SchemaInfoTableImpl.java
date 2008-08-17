@@ -89,8 +89,7 @@ public class SchemaInfoTableImpl implements SchemaInfoTable {
         this.dialect = dialect;
         this.fullTableName = fullTableName;
         this.columnName = columnName;
-        sql = "select " + dialect.quote(columnName) + " from "
-                + dialect.quote(fullTableName);
+        sql = "select " + columnName + " from " + fullTableName;
     }
 
     public int getVersionNo() {

@@ -171,9 +171,50 @@ public class TableDescFactoryImpl implements TableDescFactory {
     protected void doName(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
         TableMeta tableMeta = entityMeta.getTableMeta();
-        tableDesc.setCatalogName(dialect.unquote(tableMeta.getCatalog()));
-        tableDesc.setSchemaName(dialect.unquote(tableMeta.getSchema()));
-        tableDesc.setName(dialect.unquote(tableMeta.getName()));
+        tableDesc.setCatalogName(tableMeta.getCatalog());
+        tableDesc.setSchemaName(tableMeta.getSchema());
+        tableDesc.setName(tableMeta.getName());
+        tableDesc.setFullName(buildFullName(tableMeta));
+        tableDesc.setCanonicalName(buildCanonicalName(tableMeta));
+    }
+
+    /**
+     * 完全な名前を組み立てます。
+     * 
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @return 完全な名前
+     */
+    protected String buildFullName(TableMeta tableMeta) {
+        StringBuilder buf = new StringBuilder();
+        if (tableMeta.getCatalog() != null) {
+            buf.append(tableMeta.getCatalog()).append(".");
+        }
+        if (tableMeta.getSchema() != null) {
+            buf.append(tableMeta.getSchema()).append(".");
+        }
+        return buf.append(tableMeta.getName()).toString();
+    }
+
+    /**
+     * 標準名を組み立てます。
+     * 
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @return 標準名
+     */
+    protected String buildCanonicalName(TableMeta tableMeta) {
+        StringBuilder buf = new StringBuilder();
+        if (tableMeta.getCatalog() != null) {
+            String s = dialect.unquote(tableMeta.getCatalog());
+            buf.append(s.toLowerCase()).append(".");
+        }
+        if (tableMeta.getSchema() != null) {
+            String s = dialect.unquote(tableMeta.getSchema());
+            buf.append(s.toLowerCase()).append(".");
+        }
+        String s = dialect.unquote(tableMeta.getName());
+        return buf.append(s.toLowerCase()).toString();
     }
 
     /**

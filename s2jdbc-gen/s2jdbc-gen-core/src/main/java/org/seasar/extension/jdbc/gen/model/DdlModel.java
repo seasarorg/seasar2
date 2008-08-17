@@ -284,4 +284,15 @@ public class DdlModel {
     public String quote(String value) {
         return dialect.quote(value);
     }
+
+    /**
+     * クォートを取り除きます。
+     * 
+     * @param value
+     *            値
+     * @return クォートが取り除かれた値
+     */
+    public String unquote(String value) {
+        return dialect.unquote(value);
+    }
 }

@@ -98,7 +98,8 @@ public class LoaderImpl implements Loader {
         if (tableDesc == null) {
             return;
         }
-        logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath() });
+        logger.log("DS2JDBCGen0013", new Object[] { dumpFile.getPath(),
+                tableDesc.getFullName() });
         DumpFileReader reader = createDumpFileReader(dumpFile);
         try {
             List<String> columnNameList = reader.readLine();
@@ -126,7 +127,8 @@ public class LoaderImpl implements Loader {
         } finally {
             reader.close();
         }
-        logger.log("DS2JDBCGen0014", new Object[] { dumpFile.getPath() });
+        logger.log("DS2JDBCGen0014", new Object[] { dumpFile.getPath(),
+                tableDesc.getFullName() });
     }
 
     public boolean isTarget(File file) {
@@ -238,10 +240,10 @@ public class LoaderImpl implements Loader {
     protected String buildSql(TableDesc tableDesc, List<String> columnNameList) {
         StringBuilder buf = new StringBuilder();
         buf.append("insert into ");
-        buf.append(dialect.quote(tableDesc.getFullName()));
+        buf.append(tableDesc.getFullName());
         buf.append(" (");
         for (String columnName : columnNameList) {
-            buf.append(dialect.quote(columnName));
+            buf.append(columnName);
             buf.append(", ");
         }
         buf.setLength(buf.length() - 2);
