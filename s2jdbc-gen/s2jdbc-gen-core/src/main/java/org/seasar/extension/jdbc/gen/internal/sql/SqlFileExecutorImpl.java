@@ -22,7 +22,7 @@ import java.sql.Statement;
 import org.seasar.extension.jdbc.gen.GenDialect;
 import org.seasar.extension.jdbc.gen.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.SqlFileExecutor;
-import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedException;
+import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedRuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
@@ -87,7 +87,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
                 try {
                     statement.execute(sql);
                 } catch (SQLException e) {
-                    context.addException(new SqlFailedException(e, sqlFile
+                    context.addException(new SqlFailedRuntimeException(e, sqlFile
                             .getPath(), reader.getLineNumber(), sql));
                 }
             }

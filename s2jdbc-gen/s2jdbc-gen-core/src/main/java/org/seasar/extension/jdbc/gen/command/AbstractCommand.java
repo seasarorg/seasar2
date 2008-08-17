@@ -21,7 +21,7 @@ import java.sql.DatabaseMetaData;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.Command;
 import org.seasar.extension.jdbc.gen.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.exception.CommandFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.ConnectionUtil;

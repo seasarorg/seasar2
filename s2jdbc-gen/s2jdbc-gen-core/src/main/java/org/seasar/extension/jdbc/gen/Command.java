@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen;
 
+import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+
 /**
  * コマンドを表すインタフェースです。
  * 
@@ -24,7 +26,10 @@ public interface Command {
 
     /**
      * 実行します。
+     * 
+     * @throws CommandFailedRuntimeException
+     *             コマンドの実行に失敗した場合
      */
-    void execute();
+    void execute() throws CommandFailedRuntimeException;
 
 }

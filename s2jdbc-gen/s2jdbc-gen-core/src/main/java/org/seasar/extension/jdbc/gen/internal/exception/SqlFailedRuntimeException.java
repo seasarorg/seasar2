@@ -24,7 +24,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author taedium
  */
-public class SqlFailedException extends SRuntimeException {
+public class SqlFailedRuntimeException extends SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class SqlFailedException extends SRuntimeException {
      * @param sql
      *            SQL
      */
-    public SqlFailedException(SQLException cause, String sqlFilePath,
+    public SqlFailedRuntimeException(SQLException cause, String sqlFilePath,
             int lineNumber, String sql) {
         super("ES2JDBCGen0003", new Object[] { sqlFilePath, lineNumber, sql,
                 cause }, cause);

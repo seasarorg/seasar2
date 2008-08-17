@@ -52,7 +52,7 @@ public interface GenDialect {
      *            JDBCのSQL型
      * @return SQL型
      * @throws UnsupportedSqlTypeRuntimeException
-     *             サポートしていないJDBCのSQL型が渡された場合
+     *             サポートされていないJDBCのSQL型が渡された場合
      */
     SqlType getSqlType(int sqlType) throws UnsupportedSqlTypeRuntimeException;
 

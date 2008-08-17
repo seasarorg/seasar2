@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.exception;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.LoadFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.exception.LoadFailedRuntimeException;
 
 import static org.junit.Assert.*;
 

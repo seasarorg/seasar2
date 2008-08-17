@@ -20,7 +20,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedException;
+import org.seasar.extension.jdbc.gen.internal.exception.SqlFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlExecutionContextImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 
@@ -42,7 +42,7 @@ public class SqlExecutionContextImplTest {
         Statement statement = context.getStatement();
         assertNotNull(statement);
         assertSame(statement, context.getStatement());
-        context.addException(new SqlFailedException(new SQLException(), "aaa",
+        context.addException(new SqlFailedRuntimeException(new SQLException(), "aaa",
                 1, "bbb"));
         assertNotSame(statement, context.getStatement());
     }
@@ -55,7 +55,7 @@ public class SqlExecutionContextImplTest {
         SqlExecutionContextImpl context = new SqlExecutionContextImpl(
                 new MockDataSource(), false);
         assertTrue(context.getExceptionList().isEmpty());
-        SqlFailedException exception = new SqlFailedException(
+        SqlFailedRuntimeException exception = new SqlFailedRuntimeException(
                 new SQLException(), "aaa", 1, "bbb");
         context.addException(exception);
         List<RuntimeException> list = context.getExceptionList();
@@ -70,12 +70,12 @@ public class SqlExecutionContextImplTest {
         SqlExecutionContextImpl context = new SqlExecutionContextImpl(
                 new MockDataSource(), true);
         assertTrue(context.getExceptionList().isEmpty());
-        SqlFailedException exception = new SqlFailedException(
+        SqlFailedRuntimeException exception = new SqlFailedRuntimeException(
                 new SQLException(), "aaa", 1, "bbb");
         try {
             context.addException(exception);
             fail();
-        } catch (SqlFailedException expected) {
+        } catch (SqlFailedRuntimeException expected) {
         }
     }
 

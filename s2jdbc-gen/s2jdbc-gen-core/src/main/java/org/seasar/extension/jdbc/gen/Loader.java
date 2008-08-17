@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.gen.exception.LoadFailedRuntimeException;
+
 /**
  * ダンプデータをロードするインタフェースです。
  * 
@@ -33,9 +35,12 @@ public interface Loader {
      *            データベース記述
      * @param dumpFile
      *            ダンプファイル
+     * @throws LoadFailedRuntimeException
+     *             データのロードに失敗した場合
      */
     void load(SqlExecutionContext sqlExecutionContext,
-            DatabaseDesc databaseDesc, File dumpFile);
+            DatabaseDesc databaseDesc, File dumpFile)
+            throws LoadFailedRuntimeException;
 
     /**
      * ダンプファイルの場合{@code true}を返します。
