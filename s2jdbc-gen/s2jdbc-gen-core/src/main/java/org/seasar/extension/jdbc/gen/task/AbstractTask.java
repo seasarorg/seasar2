@@ -21,6 +21,7 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.internal.util.BeanUtil;
 import org.seasar.framework.util.ClassUtil;
@@ -33,22 +34,53 @@ import org.seasar.framework.util.MethodUtil;
  */
 public abstract class AbstractTask extends Task {
 
-    /** クラスパスの参照ID */
-    protected static String CLASSPATH_REFID = "s2jdbc-gen-classpath";
+    /** クラスパス */
+    protected Path classpath;
+
+    /**
+     * クラスパスを設定します。
+     * 
+     * @param classpath
+     *            クラスパス
+     */
+    public void setClasspath(Path classpath) {
+        createClasspath().append(classpath);
+    }
+
+    /**
+     * クラスパスの参照を設定します。
+     * 
+     * @param reference
+     *            クラスパスの参照
+     */
+    public void setClasspathRef(Reference reference) {
+        createClasspath().setRefid(reference);
+    }
+
+    /**
+     * クラスパスを作成します。
+     * 
+     * @return クラスパス
+     */
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path(getProject());
+        }
+        return classpath.createPath();
+    }
 
     @Override
     public void execute() throws BuildException {
-        Object path = getProject().getReference(CLASSPATH_REFID);
-        if (path == null) {
-            throw new BuildException("reference '" + CLASSPATH_REFID
-                    + "' not found.");
+        if (classpath == null) {
+            throw new BuildException("classpath is not specified for '"
+                    + getTaskName() + "' task");
         }
-        if (!Path.class.isInstance(path)) {
-            throw new BuildException("reference type '" + CLASSPATH_REFID
-                    + "' is not instance of '" + Path.class.getName() + "'.");
+        if (classpath.list().length == 0) {
+            throw new BuildException("classpath is empty for '" + getTaskName()
+                    + "' task");
         }
-        TaskClassLoader taskClassLoader = createTaskClassLoader(Path.class
-                .cast(path));
+
+        TaskClassLoader taskClassLoader = createTaskClassLoader();
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(taskClassLoader);
         try {
@@ -76,9 +108,9 @@ public abstract class AbstractTask extends Task {
      *            パス
      * @return クラスローダ
      */
-    protected TaskClassLoader createTaskClassLoader(Path path) {
+    protected TaskClassLoader createTaskClassLoader() {
         AntClassLoader classLoader = getProject().createClassLoader(
-                ClassLoader.getSystemClassLoader(), path);
+                ClassLoader.getSystemClassLoader(), classpath);
         classLoader.setParentFirst(false);
         classLoader.addJavaLibraries();
         classLoader.setIsolated(true);

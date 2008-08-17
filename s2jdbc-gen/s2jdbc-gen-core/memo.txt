@@ -11,6 +11,8 @@
 <tr><td>ignoreEntityNamePattern</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>dumpDir</td><td>説明</td><td>"db/dump"</td><td>NO</td></tr>
 <tr><td>dumpFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>DumpDbMetaTask</h1>
@@ -21,6 +23,8 @@
 <tr><td>jdbcmanagername</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
 <tr><td>schemaname</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>tablenamepattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>ExecuteSqlTask</h1>
@@ -35,6 +39,8 @@
 <tr><td>blockdelimiter</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>haltonerror</td><td>説明</td><td>"false"</td><td>NO</td></tr>
 <tr><td>transactional</td><td>説明</td><td>"false"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>GenerateConditionTask</h1>
@@ -56,6 +62,8 @@
 <tr><td>javafiledestdir</td><td>説明</td><td>"src/main/java"</td><td>NO</td></tr>
 <tr><td>javafileencoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>overwrite</td><td>説明</td><td>"true"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>GenerateDdlTask</h1>
@@ -98,6 +106,8 @@
 <tr><td>schemaInfoFullTableName</td><td>説明</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
 <tr><td>schemaInfoColumnName</td><td>説明</td><td>"VERSION"</td><td>NO</td></tr>
 <tr><td>tableOption</td><td>説明</td><td>-</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>GenerateEntityTask</h1>
@@ -118,6 +128,8 @@
 <tr><td>javaFileDestDir</td><td>説明</td><td>"src/main/java"</td><td>NO</td></tr>
 <tr><td>javaFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>overwrite</td><td>説明</td><td>"false"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>GenerateServiceTask</h1>
@@ -139,6 +151,8 @@
 <tr><td>templateFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>templateFilePrimaryDir</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>overwrite</td><td>説明</td><td>"false"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>GenerateTestTask</h1>
@@ -159,6 +173,8 @@
 <tr><td>templateFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>templateFilePrimaryDir</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>overwrite</td><td>説明</td><td>"false"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>LoadDataTask</h1>
@@ -175,6 +191,8 @@
 <tr><td>dumpDir</td><td>説明</td><td>"db/dump"</td><td>NO</td></tr>
 <tr><td>dumpFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>loadBatchSize</td><td>説明</td><td>"10"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
 
 <h1>MigrateTask</h1>
@@ -200,4 +218,6 @@
 <tr><td>dumpFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>loadBatchSize</td><td>説明</td><td>"10"</td><td>NO</td></tr>
 <tr><td>haltOnError</td><td>説明</td><td>"false"</td><td>NO</td></tr>
+<tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+<tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>

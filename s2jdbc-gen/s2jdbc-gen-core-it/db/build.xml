@@ -14,7 +14,7 @@
 	<property name="sql" value="${rdbms}/sql"/>	
 	<property name="rootpackagename" value="example"/>
 	
-	<path id="s2jdbc-gen-classpath">
+	<path id="classpath">
 		<pathelement location="${build}"/>
 		<pathelement location="../../s2jdbc-gen-core/build/classes"/>
 		<pathelement location="../../seasar2/build/classes"/>
@@ -33,7 +33,7 @@
 		</fileset>
 	</path>
 
-	<taskdef resource="s2jdbc-gen-task.properties" classpathref="s2jdbc-gen-classpath"/>
+	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
 	
 	<target name="showRdbmsName">
 		<echo>${rdbms}</echo>
@@ -41,7 +41,8 @@
 
 	<target name="testFromDbToEntity" depends="showRdbmsName, clean">
 		<!-- setUp -->
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testFromDbToEntity">
 				<file name="create.sql"/>
 			</sqlFileList>
@@ -50,23 +51,26 @@
 		<gen-entity
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
+			classpathref="classpath"
 		/>
 		<javac 
 			srcdir="${src}"
 			destdir="${build}"
-			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
 			debug="on"
+			classpathref="classpath"
 		/>
 		<gen-ddl 
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
 		/>
 		<!-- tearDown -->
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testFromDbToEntity">
 				<file name="drop.sql"/>
 			</sqlFileList>
@@ -78,56 +82,63 @@
 		<javac 
 			srcdir="../src/main/java"
 			destdir="${build}"
-			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
 			debug="on"
+			classpathref="classpath"
 		/>
 		<!-- test -->
 		<gen-test
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
+			classpathref="classpath"
 		/>
 		<gen-condition
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
 			overwrite="true"
+			classpathref="classpath"
 		/>
 		<gen-service
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
+			classpathref="classpath"
 		/>
 		<javac 
 			srcdir="${src}"
 			destdir="${build}"
-			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
 			debug="on"
+			classpathref="classpath"
 		/>
 		<gen-ddl 
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
 		/>
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
 		/>
-		<junit haltonfailure="no" printsummary="true">
+		<junit 
+			haltonfailure="no" 
+			printsummary="true">
 			<formatter type="xml"/>
-			<classpath refid="s2jdbc-gen-classpath"/>
 			<batchtest todir="${testresult}" fork="true">
 				<fileset dir="${src}">
 					<include name="**/AddressTest.java"/>
 				</fileset>
 			</batchtest>
+			<classpath refid="classpath"/>
 		</junit>
 		<!-- tearDown -->
 		<migrate 
@@ -136,6 +147,7 @@
 			ddlInfofile="${ddl-info}"
 			version="0"
 			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
 		/>
 	</target>
 
@@ -143,10 +155,10 @@
 		<!-- setUp -->
 		<javac 
 			destdir="${build}"
-			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
-			debug="on">
+			debug="on"
+			classpathref="classpath">
 			<src path="../src/main/java"/>
 		</javac>
 		<!-- test -->
@@ -155,14 +167,17 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
 		/>
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
 		/>
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
 				<file name="insert.sql"/>
 			</sqlFileList>
@@ -172,12 +187,14 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
 		/>
 		<migrate 
 			classpathDir="${build}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
 		/>
 		<!-- tearDown -->
 		<migrate 
@@ -186,20 +203,25 @@
 			ddlInfofile="${ddl-info}"
 			version="0"
 			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
 		/>
 	</target>
 
 	<target name="testDumpDbMeta" depends="showRdbmsName, clean">
 		<!-- setUp -->
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpDbMeta">
 				<file name="create.sql"/>
 			</sqlFileList>
 		</exec-sql>
 		<!-- test -->
-		<dump-db-meta/>
+		<dump-db-meta 
+			classpathref="classpath"
+		/>
 		<!-- tearDown -->
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpDbMeta">
 				<file name="drop.sql"/>
 			</sqlFileList>
@@ -211,12 +233,13 @@
 		<javac 
 			srcdir="../src/main/java"
 			destdir="${build}"
-			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
 			debug="on"
+			classpathref="classpath"
 		/>
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
 				<file name="create.sql"/>
 				<file name="insert.sql"/>
@@ -227,9 +250,10 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			dumpdir="${dump}"
+			classpathref="classpath"
 		/>
 		<!-- tearDown -->
-		<exec-sql>
+		<exec-sql classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
 				<file name="drop.sql"/>
 			</sqlFileList>
@@ -241,12 +265,13 @@
 		<javac 
 			srcdir="../src/main/java"
 			destdir="${build}"
-			classpathref="s2jdbc-gen-classpath"
 			encoding="UTF-8"
 			fork="true"
 			debug="on"
+			classpathref="classpath"
 		/>
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
 				<file name="create.sql"/>
 				<file name="insert.sql"/>
@@ -256,8 +281,10 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			dumpdir="${dump}"
+			classpathref="classpath"
 		/>
-		<exec-sql>
+		<exec-sql 
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
 				<file name="drop.sql"/>
 				<file name="create.sql"/>
@@ -268,9 +295,11 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			dumpdir="${dump}"
+			classpathref="classpath"
 		/>
 		<!-- tearDown -->
-		<exec-sql>
+		<exec-sql
+			classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
 				<file name="drop.sql"/>
 			</sqlFileList>
