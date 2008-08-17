@@ -92,30 +92,6 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         }
     }
 
-    /**
-     * {@link DdlInfoFile}の実装を作成します。
-     * 
-     * @param file
-     *            ファイル
-     * @return {@link DdlInfoFile}の実装
-     */
-    protected DdlInfoFile createDdlInfoFile(File file) {
-        return new DdlInfoFileImpl(file);
-    }
-
-    /**
-     * バージョンディレクトリの名前を返します。
-     * 
-     * @param versionNo
-     *            バージョン番号
-     * @param pattern
-     *            バージョン番号のパターン
-     * @return バージョンディレクトリの名前
-     */
-    public static String getVersionDirName(int versionNo, String pattern) {
-        return StringConversionUtil.toString(versionNo, pattern);
-    }
-
     public File getCurrentVersionDir() {
         return currentVersionDir;
     }
@@ -140,4 +116,27 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         return ddlInfoFile;
     }
 
+    /**
+     * {@link DdlInfoFile}の実装を作成します。
+     * 
+     * @param file
+     *            ファイル
+     * @return {@link DdlInfoFile}の実装
+     */
+    protected DdlInfoFile createDdlInfoFile(File file) {
+        return new DdlInfoFileImpl(file);
+    }
+
+    /**
+     * バージョンディレクトリの名前を返します。
+     * 
+     * @param versionNo
+     *            バージョン番号
+     * @param pattern
+     *            バージョン番号のパターン
+     * @return バージョンディレクトリの名前
+     */
+    protected String getVersionDirName(int versionNo, String pattern) {
+        return StringConversionUtil.toString(versionNo, pattern);
+    }
 }
