@@ -21,10 +21,6 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
-import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
-import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
@@ -395,8 +391,8 @@ public class GenerateServiceCommand extends AbstractCommand {
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), jdbcManager
+        return factory.createEntityMetaReader(this, classpathDir, ClassUtil
+                .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityNamePattern,
                 ignoreEntityNamePattern);
     }
@@ -407,9 +403,8 @@ public class GenerateServiceCommand extends AbstractCommand {
      * @return {@link ServiceModelFactory}の実装
      */
     protected ServiceModelFactory createServiceModelFactory() {
-        String packageName = ClassUtil.concatName(rootPackageName,
-                servicePackageName);
-        return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix);
+        return factory.createServiceModelFactory(this, ClassUtil.concatName(
+                rootPackageName, servicePackageName), serviceClassNameSuffix);
     }
 
     /**
@@ -418,7 +413,8 @@ public class GenerateServiceCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
+        return factory.createGenerator(this, templateFileEncoding,
+                templateFilePrimaryDir);
     }
 
     /**
@@ -439,8 +435,8 @@ public class GenerateServiceCommand extends AbstractCommand {
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 
-        return new GenerationContextImpl(model, dir, file, templateName,
-                javaFileEncoding, overwrite);
+        return factory.createGenerationContext(this, model, dir, file,
+                templateName, javaFileEncoding, overwrite);
     }
 
     @Override

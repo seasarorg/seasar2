@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateDdlCommand;
 
@@ -67,16 +66,6 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setClasspathDir(File classpathDir) {
         command.setClasspathDir(classpathDir);
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        command.setConfigPath(configPath);
     }
 
     /**
@@ -262,16 +251,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        command.setJdbcManagerName(jdbcManagerName);
-    }
-
-    /**
      * ルートパッケージ名を設定します。
      * 
      * @param rootPackageName
@@ -339,16 +318,6 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         command.setTemplateFilePrimaryDir(templateFilePrimaryDir);
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        command.setEnv(env);
     }
 
     /**

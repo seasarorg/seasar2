@@ -5,6 +5,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootPackageName</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityPackageName</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
@@ -21,6 +22,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcmanagername</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>schemaname</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>tablenamepattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
 <tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
@@ -33,6 +35,7 @@
 <tr><td>configpath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcmanagername</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>sqlfilelist</td><td>説明</td><td>-</td><td>YES</td></tr>
 <tr><td>sqlfileencoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>statementdelimiter</td><td>説明</td><td>";"</td><td>NO</td></tr>
@@ -50,6 +53,7 @@
 <tr><td>configpath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcmanagername</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootpackagename</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entitypackagename</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
@@ -73,6 +77,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootPackageName</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entityPackageName</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
@@ -118,6 +123,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>schemaName</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>tableNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
 <tr><td>ignoreTableNamePattern</td><td>説明</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
@@ -141,6 +147,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootPackageName</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entityPackageName</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
@@ -164,6 +171,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootPackageName</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entityPackageName</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
@@ -186,6 +194,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootPackageName</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entityPackageName</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
@@ -204,6 +213,7 @@
 <tr><td>configPath</td><td>説明</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 <tr><td>env</td><td>説明</td><td>"ut"</td><td>NO</td></tr>
 <tr><td>jdbcManagerName</td><td>説明</td><td>"jdbcManager"</td><td>NO</td></tr>
+<tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>rootPackageName</td><td>説明</td><td>""</td><td>NO</td></tr>
 <tr><td>entityPackageName</td><td>説明</td><td>"entity"</td><td>NO</td></tr>
 <tr><td>entityNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>

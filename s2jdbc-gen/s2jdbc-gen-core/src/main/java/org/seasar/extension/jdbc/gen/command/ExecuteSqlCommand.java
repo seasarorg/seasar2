@@ -26,8 +26,6 @@ import javax.transaction.UserTransaction;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyEmptyRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
-import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -299,7 +297,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
      * @return {@link SqlFileExecutor}の実装
      */
     protected SqlFileExecutor createSqlFileExecutor() {
-        return new SqlFileExecutorImpl(dialect, sqlFileEncoding,
+        return factory.createSqlFileExecutor(this, dialect, sqlFileEncoding,
                 statementDelimiter, blockDelimiter);
     }
 
@@ -309,7 +307,8 @@ public class ExecuteSqlCommand extends AbstractCommand {
      * @return {@link SqlUnitExecutor}の実装
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
-        return new SqlUnitExecutorImpl(jdbcManager.getDataSource(), haltOnError);
+        return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
+                haltOnError);
     }
 
     @Override

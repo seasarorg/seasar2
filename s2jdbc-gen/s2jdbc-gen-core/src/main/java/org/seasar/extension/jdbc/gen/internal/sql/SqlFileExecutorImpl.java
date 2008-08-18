@@ -52,6 +52,8 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
     protected SqlFileTokenizer tokenizer;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param dialect
      *            方言
      * @param sqlFileEncoding
@@ -87,8 +89,8 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
                 try {
                     statement.execute(sql);
                 } catch (SQLException e) {
-                    context.addException(new SqlFailedRuntimeException(e, sqlFile
-                            .getPath(), reader.getLineNumber(), sql));
+                    context.addException(new SqlFailedRuntimeException(e,
+                            sqlFile.getPath(), reader.getLineNumber(), sql));
                 }
             }
         } finally {

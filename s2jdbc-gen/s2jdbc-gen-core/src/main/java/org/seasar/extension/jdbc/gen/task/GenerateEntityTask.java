@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.command.GenerateEntityCommand;
 
@@ -31,16 +30,6 @@ public class GenerateEntityTask extends AbstractTask {
 
     /** コマンド */
     protected GenerateEntityCommand command = new GenerateEntityCommand();
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        command.setConfigPath(configPath);
-    }
 
     /**
      * エンティティクラスのパッケージ名を設定します。
@@ -80,16 +69,6 @@ public class GenerateEntityTask extends AbstractTask {
      */
     public void setJavaFileEncoding(String javaFileEncoding) {
         command.setJavaFileEncoding(javaFileEncoding);
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**
@@ -168,15 +147,6 @@ public class GenerateEntityTask extends AbstractTask {
      */
     public void setVersionColumnName(String versionColumnName) {
         command.setVersionColumnName(versionColumnName);
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     */
-    public void setEnv(String env) {
-        command.setEnv(env);
     }
 
     @Override

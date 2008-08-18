@@ -22,6 +22,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.internal.util.BeanUtil;
 import org.seasar.framework.util.ClassUtil;
@@ -55,6 +56,46 @@ public abstract class AbstractTask extends Task {
      */
     public void setClasspathRef(Reference reference) {
         createClasspath().setRefid(reference);
+    }
+
+    /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
+    public void setConfigPath(String configPath) {
+        getCommand().setConfigPath(configPath);
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        getCommand().setEnv(env);
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
+    public void setJdbcManagerName(String jdbcManagerName) {
+        getCommand().setJdbcManagerName(jdbcManagerName);
+    }
+
+    /**
+     * {@link Factory}の実装クラス名を設定します。
+     * 
+     * @param factoryClassName
+     *            {@link Factory}の実装クラス名
+     */
+    public void setFactoryClassName(String factoryClassName) {
+        getCommand().setFactoryClassName(factoryClassName);
     }
 
     /**

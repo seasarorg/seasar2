@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.task;
 
 import org.apache.tools.ant.Task;
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.command.DumpDbMetaCommand;
 
@@ -37,26 +36,6 @@ public class DumpDbMetaTask extends AbstractTask {
     }
 
     /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        command.setConfigPath(configPath);
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        command.setJdbcManagerName(jdbcManagerName);
-    }
-
-    /**
      * スキーマ名を設定します。
      * 
      * @param schemaName
@@ -74,15 +53,6 @@ public class DumpDbMetaTask extends AbstractTask {
      */
     public void setTableNamePattern(String tableNamePattern) {
         command.setTableNamePattern(tableNamePattern);
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     */
-    public void setEnv(String env) {
-        command.setEnv(env);
     }
 
 }

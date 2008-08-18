@@ -44,6 +44,8 @@ public class GenerationContextImpl implements GenerationContext {
     protected boolean overwrite;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param model
      *            データモデル
      * @param dir

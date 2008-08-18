@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.command.LoadDataCommand;
 
@@ -45,16 +44,6 @@ public class LoadDataTask extends AbstractTask {
      */
     public void setClasspathDir(File classpathDir) {
         command.setClasspathDir(classpathDir);
-    }
-
-    /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        command.setConfigPath(configPath);
     }
 
     /**
@@ -98,16 +87,6 @@ public class LoadDataTask extends AbstractTask {
     }
 
     /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        command.setEnv(env);
-    }
-
-    /**
      * 対象としないエンティティ名の正規表現を設定します。
      * 
      * @param ignoreEntityNamePattern
@@ -115,16 +94,6 @@ public class LoadDataTask extends AbstractTask {
      */
     public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
         command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        command.setJdbcManagerName(jdbcManagerName);
     }
 
     /**

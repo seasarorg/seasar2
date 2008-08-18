@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileList;
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand;
 
@@ -67,16 +66,6 @@ public class ExecuteSqlTask extends AbstractTask {
     }
 
     /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        command.setConfigPath(configPath);
-    }
-
-    /**
      * SQLステートメントの区切り文字を設定します。
      * 
      * @param statementDelimiter
@@ -97,16 +86,6 @@ public class ExecuteSqlTask extends AbstractTask {
     }
 
     /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        command.setJdbcManagerName(jdbcManagerName);
-    }
-
-    /**
      * SQLファイルのエンコーディングを設定します。
      * 
      * @param sqlFileEncoding
@@ -124,16 +103,6 @@ public class ExecuteSqlTask extends AbstractTask {
      */
     public void setTransactional(boolean transactional) {
         command.setTransactional(transactional);
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        command.setEnv(env);
     }
 
 }

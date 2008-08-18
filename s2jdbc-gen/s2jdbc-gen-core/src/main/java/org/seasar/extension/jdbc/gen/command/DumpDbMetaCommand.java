@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
@@ -133,8 +132,8 @@ public class DumpDbMetaCommand extends AbstractCommand {
      * @return {@link DbTableMetaReader}の実装
      */
     protected DbTableMetaReader createDbTableMetaReader() {
-        return new DbTableMetaReaderImpl(jdbcManager.getDataSource(), dialect,
-                schemaName, tableNamePattern, "");
+        return factory.createDbTableMetaReader(this, jdbcManager
+                .getDataSource(), dialect, schemaName, tableNamePattern, "");
     }
 
     @Override

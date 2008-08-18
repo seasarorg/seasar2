@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.command;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
  * コマンドを表すインタフェースです。
@@ -23,6 +25,66 @@ import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
  * @author taedium
  */
 public interface Command {
+
+    /**
+     * 設定ファイルのパスを返します。
+     * 
+     * @return 設定ファイルのパス
+     */
+    String getConfigPath();
+
+    /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
+    void setConfigPath(String configPath);
+
+    /**
+     * 環境名を返します。
+     * 
+     * @return 環境名
+     */
+    String getEnv();
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    void setEnv(String env);
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
+     */
+    String getJdbcManagerName();
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
+    void setJdbcManagerName(String jdbcManagerName);
+
+    /**
+     * {@link Factory}の実装クラス名を返します。
+     * 
+     * @return {@link Factory}の実装クラス名
+     */
+    String getFactoryClassName();
+
+    /**
+     * {@link Factory}の実装クラス名を設定します。
+     * 
+     * @param factoryClassName
+     *            {@link Factory}の実装クラス名
+     */
+    void setFactoryClassName(String factoryClassName);
 
     /**
      * 実行します。

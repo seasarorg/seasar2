@@ -21,10 +21,6 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
-import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
-import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.TestModel;
 import org.seasar.extension.jdbc.gen.model.TestModelFactory;
@@ -370,8 +366,8 @@ public class GenerateTestCommand extends AbstractCommand {
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), jdbcManager
+        return factory.createEntityMetaReader(this, classpathDir, ClassUtil
+                .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityNamePattern,
                 ignoreEntityNamePattern);
     }
@@ -382,8 +378,8 @@ public class GenerateTestCommand extends AbstractCommand {
      * @return {@link TestModelFactory}の実装
      */
     protected TestModelFactory createTestModelFactory() {
-        return new TestModelFactoryImpl(configPath, jdbcManagerName,
-                testClassNameSuffix);
+        return factory.createTestModelFactory(this, configPath,
+                jdbcManagerName, testClassNameSuffix);
     }
 
     /**
@@ -392,7 +388,8 @@ public class GenerateTestCommand extends AbstractCommand {
      * @return {@link Generator}の実装
      */
     protected Generator createGenerator() {
-        return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
+        return factory.createGenerator(this, templateFileEncoding,
+                templateFilePrimaryDir);
     }
 
     /**
@@ -413,8 +410,8 @@ public class GenerateTestCommand extends AbstractCommand {
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
 
-        return new GenerationContextImpl(model, dir, file, templateName,
-                javaFileEncoding, overwrite);
+        return factory.createGenerationContext(this, model, dir, file,
+                templateName, javaFileEncoding, overwrite);
     }
 
     @Override

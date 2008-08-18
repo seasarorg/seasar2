@@ -44,7 +44,7 @@ public class TestModelFactoryImpl implements TestModelFactory {
     protected String jdbcManagerName;
 
     /** テストクラス名のサフィックス */
-    protected String ｔestClassNameSuffix;
+    protected String testClassNameSuffix;
 
     /**
      * インスタンスを構築します。
@@ -53,23 +53,23 @@ public class TestModelFactoryImpl implements TestModelFactory {
      *            設定ファイルのパス
      * @param jdbcManagerName
      *            {@link JdbcManager}のコンポーネント名
-     * @param ｔestClassNameSuffix
+     * @param testClassNameSuffix
      *            テストクラス名のサフィックス
      */
     public TestModelFactoryImpl(String configPath, String jdbcManagerName,
-            String ｔestClassNameSuffix) {
+            String testClassNameSuffix) {
         if (configPath == null) {
             throw new NullPointerException("configPath");
         }
         if (jdbcManagerName == null) {
             throw new NullPointerException("jdbcManagerName");
         }
-        if (ｔestClassNameSuffix == null) {
-            throw new NullPointerException("ｔestClassNameSuffix");
+        if (testClassNameSuffix == null) {
+            throw new NullPointerException("testClassNameSuffix");
         }
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
-        this.ｔestClassNameSuffix = ｔestClassNameSuffix;
+        this.testClassNameSuffix = testClassNameSuffix;
     }
 
     public TestModel getEntityTestModel(EntityMeta entityMeta) {
@@ -79,7 +79,7 @@ public class TestModelFactoryImpl implements TestModelFactory {
         String packageName = ClassUtil.splitPackageAndShortClassName(entityMeta
                 .getEntityClass().getName())[0];
         testModel.setPackageName(packageName);
-        testModel.setShortClassName(entityMeta.getName() + ｔestClassNameSuffix);
+        testModel.setShortClassName(entityMeta.getName() + testClassNameSuffix);
         testModel.setShortEntityClassName(entityMeta.getName());
         doImportName(testModel, entityMeta);
         doIdValue(testModel, entityMeta);

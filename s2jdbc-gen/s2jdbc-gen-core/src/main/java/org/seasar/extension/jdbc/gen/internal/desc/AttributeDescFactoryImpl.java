@@ -36,7 +36,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     protected GenDialect dialect;
 
     /** バージョンカラム */
-    protected String versionColumn;
+    protected String versionColumnName;
 
     /**
      * インスタンスを構築します。
@@ -45,24 +45,24 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      *            永続化層の命名規約
      * @param dialect
      *            方言
-     * @param versionColumn
+     * @param versionColumnName
      *            バージョンカラム
      */
     public AttributeDescFactoryImpl(
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumn) {
+            String versionColumnName) {
         if (persistenceConvention == null) {
             throw new NullPointerException("persistenceConvention");
         }
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
-        if (versionColumn == null) {
-            throw new NullPointerException("versionColumn");
+        if (versionColumnName == null) {
+            throw new NullPointerException("versionColumnName");
         }
         this.persistenceConvention = persistenceConvention;
         this.dialect = dialect;
-        this.versionColumn = versionColumn;
+        this.versionColumnName = versionColumnName;
     }
 
     public AttributeDesc getAttributeDesc(DbColumnMeta columnMeta) {
@@ -122,7 +122,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      */
     protected void doVersion(DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        if (versionColumn.equalsIgnoreCase(columnMeta.getName())) {
+        if (versionColumnName.equalsIgnoreCase(columnMeta.getName())) {
             attributeDesc.setVersion(true);
         }
     }

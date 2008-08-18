@@ -22,11 +22,7 @@ import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
-import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -257,8 +253,8 @@ public class DumpDataCommand extends AbstractCommand {
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), jdbcManager
+        return factory.createEntityMetaReader(this, classpathDir, ClassUtil
+                .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityNamePattern,
                 ignoreEntityNamePattern);
     }
@@ -269,8 +265,8 @@ public class DumpDataCommand extends AbstractCommand {
      * @return {@link DatabaseDescFactory}の実装
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
-        return new DatabaseDescFactoryImpl(jdbcManager.getEntityMetaFactory(),
-                entityMetaReader, dialect);
+        return factory.createDatabaseDescFactory(this, jdbcManager
+                .getEntityMetaFactory(), entityMetaReader, dialect);
     }
 
     /**
@@ -279,7 +275,7 @@ public class DumpDataCommand extends AbstractCommand {
      * @return {@link Dumper}の実装
      */
     protected Dumper createDumper() {
-        return new DumperImpl(dialect, dumpFileEncoding);
+        return factory.createDumper(this, dialect, dumpFileEncoding);
     }
 
     /**
@@ -288,7 +284,8 @@ public class DumpDataCommand extends AbstractCommand {
      * @return {@link SqlUnitExecutor}の実装
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
-        return new SqlUnitExecutorImpl(jdbcManager.getDataSource(), false);
+        return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
+                false);
     }
 
     @Override

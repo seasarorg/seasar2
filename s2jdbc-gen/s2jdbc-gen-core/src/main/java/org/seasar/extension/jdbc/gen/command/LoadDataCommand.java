@@ -25,11 +25,7 @@ import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.Generator;
-import org.seasar.extension.jdbc.gen.internal.data.LoaderImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
-import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
 import org.seasar.extension.jdbc.gen.internal.util.ExcludeFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
@@ -307,8 +303,8 @@ public class LoadDataCommand extends AbstractCommand {
      * @return {@link EntityMetaReader}の実装
      */
     protected EntityMetaReader createEntityMetaReader() {
-        return new EntityMetaReaderImpl(classpathDir, ClassUtil.concatName(
-                rootPackageName, entityPackageName), jdbcManager
+        return factory.createEntityMetaReader(this, classpathDir, ClassUtil
+                .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityNamePattern,
                 ignoreEntityNamePattern);
     }
@@ -319,8 +315,8 @@ public class LoadDataCommand extends AbstractCommand {
      * @return {@link DatabaseDescFactory}の実装
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
-        return new DatabaseDescFactoryImpl(jdbcManager.getEntityMetaFactory(),
-                entityMetaReader, dialect);
+        return factory.createDatabaseDescFactory(this, jdbcManager
+                .getEntityMetaFactory(), entityMetaReader, dialect);
     }
 
     /**
@@ -329,7 +325,8 @@ public class LoadDataCommand extends AbstractCommand {
      * @return {@link SqlUnitExecutor}の実装
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
-        return new SqlUnitExecutorImpl(jdbcManager.getDataSource(), false);
+        return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
+                false);
     }
 
     /**
@@ -338,7 +335,8 @@ public class LoadDataCommand extends AbstractCommand {
      * @return {@link Loader}の実装
      */
     protected Loader createLoader() {
-        return new LoaderImpl(dialect, dumpFileEncoding, loadBatchSize);
+        return factory.createLoader(this, dialect, dumpFileEncoding,
+                loadBatchSize);
     }
 
     @Override
