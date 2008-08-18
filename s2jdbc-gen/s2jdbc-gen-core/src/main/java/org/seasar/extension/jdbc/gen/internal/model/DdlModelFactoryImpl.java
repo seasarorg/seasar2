@@ -23,6 +23,8 @@ import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 
 /**
  * {@link DdlModelFactory}の実装クラスです。
@@ -46,11 +48,21 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
     /** テーブルオプション */
     protected String tableOption;
 
+    /** SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型 */
+    protected SqlKeywordCaseType sqlKeywordCaseType;
+
+    /** SQLの識別子の大文字小文字を変換するかどうかを示す列挙型 */
+    protected SqlIdentifierCaseType sqlIdentifierCaseType;
+
     /**
      * インスタンスを構築します。
      * 
      * @param dialect
      *            方言
+     * @param sqlKeywordCaseType
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
+     * @param sqlIdentifierCaseType
+     *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      * @param statementDelimiter
      *            SQLステートメントの区切り文字
      * @param schemaInfoFullTableName
@@ -59,13 +71,20 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
      *            スキーマのバージョン番号を格納するカラム名
      * @param tableOption
      *            テーブルオプション、存在しない場合は{@code null}
-     * 
      */
-    public DdlModelFactoryImpl(GenDialect dialect, char statementDelimiter,
-            String schemaInfoFullTableName, String schemaInfoColumnName,
-            String tableOption) {
+    public DdlModelFactoryImpl(GenDialect dialect,
+            SqlKeywordCaseType sqlKeywordCaseType,
+            SqlIdentifierCaseType sqlIdentifierCaseType,
+            char statementDelimiter, String schemaInfoFullTableName,
+            String schemaInfoColumnName, String tableOption) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
+        }
+        if (sqlKeywordCaseType == null) {
+            throw new NullPointerException("sqlKeywordCaseType");
+        }
+        if (sqlIdentifierCaseType == null) {
+            throw new NullPointerException("sqlIdentifierCaseType");
         }
         if (schemaInfoFullTableName == null) {
             throw new NullPointerException("schemaInfoFullTableName");
@@ -74,6 +93,8 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
             throw new NullPointerException("schemaInfoColumnName");
         }
         this.dialect = dialect;
+        this.sqlKeywordCaseType = sqlKeywordCaseType;
+        this.sqlIdentifierCaseType = sqlIdentifierCaseType;
         this.schemaInfoFullTableName = schemaInfoFullTableName;
         this.schemaInfoColumnName = schemaInfoColumnName;
         this.statementDelimiter = statementDelimiter;
@@ -83,6 +104,8 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
     public DdlModel getDdlModel(DatabaseDesc databaseDesc, int versionNo) {
         DdlModel model = new DdlModel();
         model.setDialect(dialect);
+        model.setSqlKeywordCaseType(sqlKeywordCaseType);
+        model.setSqlIdentifierCaseType(sqlIdentifierCaseType);
         model.setDelimiter(statementDelimiter);
         model.setTableOption(tableOption);
         for (TableDesc tableDesc : databaseDesc.getTableDescList()) {

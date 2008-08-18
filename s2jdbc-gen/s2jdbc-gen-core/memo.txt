@@ -86,6 +86,8 @@
 <tr><td>dropSequenceDdlFileName</td><td>説明</td><td>"020-drop-sequence.sql"</td><td>NO</td></tr>
 <tr><td>dropForeignKeyDdlFileName</td><td>説明</td><td>"010-drop-foreignkey.sql"</td><td>NO</td></tr>
 <tr><td>ddlFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
+<tr><td>sqlkeywordcase</td><td>説明</td><td>"originalcase"</td><td>NO</td></tr>
+<tr><td>sqlidentifiercase</td><td>説明</td><td>"originalcase"</td><td>NO</td></tr>
 <tr><td>dump</td><td>説明</td><td>"true"</td><td>NO</td></tr>
 <tr><td>dumpDirName</td><td>説明</td><td>"040-dump"</td><td>NO</td></tr>
 <tr><td>dumpFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>

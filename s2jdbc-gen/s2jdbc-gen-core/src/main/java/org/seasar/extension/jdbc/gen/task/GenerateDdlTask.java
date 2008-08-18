@@ -38,6 +38,28 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を設定します。
+     * 
+     * @param sqlKeywordCase
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
+     */
+    public void setSqlKeywordCase(SqlKeywordCase sqlKeywordCase) {
+        String value = sqlKeywordCase.getValue();
+        command.setSqlKeywordCase(value.toUpperCase());
+    }
+
+    /**
+     * SQLの識別子の大文字小文字を変換するかどうかを示す列挙型を設定します。
+     * 
+     * @param sqlIdentifierCase
+     *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
+     */
+    public void setSqlIdentifierCase(SqlIdentifierCase sqlIdentifierCase) {
+        String value = sqlIdentifierCase.getValue();
+        command.setSqlIdentifierCase(value.toUpperCase());
+    }
+
+    /**
      * クラスパスのディレクトリを設定します。
      * 
      * @param classpathDir

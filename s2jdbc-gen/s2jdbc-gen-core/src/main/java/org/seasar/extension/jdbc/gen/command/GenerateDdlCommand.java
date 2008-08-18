@@ -39,6 +39,8 @@ import org.seasar.extension.jdbc.gen.internal.version.DdlVersionIncrementerImpl;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
@@ -54,7 +56,7 @@ import org.seasar.framework.util.ClassUtil;
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドが生成するDDLは次の8つです。
+ * このコマンドは次の8つのDDLを生成します。
  * <ul>
  * <li>テーブルを作成するDDL</li>
  * <li>テーブルを削除するDDL</li>
@@ -178,6 +180,13 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** データをダンプする場合{@code true}、しない場合{@code false} */
     protected boolean dump = true;
+
+    /** SQLのキーワードの大文字小文字を変換するかどうかを示す値 */
+    protected String sqlKeywordCase = SqlKeywordCaseType.ORIGINALCASE.name();
+
+    /** SQLの識別子の大文字小文字を変換するかどうかを示す値 */
+    protected String sqlIdentifierCase = SqlIdentifierCaseType.ORIGINALCASE
+            .name();
 
     /** 方言 */
     protected GenDialect dialect;
@@ -866,6 +875,50 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.dump = dump;
     }
 
+    /**
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す値を返します。
+     * 
+     * @return SQLのキーワードの大文字小文字を変換するかどうかを示す値
+     */
+    public String getSqlKeywordCase() {
+        return sqlKeywordCase;
+    }
+
+    /**
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す値を設定します。
+     * <p>
+     * {@link SqlKeywordCaseType}に対応する値でなければいけません。
+     * </p>
+     * 
+     * @param sqlKeywordCase
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す値
+     */
+    public void setSqlKeywordCase(String sqlKeywordCase) {
+        this.sqlKeywordCase = sqlKeywordCase;
+    }
+
+    /**
+     * SQLの識別子の大文字小文字を変換するかどうかを示す値を返します。
+     * 
+     * @return SQLの識別子の大文字小文字を変換するかどうかを示す値
+     */
+    public String getSqlIdentifierCase() {
+        return sqlIdentifierCase;
+    }
+
+    /**
+     * SQLの識別子の大文字小文字を変換するかどうかを示す値を設定します。
+     * <p>
+     * {@link SqlIdentifierCaseType}に対応する値でなければいけません。
+     * </p>
+     * 
+     * @param sqlIdentifierCase
+     *            SQLの識別子の大文字小文字を変換するかどうかを示す値
+     */
+    public void setSqlIdentifierCase(String sqlIdentifierCase) {
+        this.sqlIdentifierCase = sqlIdentifierCase;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -1032,7 +1085,12 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DdlModelFactory}の実装
      */
     protected DdlModelFactory createDdlModelFactory() {
-        return new DdlModelFactoryImpl(dialect, statementDelimiter,
+        SqlKeywordCaseType keywordCaseType = SqlKeywordCaseType
+                .valueOf(sqlKeywordCase);
+        SqlIdentifierCaseType identifierCaseType = SqlIdentifierCaseType
+                .valueOf(sqlIdentifierCase);
+        return new DdlModelFactoryImpl(dialect, keywordCaseType,
+                identifierCaseType, statementDelimiter,
                 schemaInfoFullTableName, schemaInfoColumnName, tableOption);
     }
 

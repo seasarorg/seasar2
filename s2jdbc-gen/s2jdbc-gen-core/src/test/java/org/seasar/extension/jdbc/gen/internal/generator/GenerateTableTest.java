@@ -27,6 +27,8 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.MssqlGenDialect;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -122,7 +124,9 @@ public class GenerateTableTest {
         databaseDesc.addTableDesc(tableDesc3);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
+                new MssqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
+                null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 
@@ -175,7 +179,8 @@ public class GenerateTableTest {
         databaseDesc.addTableDesc(tableDesc);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new MssqlGenDialect(), ';', "SCHEMA_INFO", "VERSION",
+                new MssqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
                 "ENGINE = INNODB");
         model = factory.getDdlModel(databaseDesc, 0);
 

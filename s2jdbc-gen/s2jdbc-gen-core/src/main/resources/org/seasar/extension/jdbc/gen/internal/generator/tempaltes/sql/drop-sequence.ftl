@@ -1,3 +1,3 @@
 <#list sequenceDescList as sequence>
-drop sequence ${sequence.sequenceName}${delimiter}
+drop sequence ${convertIdentifier(sequence.sequenceName)}${delimiter}
 </#list>

@@ -1,5 +1,5 @@
 <#list tableDescList as table>
-drop table ${table.fullName}${delimiter}
+${convertKeyword("drop table")} ${convertIdentifier(table.fullName)}${delimiter}
 </#list>
 
-drop table ${schemaInfoFullTableName}${delimiter}
+${convertKeyword("drop table")} ${convertIdentifier(schemaInfoFullTableName)}${delimiter}

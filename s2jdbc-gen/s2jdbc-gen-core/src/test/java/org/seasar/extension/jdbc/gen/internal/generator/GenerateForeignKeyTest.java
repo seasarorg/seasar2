@@ -26,6 +26,8 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -77,7 +79,9 @@ public class GenerateForeignKeyTest {
         databaseDesc.addTableDesc(tableDesc);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
+                new StandardGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
+                null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

@@ -21,6 +21,8 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 
 import static org.junit.Assert.*;
 
@@ -31,7 +33,8 @@ import static org.junit.Assert.*;
 public class DdlModelFactoryImplTest {
 
     private DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-            new StandardGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
+            new StandardGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
+            SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION", null);
 
     /**
      * 

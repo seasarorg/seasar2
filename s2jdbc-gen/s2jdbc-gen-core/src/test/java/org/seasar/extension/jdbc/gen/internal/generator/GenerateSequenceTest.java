@@ -26,6 +26,8 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -75,7 +77,9 @@ public class GenerateSequenceTest {
         databaseDesc.addTableDesc(tableDesc2);
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new HsqlGenDialect(), ';', "SCHEMA_INFO", "VERSION", null);
+                new HsqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
+                null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

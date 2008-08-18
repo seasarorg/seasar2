@@ -151,6 +151,28 @@
 		/>
 	</target>
 
+	<target name="testGenerateDdl" depends="showRdbmsName, clean">
+		<!-- setUp -->
+		<javac 
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath">
+			<src path="../src/main/java"/>
+		</javac>
+		<!-- test -->
+		<gen-ddl 
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
+			sqlkeywordcase="lowercase"
+			sqlidentifiercase="uppercase"
+		/>
+	</target>
+	
 	<target name="testMigrate" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 

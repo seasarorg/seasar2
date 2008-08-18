@@ -33,6 +33,12 @@ public class DdlModel {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型 */
+    protected SqlKeywordCaseType sqlKeywordCaseType;
+
+    /** SQLの識別子の大文字小文字を変換するかどうかを示す列挙型 */
+    protected SqlIdentifierCaseType sqlIdentifierCaseType;
+
     /** 区切り文字 */
     protected char delimiter;
 
@@ -77,6 +83,37 @@ public class DdlModel {
     }
 
     /**
+     * @return Returns the sqlKeywordCaseType.
+     */
+    public SqlKeywordCaseType getSqlKeywordCaseType() {
+        return sqlKeywordCaseType;
+    }
+
+    /**
+     * @param sqlKeywordCaseType
+     *            The sqlKeywordCaseType to set.
+     */
+    public void setSqlKeywordCaseType(SqlKeywordCaseType sqlKeywordCaseType) {
+        this.sqlKeywordCaseType = sqlKeywordCaseType;
+    }
+
+    /**
+     * @return Returns the sqlIdentifierCaseType.
+     */
+    public SqlIdentifierCaseType getSqlIdentifierCaseType() {
+        return sqlIdentifierCaseType;
+    }
+
+    /**
+     * @param sqlIdentifierCaseType
+     *            The sqlIdentifierCaseType to set.
+     */
+    public void setSqlIdentifierCaseType(
+            SqlIdentifierCaseType sqlIdentifierCaseType) {
+        this.sqlIdentifierCaseType = sqlIdentifierCaseType;
+    }
+
+    /**
      * 区切り文字を返します。
      * 
      * @return 区切り文字
@@ -101,7 +138,7 @@ public class DdlModel {
      * @return 存在する場合テーブルオプション、存在しない場合{@code null}
      */
     public String getTableOption() {
-        return tableOption;
+        return convertKeywordInternal(tableOption);
     }
 
     /**
@@ -242,9 +279,10 @@ public class DdlModel {
      * @return シーケンス定義の断片
      */
     public String getSequenceDefinitionFragment(SequenceDesc sequenceDesc) {
-        return dialect.getSequenceDefinitionFragment(
-                sequenceDesc.getDataType(), sequenceDesc.getInitialValue(),
-                sequenceDesc.getAllocationSize());
+        String value = dialect.getSequenceDefinitionFragment(sequenceDesc
+                .getDataType(), sequenceDesc.getInitialValue(), sequenceDesc
+                .getAllocationSize());
+        return convertKeywordInternal(value);
     }
 
     /**
@@ -253,7 +291,8 @@ public class DdlModel {
      * @return IDENTITYカラムの定義
      */
     public String getIdentityColumnDefinition() {
-        return dialect.getIdentityColumnDefinition();
+        String value = dialect.getIdentityColumnDefinition();
+        return convertKeywordInternal(value);
     }
 
     /**
@@ -262,7 +301,8 @@ public class DdlModel {
      * @return 外部キーを削除する構文
      */
     public String getDropForeignKeySyntax() {
-        return dialect.getDropForeignKeySyntax();
+        String value = dialect.getDropForeignKeySyntax();
+        return convertKeywordInternal(value);
     }
 
     /**
@@ -271,7 +311,8 @@ public class DdlModel {
      * @return 外部キーを削除する構文
      */
     public String getDropUniqueKeySyntax() {
-        return dialect.getDropUniqueKeySyntax();
+        String value = dialect.getDropUniqueKeySyntax();
+        return convertKeywordInternal(value);
     }
 
     /**
@@ -294,5 +335,69 @@ public class DdlModel {
      */
     public String unquote(String value) {
         return dialect.unquote(value);
+    }
+
+    /**
+     * SQLのキーワードの大文字小文字を変換します。
+     * 
+     * @param keyword
+     *            SQLのキーワード
+     * @return 変換された文字列
+     */
+    public String convertKeyword(String keyword) {
+        return convertKeywordInternal(keyword);
+    }
+
+    /**
+     * 内部的にSQLのキーワードの大文字小文字を変換します。
+     * 
+     * @param keyword
+     *            SQLのキーワード
+     * @return 変換された文字列
+     */
+    protected String convertKeywordInternal(String keyword) {
+        if (keyword == null) {
+            return null;
+        }
+        switch (sqlKeywordCaseType) {
+        case UPPERCASE:
+            return keyword.toUpperCase();
+        case LOWERCASE:
+            return keyword.toLowerCase();
+        default:
+            return keyword;
+        }
+    }
+
+    /**
+     * SQLのキーワードの識別子を変換します。
+     * 
+     * @param identifier
+     *            SQLの識別子
+     * @return 変換された文字列
+     */
+    public String convertIdentifier(String identifier) {
+        return convertIdentifierInternal(identifier);
+    }
+
+    /**
+     * 内部的にSQLの識別子の大文字小文字を変換します。
+     * 
+     * @param identifier
+     *            SQLの識別子
+     * @return 変換された文字列
+     */
+    protected String convertIdentifierInternal(String identifier) {
+        if (identifier == null) {
+            return null;
+        }
+        switch (sqlIdentifierCaseType) {
+        case UPPERCASE:
+            return identifier.toUpperCase();
+        case LOWERCASE:
+            return identifier.toLowerCase();
+        default:
+            return identifier;
+        }
     }
 }
