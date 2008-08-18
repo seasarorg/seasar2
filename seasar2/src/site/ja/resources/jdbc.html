@@ -308,7 +308,7 @@ public class SelectDataSourceInterceptor implements MethodInterceptor {
       <b>dataSourceFactory.setSelectableDataSourceName(dataSourceName)</b>;
       return invocation.proceed();
     } finally {
-      proxy.setDataSourceName(currentName);
+      dataSourceFactory.setSelectableDataSourceName(currentName);
   }
 
   public String getDataSourceName() {
