@@ -100,5 +100,7 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         foreignKeyDesc.setReferencedCatalogName(tableMeta.getCatalog());
         foreignKeyDesc.setReferencedSchemaName(tableMeta.getSchema());
         foreignKeyDesc.setReferencedTableName(tableMeta.getName());
+        foreignKeyDesc.setReferencedFullTableName(tableMeta.getFullName());
     }
+
 }

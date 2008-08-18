@@ -41,6 +41,9 @@ public class ForeignKeyDesc {
     /** 参照されるテーブル名 */
     protected String referencedTableName;
 
+    /** 参照されるカタログ名、参照されるスキーマ名、参照される名前をピリオドで連結した完全な名前 */
+    protected String referencedFullTableName;
+
     /** 参照されるカラム名のリスト */
     protected List<String> referencedColumnNameList = new ArrayList<String>();
 
@@ -145,19 +148,22 @@ public class ForeignKeyDesc {
     }
 
     /**
+     * 参照されるテーブルの完全な名前を設定します。
+     * 
+     * @param referencedFullTableName
+     *            参照されるテーブルの完全な名前
+     */
+    public void setReferencedFullTableName(String referencedFullTableName) {
+        this.referencedFullTableName = referencedFullTableName;
+    }
+
+    /**
      * 参照されるテーブルの完全な名前を返します。
      * 
      * @return 参照されるテーブルの完全な名前
      */
     public String getReferencedFullTableName() {
-        StringBuilder buf = new StringBuilder();
-        if (referencedCatalogName != null) {
-            buf.append(referencedCatalogName).append(".");
-        }
-        if (referencedSchemaName != null) {
-            buf.append(referencedSchemaName).append(".");
-        }
-        return buf.append(referencedTableName).toString();
+        return referencedFullTableName;
     }
 
     @Override

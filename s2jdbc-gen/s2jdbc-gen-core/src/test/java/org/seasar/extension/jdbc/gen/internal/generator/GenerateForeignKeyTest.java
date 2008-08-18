@@ -56,6 +56,7 @@ public class GenerateForeignKeyTest {
         foreignKeyDesc.setReferencedCatalogName("CCC");
         foreignKeyDesc.setReferencedSchemaName("DDD");
         foreignKeyDesc.setReferencedTableName("FOO");
+        foreignKeyDesc.setReferencedFullTableName("CCC.DDD.FOO");
         foreignKeyDesc.addReferencedColumnName("REF1-1");
         foreignKeyDesc.addReferencedColumnName("REF1-2");
 
@@ -65,6 +66,7 @@ public class GenerateForeignKeyTest {
         foreignKeyDesc2.setReferencedCatalogName("EEE");
         foreignKeyDesc2.setReferencedSchemaName("FFF");
         foreignKeyDesc2.setReferencedTableName("BAR");
+        foreignKeyDesc2.setReferencedFullTableName("EEE.FFF.BAR");
         foreignKeyDesc2.addReferencedColumnName("REF2-1");
         foreignKeyDesc2.addReferencedColumnName("REF2-2");
 
@@ -80,8 +82,8 @@ public class GenerateForeignKeyTest {
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new StandardGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
-                null);
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
+                "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

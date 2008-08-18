@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.desc;
 import junitx.framework.Assert;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 
 import static org.junit.Assert.*;
 
@@ -58,18 +57,4 @@ public class ForeignKeyDescTest {
                 .hashCode());
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testGetReferencedFullTableName() throws Exception {
-        ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
-        foreignKeyDesc.addColumnName("AAA");
-        foreignKeyDesc.setReferencedCatalogName("BBB");
-        foreignKeyDesc.setReferencedSchemaName("CCC");
-        foreignKeyDesc.setReferencedTableName("DDD");
-        foreignKeyDesc.addReferencedColumnName("EEE");
-        assertEquals("BBB.CCC.DDD", foreignKeyDesc.getReferencedFullTableName());
-    }
 }

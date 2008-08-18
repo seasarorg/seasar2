@@ -174,26 +174,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
         tableDesc.setCatalogName(tableMeta.getCatalog());
         tableDesc.setSchemaName(tableMeta.getSchema());
         tableDesc.setName(tableMeta.getName());
-        tableDesc.setFullName(buildFullName(tableMeta));
+        tableDesc.setFullName(tableMeta.getFullName());
         tableDesc.setCanonicalName(buildCanonicalName(tableMeta));
-    }
-
-    /**
-     * 完全な名前を組み立てます。
-     * 
-     * @param tableMeta
-     *            テーブルメタデータ
-     * @return 完全な名前
-     */
-    protected String buildFullName(TableMeta tableMeta) {
-        StringBuilder buf = new StringBuilder();
-        if (tableMeta.getCatalog() != null) {
-            buf.append(tableMeta.getCatalog()).append(".");
-        }
-        if (tableMeta.getSchema() != null) {
-            buf.append(tableMeta.getSchema()).append(".");
-        }
-        return buf.append(tableMeta.getName()).toString();
     }
 
     /**
