@@ -249,7 +249,7 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link EntityMetaReader}の実装を返します。
+     * {@link EntityMetaReader}の実装を作成します。
      * 
      * @return {@link EntityMetaReader}の実装
      */
@@ -261,7 +261,7 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DatabaseDescFactory}の実装を返します。
+     * {@link DatabaseDescFactory}の実装を作成します。
      * 
      * @return {@link DatabaseDescFactory}の実装
      */
@@ -271,7 +271,7 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link Dumper}の実装を返します。
+     * {@link Dumper}の実装を作成します。
      * 
      * @return {@link Dumper}の実装
      */
@@ -280,7 +280,7 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link SqlUnitExecutor}の実装を返します。
+     * {@link SqlUnitExecutor}の実装を作成します。
      * 
      * @return {@link SqlUnitExecutor}の実装
      */

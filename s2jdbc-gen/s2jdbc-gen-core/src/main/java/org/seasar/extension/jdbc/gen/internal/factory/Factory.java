@@ -58,7 +58,7 @@ public interface Factory {
      * {@link EntityMetaReader}の実装を返します。
      * 
      * @param command
-     *            コマンド
+     *            呼び出し元のコマンド
      * @param classpathDir
      *            ルートディレクトリ
      * @param packageName
@@ -126,7 +126,7 @@ public interface Factory {
      * {@link DbTableMetaReader}の実装を返します。
      * 
      * @param command
-     *            コマンド
+     *            呼び出し元のコマンド
      * @param dataSource
      *            データソース
      * @param dialect
