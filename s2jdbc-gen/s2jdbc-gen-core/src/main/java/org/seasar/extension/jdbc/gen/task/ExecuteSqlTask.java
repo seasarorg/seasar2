@@ -20,7 +20,7 @@ import java.io.File;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileList;
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.ExecuteSqlCommand;
+import org.seasar.extension.jdbc.gen.internal.command.ExecuteSqlCommand;
 
 /**
  * SQLを実行する{@link Task}です。

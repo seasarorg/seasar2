@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.apache.tools.ant.Task;
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.DumpDataCommand;
+import org.seasar.extension.jdbc.gen.internal.command.DumpDataCommand;
 
 /**
  * エンティティに対応するデータベースのデータをテキストファイルにダンプする{@link Task}です。

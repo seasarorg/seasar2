@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.GenerateTestCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateTestCommand;
 
 /**
  * エンティティに対するテストクラスのJavaファイルを生成する{@link Task}です。

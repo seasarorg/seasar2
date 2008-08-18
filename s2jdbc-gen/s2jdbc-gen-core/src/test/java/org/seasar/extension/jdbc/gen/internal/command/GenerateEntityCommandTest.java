@@ -13,13 +13,11 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
-
-import java.io.File;
+package org.seasar.extension.jdbc.gen.internal.command;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyEmptyRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -28,7 +26,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ExecuteSqlCommandTest {
+public class GenerateEntityCommandTest {
 
     /**
      * 
@@ -45,12 +43,9 @@ public class ExecuteSqlCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        ExecuteSqlCommand command = new ExecuteSqlCommand();
-        try {
-            command.validate();
-            fail();
-        } catch (RequiredPropertyEmptyRuntimeException expected) {
-        }
+        GenerateEntityCommand command = new GenerateEntityCommand();
+        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        command.validate();
     }
 
     /**
@@ -59,12 +54,13 @@ public class ExecuteSqlCommandTest {
      */
     @Test
     public void testInit() throws Exception {
-        ExecuteSqlCommand command = new ExecuteSqlCommand();
+        GenerateEntityCommand command = new GenerateEntityCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        command.getSqlFileList().add(new File("aaa"));
-        command.validate();
         command.init();
-        assertNotNull(command.sqlFileExecutor);
-        assertNotNull(command.sqlUnitExecutor);
+        assertNotNull(command.entityDescFactory);
+        assertNotNull(command.entityModelFactory);
+        assertNotNull(command.generator);
+        assertNotNull(command.dbTableMetaReader);
+        assertNotNull(command.dialect);
     }
 }

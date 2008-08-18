@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.LoadDataCommand;
+import org.seasar.extension.jdbc.gen.internal.command.LoadDataCommand;
 
 /**
  * ダンプファイルをロードする{@link Command}の実装クラスです。

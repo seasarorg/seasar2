@@ -13,14 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.internal.command.MigrateCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateServiceCommandTest {
+public class MigrateCommandTest {
 
     /**
      * 
@@ -46,7 +46,7 @@ public class GenerateServiceCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateServiceCommand command = new GenerateServiceCommand();
+        MigrateCommand command = new MigrateCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         try {
             command.validate();
@@ -61,17 +61,19 @@ public class GenerateServiceCommandTest {
      */
     @Test
     public void testInit() throws Exception {
-        GenerateServiceCommand command = new GenerateServiceCommand();
+        MigrateCommand command = new MigrateCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createServiceModelFactory());
-        assertNotNull(command.createGenerator());
-        ServiceModel serviceModel = new ServiceModel();
-        serviceModel.setPackageName("aaa");
-        serviceModel.setShortClassName("bbb");
-        assertNotNull(command.createGenerationContext(serviceModel, "ccc"));
+        assertNotNull(command.dialect);
+        assertNotNull(command.sqlFileExecutor);
+        assertNotNull(command.schemaInfoTable);
+        assertNotNull(command.ddlVersionDirectory);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.databaseDescFactory);
+        assertNotNull(command.sqlUnitExecutor);
+        assertNotNull(command.loader);
+        assertNotNull(command.migrater);
     }
 }

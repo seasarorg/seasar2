@@ -13,12 +13,13 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.internal.command.LoadDataCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -28,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateDdlCommandTest {
+public class LoadDataCommandTest {
 
     /**
      * 
@@ -45,8 +46,7 @@ public class GenerateDdlCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateDdlCommand command = new GenerateDdlCommand();
-        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        LoadDataCommand command = new LoadDataCommand();
         try {
             command.validate();
             fail();
@@ -60,19 +60,15 @@ public class GenerateDdlCommandTest {
      */
     @Test
     public void testInit() throws Exception {
-        GenerateDdlCommand command = new GenerateDdlCommand();
+        LoadDataCommand command = new LoadDataCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.dialect);
-        assertNotNull(command.ddlVersionDirectory);
-        assertNotNull(command.ddlVersionIncrementer);
-        assertNotNull(command.ddlModelFactory);
-        assertNotNull(command.generator);
-        assertNotNull(command.entityMetaReader);
-        assertNotNull(command.databaseDescFactory);
         assertNotNull(command.sqlUnitExecutor);
-        assertNotNull(command.generator);
+        assertNotNull(command.databaseDescFactory);
+        assertNotNull(command.loader);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.dialect);
     }
 }

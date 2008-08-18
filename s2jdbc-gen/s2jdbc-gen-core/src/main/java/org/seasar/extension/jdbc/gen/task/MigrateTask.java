@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.MigrateCommand;
+import org.seasar.extension.jdbc.gen.internal.command.MigrateCommand;
 
 /**
  * データベースのスキーマとデータを移行する{@link Task}です。

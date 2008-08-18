@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.GenerateConditionCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateConditionCommand;
 
 /**
  * エンティティの条件クラスのJavaファイルを生成する{@link Task}です。

@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.GenerateServiceCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceCommand;
 
 /**
  * エンティティに対するサービスクラスのJavaファイルを生成する{@link Task}です。

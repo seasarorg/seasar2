@@ -13,10 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.command;
+
+import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateTestCommand;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -25,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DumpDbMetaCommandTest {
+public class GenerateTestCommandTest {
 
     /**
      * 
@@ -41,12 +45,29 @@ public class DumpDbMetaCommandTest {
      * @throws Exception
      */
     @Test
-    public void testInit() throws Exception {
-        DumpDbMetaCommand command = new DumpDbMetaCommand();
+    public void testValidate() throws Exception {
+        GenerateTestCommand command = new GenerateTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        try {
+            command.validate();
+            fail();
+        } catch (RequiredPropertyNullRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testInit() throws Exception {
+        GenerateTestCommand command = new GenerateTestCommand();
+        command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.dialect);
-        assertNotNull(command.dbTableMetaReader);
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.testModelFactory);
+        assertNotNull(command.generator);
     }
 }

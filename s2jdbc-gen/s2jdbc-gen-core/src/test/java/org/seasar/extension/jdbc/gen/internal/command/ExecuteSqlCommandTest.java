@@ -13,13 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.command.ExecuteSqlCommand;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyEmptyRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -28,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class LoadDataCommandTest {
+public class ExecuteSqlCommandTest {
 
     /**
      * 
@@ -45,11 +46,11 @@ public class LoadDataCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        LoadDataCommand command = new LoadDataCommand();
+        ExecuteSqlCommand command = new ExecuteSqlCommand();
         try {
             command.validate();
             fail();
-        } catch (RequiredPropertyNullRuntimeException expected) {
+        } catch (RequiredPropertyEmptyRuntimeException expected) {
         }
     }
 
@@ -59,15 +60,12 @@ public class LoadDataCommandTest {
      */
     @Test
     public void testInit() throws Exception {
-        LoadDataCommand command = new LoadDataCommand();
+        ExecuteSqlCommand command = new ExecuteSqlCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        command.setClasspathDir(new File("dir"));
+        command.getSqlFileList().add(new File("aaa"));
         command.validate();
         command.init();
+        assertNotNull(command.sqlFileExecutor);
         assertNotNull(command.sqlUnitExecutor);
-        assertNotNull(command.databaseDescFactory);
-        assertNotNull(command.loader);
-        assertNotNull(command.entityMetaReader);
-        assertNotNull(command.dialect);
     }
 }

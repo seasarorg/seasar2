@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.task;
 import java.io.File;
 
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.GenerateEntityCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
 
 /**
  * エンティティクラスのJavaファイルを生成する{@link Task}です。
@@ -73,7 +73,7 @@ public class GenerateEntityTask extends AbstractTask {
 
     /**
      * @param overwrite
-     * @see org.seasar.extension.jdbc.gen.command.GenerateEntityCommand#setOverwrite(boolean)
+     * @see org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand#setOverwrite(boolean)
      */
     public void setOverwrite(boolean overwrite) {
         command.setOverwrite(overwrite);

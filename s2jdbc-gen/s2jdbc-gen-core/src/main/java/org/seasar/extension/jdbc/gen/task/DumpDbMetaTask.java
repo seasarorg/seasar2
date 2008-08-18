@@ -17,7 +17,7 @@ package org.seasar.extension.jdbc.gen.task;
 
 import org.apache.tools.ant.Task;
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.command.DumpDbMetaCommand;
+import org.seasar.extension.jdbc.gen.internal.command.DumpDbMetaCommand;
 
 /**
  * データベースのメタデータをダンプする{@link Task}です。

@@ -13,50 +13,51 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
-import org.seasar.extension.jdbc.gen.model.ConditionModel;
-import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
+import org.seasar.extension.jdbc.gen.model.ServiceModel;
+import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * 条件クラスのJavaファイルを生成する{@link Command}の実装です。
+ * サービスクラスのJavaファイルを生成する{@link Command}の実装です。
  * <p>
- * このコマンドは、エンティティクラスのメタデータから条件クラスのJavaファイルを生成します。 そのため、
+ * このコマンドは、エンティティクラスのメタデータからサービスクラスのJavaファイルを生成します。 そのため、
  * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります 。
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは、エンティティクラス１つにつき１つの条件クラスのJavaファイルを生成します。
+ * このコマンドは、エンティティクラス１つにつき１つのサービスクラスのJavaファイルを生成します。
  * </p>
  * 
  * @author taedium
  */
-public class GenerateConditionCommand extends AbstractCommand {
+public class GenerateServiceCommand extends AbstractCommand {
 
     /** ロガー */
     protected static Logger logger = Logger
-            .getLogger(GenerateConditionCommand.class);
+            .getLogger(GenerateServiceCommand.class);
 
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
     /** 条件クラス名のサフィックス */
-    protected String conditionClassNameSuffix = "Condition";
+    protected String serviceClassNameSuffix = "Service";
 
     /** 条件クラスのパッケージ名 */
-    protected String conditionPackageName = "condition";
+    protected String servicePackageName = "service";
 
     /** 条件クラスのテンプレート名 */
-    protected String conditionTemplateFileName = "java/condition.ftl";
+    protected String serviceTemplateFileName = "java/service.ftl";
 
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
@@ -74,7 +75,7 @@ public class GenerateConditionCommand extends AbstractCommand {
     protected String javaFileEncoding = "UTF-8";
 
     /** 上書きをする場合{@code true}、しない場合{@code false} */
-    protected boolean overwrite = true;
+    protected boolean overwrite = false;
 
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
@@ -88,8 +89,8 @@ public class GenerateConditionCommand extends AbstractCommand {
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
-    /** 条件クラスのモデルのファクトリ */
-    protected ConditionModelFactory conditionModelFactory;
+    /** サービスクラスのモデルのファクトリ */
+    protected ServiceModelFactory serviceModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -97,7 +98,7 @@ public class GenerateConditionCommand extends AbstractCommand {
     /**
      * インスタンスを構築します。
      */
-    public GenerateConditionCommand() {
+    public GenerateServiceCommand() {
     }
 
     /**
@@ -120,60 +121,60 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     /**
-     * 条件クラス名のサフィックスを返します。
+     * サービスクラス名のサフィックスを返します。
      * 
-     * @return 条件クラス名のサフィックス
+     * @return サービスクラス名のサフィックス
      */
-    public String getConditionClassNameSuffix() {
-        return conditionClassNameSuffix;
+    public String getServiceClassNameSuffix() {
+        return serviceClassNameSuffix;
     }
 
     /**
-     * 条件クラス名のサフィックスを設定します。
+     * サービスクラス名のサフィックスを設定します。
      * 
-     * @param conditionClassNameSuffix
-     *            条件クラス名のサフィックス
+     * @param serviceClassNameSuffix
+     *            サービスクラス名のサフィックス
      */
-    public void setConditionClassNameSuffix(String conditionClassNameSuffix) {
-        this.conditionClassNameSuffix = conditionClassNameSuffix;
+    public void setServiceClassNameSuffix(String serviceClassNameSuffix) {
+        this.serviceClassNameSuffix = serviceClassNameSuffix;
     }
 
     /**
-     * 条件クラスのパッケージ名を返します。
+     * サービスクラスのパッケージ名を返します。
      * 
-     * @return 条件クラスのパッケージ名
+     * @return サービスクラスのパッケージ名
      */
-    public String getConditionPackageName() {
-        return conditionPackageName;
+    public String getServicePackageName() {
+        return servicePackageName;
     }
 
     /**
-     * 条件クラスのパッケージ名を設定します。
+     * サービスクラスのパッケージ名を設定します。
      * 
-     * @param conditionPackageName
-     *            条件クラスのパッケージ名
+     * @param servicePackageName
+     *            サービスクラスのパッケージ名
      */
-    public void setConditionPackageName(String conditionPackageName) {
-        this.conditionPackageName = conditionPackageName;
+    public void setServicePackageName(String servicePackageName) {
+        this.servicePackageName = servicePackageName;
     }
 
     /**
-     * 条件クラスのテンプレート名を返します。
+     * サービスクラスのテンプレート名を返します。
      * 
-     * @return 条件クラスのテンプレート名
+     * @return サービスクラスのテンプレート名
      */
-    public String getConditionTemplateFileName() {
-        return conditionTemplateFileName;
+    public String getServiceTemplateFileName() {
+        return serviceTemplateFileName;
     }
 
     /**
-     * 条件クラスのテンプレート名を設定します。
+     * サービスクラスのテンプレート名を設定します。
      * 
-     * @param conditionTemplateFileName
-     *            条件クラスのテンプレート名
+     * @param serviceTemplateFileName
+     *            サービスクラスのテンプレート名
      */
-    public void setConditionTemplateFileName(String conditionTemplateFileName) {
-        this.conditionTemplateFileName = conditionTemplateFileName;
+    public void setServiceTemplateFileName(String serviceTemplateFileName) {
+        this.serviceTemplateFileName = serviceTemplateFileName;
     }
 
     /**
@@ -357,14 +358,14 @@ public class GenerateConditionCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         entityMetaReader = createEntityMetaReader();
-        conditionModelFactory = createConditionModelFactory();
+        serviceModelFactory = createServiceModelFactory();
         generator = createGenerator();
     }
 
     @Override
     protected void doExecute() {
         for (EntityMeta entityMeta : entityMetaReader.read()) {
-            generateCondition(entityMeta);
+            generateService(entityMeta);
         }
     }
 
@@ -373,16 +374,15 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     /**
-     * 条件クラスのJavaファイルを生成します。
+     * サービスクラスのJavaファイルを生成します。
      * 
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void generateCondition(EntityMeta entityMeta) {
-        ConditionModel model = conditionModelFactory
-                .getConditionModel(entityMeta);
+    protected void generateService(EntityMeta entityMeta) {
+        ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = createGenerationContext(model,
-                conditionTemplateFileName);
+                serviceTemplateFileName);
         generator.generate(context);
     }
 
@@ -399,14 +399,13 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     /**
-     * {@link ConditionModelFactory}の実装を作成します。
+     * {@link ServiceModelFactory}の実装を作成します。
      * 
-     * @return {@link ConditionModelFactory}の実装
+     * @return {@link ServiceModelFactory}の実装
      */
-    protected ConditionModelFactory createConditionModelFactory() {
-        return factory.createConditionModelFactory(this, ClassUtil.concatName(
-                rootPackageName, conditionPackageName),
-                conditionClassNameSuffix);
+    protected ServiceModelFactory createServiceModelFactory() {
+        return factory.createServiceModelFactory(this, ClassUtil.concatName(
+                rootPackageName, servicePackageName), serviceClassNameSuffix);
     }
 
     /**
@@ -428,7 +427,7 @@ public class GenerateConditionCommand extends AbstractCommand {
      *            テンプレート名
      * @return {@link GenerationContext}の実装
      */
-    protected GenerationContext createGenerationContext(ConditionModel model,
+    protected GenerationContext createGenerationContext(ServiceModel model,
             String templateName) {
         String packageName = model.getPackageName();
         String shortClassName = model.getShortClassName();

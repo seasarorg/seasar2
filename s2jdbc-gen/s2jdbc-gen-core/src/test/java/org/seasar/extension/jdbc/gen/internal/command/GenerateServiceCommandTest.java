@@ -13,10 +13,15 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.command;
+
+import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceCommand;
+import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -25,7 +30,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateEntityCommandTest {
+public class GenerateServiceCommandTest {
 
     /**
      * 
@@ -42,9 +47,13 @@ public class GenerateEntityCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateEntityCommand command = new GenerateEntityCommand();
+        GenerateServiceCommand command = new GenerateServiceCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
-        command.validate();
+        try {
+            command.validate();
+            fail();
+        } catch (RequiredPropertyNullRuntimeException expected) {
+        }
     }
 
     /**
@@ -53,13 +62,17 @@ public class GenerateEntityCommandTest {
      */
     @Test
     public void testInit() throws Exception {
-        GenerateEntityCommand command = new GenerateEntityCommand();
+        GenerateServiceCommand command = new GenerateServiceCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
+        command.setClasspathDir(new File("dir"));
+        command.validate();
         command.init();
-        assertNotNull(command.entityDescFactory);
-        assertNotNull(command.entityModelFactory);
-        assertNotNull(command.generator);
-        assertNotNull(command.dbTableMetaReader);
-        assertNotNull(command.dialect);
+        assertNotNull(command.createEntityMetaReader());
+        assertNotNull(command.createServiceModelFactory());
+        assertNotNull(command.createGenerator());
+        ServiceModel serviceModel = new ServiceModel();
+        serviceModel.setPackageName("aaa");
+        serviceModel.setShortClassName("bbb");
+        assertNotNull(command.createGenerationContext(serviceModel, "ccc"));
     }
 }
