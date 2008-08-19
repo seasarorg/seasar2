@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.internal.util.ExcludeFilenameFilter;
+import org.seasar.extension.jdbc.gen.internal.util.DefaultExcludesFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
@@ -121,7 +121,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      *            コピー先のディレクトリ
      */
     protected void copyDirectory(File srcDir, File destDir) {
-        FileUtil.copyDirectory(srcDir, destDir, new ReservedFilenameFilter());
+        FileUtil.copyDirectory(srcDir, destDir, new CopyFilenameFilter());
     }
 
     /**
@@ -152,24 +152,25 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * 
      * @author taedium
      */
-    protected class ReservedFilenameFilter implements FilenameFilter {
+    protected class CopyFilenameFilter implements FilenameFilter {
 
         /** コピー対象外のパスのリスト */
-        protected List<String> ignorePathList = new ArrayList<String>();
+        protected List<String> filterPathList = new ArrayList<String>();
 
-        /** フィルタ */
-        protected ExcludeFilenameFilter excludeFilenameFilter = new ExcludeFilenameFilter();
+        /** ファイル名のフィルタ */
+        protected FilenameFilter filenameFilter;
 
         /**
          * インスタンスを構築します。
          */
-        protected ReservedFilenameFilter() {
+        protected CopyFilenameFilter() {
+            filenameFilter = new DefaultExcludesFilenameFilter();
             File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
             File createDir = ddlVersionDirectory
                     .getCreateDir(currentVersionDir);
             File dropDir = ddlVersionDirectory.getDropDir(currentVersionDir);
-            setupIgnorePathList(createDir, createFileNameList);
-            setupIgnorePathList(dropDir, dropFileNameList);
+            setupFilterPathList(createDir, createFileNameList);
+            setupFilterPathList(dropDir, dropFileNameList);
         }
 
         /**
@@ -180,18 +181,18 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
          * @param fileNameList
          *            ファイル名のリスト
          */
-        protected void setupIgnorePathList(File dir, List<String> fileNameList) {
+        protected void setupFilterPathList(File dir, List<String> fileNameList) {
             for (String name : fileNameList) {
                 File file = new File(dir, name);
-                ignorePathList.add(FileUtil.getCanonicalPath(file));
+                filterPathList.add(FileUtil.getCanonicalPath(file));
             }
         }
 
         public boolean accept(File dir, String name) {
-            if (!excludeFilenameFilter.accept(dir, name)) {
+            if (!filenameFilter.accept(dir, name)) {
                 return false;
             }
-            for (String path : ignorePathList) {
+            for (String path : filterPathList) {
                 File file = new File(dir, name);
                 if (FileUtil.getCanonicalPath(file).startsWith(path)) {
                     return false;

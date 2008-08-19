@@ -47,7 +47,7 @@ public class EnvAwareFilenameFilter implements FilenameFilter {
             throw new NullPointerException("env");
         }
         this.env = env;
-        filenameFilter = new ExcludeFilenameFilter();
+        filenameFilter = new DefaultExcludesFilenameFilter();
     }
 
     public boolean accept(File dir, String name) {

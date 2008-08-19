@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
-import org.seasar.extension.jdbc.gen.internal.util.ExcludeFilenameFilter;
+import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
@@ -274,7 +274,7 @@ public class LoadDataCommand extends AbstractCommand {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
         final List<File> fileList = new ArrayList<File>();
 
-        FileUtil.traverseDirectory(dumpDir, new ExcludeFilenameFilter(),
+        FileUtil.traverseDirectory(dumpDir, new EnvAwareFilenameFilter(env),
                 new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
