@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.generator;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
@@ -25,16 +26,19 @@ import java.util.Locale;
 
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
+import org.seasar.extension.jdbc.gen.internal.exception.TemplateRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
-import org.seasar.extension.jdbc.gen.internal.util.ConfigurationUtil;
-import org.seasar.extension.jdbc.gen.internal.util.TemplateUtil;
+import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;
-import org.seasar.framework.util.ResourceUtil;
 
+import freemarker.cache.FileTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * {@link Generator}の実装クラスです。
@@ -74,7 +78,7 @@ public class GeneratorImpl implements Generator {
      * @param templateFileEncoding
      *            テンプレートファイルのエンコーディング
      * @param templateFilePrimaryDir
-     *            テンプレートファイルを格納したディレクトリ
+     *            テンプレートファイルを格納したプライマリディレクトリ、プライマリディレクトリを使用しない場合{@code null}
      */
     public GeneratorImpl(String templateFileEncoding,
             File templateFilePrimaryDir) {
@@ -85,10 +89,33 @@ public class GeneratorImpl implements Generator {
         configuration.setObjectWrapper(new DefaultObjectWrapper());
         configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
         configuration.setNumberFormat("0.#####");
-        File templateFileSecondaryDir = ResourceUtil
-                .getResourceAsFile(DEFAULT_TEMPLATE_DIR_NAME);
-        ConfigurationUtil.setDirectoriesForTemplateLoading(configuration,
-                templateFilePrimaryDir, templateFileSecondaryDir);
+        configuration
+                .setTemplateLoader(createTemplateLoader(templateFilePrimaryDir));
+    }
+
+    /**
+     * {@link TemplateLoader}を作成します。
+     * 
+     * @param templateFilePrimaryDir
+     *            テンプレートファイルを格納したプライマリディレクトリ、プライマリディレクトリを使用しない場合{@code null}
+     * @return {@link TemplateLoader}
+     */
+    protected TemplateLoader createTemplateLoader(File templateFilePrimaryDir) {
+        TemplateLoader primary = null;
+        if (templateFilePrimaryDir != null) {
+            try {
+                primary = new FileTemplateLoader(templateFilePrimaryDir);
+            } catch (IOException e) {
+                throw new IORuntimeException(e);
+            }
+        }
+        TemplateLoader secondary = new ResourceTemplateLoader(
+                DEFAULT_TEMPLATE_DIR_NAME);
+        if (primary == null) {
+            return secondary;
+        }
+        return new MultiTemplateLoader(new TemplateLoader[] { primary,
+                secondary });
     }
 
     public void generate(GenerationContext context) {
@@ -99,9 +126,8 @@ public class GeneratorImpl implements Generator {
         mkdirs(context.getDir());
         Writer writer = openWriter(context);
         try {
-            Template template = ConfigurationUtil.getTemplate(configuration,
-                    context.getTemplateName());
-            TemplateUtil.process(template, context.getModel(), writer);
+            Template template = getTemplate(context.getTemplateName());
+            process(template, context.getModel(), writer);
             if (exists) {
                 logger.log("DS2JDBCGen0009", new Object[] { context.getFile()
                         .getPath() });
@@ -147,6 +173,41 @@ public class GeneratorImpl implements Generator {
         FileOutputStream fos = FileOutputStreamUtil.create(context.getFile());
         OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
         return new BufferedWriter(osw);
+    }
+
+    /**
+     * テンプレートを取得します。
+     * 
+     * @param name
+     *            テンプレートの名前
+     * @return テンプレート
+     */
+    protected Template getTemplate(String name) {
+        try {
+            return configuration.getTemplate(name);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * テンプレートを処理します。
+     * 
+     * @param template
+     *            テンプレート
+     * @param dataModel
+     *            データモデル
+     * @param writer
+     *            ライタ
+     */
+    public void process(Template template, Object dataModel, Writer writer) {
+        try {
+            template.process(dataModel, writer);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } catch (TemplateException e) {
+            throw new TemplateRuntimeException(e);
+        }
     }
 
 }

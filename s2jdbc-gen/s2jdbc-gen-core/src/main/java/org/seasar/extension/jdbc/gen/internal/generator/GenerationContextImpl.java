@@ -20,8 +20,9 @@ import java.io.File;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 
 /**
- * @author taedium
+ * {@link GenerationContext}の実装クラスです。
  * 
+ * @author taedium
  */
 public class GenerationContextImpl implements GenerationContext {
 
