@@ -33,9 +33,15 @@ public class EnvAwareFileComparator implements Comparator<File> {
     protected String envSuffix;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param env
+     *            環境名
      */
     public EnvAwareFileComparator(String env) {
+        if (env == null) {
+            throw new NullPointerException("env");
+        }
         this.envSuffix = "_" + env;
     }
 

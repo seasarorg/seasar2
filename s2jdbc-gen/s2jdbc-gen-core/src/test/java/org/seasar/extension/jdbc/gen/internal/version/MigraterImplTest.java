@@ -22,8 +22,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
-import org.seasar.extension.jdbc.gen.internal.version.MigraterImpl;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
@@ -62,8 +60,8 @@ public class MigraterImplTest {
 
         DdlVersionDirectoryImpl directory = new DdlVersionDirectoryImpl(
                 baseDir, versionFile, "v000");
-        migrater = new MigraterImpl(sqlUnitExecutor, schemaInfoTable, directory,
-                "latest", "ut");
+        migrater = new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
+                directory, "latest", "ut");
     }
 
     /**
@@ -86,10 +84,11 @@ public class MigraterImplTest {
             }
         });
 
-        assertEquals(1, dropFileList.size());
+        assertEquals(2, dropFileList.size());
         File v010 = new File(baseDir, "v010");
         File drop = new File(v010, "drop");
         assertEquals(new File(drop, "drop.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "drop_ut.sql"), dropFileList.get(1));
 
         assertEquals(1, createFileList.size());
         File v011 = new File(baseDir, "v011");

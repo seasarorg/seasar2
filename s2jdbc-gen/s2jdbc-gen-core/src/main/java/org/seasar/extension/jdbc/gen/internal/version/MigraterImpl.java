@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
-import org.seasar.extension.jdbc.gen.internal.util.ExcludeFilenameFilter;
+import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -158,7 +158,7 @@ public class MigraterImpl implements Migrater {
      */
     protected List<File> getFileList(File dir) {
         final List<File> fileList = new ArrayList<File>();
-        FileUtil.traverseDirectory(dir, new ExcludeFilenameFilter(),
+        FileUtil.traverseDirectory(dir, new EnvAwareFilenameFilter(env),
                 new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
 
                     public void handle(File file) {
