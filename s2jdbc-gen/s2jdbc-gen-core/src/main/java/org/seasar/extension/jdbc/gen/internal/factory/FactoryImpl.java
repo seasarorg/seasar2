@@ -24,27 +24,27 @@ import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.data.Loader;
-import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
-import org.seasar.extension.jdbc.gen.desc.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
 import org.seasar.extension.jdbc.gen.internal.data.LoaderImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.desc.DatabaseDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.EntityDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.desc.EntitySetDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.InverseAssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
@@ -164,21 +164,22 @@ public class FactoryImpl implements Factory {
                 schemaInfoFullTableName, schemaInfoColumnName, tableOption);
     }
 
-    public EntityDescFactory createEntityDescFactory(Command command,
+    public EntitySetDescFactory createEntitySetDescFactory(Command command,
+            DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
             String versionColumnName, String schemaName) {
 
-        AttributeDescFactory attributeDescFactory = new AttributeDescFactoryImpl(
-                persistenceConvention, dialect, versionColumnName);
-        return new EntityDescFactoryImpl(persistenceConvention,
-                attributeDescFactory, schemaName != null);
+        return new EntitySetDescFactoryImpl(dbTableMetaReader,
+                persistenceConvention, dialect, versionColumnName, schemaName);
     }
 
     public EntityModelFactory createEntityModelFactory(Command command,
             String packageName) {
 
         return new EntityModelFactoryImpl(packageName,
-                new AttributeModelFactoryImpl());
+                new AttributeModelFactoryImpl(),
+                new AssociationModelFactoryImpl(),
+                new InverseAssociationModelFactoryImpl());
     }
 
     public ServiceModelFactory createServiceModelFactory(Command command,

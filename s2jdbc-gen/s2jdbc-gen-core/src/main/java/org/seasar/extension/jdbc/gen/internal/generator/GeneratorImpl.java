@@ -200,7 +200,7 @@ public class GeneratorImpl implements Generator {
      * @param writer
      *            ライタ
      */
-    public void process(Template template, Object dataModel, Writer writer) {
+    protected void process(Template template, Object dataModel, Writer writer) {
         try {
             template.process(dataModel, writer);
         } catch (IOException e) {

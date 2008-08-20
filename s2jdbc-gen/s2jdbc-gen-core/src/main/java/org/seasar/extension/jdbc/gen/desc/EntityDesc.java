@@ -38,6 +38,8 @@ public class EntityDesc {
     /** テーブル名 */
     protected String tableName;
 
+    protected String fullTableName;
+
     /** 複合識別子をもつならば{@code true} */
     protected boolean compositeId;
 
@@ -46,6 +48,10 @@ public class EntityDesc {
 
     /** 識別子である属性記述のリスト */
     protected List<AttributeDesc> idAttributeDescList = new ArrayList<AttributeDesc>();
+
+    protected List<AssociationDesc> associationDescList = new ArrayList<AssociationDesc>();
+
+    protected List<InverseAssociationDesc> inverseAssociationDescList = new ArrayList<InverseAssociationDesc>();
 
     /**
      * インスタンスを構築します。
@@ -130,6 +136,21 @@ public class EntityDesc {
     }
 
     /**
+     * @return Returns the fullTableName.
+     */
+    public String getFullTableName() {
+        return fullTableName;
+    }
+
+    /**
+     * @param fullTableName
+     *            The fullTableName to set.
+     */
+    public void setFullTableName(String fullTableName) {
+        this.fullTableName = fullTableName;
+    }
+
+    /**
      * 属性記述を追加します。
      * 
      * @param attributeDesc
@@ -164,6 +185,37 @@ public class EntityDesc {
     }
 
     /**
+     * @return Returns the associationDescList.
+     */
+    public List<AssociationDesc> getAssociationDescList() {
+        return Collections.unmodifiableList(associationDescList);
+    }
+
+    /**
+     * @param associationDescList
+     *            The associationDescList to set.
+     */
+    public void addAssociationDesc(AssociationDesc associationDesc) {
+        associationDescList.add(associationDesc);
+    }
+
+    /**
+     * @return Returns the inverseAssociationDescList.
+     */
+    public List<InverseAssociationDesc> getInverseAssociationDescList() {
+        return inverseAssociationDescList;
+    }
+
+    /**
+     * @param inverseAssociationDescList
+     *            The inverseAssociationDescList to set.
+     */
+    public void addInverseAssociationDesc(
+            InverseAssociationDesc inverseAssociationDesc) {
+        inverseAssociationDescList.add(inverseAssociationDesc);
+    }
+
+    /**
      * 複合識別子を持つならば{@code true}を返します。
      * 
      * @return 複合識別子を持つならば{@code true}、そうでないならば{@code false}
@@ -171,4 +223,5 @@ public class EntityDesc {
     public boolean hasCompositeId() {
         return compositeId;
     }
+
 }

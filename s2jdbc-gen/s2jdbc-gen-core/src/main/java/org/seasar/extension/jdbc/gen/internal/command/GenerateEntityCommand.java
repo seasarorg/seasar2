@@ -16,17 +16,15 @@
 package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
-import org.seasar.extension.jdbc.gen.desc.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
+import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
-import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
@@ -95,8 +93,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** テーブルメタデータのリーダ */
     protected DbTableMetaReader dbTableMetaReader;
 
-    /** エンティティ記述のファクトリ */
-    protected EntityDescFactory entityDescFactory;
+    /** エンティティセット記述のファクトリ */
+    protected EntitySetDescFactory entitySetDescFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -349,7 +347,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected void doInit() {
         dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
         dbTableMetaReader = createDbTableMetaReader();
-        entityDescFactory = createEntityDescFactory();
+        entitySetDescFactory = createEntitySetDescFactory();
         generator = createGenerator();
         entityModelFactory = createEntityModelFactory();
 
@@ -358,12 +356,8 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() {
-        List<EntityDesc> entityDescList = new ArrayList<EntityDesc>();
-        for (DbTableMeta tableMeta : dbTableMetaReader.read()) {
-            EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
-            entityDescList.add(entityDesc);
-        }
-        for (EntityDesc entityDesc : entityDescList) {
+        EntitySetDesc entitySetDesc = entitySetDescFactory.getEntitySetDesc();
+        for (EntityDesc entityDesc : entitySetDesc.getEntityDescList()) {
             generateEntity(entityDesc);
         }
     }
@@ -397,14 +391,14 @@ public class GenerateEntityCommand extends AbstractCommand {
     }
 
     /**
-     * {@link EntityDescFactory}の実装を作成します。
+     * {@link EntitySetDescFactory}の実装を作成します。
      * 
-     * @return {@link EntityDescFactory}の実装
+     * @return {@link EntitySetDescFactory}の実装
      */
-    protected EntityDescFactory createEntityDescFactory() {
-        return factory.createEntityDescFactory(this, jdbcManager
-                .getPersistenceConvention(), dialect, versionColumnName,
-                schemaName);
+    protected EntitySetDescFactory createEntitySetDescFactory() {
+        return factory.createEntitySetDescFactory(this, dbTableMetaReader,
+                jdbcManager.getPersistenceConvention(), dialect,
+                versionColumnName, schemaName);
     }
 
     /**

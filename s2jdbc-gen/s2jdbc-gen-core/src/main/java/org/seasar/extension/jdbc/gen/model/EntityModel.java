@@ -49,6 +49,10 @@ public class EntityModel {
     /** 属性モデルのリスト */
     protected List<AttributeModel> attributeModelList = new ArrayList<AttributeModel>();
 
+    protected List<AssociationModel> associationModelList = new ArrayList<AssociationModel>();
+
+    protected List<InverseAssociationModel> inverseAssociationModelList = new ArrayList<InverseAssociationModel>();
+
     /**
      * カタログ名を返します。
      * 
@@ -161,6 +165,37 @@ public class EntityModel {
      */
     public List<AttributeModel> getAttributeModelList() {
         return Collections.unmodifiableList(attributeModelList);
+    }
+
+    /**
+     * @return Returns the associationModelList.
+     */
+    public List<AssociationModel> getAssociationModelList() {
+        return Collections.unmodifiableList(associationModelList);
+    }
+
+    /**
+     * @param associationModelList
+     *            The associationModelList to set.
+     */
+    public void setAssociationModel(AssociationModel associationModel) {
+        associationModelList.add(associationModel);
+    }
+
+    /**
+     * @return Returns the inverseAssociationModelList.
+     */
+    public List<InverseAssociationModel> getInverseAssociationModelList() {
+        return Collections.unmodifiableList(inverseAssociationModelList);
+    }
+
+    /**
+     * @param inverseAssociationModelList
+     *            The inverseAssociationModelList to set.
+     */
+    public void setInverseAssociationModel(
+            InverseAssociationModel inverseAssociationModel) {
+        inverseAssociationModelList.add(inverseAssociationModel);
     }
 
     /**

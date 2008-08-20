@@ -20,6 +20,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,12 +30,14 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.ResultSetUtil;
 
 /**
@@ -114,6 +117,10 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                         cm.setPrimaryKey(true);
                     }
                     tm.addColumnMeta(cm);
+                }
+                for (DbForeignKeyMeta fk : getDbForeignKeyMetaList(metaData, tm
+                        .getCatalogName(), tm.getSchemaName(), tm.getName())) {
+                    tm.addForeignKeyMeta(fk);
                 }
             }
             return dbTableMetaList;
@@ -255,6 +262,46 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                 ResultSetUtil.close(rs);
             }
             return result;
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    protected List<DbForeignKeyMeta> getDbForeignKeyMetaList(
+            DatabaseMetaData metaData, String catalogName, String schemaName,
+            String tableName) {
+        ArrayMap map = new ArrayMap();
+        try {
+            ResultSet rs = metaData.getImportedKeys(catalogName, schemaName,
+                    tableName);
+            try {
+                while (rs.next()) {
+                    String fkName = rs.getString(12);
+                    DbForeignKeyMeta fkMeta = null;
+                    if (map.containsKey(fkName)) {
+                        fkMeta = (DbForeignKeyMeta) map.get(fkName);
+                        fkMeta.addPrimaryKeyColumnName(rs.getString(4));
+                        fkMeta.addForeignKeyColumnName(rs.getString(8));
+                    } else {
+                        fkMeta = new DbForeignKeyMeta();
+                        fkMeta.setForeignKeyName(fkName);
+                        fkMeta.setPrimaryKeyCatalogName(rs.getString(1));
+                        fkMeta.setPrimaryKeySchemaName(rs.getString(2));
+                        fkMeta.setPrimaryKeyTableName(rs.getString(3));
+                        fkMeta.addPrimaryKeyColumnName(rs.getString(4));
+                        fkMeta.setForeignKeyCatalogName(rs.getString(5));
+                        fkMeta.setForeignKeySchemaName(rs.getString(6));
+                        fkMeta.setForeignKeyTableName(rs.getString(7));
+                        fkMeta.addForeignKeyColumnName(rs.getString(8));
+                        map.put(fkName, fkMeta);
+                    }
+                }
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+            DbForeignKeyMeta[] array = (DbForeignKeyMeta[]) map
+                    .toArray(new DbForeignKeyMeta[map.size()]);
+            return Arrays.asList(array);
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }

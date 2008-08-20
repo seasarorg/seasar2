@@ -19,13 +19,14 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.mock.sql.GenMockDatabaseMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
@@ -155,7 +156,7 @@ public class DbTableMetaReaderImplTest {
      * @throws Exception
      */
     @Test
-    public void testGetTableMetaList() throws Exception {
+    public void testGetDbTableMetaList() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
@@ -200,4 +201,105 @@ public class DbTableMetaReaderImplTest {
         assertEquals("table2", list.get(1).getName());
     }
 
+    @Test
+    public void testGetDbForeignKeyMetaList() throws Exception {
+        final MockResultSet resultSet = new MockResultSet();
+
+        ArrayMap rowData = new ArrayMap();
+        rowData.put("PKTABLE_CAT", "dept_catalog");
+        rowData.put("PKTABLE_SCHEM", "dept_schema");
+        rowData.put("PKTABLE_NAME", "dept");
+        rowData.put("PKCOLUMN_NAME", "dept_no");
+        rowData.put("FKTABLE_CAT", "emp_catalog");
+        rowData.put("FKTABLE_SCHEM ", "emp_schema");
+        rowData.put("FKTABLE_NAME", "emp");
+        rowData.put("FKCOLUMN_NAME", "dept_no_fk");
+        rowData.put("KEY_SEQ", null);
+        rowData.put("UPDATE_RULE", null);
+        rowData.put("DELETE_RULE", null);
+        rowData.put("FK_NAME", "emp_fk1");
+        rowData.put("PK_NAME", "dept_pk1");
+        rowData.put("DEFERRABILITY ", null);
+        resultSet.addRowData(rowData);
+
+        rowData = new ArrayMap();
+        rowData.put("PKTABLE_CAT", "dept_catalog");
+        rowData.put("PKTABLE_SCHEM", "dept_schema");
+        rowData.put("PKTABLE_NAME", "dept");
+        rowData.put("PKCOLUMN_NAME", "dept_name");
+        rowData.put("FKTABLE_CAT", "emp_catalog");
+        rowData.put("FKTABLE_SCHEM ", "emp_schema");
+        rowData.put("FKTABLE_NAME", "emp");
+        rowData.put("FKCOLUMN_NAME", "dept_name_fk");
+        rowData.put("KEY_SEQ", null);
+        rowData.put("UPDATE_RULE", null);
+        rowData.put("DELETE_RULE", null);
+        rowData.put("FK_NAME", "emp_fk1");
+        rowData.put("PK_NAME", "dept_pk1");
+        rowData.put("DEFERRABILITY ", null);
+        resultSet.addRowData(rowData);
+
+        rowData = new ArrayMap();
+        rowData.put("PKTABLE_CAT", "address_catalog");
+        rowData.put("PKTABLE_SCHEM", "address_schema");
+        rowData.put("PKTABLE_NAME", "address");
+        rowData.put("PKCOLUMN_NAME", "address_name");
+        rowData.put("FKTABLE_CAT", "emp_catalog");
+        rowData.put("FKTABLE_SCHEM ", "emp_schema");
+        rowData.put("FKTABLE_NAME", "emp");
+        rowData.put("FKCOLUMN_NAME", "address_name_fk");
+        rowData.put("KEY_SEQ", null);
+        rowData.put("UPDATE_RULE", null);
+        rowData.put("DELETE_RULE", null);
+        rowData.put("FK_NAME", "emp_fk2");
+        rowData.put("PK_NAME", "address_pk1");
+        rowData.put("DEFERRABILITY ", null);
+        resultSet.addRowData(rowData);
+
+        GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
+
+            @Override
+            public ResultSet getImportedKeys(String catalog, String schema,
+                    String table) throws SQLException {
+                return resultSet;
+            }
+        };
+
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), null, ".*", "");
+        List<DbForeignKeyMeta> list = reader.getDbForeignKeyMetaList(metaData,
+                "emp_catalog", "emp_schema", "emp");
+
+        assertEquals(2, list.size());
+
+        DbForeignKeyMeta fkMeta = list.get(0);
+        assertEquals("emp_fk1", fkMeta.getForeignKeyName());
+        assertEquals("dept_catalog", fkMeta.getPrimaryKeyCatalogName());
+        assertEquals("dept_schema", fkMeta.getPrimaryKeySchemaName());
+        assertEquals("dept", fkMeta.getPrimaryKeyTableName());
+        assertEquals("emp_catalog", fkMeta.getForeignKeyCatalogName());
+        assertEquals("emp_schema", fkMeta.getForeignKeySchemaName());
+        assertEquals("emp", fkMeta.getForeignKeyTableName());
+        assertEquals(2, fkMeta.getPrimaryKeyColumnNameList().size());
+        assertEquals(Arrays.asList("dept_no", "dept_name"), fkMeta
+                .getPrimaryKeyColumnNameList());
+        assertEquals(2, fkMeta.getForeignKeyColumnNameList().size());
+        assertEquals(Arrays.asList("dept_no_fk", "dept_name_fk"), fkMeta
+                .getForeignKeyColumnNameList());
+
+        fkMeta = list.get(1);
+        assertEquals("emp_fk2", fkMeta.getForeignKeyName());
+        assertEquals("address_catalog", fkMeta.getPrimaryKeyCatalogName());
+        assertEquals("address_schema", fkMeta.getPrimaryKeySchemaName());
+        assertEquals("address", fkMeta.getPrimaryKeyTableName());
+        assertEquals("emp_catalog", fkMeta.getForeignKeyCatalogName());
+        assertEquals("emp_schema", fkMeta.getForeignKeySchemaName());
+        assertEquals("emp", fkMeta.getForeignKeyTableName());
+        assertEquals(1, fkMeta.getPrimaryKeyColumnNameList().size());
+        assertEquals(Arrays.asList("address_name"), fkMeta
+                .getPrimaryKeyColumnNameList());
+        assertEquals(1, fkMeta.getForeignKeyColumnNameList().size());
+        assertEquals(Arrays.asList("address_name_fk"), fkMeta
+                .getForeignKeyColumnNameList());
+    }
 }

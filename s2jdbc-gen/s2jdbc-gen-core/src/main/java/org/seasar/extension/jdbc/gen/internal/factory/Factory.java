@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
-import org.seasar.extension.jdbc.gen.desc.EntityDescFactory;
+import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
@@ -71,10 +71,9 @@ public interface Factory {
      *            対象としないエンティティ名の正規表現
      * @return {@link EntityMetaReader}の実装
      */
-    public abstract EntityMetaReader createEntityMetaReader(Command command,
-            File classpathDir, String packageName,
-            EntityMetaFactory entityMetaFactory, String entityNamePattern,
-            String ignoreEntityNamePattern);
+    EntityMetaReader createEntityMetaReader(Command command, File classpathDir,
+            String packageName, EntityMetaFactory entityMetaFactory,
+            String entityNamePattern, String ignoreEntityNamePattern);
 
     /**
      * {@link DatabaseDescFactory}の実装を返します。
@@ -89,8 +88,8 @@ public interface Factory {
      *            方言
      * @return {@link DatabaseDescFactory}の実装
      */
-    public abstract DatabaseDescFactory createDatabaseDescFactory(
-            Command command, EntityMetaFactory entityMetaFactory,
+    DatabaseDescFactory createDatabaseDescFactory(Command command,
+            EntityMetaFactory entityMetaFactory,
             EntityMetaReader entityMetaReader, GenDialect dialect);
 
     /**
@@ -104,7 +103,7 @@ public interface Factory {
      *            ダンプファイルのエンコーディング
      * @return {@link Dumper}の実装
      */
-    public abstract Dumper createDumper(Command command, GenDialect dialect,
+    Dumper createDumper(Command command, GenDialect dialect,
             String dumpFileEncoding);
 
     /**
@@ -119,7 +118,7 @@ public interface Factory {
      * 
      * @return {@link SqlUnitExecutor}の実装
      */
-    public abstract SqlUnitExecutor createSqlUnitExecutor(Command command,
+    SqlUnitExecutor createSqlUnitExecutor(Command command,
             DataSource dataSource, boolean haltOnError);
 
     /**
@@ -139,7 +138,7 @@ public interface Factory {
      *            対象としないテーブル名の正規表現
      * @return
      */
-    public abstract DbTableMetaReader createDbTableMetaReader(Command command,
+    DbTableMetaReader createDbTableMetaReader(Command command,
             DataSource dataSource, GenDialect dialect, String schemaName,
             String tableNamePattern, String ignoreTableNamePattern);
 
@@ -158,9 +157,9 @@ public interface Factory {
      *            SQLブロックの区切り文字
      * @return {@link SqlFileExecutor}の実装
      */
-    public abstract SqlFileExecutor createSqlFileExecutor(Command command,
-            GenDialect dialect, String sqlFileEncoding,
-            char statementDelimiter, String blockDelimiter);
+    SqlFileExecutor createSqlFileExecutor(Command command, GenDialect dialect,
+            String sqlFileEncoding, char statementDelimiter,
+            String blockDelimiter);
 
     /**
      * {@link ConditionModelFactory}の実装を作成します。
@@ -173,8 +172,8 @@ public interface Factory {
      *            条件クラス名のサフィックス
      * @return {@link ConditionModelFactory}の実装
      */
-    public abstract ConditionModelFactory createConditionModelFactory(
-            Command command, String packageName, String conditionClassNameSuffix);
+    ConditionModelFactory createConditionModelFactory(Command command,
+            String packageName, String conditionClassNameSuffix);
 
     /**
      * {@link Generator}の実装を作成します。
@@ -187,8 +186,8 @@ public interface Factory {
      *            テンプレートファイルを格納したディレクトリ
      * @return {@link Generator}の実装
      */
-    public abstract Generator createGenerator(Command command,
-            String templateFileEncoding, File templateFilePrimaryDir);
+    Generator createGenerator(Command command, String templateFileEncoding,
+            File templateFilePrimaryDir);
 
     /**
      * {@link DdlVersionDirectory}の実装を作成します。
@@ -203,9 +202,8 @@ public interface Factory {
      *            バージョン番号のパターン
      * @return {@link DdlVersionDirectory}の実装
      */
-    public abstract DdlVersionDirectory createDdlVersionDirectory(
-            Command command, File baseDir, File versionFile,
-            String versionNoPattern);
+    DdlVersionDirectory createDdlVersionDirectory(Command command,
+            File baseDir, File versionFile, String versionNoPattern);
 
     /**
      * {@link DdlVersionIncrementer}の実装を作成します。
@@ -220,8 +218,8 @@ public interface Factory {
      *            dropファイル名のリスト
      * @return {@link DdlVersionIncrementer}の実装
      */
-    public abstract DdlVersionIncrementer createDdlVersionIncrementer(
-            Command command, DdlVersionDirectory ddlVersionDirectory,
+    DdlVersionIncrementer createDdlVersionIncrementer(Command command,
+            DdlVersionDirectory ddlVersionDirectory,
             List<String> createFileNameList, List<String> dropFileNameList);
 
     /**
@@ -245,14 +243,14 @@ public interface Factory {
      *            テーブルオプション、存在しない場合は{@code null}
      * @return {@link DdlModelFactory}の実装
      */
-    public abstract DdlModelFactory createDdlModelFactory(Command command,
-            GenDialect dialect, SqlKeywordCaseType sqlKeywordCaseType,
+    DdlModelFactory createDdlModelFactory(Command command, GenDialect dialect,
+            SqlKeywordCaseType sqlKeywordCaseType,
             SqlIdentifierCaseType sqlIdentifierCaseType,
             char statementDelimiter, String schemaInfoFullTableName,
             String schemaInfoColumnName, String tableOption);
 
     /**
-     * {@link EntityDescFactory}の実装を作成します。
+     * {@link EntitySetDescFactory}の実装を作成します。
      * 
      * @param command
      *            呼び出し元のコマンド
@@ -264,9 +262,10 @@ public interface Factory {
      *            バージョンカラム名
      * @param schemaName
      *            スキーマ名、指定されていない場合は{@code null}
-     * @return {@link EntityDescFactory}の実装
+     * @return {@link EntitySetDescFactory}の実装
      */
-    public abstract EntityDescFactory createEntityDescFactory(Command command,
+    EntitySetDescFactory createEntitySetDescFactory(Command command,
+            DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
             String versionColumnName, String schemaName);
 
@@ -279,8 +278,8 @@ public interface Factory {
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @return {@link EntityModelFactory}の実装
      */
-    public abstract EntityModelFactory createEntityModelFactory(
-            Command command, String packageName);
+    EntityModelFactory createEntityModelFactory(Command command,
+            String packageName);
 
     /**
      * {@link ServiceModelFactory}の実装を作成します。
@@ -293,8 +292,8 @@ public interface Factory {
      *            サービスクラス名のサフィックス
      * @return {@link ServiceModelFactory}の実装
      */
-    public abstract ServiceModelFactory createServiceModelFactory(
-            Command command, String packageName, String serviceClassNameSuffix);
+    ServiceModelFactory createServiceModelFactory(Command command,
+            String packageName, String serviceClassNameSuffix);
 
     /**
      * {@link TestModelFactory}の実装を作成します。
@@ -309,9 +308,8 @@ public interface Factory {
      *            テストクラス名のサフィックス
      * @return {@link TestModelFactory}の実装
      */
-    public abstract TestModelFactory createTestModelFactory(Command command,
-            String configPath, String jdbcManagerName,
-            String testClassNameSuffix);
+    TestModelFactory createTestModelFactory(Command command, String configPath,
+            String jdbcManagerName, String testClassNameSuffix);
 
     /**
      * {@link SchemaInfoTable}の実装を作成します。
@@ -328,7 +326,7 @@ public interface Factory {
      *            カラム名
      * @return {@link SchemaInfoTable}の実装
      */
-    public abstract SchemaInfoTable createSchemaInfoTable(Command command,
+    SchemaInfoTable createSchemaInfoTable(Command command,
             DataSource dataSource, GenDialect dialect, String fullTableName,
             String columnName);
 
@@ -349,8 +347,8 @@ public interface Factory {
      *            環境名
      * @return {@link Migrater}の実装
      */
-    public abstract Migrater createMigrater(Command command,
-            SqlUnitExecutor sqlUnitExecutor, SchemaInfoTable schemaInfoTable,
+    Migrater createMigrater(Command command, SqlUnitExecutor sqlUnitExecutor,
+            SchemaInfoTable schemaInfoTable,
             DdlVersionDirectory ddlVersionDirectory, String version, String env);
 
     /**
@@ -366,7 +364,7 @@ public interface Factory {
      *            バッチサイズ
      * @return {@link Loader}の実装
      */
-    public abstract Loader createLoader(Command command, GenDialect dialect,
+    Loader createLoader(Command command, GenDialect dialect,
             String dumpFileEncoding, int batchSize);
 
     /**
@@ -389,8 +387,8 @@ public interface Factory {
      * 
      * @return {@link GenerationContext}の実装
      */
-    public abstract GenerationContext createGenerationContext(Command command,
-            Object model, File dir, File file, String templateName,
-            String encoding, boolean overwrite);
+    GenerationContext createGenerationContext(Command command, Object model,
+            File dir, File file, String templateName, String encoding,
+            boolean overwrite);
 
 }

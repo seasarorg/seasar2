@@ -38,6 +38,8 @@ public class DbTableMeta {
     /** カラムのメタデータのリスト */
     protected List<DbColumnMeta> columnMetaList = new ArrayList<DbColumnMeta>();
 
+    protected List<DbForeignKeyMeta> foreignKeyMetaList = new ArrayList<DbForeignKeyMeta>();
+
     /**
      * カタログ名を返します。
      * 
@@ -96,6 +98,15 @@ public class DbTableMeta {
     }
 
     /**
+     * カラムのメタデータのリストを返します。
+     * 
+     * @return カラムのメタデータのリスト
+     */
+    public List<DbColumnMeta> getColumnMetaList() {
+        return Collections.unmodifiableList(columnMetaList);
+    }
+
+    /**
      * カラムのメタデータを追加します。
      * 
      * @param columnDesc
@@ -106,11 +117,18 @@ public class DbTableMeta {
     }
 
     /**
-     * カラムのメタデータのリストを返します。
-     * 
-     * @return カラムのメタデータのリスト
+     * @return Returns the foreignKeyDescList.
      */
-    public List<DbColumnMeta> getColumnMetaList() {
-        return Collections.unmodifiableList(columnMetaList);
+    public List<DbForeignKeyMeta> getForeignKeyMetaList() {
+        return Collections.unmodifiableList(foreignKeyMetaList);
     }
+
+    /**
+     * @param foreignKeyMetaList
+     *            The foreignKeyDescList to set.
+     */
+    public void addForeignKeyMeta(DbForeignKeyMeta foreignKeyMeta) {
+        foreignKeyMetaList.add(foreignKeyMeta);
+    }
+
 }

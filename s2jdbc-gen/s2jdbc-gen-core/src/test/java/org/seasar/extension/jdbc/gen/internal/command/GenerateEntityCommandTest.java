@@ -17,7 +17,6 @@ package org.seasar.extension.jdbc.gen.internal.command;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 import static org.junit.Assert.*;
@@ -57,7 +56,7 @@ public class GenerateEntityCommandTest {
         GenerateEntityCommand command = new GenerateEntityCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.init();
-        assertNotNull(command.entityDescFactory);
+        assertNotNull(command.entitySetDescFactory);
         assertNotNull(command.entityModelFactory);
         assertNotNull(command.generator);
         assertNotNull(command.dbTableMetaReader);

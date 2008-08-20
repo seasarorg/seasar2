@@ -26,12 +26,18 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
+import org.seasar.extension.jdbc.gen.desc.InverseAssociationDesc;
+import org.seasar.extension.jdbc.gen.model.AssociationModel;
+import org.seasar.extension.jdbc.gen.model.AssociationModelFactory;
 import org.seasar.extension.jdbc.gen.model.AttributeModel;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
+import org.seasar.extension.jdbc.gen.model.InverseAssociationModel;
+import org.seasar.extension.jdbc.gen.model.InverseAssociationModelFactory;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -47,6 +53,10 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** 属性モデルのファクトリ */
     protected AttributeModelFactory attributeModelFactory;
 
+    protected AssociationModelFactory associationModelFactory;
+
+    protected InverseAssociationModelFactory inverseAssociationModelFactory;
+
     /**
      * インスタンスを構築しますｌ
      * 
@@ -56,12 +66,22 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      *            属性モデルのファクトリ
      */
     public EntityModelFactoryImpl(String packageName,
-            AttributeModelFactory attributeModelFactory) {
+            AttributeModelFactory attributeModelFactory,
+            AssociationModelFactory associationModelFactory,
+            InverseAssociationModelFactory inverseAssociationModelFactory) {
         if (attributeModelFactory == null) {
             throw new NullPointerException("attributeModelFactory");
         }
+        if (associationModelFactory == null) {
+            throw new NullPointerException("associationModelFactory");
+        }
+        if (inverseAssociationModelFactory == null) {
+            throw new NullPointerException("inverseAssociationModelFactory");
+        }
         this.packageName = packageName;
         this.attributeModelFactory = attributeModelFactory;
+        this.associationModelFactory = associationModelFactory;
+        this.inverseAssociationModelFactory = inverseAssociationModelFactory;
     }
 
     public EntityModel getEntityModel(EntityDesc entityDesc) {
@@ -72,6 +92,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         entityModel.setShortClassName(entityDesc.getName());
         entityModel.setCompositeId(entityDesc.hasCompositeId());
         doAttributeModel(entityModel, entityDesc);
+        doAssociationModel(entityModel, entityDesc);
+        doInverseAssociationModel(entityModel, entityDesc);
         doImportName(entityModel, entityDesc);
         return entityModel;
     }
@@ -90,6 +112,26 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             AttributeModel attributeModel = attributeModelFactory
                     .getAttributeModel(attributeDesc);
             entityModel.addAttributeModel(attributeModel);
+        }
+    }
+
+    protected void doAssociationModel(EntityModel entityModel,
+            EntityDesc entityDesc) {
+        for (AssociationDesc associationDesc : entityDesc
+                .getAssociationDescList()) {
+            AssociationModel associationModel = associationModelFactory
+                    .getAssociationModel(associationDesc);
+            entityModel.setAssociationModel(associationModel);
+        }
+    }
+
+    protected void doInverseAssociationModel(EntityModel entityModel,
+            EntityDesc entityDesc) {
+        for (InverseAssociationDesc inverseAssociationDesc : entityDesc
+                .getInverseAssociationDescList()) {
+            InverseAssociationModel inverseAssociationModel = inverseAssociationModelFactory
+                    .getInverseAssociationModel(inverseAssociationDesc);
+            entityModel.setInverseAssociationModel(inverseAssociationModel);
         }
     }
 

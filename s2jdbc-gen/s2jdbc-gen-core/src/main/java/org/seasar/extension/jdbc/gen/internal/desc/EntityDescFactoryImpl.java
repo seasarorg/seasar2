@@ -96,10 +96,36 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
      *            エンティティ記述
      */
     public void doTable(DbTableMeta tableMeta, EntityDesc entityDesc) {
-        if (schemaSpecified) {
-            entityDesc.setCatalogName(tableMeta.getCatalogName());
-            entityDesc.setSchemaName(tableMeta.getSchemaName());
+        String catalog = tableMeta.getCatalogName();
+        String schema = tableMeta.getSchemaName();
+        String name = tableMeta.getName();
+        entityDesc.setCatalogName(schemaSpecified ? catalog : null);
+        entityDesc.setSchemaName(schemaSpecified ? schema : null);
+        entityDesc.setTableName(name);
+        entityDesc.setFullTableName(buildFullTableName(catalog, schema, name));
+
+    }
+
+    /**
+     * 完全なテーブル名を組み立てます。
+     * 
+     * @param catalog
+     *            カタログ名
+     * @param schema
+     *            スキーマ名
+     * @param name
+     *            テーブル名
+     * @return 完全な名前
+     */
+    protected String buildFullTableName(String catalog, String schema,
+            String name) {
+        StringBuilder buf = new StringBuilder();
+        if (catalog != null) {
+            buf.append(catalog).append(".");
         }
-        entityDesc.setTableName(tableMeta.getName());
+        if (schema != null) {
+            buf.append(schema).append(".");
+        }
+        return buf.append(name).toString();
     }
 }

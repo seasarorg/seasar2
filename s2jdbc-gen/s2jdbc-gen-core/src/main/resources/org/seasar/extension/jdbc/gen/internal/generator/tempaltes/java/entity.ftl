@@ -48,4 +48,22 @@ public class ${shortClassName} {
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>
+<#list associationModelList as asso>
+    
+    @${asso.associationType.annotation.simpleName}
+  <#if asso.joinColumnModel??>
+    @JoinColumn(name = "${asso.joinColumnModel.name}", referencedColumnName = "${asso.joinColumnModel.referencedColumnName}")
+  <#else>
+    <#list asso.joinColumnModelList as joinColumnModel>
+    @JoinColumns( {
+        @JoinColumn(name = "${joinColumnModel.name}", referencedColumnName = "${joinColumnModel.referencedColumnName}")<#if joinColumnModel_has_next>,<#else> })</#if>
+    </#list>
+  </#if>
+    public ${asso.shortClassName} ${asso.name};
+</#list>
+<#list inverseAssociationModelList as asso>
+    
+    @${asso.associationType.annotation.simpleName}(<#if asso.mappedBy??>mappedBy = "${asso.mappedBy}"</#if>)
+    public ${asso.shortClassName} ${asso.name};
+</#list>
 }

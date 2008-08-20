@@ -32,8 +32,6 @@ import javax.persistence.Version;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
-import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 
 import static org.junit.Assert.*;
@@ -45,7 +43,9 @@ import static org.junit.Assert.*;
 public class EntityModelFactoryImplTest {
 
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
-            "aaa.bbb", new AttributeModelFactoryImpl());
+            "aaa.bbb", new AttributeModelFactoryImpl(),
+            new AssociationModelFactoryImpl(),
+            new InverseAssociationModelFactoryImpl());
 
     /**
      * 
