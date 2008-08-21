@@ -60,6 +60,9 @@ public class AttributeDesc {
     /** NULL可能の場合{@code true} */
     protected boolean nullable;
 
+    /** 一意の場合{@code true} */
+    protected boolean unique;
+
     /** カラム定義 */
     protected String columnDefinition;
 
@@ -298,6 +301,25 @@ public class AttributeDesc {
      */
     public void setNullable(boolean nullable) {
         this.nullable = nullable;
+    }
+
+    /**
+     * 一意の場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return 一意の場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isUnique() {
+        return unique;
+    }
+
+    /**
+     * 一意の場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param unique
+     *            一意の場合{@code true}
+     */
+    public void setUnique(boolean unique) {
+        this.unique = unique;
     }
 
     /**

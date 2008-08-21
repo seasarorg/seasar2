@@ -23,15 +23,17 @@ import javax.persistence.TemporalType;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.desc.CompositeUniqueConstraintDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.desc.AssociationResolver;
 import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.InverseAssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
@@ -55,10 +57,10 @@ public class GenerateEntityTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new EntityModelFactoryImpl("hoge.entity",
+        factory = new EntityModelFactoryImpl("hoge.entity", true,
                 new AttributeModelFactoryImpl(),
                 new AssociationModelFactoryImpl(),
-                new InverseAssociationModelFactoryImpl());
+                new CompositeUniqueConstraintModelFactoryImpl());
         generator = new GeneratorImplStub();
     }
 
@@ -82,6 +84,7 @@ public class GenerateEntityTest {
         name.setColumnName("NAME");
         name.setColumnDefinition("varchar(10)");
         name.setNullable(false);
+        name.setUnique(true);
 
         AttributeDesc sal = new AttributeDesc();
         sal.setName("sal");
@@ -124,14 +127,15 @@ public class GenerateEntityTest {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(sal);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
+        entityDesc.addAttributeDesc(id);
+        entityDesc.addAttributeDesc(name);
+        entityDesc.addAttributeDesc(sal);
+        entityDesc.addAttributeDesc(lob);
+        entityDesc.addAttributeDesc(date);
+        entityDesc.addAttributeDesc(temp);
+        entityDesc.addAttributeDesc(version);
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -167,9 +171,10 @@ public class GenerateEntityTest {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
-        entityDesc.addAttribute(id1);
-        entityDesc.addAttribute(id2);
+        entityDesc.addAttributeDesc(id1);
+        entityDesc.addAttributeDesc(id2);
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -190,6 +195,7 @@ public class GenerateEntityTest {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
 
         EntityModel model = factory.getEntityModel(entityDesc);
@@ -222,8 +228,9 @@ public class GenerateEntityTest {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
-        entityDesc.addAttribute(name);
+        entityDesc.addAttributeDesc(name);
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -235,71 +242,87 @@ public class GenerateEntityTest {
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testAssociation_singleId() throws Exception {
+    public void testSingleIdAssociation() throws Exception {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
-        entityDesc.setFullTableName("AAA.BBB.FOO");
 
         EntityDesc entityDesc2 = new EntityDesc();
         entityDesc2.setCatalogName("AAA");
         entityDesc2.setSchemaName("BBB");
+        entityDesc2.setTableName("HOGE");
         entityDesc2.setName("Hoge");
-        entityDesc2.setFullTableName("AAA.BBB.HOGE");
 
         EntitySetDesc entitySetDesc = new EntitySetDesc();
         entitySetDesc.addEntityDesc(entityDesc);
         entitySetDesc.addEntityDesc(entityDesc2);
+
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("AAA");
+        tableMeta.setSchemaName("BBB");
+        tableMeta.setName("FOO");
 
         DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
         fkMeta.setPrimaryKeyCatalogName("AAA");
         fkMeta.setPrimaryKeySchemaName("BBB");
         fkMeta.setPrimaryKeyTableName("HOGE");
         fkMeta.addPrimaryKeyColumnName("ID");
-        fkMeta.setForeignKeyCatalogName("AAA");
-        fkMeta.setForeignKeySchemaName("BBB");
-        fkMeta.setForeignKeyTableName("FOO");
         fkMeta.addForeignKeyColumnName("HOGE_ID");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc);
-        resolver.resolveRelationship(fkMeta);
+        resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
-        System.out.println(generator.getResult());
+        String path = getClass().getName().replace(".", "/")
+                + "_SingleId_Association_Foo.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+        generator.clear();
 
         model = factory.getEntityModel(entityDesc2);
         context = new GenerationContextImpl(model, new File("dir"), new File(
                 "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
-        System.out.println(generator.getResult());
-
-        String path = getClass().getName().replace(".", "/")
-                + "_Association_singleId.txt";
+        path = getClass().getName().replace(".", "/")
+                + "_SingleId_Association_Hoge.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void testAssociation_compositeId() throws Exception {
+    public void testCompositeIdAssociation() throws Exception {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
         entityDesc.setName("Foo");
-        entityDesc.setFullTableName("AAA.BBB.FOO");
 
         EntityDesc entityDesc2 = new EntityDesc();
         entityDesc2.setCatalogName("AAA");
         entityDesc2.setSchemaName("BBB");
+        entityDesc2.setTableName("HOGE");
         entityDesc2.setName("Hoge");
-        entityDesc2.setFullTableName("AAA.BBB.HOGE");
 
         EntitySetDesc entitySetDesc = new EntitySetDesc();
         entitySetDesc.addEntityDesc(entityDesc);
         entitySetDesc.addEntityDesc(entityDesc2);
+
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("AAA");
+        tableMeta.setSchemaName("BBB");
+        tableMeta.setName("FOO");
 
         DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
         fkMeta.setPrimaryKeyCatalogName("AAA");
@@ -307,30 +330,58 @@ public class GenerateEntityTest {
         fkMeta.setPrimaryKeyTableName("HOGE");
         fkMeta.addPrimaryKeyColumnName("ID1");
         fkMeta.addPrimaryKeyColumnName("ID2");
-        fkMeta.setForeignKeyCatalogName("AAA");
-        fkMeta.setForeignKeySchemaName("BBB");
-        fkMeta.setForeignKeyTableName("FOO");
         fkMeta.addForeignKeyColumnName("HOGE_ID1");
         fkMeta.addForeignKeyColumnName("HOGE_ID2");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc);
-        resolver.resolveRelationship(fkMeta);
+        resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
-        System.out.println(generator.getResult());
+        String path = getClass().getName().replace(".", "/")
+                + "_CompositeId_Association_Foo.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+        generator.clear();
 
         model = factory.getEntityModel(entityDesc2);
         context = new GenerationContextImpl(model, new File("dir"), new File(
                 "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
-        System.out.println(generator.getResult());
-
-        String path = getClass().getName().replace(".", "/")
-                + "_Association_singleId.txt";
+        path = getClass().getName().replace(".", "/")
+                + "_CompositeId_Association_Hoge.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testUniqueConstraint() throws Exception {
+        CompositeUniqueConstraintDesc uniqueConstraintDesc1 = new CompositeUniqueConstraintDesc();
+        uniqueConstraintDesc1.addColumnName("CCC");
+        uniqueConstraintDesc1.addColumnName("DDD");
+
+        CompositeUniqueConstraintDesc uniqueConstraintDesc2 = new CompositeUniqueConstraintDesc();
+        uniqueConstraintDesc2.addColumnName("EEE");
+        uniqueConstraintDesc2.addColumnName("FFF");
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+        entityDesc.addCompositeUniqueConstraintDesc(uniqueConstraintDesc1);
+        entityDesc.addCompositeUniqueConstraintDesc(uniqueConstraintDesc2);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/")
+                + "_UniqueConstraint.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
 }

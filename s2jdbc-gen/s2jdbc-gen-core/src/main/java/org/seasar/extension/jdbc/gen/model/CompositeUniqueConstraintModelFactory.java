@@ -15,21 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
+import org.seasar.extension.jdbc.gen.desc.CompositeUniqueConstraintDesc;
 
 /**
- * {@link AssociationModel}のファクトリです。
+ * {@link CompositeUniqueConstraintModel}のファクトリです。
  * 
  * @author taedium
  */
-public interface AssociationModelFactory {
+public interface CompositeUniqueConstraintModelFactory {
 
     /**
-     * 関連モデルを返します。
+     * 複合一意制約モデルを返します。
      * 
-     * @param associationDesc
-     *            関連記述
-     * @return 関連モデル
+     * @param compositeUniqueConstraintDesc
+     *            複合一意制約記述
+     * @return 複合一意制約モデル
      */
-    AssociationModel getAssociationModel(AssociationDesc associationDesc);
+    CompositeUniqueConstraintModel getUniqueConstraintModel(
+            CompositeUniqueConstraintDesc compositeUniqueConstraintDesc);
 }

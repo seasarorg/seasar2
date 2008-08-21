@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
+import org.seasar.extension.jdbc.gen.meta.DbUniqueKeyMeta;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
@@ -108,20 +110,12 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     : getDefaultSchemaName(metaData);
             List<DbTableMeta> dbTableMetaList = getDbTableMetaList(metaData,
                     schemaName);
-            for (DbTableMeta tm : dbTableMetaList) {
-                Set<String> primaryKeys = getPrimaryKeySet(metaData, tm
-                        .getCatalogName(), tm.getSchemaName(), tm.getName());
-                for (DbColumnMeta cm : getDbColumnMetaList(metaData, tm
-                        .getCatalogName(), tm.getSchemaName(), tm.getName())) {
-                    if (primaryKeys.contains(cm.getName())) {
-                        cm.setPrimaryKey(true);
-                    }
-                    tm.addColumnMeta(cm);
-                }
-                for (DbForeignKeyMeta fk : getDbForeignKeyMetaList(metaData, tm
-                        .getCatalogName(), tm.getSchemaName(), tm.getName())) {
-                    tm.addForeignKeyMeta(fk);
-                }
+            for (DbTableMeta tableMeta : dbTableMetaList) {
+                Set<String> primaryKeySet = getPrimaryKeySet(metaData,
+                        tableMeta);
+                doDbUniqueKeyMeta(metaData, tableMeta, primaryKeySet);
+                doDbColumnMeta(metaData, tableMeta, primaryKeySet);
+                doDbForeignKeyMeta(metaData, tableMeta);
             }
             return dbTableMetaList;
         } finally {
@@ -130,10 +124,82 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     }
 
     /**
+     * 一意キーメタデータを処理します。
+     * 
+     * @param metaData
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @param primaryKeySet
+     *            主キーのセット
+     */
+    protected void doDbUniqueKeyMeta(DatabaseMetaData metaData,
+            DbTableMeta tableMeta, Set<String> primaryKeySet) {
+        for (DbUniqueKeyMeta ukMeta : getDbUniqueKeyMetaList(metaData,
+                tableMeta)) {
+            if (primaryKeySet.size() == ukMeta.getColumnNameList().size()
+                    && primaryKeySet.containsAll(ukMeta.getColumnNameList())) {
+                ukMeta.setPrimaryKey(true);
+            }
+            tableMeta.addUniqueKeyMeta(ukMeta);
+        }
+    }
+
+    /**
+     * カラムメタデータを処理します。
+     * 
+     * @param metaData
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @param primaryKeySet
+     *            主キーのセット
+     */
+    protected void doDbColumnMeta(DatabaseMetaData metaData,
+            DbTableMeta tableMeta, Set<String> primaryKeySet) {
+        for (DbColumnMeta columnMeta : getDbColumnMetaList(metaData, tableMeta)) {
+            if (primaryKeySet.contains(columnMeta.getName())) {
+                columnMeta.setPrimaryKey(true);
+            }
+            for (DbUniqueKeyMeta ukMeta : tableMeta.getUniqueKeyMetaList()) {
+                if (ukMeta.getColumnNameList().size() == 1) {
+                    String ukColumnName = ukMeta.getColumnNameList().get(0);
+                    if (columnMeta.getName().equals(ukColumnName)) {
+                        columnMeta.setUnique(true);
+                    }
+                }
+            }
+            tableMeta.addColumnMeta(columnMeta);
+        }
+    }
+
+    /**
+     * 外部キーメタデータを処理します。
+     * 
+     * @param metaData
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     */
+    protected void doDbForeignKeyMeta(DatabaseMetaData metaData,
+            DbTableMeta tableMeta) {
+        for (DbForeignKeyMeta fkMeta : getDbForeignKeyMetaList(metaData,
+                tableMeta)) {
+            for (DbUniqueKeyMeta ukMeta : tableMeta.getUniqueKeyMetaList()) {
+                if (fkMeta.getForeignKeyColumnNameList().equals(
+                        ukMeta.getColumnNameList())) {
+                    fkMeta.setUnique(true);
+                }
+            }
+            tableMeta.addForeignKeyMeta(fkMeta);
+        }
+    }
+
+    /**
      * デフォルトのスキーマ名を返します。
      * 
      * @param metaData
-     *            メタデータ
+     *            データベースメタデータ
      * @return デフォルトのスキーマ名
      */
     protected String getDefaultSchemaName(DatabaseMetaData metaData) {
@@ -145,7 +211,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * テーブルメタデータのリストを返します。
      * 
      * @param metaData
-     *            メタデータ
+     *            データベースメタデータ
      * @param schemaName
      *            スキーマ名
      * @return テーブルメタデータのリスト
@@ -159,9 +225,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
             try {
                 while (rs.next()) {
                     DbTableMeta dbTableMeta = new DbTableMeta();
-                    dbTableMeta.setCatalogName(rs.getString(1));
-                    dbTableMeta.setSchemaName(rs.getString(2));
-                    dbTableMeta.setName(rs.getString(3));
+                    dbTableMeta.setCatalogName(rs.getString("TABLE_CAT"));
+                    dbTableMeta.setSchemaName(rs.getString("TABLE_SCHEM"));
+                    dbTableMeta.setName(rs.getString("TABLE_NAME"));
                     if (isTargetTable(dbTableMeta)) {
                         result.add(dbTableMeta);
                     }
@@ -200,30 +266,27 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * カラムメタデータのリストを返します。
      * 
      * @param metaData
-     *            メタデータ
-     * @param catalogName
-     *            カタログ名
-     * @param schemaName
-     *            スキーマ名
-     * @param tableName
-     *            テーブル名
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     * 
      * @return カラムメタデータのリスト
      */
     protected List<DbColumnMeta> getDbColumnMetaList(DatabaseMetaData metaData,
-            String catalogName, String schemaName, String tableName) {
+            DbTableMeta tableMeta) {
         List<DbColumnMeta> result = new ArrayList<DbColumnMeta>();
         try {
-            ResultSet rs = metaData.getColumns(catalogName, schemaName,
-                    tableName, null);
+            ResultSet rs = metaData.getColumns(tableMeta.getCatalogName(),
+                    tableMeta.getSchemaName(), tableMeta.getName(), null);
             try {
                 while (rs.next()) {
                     DbColumnMeta columnDesc = new DbColumnMeta();
-                    columnDesc.setName(rs.getString(4));
-                    columnDesc.setSqlType(rs.getInt(5));
-                    columnDesc.setTypeName(rs.getString(6));
-                    columnDesc.setLength(rs.getInt(7));
-                    columnDesc.setScale(rs.getInt(9));
-                    columnDesc.setNullable(rs.getBoolean(11));
+                    columnDesc.setName(rs.getString("COLUMN_NAME"));
+                    columnDesc.setSqlType(rs.getInt("DATA_TYPE"));
+                    columnDesc.setTypeName(rs.getString("TYPE_NAME"));
+                    columnDesc.setLength(rs.getInt("COLUMN_SIZE"));
+                    columnDesc.setScale(rs.getInt("DECIMAL_DIGITS"));
+                    columnDesc.setNullable(rs.getBoolean("NULLABLE"));
                     result.add(columnDesc);
                 }
                 return result;
@@ -239,24 +302,20 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      * 主キーのセットを返します。
      * 
      * @param metaData
-     *            メタデータ
-     * @param catalogName
-     *            カタログ名
-     * @param schemaName
-     *            スキーマ名
-     * @param tableName
-     *            テーブル名
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
      * @return 主キーのセット
      */
     protected Set<String> getPrimaryKeySet(DatabaseMetaData metaData,
-            String catalogName, String schemaName, String tableName) {
+            DbTableMeta tableMeta) {
         Set<String> result = new HashSet<String>();
         try {
-            ResultSet rs = metaData.getPrimaryKeys(catalogName, schemaName,
-                    tableName);
+            ResultSet rs = metaData.getPrimaryKeys(tableMeta.getCatalogName(),
+                    tableMeta.getSchemaName(), tableMeta.getName());
             try {
                 while (rs.next()) {
-                    result.add(rs.getString(4));
+                    result.add(rs.getString("COLUMN_NAME"));
                 }
             } finally {
                 ResultSetUtil.close(rs);
@@ -267,40 +326,86 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
         }
     }
 
+    /**
+     * 外部キーメタデータのリストを返します。
+     * 
+     * @param metaData
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @return 外部キーメタデータのリスト
+     */
     protected List<DbForeignKeyMeta> getDbForeignKeyMetaList(
-            DatabaseMetaData metaData, String catalogName, String schemaName,
-            String tableName) {
-        ArrayMap map = new ArrayMap();
+            DatabaseMetaData metaData, DbTableMeta tableMeta) {
+        @SuppressWarnings("unchecked")
+        Map<String, DbForeignKeyMeta> map = new ArrayMap();
         try {
-            ResultSet rs = metaData.getImportedKeys(catalogName, schemaName,
-                    tableName);
+            ResultSet rs = metaData.getImportedKeys(tableMeta.getCatalogName(),
+                    tableMeta.getSchemaName(), tableMeta.getName());
             try {
                 while (rs.next()) {
-                    String fkName = rs.getString(12);
-                    DbForeignKeyMeta fkMeta = null;
-                    if (map.containsKey(fkName)) {
-                        fkMeta = (DbForeignKeyMeta) map.get(fkName);
-                        fkMeta.addPrimaryKeyColumnName(rs.getString(4));
-                        fkMeta.addForeignKeyColumnName(rs.getString(8));
-                    } else {
-                        fkMeta = new DbForeignKeyMeta();
-                        fkMeta.setForeignKeyName(fkName);
-                        fkMeta.setPrimaryKeyCatalogName(rs.getString(1));
-                        fkMeta.setPrimaryKeySchemaName(rs.getString(2));
-                        fkMeta.setPrimaryKeyTableName(rs.getString(3));
-                        fkMeta.addPrimaryKeyColumnName(rs.getString(4));
-                        fkMeta.setForeignKeyCatalogName(rs.getString(5));
-                        fkMeta.setForeignKeySchemaName(rs.getString(6));
-                        fkMeta.setForeignKeyTableName(rs.getString(7));
-                        fkMeta.addForeignKeyColumnName(rs.getString(8));
-                        map.put(fkName, fkMeta);
+                    String name = rs.getString("FK_NAME");
+                    if (!map.containsKey(name)) {
+                        DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
+                        fkMeta.setName(name);
+                        fkMeta.setPrimaryKeyCatalogName(rs
+                                .getString("PKTABLE_CAT"));
+                        fkMeta.setPrimaryKeySchemaName(rs
+                                .getString("PKTABLE_SCHEM"));
+                        fkMeta.setPrimaryKeyTableName(rs
+                                .getString("PKTABLE_NAME"));
+                        map.put(name, fkMeta);
                     }
+                    DbForeignKeyMeta fkMeta = map.get(name);
+                    fkMeta.addPrimaryKeyColumnName(rs
+                            .getString("PKCOLUMN_NAME"));
+                    fkMeta.addForeignKeyColumnName(rs
+                            .getString("FKCOLUMN_NAME"));
                 }
             } finally {
                 ResultSetUtil.close(rs);
             }
-            DbForeignKeyMeta[] array = (DbForeignKeyMeta[]) map
-                    .toArray(new DbForeignKeyMeta[map.size()]);
+            DbForeignKeyMeta[] array = map.values().toArray(
+                    new DbForeignKeyMeta[map.size()]);
+            return Arrays.asList(array);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * 一意キーメタデータのリストを返します。
+     * 
+     * @param metaData
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @return 一意キーメタデータのリスト
+     */
+    protected List<DbUniqueKeyMeta> getDbUniqueKeyMetaList(
+            DatabaseMetaData metaData, DbTableMeta tableMeta) {
+        @SuppressWarnings("unchecked")
+        Map<String, DbUniqueKeyMeta> map = new ArrayMap();
+        try {
+            ResultSet rs = metaData
+                    .getIndexInfo(tableMeta.getCatalogName(), tableMeta
+                            .getSchemaName(), tableMeta.getName(), true, false);
+            try {
+                while (rs.next()) {
+                    String name = rs.getString("INDEX_NAME");
+                    if (!map.containsKey(name)) {
+                        DbUniqueKeyMeta ukMeta = new DbUniqueKeyMeta();
+                        ukMeta.setName(name);
+                        map.put(name, ukMeta);
+                    }
+                    DbUniqueKeyMeta ukMeta = map.get(name);
+                    ukMeta.addColumnName(rs.getString("COLUMN_NAME"));
+                }
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+            DbUniqueKeyMeta[] array = map.values().toArray(
+                    new DbUniqueKeyMeta[map.size()]);
             return Arrays.asList(array);
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);

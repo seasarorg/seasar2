@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
+import org.seasar.extension.jdbc.gen.meta.DbUniqueKeyMeta;
 import org.seasar.extension.jdbc.gen.mock.sql.GenMockDatabaseMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
@@ -50,16 +51,10 @@ public class DbTableMetaReaderImplTest {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
-        rowData.put("TABLE_CAT", "catalog");
-        rowData.put("TABLE_SCHEM", "schemaName");
-        rowData.put("TABLE_NAME", "table");
         rowData.put("COLUMN_NAME", "pk1");
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
-        rowData.put("TABLE_CAT", "catalog");
-        rowData.put("TABLE_SCHEM", "schemaName");
-        rowData.put("TABLE_NAME", "table");
         rowData.put("COLUMN_NAME", "pk2");
         resultSet.addRowData(rowData);
 
@@ -75,8 +70,7 @@ public class DbTableMetaReaderImplTest {
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
                 ".*", "");
-        Set<String> list = reader.getPrimaryKeySet(metaData, "catalogName",
-                "schemaName", "table");
+        Set<String> list = reader.getPrimaryKeySet(metaData, new DbTableMeta());
         assertEquals(2, list.size());
         assertTrue(list.contains("pk1"));
         assertTrue(list.contains("pk2"));
@@ -91,31 +85,21 @@ public class DbTableMetaReaderImplTest {
         final MockResultSet resultSet = new MockResultSet();
 
         ArrayMap rowData = new ArrayMap();
-        rowData.put("TABLE_CAT", "catalogName");
-        rowData.put("TABLE_SCHEM", "schemaName");
-        rowData.put("TABLE_NAME", "table");
         rowData.put("COLUMN_NAME", "column1");
         rowData.put("DATA_TYPE", Types.DECIMAL);
         rowData.put("TYPE_NAME", "DECIMAL");
         rowData.put("COLUMN_SIZE", 10);
-        rowData.put("BUFFER_LENGTH", null);
         rowData.put("DECIMAL_DIGITS", 3);
-        rowData.put("NUM_PREC_RADIX", 10);
-        rowData.put("NULLABLE ", DatabaseMetaData.columnNoNulls);
+        rowData.put("NULLABLE", DatabaseMetaData.columnNoNulls);
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
-        rowData.put("TABLE_CAT", "catalogName");
-        rowData.put("TABLE_SCHEM", "schemaName");
-        rowData.put("TABLE_NAME", "table");
         rowData.put("COLUMN_NAME", "column2");
         rowData.put("DATA_TYPE", Types.VARCHAR);
         rowData.put("TYPE_NAME", "VARCHAR");
         rowData.put("COLUMN_SIZE", 10);
-        rowData.put("BUFFER_LENGTH", null);
         rowData.put("DECIMAL_DIGITS", 0);
-        rowData.put("NUM_PREC_RADIX", 10);
-        rowData.put("NULLABLE ", DatabaseMetaData.columnNullable);
+        rowData.put("NULLABLE", DatabaseMetaData.columnNullable);
         resultSet.addRowData(rowData);
 
         GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
@@ -132,7 +116,7 @@ public class DbTableMetaReaderImplTest {
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
                 ".*", "");
         List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
-                "catalogName", "schemaName", "SchemaInfoTableName");
+                new DbTableMeta());
         assertEquals(2, list.size());
         DbColumnMeta columnMeta = list.get(0);
         assertEquals("column1", columnMeta.getName());
@@ -201,6 +185,10 @@ public class DbTableMetaReaderImplTest {
         assertEquals("table2", list.get(1).getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testGetDbForeignKeyMetaList() throws Exception {
         final MockResultSet resultSet = new MockResultSet();
@@ -210,16 +198,8 @@ public class DbTableMetaReaderImplTest {
         rowData.put("PKTABLE_SCHEM", "dept_schema");
         rowData.put("PKTABLE_NAME", "dept");
         rowData.put("PKCOLUMN_NAME", "dept_no");
-        rowData.put("FKTABLE_CAT", "emp_catalog");
-        rowData.put("FKTABLE_SCHEM ", "emp_schema");
-        rowData.put("FKTABLE_NAME", "emp");
         rowData.put("FKCOLUMN_NAME", "dept_no_fk");
-        rowData.put("KEY_SEQ", null);
-        rowData.put("UPDATE_RULE", null);
-        rowData.put("DELETE_RULE", null);
         rowData.put("FK_NAME", "emp_fk1");
-        rowData.put("PK_NAME", "dept_pk1");
-        rowData.put("DEFERRABILITY ", null);
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
@@ -227,16 +207,8 @@ public class DbTableMetaReaderImplTest {
         rowData.put("PKTABLE_SCHEM", "dept_schema");
         rowData.put("PKTABLE_NAME", "dept");
         rowData.put("PKCOLUMN_NAME", "dept_name");
-        rowData.put("FKTABLE_CAT", "emp_catalog");
-        rowData.put("FKTABLE_SCHEM ", "emp_schema");
-        rowData.put("FKTABLE_NAME", "emp");
         rowData.put("FKCOLUMN_NAME", "dept_name_fk");
-        rowData.put("KEY_SEQ", null);
-        rowData.put("UPDATE_RULE", null);
-        rowData.put("DELETE_RULE", null);
         rowData.put("FK_NAME", "emp_fk1");
-        rowData.put("PK_NAME", "dept_pk1");
-        rowData.put("DEFERRABILITY ", null);
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
@@ -244,16 +216,8 @@ public class DbTableMetaReaderImplTest {
         rowData.put("PKTABLE_SCHEM", "address_schema");
         rowData.put("PKTABLE_NAME", "address");
         rowData.put("PKCOLUMN_NAME", "address_name");
-        rowData.put("FKTABLE_CAT", "emp_catalog");
-        rowData.put("FKTABLE_SCHEM ", "emp_schema");
-        rowData.put("FKTABLE_NAME", "emp");
         rowData.put("FKCOLUMN_NAME", "address_name_fk");
-        rowData.put("KEY_SEQ", null);
-        rowData.put("UPDATE_RULE", null);
-        rowData.put("DELETE_RULE", null);
         rowData.put("FK_NAME", "emp_fk2");
-        rowData.put("PK_NAME", "address_pk1");
-        rowData.put("DEFERRABILITY ", null);
         resultSet.addRowData(rowData);
 
         GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
@@ -268,18 +232,15 @@ public class DbTableMetaReaderImplTest {
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), null, ".*", "");
         List<DbForeignKeyMeta> list = reader.getDbForeignKeyMetaList(metaData,
-                "emp_catalog", "emp_schema", "emp");
+                new DbTableMeta());
 
         assertEquals(2, list.size());
 
         DbForeignKeyMeta fkMeta = list.get(0);
-        assertEquals("emp_fk1", fkMeta.getForeignKeyName());
+        assertEquals("emp_fk1", fkMeta.getName());
         assertEquals("dept_catalog", fkMeta.getPrimaryKeyCatalogName());
         assertEquals("dept_schema", fkMeta.getPrimaryKeySchemaName());
         assertEquals("dept", fkMeta.getPrimaryKeyTableName());
-        assertEquals("emp_catalog", fkMeta.getForeignKeyCatalogName());
-        assertEquals("emp_schema", fkMeta.getForeignKeySchemaName());
-        assertEquals("emp", fkMeta.getForeignKeyTableName());
         assertEquals(2, fkMeta.getPrimaryKeyColumnNameList().size());
         assertEquals(Arrays.asList("dept_no", "dept_name"), fkMeta
                 .getPrimaryKeyColumnNameList());
@@ -288,18 +249,67 @@ public class DbTableMetaReaderImplTest {
                 .getForeignKeyColumnNameList());
 
         fkMeta = list.get(1);
-        assertEquals("emp_fk2", fkMeta.getForeignKeyName());
+        assertEquals("emp_fk2", fkMeta.getName());
         assertEquals("address_catalog", fkMeta.getPrimaryKeyCatalogName());
         assertEquals("address_schema", fkMeta.getPrimaryKeySchemaName());
         assertEquals("address", fkMeta.getPrimaryKeyTableName());
-        assertEquals("emp_catalog", fkMeta.getForeignKeyCatalogName());
-        assertEquals("emp_schema", fkMeta.getForeignKeySchemaName());
-        assertEquals("emp", fkMeta.getForeignKeyTableName());
         assertEquals(1, fkMeta.getPrimaryKeyColumnNameList().size());
         assertEquals(Arrays.asList("address_name"), fkMeta
                 .getPrimaryKeyColumnNameList());
         assertEquals(1, fkMeta.getForeignKeyColumnNameList().size());
         assertEquals(Arrays.asList("address_name_fk"), fkMeta
                 .getForeignKeyColumnNameList());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetDbUniqueKeyMetaList() throws Exception {
+        final MockResultSet resultSet = new MockResultSet();
+
+        ArrayMap rowData = new ArrayMap();
+        rowData.put("INDEX_NAME", "hoge");
+        rowData.put("COLUMN_NAME", "aaa");
+        resultSet.addRowData(rowData);
+
+        rowData = new ArrayMap();
+        rowData.put("INDEX_NAME", "hoge");
+        rowData.put("COLUMN_NAME", "bbb");
+        resultSet.addRowData(rowData);
+
+        rowData = new ArrayMap();
+        rowData.put("INDEX_NAME", "foo");
+        rowData.put("COLUMN_NAME", "ccc");
+        resultSet.addRowData(rowData);
+
+        GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
+
+            @Override
+            public ResultSet getIndexInfo(String catalog, String schema,
+                    String table, boolean unique, boolean approximate)
+                    throws SQLException {
+                return resultSet;
+            }
+        };
+
+        DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
+                new MockDataSource(), new StandardGenDialect(), null, ".*", "");
+        List<DbUniqueKeyMeta> list = reader.getDbUniqueKeyMetaList(metaData,
+                new DbTableMeta());
+
+        assertEquals(2, list.size());
+
+        DbUniqueKeyMeta ukMeta = list.get(0);
+        assertEquals("hoge", ukMeta.getName());
+        assertEquals(2, ukMeta.getColumnNameList().size());
+        assertEquals("aaa", ukMeta.getColumnNameList().get(0));
+        assertEquals("bbb", ukMeta.getColumnNameList().get(1));
+
+        ukMeta = list.get(1);
+        assertEquals("foo", ukMeta.getName());
+        assertEquals(1, ukMeta.getColumnNameList().size());
+        assertEquals("ccc", ukMeta.getColumnNameList().get(0));
     }
 }

@@ -20,162 +20,180 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author taedium
+ * データベースの外部キーメタデータです。
  * 
+ * @author taedium
  */
 public class DbForeignKeyMeta {
 
-    protected String foreignKeyName;
+    /** 名前 */
+    protected String name;
 
+    /** 主キー側のカタログ名 */
     protected String primaryKeyCatalogName;
 
+    /** 主キー側のスキーマ名 */
     protected String primaryKeySchemaName;
 
+    /** 主キー側のテーブル名 */
     protected String primaryKeyTableName;
 
-    protected String foreignKeyCatalogName;
-
-    protected String foreignKeySchemaName;
-
-    protected String foreignKeyTableName;
-
+    /** 主キーのカラム名のリスト */
     protected List<String> primaryKeyColumnNameList = new ArrayList<String>();
 
+    /** 外部キーのカラム名のリスト */
     protected List<String> foreignKeyColumnNameList = new ArrayList<String>();
 
+    /** 一意の場合{@code true} */
+    protected boolean unique;
+
     /**
-     * @return Returns the foreignKeyName.
+     * 名前を返します。
+     * 
+     * @return 名前
      */
-    public String getForeignKeyName() {
-        return foreignKeyName;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param foreignKeyName
-     *            The foreignKeyName to set.
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
      */
-    public void setForeignKeyName(String foreignKeyName) {
-        this.foreignKeyName = foreignKeyName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * @return Returns the primaryKeyCatalogName.
+     * 主キー側のカタログ名を返します。
+     * 
+     * @return 主キー側のカタログ名
      */
     public String getPrimaryKeyCatalogName() {
         return primaryKeyCatalogName;
     }
 
     /**
+     * 主キー側のカタログ名を設定します。
+     * 
      * @param primaryKeyCatalogName
-     *            The primaryKeyCatalogName to set.
+     *            主キー側のカタログ名
      */
     public void setPrimaryKeyCatalogName(String primaryKeyCatalogName) {
         this.primaryKeyCatalogName = primaryKeyCatalogName;
     }
 
     /**
-     * @return Returns the primaryKeySchemaName.
+     * 主キー側のスキーマ名を返します。
+     * 
+     * @return 主キー側のスキーマ名
      */
     public String getPrimaryKeySchemaName() {
         return primaryKeySchemaName;
     }
 
     /**
+     * 主キー側のスキーマ名を設定します。
+     * 
      * @param primaryKeySchemaName
-     *            The primaryKeySchemaName to set.
+     *            主キー側のスキーマ名
      */
     public void setPrimaryKeySchemaName(String primaryKeySchemaName) {
         this.primaryKeySchemaName = primaryKeySchemaName;
     }
 
     /**
-     * @return Returns the primaryKeyTableName.
+     * 主キー側のテーブル名を返します。
+     * 
+     * @return 主キー側のテーブル名
      */
     public String getPrimaryKeyTableName() {
         return primaryKeyTableName;
     }
 
     /**
+     * 主キー側のテーブル名を設定します。
+     * 
      * @param primaryKeyTableName
-     *            The primaryKeyTableName to set.
+     *            主キー側のテーブル名
      */
     public void setPrimaryKeyTableName(String primaryKeyTableName) {
         this.primaryKeyTableName = primaryKeyTableName;
     }
 
     /**
-     * @return Returns the foreignKeyCatalogName.
-     */
-    public String getForeignKeyCatalogName() {
-        return foreignKeyCatalogName;
-    }
-
-    /**
-     * @param foreignKeyCatalogName
-     *            The foreignKeyCatalogName to set.
-     */
-    public void setForeignKeyCatalogName(String foreignKeyCatalogName) {
-        this.foreignKeyCatalogName = foreignKeyCatalogName;
-    }
-
-    /**
-     * @return Returns the foreignKeySchemaName.
-     */
-    public String getForeignKeySchemaName() {
-        return foreignKeySchemaName;
-    }
-
-    /**
-     * @param foreignKeySchemaName
-     *            The foreignKeySchemaName to set.
-     */
-    public void setForeignKeySchemaName(String foreignKeySchemaName) {
-        this.foreignKeySchemaName = foreignKeySchemaName;
-    }
-
-    /**
-     * @return Returns the foreignKeyTableName.
-     */
-    public String getForeignKeyTableName() {
-        return foreignKeyTableName;
-    }
-
-    /**
-     * @param foreignKeyTableName
-     *            The foreignKeyTableName to set.
-     */
-    public void setForeignKeyTableName(String foreignKeyTableName) {
-        this.foreignKeyTableName = foreignKeyTableName;
-    }
-
-    /**
-     * @return Returns the primaryKeyColumnNameList.
+     * 主キーのカラム名のリストを返します。
+     * 
+     * @return 主キーのカラム名のリスト
      */
     public List<String> getPrimaryKeyColumnNameList() {
         return Collections.unmodifiableList(primaryKeyColumnNameList);
     }
 
     /**
-     * @param primaryKeyColumnNameList
-     *            The primaryKeyColumnNameList to set.
+     * 主キーのカラム名を追加します。
+     * 
+     * @param primaryKeyColumnName
+     *            主キーのカラム名
      */
     public void addPrimaryKeyColumnName(String primaryKeyColumnName) {
         primaryKeyColumnNameList.add(primaryKeyColumnName);
     }
 
     /**
-     * @return Returns the foreignKeycolumnNameList.
+     * 外部キーのカラム名のリストを返します。
+     * 
+     * @return 外部キーのカラム名のリスト
      */
     public List<String> getForeignKeyColumnNameList() {
         return Collections.unmodifiableList(foreignKeyColumnNameList);
     }
 
     /**
-     * @param foreignKeyColumnNameList
-     *            The foreignKeycolumnNameList to set.
+     * 外部キーのカラム名を追加します。
+     * 
+     * @param foreignKeyColumnName
+     *            外部キーのカラム名
      */
     public void addForeignKeyColumnName(String foreignKeyColumnName) {
         foreignKeyColumnNameList.add(foreignKeyColumnName);
+    }
+
+    /**
+     * 一意の場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return 一意の場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isUnique() {
+        return unique;
+    }
+
+    /**
+     * 一意の場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param unique
+     *            一意の場合{@code true}
+     */
+    public void setUnique(boolean unique) {
+        this.unique = unique;
+    }
+
+    /**
+     * 完全なテーブル名を返します。
+     * 
+     * @return 完全なテーブル名
+     */
+    public String getPrimaryKeyFullTableName() {
+        StringBuilder buf = new StringBuilder();
+        if (primaryKeyCatalogName != null) {
+            buf.append(primaryKeyCatalogName).append(".");
+        }
+        if (primaryKeySchemaName != null) {
+            buf.append(primaryKeySchemaName).append(".");
+        }
+        return buf.append(primaryKeyTableName).toString();
     }
 
 }

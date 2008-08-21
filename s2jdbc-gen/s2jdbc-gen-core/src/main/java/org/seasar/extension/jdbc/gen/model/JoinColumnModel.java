@@ -16,40 +16,51 @@
 package org.seasar.extension.jdbc.gen.model;
 
 /**
- * @author taedium
+ * 結合カラムモデルです。
  * 
+ * @author taedium
  */
 public class JoinColumnModel {
 
+    /** 参照する側のカラム名 */
     protected String name;
 
+    /** 参照される側のカラム名 */
     protected String referencedColumnName;
 
     /**
-     * @return Returns the name.
+     * 参照する側のカラム名を返します。
+     * 
+     * @return 参照する側のカラム名
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 参照する側のカラム名を設定します。
+     * 
      * @param name
-     *            The name to set.
+     *            参照する側のカラム名
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the referencedColumnName.
+     * 参照される側のカラム名を返します。
+     * 
+     * @return 参照される側のカラム名
      */
     public String getReferencedColumnName() {
         return referencedColumnName;
     }
 
     /**
+     * 参照される側のカラム名を設定します。
+     * 
      * @param referencedColumnName
-     *            The referencedColumnName to set.
+     *            参照される側のカラム名
      */
     public void setReferencedColumnName(String referencedColumnName) {
         this.referencedColumnName = referencedColumnName;

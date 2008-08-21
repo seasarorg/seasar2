@@ -1,0 +1,20 @@
+package hoge.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo {
+    
+    /** */
+    @ManyToOne
+    @JoinColumn(name = "HOGE_ID", referencedColumnName = "ID")
+    public Hoge hoge;
+}

@@ -15,10 +15,15 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.util.Arrays;
+
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
+import org.seasar.extension.jdbc.gen.desc.AssociationType;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 
 import static org.junit.Assert.*;
 
@@ -28,43 +33,199 @@ import static org.junit.Assert.*;
  */
 public class AssociationResolverTest {
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
-    public void test() throws Exception {
+    public void test_OneToMany() throws Exception {
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setCatalogName("AAA");
         entityDesc.setSchemaName("BBB");
         entityDesc.setTableName("CCC");
-        entityDesc.setFullTableName("AAA.BBB.CCC");
+        entityDesc.setName("Ccc");
 
         EntityDesc entityDesc2 = new EntityDesc();
         entityDesc2.setCatalogName("DDD");
         entityDesc2.setSchemaName("EEE");
         entityDesc2.setTableName("FFF");
-        entityDesc2.setFullTableName("DDD.EEE.FFF");
+        entityDesc2.setName("Fff");
 
         EntitySetDesc entitySetDesc = new EntitySetDesc();
         entitySetDesc.addEntityDesc(entityDesc);
         entitySetDesc.addEntityDesc(entityDesc2);
 
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("DDD");
+        tableMeta.setSchemaName("EEE");
+        tableMeta.setName("FFF");
+
         DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
         fkMeta.setPrimaryKeyCatalogName("AAA");
         fkMeta.setPrimaryKeySchemaName("BBB");
         fkMeta.setPrimaryKeyTableName("CCC");
-        fkMeta.addPrimaryKeyColumnName("111");
-        fkMeta.addPrimaryKeyColumnName("222");
-        fkMeta.setForeignKeyCatalogName("DDD");
-        fkMeta.setForeignKeySchemaName("EEE");
-        fkMeta.setForeignKeyTableName("FFF");
-        fkMeta.addForeignKeyColumnName("111");
-        fkMeta.addForeignKeyColumnName("222");
+        fkMeta.addPrimaryKeyColumnName("GGG_ID");
+        fkMeta.addPrimaryKeyColumnName("HHH_ID");
+        fkMeta.addForeignKeyColumnName("GGG");
+        fkMeta.addForeignKeyColumnName("HHH");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc);
-        resolver.resolveRelationship(fkMeta);
+        resolver.resolve(tableMeta, fkMeta);
 
-        assertEquals(0, entityDesc.getAssociationDescList().size());
-        assertEquals(1, entityDesc.getInverseAssociationDescList().size());
+        assertEquals(1, entityDesc.getAssociationDescList().size());
+        AssociationDesc assoDesc = entityDesc.getAssociationDescList().get(0);
+        assertSame(entityDesc2, assoDesc.getReferencedEntityDesc());
+        assertEquals(AssociationType.ONE_TO_MANY, assoDesc.getAssociationType());
+        assertEquals("fffList", assoDesc.getName());
+        assertEquals("ccc", assoDesc.getMappedBy());
+        assertTrue(assoDesc.getColumnNameList().isEmpty());
+        assertNull(assoDesc.getReferencedCatalogName());
+        assertNull(assoDesc.getReferencedSchemaName());
+        assertNull(assoDesc.getReferencedTableName());
+        assertTrue(assoDesc.getReferencedColumnNameList().isEmpty());
+
         assertEquals(1, entityDesc2.getAssociationDescList().size());
-        assertEquals(0, entityDesc2.getInverseAssociationDescList().size());
+        assoDesc = entityDesc2.getAssociationDescList().get(0);
+        assertSame(entityDesc, assoDesc.getReferencedEntityDesc());
+        assertEquals(AssociationType.MANY_TO_ONE, assoDesc.getAssociationType());
+        assertEquals("ccc", assoDesc.getName());
+        assertNull(assoDesc.getMappedBy());
+        assertEquals(Arrays.asList("GGG", "HHH"), assoDesc.getColumnNameList());
+        assertEquals("AAA", assoDesc.getReferencedCatalogName());
+        assertEquals("BBB", assoDesc.getReferencedSchemaName());
+        assertEquals("CCC", assoDesc.getReferencedTableName());
+        assertEquals(Arrays.asList("GGG_ID", "HHH_ID"), assoDesc
+                .getReferencedColumnNameList());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void test_OneToOne() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("CCC");
+        entityDesc.setName("Ccc");
+
+        EntityDesc entityDesc2 = new EntityDesc();
+        entityDesc2.setCatalogName("DDD");
+        entityDesc2.setSchemaName("EEE");
+        entityDesc2.setTableName("FFF");
+        entityDesc2.setName("Fff");
+
+        EntitySetDesc entitySetDesc = new EntitySetDesc();
+        entitySetDesc.addEntityDesc(entityDesc);
+        entitySetDesc.addEntityDesc(entityDesc2);
+
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("DDD");
+        tableMeta.setSchemaName("EEE");
+        tableMeta.setName("FFF");
+
+        DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
+        fkMeta.setPrimaryKeyCatalogName("AAA");
+        fkMeta.setPrimaryKeySchemaName("BBB");
+        fkMeta.setPrimaryKeyTableName("CCC");
+        fkMeta.addPrimaryKeyColumnName("GGG_ID");
+        fkMeta.addPrimaryKeyColumnName("HHH_ID");
+        fkMeta.addForeignKeyColumnName("GGG");
+        fkMeta.addForeignKeyColumnName("HHH");
+        fkMeta.setUnique(true);
+
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        resolver.resolve(tableMeta, fkMeta);
+
+        assertEquals(1, entityDesc.getAssociationDescList().size());
+        AssociationDesc assoDesc = entityDesc.getAssociationDescList().get(0);
+        assertSame(entityDesc2, assoDesc.getReferencedEntityDesc());
+        assertEquals(AssociationType.ONE_TO_ONE, assoDesc.getAssociationType());
+        assertEquals("fff", assoDesc.getName());
+        assertEquals("ccc", assoDesc.getMappedBy());
+        assertTrue(assoDesc.getColumnNameList().isEmpty());
+        assertNull(assoDesc.getReferencedCatalogName());
+        assertNull(assoDesc.getReferencedSchemaName());
+        assertNull(assoDesc.getReferencedTableName());
+        assertTrue(assoDesc.getReferencedColumnNameList().isEmpty());
+
+        assertEquals(1, entityDesc2.getAssociationDescList().size());
+        assoDesc = entityDesc2.getAssociationDescList().get(0);
+        assertSame(entityDesc, assoDesc.getReferencedEntityDesc());
+        assertEquals(AssociationType.ONE_TO_ONE, assoDesc.getAssociationType());
+        assertEquals("ccc", assoDesc.getName());
+        assertNull(assoDesc.getMappedBy());
+        assertEquals(Arrays.asList("GGG", "HHH"), assoDesc.getColumnNameList());
+        assertEquals("AAA", assoDesc.getReferencedCatalogName());
+        assertEquals("BBB", assoDesc.getReferencedSchemaName());
+        assertEquals("CCC", assoDesc.getReferencedTableName());
+        assertEquals(Arrays.asList("GGG_ID", "HHH_ID"), assoDesc
+                .getReferencedColumnNameList());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testMultiAssociations() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("CCC");
+        entityDesc.setName("Ccc");
+
+        EntityDesc entityDesc2 = new EntityDesc();
+        entityDesc2.setCatalogName("DDD");
+        entityDesc2.setSchemaName("EEE");
+        entityDesc2.setTableName("FFF");
+        entityDesc2.setName("Fff");
+
+        EntitySetDesc entitySetDesc = new EntitySetDesc();
+        entitySetDesc.addEntityDesc(entityDesc);
+        entitySetDesc.addEntityDesc(entityDesc2);
+
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("DDD");
+        tableMeta.setSchemaName("EEE");
+        tableMeta.setName("FFF");
+
+        DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
+        fkMeta.setPrimaryKeyCatalogName("AAA");
+        fkMeta.setPrimaryKeySchemaName("BBB");
+        fkMeta.setPrimaryKeyTableName("CCC");
+        fkMeta.addPrimaryKeyColumnName("GGG_ID");
+        fkMeta.addPrimaryKeyColumnName("HHH_ID");
+        fkMeta.addForeignKeyColumnName("GGG");
+        fkMeta.addForeignKeyColumnName("HHH");
+
+        DbForeignKeyMeta fkMeta2 = new DbForeignKeyMeta();
+        fkMeta2.setPrimaryKeyCatalogName("AAA");
+        fkMeta2.setPrimaryKeySchemaName("BBB");
+        fkMeta2.setPrimaryKeyTableName("CCC");
+        fkMeta2.addPrimaryKeyColumnName("GGG_ID");
+        fkMeta2.addPrimaryKeyColumnName("HHH_ID");
+        fkMeta2.addForeignKeyColumnName("III");
+        fkMeta2.addForeignKeyColumnName("JJJ");
+
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        resolver.resolve(tableMeta, fkMeta);
+        resolver.resolve(tableMeta, fkMeta2);
+
+        assertEquals(2, entityDesc.getAssociationDescList().size());
+        AssociationDesc assoDesc = entityDesc.getAssociationDescList().get(0);
+        assertEquals(AssociationType.ONE_TO_MANY, assoDesc.getAssociationType());
+        assertEquals("fffList", assoDesc.getName());
+        assoDesc = entityDesc.getAssociationDescList().get(1);
+        assertEquals(AssociationType.ONE_TO_MANY, assoDesc.getAssociationType());
+        assertEquals("fffList2", assoDesc.getName());
+
+        assertEquals(2, entityDesc2.getAssociationDescList().size());
+        assoDesc = entityDesc2.getAssociationDescList().get(0);
+        assertEquals("ccc", assoDesc.getName());
+        assoDesc = entityDesc2.getAssociationDescList().get(1);
+        assertEquals("ccc2", assoDesc.getName());
 
     }
 }

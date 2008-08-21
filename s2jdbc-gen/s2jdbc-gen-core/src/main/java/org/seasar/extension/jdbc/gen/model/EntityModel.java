@@ -49,9 +49,11 @@ public class EntityModel {
     /** 属性モデルのリスト */
     protected List<AttributeModel> attributeModelList = new ArrayList<AttributeModel>();
 
+    /** 関連モデルのリスト */
     protected List<AssociationModel> associationModelList = new ArrayList<AssociationModel>();
 
-    protected List<InverseAssociationModel> inverseAssociationModelList = new ArrayList<InverseAssociationModel>();
+    /** 複合一意制約モデルのリスト */
+    protected List<CompositeUniqueConstraintModel> compositeUniqueConstraintModelList = new ArrayList<CompositeUniqueConstraintModel>();
 
     /**
      * カタログ名を返します。
@@ -149,6 +151,15 @@ public class EntityModel {
     }
 
     /**
+     * 属性モデルを返します。
+     * 
+     * @return 属性モデル
+     */
+    public List<AttributeModel> getAttributeModelList() {
+        return Collections.unmodifiableList(attributeModelList);
+    }
+
+    /**
      * 属性モデルを追加します。
      * 
      * @param attributeModel
@@ -159,43 +170,42 @@ public class EntityModel {
     }
 
     /**
-     * 属性モデルを返します。
+     * 関連モデルのリストを返します。
      * 
-     * @return 属性モデル
-     */
-    public List<AttributeModel> getAttributeModelList() {
-        return Collections.unmodifiableList(attributeModelList);
-    }
-
-    /**
-     * @return Returns the associationModelList.
+     * @return 関連モデルのリスト
      */
     public List<AssociationModel> getAssociationModelList() {
         return Collections.unmodifiableList(associationModelList);
     }
 
     /**
-     * @param associationModelList
-     *            The associationModelList to set.
+     * 関連モデルを追加します。
+     * 
+     * @param associationModel
+     *            関連モデル
      */
-    public void setAssociationModel(AssociationModel associationModel) {
+    public void addAssociationModel(AssociationModel associationModel) {
         associationModelList.add(associationModel);
     }
 
     /**
-     * @return Returns the inverseAssociationModelList.
+     * 複合一意制約モデルのリストを返します。
+     * 
+     * @return 複合一意制約モデルのリスト
      */
-    public List<InverseAssociationModel> getInverseAssociationModelList() {
-        return Collections.unmodifiableList(inverseAssociationModelList);
+    public List<CompositeUniqueConstraintModel> getCompositeUniqueConstraintModelList() {
+        return Collections.unmodifiableList(compositeUniqueConstraintModelList);
     }
 
     /**
-     * @param inverseAssociationModelList
-     *            The inverseAssociationModelList to set.
+     * 複合一意制約モデルを追加します。
+     * 
+     * @param compositeUniqueConstraintModel
+     *            複合一意制約モデル
      */
-    public void setInverseAssociationModel(
-            InverseAssociationModel inverseAssociationModel) {
-        inverseAssociationModelList.add(inverseAssociationModel);
+    public void addCompositeUniqueConstraintModel(
+            CompositeUniqueConstraintModel compositeUniqueConstraintModel) {
+        compositeUniqueConstraintModelList.add(compositeUniqueConstraintModel);
     }
 
     /**

@@ -20,7 +20,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
-import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
 
 /**
  * @author taedium
@@ -67,5 +66,12 @@ public class GeneratorImplStub extends GeneratorImpl {
      */
     protected String getResult() {
         return writer.toString();
+    }
+
+    /**
+     * 
+     */
+    protected void clear() {
+        writer = new StringWriter();
     }
 }

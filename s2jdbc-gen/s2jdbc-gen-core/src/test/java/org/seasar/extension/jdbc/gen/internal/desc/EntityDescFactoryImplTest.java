@@ -15,15 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.util.Arrays;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.desc.CompositeUniqueConstraintDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.desc.AttributeDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.EntityDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
+import org.seasar.extension.jdbc.gen.meta.DbUniqueKeyMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
@@ -47,8 +49,9 @@ public class EntityDescFactoryImplTest {
         GenDialect dialect = new StandardGenDialect();
         AttributeDescFactoryImpl attributeDescFactory = new AttributeDescFactoryImpl(
                 convention, dialect, "VERSION");
+        CompositeUniqueConstraintDescFactoryImpl uniqueConstraintDescFactory = new CompositeUniqueConstraintDescFactoryImpl();
         factory = new EntityDescFactoryImpl(convention, attributeDescFactory,
-                true);
+                uniqueConstraintDescFactory);
     }
 
     /**
@@ -95,8 +98,8 @@ public class EntityDescFactoryImplTest {
         tableMeta.setName("HOGE");
         tableMeta.addColumnMeta(columnMeta1);
         tableMeta.addColumnMeta(columnMeta2);
-        EntityDesc entityModel = factory.getEntityDesc(tableMeta);
-        assertEquals(2, entityModel.getAttributeDescList().size());
+        EntityDesc entityDesc = factory.getEntityDesc(tableMeta);
+        assertEquals(2, entityDesc.getAttributeDescList().size());
     }
 
     /**
@@ -117,8 +120,40 @@ public class EntityDescFactoryImplTest {
         tableMeta.setName("HOGE");
         tableMeta.addColumnMeta(columnMeta1);
         tableMeta.addColumnMeta(columnMeta2);
-        EntityDesc entityModel = factory.getEntityDesc(tableMeta);
-        assertEquals(2, entityModel.getIdAttributeDescList().size());
-        assertTrue(entityModel.hasCompositeId());
+        EntityDesc entityDesc = factory.getEntityDesc(tableMeta);
+        assertEquals(2, entityDesc.getIdAttributeDescList().size());
+        assertTrue(entityDesc.hasCompositeId());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetCompositeUniqueConstraintDescList() throws Exception {
+        DbUniqueKeyMeta ukMeta1 = new DbUniqueKeyMeta();
+        ukMeta1.addColumnName("AAA");
+        ukMeta1.addColumnName("BBB");
+        DbUniqueKeyMeta ukMeta2 = new DbUniqueKeyMeta();
+        ukMeta2.addColumnName("CCC");
+        ukMeta2.addColumnName("DDD");
+        DbUniqueKeyMeta ukMeta3 = new DbUniqueKeyMeta();
+        ukMeta3.addColumnName("EEE");
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setName("HOGE");
+        tableMeta.addUniqueKeyMeta(ukMeta1);
+        tableMeta.addUniqueKeyMeta(ukMeta2);
+        tableMeta.addUniqueKeyMeta(ukMeta3);
+        EntityDesc entityDesc = factory.getEntityDesc(tableMeta);
+        assertEquals(2, entityDesc.getCompositeUniqueConstraintDescList()
+                .size());
+        CompositeUniqueConstraintDesc compositeUniqueConstraintDesc = entityDesc
+                .getCompositeUniqueConstraintDescList().get(0);
+        assertEquals(Arrays.asList("AAA", "BBB"), compositeUniqueConstraintDesc
+                .getColumnNameList());
+        compositeUniqueConstraintDesc = entityDesc
+                .getCompositeUniqueConstraintDescList().get(1);
+        assertEquals(Arrays.asList("CCC", "DDD"), compositeUniqueConstraintDesc
+                .getColumnNameList());
     }
 }

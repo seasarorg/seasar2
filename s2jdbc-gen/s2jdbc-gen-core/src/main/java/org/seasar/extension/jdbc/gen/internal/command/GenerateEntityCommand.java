@@ -398,7 +398,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected EntitySetDescFactory createEntitySetDescFactory() {
         return factory.createEntitySetDescFactory(this, dbTableMetaReader,
                 jdbcManager.getPersistenceConvention(), dialect,
-                versionColumnName, schemaName);
+                versionColumnName);
     }
 
     /**
@@ -408,7 +408,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     protected EntityModelFactory createEntityModelFactory() {
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
-                rootPackageName, entityPackageName));
+                rootPackageName, entityPackageName), schemaName != null);
     }
 
     /**

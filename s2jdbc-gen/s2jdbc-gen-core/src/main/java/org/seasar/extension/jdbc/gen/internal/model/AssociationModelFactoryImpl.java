@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
+import org.seasar.extension.jdbc.gen.desc.AssociationType;
 import org.seasar.extension.jdbc.gen.model.AssociationModel;
 import org.seasar.extension.jdbc.gen.model.AssociationModelFactory;
 import org.seasar.extension.jdbc.gen.model.JoinColumnModel;
@@ -29,9 +30,16 @@ public class AssociationModelFactoryImpl implements AssociationModelFactory {
     public AssociationModel getAssociationModel(AssociationDesc associationDesc) {
         AssociationModel model = new AssociationModel();
         model.setName(associationDesc.getName());
-        model.setShortClassName(associationDesc.getReferencedEntityDesc()
-                .getName());
+        if (associationDesc.getAssociationType() == AssociationType.ONE_TO_MANY) {
+            String entityName = associationDesc.getReferencedEntityDesc()
+                    .getName();
+            model.setShortClassName("List<" + entityName + ">");
+        } else {
+            model.setShortClassName(associationDesc.getReferencedEntityDesc()
+                    .getName());
+        }
         model.setAssociationType(associationDesc.getAssociationType());
+        model.setMappedBy(associationDesc.getMappedBy());
         if (associationDesc.getColumnNameList().size() == 1) {
             String name = associationDesc.getColumnNameList().get(0);
             String referencedColumnName = associationDesc
@@ -40,7 +48,7 @@ public class AssociationModelFactoryImpl implements AssociationModelFactory {
             joinColumnModel.setName(name);
             joinColumnModel.setReferencedColumnName(referencedColumnName);
             model.setJoinColumnModel(joinColumnModel);
-        } else {
+        } else if (associationDesc.getColumnNameList().size() > 1) {
             int i = 0;
             for (String name : associationDesc.getColumnNameList()) {
                 String referencedColumnName = associationDesc

@@ -15,6 +15,6 @@ public class Foo {
     /**
      * FIXME このプロパティに対応するカラムの型(hoge)はサポート対象外です。
      */
-    @Column(columnDefinition = null, nullable = false)
+    @Column(columnDefinition = null, nullable = false, unique = false)
     public String name;
 }

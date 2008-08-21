@@ -16,10 +16,16 @@
 package org.seasar.extension.jdbc.gen.desc;
 
 /**
- * @author taedium
+ * {@link EntitySetDesc}のファクトリです。
  * 
+ * @author taedium
  */
 public interface EntitySetDescFactory {
 
+    /**
+     * エンティティ集合記述を返します。
+     * 
+     * @return エンティティ集合記述
+     */
     EntitySetDesc getEntitySetDesc();
 }

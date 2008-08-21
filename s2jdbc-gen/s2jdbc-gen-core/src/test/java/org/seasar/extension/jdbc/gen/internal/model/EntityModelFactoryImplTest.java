@@ -43,9 +43,9 @@ import static org.junit.Assert.*;
 public class EntityModelFactoryImplTest {
 
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
-            "aaa.bbb", new AttributeModelFactoryImpl(),
+            "aaa.bbb", true, new AttributeModelFactoryImpl(),
             new AssociationModelFactoryImpl(),
-            new InverseAssociationModelFactoryImpl());
+            new CompositeUniqueConstraintModelFactoryImpl());
 
     /**
      * 
@@ -84,12 +84,12 @@ public class EntityModelFactoryImplTest {
 
         EntityDesc entityDesc = new EntityDesc();
         entityDesc.setName("Foo");
-        entityDesc.addAttribute(id);
-        entityDesc.addAttribute(name);
-        entityDesc.addAttribute(lob);
-        entityDesc.addAttribute(date);
-        entityDesc.addAttribute(temp);
-        entityDesc.addAttribute(version);
+        entityDesc.addAttributeDesc(id);
+        entityDesc.addAttributeDesc(name);
+        entityDesc.addAttributeDesc(lob);
+        entityDesc.addAttributeDesc(date);
+        entityDesc.addAttributeDesc(temp);
+        entityDesc.addAttributeDesc(version);
 
         EntityModel model = factory.getEntityModel(entityDesc);
         assertEquals("aaa.bbb", model.getPackageName());

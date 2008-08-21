@@ -142,6 +142,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         attributeDesc.setPrecision(columnMeta.getLength());
         attributeDesc.setScale(columnMeta.getScale());
         attributeDesc.setNullable(columnMeta.isNullable());
+        attributeDesc.setUnique(columnMeta.isUnique());
         ColumnType columnType = dialect.getColumnType(columnMeta.getTypeName());
         if (columnType != null) {
             Class<?> clazz = columnType

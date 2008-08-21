@@ -15,21 +15,36 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
- * {@link AssociationModel}のファクトリです。
+ * 複合一意制約モデルです。
  * 
  * @author taedium
  */
-public interface AssociationModelFactory {
+public class CompositeUniqueConstraintModel {
+
+    /** カラム名のリスト */
+    protected List<String> columnNameList = new ArrayList<String>();
 
     /**
-     * 関連モデルを返します。
+     * カラム名のリストを返します。
      * 
-     * @param associationDesc
-     *            関連記述
-     * @return 関連モデル
+     * @return カラム名のリスト
      */
-    AssociationModel getAssociationModel(AssociationDesc associationDesc);
+    public List<String> getColumnNameList() {
+        return Collections.unmodifiableList(columnNameList);
+    }
+
+    /**
+     * カラム名を追加します。
+     * 
+     * @param columnName
+     *            カラム名
+     */
+    public void addColumnName(String columnName) {
+        columnNameList.add(columnName);
+    }
 }

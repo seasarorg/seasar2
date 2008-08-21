@@ -17,7 +17,9 @@ package org.seasar.extension.jdbc.gen.desc;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * エンティティ記述です。
@@ -38,8 +40,6 @@ public class EntityDesc {
     /** テーブル名 */
     protected String tableName;
 
-    protected String fullTableName;
-
     /** 複合識別子をもつならば{@code true} */
     protected boolean compositeId;
 
@@ -49,9 +49,14 @@ public class EntityDesc {
     /** 識別子である属性記述のリスト */
     protected List<AttributeDesc> idAttributeDescList = new ArrayList<AttributeDesc>();
 
+    /** 関連記述のリスト */
     protected List<AssociationDesc> associationDescList = new ArrayList<AssociationDesc>();
 
-    protected List<InverseAssociationDesc> inverseAssociationDescList = new ArrayList<InverseAssociationDesc>();
+    /** 関連名をキー、関連記述を値とするマップ */
+    protected Map<String, AssociationDesc> associationDescMap = new HashMap<String, AssociationDesc>();
+
+    /** 一意制約記述のリスト */
+    protected List<CompositeUniqueConstraintDesc> compositeUniqueConstraintDescList = new ArrayList<CompositeUniqueConstraintDesc>();
 
     /**
      * インスタンスを構築します。
@@ -136,18 +141,19 @@ public class EntityDesc {
     }
 
     /**
-     * @return Returns the fullTableName.
+     * 完全なテーブル名を返します。
+     * 
+     * @return 完全なテーブル名
      */
     public String getFullTableName() {
-        return fullTableName;
-    }
-
-    /**
-     * @param fullTableName
-     *            The fullTableName to set.
-     */
-    public void setFullTableName(String fullTableName) {
-        this.fullTableName = fullTableName;
+        StringBuilder buf = new StringBuilder();
+        if (catalogName != null) {
+            buf.append(catalogName).append(".");
+        }
+        if (schemaName != null) {
+            buf.append(schemaName).append(".");
+        }
+        return buf.append(tableName).toString();
     }
 
     /**
@@ -156,7 +162,7 @@ public class EntityDesc {
      * @param attributeDesc
      *            属性記述
      */
-    public void addAttribute(AttributeDesc attributeDesc) {
+    public void addAttributeDesc(AttributeDesc attributeDesc) {
         attributeDescList.add(attributeDesc);
         if (attributeDesc.isId()) {
             idAttributeDescList.add(attributeDesc);
@@ -185,34 +191,54 @@ public class EntityDesc {
     }
 
     /**
-     * @return Returns the associationDescList.
+     * 関連記述のリストを返します。
+     * 
+     * @return 関連記述のリスト
      */
     public List<AssociationDesc> getAssociationDescList() {
         return Collections.unmodifiableList(associationDescList);
     }
 
     /**
-     * @param associationDescList
-     *            The associationDescList to set.
+     * 関連記述を追加します。
+     * 
+     * @param associationDesc
+     *            関連記述
      */
     public void addAssociationDesc(AssociationDesc associationDesc) {
         associationDescList.add(associationDesc);
+        associationDescMap.put(associationDesc.getName(), associationDesc);
     }
 
     /**
-     * @return Returns the inverseAssociationDescList.
+     * 指定された関連名の関連記述を返します。
+     * 
+     * @param associationName
+     *            関連名
+     * @return 関連記述、存在しない場合{@code null}
      */
-    public List<InverseAssociationDesc> getInverseAssociationDescList() {
-        return inverseAssociationDescList;
+    public boolean hasAssociationDesc(String associationName) {
+        return associationDescMap.containsKey(associationName);
     }
 
     /**
-     * @param inverseAssociationDescList
-     *            The inverseAssociationDescList to set.
+     * 複合一意制約記述のリストを返します。
+     * 
+     * @return 複合一意制約記述のリスト
      */
-    public void addInverseAssociationDesc(
-            InverseAssociationDesc inverseAssociationDesc) {
-        inverseAssociationDescList.add(inverseAssociationDesc);
+    public List<CompositeUniqueConstraintDesc> getCompositeUniqueConstraintDescList() {
+        return compositeUniqueConstraintDescList;
+    }
+
+    /**
+     * 複合一意制約記述を追加します。
+     * 
+     * @param compositeUniqueConstraintDesc
+     *            複合一意制約記述
+     */
+    public void addCompositeUniqueConstraintDesc(
+            CompositeUniqueConstraintDesc compositeUniqueConstraintDesc) {
+        compositeUniqueConstraintDescList.add(compositeUniqueConstraintDesc);
     }
 
     /**

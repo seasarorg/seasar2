@@ -22,8 +22,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 /**
- * @author taedium
+ * 関連タイプです。
  * 
+ * @author taedium
  */
 public enum AssociationType {
 
@@ -32,6 +33,7 @@ public enum AssociationType {
      */
     MANY_TO_ONE {
 
+        @Override
         public Class<? extends Annotation> getAnnotation() {
             return ManyToOne.class;
         }
@@ -41,6 +43,7 @@ public enum AssociationType {
      */
     ONE_TO_MANY {
 
+        @Override
         public Class<? extends Annotation> getAnnotation() {
             return OneToMany.class;
         }
@@ -50,10 +53,16 @@ public enum AssociationType {
      */
     ONE_TO_ONE {
 
+        @Override
         public Class<? extends Annotation> getAnnotation() {
             return OneToOne.class;
         }
     };
 
+    /**
+     * アノテーションを返します。
+     * 
+     * @return アノテーション
+     */
     public abstract Class<? extends Annotation> getAnnotation();
 }

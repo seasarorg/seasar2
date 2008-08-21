@@ -48,6 +48,9 @@ public class AttributeModel {
     /** NULL可能の場合{@code true} */
     protected boolean nullable;
 
+    /** 一意の場合{@code true}、そうでない場合{@code false} */
+    protected boolean unique;
+
     /** 長さ */
     protected int length;
 
@@ -56,15 +59,6 @@ public class AttributeModel {
 
     /** スケール */
     protected int scale;
-
-    /** {@code #length}が利用可能な場合{@code true} */
-    protected boolean lengthAvailable;
-
-    /** {@code #precision}が利用可能な場合{@code true} */
-    protected boolean precisionAvailable;
-
-    /** {@code #scale}が利用可能な場合{@code true} */
-    protected boolean scaleAvailable;
 
     /** カラム定義 */
     protected String columnDefinition;
@@ -187,22 +181,22 @@ public class AttributeModel {
     }
 
     /**
-     * {@code #length}が利用可能な場合{@code true}を返します。
+     * 一意の場合{@code true}、そうでない場合{@code false}を返します。
      * 
-     * @return {@code #length}が利用可能な場合{@code true}
+     * @return 一意の場合{@code true}、そうでない場合{@code false}
      */
-    public boolean isLengthAvailable() {
-        return lengthAvailable;
+    public boolean isUnique() {
+        return unique;
     }
 
     /**
-     * {@code #length}が利用可能な場合{@code true}を設定します。
+     * 一意の場合{@code true}、そうでない場合{@code false}を設定します。
      * 
-     * @param lengthAvailable
-     *            {@code #length}が利用可能な場合{@code true}
+     * @param unique
+     *            一意の場合{@code true}
      */
-    public void setLengthAvailable(boolean lengthAvailable) {
-        this.lengthAvailable = lengthAvailable;
+    public void setUnique(boolean unique) {
+        this.unique = unique;
     }
 
     /**
@@ -225,25 +219,6 @@ public class AttributeModel {
     }
 
     /**
-     * {@code #precision}が利用可能な場合{@code true}を返します。
-     * 
-     * @return {@code #precision}が利用可能な場合{@code true}
-     */
-    public boolean isPrecisionAvailable() {
-        return precisionAvailable;
-    }
-
-    /**
-     * {@code #precision}が利用可能な場合{@code true}を設定します。
-     * 
-     * @param precisionAvailable
-     *            {@code #precision}が利用可能な場合{@code true}
-     */
-    public void setPrecisionAvailable(boolean precisionAvailable) {
-        this.precisionAvailable = precisionAvailable;
-    }
-
-    /**
      * 精度を返します。
      * 
      * @return 精度
@@ -260,25 +235,6 @@ public class AttributeModel {
      */
     public void setPrecision(int precision) {
         this.precision = precision;
-    }
-
-    /**
-     * {@code #scale}が利用可能な場合{@code true}を返します。
-     * 
-     * @return {@code #scale}が利用可能な場合{@code true}
-     */
-    public boolean isScaleAvailable() {
-        return scaleAvailable;
-    }
-
-    /**
-     * {@code #scale}が利用可能な場合{@code true}を設定します。
-     * 
-     * @param scaleAvailable
-     *            {@code #scale}が利用可能な場合{@code true}
-     */
-    public void setScaleAvailable(boolean scaleAvailable) {
-        this.scaleAvailable = scaleAvailable;
     }
 
     /**

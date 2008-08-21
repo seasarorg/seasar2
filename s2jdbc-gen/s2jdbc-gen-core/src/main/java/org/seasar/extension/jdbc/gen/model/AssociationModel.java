@@ -22,95 +22,160 @@ import java.util.List;
 import org.seasar.extension.jdbc.gen.desc.AssociationType;
 
 /**
- * @author taedium
+ * 関連モデルです。
  * 
+ * @author taedium
  */
 public class AssociationModel {
 
     /** 名前 */
     protected String name;
 
+    /** クラスの単純名 */
     protected String shortClassName;
 
+    /** 関連タイプ */
     protected AssociationType associationType;
 
+    /** 関連の所有者側のプロパティの名前 */
+    protected String mappedBy;
+
+    /** 結合カラムモデル */
     protected JoinColumnModel joinColumnModel;
 
+    /** 結合カラムモデルのリスト */
     protected List<JoinColumnModel> joinColumnModelList = new ArrayList<JoinColumnModel>();
 
+    /** 結合カラムが2つ以上ある場合{@code true}、そうでない場合{@code false} */
+    protected boolean compositeJoin;
+
     /**
-     * @return Returns the name.
+     * 名前を返します。
+     * 
+     * @return 名前
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 名前を設定します。
+     * 
      * @param name
-     *            The name to set.
+     *            名前
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the associationClassName.
+     * クラスの単純名を返します。
+     * 
+     * @return クラスの単純名
      */
     public String getShortClassName() {
         return shortClassName;
     }
 
     /**
-     * @param associationClassName
-     *            The associationClassName to set.
+     * クラスの単純名を設定します。
+     * 
+     * @param shortClassName
+     *            クラスの単純名
      */
-    public void setShortClassName(String associationClassName) {
-        this.shortClassName = associationClassName;
+    public void setShortClassName(String shortClassName) {
+        this.shortClassName = shortClassName;
     }
 
     /**
-     * @return Returns the associationType.
+     * 関連タイプを返します。
+     * 
+     * @return 関連タイプ
      */
     public AssociationType getAssociationType() {
         return associationType;
     }
 
     /**
+     * 関連タイプを設定します。
+     * 
      * @param associationType
-     *            The associationType to set.
+     *            関連タイプ
      */
     public void setAssociationType(AssociationType associationType) {
         this.associationType = associationType;
     }
 
     /**
-     * @return Returns the joinColumnModel.
+     * 関連の所有者側のプロパティの名前を返します。
+     * 
+     * @return 関連の所有者側のプロパティの名前
+     */
+    public String getMappedBy() {
+        return mappedBy;
+    }
+
+    /**
+     * 関連の所有者側のプロパティの名前を設定します。
+     * 
+     * @param mappedBy
+     *            関連の所有者側のプロパティの名前
+     */
+    public void setMappedBy(String mappedBy) {
+        this.mappedBy = mappedBy;
+    }
+
+    /**
+     * 結合カラムモデルを返します。
+     * 
+     * @return 結合カラムモデル
      */
     public JoinColumnModel getJoinColumnModel() {
         return joinColumnModel;
     }
 
     /**
+     * 結合カラムモデルを設定します。
+     * 
      * @param joinColumnModel
-     *            The joinColumnModel to set.
+     *            結合カラムモデル
      */
     public void setJoinColumnModel(JoinColumnModel joinColumnModel) {
+        if (!joinColumnModelList.isEmpty()) {
+            throw new IllegalStateException("joinColumnModelList");
+        }
         this.joinColumnModel = joinColumnModel;
     }
 
     /**
-     * @return Returns the joinColumnModelList.
+     * 結合カラムモデルのリストを返します。
+     * 
+     * @return 結合カラムモデルのリストを設定します。
      */
     public List<JoinColumnModel> getJoinColumnModelList() {
         return Collections.unmodifiableList(joinColumnModelList);
     }
 
     /**
-     * @param joinColumnModelList
-     *            The joinColumnModelList to set.
+     * 結合カラムモデルを追加します。
+     * 
+     * @param joinColumnModel
+     *            結合カラムモデル
      */
     public void addJoinColumnModel(JoinColumnModel joinColumnModel) {
+        if (this.joinColumnModel != null) {
+            throw new IllegalStateException("joinColumnModel");
+        }
         joinColumnModelList.add(joinColumnModel);
+    }
+
+    /**
+     * 結合カラムが2つ以上ある場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return 結合カラムが2つ以上ある場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isCompositeJoin() {
+        return joinColumnModelList.size() > 1;
     }
 
 }

@@ -43,6 +43,9 @@ public class DbColumnMeta {
     /** 主キーの場合{@code true} */
     protected boolean primaryKey;
 
+    /** 一意の場合{@code true} */
+    protected boolean unique;
+
     /**
      * 名前を返します。
      * 
@@ -175,6 +178,25 @@ public class DbColumnMeta {
      */
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
+    }
+
+    /**
+     * 一意の場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return 一意の場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isUnique() {
+        return unique;
+    }
+
+    /**
+     * 一意の場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param unique
+     *            一意の場合{@code true}
+     */
+    public void setUnique(boolean unique) {
+        this.unique = unique;
     }
 
 }

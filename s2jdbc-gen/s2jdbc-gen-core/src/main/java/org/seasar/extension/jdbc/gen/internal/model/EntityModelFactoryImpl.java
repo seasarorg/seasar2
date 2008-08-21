@@ -15,29 +15,35 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
+import org.seasar.extension.jdbc.gen.desc.AssociationType;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
+import org.seasar.extension.jdbc.gen.desc.CompositeUniqueConstraintDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
-import org.seasar.extension.jdbc.gen.desc.InverseAssociationDesc;
 import org.seasar.extension.jdbc.gen.model.AssociationModel;
 import org.seasar.extension.jdbc.gen.model.AssociationModelFactory;
 import org.seasar.extension.jdbc.gen.model.AttributeModel;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
+import org.seasar.extension.jdbc.gen.model.CompositeUniqueConstraintModel;
+import org.seasar.extension.jdbc.gen.model.CompositeUniqueConstraintModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
-import org.seasar.extension.jdbc.gen.model.InverseAssociationModel;
-import org.seasar.extension.jdbc.gen.model.InverseAssociationModelFactory;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -50,50 +56,66 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** パッケージ名 */
     protected String packageName;
 
+    /** テーブル名をカタログ名とスキーマ名で修飾する場合{@code true}、修飾しない場合{@code false} */
+    protected boolean tableNameQualified;
+
     /** 属性モデルのファクトリ */
     protected AttributeModelFactory attributeModelFactory;
 
+    /** 関連モデルのファクトリ */
     protected AssociationModelFactory associationModelFactory;
 
-    protected InverseAssociationModelFactory inverseAssociationModelFactory;
+    /** 複合一意制約モデルのファクトリ */
+    protected CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory;
 
     /**
      * インスタンスを構築しますｌ
      * 
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param tableNameQualified
+     *            テーブル名をカタログ名とスキーマ名で修飾する場合{@code true}、修飾しない場合{@code false}
      * @param attributeModelFactory
      *            属性モデルのファクトリ
+     * @param associationModelFactory
+     *            関連モデルのファクトリ
+     * @param compositeUniqueConstraintModelFactory
+     *            複合一意制約モデルのファクトリ
      */
-    public EntityModelFactoryImpl(String packageName,
+    public EntityModelFactoryImpl(
+            String packageName,
+            boolean tableNameQualified,
             AttributeModelFactory attributeModelFactory,
             AssociationModelFactory associationModelFactory,
-            InverseAssociationModelFactory inverseAssociationModelFactory) {
+            CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory) {
         if (attributeModelFactory == null) {
             throw new NullPointerException("attributeModelFactory");
         }
         if (associationModelFactory == null) {
             throw new NullPointerException("associationModelFactory");
         }
-        if (inverseAssociationModelFactory == null) {
-            throw new NullPointerException("inverseAssociationModelFactory");
+        if (compositeUniqueConstraintModelFactory == null) {
+            throw new NullPointerException("uniqueConstraintModelFactory");
         }
         this.packageName = packageName;
+        this.tableNameQualified = tableNameQualified;
         this.attributeModelFactory = attributeModelFactory;
         this.associationModelFactory = associationModelFactory;
-        this.inverseAssociationModelFactory = inverseAssociationModelFactory;
+        this.compositeUniqueConstraintModelFactory = compositeUniqueConstraintModelFactory;
     }
 
     public EntityModel getEntityModel(EntityDesc entityDesc) {
         EntityModel entityModel = new EntityModel();
-        entityModel.setCatalogName(entityDesc.getCatalogName());
-        entityModel.setSchemaName(entityDesc.getSchemaName());
+        if (tableNameQualified) {
+            entityModel.setCatalogName(entityDesc.getCatalogName());
+            entityModel.setSchemaName(entityDesc.getSchemaName());
+        }
         entityModel.setPackageName(packageName);
         entityModel.setShortClassName(entityDesc.getName());
         entityModel.setCompositeId(entityDesc.hasCompositeId());
         doAttributeModel(entityModel, entityDesc);
         doAssociationModel(entityModel, entityDesc);
-        doInverseAssociationModel(entityModel, entityDesc);
+        doCompositeUniqueConstraintModel(entityModel, entityDesc);
         doImportName(entityModel, entityDesc);
         return entityModel;
     }
@@ -115,23 +137,40 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         }
     }
 
+    /**
+     * 関連モデルを処理します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
     protected void doAssociationModel(EntityModel entityModel,
             EntityDesc entityDesc) {
         for (AssociationDesc associationDesc : entityDesc
                 .getAssociationDescList()) {
             AssociationModel associationModel = associationModelFactory
                     .getAssociationModel(associationDesc);
-            entityModel.setAssociationModel(associationModel);
+            entityModel.addAssociationModel(associationModel);
         }
     }
 
-    protected void doInverseAssociationModel(EntityModel entityModel,
+    /**
+     * 複合一意制約モデルを処理します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void doCompositeUniqueConstraintModel(EntityModel entityModel,
             EntityDesc entityDesc) {
-        for (InverseAssociationDesc inverseAssociationDesc : entityDesc
-                .getInverseAssociationDescList()) {
-            InverseAssociationModel inverseAssociationModel = inverseAssociationModelFactory
-                    .getInverseAssociationModel(inverseAssociationDesc);
-            entityModel.setInverseAssociationModel(inverseAssociationModel);
+        for (CompositeUniqueConstraintDesc compositeUniqueConstraintDesc : entityDesc
+                .getCompositeUniqueConstraintDescList()) {
+            CompositeUniqueConstraintModel compositeUniqueConstraintModel = compositeUniqueConstraintModelFactory
+                    .getUniqueConstraintModel(compositeUniqueConstraintDesc);
+            entityModel
+                    .addCompositeUniqueConstraintModel(compositeUniqueConstraintModel);
         }
     }
 
@@ -175,6 +214,25 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             if (name != null && !"java.lang".equals(name)) {
                 model.addImportName(attr.getAttributeClass().getName());
             }
+        }
+        for (AssociationDesc associationDesc : entityDesc
+                .getAssociationDescList()) {
+            AssociationType associationType = associationDesc
+                    .getAssociationType();
+            if (associationType == AssociationType.ONE_TO_MANY) {
+                model.addImportName(List.class.getName());
+            }
+            model.addImportName(associationType.getAnnotation().getName());
+            if (associationDesc.getColumnNameList().size() > 0) {
+                model.addImportName(JoinColumn.class.getName());
+            }
+            if (associationDesc.getColumnNameList().size() > 1) {
+                model.addImportName(JoinColumns.class.getName());
+            }
+        }
+        if (!entityDesc.getCompositeUniqueConstraintDescList().isEmpty()) {
+            model.addImportName(Table.class.getName());
+            model.addImportName(UniqueConstraint.class.getName());
         }
     }
 }

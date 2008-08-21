@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
+import org.seasar.extension.jdbc.gen.desc.CompositeUniqueConstraintDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
@@ -29,34 +30,42 @@ import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
- * @author taedium
+ * {@link EntitySetDescFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
 
+    /** テーブルメタデータのリーダ */
     protected DbTableMetaReader dbTableMetaReader;
 
+    /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
+    /** 方言 */
     protected GenDialect dialect;
 
+    /** バージョンカラム名 */
     protected String versionColumnName;
 
-    protected String schemaName;
-
+    /** エンティティ記述のファクトリ */
     protected EntityDescFactory entityDescFactory;
 
     /**
+     * インスタンスを構築します。
+     * 
      * @param dbTableMetaReader
+     *            テーブルメタデータのリーダ
      * @param dialect
+     *            方言
      * @param persistenceConvention
+     *            永続化層の命名規約
      * @param versionColumnName
-     * @param schemaName
-     *            指定されていない場合{@code}
+     *            バージョンカラム名
      */
     public EntitySetDescFactoryImpl(DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName, String schemaName) {
+            String versionColumnName) {
         if (dbTableMetaReader == null) {
             throw new NullPointerException("dbTableMetaReader");
         }
@@ -72,7 +81,6 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
         this.dbTableMetaReader = dbTableMetaReader;
         this.dialect = dialect;
         this.persistenceConvention = persistenceConvention;
-        this.schemaName = schemaName;
         this.versionColumnName = versionColumnName;
         entityDescFactory = createEntityDescFactory();
     }
@@ -84,22 +92,35 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
             EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
             entitySetDesc.addEntityDesc(entityDesc);
         }
+        AssociationResolver resolver = createRelationshipResolver(entitySetDesc);
         for (DbTableMeta tableMeta : dbTableMetaList) {
             for (DbForeignKeyMeta fkMeta : tableMeta.getForeignKeyMetaList()) {
-                AssociationResolver resolver = createRelationshipResolver(entitySetDesc);
-                resolver.resolveRelationship(fkMeta);
+                resolver.resolve(tableMeta, fkMeta);
             }
         }
         return entitySetDesc;
     }
 
+    /**
+     * {@link EntityDescFactory}の実装を作成します。
+     * 
+     * @return {@link EntityDescFactory}の実装
+     */
     protected EntityDescFactory createEntityDescFactory() {
         AttributeDescFactory attributeDescFactory = new AttributeDescFactoryImpl(
                 persistenceConvention, dialect, versionColumnName);
+        CompositeUniqueConstraintDescFactory compositeUniqueConstraintDescFactory = new CompositeUniqueConstraintDescFactoryImpl();
         return new EntityDescFactoryImpl(persistenceConvention,
-                attributeDescFactory, schemaName != null);
+                attributeDescFactory, compositeUniqueConstraintDescFactory);
     }
 
+    /**
+     * 関連のリゾルバを作成します。
+     * 
+     * @param entitySetDesc
+     *            エンティティ集合記述
+     * @return 関連のリゾルバ
+     */
     protected AssociationResolver createRelationshipResolver(
             EntitySetDesc entitySetDesc) {
         return new AssociationResolver(entitySetDesc);

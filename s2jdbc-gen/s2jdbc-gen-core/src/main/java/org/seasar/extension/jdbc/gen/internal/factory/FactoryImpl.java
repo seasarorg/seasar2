@@ -39,12 +39,12 @@ import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.InverseAssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
@@ -167,19 +167,19 @@ public class FactoryImpl implements Factory {
     public EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName, String schemaName) {
+            String versionColumnName) {
 
         return new EntitySetDescFactoryImpl(dbTableMetaReader,
-                persistenceConvention, dialect, versionColumnName, schemaName);
+                persistenceConvention, dialect, versionColumnName);
     }
 
     public EntityModelFactory createEntityModelFactory(Command command,
-            String packageName) {
+            String packageName, boolean tableNameQualified) {
 
-        return new EntityModelFactoryImpl(packageName,
+        return new EntityModelFactoryImpl(packageName, tableNameQualified,
                 new AttributeModelFactoryImpl(),
                 new AssociationModelFactoryImpl(),
-                new InverseAssociationModelFactoryImpl());
+                new CompositeUniqueConstraintModelFactoryImpl());
     }
 
     public ServiceModelFactory createServiceModelFactory(Command command,

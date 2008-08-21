@@ -35,10 +35,17 @@ public class DbTableMeta {
     /** 名前 */
     protected String name;
 
-    /** カラムのメタデータのリスト */
+    /** カラムメタデータのリスト */
     protected List<DbColumnMeta> columnMetaList = new ArrayList<DbColumnMeta>();
 
+    /** 主キーのカラムメタデータのリスト */
+    protected List<DbColumnMeta> primaryKeyColumnMetaList = new ArrayList<DbColumnMeta>();
+
+    /** 外部キーメタデータのリスト */
     protected List<DbForeignKeyMeta> foreignKeyMetaList = new ArrayList<DbForeignKeyMeta>();
+
+    /** 一意キーメタデータのリスト */
+    protected List<DbUniqueKeyMeta> uniqueKeyMetaList = new ArrayList<DbUniqueKeyMeta>();
 
     /**
      * カタログ名を返します。
@@ -114,21 +121,71 @@ public class DbTableMeta {
      */
     public void addColumnMeta(DbColumnMeta columnDesc) {
         columnMetaList.add(columnDesc);
+        if (columnDesc.isPrimaryKey()) {
+            primaryKeyColumnMetaList.add(columnDesc);
+        }
     }
 
     /**
-     * @return Returns the foreignKeyDescList.
+     * 主キーのカラムメタデータのリストを返します。
+     * 
+     * @return 主キーのカラムメタデータのリスト
+     */
+    public List<DbColumnMeta> getPrimaryKeyColumnMetaList() {
+        return Collections.unmodifiableList(primaryKeyColumnMetaList);
+    }
+
+    /**
+     * 外部キーメタデータのリストを返します。
+     * 
+     * @return 外部キーメタデータのリスト
      */
     public List<DbForeignKeyMeta> getForeignKeyMetaList() {
         return Collections.unmodifiableList(foreignKeyMetaList);
     }
 
     /**
-     * @param foreignKeyMetaList
-     *            The foreignKeyDescList to set.
+     * 外部キーメタデータを追加します。
+     * 
+     * @param foreignKeyMeta
+     *            外部キーメタデータ
      */
     public void addForeignKeyMeta(DbForeignKeyMeta foreignKeyMeta) {
         foreignKeyMetaList.add(foreignKeyMeta);
     }
 
+    /**
+     * 一意キーメタデータのリスト
+     * 
+     * @return 一意キーメタデータのリスト
+     */
+    public List<DbUniqueKeyMeta> getUniqueKeyMetaList() {
+        return Collections.unmodifiableList(uniqueKeyMetaList);
+    }
+
+    /**
+     * 一意キーメタデータを追加します。
+     * 
+     * @param uniqueKeyMeta
+     *            一意キーメタデータ
+     */
+    public void addUniqueKeyMeta(DbUniqueKeyMeta uniqueKeyMeta) {
+        uniqueKeyMetaList.add(uniqueKeyMeta);
+    }
+
+    /**
+     * 完全なテーブル名を返します。
+     * 
+     * @return 完全なテーブル名
+     */
+    public String getFullTableName() {
+        StringBuilder buf = new StringBuilder();
+        if (catalogName != null) {
+            buf.append(catalogName).append(".");
+        }
+        if (schemaName != null) {
+            buf.append(schemaName).append(".");
+        }
+        return buf.append(name).toString();
+    }
 }

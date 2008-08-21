@@ -15,86 +15,162 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.util.Map;
-
 import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
 import org.seasar.extension.jdbc.gen.desc.AssociationType;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
-import org.seasar.extension.jdbc.gen.desc.InverseAssociationDesc;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
-import org.seasar.framework.util.ArrayMap;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author taedium
+ * エンティティ記述の関連を解決するクラスです。
  * 
+ * @author taedium
  */
 public class AssociationResolver {
 
-    protected Map<String, EntityDesc> entityDescMap = new ArrayMap();
+    /** 多側に対する関連名のサフィックス */
+    protected static String TO_MANY_ASSOCIATION_NAME_SUFFIX = "List";
 
+    /** エンティティ集合記述 */
+    protected EntitySetDesc entitySetDesc;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param entitySetDesc
+     *            エンティティ集合記述
+     */
     public AssociationResolver(EntitySetDesc entitySetDesc) {
-        for (EntityDesc entityDesc : entitySetDesc.getEntityDescList()) {
-            entityDescMap.put(entityDesc.getFullTableName(), entityDesc);
+        if (entitySetDesc == null) {
+            throw new NullPointerException("entitySetDesc");
         }
+        this.entitySetDesc = entitySetDesc;
     }
 
-    public void resolveRelationship(DbForeignKeyMeta fkMeta) {
-        EntityDesc entityDesc = null;
-        EntityDesc referencedEntityDesc = null;
-        String name = buildFullTableName(fkMeta.getForeignKeyCatalogName(),
-                fkMeta.getForeignKeySchemaName(), fkMeta
-                        .getForeignKeyTableName());
-        if (entityDescMap.containsKey(name)) {
-            entityDesc = entityDescMap.get(name);
+    /**
+     * 関連を解決します。
+     * 
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @param fkMeta
+     *            外部キーメタデータ
+     */
+    public void resolve(DbTableMeta tableMeta, DbForeignKeyMeta fkMeta) {
+        EntityDesc ownerEntityDesc = entitySetDesc.getEntityDesc(tableMeta
+                .getFullTableName());
+        if (ownerEntityDesc == null) {
+            return;
         }
-        String referencedName = buildFullTableName(fkMeta
-                .getPrimaryKeyCatalogName(), fkMeta.getPrimaryKeySchemaName(),
-                fkMeta.getPrimaryKeyTableName());
-        if (entityDescMap.containsKey(referencedName)) {
-            referencedEntityDesc = entityDescMap.get(referencedName);
+        EntityDesc inverseEntityDesc = entitySetDesc.getEntityDesc(fkMeta
+                .getPrimaryKeyFullTableName());
+        if (inverseEntityDesc == null) {
+            return;
         }
-        if (entityDesc != null && referencedEntityDesc != null) {
-            AssociationDesc assoDesc = new AssociationDesc();
-            assoDesc
-                    .setReferencedCatalogName(fkMeta.getPrimaryKeyCatalogName());
-            assoDesc.setReferencedSchemaName(fkMeta.getPrimaryKeySchemaName());
-            assoDesc.setReferencedTableName(fkMeta.getPrimaryKeyTableName());
-            assoDesc.setAssociationType(AssociationType.MANY_TO_ONE);
-            for (String referencedColumnName : fkMeta
-                    .getPrimaryKeyColumnNameList()) {
-                assoDesc.addReferencedColumnName(referencedColumnName);
-            }
-            for (String columnName : fkMeta.getForeignKeyColumnNameList()) {
-                assoDesc.addColumnName(columnName);
-            }
-            assoDesc.setReferencedEntityDesc(referencedEntityDesc);
-            assoDesc.setName(StringUtil.decapitalize(referencedEntityDesc
-                    .getName()));
-            entityDesc.addAssociationDesc(assoDesc);
-
-            InverseAssociationDesc inverseAssoDesc = new InverseAssociationDesc();
-            inverseAssoDesc.setAssociationType(AssociationType.ONE_TO_MANY);
-            inverseAssoDesc.setName(StringUtil
-                    .decapitalize(entityDesc.getName())
-                    + "List");
-            inverseAssoDesc.setMappedBy(assoDesc.getName());
-            inverseAssoDesc.setReferencingEntityDesc(entityDesc);
-            referencedEntityDesc.addInverseAssociationDesc(inverseAssoDesc);
-        }
+        AssociationDesc ownerAssociationDesc = doOwnerAssociationDesc(fkMeta,
+                ownerEntityDesc, inverseEntityDesc);
+        doInverseAssociationDesc(fkMeta, ownerEntityDesc, inverseEntityDesc,
+                ownerAssociationDesc.getName());
     }
 
-    protected String buildFullTableName(String catalog, String schema,
-            String name) {
-        StringBuilder buf = new StringBuilder();
-        if (catalog != null) {
-            buf.append(catalog).append(".");
+    /**
+     * 所有側の関連を処理します。
+     * 
+     * @param fkMeta
+     *            外部キーメタデータ
+     * @param ownerEntityDesc
+     *            関連の所有者側のエンティティ記述
+     * @param inverseEntityDesc
+     *            関連の被所有者側のエンティティ記述
+     * @return
+     */
+    protected AssociationDesc doOwnerAssociationDesc(DbForeignKeyMeta fkMeta,
+            EntityDesc ownerEntityDesc, EntityDesc inverseEntityDesc) {
+        AssociationDesc associationDesc = new AssociationDesc();
+        associationDesc.setReferencedCatalogName(fkMeta
+                .getPrimaryKeyCatalogName());
+        associationDesc.setReferencedSchemaName(fkMeta
+                .getPrimaryKeySchemaName());
+        associationDesc.setReferencedTableName(fkMeta.getPrimaryKeyTableName());
+        String name = getAssociationName(ownerEntityDesc, inverseEntityDesc,
+                false);
+        associationDesc.setName(name);
+        if (fkMeta.isUnique()) {
+            associationDesc.setAssociationType(AssociationType.ONE_TO_ONE);
+        } else {
+            associationDesc.setAssociationType(AssociationType.MANY_TO_ONE);
         }
-        if (schema != null) {
-            buf.append(schema).append(".");
+        for (String referencedColumnName : fkMeta.getPrimaryKeyColumnNameList()) {
+            associationDesc.addReferencedColumnName(referencedColumnName);
         }
-        return buf.append(name).toString();
+        for (String columnName : fkMeta.getForeignKeyColumnNameList()) {
+            associationDesc.addColumnName(columnName);
+        }
+        associationDesc.setReferencedEntityDesc(inverseEntityDesc);
+        ownerEntityDesc.addAssociationDesc(associationDesc);
+        return associationDesc;
+    }
+
+    /**
+     * 被所有側の関連を処理します。
+     * 
+     * @param fkMeta
+     *            外部キーメタデータ
+     * @param ownerEntityDesc
+     *            関連の所有者側のエンティティ記述
+     * @param inverseEntityDesc
+     *            関連の被所有者側のエンティティ記述
+     * @param mappedBy
+     *            関連の所有者側のプロパティ名
+     */
+    protected void doInverseAssociationDesc(DbForeignKeyMeta fkMeta,
+            EntityDesc ownerEntityDesc, EntityDesc inverseEntityDesc,
+            String mappedBy) {
+        AssociationDesc inverseAssociationDesc = new AssociationDesc();
+        if (fkMeta.isUnique()) {
+            String name = getAssociationName(inverseEntityDesc,
+                    ownerEntityDesc, false);
+            inverseAssociationDesc.setName(name);
+            inverseAssociationDesc
+                    .setAssociationType(AssociationType.ONE_TO_ONE);
+        } else {
+            String name = getAssociationName(inverseEntityDesc,
+                    ownerEntityDesc, true);
+            inverseAssociationDesc.setName(name);
+            inverseAssociationDesc
+                    .setAssociationType(AssociationType.ONE_TO_MANY);
+        }
+        inverseAssociationDesc.setMappedBy(mappedBy);
+        inverseAssociationDesc.setReferencedEntityDesc(ownerEntityDesc);
+        inverseEntityDesc.addAssociationDesc(inverseAssociationDesc);
+    }
+
+    /**
+     * 関連名を返します。
+     * 
+     * @param referencingEntityDesc
+     *            参照する側のエンティティ記述
+     * @param referencedEntityDesc
+     *            参照される側のエンティティ記述
+     * @param oneToMany
+     *            関連がOneToManyの場合{@code true}
+     * @return 関連名
+     */
+    protected String getAssociationName(EntityDesc referencingEntityDesc,
+            EntityDesc referencedEntityDesc, boolean oneToMany) {
+        String entityName = referencedEntityDesc.getName();
+        String associationName = StringUtil.decapitalize(entityName)
+                + (oneToMany ? TO_MANY_ASSOCIATION_NAME_SUFFIX : "");
+        if (referencingEntityDesc.hasAssociationDesc(associationName)) {
+            for (int i = 2;; i++) {
+                if (!referencingEntityDesc.hasAssociationDesc(associationName
+                        + i)) {
+                    return associationName + i;
+                }
+            }
+        }
+        return associationName;
     }
 
 }

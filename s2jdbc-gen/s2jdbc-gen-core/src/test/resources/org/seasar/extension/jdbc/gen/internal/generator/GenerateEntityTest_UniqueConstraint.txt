@@ -1,0 +1,14 @@
+package hoge.entity;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB", uniqueConstraints = { @UniqueConstraint(columnNames = { "CCC", "DDD" }), @UniqueConstraint(columnNames = { "EEE", "FFF" }) })
+public class Foo {
+}

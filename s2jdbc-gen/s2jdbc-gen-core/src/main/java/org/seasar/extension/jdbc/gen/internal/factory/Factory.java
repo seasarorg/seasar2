@@ -254,6 +254,8 @@ public interface Factory {
      * 
      * @param command
      *            呼び出し元のコマンド
+     * @param dbTableMetaReader
+     *            データベースのテーブルメタデータのリーダ
      * @param persistenceConvention
      *            永続化層の命名規約
      * @param dialect
@@ -267,7 +269,7 @@ public interface Factory {
     EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName, String schemaName);
+            String versionColumnName);
 
     /**
      * {@link EntityModelFactory}の実装を作成します。
@@ -276,10 +278,12 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param tableNameQualified
+     *            テーブル名をカタログ名とスキーマ名で修飾する場合{@code true}、修飾しない場合{@code false}
      * @return {@link EntityModelFactory}の実装
      */
     EntityModelFactory createEntityModelFactory(Command command,
-            String packageName);
+            String packageName, boolean tableNameQualified);
 
     /**
      * {@link ServiceModelFactory}の実装を作成します。

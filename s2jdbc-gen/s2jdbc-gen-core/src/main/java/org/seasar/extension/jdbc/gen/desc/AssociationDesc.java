@@ -20,16 +20,23 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author taedium
+ * 関連記述です。
  * 
+ * @author taedium
  */
 public class AssociationDesc {
 
+    /** 名前 */
     protected String name;
 
+    /** 関連先のエンティティ記述 */
     protected EntityDesc referencedEntityDesc;
 
+    /** 関連タイプ */
     protected AssociationType associationType;
+
+    /** 関連の所有者側のプロパティの名前 */
+    protected String mappedBy;
 
     /** カラム名のリスト */
     protected List<String> columnNameList = new ArrayList<String>();
@@ -43,55 +50,83 @@ public class AssociationDesc {
     /** 参照されるテーブル名 */
     protected String referencedTableName;
 
-    /** 参照されるカタログ名、参照されるスキーマ名、参照される名前をピリオドで連結した完全な名前 */
-    protected String referencedFullTableName;
-
     /** 参照されるカラム名のリスト */
     protected List<String> referencedColumnNameList = new ArrayList<String>();
 
     /**
-     * @return Returns the name.
+     * 名前を返します。
+     * 
+     * @return 名前
      */
     public String getName() {
         return name;
     }
 
     /**
+     * 名前を設定します。
+     * 
      * @param name
-     *            The name to set.
+     *            名前
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * @return Returns the relationshipEntityDesc.
+     * 関連先のエンティティ記述を返します。
+     * 
+     * @return 関連先のエンティティ記述
      */
     public EntityDesc getReferencedEntityDesc() {
         return referencedEntityDesc;
     }
 
     /**
+     * 関連先のエンティティ記述を設定します。
+     * 
      * @param relationshipEntityDesc
-     *            The relationshipEntityDesc to set.
+     *            関連先のエンティティ記述
      */
     public void setReferencedEntityDesc(EntityDesc relationshipEntityDesc) {
         this.referencedEntityDesc = relationshipEntityDesc;
     }
 
     /**
-     * @return Returns the associationType.
+     * 関連タイプを返します。
+     * 
+     * @return 関連タイプ
      */
     public AssociationType getAssociationType() {
         return associationType;
     }
 
     /**
+     * 関連タイプを設定します。
+     * 
      * @param associationType
-     *            The associationType to set.
+     *            関連タイプ
      */
     public void setAssociationType(AssociationType associationType) {
         this.associationType = associationType;
+    }
+
+    /**
+     * 関連の所有者側のプロパティの名前を返します。
+     * 
+     * @return 関連の所有者側のプロパティの名前
+     */
+    public String getMappedBy() {
+        return mappedBy;
+    }
+
+    /**
+     * 関連の所有者側のプロパティの名前を設定します。
+     * 
+     * @param mappedBy
+     *            関連の所有者側のプロパティの名前
+     */
+    public void setMappedBy(String mappedBy) {
+        this.mappedBy = mappedBy;
     }
 
     /**
@@ -187,16 +222,6 @@ public class AssociationDesc {
      */
     public void addReferencedColumnName(String referencedColumnName) {
         referencedColumnNameList.add(referencedColumnName);
-    }
-
-    /**
-     * 参照されるテーブルの完全な名前を設定します。
-     * 
-     * @param referencedFullTableName
-     *            参照されるテーブルの完全な名前
-     */
-    public void setReferencedFullTableName(String referencedFullTableName) {
-        this.referencedFullTableName = referencedFullTableName;
     }
 
 }

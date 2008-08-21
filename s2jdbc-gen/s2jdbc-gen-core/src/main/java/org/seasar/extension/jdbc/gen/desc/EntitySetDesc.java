@@ -18,28 +18,53 @@ package org.seasar.extension.jdbc.gen.desc;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import org.seasar.framework.util.ArrayMap;
 
 /**
- * @author taedium
+ * エンティティ集合記述です。
  * 
+ * @author taedium
  */
 public class EntitySetDesc {
 
+    /** エンティティ記述のリスト */
     protected List<EntityDesc> entityDescList = new ArrayList<EntityDesc>();
 
+    /** 完全なテーブル名をキー、エンティティ記述を値とするマップ */
+    @SuppressWarnings("unchecked")
+    protected Map<String, EntityDesc> entityDescMap = new ArrayMap();
+
     /**
-     * @return Returns the entityDescList.
+     * エンティティ記述のリストを返します。
+     * 
+     * @return エンティティ記述のリスト
      */
     public List<EntityDesc> getEntityDescList() {
         return Collections.unmodifiableList(entityDescList);
     }
 
     /**
-     * @param entityDescList
-     *            The entityDescList to set.
+     * エンティティ記述を追加します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
      */
     public void addEntityDesc(EntityDesc entityDesc) {
         entityDescList.add(entityDesc);
+        entityDescMap.put(entityDesc.getFullTableName(), entityDesc);
+    }
+
+    /**
+     * 完全なテーブル名に対応するエンティティ記述を返します。
+     * 
+     * @param fullTableName
+     *            完全なテーブル名
+     * @return エンティティ記述、存在しない場合{@code null}
+     */
+    public EntityDesc getEntityDesc(String fullTableName) {
+        return entityDescMap.get(fullTableName);
     }
 
 }

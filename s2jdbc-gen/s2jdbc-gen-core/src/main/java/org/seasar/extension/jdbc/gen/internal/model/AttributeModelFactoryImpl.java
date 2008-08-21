@@ -34,6 +34,7 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setTransient(attributeDesc.isTransient());
         attributeModel.setVersion(attributeDesc.isVersion());
         attributeModel.setNullable(attributeDesc.isNullable());
+        attributeModel.setUnique(attributeDesc.isUnique());
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
         attributeModel.setColumnDefinition(attributeDesc.getColumnDefinition());

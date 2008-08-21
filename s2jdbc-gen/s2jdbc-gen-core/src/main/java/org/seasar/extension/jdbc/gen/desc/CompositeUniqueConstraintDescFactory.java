@@ -13,16 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.model;
+package org.seasar.extension.jdbc.gen.desc;
 
-import org.seasar.extension.jdbc.gen.desc.InverseAssociationDesc;
+import org.seasar.extension.jdbc.gen.meta.DbUniqueKeyMeta;
 
 /**
- * @author taedium
+ * {@link CompositeUniqueConstraintDesc}のファクトリです。
  * 
+ * @author taedium
  */
-public interface InverseAssociationModelFactory {
+public interface CompositeUniqueConstraintDescFactory {
 
-    InverseAssociationModel getInverseAssociationModel(
-            InverseAssociationDesc inverseAssociationDesc);
+    /**
+     * 一意制約記述を返します。
+     * 
+     * @param uniqueKeyMeta
+     *            一意キーメタデータ
+     * @return 存在する場合は一意制約記述、存在しない場合は{@code null}
+     */
+    CompositeUniqueConstraintDesc getCompositeUniqueConstraintDesc(DbUniqueKeyMeta uniqueKeyMeta);
 }
