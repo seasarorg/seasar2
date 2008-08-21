@@ -92,10 +92,10 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
             EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
             entitySetDesc.addEntityDesc(entityDesc);
         }
-        AssociationResolver resolver = createRelationshipResolver(entitySetDesc);
+        AssociationResolver associationResolver = createAssociationResolver(entitySetDesc);
         for (DbTableMeta tableMeta : dbTableMetaList) {
             for (DbForeignKeyMeta fkMeta : tableMeta.getForeignKeyMetaList()) {
-                resolver.resolve(tableMeta, fkMeta);
+                associationResolver.resolve(tableMeta, fkMeta);
             }
         }
         return entitySetDesc;
@@ -121,7 +121,7 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      *            エンティティ集合記述
      * @return 関連のリゾルバ
      */
-    protected AssociationResolver createRelationshipResolver(
+    protected AssociationResolver createAssociationResolver(
             EntitySetDesc entitySetDesc) {
         return new AssociationResolver(entitySetDesc);
     }
