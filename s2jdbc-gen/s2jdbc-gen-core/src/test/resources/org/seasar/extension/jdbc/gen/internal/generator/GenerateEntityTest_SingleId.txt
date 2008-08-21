@@ -24,7 +24,7 @@ public class Foo {
     /** */
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    @Column(columnDefinition = "integer")
     public int id;
 
     /** */

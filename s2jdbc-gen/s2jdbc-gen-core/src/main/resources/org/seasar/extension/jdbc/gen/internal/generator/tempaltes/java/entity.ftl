@@ -44,7 +44,7 @@ public class ${shortClassName} {
     @Version
   </#if>
   <#if !attr.transient>
-    @Column(columnDefinition = <#if attr.columnDefinition??>"${attr.columnDefinition}"<#else>null</#if>, nullable = ${attr.nullable?string}, unique = ${attr.unique?string})
+    @Column(columnDefinition = <#if attr.columnDefinition??>"${attr.columnDefinition}"<#else>null</#if><#if !attr.id>, nullable = ${attr.nullable?string}, unique = ${attr.unique?string}</#if>)
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>

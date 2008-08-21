@@ -15,11 +15,11 @@ public class Foo {
 
     /** */
     @Id
-    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    @Column(columnDefinition = "integer")
     public int id1;
 
     /** */
     @Id
-    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    @Column(columnDefinition = "integer")
     public int id2;
 }
