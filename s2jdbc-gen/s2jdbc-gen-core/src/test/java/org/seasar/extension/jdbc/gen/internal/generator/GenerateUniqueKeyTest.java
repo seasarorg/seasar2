@@ -59,8 +59,9 @@ public class GenerateUniqueKeyTest {
         uniqueKeyDesc2.addColumnName("UK2-2");
 
         TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
-        tableDesc.setFullName("AAA.BBB.HOGE");
         tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
         tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
@@ -70,8 +71,8 @@ public class GenerateUniqueKeyTest {
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new StandardGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
-                null);
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
+                "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

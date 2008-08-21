@@ -174,7 +174,6 @@ public class TableDescFactoryImpl implements TableDescFactory {
         tableDesc.setCatalogName(tableMeta.getCatalog());
         tableDesc.setSchemaName(tableMeta.getSchema());
         tableDesc.setName(tableMeta.getName());
-        tableDesc.setFullName(tableMeta.getFullName());
         tableDesc.setCanonicalName(buildCanonicalName(tableMeta));
     }
 

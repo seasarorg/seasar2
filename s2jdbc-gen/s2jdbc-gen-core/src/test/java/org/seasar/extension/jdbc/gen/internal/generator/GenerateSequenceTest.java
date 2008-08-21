@@ -63,12 +63,10 @@ public class GenerateSequenceTest {
         sequenceDesc2.setDataType("integer");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setFullName("AAA");
         tableDesc.setCanonicalName("aaa");
         tableDesc.addSequenceDesc(sequenceDesc);
 
         TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setFullName("BBB");
         tableDesc2.setCanonicalName("bbb");
         tableDesc2.addSequenceDesc(sequenceDesc2);
 
@@ -78,8 +76,8 @@ public class GenerateSequenceTest {
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new HsqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
-                null);
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
+                "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 

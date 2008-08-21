@@ -71,8 +71,9 @@ public class GenerateForeignKeyTest {
         foreignKeyDesc2.addReferencedColumnName("REF2-2");
 
         TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
-        tableDesc.setFullName("AAA.BBB.HOGE");
         tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);

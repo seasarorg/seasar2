@@ -68,8 +68,9 @@ public class GenerateTableTest {
         primaryKeyDesc.addColumnName("no");
 
         TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
-        tableDesc.setFullName("AAA.BBB.HOGE");
         tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addColumnDesc(no);
         tableDesc.addColumnDesc(name);
@@ -92,8 +93,9 @@ public class GenerateTableTest {
         primaryKeyDesc2.addColumnName("name");
 
         TableDesc tableDesc2 = new TableDesc();
+        tableDesc2.setCatalogName("AAA");
+        tableDesc2.setSchemaName("BBB");
         tableDesc2.setName("FOO");
-        tableDesc2.setFullName("AAA.BBB.FOO");
         tableDesc2.setCanonicalName("aaa.bbb.foo");
         tableDesc2.addColumnDesc(no2);
         tableDesc2.addColumnDesc(name2);
@@ -112,8 +114,9 @@ public class GenerateTableTest {
         name3.setUnique(false);
 
         TableDesc tableDesc3 = new TableDesc();
+        tableDesc3.setCatalogName("AAA");
+        tableDesc3.setSchemaName("BBB");
         tableDesc3.setName("BAR");
-        tableDesc3.setFullName("AAA.BBB.BAR");
         tableDesc3.setCanonicalName("aaa.bbb.bar");
         tableDesc3.addColumnDesc(no3);
         tableDesc3.addColumnDesc(name3);
@@ -125,8 +128,8 @@ public class GenerateTableTest {
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new MssqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
-                null);
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
+                "VERSION", null);
         model = factory.getDdlModel(databaseDesc, 0);
     }
 
@@ -168,8 +171,9 @@ public class GenerateTableTest {
         primaryKeyDesc.addColumnName("no");
 
         TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
-        tableDesc.setFullName("AAA.BBB.HOGE");
         tableDesc.setCanonicalName("aaa.bbb.hoge");
         tableDesc.addColumnDesc(no);
         tableDesc.addColumnDesc(name);
@@ -180,8 +184,8 @@ public class GenerateTableTest {
 
         DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
                 new MssqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO", "VERSION",
-                "ENGINE = INNODB");
+                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
+                "VERSION", "ENGINE = INNODB");
         model = factory.getDdlModel(databaseDesc, 0);
 
         GenerationContext context = new GenerationContextImpl(model, new File(

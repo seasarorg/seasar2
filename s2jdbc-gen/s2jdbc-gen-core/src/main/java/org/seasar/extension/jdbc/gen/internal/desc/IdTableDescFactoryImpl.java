@@ -141,30 +141,7 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         tableDesc.setCatalogName(catalog);
         tableDesc.setSchemaName(schema);
         tableDesc.setName(name);
-        tableDesc.setFullName(buildFullName(catalog, schema, name));
         tableDesc.setCanonicalName(buildCanonicalName(catalog, schema, name));
-    }
-
-    /**
-     * 完全な名前を組み立てます。
-     * 
-     * @param catalog
-     *            カタログ名
-     * @param schema
-     *            スキーマ名
-     * @param name
-     *            テーブル名
-     * @return 完全な名前
-     */
-    protected String buildFullName(String catalog, String schema, String name) {
-        StringBuilder buf = new StringBuilder();
-        if (catalog != null) {
-            buf.append(catalog).append(".");
-        }
-        if (schema != null) {
-            buf.append(schema).append(".");
-        }
-        return buf.append(name).toString();
     }
 
     /**

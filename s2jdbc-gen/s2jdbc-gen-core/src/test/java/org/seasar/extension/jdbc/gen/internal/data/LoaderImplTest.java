@@ -42,7 +42,9 @@ public class LoaderImplTest {
         columnDesc2.setName("BAR");
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.setFullName("AAA.BBB.HOGE");
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 

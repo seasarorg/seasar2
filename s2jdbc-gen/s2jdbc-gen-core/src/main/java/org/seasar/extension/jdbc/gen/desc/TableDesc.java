@@ -42,9 +42,6 @@ public class TableDesc {
     /** 名前 */
     protected String name;
 
-    /** カタログ名、スキーマ名、名前をピリオドで連結した完全な名前 */
-    protected String fullName;
-
     /** 一意性をもつ標準名 */
     protected String canonicalName;
 
@@ -133,17 +130,14 @@ public class TableDesc {
      * @return 完全な名前
      */
     public String getFullName() {
-        return fullName;
-    }
-
-    /**
-     * 完全な名前を設定します。
-     * 
-     * @param fullName
-     *            完全な名前
-     */
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+        StringBuilder buf = new StringBuilder();
+        if (catalogName != null) {
+            buf.append(catalogName).append(".");
+        }
+        if (schemaName != null) {
+            buf.append(schemaName).append(".");
+        }
+        return buf.append(name).toString();
     }
 
     /**
