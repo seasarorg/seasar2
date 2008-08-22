@@ -49,7 +49,7 @@ public class ${shortClassName} {
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>
 <#list associationModelList as asso>
-    
+
     /** */
     @${asso.associationType.annotation.simpleName}<#if asso.mappedBy??>(mappedBy = "${asso.mappedBy}")</#if>
   <#if asso.joinColumnModel??>

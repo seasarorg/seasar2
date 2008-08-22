@@ -1,3 +1,10 @@
+drop table employee;
+drop table department;
+drop table address;
+drop table comp_key_employee;
+drop table comp_key_department;
+drop table comp_key_address;
+
 drop table bigint_table;
 drop table int_table;
 drop table smallint_table;
