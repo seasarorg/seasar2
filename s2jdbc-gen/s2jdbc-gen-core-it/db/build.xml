@@ -39,7 +39,7 @@
 		<echo>${rdbms}</echo>
 	</target>
 
-	<target name="testFromDbToEntity" depends="showRdbmsName, clean">
+	<target name="testFromDbToEntity" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<exec-sql 
 			classpathref="classpath">
@@ -77,7 +77,7 @@
 		</exec-sql>
 	</target>
 	
-	<target name="testFromEntityToDb" depends="showRdbmsName, clean">
+	<target name="testFromEntityToDb" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -151,7 +151,7 @@
 		/>
 	</target>
 
-	<target name="testGenerateDdl" depends="showRdbmsName, clean">
+	<target name="testGenerateDdl" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<javac 
 			destdir="${build}"
@@ -173,7 +173,7 @@
 		/>
 	</target>
 	
-	<target name="testMigrate" depends="showRdbmsName, clean">
+	<target name="testMigrate" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<javac 
 			destdir="${build}"
@@ -229,7 +229,7 @@
 		/>
 	</target>
 
-	<target name="testDumpDbMeta" depends="showRdbmsName, clean">
+	<target name="testDumpDbMeta" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<exec-sql 
 			classpathref="classpath">
@@ -250,7 +250,7 @@
 		</exec-sql>
 	</target>
 
-	<target name="testDumpData" depends="showRdbmsName, clean">
+	<target name="testDumpData" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -282,7 +282,7 @@
 		</exec-sql>
 	</target>
 
-	<target name="testLoadData" depends="showRdbmsName, clean">
+	<target name="testLoadData" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -328,6 +328,18 @@
 		</exec-sql>
 	</target>
 
+	<target name="setup" depends="clean">
+		<javac 
+			srcdir="../src/main/java"
+			includes="org/seasar/extension/jdbc/gen/it/**"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+	</target>
+	
 	<target name="clean">
 		<delete dir="${temp}"/>
 		<mkdir dir="${build}"/>
@@ -338,4 +350,5 @@
 			</fileset>
 		</copy>
 	</target>
+
 </project>
