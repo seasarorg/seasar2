@@ -13,23 +13,33 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
-
-import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+package org.seasar.extension.jdbc.gen.internal.argtype;
 
 /**
- * コマンドを表すインタフェースです。
+ * コマンドラインの引数の値の型を表すインタフェースです。
  * 
  * @author taedium
+ * @param <T>
+ *            引数の値の型
  */
-public interface Command {
+public interface ArgumentType<T> {
 
     /**
-     * 実行します。
+     * 引数の値の文字列を適切な型のオブジェクトに変換します。
      * 
-     * @throws CommandFailedRuntimeException
-     *             コマンドの実行に失敗した場合
+     * @param value
+     *            引数の文字列
+     * @return オブジェクト
      */
-    void execute() throws CommandFailedRuntimeException;
+    T toObject(String value);
+
+    /**
+     * 引数の値のオブジェクトを文字列に変換します。
+     * 
+     * @param value
+     *            引数のオブジェクト
+     * @return 文字列
+     */
+    String toText(T value);
 
 }

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
-    
+
     /** */
     @ManyToOne
     @JoinColumn(name = "HOGE_ID", referencedColumnName = "ID")

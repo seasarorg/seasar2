@@ -39,6 +39,11 @@
 		<echo>${rdbms}</echo>
 	</target>
 
+	<target name="testSample">
+		<sample classpathref="classpath"
+		/>
+	</target>
+
 	<target name="testFromDbToEntity" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<exec-sql 
@@ -329,15 +334,6 @@
 	</target>
 
 	<target name="setup" depends="clean">
-		<javac 
-			srcdir="../src/main/java"
-			includes="org/seasar/extension/jdbc/gen/it/**"
-			destdir="${build}"
-			encoding="UTF-8"
-			fork="true"
-			debug="on"
-			classpathref="classpath"
-		/>
 	</target>
 	
 	<target name="clean">

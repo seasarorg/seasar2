@@ -17,8 +17,11 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateDdlCommand;
+import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
+import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 
 /**
  * DDLのSQLファイルを生成する{@link Task}です。
@@ -37,14 +40,54 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
+     * 設定ファイルのパスを設定します。
+     * 
+     * @param configPath
+     *            設定ファイルのパス
+     */
+    public void setConfigPath(String configPath) {
+        command.setConfigPath(configPath);
+    }
+
+    /**
+     * 環境名を設定します。
+     * 
+     * @param env
+     *            環境名
+     */
+    public void setEnv(String env) {
+        command.setEnv(env);
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
+    public void setJdbcManagerName(String jdbcManagerName) {
+        command.setJdbcManagerName(jdbcManagerName);
+    }
+
+    /**
+     * {@link Factory}の実装クラス名を設定します。
+     * 
+     * @param factoryClassName
+     *            {@link Factory}の実装クラス名
+     */
+    public void setFactoryClassName(String factoryClassName) {
+        command.setFactoryClassName(factoryClassName);
+    }
+
+    /**
      * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を設定します。
      * 
      * @param sqlKeywordCase
      *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      */
     public void setSqlKeywordCase(SqlKeywordCase sqlKeywordCase) {
-        String value = sqlKeywordCase.getValue();
-        command.setSqlKeywordCase(value.toUpperCase());
+        String value = sqlKeywordCase.getValue().toUpperCase();
+        command.setSqlKeywordCaseType(SqlKeywordCaseType.valueOf(value));
     }
 
     /**
@@ -54,8 +97,8 @@ public class GenerateDdlTask extends AbstractTask {
      *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      */
     public void setSqlIdentifierCase(SqlIdentifierCase sqlIdentifierCase) {
-        String value = sqlIdentifierCase.getValue();
-        command.setSqlIdentifierCase(value.toUpperCase());
+        String value = sqlIdentifierCase.getValue().toUpperCase();
+        command.setSqlIdentifierCaseType(SqlIdentifierCaseType.valueOf(value));
     }
 
     /**

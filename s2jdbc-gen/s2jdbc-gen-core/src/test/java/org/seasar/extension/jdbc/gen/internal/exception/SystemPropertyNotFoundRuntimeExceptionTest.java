@@ -13,23 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.exception;
 
-import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * コマンドを表すインタフェースです。
- * 
  * @author taedium
+ * 
  */
-public interface Command {
+public class SystemPropertyNotFoundRuntimeExceptionTest {
 
     /**
-     * 実行します。
      * 
-     * @throws CommandFailedRuntimeException
-     *             コマンドの実行に失敗した場合
+     * @throws Exception
      */
-    void execute() throws CommandFailedRuntimeException;
-
+    @Test
+    public void test() throws Exception {
+        SystemPropertyNotFoundRuntimeException e = new SystemPropertyNotFoundRuntimeException(
+                "aaa");
+        assertEquals("aaa", e.getPropertyName());
+        System.out.println(e.getMessage());
+    }
 }

@@ -30,10 +30,5 @@
 	<component name="dataSource"
 		class="org.seasar.extension.dbcp.impl.DataSourceImpl"
 	/>
-	
-	<component
-		class="org.seasar.extension.jdbc.gen.it.DerbyHelper">
-		<destroyMethod name="shutdown"/>
-	</component>
-	
+
 </components>

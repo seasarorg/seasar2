@@ -15,18 +15,16 @@
  */
 package org.seasar.extension.jdbc.gen.task;
 
-import java.lang.reflect.Method;
+import java.util.List;
 
-import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.internal.util.BeanUtil;
-import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.MethodUtil;
+import org.seasar.extension.jdbc.gen.internal.arg.ArgumentsBuilder;
+import org.seasar.extension.jdbc.gen.internal.command.CommandAdapter;
 
 /**
  * {@link Task}の抽象クラスです。
@@ -59,46 +57,6 @@ public abstract class AbstractTask extends Task {
     }
 
     /**
-     * 設定ファイルのパスを設定します。
-     * 
-     * @param configPath
-     *            設定ファイルのパス
-     */
-    public void setConfigPath(String configPath) {
-        getCommand().setConfigPath(configPath);
-    }
-
-    /**
-     * 環境名を設定します。
-     * 
-     * @param env
-     *            環境名
-     */
-    public void setEnv(String env) {
-        getCommand().setEnv(env);
-    }
-
-    /**
-     * {@link JdbcManager}のコンポーネント名を設定します。
-     * 
-     * @param jdbcManagerName
-     *            {@link JdbcManager}のコンポーネント名
-     */
-    public void setJdbcManagerName(String jdbcManagerName) {
-        getCommand().setJdbcManagerName(jdbcManagerName);
-    }
-
-    /**
-     * {@link Factory}の実装クラス名を設定します。
-     * 
-     * @param factoryClassName
-     *            {@link Factory}の実装クラス名
-     */
-    public void setFactoryClassName(String factoryClassName) {
-        getCommand().setFactoryClassName(factoryClassName);
-    }
-
-    /**
      * クラスパスを作成します。
      * 
      * @return クラスパス
@@ -120,54 +78,29 @@ public abstract class AbstractTask extends Task {
             throw new BuildException("classpath is empty for '" + getTaskName()
                     + "' task");
         }
+        executeCommand();
+    }
 
-        TaskClassLoader taskClassLoader = createTaskClassLoader();
-        ClassLoader original = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(taskClassLoader);
-        try {
-            Class<?> commandClass = null;
-            try {
-                commandClass = taskClassLoader.forceLoadClass(getCommand()
-                        .getClass().getName());
-            } catch (ClassNotFoundException e) {
-                throw new BuildException(getCommand().getClass().getName()
-                        + " not found.", e);
-            }
-            Object command = ClassUtil.newInstance(commandClass);
-            copyProperties(getCommand(), command);
-            Method method = ClassUtil.getMethod(commandClass, "execute", null);
-            MethodUtil.invoke(method, command, null);
-        } finally {
-            Thread.currentThread().setContextClassLoader(original);
+    /**
+     * コマンドを実行します。
+     */
+    protected void executeCommand() {
+        Command command = getCommand();
+        String jvmArg = "-D" + CommandAdapter.COMMAND_KEY + "="
+                + command.getClass().getName();
+        ArgumentsBuilder builder = new ArgumentsBuilder(command);
+        List<String> args = builder.build();
+
+        Java java = new Java(this);
+        java.createJvmarg().setValue(jvmArg);
+        for (String arg : args) {
+            java.createArg().setValue(arg);
         }
-    }
-
-    /**
-     * {@link TaskClassLoader}を作成します。
-     * 
-     * @param path
-     *            パス
-     * @return クラスローダ
-     */
-    protected TaskClassLoader createTaskClassLoader() {
-        AntClassLoader classLoader = getProject().createClassLoader(
-                ClassLoader.getSystemClassLoader(), classpath);
-        classLoader.setParentFirst(false);
-        classLoader.addJavaLibraries();
-        classLoader.setIsolated(true);
-        return new TaskClassLoader(classLoader);
-    }
-
-    /**
-     * JavaBeans形式のプロパティをコピーします。
-     * 
-     * @param src
-     *            コピー元のコマンド
-     * @param dest
-     *            コピー先のコマンド
-     */
-    protected void copyProperties(Command src, Object dest) {
-        BeanUtil.copy(src, dest);
+        java.setClasspath(classpath);
+        java.setClassname(CommandAdapter.class.getName());
+        java.setFailonerror(true);
+        java.setFork(true);
+        java.execute();
     }
 
     /**

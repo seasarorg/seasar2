@@ -13,25 +13,36 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.it;
+package org.seasar.extension.jdbc.gen.internal.argtype;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Derbyに関するヘルパクラスです。
- * 
  * @author taedium
+ * 
  */
-public class DerbyHelper {
+public class CharacterTypeTest {
+
+    private CharacterType characterType = new CharacterType();
 
     /**
-     * Derbyのシステム全体をシャットダウンします。
+     * 
      */
-    public void shutdown() {
-        try {
-            DriverManager.getConnection("jdbc:derby:;shutdown=true");
-        } catch (SQLException ignore) {
-        }
+    @Test
+    public void testToObject() {
+        assertEquals(new Character('\u0000'), characterType.toObject("\\u0000"));
+        assertEquals(new Character('a'), characterType.toObject("\\u0097"));
     }
+
+    /**
+     * 
+     */
+    @Test
+    public void testToText() {
+        assertEquals("\\u0000", characterType.toText(new Character('\u0000')));
+        assertEquals("\\u0097", characterType.toText(new Character('a')));
+    }
+
 }

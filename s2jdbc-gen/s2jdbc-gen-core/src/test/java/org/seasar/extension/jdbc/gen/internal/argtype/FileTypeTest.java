@@ -13,23 +13,38 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.argtype;
 
-import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+import java.io.File;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * コマンドを表すインタフェースです。
- * 
  * @author taedium
+ * 
  */
-public interface Command {
+public class FileTypeTest {
+
+    private FileType fileType = new FileType();
 
     /**
-     * 実行します。
      * 
-     * @throws CommandFailedRuntimeException
-     *             コマンドの実行に失敗した場合
      */
-    void execute() throws CommandFailedRuntimeException;
+    @Test
+    public void testToObject() {
+        assertEquals(new File("hoge"), fileType.toObject("'hoge'"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testToText() throws Exception {
+        assertEquals("'" + new File("hoge").getCanonicalPath() + "'", fileType
+                .toText(new File("hoge")));
+    }
 
 }

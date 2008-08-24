@@ -13,23 +13,29 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.command;
+package org.seasar.extension.jdbc.gen.internal.argtype;
 
-import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
+import org.seasar.framework.util.StringUtil;
 
 /**
- * コマンドを表すインタフェースです。
+ * {@link Boolean}を扱う{@link ArgumentType}の実装クラスです。
  * 
  * @author taedium
  */
-public interface Command {
+public class BooleanType implements ArgumentType<Boolean> {
 
-    /**
-     * 実行します。
-     * 
-     * @throws CommandFailedRuntimeException
-     *             コマンドの実行に失敗した場合
-     */
-    void execute() throws CommandFailedRuntimeException;
+    public Boolean toObject(String value) {
+        if (StringUtil.isEmpty(value)) {
+            return null;
+        }
+        return Boolean.valueOf(value);
+    }
+
+    public String toText(Boolean value) {
+        if (value == null) {
+            return "";
+        }
+        return value.toString();
+    }
 
 }

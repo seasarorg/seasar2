@@ -174,11 +174,10 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected boolean dump = true;
 
     /** SQLのキーワードの大文字小文字を変換するかどうかを示す値 */
-    protected String sqlKeywordCase = SqlKeywordCaseType.ORIGINALCASE.name();
+    protected SqlKeywordCaseType sqlKeywordCaseType = SqlKeywordCaseType.ORIGINALCASE;
 
     /** SQLの識別子の大文字小文字を変換するかどうかを示す値 */
-    protected String sqlIdentifierCase = SqlIdentifierCaseType.ORIGINALCASE
-            .name();
+    protected SqlIdentifierCaseType sqlIdentifierCaseType = SqlIdentifierCaseType.ORIGINALCASE;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -868,47 +867,42 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * SQLのキーワードの大文字小文字を変換するかどうかを示す値を返します。
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を返します。
      * 
-     * @return SQLのキーワードの大文字小文字を変換するかどうかを示す値
+     * @return SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      */
-    public String getSqlKeywordCase() {
-        return sqlKeywordCase;
+    public SqlKeywordCaseType getSqlKeywordCaseType() {
+        return sqlKeywordCaseType;
     }
 
     /**
-     * SQLのキーワードの大文字小文字を変換するかどうかを示す値を設定します。
-     * <p>
-     * {@link SqlKeywordCaseType}に対応する値でなければいけません。
-     * </p>
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を設定します。
      * 
-     * @param sqlKeywordCase
-     *            SQLのキーワードの大文字小文字を変換するかどうかを示す値
+     * @param sqlKeywordCaseType
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      */
-    public void setSqlKeywordCase(String sqlKeywordCase) {
-        this.sqlKeywordCase = sqlKeywordCase;
+    public void setSqlKeywordCaseType(SqlKeywordCaseType sqlKeywordCaseType) {
+        this.sqlKeywordCaseType = sqlKeywordCaseType;
     }
 
     /**
-     * SQLの識別子の大文字小文字を変換するかどうかを示す値を返します。
+     * SQLの識別子の大文字小文字を変換するかどうかを示す列挙型を返します。
      * 
-     * @return SQLの識別子の大文字小文字を変換するかどうかを示す値
+     * @return SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      */
-    public String getSqlIdentifierCase() {
-        return sqlIdentifierCase;
+    public SqlIdentifierCaseType getSqlIdentifierCaseType() {
+        return sqlIdentifierCaseType;
     }
 
     /**
-     * SQLの識別子の大文字小文字を変換するかどうかを示す値を設定します。
-     * <p>
-     * {@link SqlIdentifierCaseType}に対応する値でなければいけません。
-     * </p>
+     * SQLの識別子の大文字小文字を変換するかどうかを示す列挙型を設定します。
      * 
-     * @param sqlIdentifierCase
-     *            SQLの識別子の大文字小文字を変換するかどうかを示す値
+     * @param sqlIdentifierCaseType
+     *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      */
-    public void setSqlIdentifierCase(String sqlIdentifierCase) {
-        this.sqlIdentifierCase = sqlIdentifierCase;
+    public void setSqlIdentifierCaseType(
+            SqlIdentifierCaseType sqlIdentifierCaseType) {
+        this.sqlIdentifierCaseType = sqlIdentifierCaseType;
     }
 
     @Override
@@ -1077,12 +1071,8 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DdlModelFactory}の実装
      */
     protected DdlModelFactory createDdlModelFactory() {
-        SqlKeywordCaseType keywordCaseType = SqlKeywordCaseType
-                .valueOf(sqlKeywordCase);
-        SqlIdentifierCaseType identifierCaseType = SqlIdentifierCaseType
-                .valueOf(sqlIdentifierCase);
-        return factory.createDdlModelFactory(this, dialect, keywordCaseType,
-                identifierCaseType, statementDelimiter,
+        return factory.createDdlModelFactory(this, dialect, sqlKeywordCaseType,
+                sqlIdentifierCaseType, statementDelimiter,
                 schemaInfoFullTableName, schemaInfoColumnName, tableOption);
     }
 
