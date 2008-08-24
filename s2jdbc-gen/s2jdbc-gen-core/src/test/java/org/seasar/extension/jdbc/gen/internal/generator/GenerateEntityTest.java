@@ -273,7 +273,7 @@ public class GenerateEntityTest {
         fkMeta.setPrimaryKeyCatalogName("AAA");
         fkMeta.setPrimaryKeySchemaName("BBB");
         fkMeta.setPrimaryKeyTableName("HOGE");
-        fkMeta.addPrimaryKeyColumnName("ID");
+        fkMeta.addPrimaryKeyColumnName("PK");
         fkMeta.addForeignKeyColumnName("HOGE_ID");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc);
@@ -294,6 +294,61 @@ public class GenerateEntityTest {
         generator.generate(context);
         path = getClass().getName().replace(".", "/")
                 + "_SingleId_Association_Hoge.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testSingleIdAssociationDefaultMapping() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+
+        EntityDesc entityDesc2 = new EntityDesc();
+        entityDesc2.setCatalogName("AAA");
+        entityDesc2.setSchemaName("BBB");
+        entityDesc2.setTableName("HOGE");
+        entityDesc2.setName("Hoge");
+
+        EntitySetDesc entitySetDesc = new EntitySetDesc();
+        entitySetDesc.addEntityDesc(entityDesc);
+        entitySetDesc.addEntityDesc(entityDesc2);
+
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("AAA");
+        tableMeta.setSchemaName("BBB");
+        tableMeta.setName("FOO");
+
+        DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
+        fkMeta.setPrimaryKeyCatalogName("AAA");
+        fkMeta.setPrimaryKeySchemaName("BBB");
+        fkMeta.setPrimaryKeyTableName("HOGE");
+        fkMeta.addPrimaryKeyColumnName("ID");
+        fkMeta.addForeignKeyColumnName("HOGE_ID");
+
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        resolver.resolve(tableMeta, fkMeta);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/")
+                + "_SingleId_Association_DefaultMapping_Foo.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+        generator.clear();
+
+        model = factory.getEntityModel(entityDesc2);
+        context = new GenerationContextImpl(model, new File("dir"), new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+        path = getClass().getName().replace(".", "/")
+                + "_SingleId_Association_DefaultMapping_Hoge.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 

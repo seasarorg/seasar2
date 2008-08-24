@@ -1,0 +1,19 @@
+package hoge.entity;
+
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+/**
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Hoge {
+
+    /** */
+    @OneToMany(mappedBy = "hoge")
+    public List<Foo> fooList;
+}

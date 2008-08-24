@@ -54,13 +54,11 @@ public class ${shortClassName} {
     @${asso.associationType.annotation.simpleName}<#if asso.mappedBy??>(mappedBy = "${asso.mappedBy}")</#if>
   <#if asso.joinColumnModel??>
     @JoinColumn(name = "${asso.joinColumnModel.name}", referencedColumnName = "${asso.joinColumnModel.referencedColumnName}")
-  <#else>
-    <#if asso.joinColumnModelList?size gt 0>
+  <#elseif asso.joinColumnsModel??>
     @JoinColumns( {
-      <#list asso.joinColumnModelList as joinColumnModel>
+    <#list asso.joinColumnsModel.joinColumnModelList as joinColumnModel>
         @JoinColumn(name = "${joinColumnModel.name}", referencedColumnName = "${joinColumnModel.referencedColumnName}")<#if joinColumnModel_has_next>,<#else> })</#if>
-      </#list>
-    </#if>
+    </#list>
   </#if>
     public ${asso.shortClassName} ${asso.name};
 </#list>

@@ -20,10 +20,12 @@ import org.seasar.extension.jdbc.gen.desc.AssociationType;
 import org.seasar.extension.jdbc.gen.model.AssociationModel;
 import org.seasar.extension.jdbc.gen.model.AssociationModelFactory;
 import org.seasar.extension.jdbc.gen.model.JoinColumnModel;
+import org.seasar.extension.jdbc.gen.model.JoinColumnsModel;
 
 /**
- * @author taedium
+ * {@link AssociationModelFactory}の実装クラスです。
  * 
+ * @author taedium
  */
 public class AssociationModelFactoryImpl implements AssociationModelFactory {
 
@@ -41,25 +43,76 @@ public class AssociationModelFactoryImpl implements AssociationModelFactory {
         model.setAssociationType(associationDesc.getAssociationType());
         model.setMappedBy(associationDesc.getMappedBy());
         if (associationDesc.getColumnNameList().size() == 1) {
-            String name = associationDesc.getColumnNameList().get(0);
+            doJoinColumnModel(model, associationDesc);
+        } else if (associationDesc.getColumnNameList().size() > 1) {
+            doJoinColumnsModel(model, associationDesc);
+        }
+        return model;
+    }
+
+    /**
+     * 結合カラムモデルを処理します。
+     * 
+     * @param associationModel
+     *            関連モデル
+     * @param associationDesc
+     *            関連記述
+     */
+    protected void doJoinColumnModel(AssociationModel associationModel,
+            AssociationDesc associationDesc) {
+        String propertyName = associationDesc.getName();
+        String columnName = associationDesc.getColumnNameList().get(0);
+        String referencedColumnName = associationDesc
+                .getReferencedColumnNameList().get(0);
+        if (matchesJoinColumnNamingConvention(propertyName, columnName,
+                referencedColumnName)) {
+            return;
+        }
+        JoinColumnModel joinColumnModel = new JoinColumnModel();
+        joinColumnModel.setName(columnName);
+        joinColumnModel.setReferencedColumnName(referencedColumnName);
+        associationModel.setJoinColumnModel(joinColumnModel);
+    }
+
+    /**
+     * 結合カラムの命名規約に合致する場合{@code true}を返します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param columnName
+     *            参照する側のカラム名
+     * @param referencedColumnName
+     *            参照される側のカラム名
+     * @return 結合カラムの命名規約に合致する場合{@code true}
+     */
+    protected boolean matchesJoinColumnNamingConvention(String propertyName,
+            String columnName, String referencedColumnName) {
+        return columnName.equalsIgnoreCase(propertyName + "_"
+                + referencedColumnName);
+    }
+
+    /**
+     * 複合結合カラムモデルを処理します。
+     * 
+     * @param associationModel
+     *            関連モデル
+     * @param associationDesc
+     *            関連記述
+     */
+    protected void doJoinColumnsModel(AssociationModel associationModel,
+            AssociationDesc associationDesc) {
+        JoinColumnsModel joinColumnsModel = new JoinColumnsModel();
+        int i = 0;
+        for (String name : associationDesc.getColumnNameList()) {
             String referencedColumnName = associationDesc
-                    .getReferencedColumnNameList().get(0);
+                    .getReferencedColumnNameList().get(i);
             JoinColumnModel joinColumnModel = new JoinColumnModel();
             joinColumnModel.setName(name);
             joinColumnModel.setReferencedColumnName(referencedColumnName);
-            model.setJoinColumnModel(joinColumnModel);
-        } else if (associationDesc.getColumnNameList().size() > 1) {
-            int i = 0;
-            for (String name : associationDesc.getColumnNameList()) {
-                String referencedColumnName = associationDesc
-                        .getReferencedColumnNameList().get(i);
-                JoinColumnModel joinColumnModel = new JoinColumnModel();
-                joinColumnModel.setName(name);
-                joinColumnModel.setReferencedColumnName(referencedColumnName);
-                model.addJoinColumnModel(joinColumnModel);
-            }
+            joinColumnsModel.addJoinColumnModel(joinColumnModel);
+            i++;
         }
-        return model;
+        associationModel.setJoinColumnsModel(joinColumnsModel);
     }
 
 }

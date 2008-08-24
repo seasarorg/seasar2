@@ -18,6 +18,6 @@ public class Foo {
     @ManyToOne
     @JoinColumns( {
         @JoinColumn(name = "HOGE_ID1", referencedColumnName = "ID1"),
-        @JoinColumn(name = "HOGE_ID2", referencedColumnName = "ID1") })
+        @JoinColumn(name = "HOGE_ID2", referencedColumnName = "ID2") })
     public Hoge hoge;
 }

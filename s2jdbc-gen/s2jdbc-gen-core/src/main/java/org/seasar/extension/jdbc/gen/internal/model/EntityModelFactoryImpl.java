@@ -95,7 +95,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             throw new NullPointerException("associationModelFactory");
         }
         if (compositeUniqueConstraintModelFactory == null) {
-            throw new NullPointerException("uniqueConstraintModelFactory");
+            throw new NullPointerException(
+                    "compositeUniqueConstraintModelFactory");
         }
         this.packageName = packageName;
         this.tableNameQualified = tableNameQualified;
@@ -187,10 +188,10 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         if (model.getCatalogName() != null || model.getSchemaName() != null) {
             model.addImportName(Table.class.getName());
         }
-        for (AttributeDesc attr : entityDesc.getAttributeDescList()) {
+        for (AttributeModel attr : model.getAttributeModelList()) {
             if (attr.isId()) {
                 model.addImportName(Id.class.getName());
-                if (!entityDesc.hasCompositeId()) {
+                if (!model.hasCompositeId()) {
                     model.addImportName(GeneratedValue.class.getName());
                 }
             }
@@ -215,22 +216,21 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
                 model.addImportName(attr.getAttributeClass().getName());
             }
         }
-        for (AssociationDesc associationDesc : entityDesc
-                .getAssociationDescList()) {
-            AssociationType associationType = associationDesc
-                    .getAssociationType();
+        for (AssociationModel asso : model.getAssociationModelList()) {
+            AssociationType associationType = asso.getAssociationType();
             if (associationType == AssociationType.ONE_TO_MANY) {
                 model.addImportName(List.class.getName());
             }
             model.addImportName(associationType.getAnnotation().getName());
-            if (associationDesc.getColumnNameList().size() > 0) {
+            if (asso.getJoinColumnModel() != null) {
                 model.addImportName(JoinColumn.class.getName());
             }
-            if (associationDesc.getColumnNameList().size() > 1) {
+            if (asso.getJoinColumnsModel() != null) {
+                model.addImportName(JoinColumn.class.getName());
                 model.addImportName(JoinColumns.class.getName());
             }
         }
-        if (!entityDesc.getCompositeUniqueConstraintDescList().isEmpty()) {
+        if (!model.getCompositeUniqueConstraintModelList().isEmpty()) {
             model.addImportName(Table.class.getName());
             model.addImportName(UniqueConstraint.class.getName());
         }

@@ -15,10 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.seasar.extension.jdbc.gen.desc.AssociationType;
 
 /**
@@ -43,11 +39,8 @@ public class AssociationModel {
     /** 結合カラムモデル */
     protected JoinColumnModel joinColumnModel;
 
-    /** 結合カラムモデルのリスト */
-    protected List<JoinColumnModel> joinColumnModelList = new ArrayList<JoinColumnModel>();
-
-    /** 結合カラムが2つ以上ある場合{@code true}、そうでない場合{@code false} */
-    protected boolean compositeJoin;
+    /** 複合結合カラムモデル */
+    protected JoinColumnsModel joinColumnsModel;
 
     /**
      * 名前を返します。
@@ -141,41 +134,32 @@ public class AssociationModel {
      *            結合カラムモデル
      */
     public void setJoinColumnModel(JoinColumnModel joinColumnModel) {
-        if (!joinColumnModelList.isEmpty()) {
-            throw new IllegalStateException("joinColumnModelList");
+        if (joinColumnsModel != null) {
+            throw new IllegalStateException("joinColumnsModel");
         }
         this.joinColumnModel = joinColumnModel;
     }
 
     /**
-     * 結合カラムモデルのリストを返します。
+     * 複合結合カラムモデルを返します。
      * 
-     * @return 結合カラムモデルのリストを設定します。
+     * @return 複合結合カラムモデル
      */
-    public List<JoinColumnModel> getJoinColumnModelList() {
-        return Collections.unmodifiableList(joinColumnModelList);
+    public JoinColumnsModel getJoinColumnsModel() {
+        return joinColumnsModel;
     }
 
     /**
-     * 結合カラムモデルを追加します。
+     * 複合結合カラムモデルを設定します。
      * 
-     * @param joinColumnModel
-     *            結合カラムモデル
+     * @param joinColumnsModel
+     *            複合結合カラムモデル
      */
-    public void addJoinColumnModel(JoinColumnModel joinColumnModel) {
-        if (this.joinColumnModel != null) {
+    public void setJoinColumnsModel(JoinColumnsModel joinColumnsModel) {
+        if (joinColumnModel != null) {
             throw new IllegalStateException("joinColumnModel");
         }
-        joinColumnModelList.add(joinColumnModel);
-    }
-
-    /**
-     * 結合カラムが2つ以上ある場合{@code true}、そうでない場合{@code false}を返します。
-     * 
-     * @return 結合カラムが2つ以上ある場合{@code true}、そうでない場合{@code false}
-     */
-    public boolean isCompositeJoin() {
-        return joinColumnModelList.size() > 1;
+        this.joinColumnsModel = joinColumnsModel;
     }
 
 }
