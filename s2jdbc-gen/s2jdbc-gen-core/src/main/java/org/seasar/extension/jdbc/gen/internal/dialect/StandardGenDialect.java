@@ -107,10 +107,6 @@ public class StandardGenDialect implements GenDialect {
         columnTypeMap.put("varchar", StandardColumnType.VARCHAR);
     }
 
-    public boolean isUserTable(String tableName) {
-        return true;
-    }
-
     public String getDefaultSchemaName(String userName) {
         return userName;
     }

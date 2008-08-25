@@ -25,6 +25,7 @@
 <tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>schemaname</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>tablenamepattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
+<tr><td>ignoreTableNamePattern</td><td>説明</td><td>".*\\S.*"</td><td>NO</td></tr>
 <tr><td>classpath</td><td>説明</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 <tr><td>classpathref</td><td>説明</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 </table>
@@ -126,8 +127,9 @@
 <tr><td>factoryClassName</td><td>説明</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 <tr><td>schemaName</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>tableNamePattern</td><td>説明</td><td>".*"</td><td>NO</td></tr>
-<tr><td>ignoreTableNamePattern</td><td>説明</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
+<tr><td>ignoreTableNamePattern</td><td>説明</td><td>"(SCHEMA_INFO|.*\\S.*)"</td><td>NO</td></tr>
 <tr><td>versionColumnName</td><td>説明</td><td>"version"</td><td>NO</td></tr>
+<tr><td>pluralFormFile</td><td>説明</td><td>-</td><td>NO</td></tr>
 <tr><td>entityTemplateFileName</td><td>説明</td><td>"java/entity.ftl"</td><td>NO</td></tr>
 <tr><td>templateFileEncoding</td><td>説明</td><td>"UTF-8"</td><td>NO</td></tr>
 <tr><td>templateFilePrimaryDir</td><td>説明</td><td>-</td><td>NO</td></tr>

@@ -77,11 +77,6 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public boolean isUserTable(String tableName) {
-        return !tableName.contains("$");
-    }
-
-    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.SEQUENCE;
     }

@@ -38,15 +38,6 @@ public interface GenDialect {
     String getDefaultSchemaName(String userName);
 
     /**
-     * ユーザーテーブルならば{@code true}を返します。
-     * 
-     * @param tableName
-     *            テーブル名
-     * @return ユーザーテーブルならば{@code true}
-     */
-    boolean isUserTable(String tableName);
-
-    /**
      * SQL型を返します。
      * 
      * @param sqlType

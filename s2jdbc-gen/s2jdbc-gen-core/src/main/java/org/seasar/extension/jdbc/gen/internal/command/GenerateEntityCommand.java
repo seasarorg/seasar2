@@ -82,7 +82,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String tableNamePattern = ".*";
 
     /** Javaコード生成の対象としないテーブル名の正規表現 */
-    protected String ignoreTableNamePattern = "SCHEMA_INFO";
+    protected String ignoreTableNamePattern = "(SCHEMA_INFO|.*\\$.*)";
 
     /** バージョンカラムの名前 */
     protected String versionColumnName = "version";

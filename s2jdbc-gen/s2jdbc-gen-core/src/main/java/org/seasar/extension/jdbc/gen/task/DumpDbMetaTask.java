@@ -96,4 +96,13 @@ public class DumpDbMetaTask extends AbstractTask {
         command.setTableNamePattern(tableNamePattern);
     }
 
+    /**
+     * Javaコード生成の対象としないテーブル名の正規表現を設定します。
+     * 
+     * @param ignoreTableNamePattern
+     *            Javaコード生成の対象としないテーブル名の正規表現
+     */
+    public void setIgnoreTableNamePattern(String ignoreTableNamePattern) {
+        this.command.setIgnoreTableNamePattern(ignoreTableNamePattern);
+    }
 }

@@ -41,6 +41,9 @@ public class DumpDbMetaCommand extends AbstractCommand {
     /** Javaコード生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";
 
+    /** Javaコード生成の対象としないテーブル名の正規表現 */
+    protected String ignoreTableNamePattern = ".*\\.*";
+
     /** 方言 */
     protected GenDialect dialect;
 
@@ -91,6 +94,16 @@ public class DumpDbMetaCommand extends AbstractCommand {
         this.tableNamePattern = tableNamePattern;
     }
 
+    /**
+     * Javaコード生成の対象としないテーブル名の正規表現を設定します。
+     * 
+     * @param ignoreTableNamePattern
+     *            Javaコード生成の対象としないテーブル名の正規表現
+     */
+    public void setIgnoreTableNamePattern(String ignoreTableNamePattern) {
+        this.ignoreTableNamePattern = ignoreTableNamePattern;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -134,7 +147,8 @@ public class DumpDbMetaCommand extends AbstractCommand {
      */
     protected DbTableMetaReader createDbTableMetaReader() {
         return factory.createDbTableMetaReader(this, jdbcManager
-                .getDataSource(), dialect, schemaName, tableNamePattern, "");
+                .getDataSource(), dialect, schemaName, tableNamePattern,
+                ignoreTableNamePattern);
     }
 
     @Override

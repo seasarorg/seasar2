@@ -250,9 +250,6 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      */
     protected boolean isTargetTable(DbTableMeta dbTableMeta) {
         String name = dbTableMeta.getName();
-        if (!dialect.isUserTable(name)) {
-            return false;
-        }
         if (!tableNamePattern.matcher(name).matches()) {
             return false;
         }
