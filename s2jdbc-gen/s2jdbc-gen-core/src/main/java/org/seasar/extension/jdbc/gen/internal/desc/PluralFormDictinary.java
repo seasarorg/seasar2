@@ -63,9 +63,10 @@ public class PluralFormDictinary {
             if (!matcher.matches()) {
                 continue;
             }
+            matcher.reset();
             StringBuffer buf = new StringBuffer();
             String replacement = entry.getValue();
-            for (; matcher.find(0);) {
+            for (; matcher.find();) {
                 matcher.appendReplacement(buf, replacement);
                 if (matcher.hitEnd()) {
                     break;
