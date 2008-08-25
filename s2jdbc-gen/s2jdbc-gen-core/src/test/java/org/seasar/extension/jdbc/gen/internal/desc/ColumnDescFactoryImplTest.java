@@ -30,7 +30,6 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
-import org.seasar.extension.jdbc.gen.internal.desc.ColumnDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -67,6 +66,10 @@ public class ColumnDescFactoryImplTest {
     @SuppressWarnings("unused")
     @Column(columnDefinition = "VARCHAR2(10)")
     private String customDefinitionString;
+
+    @SuppressWarnings("unused")
+    @Column(columnDefinition = "default 'hoge'")
+    private String customDefinitionDefaultString;
 
     @SuppressWarnings("unused")
     private Integer nullableReference;
@@ -190,6 +193,21 @@ public class ColumnDescFactoryImplTest {
         ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
         assertNotNull(columnDesc);
         assertEquals("VARCHAR2(10)", columnDesc.getDefinition());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testDefinition_columnDefault() throws Exception {
+        Field field = getClass().getDeclaredField(
+                "customDefinitionDefaultString");
+        PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
+                field, new EntityMeta());
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        assertNotNull(columnDesc);
+        assertEquals("varchar(255) default 'hoge'", columnDesc.getDefinition());
     }
 
     /**

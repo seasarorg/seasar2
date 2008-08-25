@@ -19,7 +19,6 @@ import java.sql.Types;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
-import org.seasar.extension.jdbc.gen.internal.dialect.PostgreGenDialect;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 import static org.junit.Assert.*;
@@ -39,8 +38,8 @@ public class PostgreGenDialectTest {
     @Test
     public void testGetSqlType_integer() throws Exception {
         SqlType type = dialect.getSqlType(Types.INTEGER);
-        assertEquals("serial", type.getColumnDefinition(10, 0, 0, true));
-        assertEquals("integer", type.getColumnDefinition(10, 0, 0, false));
+        assertEquals("serial", type.getDataType(10, 0, 0, true));
+        assertEquals("integer", type.getDataType(10, 0, 0, false));
     }
 
     /**
@@ -50,8 +49,8 @@ public class PostgreGenDialectTest {
     @Test
     public void testGetSqlType_bigint() throws Exception {
         SqlType type = dialect.getSqlType(Types.BIGINT);
-        assertEquals("bigserial", type.getColumnDefinition(10, 0, 0, true));
-        assertEquals("bigint", type.getColumnDefinition(10, 0, 0, false));
+        assertEquals("bigserial", type.getDataType(10, 0, 0, true));
+        assertEquals("bigint", type.getDataType(10, 0, 0, false));
     }
 
     /**

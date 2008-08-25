@@ -117,9 +117,9 @@ public class DdlModelFactoryImpl implements DdlModelFactory {
         model.setSchemaInfoFullTableName(schemaInfoFullTableName);
         model.setSchemaInfoColumnName(schemaInfoColumnName);
         model.setVersionNo(versionNo);
-        String columnDefinition = dialect.getSqlType(Types.INTEGER)
-                .getColumnDefinition(0, 10, 0, false);
-        model.setSchemaInfoColumnDefinition(columnDefinition);
+        String dataType = dialect.getSqlType(Types.INTEGER).getDataType(0, 10,
+                0, false);
+        model.setSchemaInfoColumnDefinition(dataType);
         return model;
     }
 

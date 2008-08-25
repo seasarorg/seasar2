@@ -116,14 +116,21 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doDefinition(PropertyMeta propertyMeta,
             ColumnDesc columnDesc, Column column) {
-        String definition = null;
+        int sqlType = propertyMeta.getValueType().getSqlType();
+        SqlType type = dialect.getSqlType(sqlType);
+        String dataType = type.getDataType(column.length(), column.precision(),
+                column.scale(), columnDesc.isIdentity());
+
+        String definition;
         if (!StringUtil.isEmpty(column.columnDefinition())) {
-            definition = column.columnDefinition();
+            if (StringUtil.startsWithIgnoreCase(column.columnDefinition(),
+                    "default ")) {
+                definition = dataType + " " + column.columnDefinition();
+            } else {
+                definition = column.columnDefinition();
+            }
         } else {
-            int sqlType = propertyMeta.getValueType().getSqlType();
-            SqlType type = dialect.getSqlType(sqlType);
-            definition = type.getColumnDefinition(column.length(), column
-                    .precision(), column.scale(), columnDesc.isIdentity());
+            definition = dataType;
         }
         columnDesc.setDefinition(definition);
     }

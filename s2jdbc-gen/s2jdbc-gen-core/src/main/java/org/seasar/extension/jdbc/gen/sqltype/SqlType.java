@@ -31,7 +31,7 @@ import java.sql.Types;
 public interface SqlType {
 
     /**
-     * カラム定義を返します。
+     * データ型を返します。
      * 
      * @param length
      *            長さ
@@ -41,10 +41,9 @@ public interface SqlType {
      *            スケール
      * @param identity
      *            IDENTITYカラムの場合{@code true}
-     * @return カラム定義
+     * @return データ型
      */
-    String getColumnDefinition(int length, int precision, int scale,
-            boolean identity);
+    String getDataType(int length, int precision, int scale, boolean identity);
 
     /**
      * {@link ResultSet}から値を文字列として取得します。

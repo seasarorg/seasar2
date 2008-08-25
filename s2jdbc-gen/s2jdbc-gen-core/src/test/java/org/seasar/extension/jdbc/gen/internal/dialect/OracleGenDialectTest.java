@@ -21,7 +21,6 @@ import java.sql.Types;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.ColumnType;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
-import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 import static org.junit.Assert.*;
@@ -54,7 +53,7 @@ public class OracleGenDialectTest {
     @Test
     public void testGetSqlType_binary() throws Exception {
         SqlType type = dialect.getSqlType(Types.BINARY);
-        assertEquals("raw(2000)", type.getColumnDefinition(2000, 0, 0, false));
+        assertEquals("raw(2000)", type.getDataType(2000, 0, 0, false));
     }
 
     /**
@@ -64,8 +63,7 @@ public class OracleGenDialectTest {
     @Test
     public void testGetSqlType_varchar() throws Exception {
         SqlType type = dialect.getSqlType(Types.VARCHAR);
-        assertEquals("varchar2(4000)", type.getColumnDefinition(4000, 0, 0,
-                false));
+        assertEquals("varchar2(4000)", type.getDataType(4000, 0, 0, false));
     }
 
     /**
@@ -75,7 +73,7 @@ public class OracleGenDialectTest {
     @Test
     public void testGetSqlType_bigint() throws Exception {
         SqlType type = dialect.getSqlType(Types.BIGINT);
-        assertEquals("number(10,0)", type.getColumnDefinition(0, 10, 0, false));
+        assertEquals("number(10,0)", type.getDataType(0, 10, 0, false));
     }
 
     /**

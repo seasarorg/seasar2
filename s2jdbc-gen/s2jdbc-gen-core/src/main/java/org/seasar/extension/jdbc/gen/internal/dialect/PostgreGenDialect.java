@@ -49,8 +49,8 @@ public class PostgreGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BIGINT, new BigIntType() {
 
             @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
+            public String getDataType(int length, int precision, int scale,
+                    boolean identity) {
                 return identity ? "bigserial" : "bigint";
             }
         });
@@ -64,8 +64,8 @@ public class PostgreGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.INTEGER, new IntegerType() {
 
             @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
+            public String getDataType(int length, int precision, int scale,
+                    boolean identity) {
                 return identity ? "serial" : "integer";
             }
 

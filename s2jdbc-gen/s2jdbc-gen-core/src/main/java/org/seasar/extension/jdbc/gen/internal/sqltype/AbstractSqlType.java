@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.sqltype.SqlType;
  */
 public abstract class AbstractSqlType implements SqlType {
 
-    /** カラム定義 */
+    /** データ型 */
     protected String dataType;
 
     /**
@@ -43,7 +43,7 @@ public abstract class AbstractSqlType implements SqlType {
         this.dataType = dataType;
     }
 
-    public String getColumnDefinition(int length, int precision, int scale,
+    public String getDataType(int length, int precision, int scale,
             boolean identity) {
         return ColumnDataTypeUtil.format(dataType, length, precision, scale);
     }

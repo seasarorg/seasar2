@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.dialect.MysqlGenDialect;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 import static org.junit.Assert.*;
@@ -38,14 +37,12 @@ public class MysqlGenDialectTest {
     @Test
     public void testGetSqlType_blob() throws Exception {
         SqlType type = dialect.getSqlType(Types.BLOB);
-        assertEquals("tinyblob", type.getColumnDefinition(255, 0, 0, false));
-        assertEquals("blob", type.getColumnDefinition(256, 0, 0, false));
-        assertEquals("blob", type.getColumnDefinition(65535, 0, 0, false));
-        assertEquals("mediumblob", type.getColumnDefinition(65536, 0, 0, false));
-        assertEquals("mediumblob", type.getColumnDefinition(16777215, 0, 0,
-                false));
-        assertEquals("longblob", type
-                .getColumnDefinition(16777216, 0, 0, false));
+        assertEquals("tinyblob", type.getDataType(255, 0, 0, false));
+        assertEquals("blob", type.getDataType(256, 0, 0, false));
+        assertEquals("blob", type.getDataType(65535, 0, 0, false));
+        assertEquals("mediumblob", type.getDataType(65536, 0, 0, false));
+        assertEquals("mediumblob", type.getDataType(16777215, 0, 0, false));
+        assertEquals("longblob", type.getDataType(16777216, 0, 0, false));
     }
 
     /**
@@ -55,13 +52,11 @@ public class MysqlGenDialectTest {
     @Test
     public void testGetSqlType_clob() throws Exception {
         SqlType type = dialect.getSqlType(Types.CLOB);
-        assertEquals("tinytext", type.getColumnDefinition(255, 0, 0, false));
-        assertEquals("text", type.getColumnDefinition(256, 0, 0, false));
-        assertEquals("text", type.getColumnDefinition(65535, 0, 0, false));
-        assertEquals("mediumtext", type.getColumnDefinition(65536, 0, 0, false));
-        assertEquals("mediumtext", type.getColumnDefinition(16777215, 0, 0,
-                false));
-        assertEquals("longtext", type
-                .getColumnDefinition(16777216, 0, 0, false));
+        assertEquals("tinytext", type.getDataType(255, 0, 0, false));
+        assertEquals("text", type.getDataType(256, 0, 0, false));
+        assertEquals("text", type.getDataType(65535, 0, 0, false));
+        assertEquals("mediumtext", type.getDataType(65536, 0, 0, false));
+        assertEquals("mediumtext", type.getDataType(16777215, 0, 0, false));
+        assertEquals("longtext", type.getDataType(16777216, 0, 0, false));
     }
 }

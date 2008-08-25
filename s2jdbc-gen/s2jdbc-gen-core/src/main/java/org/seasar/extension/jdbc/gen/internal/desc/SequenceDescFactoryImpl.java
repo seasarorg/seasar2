@@ -113,6 +113,6 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
      */
     protected String getDataType(PropertyMeta propertyMeta) {
         int sqlType = propertyMeta.getValueType().getSqlType();
-        return dialect.getSqlType(sqlType).getColumnDefinition(0, 20, 0, false);
+        return dialect.getSqlType(sqlType).getDataType(0, 20, 0, false);
     }
 }

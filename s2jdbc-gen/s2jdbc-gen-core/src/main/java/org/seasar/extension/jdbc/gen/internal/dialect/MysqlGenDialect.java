@@ -50,8 +50,8 @@ public class MysqlGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BLOB, new BlobType() {
 
             @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
+            public String getDataType(int length, int precision, int scale,
+                    boolean identity) {
                 if (length <= 0xFF) {
                     return "tinyblob";
                 } else if (length <= 0xFFFF) {
@@ -65,8 +65,8 @@ public class MysqlGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.CLOB, new ClobType() {
 
             @Override
-            public String getColumnDefinition(int length, int precision,
-                    int scale, boolean identity) {
+            public String getDataType(int length, int precision, int scale,
+                    boolean identity) {
                 if (length <= 0xFF) {
                     return "tinytext";
                 } else if (length <= 0xFFFF) {

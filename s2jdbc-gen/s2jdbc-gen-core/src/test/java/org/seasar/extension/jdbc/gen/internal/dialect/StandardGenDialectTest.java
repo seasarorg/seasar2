@@ -39,7 +39,7 @@ public class StandardGenDialectTest {
     @Test
     public void testGetSqlType_char() throws Exception {
         SqlType type = dialect.getSqlType(Types.CHAR);
-        assertEquals("char(1)", type.getColumnDefinition(10, 0, 0, false));
+        assertEquals("char(1)", type.getDataType(10, 0, 0, false));
     }
 
     /**
@@ -49,7 +49,7 @@ public class StandardGenDialectTest {
     @Test
     public void testGetSqlType_varchar() throws Exception {
         SqlType type = dialect.getSqlType(Types.VARCHAR);
-        assertEquals("varchar(10)", type.getColumnDefinition(10, 0, 0, false));
+        assertEquals("varchar(10)", type.getDataType(10, 0, 0, false));
     }
 
     /**
