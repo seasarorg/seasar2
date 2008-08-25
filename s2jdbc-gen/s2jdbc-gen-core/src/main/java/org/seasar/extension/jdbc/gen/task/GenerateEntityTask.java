@@ -195,4 +195,14 @@ public class GenerateEntityTask extends AbstractTask {
         command.setVersionColumnName(versionColumnName);
     }
 
+    /**
+     * 単語を複数系に変換するための辞書ファイルを設定します。
+     * 
+     * @param pluralFormFile
+     *            単語を複数系に変換するための辞書ファイル
+     */
+    public void setPluralFormFile(File pluralFormFile) {
+        command.setPluralFormFile(pluralFormFile);
+    }
+
 }

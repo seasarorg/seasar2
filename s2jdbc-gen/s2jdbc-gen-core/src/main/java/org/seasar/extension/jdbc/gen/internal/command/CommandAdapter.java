@@ -41,8 +41,8 @@ public class CommandAdapter {
             throw new SystemPropertyNotFoundRuntimeException(COMMAND_KEY);
         }
         Command command = (Command) ClassUtil.newInstance(className);
-        ArgumentsParser parsar = new ArgumentsParser(command);
-        parsar.parse(args);
+        ArgumentsParser parser = new ArgumentsParser(command);
+        parser.parse(args);
         command.execute();
     }
 }

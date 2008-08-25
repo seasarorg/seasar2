@@ -36,17 +36,27 @@ public class AssociationResolver {
     /** エンティティ集合記述 */
     protected EntitySetDesc entitySetDesc;
 
+    /** 単語を複数形に変換するための辞書 */
+    protected PluralFormDictinary pluralFormDictinary;
+
     /**
      * インスタンスを構築します。
      * 
      * @param entitySetDesc
      *            エンティティ集合記述
+     * @param pluralFormDictinary
+     *            単語を複数形に変換するための辞書
      */
-    public AssociationResolver(EntitySetDesc entitySetDesc) {
+    public AssociationResolver(EntitySetDesc entitySetDesc,
+            PluralFormDictinary pluralFormDictinary) {
         if (entitySetDesc == null) {
             throw new NullPointerException("entitySetDesc");
         }
+        if (pluralFormDictinary == null) {
+            throw new NullPointerException("pluralFormDictinary");
+        }
         this.entitySetDesc = entitySetDesc;
+        this.pluralFormDictinary = pluralFormDictinary;
     }
 
     /**
@@ -160,8 +170,10 @@ public class AssociationResolver {
     protected String getAssociationName(EntityDesc referencingEntityDesc,
             EntityDesc referencedEntityDesc, boolean oneToMany) {
         String entityName = referencedEntityDesc.getName();
-        String associationName = StringUtil.decapitalize(entityName)
-                + (oneToMany ? TO_MANY_ASSOCIATION_NAME_SUFFIX : "");
+        String associationName = StringUtil.decapitalize(entityName);
+        if (oneToMany) {
+            associationName = pluralizeName(associationName);
+        }
         if (referencingEntityDesc.hasAssociationDesc(associationName)) {
             for (int i = 2;; i++) {
                 if (!referencingEntityDesc.hasAssociationDesc(associationName
@@ -173,4 +185,18 @@ public class AssociationResolver {
         return associationName;
     }
 
+    /**
+     * 名前を複数形に変換します。
+     * 
+     * @param name
+     *            名前
+     * @return 複数形に変換された名前
+     */
+    protected String pluralizeName(String name) {
+        String pluralizeName = pluralFormDictinary.lookup(name);
+        if (pluralizeName != null) {
+            return pluralizeName;
+        }
+        return name + TO_MANY_ASSOCIATION_NAME_SUFFIX;
+    }
 }

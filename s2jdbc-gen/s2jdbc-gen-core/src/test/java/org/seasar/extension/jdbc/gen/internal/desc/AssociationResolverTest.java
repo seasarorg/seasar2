@@ -69,7 +69,8 @@ public class AssociationResolverTest {
         fkMeta.addForeignKeyColumnName("GGG");
         fkMeta.addForeignKeyColumnName("HHH");
 
-        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary());
         resolver.resolve(tableMeta, fkMeta);
 
         assertEquals(1, entityDesc.getAssociationDescList().size());
@@ -135,7 +136,8 @@ public class AssociationResolverTest {
         fkMeta.addForeignKeyColumnName("HHH");
         fkMeta.setUnique(true);
 
-        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary());
         resolver.resolve(tableMeta, fkMeta);
 
         assertEquals(1, entityDesc.getAssociationDescList().size());
@@ -209,7 +211,8 @@ public class AssociationResolverTest {
         fkMeta2.addForeignKeyColumnName("III");
         fkMeta2.addForeignKeyColumnName("JJJ");
 
-        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary());
         resolver.resolve(tableMeta, fkMeta);
         resolver.resolve(tableMeta, fkMeta2);
 

@@ -87,6 +87,9 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** バージョンカラムの名前 */
     protected String versionColumnName = "version";
 
+    /** 単語を複数系に変換するための辞書ファイル */
+    protected File pluralFormFile = null;
+
     /** 方言 */
     protected GenDialect dialect;
 
@@ -336,6 +339,25 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.versionColumnName = versionColumnName;
     }
 
+    /**
+     * 単語を複数系に変換するための辞書ファイルを返します。
+     * 
+     * @return 単語を複数系に変換するための辞書ファイル
+     */
+    public File getPluralFormFile() {
+        return pluralFormFile;
+    }
+
+    /**
+     * 単語を複数系に変換するための辞書ファイルを設定します。
+     * 
+     * @param pluralFormFile
+     *            単語を複数系に変換するための辞書ファイル
+     */
+    public void setPluralFormFile(File pluralFormFile) {
+        this.pluralFormFile = pluralFormFile;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -398,7 +420,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected EntitySetDescFactory createEntitySetDescFactory() {
         return factory.createEntitySetDescFactory(this, dbTableMetaReader,
                 jdbcManager.getPersistenceConvention(), dialect,
-                versionColumnName);
+                versionColumnName, pluralFormFile);
     }
 
     /**

@@ -262,14 +262,14 @@ public interface Factory {
      *            方言
      * @param versionColumnName
      *            バージョンカラム名
-     * @param schemaName
-     *            スキーマ名、指定されていない場合は{@code null}
+     * @param pluralFormFile
+     *            単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null}
      * @return {@link EntitySetDescFactory}の実装
      */
     EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName);
+            String versionColumnName, File pluralFormFile);
 
     /**
      * {@link EntityModelFactory}の実装を作成します。

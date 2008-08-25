@@ -167,10 +167,11 @@ public class FactoryImpl implements Factory {
     public EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName) {
+            String versionColumnName, File pluralFormFile) {
 
         return new EntitySetDescFactoryImpl(dbTableMetaReader,
-                persistenceConvention, dialect, versionColumnName);
+                persistenceConvention, dialect, versionColumnName,
+                pluralFormFile);
     }
 
     public EntityModelFactory createEntityModelFactory(Command command,

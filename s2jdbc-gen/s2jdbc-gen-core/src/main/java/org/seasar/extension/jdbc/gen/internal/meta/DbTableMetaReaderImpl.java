@@ -88,10 +88,10 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
             throw new NullPointerException("dialect");
         }
         if (tableNamePattern == null) {
-            throw new NullPointerException(tableNamePattern);
+            throw new NullPointerException("tableNamePattern");
         }
         if (ignoreTableNamePattern == null) {
-            throw new NullPointerException(ignoreTableNamePattern);
+            throw new NullPointerException("ignoreTableNamePattern");
         }
         this.dataSource = dataSource;
         this.dialect = dialect;

@@ -15,6 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
@@ -28,6 +34,7 @@ import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.exception.IORuntimeException;
 
 /**
  * {@link EntitySetDescFactory}の実装クラスです。
@@ -48,6 +55,9 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
     /** バージョンカラム名 */
     protected String versionColumnName;
 
+    /** 単語を複数系に変換するための辞書ファイル */
+    protected File pluralFormFile;
+
     /** エンティティ記述のファクトリ */
     protected EntityDescFactory entityDescFactory;
 
@@ -62,10 +72,12 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      *            永続化層の命名規約
      * @param versionColumnName
      *            バージョンカラム名
+     * @param pluralFormFile
+     *            単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null}
      */
     public EntitySetDescFactoryImpl(DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName) {
+            String versionColumnName, File pluralFormFile) {
         if (dbTableMetaReader == null) {
             throw new NullPointerException("dbTableMetaReader");
         }
@@ -82,6 +94,7 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
         this.dialect = dialect;
         this.persistenceConvention = persistenceConvention;
         this.versionColumnName = versionColumnName;
+        this.pluralFormFile = pluralFormFile;
         entityDescFactory = createEntityDescFactory();
     }
 
@@ -123,7 +136,54 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      */
     protected AssociationResolver createAssociationResolver(
             EntitySetDesc entitySetDesc) {
-        return new AssociationResolver(entitySetDesc);
+        PluralFormDictinary dictinary = createPluralFormDictinary();
+        return new AssociationResolver(entitySetDesc, dictinary);
+    }
+
+    /**
+     * 単語を複数形に変換するための辞書を作成します。
+     * 
+     * @return 単語を複数形に変換するための辞書
+     */
+    protected PluralFormDictinary createPluralFormDictinary() {
+        if (pluralFormFile != null) {
+            LinkedHashMap<String, String> map = loadPluralFormFile();
+            return new PluralFormDictinary(map);
+        }
+        return new PluralFormDictinary();
+    }
+
+    /**
+     * 辞書ファイルをロードし結果を{@link LinkedHashMap}として返します。
+     * 
+     * @return 正規表現をキー、置換文字列を値とするマップ
+     */
+    public LinkedHashMap<String, String> loadPluralFormFile() {
+        LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(pluralFormFile), "UTF-8"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.length() == 0) {
+                    continue;
+                }
+                char firstChar = line.charAt(0);
+                if (firstChar == '#' || firstChar == '!') {
+                    continue;
+                }
+                int pos = line.indexOf('=');
+                if (pos < 0) {
+                    continue;
+                }
+                String key = line.substring(0, pos);
+                String value = line.substring(pos + 1, line.length());
+                map.put(key, value);
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+        return map;
     }
 
 }

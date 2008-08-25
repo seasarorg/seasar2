@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.desc.AssociationResolver;
+import org.seasar.extension.jdbc.gen.internal.desc.PluralFormDictinary;
 import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintModelFactoryImpl;
@@ -276,7 +277,8 @@ public class GenerateEntityTest {
         fkMeta.addPrimaryKeyColumnName("PK");
         fkMeta.addForeignKeyColumnName("HOGE_ID");
 
-        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary());
         resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
@@ -331,7 +333,8 @@ public class GenerateEntityTest {
         fkMeta.addPrimaryKeyColumnName("ID");
         fkMeta.addForeignKeyColumnName("HOGE_ID");
 
-        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary());
         resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
@@ -388,7 +391,8 @@ public class GenerateEntityTest {
         fkMeta.addForeignKeyColumnName("HOGE_ID1");
         fkMeta.addForeignKeyColumnName("HOGE_ID2");
 
-        AssociationResolver resolver = new AssociationResolver(entitySetDesc);
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary());
         resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);

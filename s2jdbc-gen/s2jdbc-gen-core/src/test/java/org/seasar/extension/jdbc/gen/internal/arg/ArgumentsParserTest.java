@@ -35,8 +35,8 @@ public class ArgumentsParserTest {
     @Test
     public void testParse() {
         MyBean bean = new MyBean();
-        ArgumentsParser parsar = new ArgumentsParser(bean);
-        parsar
+        ArgumentsParser parser = new ArgumentsParser(bean);
+        parser
                 .parse(new String[] { "string='aaa'", "integer=1", "bool=true",
                         "ch=\\u0097", "myEnum=AAA", "list=['aaa','bbb']",
                         "file='aaa'" });
@@ -55,8 +55,8 @@ public class ArgumentsParserTest {
     @Test
     public void testParse_nullOrDefaultValue() {
         MyBean bean = new MyBean();
-        ArgumentsParser parsar = new ArgumentsParser(bean);
-        parsar.parse(new String[] { "string=", "integer=", "bool=",
+        ArgumentsParser parser = new ArgumentsParser(bean);
+        parser.parse(new String[] { "string=", "integer=", "bool=",
                 "ch=\\u0000", "myEnum=", "list=", "file=" });
         assertNull(bean.getString());
         assertNull(bean.getInteger());
