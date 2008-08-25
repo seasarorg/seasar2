@@ -418,7 +418,8 @@ public class ResourcesUtil {
                 public void processClass(String packageName,
                         String shortClassName) {
                     if (rootPackage == null
-                            || packageName.startsWith(rootPackage)) {
+                            || (packageName != null && packageName
+                                    .startsWith(rootPackage))) {
                         handler.processClass(packageName, shortClassName);
                     }
                 }
