@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
@@ -122,7 +122,7 @@ public class DumpDbMetaCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
+        dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
         dbTableMetaReader = createDbTableMetaReader();
 
         logRdbmsAndGenDialect(dialect);

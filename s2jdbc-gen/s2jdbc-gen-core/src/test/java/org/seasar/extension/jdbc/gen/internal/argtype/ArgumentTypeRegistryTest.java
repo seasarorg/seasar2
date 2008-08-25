@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ArgumentTypeManagerTest {
+public class ArgumentTypeRegistryTest {
 
     private BeanDesc beanDesc;
 
@@ -47,7 +47,7 @@ public class ArgumentTypeManagerTest {
      */
     @Test
     public void testGetArgumentType_String() throws Exception {
-        ArgumentType<String> argumentType = ArgumentTypeManager
+        ArgumentType<String> argumentType = ArgumentTypeRegistry
                 .getArgumentType(beanDesc.getPropertyDesc("string"));
         assertNotNull(argumentType);
     }
@@ -58,7 +58,7 @@ public class ArgumentTypeManagerTest {
      */
     @Test
     public void testGetArgumentType_Integer() throws Exception {
-        ArgumentType<String> argumentType = ArgumentTypeManager
+        ArgumentType<String> argumentType = ArgumentTypeRegistry
                 .getArgumentType(beanDesc.getPropertyDesc("integer"));
         assertNotNull(argumentType);
     }
@@ -69,7 +69,7 @@ public class ArgumentTypeManagerTest {
      */
     @Test
     public void testGetArgumentType_MyEnum() throws Exception {
-        ArgumentType<String> argumentType = ArgumentTypeManager
+        ArgumentType<String> argumentType = ArgumentTypeRegistry
                 .getArgumentType(beanDesc.getPropertyDesc("myEnum"));
         assertNotNull(argumentType);
     }
@@ -80,7 +80,7 @@ public class ArgumentTypeManagerTest {
      */
     @Test
     public void testGetArgumentType_List() throws Exception {
-        ArgumentType<List<File>> argumentType = ArgumentTypeManager
+        ArgumentType<List<File>> argumentType = ArgumentTypeRegistry
                 .getArgumentType(beanDesc.getPropertyDesc("list"));
         assertNotNull(argumentType);
     }
@@ -91,13 +91,13 @@ public class ArgumentTypeManagerTest {
      */
     @Test
     public void testRegister() throws Exception {
-        ArgumentTypeManager.register(MyArgumentType.class);
+        ArgumentTypeRegistry.register(MyArgumentType.class);
         try {
-            ArgumentType<String> argumentType = ArgumentTypeManager
+            ArgumentType<String> argumentType = ArgumentTypeRegistry
                     .getArgumentType(MyArgumentType.class);
             assertNotNull(argumentType);
         } finally {
-            ArgumentTypeManager.deregister(MyArgumentType.class);
+            ArgumentTypeRegistry.deregister(MyArgumentType.class);
         }
     }
 

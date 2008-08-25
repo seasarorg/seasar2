@@ -31,7 +31,7 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  * 
  * @author taedium
  */
-public class ArgumentTypeManager {
+public class ArgumentTypeRegistry {
 
     /** 引数の値のクラスをキー、 {@link ArgumentType}のコンストラクタを値とするマップ */
     protected static Map<Class<?>, Constructor<? extends ArgumentType<?>>> argTypeMap = new ConcurrentHashMap<Class<?>, Constructor<? extends ArgumentType<?>>>();
@@ -60,10 +60,10 @@ public class ArgumentTypeManager {
         if (propertyDesc.isParameterized()
                 && Collection.class.isAssignableFrom(propertyType)) {
             Class<?> elementClass = propertyDesc.getElementClassOfCollection();
-            return ArgumentTypeManager.getCollectionArgumentType(propertyType,
+            return ArgumentTypeRegistry.getCollectionArgumentType(propertyType,
                     elementClass);
         }
-        return ArgumentTypeManager.getArgumentType(propertyType);
+        return ArgumentTypeRegistry.getArgumentType(propertyType);
     }
 
     /**

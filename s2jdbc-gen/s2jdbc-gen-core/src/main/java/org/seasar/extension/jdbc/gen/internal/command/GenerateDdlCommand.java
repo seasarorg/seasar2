@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
@@ -914,7 +914,7 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
+        dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
         ddlVersionDirectory = createDdlVersionDirectory();
         ddlVersionIncrementer = createDdlVersionIncrementer();
         ddlModelFactory = createDdlModelFactory();

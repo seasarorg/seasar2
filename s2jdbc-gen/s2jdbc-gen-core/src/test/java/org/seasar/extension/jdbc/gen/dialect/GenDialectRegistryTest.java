@@ -19,8 +19,6 @@ import org.junit.After;
 import org.junit.Test;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 
 import static org.junit.Assert.*;
@@ -29,12 +27,12 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenDialectManagerTest {
+public class GenDialectRegistryTest {
 
     /** */
     @After
     public void tearDown() {
-        GenDialectManager.dialectMap.remove(MyDialect.class.getName());
+        GenDialectRegistry.dialectMap.remove(MyDialect.class.getName());
     }
 
     /**
@@ -43,10 +41,10 @@ public class GenDialectManagerTest {
     @Test
     public void testGetGenDialect() {
         OracleDialect oracle = new OracleDialect();
-        GenDialect genDialect = GenDialectManager.getGenDialect(oracle);
+        GenDialect genDialect = GenDialectRegistry.getGenDialect(oracle);
         assertNotNull(genDialect);
-        assertSame(GenDialectManager.ORACLE, genDialect);
-        GenDialect genDialect2 = GenDialectManager.getGenDialect(oracle);
+        assertSame(GenDialectRegistry.ORACLE, genDialect);
+        GenDialect genDialect2 = GenDialectRegistry.getGenDialect(oracle);
         assertSame(genDialect, genDialect2);
     }
 
@@ -54,11 +52,11 @@ public class GenDialectManagerTest {
      * 
      */
     @Test
-    public void testRegisterGenDialect() {
+    public void testRegister() {
         MyDialect myDialect = new MyDialect();
         MyGenDialect myGenDialect = new MyGenDialect();
-        GenDialectManager.registerGenDialect(myDialect, myGenDialect);
-        assertSame(myGenDialect, GenDialectManager.getGenDialect(myDialect));
+        GenDialectRegistry.register(myDialect, myGenDialect);
+        assertSame(myGenDialect, GenDialectRegistry.getGenDialect(myDialect));
     }
 
     /** */

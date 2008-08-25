@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
@@ -367,7 +367,7 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
+        dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
         dbTableMetaReader = createDbTableMetaReader();
         entitySetDescFactory = createEntitySetDescFactory();
         generator = createGenerator();

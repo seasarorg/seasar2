@@ -25,7 +25,7 @@ import javax.transaction.UserTransaction;
 
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectManager;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyEmptyRuntimeException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
@@ -206,7 +206,7 @@ public class ExecuteSqlCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        dialect = GenDialectManager.getGenDialect(jdbcManager.getDialect());
+        dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
         if (transactional) {
             userTransaction = SingletonS2Container
                     .getComponent(UserTransaction.class);

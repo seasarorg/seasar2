@@ -57,7 +57,7 @@ import org.seasar.extension.jdbc.gen.internal.dialect.SybaseGenDialect;
  * 
  * @author taedium
  */
-public class GenDialectManager {
+public class GenDialectRegistry {
 
     /** DB2 390の方言 */
     protected static Db2390GenDialect DB2_390 = new Db2390GenDialect();
@@ -130,7 +130,7 @@ public class GenDialectManager {
         dialectMap.put(SybaseDialect.class.getName(), SYBASE);
     }
 
-    private GenDialectManager() {
+    private GenDialectRegistry() {
     }
 
     /**
@@ -159,8 +159,7 @@ public class GenDialectManager {
      * @param genDialect
      *            S2JDBC-Genのデータベースごとの方言
      */
-    public static void registerGenDialect(DbmsDialect dbmsDialect,
-            GenDialect genDialect) {
+    public static void register(DbmsDialect dbmsDialect, GenDialect genDialect) {
         if (dbmsDialect == null) {
             throw new NullPointerException("dbmsDialect");
         }
@@ -170,4 +169,16 @@ public class GenDialectManager {
         dialectMap.put(dbmsDialect.getClass().getName(), genDialect);
     }
 
+    /**
+     * S2JDBC-Genのデータベースごとの方言を削除します。
+     * 
+     * @param dbmsDialect
+     *            データベースごとの方言
+     */
+    public static void deregister(DbmsDialect dbmsDialect) {
+        if (dbmsDialect == null) {
+            throw new NullPointerException("dbmsDialect");
+        }
+        dialectMap.remove(dbmsDialect.getClass().getName());
+    }
 }

@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.arg;
 
 import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentType;
-import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentTypeManager;
+import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentTypeRegistry;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -64,11 +64,14 @@ public class ArgumentsParser {
             }
             String key = arg.substring(0, pos);
             String value = arg.substring(pos + 1, arg.length());
+            if (!beanDesc.hasPropertyDesc(key)) {
+                continue;
+            }
             PropertyDesc propertyDesc = beanDesc.getPropertyDesc(key);
             if (!propertyDesc.hasWriteMethod()) {
                 continue;
             }
-            ArgumentType<?> argumentType = ArgumentTypeManager
+            ArgumentType<?> argumentType = ArgumentTypeRegistry
                     .getArgumentType(propertyDesc);
             Object propertyValue = argumentType.toObject(value);
             propertyDesc.setValue(bean, propertyValue);

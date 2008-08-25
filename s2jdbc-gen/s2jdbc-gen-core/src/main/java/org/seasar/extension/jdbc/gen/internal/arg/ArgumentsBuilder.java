@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentType;
-import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentTypeManager;
+import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentTypeRegistry;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
@@ -66,7 +66,7 @@ public class ArgumentsBuilder {
             if (!propertyDesc.hasReadMethod()) {
                 continue;
             }
-            ArgumentType<Object> argumentType = ArgumentTypeManager
+            ArgumentType<Object> argumentType = ArgumentTypeRegistry
                     .getArgumentType(propertyDesc);
             String name = propertyDesc.getPropertyName();
             Object value = propertyDesc.getValue(bean);
