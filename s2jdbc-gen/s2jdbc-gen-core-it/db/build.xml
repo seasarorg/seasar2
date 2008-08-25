@@ -39,11 +39,6 @@
 		<echo>${rdbms}</echo>
 	</target>
 
-	<target name="testSample">
-		<sample classpathref="classpath"
-		/>
-	</target>
-
 	<target name="testFromDbToEntity" depends="showRdbmsName, setup">
 		<!-- setUp -->
 		<exec-sql 
