@@ -37,7 +37,8 @@ public class ${shortClassName} extends
 <#list conditionMethodModelList as method>
 
     /**
-     *
+     * 
+     * @return
      */
     public ${method.shortReturnClassName} ${method.name}() {
         return new ${method.shortReturnClassName}(prefix + "${method.name}.", where);

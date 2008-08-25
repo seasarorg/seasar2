@@ -36,7 +36,8 @@ public class BbbCondition extends
         new NullableStringCondition<BbbCondition>("name", this);
 
     /**
-     *
+     * 
+     * @return
      */
     public AaaCondition aaas() {
         return new AaaCondition(prefix + "aaas.", where);

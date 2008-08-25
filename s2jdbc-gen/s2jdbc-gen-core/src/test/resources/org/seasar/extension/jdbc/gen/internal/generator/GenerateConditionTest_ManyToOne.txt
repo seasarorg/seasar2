@@ -54,7 +54,8 @@ public class AaaCondition extends
         new NotNullableCondition<AaaCondition, Integer>("bbbId", this);
 
     /**
-     *
+     * 
+     * @return
      */
     public BbbCondition bbb() {
         return new BbbCondition(prefix + "bbb.", where);
