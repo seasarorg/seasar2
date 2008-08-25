@@ -91,6 +91,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("COLUMN_SIZE", 10);
         rowData.put("DECIMAL_DIGITS", 3);
         rowData.put("NULLABLE", DatabaseMetaData.columnNoNulls);
+        rowData.put("COLUMN_DEF", "10.5");
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
@@ -100,6 +101,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("COLUMN_SIZE", 10);
         rowData.put("DECIMAL_DIGITS", 0);
         rowData.put("NULLABLE", DatabaseMetaData.columnNullable);
+        rowData.put("COLUMN_DEF", "aaa");
         resultSet.addRowData(rowData);
 
         GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
@@ -125,6 +127,7 @@ public class DbTableMetaReaderImplTest {
         assertEquals(10, columnMeta.getLength());
         assertEquals(3, columnMeta.getScale());
         assertFalse(columnMeta.isNullable());
+        assertEquals("10.5", columnMeta.getDefaultValue());
 
         columnMeta = list.get(1);
         assertEquals("column2", columnMeta.getName());
@@ -133,6 +136,7 @@ public class DbTableMetaReaderImplTest {
         assertEquals(10, columnMeta.getLength());
         assertEquals(0, columnMeta.getScale());
         assertTrue(columnMeta.isNullable());
+        assertEquals("aaa", columnMeta.getDefaultValue());
     }
 
     /**

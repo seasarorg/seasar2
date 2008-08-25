@@ -41,7 +41,7 @@ public class OracleGenDialectTest {
     @Test
     public void testGetColumnType_number() throws Exception {
         ColumnType type = dialect.getColumnType("NUMBER");
-        assertEquals("number(10,5)", type.getColumnDefinition(0, 10, 5));
+        assertEquals("number(10,5)", type.getColumnDefinition(0, 10, 5, null));
         assertEquals(Integer.class, type.getAttributeClass(0, 8, 0));
         assertEquals(BigDecimal.class, type.getAttributeClass(0, 8, 2));
         assertEquals(Long.class, type.getAttributeClass(0, 11, 0));

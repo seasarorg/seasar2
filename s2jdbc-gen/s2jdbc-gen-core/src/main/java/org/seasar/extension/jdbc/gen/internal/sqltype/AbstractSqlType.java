@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.sqltype;
 
-import org.seasar.extension.jdbc.gen.internal.util.ColumnDefinitionUtil;
+import org.seasar.extension.jdbc.gen.internal.util.ColumnDataTypeUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
@@ -25,7 +25,7 @@ import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 public abstract class AbstractSqlType implements SqlType {
 
     /** カラム定義 */
-    protected String columnDefinition;
+    protected String dataType;
 
     /**
      * インスタンスを構築します。
@@ -36,17 +36,16 @@ public abstract class AbstractSqlType implements SqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    protected AbstractSqlType(String columnDefinition) {
-        this.columnDefinition = columnDefinition;
+    protected AbstractSqlType(String dataType) {
+        this.dataType = dataType;
     }
 
     public String getColumnDefinition(int length, int precision, int scale,
             boolean identity) {
-        return ColumnDefinitionUtil.format(columnDefinition, length, precision,
-                scale);
+        return ColumnDataTypeUtil.format(dataType, length, precision, scale);
     }
 
 }

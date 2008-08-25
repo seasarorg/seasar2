@@ -61,43 +61,43 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          */
-        public MssqlColumnType(String columnDefinition, Class<?> attributeClass) {
-            super(columnDefinition, attributeClass);
+        public MssqlColumnType(String dataType, Class<?> attributeClass) {
+            super(dataType, attributeClass);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param lob
          *            LOBの場合{@code true}
          */
-        public MssqlColumnType(String columnDefinition,
-                Class<?> attributeClass, boolean lob) {
-            super(columnDefinition, attributeClass, lob);
+        public MssqlColumnType(String dataType, Class<?> attributeClass,
+                boolean lob) {
+            super(dataType, attributeClass, lob);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param temporalType
          *            時制型
          */
-        public MssqlColumnType(String columnDefinition,
-                Class<?> attributeClass, TemporalType temporalType) {
-            super(columnDefinition, attributeClass, temporalType);
+        public MssqlColumnType(String dataType, Class<?> attributeClass,
+                TemporalType temporalType) {
+            super(dataType, attributeClass, temporalType);
         }
     }
 }

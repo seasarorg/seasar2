@@ -39,11 +39,11 @@ public class CharType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public CharType(String columnDefinition) {
-        super(columnDefinition);
+    public CharType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

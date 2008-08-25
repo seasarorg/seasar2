@@ -43,11 +43,11 @@ public class BigIntType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public BigIntType(String columnDefinition) {
-        super(columnDefinition);
+    public BigIntType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

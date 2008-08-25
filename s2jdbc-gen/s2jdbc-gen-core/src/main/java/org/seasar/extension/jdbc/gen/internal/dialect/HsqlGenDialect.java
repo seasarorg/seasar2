@@ -96,13 +96,13 @@ public class HsqlGenDialect extends StandardGenDialect {
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          */
-        public HsqlColumnType(String columnDefinition, Class<?> attributeClass) {
-            super(columnDefinition, attributeClass);
+        public HsqlColumnType(String dataType, Class<?> attributeClass) {
+            super(dataType, attributeClass);
         }
 
     }

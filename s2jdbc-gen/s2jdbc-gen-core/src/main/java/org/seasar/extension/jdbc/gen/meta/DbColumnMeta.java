@@ -37,6 +37,9 @@ public class DbColumnMeta {
     /** スケール */
     protected int scale;
 
+    /** デフォルト値 */
+    protected String defaultValue;
+
     /** NULL可能の場合{@code true} */
     protected boolean nullable;
 
@@ -148,6 +151,25 @@ public class DbColumnMeta {
      */
     public boolean isNullable() {
         return nullable;
+    }
+
+    /**
+     * デフォルト値を返します。
+     * 
+     * @return デフォルト値
+     */
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    /**
+     * デフォルト値を設定します
+     * 
+     * @param defaultValue
+     *            デフォルト値
+     */
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     /**

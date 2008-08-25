@@ -231,9 +231,12 @@ public interface GenDialect {
          *            精度
          * @param scale
          *            スケール
+         * @param defaultValue
+         *            デフォルト値、存在しない場合は{@code null}
          * @return カラム定義
          */
-        String getColumnDefinition(int length, int precision, int scale);
+        String getColumnDefinition(int length, int precision, int scale,
+                String defaultValue);
 
         /**
          * LOBの場合{@code true}

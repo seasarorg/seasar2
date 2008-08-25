@@ -45,11 +45,11 @@ public class BlobType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public BlobType(String columnDefinition) {
-        super(columnDefinition);
+    public BlobType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

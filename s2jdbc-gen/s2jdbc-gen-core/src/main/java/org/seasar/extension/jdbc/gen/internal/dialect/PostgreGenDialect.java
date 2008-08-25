@@ -168,9 +168,10 @@ public class PostgreGenDialect extends StandardGenDialect {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale) {
+                    int scale, String defaultValue) {
                 precision = precision > 1000 ? 1000 : precision;
-                return super.getColumnDefinition(length, precision, scale);
+                return super.getColumnDefinition(length, precision, scale,
+                        defaultValue);
             }
 
         };
@@ -210,53 +211,53 @@ public class PostgreGenDialect extends StandardGenDialect {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale) {
+                    int scale, String defaultValue) {
                 length = length > 10485760 ? 10485760 : length;
-                return super.getColumnDefinition(length, precision, scale);
+                return super.getColumnDefinition(length, precision, scale,
+                        defaultValue);
             }
         };
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          */
-        public PostgreColumnType(String columnDefinition,
-                Class<?> attributeClass) {
-            super(columnDefinition, attributeClass);
+        public PostgreColumnType(String dataType, Class<?> attributeClass) {
+            super(dataType, attributeClass);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param lob
          *            LOBの場合{@code true}
          */
-        public PostgreColumnType(String columnDefinition,
-                Class<?> attributeClass, boolean lob) {
-            super(columnDefinition, attributeClass, lob, null);
+        public PostgreColumnType(String dataType, Class<?> attributeClass,
+                boolean lob) {
+            super(dataType, attributeClass, lob, null);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param temporalType
          *            時制型
          */
-        public PostgreColumnType(String columnDefinition,
-                Class<?> attributeClass, TemporalType temporalType) {
-            super(columnDefinition, attributeClass, false, temporalType);
+        public PostgreColumnType(String dataType, Class<?> attributeClass,
+                TemporalType temporalType) {
+            super(dataType, attributeClass, false, temporalType);
         }
     }
 

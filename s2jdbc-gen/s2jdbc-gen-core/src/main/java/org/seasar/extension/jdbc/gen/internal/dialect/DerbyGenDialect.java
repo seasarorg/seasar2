@@ -113,41 +113,43 @@ public class DerbyGenDialect extends StandardGenDialect {
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
+         * @param dataType
+         *            データ型
          * @param attributeClass
+         *            属性のクラス
          */
-        public DerbyColumnType(String columnDefinition, Class<?> attributeClass) {
-            super(columnDefinition, attributeClass);
+        public DerbyColumnType(String dataType, Class<?> attributeClass) {
+            super(dataType, attributeClass);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param lob
          *            LOBの場合{@code true}
          */
-        public DerbyColumnType(String columnDefinition,
-                Class<?> attributeClass, boolean lob) {
-            super(columnDefinition, attributeClass, lob);
+        public DerbyColumnType(String dataType, Class<?> attributeClass,
+                boolean lob) {
+            super(dataType, attributeClass, lob);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param temporalType
          *            時制型
          */
-        public DerbyColumnType(String columnDefinition,
-                Class<?> attributeClass, TemporalType temporalType) {
-            super(columnDefinition, attributeClass, temporalType);
+        public DerbyColumnType(String dataType, Class<?> attributeClass,
+                TemporalType temporalType) {
+            super(dataType, attributeClass, temporalType);
         }
 
     }

@@ -175,9 +175,12 @@ public class MysqlGenDialect extends StandardGenDialect {
 
             @Override
             public String getColumnDefinition(int length, int precision,
-                    int scale) {
-                return length == 0 ? "bool" : super.getColumnDefinition(length,
-                        precision, scale);
+                    int scale, String defaultValue) {
+                if (length == 0) {
+                    return getColumnDefinitionInternal("bool", defaultValue);
+                }
+                return super.getColumnDefinition(length, precision, scale,
+                        defaultValue);
             }
 
         };
@@ -242,43 +245,43 @@ public class MysqlGenDialect extends StandardGenDialect {
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          */
-        public MysqlColumnType(String columnDefinition, Class<?> attributeClass) {
-            super(columnDefinition, attributeClass);
+        public MysqlColumnType(String dataType, Class<?> attributeClass) {
+            super(dataType, attributeClass);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param lob
          *            LOBの場合{@code true}
          */
-        public MysqlColumnType(String columnDefinition,
-                Class<?> attributeClass, boolean lob) {
-            super(columnDefinition, attributeClass, lob);
+        public MysqlColumnType(String dataType, Class<?> attributeClass,
+                boolean lob) {
+            super(dataType, attributeClass, lob);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param temporalType
          *            時制型
          */
-        public MysqlColumnType(String columnDefinition,
-                Class<?> attributeClass, TemporalType temporalType) {
-            super(columnDefinition, attributeClass, temporalType);
+        public MysqlColumnType(String dataType, Class<?> attributeClass,
+                TemporalType temporalType) {
+            super(dataType, attributeClass, temporalType);
         }
     }
 

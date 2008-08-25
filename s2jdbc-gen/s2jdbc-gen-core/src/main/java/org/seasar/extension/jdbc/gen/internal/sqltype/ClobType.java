@@ -43,11 +43,11 @@ public class ClobType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public ClobType(String columnDefinition) {
-        super(columnDefinition);
+    public ClobType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

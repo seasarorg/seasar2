@@ -40,11 +40,11 @@ public class BinaryType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public BinaryType(String columnDefinition) {
-        super(columnDefinition);
+    public BinaryType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

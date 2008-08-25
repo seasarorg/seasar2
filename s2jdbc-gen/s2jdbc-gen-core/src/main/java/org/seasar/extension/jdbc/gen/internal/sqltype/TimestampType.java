@@ -42,11 +42,11 @@ public class TimestampType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public TimestampType(String columnDefinition) {
-        super(columnDefinition);
+    public TimestampType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

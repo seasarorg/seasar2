@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 import java.sql.Types;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
@@ -71,6 +72,17 @@ public class StandardGenDialectTest {
     @Test
     public void testGetColumnType_unknown() throws Exception {
         assertNull(dialect.getColumnType("hoge"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_defaultValue() throws Exception {
+        GenDialect.ColumnType columnType = dialect.getColumnType("integer");
+        String definition = columnType.getColumnDefinition(10, 0, 0, "5");
+        assertEquals("integer default 5", definition);
     }
 
     /**

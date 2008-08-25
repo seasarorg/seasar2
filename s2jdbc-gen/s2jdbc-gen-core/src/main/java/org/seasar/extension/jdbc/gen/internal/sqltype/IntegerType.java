@@ -41,11 +41,11 @@ public class IntegerType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public IntegerType(String columnDefinition) {
-        super(columnDefinition);
+    public IntegerType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

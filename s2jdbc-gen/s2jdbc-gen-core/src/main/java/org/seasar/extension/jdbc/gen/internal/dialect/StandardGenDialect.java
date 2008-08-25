@@ -44,7 +44,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.SmallIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
-import org.seasar.extension.jdbc.gen.internal.util.ColumnDefinitionUtil;
+import org.seasar.extension.jdbc.gen.internal.util.ColumnDataTypeUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
@@ -334,7 +334,7 @@ public class StandardGenDialect implements GenDialect {
                 "varchar($l)", String.class);
 
         /** カラム定義 */
-        protected String columnDefinition;
+        protected String dataType;
 
         /** 属性のクラス */
         protected Class<?> attributeClass;
@@ -348,51 +348,50 @@ public class StandardGenDialect implements GenDialect {
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          */
-        protected StandardColumnType(String columnDefinition,
-                Class<?> attributeClass) {
-            this(columnDefinition, attributeClass, false, null);
+        protected StandardColumnType(String dataType, Class<?> attributeClass) {
+            this(dataType, attributeClass, false, null);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
+         * @param dataType
          *            カラム定義
          * @param attributeClass
          *            属性のクラス
          * @param lob
          *            LOBの場合{@code true}
          */
-        protected StandardColumnType(String columnDefinition,
-                Class<?> attributeClass, boolean lob) {
-            this(columnDefinition, attributeClass, lob, null);
+        protected StandardColumnType(String dataType, Class<?> attributeClass,
+                boolean lob) {
+            this(dataType, attributeClass, lob, null);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param temporalType
          *            時制型
          */
-        protected StandardColumnType(String columnDefinition,
-                Class<?> attributeClass, TemporalType temporalType) {
-            this(columnDefinition, attributeClass, false, temporalType);
+        protected StandardColumnType(String dataType, Class<?> attributeClass,
+                TemporalType temporalType) {
+            this(dataType, attributeClass, false, temporalType);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param lob
@@ -400,17 +399,36 @@ public class StandardGenDialect implements GenDialect {
          * @param temporalType
          *            時制型
          */
-        protected StandardColumnType(String columnDefinition,
-                Class<?> attributeClass, boolean lob, TemporalType temporalType) {
-            this.columnDefinition = columnDefinition;
+        protected StandardColumnType(String dataType, Class<?> attributeClass,
+                boolean lob, TemporalType temporalType) {
+            this.dataType = dataType;
             this.attributeClass = attributeClass;
             this.lob = lob;
             this.temporalType = temporalType;
         }
 
-        public String getColumnDefinition(int length, int precision, int scale) {
-            return ColumnDefinitionUtil.format(columnDefinition, length,
-                    precision, scale);
+        public String getColumnDefinition(int length, int precision, int scale,
+                String defaultValue) {
+            String completeDataType = ColumnDataTypeUtil.format(dataType,
+                    length, precision, scale);
+            return getColumnDefinitionInternal(completeDataType, defaultValue);
+        }
+
+        /**
+         * カラム定義を返します。
+         * 
+         * @param completeDataType
+         *            完全なデータ型
+         * @param defaultValue
+         *            デフォルト値、存在しない場合は{@code null}
+         * @return カラム定義
+         */
+        protected String getColumnDefinitionInternal(String completeDataType,
+                String defaultValue) {
+            if (defaultValue == null) {
+                return completeDataType;
+            }
+            return completeDataType + " default " + defaultValue;
         }
 
         public Class<?> getAttributeClass(int length, int precision, int scale) {

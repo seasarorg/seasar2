@@ -42,11 +42,11 @@ public class DecimalType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public DecimalType(String columnDefinition) {
-        super(columnDefinition);
+    public DecimalType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)

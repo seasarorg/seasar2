@@ -172,43 +172,43 @@ public class Db2GenDialect extends StandardGenDialect {
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          */
-        public Db2ColumnType(String columnDefinition, Class<?> attributeClass) {
-            super(columnDefinition, attributeClass);
+        public Db2ColumnType(String dataType, Class<?> attributeClass) {
+            super(dataType, attributeClass);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param lob
          *            LOBの場合{@code true}
          */
-        public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
+        public Db2ColumnType(String dataType, Class<?> attributeClass,
                 boolean lob) {
-            super(columnDefinition, attributeClass, lob);
+            super(dataType, attributeClass, lob);
         }
 
         /**
          * インスタンスを構築します。
          * 
-         * @param columnDefinition
-         *            カラム定義
+         * @param dataType
+         *            データ型
          * @param attributeClass
          *            属性のクラス
          * @param temporalType
          *            時制型
          */
-        public Db2ColumnType(String columnDefinition, Class<?> attributeClass,
+        public Db2ColumnType(String dataType, Class<?> attributeClass,
                 TemporalType temporalType) {
-            super(columnDefinition, attributeClass, temporalType);
+            super(dataType, attributeClass, temporalType);
         }
     }
 

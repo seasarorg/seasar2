@@ -284,6 +284,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     columnDesc.setLength(rs.getInt("COLUMN_SIZE"));
                     columnDesc.setScale(rs.getInt("DECIMAL_DIGITS"));
                     columnDesc.setNullable(rs.getBoolean("NULLABLE"));
+                    columnDesc.setDefaultValue(rs.getString("COLUMN_DEF"));
                     result.add(columnDesc);
                 }
                 return result;

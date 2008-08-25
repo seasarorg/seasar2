@@ -40,11 +40,11 @@ public class BooleanType extends AbstractSqlType {
     /**
      * インスタンスを構築します。
      * 
-     * @param columnDefinition
-     *            カラム定義
+     * @param dataType
+     *            データ型
      */
-    public BooleanType(String columnDefinition) {
-        super(columnDefinition);
+    public BooleanType(String dataType) {
+        super(dataType);
     }
 
     public void bindValue(PreparedStatement ps, int index, String value)
