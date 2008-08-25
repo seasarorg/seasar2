@@ -20,6 +20,8 @@ import java.util.List;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.seasar.extension.jdbc.gen.command.Command;
@@ -33,8 +35,29 @@ import org.seasar.extension.jdbc.gen.internal.command.CommandAdapter;
  */
 public abstract class AbstractTask extends Task {
 
+    /** JavaタスクのresultPropertyのサフィックス */
+    protected static String RESULT_PROPERTY_NAME_SUFFIX = "_result";
+
+    /** JavaタスクのerrorPropertyのサフィックス */
+    protected static String ERROR_PROPERTY_NAME_SUFFIX = "_error";
+
+    /** Javaタスク */
+    protected Java java = new Java();
+
+    /** JVMのコマンドライン */
+    protected Commandline jvmCommandline = new Commandline();
+
     /** クラスパス */
     protected Path classpath;
+
+    /**
+     * JVMの引数を作成します。
+     * 
+     * @return JVMの引数
+     */
+    public Commandline.Argument createJvmarg() {
+        return jvmCommandline.createArgument();
+    }
 
     /**
      * クラスパスを設定します。
@@ -86,21 +109,38 @@ public abstract class AbstractTask extends Task {
      */
     protected void executeCommand() {
         Command command = getCommand();
-        String jvmArg = "-D" + CommandAdapter.COMMAND_KEY + "="
-                + command.getClass().getName();
+        String commadnName = command.getClass().getName();
+
         ArgumentsBuilder builder = new ArgumentsBuilder(command);
         List<String> args = builder.build();
 
-        Java java = new Java(this);
-        java.createJvmarg().setValue(jvmArg);
+        Environment.Variable sysproperty = new Environment.Variable();
+        sysproperty.setKey(CommandAdapter.COMMAND_KEY);
+        sysproperty.setValue(commadnName);
+
+        String resultPropertyName = commadnName + RESULT_PROPERTY_NAME_SUFFIX;
+        String errorPropertyName = commadnName + ERROR_PROPERTY_NAME_SUFFIX;
+
+        java.bindToOwner(this);
+        java.addSysproperty(sysproperty);
         for (String arg : args) {
             java.createArg().setValue(arg);
         }
+        for (String arg : jvmCommandline.getArguments()) {
+            java.createJvmarg().setValue(arg);
+        }
         java.setClasspath(classpath);
         java.setClassname(CommandAdapter.class.getName());
-        java.setFailonerror(true);
+        java.setResultProperty(resultPropertyName);
+        java.setErrorProperty(errorPropertyName);
         java.setFork(true);
         java.execute();
+
+        String result = getProject().getProperty(resultPropertyName);
+        if (!"0".equals(result)) {
+            throw new BuildException(getProject()
+                    .getProperty(errorPropertyName));
+        }
     }
 
     /**

@@ -95,6 +95,15 @@ public class DumpDbMetaCommand extends AbstractCommand {
     }
 
     /**
+     * Javaコード生成の対象としないテーブル名の正規表現を返します。
+     * 
+     * @return Javaコード生成の対象としないテーブル名の正規表現
+     */
+    public String getIgnoreTableNamePattern() {
+        return ignoreTableNamePattern;
+    }
+
+    /**
      * Javaコード生成の対象としないテーブル名の正規表現を設定します。
      * 
      * @param ignoreTableNamePattern
