@@ -211,11 +211,11 @@ public class EntityDesc {
     }
 
     /**
-     * 指定された関連名の関連記述を返します。
+     * 指定された関連名の関連記述を持っている場合{@code true}を返します。
      * 
      * @param associationName
      *            関連名
-     * @return 関連記述、存在しない場合{@code null}
+     * @return 指定された関連名の関連記述を持っている場合{@code true}、そうでない場合{@code false}
      */
     public boolean hasAssociationDesc(String associationName) {
         return associationDescMap.containsKey(associationName);
@@ -227,7 +227,7 @@ public class EntityDesc {
      * @return 複合一意制約記述のリスト
      */
     public List<CompositeUniqueConstraintDesc> getCompositeUniqueConstraintDescList() {
-        return compositeUniqueConstraintDescList;
+        return Collections.unmodifiableList(compositeUniqueConstraintDescList);
     }
 
     /**

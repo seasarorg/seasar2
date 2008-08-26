@@ -193,9 +193,9 @@ public class AssociationResolver {
      * @return 複数形に変換された名前
      */
     protected String pluralizeName(String name) {
-        String pluralizeName = pluralFormDictinary.lookup(name);
-        if (pluralizeName != null) {
-            return pluralizeName;
+        String pluralizeNamed = pluralFormDictinary.lookup(name);
+        if (pluralizeNamed != null) {
+            return pluralizeNamed;
         }
         return name + TO_MANY_ASSOCIATION_NAME_SUFFIX;
     }

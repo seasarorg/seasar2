@@ -105,7 +105,10 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
             EntityDesc entityDesc = entityDescFactory.getEntityDesc(tableMeta);
             entitySetDesc.addEntityDesc(entityDesc);
         }
-        AssociationResolver associationResolver = createAssociationResolver(entitySetDesc);
+
+        PluralFormDictinary pluralFormDictinary = createPluralFormDictinary();
+        AssociationResolver associationResolver = createAssociationResolver(
+                entitySetDesc, pluralFormDictinary);
         for (DbTableMeta tableMeta : dbTableMetaList) {
             for (DbForeignKeyMeta fkMeta : tableMeta.getForeignKeyMetaList()) {
                 associationResolver.resolve(tableMeta, fkMeta);
@@ -132,12 +135,13 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      * 
      * @param entitySetDesc
      *            エンティティ集合記述
+     * @param pluralFormDictinary
+     *            単語を複数形に変換するための辞書
      * @return 関連のリゾルバ
      */
     protected AssociationResolver createAssociationResolver(
-            EntitySetDesc entitySetDesc) {
-        PluralFormDictinary dictinary = createPluralFormDictinary();
-        return new AssociationResolver(entitySetDesc, dictinary);
+            EntitySetDesc entitySetDesc, PluralFormDictinary pluralFormDictinary) {
+        return new AssociationResolver(entitySetDesc, pluralFormDictinary);
     }
 
     /**
