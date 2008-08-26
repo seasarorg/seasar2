@@ -6,6 +6,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
+ * Hogeエンティティクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 @Table(catalog = "AAA", schema = "BBB")
 public class Hoge {
 
-    /** */
+    /** fooList関連プロパティ */
     @OneToMany(mappedBy = "hoge")
     public List<Foo> fooList;
 }

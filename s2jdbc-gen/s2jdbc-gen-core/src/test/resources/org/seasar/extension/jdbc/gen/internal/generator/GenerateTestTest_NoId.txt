@@ -4,6 +4,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
+ * Dddのテストクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -12,6 +13,7 @@ public class DddTest extends S2TestCase {
     private JdbcManager jdbcManager;
 
     /**
+     * 事前処理をします。
      * 
      * @throws Exception
      */
@@ -22,10 +24,11 @@ public class DddTest extends S2TestCase {
     }
 
     /**
+     * 全件取得をテストします。
      * 
      * @throws Exception
      */
-    public void testFindById() throws Exception {
+    public void testFindAll() throws Exception {
         jdbcManager.from(Ddd.class).getResultList();
     }
 }

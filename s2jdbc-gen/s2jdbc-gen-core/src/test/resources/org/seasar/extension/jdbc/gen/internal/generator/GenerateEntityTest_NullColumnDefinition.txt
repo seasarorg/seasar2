@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 /**
+ * Fooエンティティクラスです。
  * 
  * @author S2JDBC-Gen
  */

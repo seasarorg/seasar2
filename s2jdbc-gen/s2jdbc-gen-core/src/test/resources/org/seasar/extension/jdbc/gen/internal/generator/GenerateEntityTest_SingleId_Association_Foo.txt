@@ -6,6 +6,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
+ * Fooエンティティクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -13,7 +14,7 @@ import javax.persistence.Table;
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
-    /** */
+    /** hoge関連プロパティ */
     @ManyToOne
     @JoinColumn(name = "HOGE_ID", referencedColumnName = "PK")
     public Hoge hoge;

@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 /**
+ * Fooエンティティクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -21,35 +22,35 @@ import javax.persistence.Version;
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
-    /** */
+    /** idプロパティ */
     @Id
     @GeneratedValue
     @Column(columnDefinition = "integer")
     public int id;
 
-    /** */
+    /** nameプロパティ */
     @Column(columnDefinition = "varchar(10)", nullable = false, unique = true)
     public String name;
 
-    /** */
+    /** salプロパティ */
     @Column(columnDefinition = "decimal(15,5)", nullable = false, unique = false)
     public BigDecimal sal;
 
-    /** */
+    /** lobプロパティ */
     @Lob
     @Column(columnDefinition = "blob", nullable = true, unique = false)
     public byte[] lob;
 
-    /** */
+    /** dateプロパティ */
     @Temporal(TemporalType.DATE)
     @Column(columnDefinition = "date", nullable = true, unique = false)
     public Date date;
 
-    /** */
+    /** tempプロパティ */
     @Transient
     public String temp;
 
-    /** */
+    /** versionプロパティ */
     @Version
     @Column(columnDefinition = "integer", nullable = false, unique = false)
     public Integer version;

@@ -34,6 +34,9 @@ public class ConditionModel {
     /** クラスの単純名 */
     protected String shortClassName;
 
+    /** エンティティクラスの単純名 */
+    protected String shortEntityClassName;
+
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();
 
@@ -79,6 +82,25 @@ public class ConditionModel {
      */
     public void setShortClassName(String shortClassName) {
         this.shortClassName = shortClassName;
+    }
+
+    /**
+     * エンティティクラスの単純名を返します。
+     * 
+     * @return エンティティクラスの単純名
+     */
+    public String getShortEntityClassName() {
+        return shortEntityClassName;
+    }
+
+    /**
+     * エンティティクラスの単純名を設定します。
+     * 
+     * @param shortEntityClassName
+     *            エンティティクラスの単純名
+     */
+    public void setShortEntityClassName(String shortEntityClassName) {
+        this.shortEntityClassName = shortEntityClassName;
     }
 
     /**

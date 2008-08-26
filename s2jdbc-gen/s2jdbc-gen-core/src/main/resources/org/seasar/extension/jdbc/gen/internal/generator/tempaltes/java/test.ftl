@@ -8,6 +8,7 @@ import ${importName};
 </#list>
 
 /**
+ * ${shortEntityClassName}のテストクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -16,6 +17,7 @@ public class ${shortClassName} extends S2TestCase {
     private JdbcManager ${jdbcManagerName};
 
     /**
+     * 事前処理をします。
      * 
      * @throws Exception
      */
@@ -25,15 +27,23 @@ public class ${shortClassName} extends S2TestCase {
         include("${configPath}");
     }
 
+<#if idExpressionList?size == 0>
     /**
+     * 全件取得をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testFindAll() throws Exception {
+        ${jdbcManagerName}.from(${shortEntityClassName}.class).getResultList();
+    }
+<#else>
+    /**
+     * 識別子による取得をテストします。
      * 
      * @throws Exception
      */
     public void testFindById() throws Exception {
-<#if idExpressionList?size == 0>
-        ${jdbcManagerName}.from(${shortEntityClassName}.class).getResultList();
-<#else>
         ${jdbcManagerName}.from(${shortEntityClassName}.class).id(<#list idExpressionList as idExpression>${idExpression}<#if idExpression_has_next>, </#if></#list>).getSingleResult();
-</#if>
     }
+</#if>
 }

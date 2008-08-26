@@ -5,6 +5,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
+ * Cccのテストクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -13,6 +14,7 @@ public class CccTest extends S2TestCase {
     private JdbcManager jdbcManager;
 
     /**
+     * 事前処理をします。
      * 
      * @throws Exception
      */
@@ -23,6 +25,7 @@ public class CccTest extends S2TestCase {
     }
 
     /**
+     * 識別子による取得をテストします。
      * 
      * @throws Exception
      */

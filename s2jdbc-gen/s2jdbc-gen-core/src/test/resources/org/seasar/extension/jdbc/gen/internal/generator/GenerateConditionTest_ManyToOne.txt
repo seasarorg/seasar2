@@ -8,6 +8,7 @@ import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
 
 /**
+ * Aaaの条件クラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -15,47 +16,49 @@ public class AaaCondition extends
         AbstractEntityCondition<AaaCondition> {
 
     /**
-     *
+     * インスタンスを構築します。
      */
     public AaaCondition() {
     }
 
     /**
+     * インスタンスを構築します。
      * 
-     * @param prefix
-     * @param where
+     * @param prefix プレフィックス
+     * @param where 検索条件
      */
     public AaaCondition(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
 
-    /** */
+    /** idの条件 */
     public NotNullableCondition<AaaCondition, Integer> id =
         new NotNullableCondition<AaaCondition, Integer>("id", this);
 
-    /** */
+    /** nameの条件 */
     public NotNullableStringCondition<AaaCondition> name =
         new NotNullableStringCondition<AaaCondition>("name", this);
 
-    /** */
+    /** lobの条件 */
     public NotNullableCondition<AaaCondition, byte[]> lob =
         new NotNullableCondition<AaaCondition, byte[]>("lob", this);
 
-    /** */
+    /** dateの条件 */
     public NullableCondition<AaaCondition, Date> date =
         new NullableCondition<AaaCondition, Date>("date", this);
 
-    /** */
+    /** versionの条件 */
     public NotNullableCondition<AaaCondition, Integer> version =
         new NotNullableCondition<AaaCondition, Integer>("version", this);
 
-    /** */
+    /** bbbIdの条件 */
     public NotNullableCondition<AaaCondition, Integer> bbbId =
         new NotNullableCondition<AaaCondition, Integer>("bbbId", this);
 
     /**
+     * bbbの条件
      * 
-     * @return
+     * @return bbbの条件
      */
     public BbbCondition bbb() {
         return new BbbCondition(prefix + "bbb.", where);

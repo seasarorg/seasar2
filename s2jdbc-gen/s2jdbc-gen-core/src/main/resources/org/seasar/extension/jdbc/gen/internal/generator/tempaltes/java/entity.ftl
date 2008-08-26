@@ -8,6 +8,7 @@ import ${importName};
 </#list>
 
 /**
+ * ${shortClassName}エンティティクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -19,7 +20,7 @@ public class ${shortClassName} {
 <#list attributeModelList as attr>
 
   <#if attr.transient || attr.columnDefinition??>
-    /** */
+    /** ${attr.name}プロパティ */
   <#else>
     /**
      * FIXME このプロパティに対応するカラムの型(${attr.columnTypeName})はサポート対象外です。
@@ -50,7 +51,7 @@ public class ${shortClassName} {
 </#list>
 <#list associationModelList as asso>
 
-    /** */
+    /** ${asso.name}関連プロパティ */
     @${asso.associationType.annotation.simpleName}<#if asso.mappedBy??>(mappedBy = "${asso.mappedBy}")</#if>
   <#if asso.joinColumnModel??>
     @JoinColumn(name = "${asso.joinColumnModel.name}", referencedColumnName = "${asso.joinColumnModel.referencedColumnName}")

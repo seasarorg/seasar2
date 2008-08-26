@@ -82,6 +82,8 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
         conditionModel.setPackageName(packageName);
         conditionModel.setShortClassName(entityMeta.getName()
                 + conditionClassNameSuffix);
+        conditionModel.setShortEntityClassName(entityMeta.getEntityClass()
+                .getSimpleName());
         for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
             if (propertyMeta.isTransient()) {

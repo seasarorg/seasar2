@@ -5,6 +5,7 @@ import org.seasar.extension.jdbc.gen.internal.generator.Ccc;
 import org.seasar.extension.jdbc.service.S2AbstractService;
 
 /**
+ * Cccのサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */

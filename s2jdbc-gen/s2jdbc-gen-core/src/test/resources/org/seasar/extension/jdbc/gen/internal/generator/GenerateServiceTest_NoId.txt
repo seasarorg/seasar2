@@ -4,6 +4,7 @@ import org.seasar.extension.jdbc.gen.internal.generator.Ddd;
 import org.seasar.extension.jdbc.service.S2AbstractService;
 
 /**
+ * Dddのサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */

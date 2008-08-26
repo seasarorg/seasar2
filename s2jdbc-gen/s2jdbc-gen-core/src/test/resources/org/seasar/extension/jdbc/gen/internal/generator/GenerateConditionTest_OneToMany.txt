@@ -6,6 +6,7 @@ import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
 import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 
 /**
+ * Bbbの条件クラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -13,31 +14,33 @@ public class BbbCondition extends
         AbstractEntityCondition<BbbCondition> {
 
     /**
-     *
+     * インスタンスを構築します。
      */
     public BbbCondition() {
     }
 
     /**
+     * インスタンスを構築します。
      * 
-     * @param prefix
-     * @param where
+     * @param prefix プレフィックス
+     * @param where 検索条件
      */
     public BbbCondition(String prefix, ComplexWhere where) {
         super(prefix, where);
     }
 
-    /** */
+    /** idの条件 */
     public NotNullableCondition<BbbCondition, Integer> id =
         new NotNullableCondition<BbbCondition, Integer>("id", this);
 
-    /** */
+    /** nameの条件 */
     public NullableStringCondition<BbbCondition> name =
         new NullableStringCondition<BbbCondition>("name", this);
 
     /**
+     * aaasの条件
      * 
-     * @return
+     * @return aaasの条件
      */
     public AaaCondition aaas() {
         return new AaaCondition(prefix + "aaas.", where);

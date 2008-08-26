@@ -84,15 +84,19 @@ public class ServiceModel {
     }
 
     /**
-     * @return Returns the shortEntityClassName.
+     * エンティティクラスの単純名を返します。
+     * 
+     * @return エンティティクラスの単純名
      */
     public String getShortEntityClassName() {
         return shortEntityClassName;
     }
 
     /**
+     * エンティティクラスの単純名を設定します。
+     * 
      * @param shortEntityClassName
-     *            The shortEntityClassName to set.
+     *            エンティティクラスの単純名
      */
     public void setShortEntityClassName(String shortEntityClassName) {
         this.shortEntityClassName = shortEntityClassName;

@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
+ * Fooエンティティクラスです。
  * 
  * @author S2JDBC-Gen
  */
@@ -13,12 +14,12 @@ import javax.persistence.Table;
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
-    /** */
+    /** id1プロパティ */
     @Id
     @Column(columnDefinition = "integer")
     public int id1;
 
-    /** */
+    /** id2プロパティ */
     @Id
     @Column(columnDefinition = "integer")
     public int id2;
