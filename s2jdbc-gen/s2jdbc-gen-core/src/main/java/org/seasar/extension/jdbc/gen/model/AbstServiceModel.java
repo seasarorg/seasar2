@@ -15,20 +15,16 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.seasar.extension.jdbc.PropertyMeta;
-
 /**
- * サービスモデルです。
+ * 抽象サービスモデルです。
  * 
  * @author taedium
  */
-public class ServiceModel {
+public class AbstServiceModel {
 
     /** パッケージ名 */
     protected String packageName;
@@ -36,14 +32,8 @@ public class ServiceModel {
     /** クラスの単純名 */
     protected String shortClassName;
 
-    /** エンティティクラスの単純名 */
-    protected String shortEntityClassName;
-
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();
-
-    /** 識別子のプロパティメタデータのリスト */
-    protected List<PropertyMeta> idPropertyMetaList = new ArrayList<PropertyMeta>();
 
     /**
      * パッケージ名を返します。
@@ -84,25 +74,6 @@ public class ServiceModel {
     }
 
     /**
-     * エンティティクラスの単純名を返します。
-     * 
-     * @return エンティティクラスの単純名
-     */
-    public String getShortEntityClassName() {
-        return shortEntityClassName;
-    }
-
-    /**
-     * エンティティクラスの単純名を設定します。
-     * 
-     * @param shortEntityClassName
-     *            エンティティクラスの単純名
-     */
-    public void setShortEntityClassName(String shortEntityClassName) {
-        this.shortEntityClassName = shortEntityClassName;
-    }
-
-    /**
      * インポート名のソートされたセットを返します。
      * 
      * @return インポート名のソートされたセット
@@ -120,24 +91,4 @@ public class ServiceModel {
     public void addImportName(String name) {
         importNameSet.add(name);
     }
-
-    /**
-     * 識別子のプロパティメタデータを追加します。
-     * 
-     * @param idPropertyMeta
-     *            識別子のプロパティメタデータ
-     */
-    public void addIdPropertyMeta(PropertyMeta idPropertyMeta) {
-        idPropertyMetaList.add(idPropertyMeta);
-    }
-
-    /**
-     * 識別子のプロパティメタデータのリストを返します。
-     * 
-     * @return 識別子のプロパティメタデータのリスト
-     */
-    public List<PropertyMeta> getIdPropertyMetaList() {
-        return Collections.unmodifiableList(idPropertyMetaList);
-    }
-
 }

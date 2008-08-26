@@ -27,13 +27,11 @@ import javax.persistence.TemporalType;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
-import org.seasar.extension.jdbc.service.S2AbstractService;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
@@ -85,10 +83,9 @@ public class ServiceModelFactoryImplTest {
                 .getShortClassName());
         assertEquals("Aaa", serviceModel.getShortEntityClassName());
         assertEquals(1, serviceModel.getIdPropertyMetaList().size());
-        assertEquals(2, serviceModel.getImportNameSet().size());
+        assertEquals(1, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
         assertEquals(Aaa.class.getName(), iterator.next());
-        assertEquals(S2AbstractService.class.getName(), iterator.next());
     }
 
     /**
@@ -105,11 +102,10 @@ public class ServiceModelFactoryImplTest {
         assertEquals("ServiceModelFactoryImplTest$BbbService", serviceModel
                 .getShortClassName());
         assertEquals(2, serviceModel.getIdPropertyMetaList().size());
-        assertEquals(3, serviceModel.getImportNameSet().size());
+        assertEquals(2, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
-        assertEquals(S2AbstractService.class.getName(), iterator.next());
     }
 
     /** */

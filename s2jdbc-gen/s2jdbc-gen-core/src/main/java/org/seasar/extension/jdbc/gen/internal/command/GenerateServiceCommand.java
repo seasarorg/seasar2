@@ -23,6 +23,8 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.model.AbstServiceModel;
+import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.framework.log.Logger;
@@ -50,14 +52,17 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
-    /** 条件クラス名のサフィックス */
+    /** サービスクラス名のサフィックス */
     protected String serviceClassNameSuffix = "Service";
 
-    /** 条件クラスのパッケージ名 */
+    /** サービスクラスのパッケージ名 */
     protected String servicePackageName = "service";
 
-    /** 条件クラスのテンプレート名 */
+    /** サービスクラスのテンプレート名 */
     protected String serviceTemplateFileName = "java/service.ftl";
+
+    /** 抽象サービスクラスのテンプレート名 */
+    protected String abstractServiceTemplateFileName = "java/abstract-service.ftl";
 
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
@@ -89,8 +94,11 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
-    /** サービスクラスのモデルのファクトリ */
+    /** サービスモデルのファクトリ */
     protected ServiceModelFactory serviceModelFactory;
+
+    /** 抽象サービスモデルのファクトリ */
+    protected AbstServiceModelFactory abstServiceModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -175,6 +183,26 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     public void setServiceTemplateFileName(String serviceTemplateFileName) {
         this.serviceTemplateFileName = serviceTemplateFileName;
+    }
+
+    /**
+     * 抽象サービスクラスのテンプレート名を返します。
+     * 
+     * @return 抽象サービスクラスのテンプレート名
+     */
+    public String getAbstractServiceTemplateFileName() {
+        return abstractServiceTemplateFileName;
+    }
+
+    /**
+     * 抽象サービスクラスのテンプレート名を設定します。
+     * 
+     * @param abstractServiceTemplateFileName
+     *            抽象サービスクラスのテンプレート名
+     */
+    public void setAbstractServiceTemplateFileName(
+            String abstractServiceTemplateFileName) {
+        this.abstractServiceTemplateFileName = abstractServiceTemplateFileName;
     }
 
     /**
@@ -359,11 +387,13 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected void doInit() {
         entityMetaReader = createEntityMetaReader();
         serviceModelFactory = createServiceModelFactory();
+        abstServiceModelFactory = createAbstServiceModelFactory();
         generator = createGenerator();
     }
 
     @Override
     protected void doExecute() {
+        generateAbstractService();
         for (EntityMeta entityMeta : entityMetaReader.read()) {
             generateService(entityMeta);
         }
@@ -374,6 +404,18 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
+     * 抽象サービスクラスのJavaファイルを生成します。
+     */
+    protected void generateAbstractService() {
+        AbstServiceModel model = abstServiceModelFactory.getAbstServiceModel();
+        String packageName = model.getPackageName();
+        String shortClassName = model.getShortClassName();
+        GenerationContext context = createGenerationContext(model,
+                abstractServiceTemplateFileName, packageName, shortClassName);
+        generator.generate(context);
+    }
+
+    /**
      * サービスクラスのJavaファイルを生成します。
      * 
      * @param entityMeta
@@ -381,8 +423,10 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     protected void generateService(EntityMeta entityMeta) {
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
+        String packageName = model.getPackageName();
+        String shortClassName = model.getShortClassName();
         GenerationContext context = createGenerationContext(model,
-                serviceTemplateFileName);
+                serviceTemplateFileName, packageName, shortClassName);
         generator.generate(context);
     }
 
@@ -409,6 +453,17 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
+     * {@link AbstServiceModelFactory}の実装を作成します。
+     * 
+     * @return {@link AbstServiceModelFactory}の実装
+     */
+    protected AbstServiceModelFactory createAbstServiceModelFactory() {
+        return factory.createAbstServiceModelFactory(this, ClassUtil
+                .concatName(rootPackageName, servicePackageName),
+                serviceClassNameSuffix);
+    }
+
+    /**
      * {@link Generator}の実装を作成します。
      * 
      * @return {@link Generator}の実装
@@ -425,17 +480,17 @@ public class GenerateServiceCommand extends AbstractCommand {
      *            モデル
      * @param templateName
      *            テンプレート名
+     * @param packageName
+     *            パッケージ
+     * @param shortClassName
+     *            クラスの単純名
      * @return {@link GenerationContext}の実装
      */
-    protected GenerationContext createGenerationContext(ServiceModel model,
-            String templateName) {
-        String packageName = model.getPackageName();
-        String shortClassName = model.getShortClassName();
-
+    protected GenerationContext createGenerationContext(Object model,
+            String templateName, String packageName, String shortClassName) {
         File dir = new File(javaFileDestDir, packageName.replace('.',
                 File.separatorChar));
         File file = new File(dir, shortClassName + ".java");
-
         return factory.createGenerationContext(this, model, dir, file,
                 templateName, javaFileEncoding, overwrite);
     }

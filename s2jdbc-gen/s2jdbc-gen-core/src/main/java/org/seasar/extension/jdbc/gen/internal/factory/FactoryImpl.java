@@ -37,6 +37,7 @@ import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
+import org.seasar.extension.jdbc.gen.internal.model.AbstServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintModelFactoryImpl;
@@ -55,6 +56,7 @@ import org.seasar.extension.jdbc.gen.internal.version.MigraterImpl;
 import org.seasar.extension.jdbc.gen.internal.version.SchemaInfoTableImpl;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
@@ -187,6 +189,13 @@ public class FactoryImpl implements Factory {
             String packageName, String serviceClassNameSuffix) {
 
         return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix);
+    }
+
+    public AbstServiceModelFactory createAbstServiceModelFactory(
+            Command command, String packageName, String serviceClassNameSuffix) {
+
+        return new AbstServiceModelFactoryImpl(packageName,
+                serviceClassNameSuffix);
     }
 
     public TestModelFactory createTestModelFactory(Command command,

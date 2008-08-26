@@ -1,12 +1,11 @@
 package hoge.service;
 
 import org.seasar.extension.jdbc.gen.internal.generator.Ddd;
-import org.seasar.extension.jdbc.service.S2AbstractService;
 
 /**
  * {@link Ddd}のサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */
-public class DddService extends S2AbstractService<Ddd> {
+public class DddService extends AbstractService<Ddd> {
 }

@@ -113,6 +113,18 @@ public class GenerateServiceTask extends AbstractTask {
     }
 
     /**
+     * 抽象サービスクラスのテンプレート名を設定します。
+     * 
+     * @param abstractServiceTemplateFileName
+     *            抽象サービスクラスのテンプレート名
+     */
+    public void setAbstractServiceTemplateFileName(
+            String abstractServiceTemplateFileName) {
+        command
+                .setAbstractServiceTemplateFileName(abstractServiceTemplateFileName);
+    }
+
+    /**
      * エンティティクラスのパッケージ名を設定します。
      * 
      * @param entityPackageName

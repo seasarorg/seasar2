@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
@@ -67,12 +66,14 @@ public class GenerateServiceCommandTest {
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
-        assertNotNull(command.createEntityMetaReader());
-        assertNotNull(command.createServiceModelFactory());
-        assertNotNull(command.createGenerator());
+        assertNotNull(command.entityMetaReader);
+        assertNotNull(command.serviceModelFactory);
+        assertNotNull(command.abstServiceModelFactory);
+        assertNotNull(command.generator);
         ServiceModel serviceModel = new ServiceModel();
         serviceModel.setPackageName("aaa");
         serviceModel.setShortClassName("bbb");
-        assertNotNull(command.createGenerationContext(serviceModel, "ccc"));
+        assertNotNull(command.createGenerationContext(serviceModel, "ccc",
+                "ddd", "eee"));
     }
 }

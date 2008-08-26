@@ -19,7 +19,6 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
-import org.seasar.extension.jdbc.service.S2AbstractService;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -75,7 +74,6 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      *            エンティティメタデータ
      */
     protected void doImportName(ServiceModel serviceModel, EntityMeta entityMeta) {
-        addImportName(serviceModel, S2AbstractService.class);
         addImportName(serviceModel, entityMeta.getEntityClass());
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             addImportName(serviceModel, propertyMeta.getPropertyClass());

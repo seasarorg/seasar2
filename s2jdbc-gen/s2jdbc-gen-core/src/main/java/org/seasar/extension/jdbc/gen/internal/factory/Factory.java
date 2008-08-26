@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
@@ -297,6 +298,20 @@ public interface Factory {
      * @return {@link ServiceModelFactory}の実装
      */
     ServiceModelFactory createServiceModelFactory(Command command,
+            String packageName, String serviceClassNameSuffix);
+
+    /**
+     * {@link AbstServiceModelFactory}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param packageName
+     *            パッケージ名
+     * @param serviceClassNameSuffix
+     *            サービスクラス名のサフィックス
+     * @return {@link AbstServiceModelFactory}の実装
+     */
+    AbstServiceModelFactory createAbstServiceModelFactory(Command command,
             String packageName, String serviceClassNameSuffix);
 
     /**

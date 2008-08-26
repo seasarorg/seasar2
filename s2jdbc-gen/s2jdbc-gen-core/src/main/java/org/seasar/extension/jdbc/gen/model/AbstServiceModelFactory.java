@@ -15,21 +15,17 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import org.seasar.extension.jdbc.EntityMeta;
-
 /**
- * {@link ServiceModel サービスモデル}のファクトリです。
+ * {@link AbstServiceModel 抽象サービスモデル}のファクトリです。
  * 
  * @author taedium
  */
-public interface ServiceModelFactory {
+public interface AbstServiceModelFactory {
 
     /**
-     * サービスモデルを返します。
+     * 抽象サービスモデルを返します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
-     * @return サービスモデル
+     * @return 抽象サービスモデル
      */
-    ServiceModel getServiceModel(EntityMeta entityMeta);
+    AbstServiceModel getAbstServiceModel();
 }
