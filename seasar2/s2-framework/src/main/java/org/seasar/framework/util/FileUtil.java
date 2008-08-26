@@ -18,7 +18,9 @@ package org.seasar.framework.util;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
 
 import org.seasar.framework.exception.IORuntimeException;
@@ -109,4 +111,61 @@ public class FileUtil {
         }
     }
 
+    /**
+     * バイトの配列をファイルに書き出します。
+     * 
+     * @param path
+     *            ファイルのパス
+     * @param data
+     *            バイトの配列
+     * @param offset
+     *            オフセット
+     * @param length
+     *            配列の長さ
+     * @throws NullPointerException
+     *             pathやdataがnullの場合。
+     */
+    public static void write(String path, byte[] data) {
+        if (path == null) {
+            throw new NullPointerException("path");
+        }
+        if (data == null) {
+            throw new NullPointerException("data");
+        }
+        write(path, data, 0, data.length);
+    }
+
+    /**
+     * バイトの配列をファイルに書き出します。
+     * 
+     * @param path
+     *            ファイルのパス
+     * @param data
+     *            バイトの配列
+     * @param offset
+     *            オフセット
+     * @param length
+     *            配列の長さ
+     * @throws NullPointerException
+     *             pathやdataがnullの場合。
+     */
+    public static void write(String path, byte[] data, int offset, int length) {
+        if (path == null) {
+            throw new NullPointerException("path");
+        }
+        if (data == null) {
+            throw new NullPointerException("data");
+        }
+        try {
+            OutputStream out = new BufferedOutputStream(new FileOutputStream(
+                    path));
+            try {
+                out.write(data, offset, length);
+            } finally {
+                out.close();
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
 }
