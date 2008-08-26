@@ -8,7 +8,7 @@ import ${importName};
 </#list>
 
 /**
- * ${shortEntityClassName}のテストクラスです。
+ * {@link ${shortEntityClassName}}のテストクラスです。
  * 
  * @author S2JDBC-Gen
  */

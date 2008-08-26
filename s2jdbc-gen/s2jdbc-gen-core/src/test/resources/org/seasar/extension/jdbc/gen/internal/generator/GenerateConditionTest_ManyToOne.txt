@@ -8,7 +8,7 @@ import org.seasar.extension.jdbc.where.condition.NotNullableStringCondition;
 import org.seasar.extension.jdbc.where.condition.NullableCondition;
 
 /**
- * Aaaの条件クラスです。
+ * {@link Aaa}の条件クラスです。
  * 
  * @author S2JDBC-Gen
  */

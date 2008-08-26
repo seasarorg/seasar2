@@ -4,7 +4,7 @@ import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
 import org.seasar.extension.jdbc.service.S2AbstractService;
 
 /**
- * Aaaのサービスクラスです。
+ * {@link Aaa}のサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */

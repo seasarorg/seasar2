@@ -5,7 +5,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
- * Cccのテストクラスです。
+ * {@link Ccc}のテストクラスです。
  * 
  * @author S2JDBC-Gen
  */

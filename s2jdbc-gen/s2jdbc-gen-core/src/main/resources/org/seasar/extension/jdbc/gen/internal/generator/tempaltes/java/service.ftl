@@ -8,7 +8,7 @@ import ${importName};
 </#list>
 
 /**
- * ${shortEntityClassName}のサービスクラスです。
+ * {@link ${shortEntityClassName}}のサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */

@@ -4,7 +4,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
- * Dddのテストクラスです。
+ * {@link Ddd}のテストクラスです。
  * 
  * @author S2JDBC-Gen
  */

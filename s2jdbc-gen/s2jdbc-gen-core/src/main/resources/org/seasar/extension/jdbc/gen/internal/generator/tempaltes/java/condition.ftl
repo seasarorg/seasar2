@@ -8,7 +8,7 @@ import ${importName};
 </#list>
 
 /**
- * ${shortEntityClassName}の条件クラスです。
+ * {@link ${shortEntityClassName}}の条件クラスです。
  * 
  * @author S2JDBC-Gen
  */
