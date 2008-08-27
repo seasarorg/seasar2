@@ -17,31 +17,30 @@ package org.seasar.extension.jdbc.gen.internal.argtype;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.internal.util.ArgumentUtil;
-import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.framework.util.StringUtil;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * {@link File}を扱う{@link ArgumentType}の実装クラスです。
  * 
  * @author taedium
+ * @param <T>
+ *            クラスの型
  */
-public class FileType implements ArgumentType<File> {
+public class ClassType implements ArgumentType<Class<?>> {
 
-    public File toObject(String value) {
+    public Class<?> toObject(String value) {
         if (StringUtil.isEmpty(value)) {
             return null;
         }
-        String s = ArgumentUtil.decode(value);
-        return new File(s);
+        return ReflectionUtil.forName(value);
     }
 
-    public String toText(File value) {
+    public String toText(Class<?> value) {
         if (value == null) {
             return "";
         }
-        String path = FileUtil.getCanonicalPath(value);
-        return ArgumentUtil.encode(path);
+        return value.getName();
     }
 
 }

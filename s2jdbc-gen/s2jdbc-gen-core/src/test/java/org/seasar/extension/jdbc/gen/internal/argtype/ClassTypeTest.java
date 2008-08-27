@@ -15,33 +15,39 @@
  */
 package org.seasar.extension.jdbc.gen.internal.argtype;
 
-import java.io.File;
+import org.junit.Test;
 
-import org.seasar.extension.jdbc.gen.internal.util.ArgumentUtil;
-import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
-import org.seasar.framework.util.StringUtil;
+import static org.junit.Assert.*;
 
 /**
- * {@link File}を扱う{@link ArgumentType}の実装クラスです。
- * 
  * @author taedium
+ * 
  */
-public class FileType implements ArgumentType<File> {
+public class ClassTypeTest {
 
-    public File toObject(String value) {
-        if (StringUtil.isEmpty(value)) {
-            return null;
-        }
-        String s = ArgumentUtil.decode(value);
-        return new File(s);
+    private ClassType classType = new ClassType();
+
+    /**
+     * 
+     */
+    @Test
+    public void testToObject() {
+        assertSame(Aaa.class, classType.toObject(Aaa.class.getName()));
     }
 
-    public String toText(File value) {
-        if (value == null) {
-            return "";
-        }
-        String path = FileUtil.getCanonicalPath(value);
-        return ArgumentUtil.encode(path);
+    /**
+     * 
+     */
+    @Test
+    public void testToText() {
+        assertEquals(
+                "org.seasar.extension.jdbc.gen.internal.argtype.ClassTypeTest$Aaa",
+                classType.toText(Aaa.class));
     }
 
+    /**
+     * 
+     */
+    public static class Aaa {
+    }
 }

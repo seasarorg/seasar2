@@ -20,6 +20,7 @@ import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentTypeRegistry;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.log.Logger;
 
 /**
  * コマンドラインの引数を解析するクラスです。
@@ -30,6 +31,9 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  * @author taedium
  */
 public class ArgumentsParser {
+
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(ArgumentsParser.class);
 
     /** JavaBeanのインスタンス */
     protected Object bean;
@@ -73,6 +77,12 @@ public class ArgumentsParser {
             }
             ArgumentType<?> argumentType = ArgumentTypeRegistry
                     .getArgumentType(propertyDesc);
+            if (argumentType == null) {
+                logger.log("WS2JDBCGEN0001", new Object[] {
+                        bean.getClass().getName(),
+                        propertyDesc.getPropertyName() });
+                continue;
+            }
             Object propertyValue = argumentType.toObject(value);
             propertyDesc.setValue(bean, propertyValue);
         }

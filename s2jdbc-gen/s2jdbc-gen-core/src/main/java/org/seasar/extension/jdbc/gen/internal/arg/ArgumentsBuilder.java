@@ -23,6 +23,7 @@ import org.seasar.extension.jdbc.gen.internal.argtype.ArgumentTypeRegistry;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.log.Logger;
 
 /**
  * コマンドライン用の引数を組み立てるクラスです。
@@ -33,6 +34,9 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  * @author taedium
  */
 public class ArgumentsBuilder {
+
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(ArgumentsBuilder.class);
 
     /** JavaBeanのインスタンス */
     protected Object bean;
@@ -68,6 +72,12 @@ public class ArgumentsBuilder {
             }
             ArgumentType<Object> argumentType = ArgumentTypeRegistry
                     .getArgumentType(propertyDesc);
+            if (argumentType == null) {
+                logger.log("WS2JDBCGEN0001", new Object[] {
+                        bean.getClass().getName(),
+                        propertyDesc.getPropertyName() });
+                continue;
+            }
             String name = propertyDesc.getPropertyName();
             Object value = propertyDesc.getValue(bean);
             args.add(name + "=" + argumentType.toText(value));

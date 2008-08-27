@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.argtype;
 
+import org.seasar.extension.jdbc.gen.internal.util.ArgumentUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -28,17 +29,14 @@ public class StringType implements ArgumentType<String> {
         if (StringUtil.isEmpty(value)) {
             return null;
         }
-        String s = StringUtil.ltrim(value, "'");
-        s = StringUtil.rtrim(s, "'");
-        return s.replace("''", "'");
+        return ArgumentUtil.decode(value);
     }
 
     public String toText(String value) {
         if (value == null) {
             return "";
         }
-        String s = value.replace("'", "''");
-        return "'" + s + "'";
+        return ArgumentUtil.encode(value);
     }
 
 }

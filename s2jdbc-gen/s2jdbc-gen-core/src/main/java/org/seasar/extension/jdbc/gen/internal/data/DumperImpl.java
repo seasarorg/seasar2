@@ -93,11 +93,16 @@ public class DumperImpl implements Dumper {
     }
 
     /**
+     * テーブルをダンプします。
+     * 
      * @param sqlExecutionContext
+     *            SQL実行コンテキスト
      * @param tableDesc
+     *            テーブル記述
      * @param writer
+     *            ライタ
      */
-    private void dumpTable(SqlExecutionContext sqlExecutionContext,
+    protected void dumpTable(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, DumpFileWriter writer) {
         List<String> columnNameList = getColumnNameList(tableDesc);
         writer.writeHeader(columnNameList);

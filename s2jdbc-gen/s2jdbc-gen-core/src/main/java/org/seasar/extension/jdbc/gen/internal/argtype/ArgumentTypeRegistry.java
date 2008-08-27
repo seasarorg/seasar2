@@ -44,6 +44,8 @@ public class ArgumentTypeRegistry {
                 StringType.class, null));
         argTypeMap.put(File.class, ReflectionUtil.getConstructor(
                 FileType.class, null));
+        argTypeMap.put(Class.class, ReflectionUtil.getConstructor(
+                ClassType.class, null));
     }
 
     /**
@@ -60,10 +62,9 @@ public class ArgumentTypeRegistry {
         if (propertyDesc.isParameterized()
                 && Collection.class.isAssignableFrom(propertyType)) {
             Class<?> elementClass = propertyDesc.getElementClassOfCollection();
-            return ArgumentTypeRegistry.getCollectionArgumentType(propertyType,
-                    elementClass);
+            return getCollectionArgumentType(propertyType, elementClass);
         }
-        return ArgumentTypeRegistry.getArgumentType(propertyType);
+        return getArgumentType(propertyType);
     }
 
     /**
@@ -90,7 +91,7 @@ public class ArgumentTypeRegistry {
         if (Enum.class.isAssignableFrom(clazz)) {
             return new EnumType(clazz);
         }
-        throw new IllegalArgumentException(clazz.getName());
+        return null;
     }
 
     /**
@@ -111,7 +112,7 @@ public class ArgumentTypeRegistry {
         if (List.class.isAssignableFrom(collectioinClass)) {
             return new ListType(argumentType);
         }
-        throw new IllegalArgumentException(collectioinClass.getName());
+        return null;
     }
 
     /**

@@ -95,6 +95,8 @@ public class ArgumentsBuilderTest {
 
         private File file;
 
+        private Object object;
+
         /**
          * @return Returns the string.
          */
@@ -198,6 +200,21 @@ public class ArgumentsBuilderTest {
          */
         public void setFile(File file) {
             this.file = file;
+        }
+
+        /**
+         * @return Returns the object.
+         */
+        public Object getObject() {
+            return object;
+        }
+
+        /**
+         * @param object
+         *            The object to set.
+         */
+        public void setObject(Object object) {
+            this.object = object;
         }
 
     }
