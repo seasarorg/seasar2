@@ -16,6 +16,6 @@ public interface ${shortClassName} {
 <#list nameList as name>
 
     /** {@link ${shortEntityClassName}#${name}}の名前 */
-    public static final String ${name} = "${name}";
+    String ${name} = "${name}";
 </#list>
 }

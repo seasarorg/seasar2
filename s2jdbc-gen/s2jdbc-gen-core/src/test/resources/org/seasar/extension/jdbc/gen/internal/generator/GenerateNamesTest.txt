@@ -10,11 +10,11 @@ import org.seasar.extension.jdbc.gen.internal.generator.Bbb;
 public interface BbbNames {
 
     /** {@link Bbb#id}の名前 */
-    public static final String id = "id";
+    String id = "id";
 
     /** {@link Bbb#name}の名前 */
-    public static final String name = "name";
+    String name = "name";
 
     /** {@link Bbb#aaas}の名前 */
-    public static final String aaas = "aaas";
+    String aaas = "aaas";
 }
