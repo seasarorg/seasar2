@@ -32,6 +32,9 @@ public class AbstServiceModelFactoryImpl implements AbstServiceModelFactory {
     /** サービスクラス名のサフィックス */
     protected String serviceClassNameSuffix;
 
+    /** クラスモデルのサポート */
+    protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
     /**
      * インスタンスを構築します。
      * 
@@ -53,7 +56,8 @@ public class AbstServiceModelFactoryImpl implements AbstServiceModelFactory {
         AbstServiceModel abstServiceModel = new AbstServiceModel();
         abstServiceModel.setPackageName(packageName);
         abstServiceModel.setShortClassName("Abstract" + serviceClassNameSuffix);
-        abstServiceModel.addImportName(S2AbstractService.class.getName());
+        classModelSupport.addImportName(abstServiceModel,
+                S2AbstractService.class);
         return abstServiceModel;
     }
 

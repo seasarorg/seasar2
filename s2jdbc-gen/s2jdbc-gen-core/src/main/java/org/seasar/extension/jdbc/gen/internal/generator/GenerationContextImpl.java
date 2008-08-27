@@ -49,8 +49,6 @@ public class GenerationContextImpl implements GenerationContext {
      * 
      * @param model
      *            データモデル
-     * @param dir
-     *            生成するファイルの出力先ディレクトリ
      * @param file
      *            生成するファイル
      * @param templateName
@@ -60,13 +58,10 @@ public class GenerationContextImpl implements GenerationContext {
      * @param overwrite
      *            上書きする場合{@code true}、しない場合{@code false}
      */
-    public GenerationContextImpl(Object model, File dir, File file,
-            String templateName, String encoding, boolean overwrite) {
+    public GenerationContextImpl(Object model, File file, String templateName,
+            String encoding, boolean overwrite) {
         if (model == null) {
             throw new NullPointerException("model");
-        }
-        if (dir == null) {
-            throw new NullPointerException("dir");
         }
         if (file == null) {
             throw new NullPointerException("file");
@@ -78,7 +73,6 @@ public class GenerationContextImpl implements GenerationContext {
             throw new NullPointerException("dumpFileEncoding");
         }
         this.model = model;
-        this.dir = dir;
         this.file = file;
         this.templateName = templateName;
         this.encoding = encoding;
@@ -91,10 +85,6 @@ public class GenerationContextImpl implements GenerationContext {
 
     public Object getModel() {
         return model;
-    }
-
-    public File getDir() {
-        return dir;
     }
 
     public File getFile() {

@@ -1,5 +1,6 @@
 package hoge.service;
 
+import hoge.entity.AaaNames;
 import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
 
 /**
@@ -7,7 +8,7 @@ import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
  * 
  * @author S2JDBC-Gen
  */
-public class AaaService extends AbstractService<Aaa> {
+public class AaaService extends AbstractService<Aaa> implements AaaNames {
 
     /**
      * 識別子でエンティティを検索します。

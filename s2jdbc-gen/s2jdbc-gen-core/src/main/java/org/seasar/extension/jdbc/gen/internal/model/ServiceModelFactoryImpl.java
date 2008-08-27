@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.gen.model.NamesModel;
+import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.framework.util.ClassUtil;
@@ -34,21 +36,40 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
     /** サービスクラス名のサフィックス */
     protected String serviceClassNameSuffix;
 
+    /** 名前モデルのファクトリ */
+    protected NamesModelFactory namesModelFactory;
+
+    /** 名前インタフェースを実装する場合{@code true} */
+    protected boolean implementsNames;
+
+    /** クラスモデルのサポート */
+    protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
     /**
      * インスタンスを構築します。
      * 
      * @param packageName
      *            パッケージ名
+     * @param namesModelFactory
+     *            名前モデルのファクトリ
      * @param serviceClassNameSuffix
      *            サービスクラス名のサフィックス
+     * @param implementsNames
+     *            名前インタフェースを実装する場合{@code true}
      */
     public ServiceModelFactoryImpl(String packageName,
-            String serviceClassNameSuffix) {
+            String serviceClassNameSuffix, NamesModelFactory namesModelFactory,
+            boolean implementsNames) {
         if (serviceClassNameSuffix == null) {
             throw new NullPointerException("serviceClassNameSuffix");
         }
+        if (namesModelFactory == null) {
+            throw new NullPointerException("namesModelFactory");
+        }
         this.packageName = packageName;
         this.serviceClassNameSuffix = serviceClassNameSuffix;
+        this.namesModelFactory = namesModelFactory;
+        this.implementsNames = implementsNames;
     }
 
     public ServiceModel getServiceModel(EntityMeta entityMeta) {
@@ -61,37 +82,43 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         for (PropertyMeta idPropertyMeta : entityMeta.getIdPropertyMetaList()) {
             serviceModel.addIdPropertyMeta(idPropertyMeta);
         }
+        doNamesModel(serviceModel, entityMeta);
         doImportName(serviceModel, entityMeta);
         return serviceModel;
+    }
+
+    /**
+     * 名前モデルを処理します。
+     * 
+     * @param serviceModel
+     *            サービスモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doNamesModel(ServiceModel serviceModel, EntityMeta entityMeta) {
+        if (implementsNames) {
+            NamesModel namesModel = namesModelFactory.getNamesModel(entityMeta);
+            serviceModel.setNamesModel(namesModel);
+            String namesClassName = ClassUtil.concatName(namesModel
+                    .getPackageName(), namesModel.getShortClassName());
+            classModelSupport.addImportName(serviceModel, namesClassName);
+        }
     }
 
     /**
      * インポート名を処理します。
      * 
      * @param serviceModel
-     *            サービスクラスのモデル
+     *            サービスモデル
      * @param entityMeta
      *            エンティティメタデータ
      */
     protected void doImportName(ServiceModel serviceModel, EntityMeta entityMeta) {
-        addImportName(serviceModel, entityMeta.getEntityClass());
+        classModelSupport.addImportName(serviceModel, entityMeta
+                .getEntityClass());
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            addImportName(serviceModel, propertyMeta.getPropertyClass());
-        }
-    }
-
-    /**
-     * インポート名を追加します。
-     * 
-     * @param serviceModel
-     *            サービスクラスのモデル
-     * @param clazz
-     *            インポートするクラス
-     */
-    protected void addImportName(ServiceModel serviceModel, Class<?> clazz) {
-        String pakcageName = ClassUtil.getPackageName(clazz);
-        if (pakcageName != null && !"java.lang".equals(pakcageName)) {
-            serviceModel.addImportName(clazz.getName());
+            classModelSupport.addImportName(serviceModel, propertyMeta
+                    .getPropertyClass());
         }
     }
 }

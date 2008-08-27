@@ -25,7 +25,6 @@ import org.seasar.extension.jdbc.gen.model.ConditionModel;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link ConditionModelFactory}の実装クラスです。
@@ -45,6 +44,9 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
     /** 条件クラス名のサフィックス */
     protected String conditionClassNameSuffix;
+
+    /** クラスモデルのサポート */
+    protected ClassModelSupport classModelSupport = new ClassModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -139,27 +141,15 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      */
     protected void doImportName(ConditionModel conditionModel,
             EntityMeta entityMeta) {
-        addImportName(conditionModel, ComplexWhere.class);
-        addImportName(conditionModel, AbstractEntityCondition.class);
+        classModelSupport.addImportName(conditionModel, ComplexWhere.class);
+        classModelSupport.addImportName(conditionModel,
+                AbstractEntityCondition.class);
         for (ConditionAttributeModel attributeModel : conditionModel
                 .getConditionAttributeModelList()) {
-            addImportName(conditionModel, attributeModel.getAttributeClass());
-            addImportName(conditionModel, attributeModel.getConditionClass());
-        }
-    }
-
-    /**
-     * インポート名を追加します。
-     * 
-     * @param conditionModel
-     *            条件クラスのモデル
-     * @param clazz
-     *            インポートするクラス
-     */
-    protected void addImportName(ConditionModel conditionModel, Class<?> clazz) {
-        String pakcageName = ClassUtil.getPackageName(clazz);
-        if (pakcageName != null && !"java.lang".equals(pakcageName)) {
-            conditionModel.addImportName(clazz.getName());
+            classModelSupport.addImportName(conditionModel, attributeModel
+                    .getAttributeClass());
+            classModelSupport.addImportName(conditionModel, attributeModel
+                    .getConditionClass());
         }
     }
 

@@ -12,7 +12,7 @@ import ${importName};
  * 
  * @author S2JDBC-Gen
  */
-public class ${shortClassName} extends AbstractService<${shortEntityClassName}> {
+public class ${shortClassName} extends AbstractService<${shortEntityClassName}><#if namesModel??> implements ${namesModel.shortClassName}</#if> {
 <#if idPropertyMetaList?size gt 0>
 
     /**

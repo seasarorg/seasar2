@@ -140,7 +140,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_SingleId.txt";
@@ -179,7 +179,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
@@ -201,7 +201,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         String packageName = ClassUtil.getPackageName(getClass());
         File dir = ResourceUtil
                 .getResourceAsFile(packageName.replace('.', '/'));
@@ -235,7 +235,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
@@ -283,7 +283,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_SingleId_Association_Foo.txt";
@@ -291,8 +291,8 @@ public class GenerateEntityTest {
         generator.clear();
 
         model = factory.getEntityModel(entityDesc2);
-        context = new GenerationContextImpl(model, new File("dir"), new File(
-                "file"), "java/entity.ftl", "UTF-8", false);
+        context = new GenerationContextImpl(model, new File("file"),
+                "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         path = getClass().getName().replace(".", "/")
                 + "_SingleId_Association_Hoge.txt";
@@ -339,7 +339,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_SingleId_Association_DefaultMapping_Foo.txt";
@@ -347,8 +347,8 @@ public class GenerateEntityTest {
         generator.clear();
 
         model = factory.getEntityModel(entityDesc2);
-        context = new GenerationContextImpl(model, new File("dir"), new File(
-                "file"), "java/entity.ftl", "UTF-8", false);
+        context = new GenerationContextImpl(model, new File("file"),
+                "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         path = getClass().getName().replace(".", "/")
                 + "_SingleId_Association_DefaultMapping_Hoge.txt";
@@ -397,7 +397,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_CompositeId_Association_Foo.txt";
@@ -405,8 +405,8 @@ public class GenerateEntityTest {
         generator.clear();
 
         model = factory.getEntityModel(entityDesc2);
-        context = new GenerationContextImpl(model, new File("dir"), new File(
-                "file"), "java/entity.ftl", "UTF-8", false);
+        context = new GenerationContextImpl(model, new File("file"),
+                "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         path = getClass().getName().replace(".", "/")
                 + "_CompositeId_Association_Hoge.txt";
@@ -437,7 +437,7 @@ public class GenerateEntityTest {
 
         EntityModel model = factory.getEntityModel(entityDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/entity.ftl", "UTF-8", false);
+                "file"), "java/entity.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_UniqueConstraint.txt";

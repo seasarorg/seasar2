@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
+import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -64,7 +64,8 @@ public class GenerateServiceTest {
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
         serviceModelFactory = new ServiceModelFactoryImpl("hoge.service",
-                "Service");
+                "Service", new NamesModelFactoryImpl("hoge.entity", "Names"),
+                true);
         generator = new GeneratorImplStub();
     }
 
@@ -77,7 +78,7 @@ public class GenerateServiceTest {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/service.ftl", "UTF-8", false);
+                "file"), "java/service.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_SingleId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
@@ -92,7 +93,7 @@ public class GenerateServiceTest {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/service.ftl", "UTF-8", false);
+                "file"), "java/service.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_CompositeId.txt";
@@ -108,7 +109,7 @@ public class GenerateServiceTest {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/service.ftl", "UTF-8", false);
+                "file"), "java/service.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_NoId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

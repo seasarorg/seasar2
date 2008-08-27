@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
  * 
  * @author taedium
  */
-public class ServiceModel {
+public class ServiceModel implements ClassModel {
 
     /** パッケージ名 */
     protected String packageName;
@@ -38,6 +38,9 @@ public class ServiceModel {
 
     /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
+
+    /** 名前モデル */
+    protected NamesModel namesModel;
 
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();
@@ -100,6 +103,25 @@ public class ServiceModel {
      */
     public void setShortEntityClassName(String shortEntityClassName) {
         this.shortEntityClassName = shortEntityClassName;
+    }
+
+    /**
+     * 名前モデルを返します。
+     * 
+     * @return 名前モデル
+     */
+    public NamesModel getNamesModel() {
+        return namesModel;
+    }
+
+    /**
+     * 名前モデルを設定します。
+     * 
+     * @param namesModel
+     *            名前モデル
+     */
+    public void setNamesModel(NamesModel namesModel) {
+        this.namesModel = namesModel;
     }
 
     /**

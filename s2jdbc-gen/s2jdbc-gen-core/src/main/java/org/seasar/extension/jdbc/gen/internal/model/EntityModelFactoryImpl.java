@@ -44,7 +44,6 @@ import org.seasar.extension.jdbc.gen.model.CompositeUniqueConstraintModel;
 import org.seasar.extension.jdbc.gen.model.CompositeUniqueConstraintModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link EntityModelFactory}の実装クラスです。
@@ -67,6 +66,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
 
     /** 複合一意制約モデルのファクトリ */
     protected CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory;
+
+    /** クラスモデルのサポート */
+    protected ClassModelSupport classModelSupport = new ClassModelSupport();
 
     /**
      * インスタンスを構築しますｌ
@@ -184,55 +186,53 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      *            エンティティ記述
      */
     protected void doImportName(EntityModel model, EntityDesc entityDesc) {
-        model.addImportName(Entity.class.getName());
+        classModelSupport.addImportName(model, Entity.class);
         if (model.getCatalogName() != null || model.getSchemaName() != null) {
-            model.addImportName(Table.class.getName());
+            classModelSupport.addImportName(model, Table.class);
         }
         for (AttributeModel attr : model.getAttributeModelList()) {
             if (attr.isId()) {
-                model.addImportName(Id.class.getName());
+                classModelSupport.addImportName(model, Id.class);
                 if (!model.hasCompositeId()) {
-                    model.addImportName(GeneratedValue.class.getName());
+                    classModelSupport
+                            .addImportName(model, GeneratedValue.class);
                 }
             }
             if (attr.isLob()) {
-                model.addImportName(Lob.class.getName());
+                classModelSupport.addImportName(model, Lob.class);
             }
             if (attr.getTemporalType() != null) {
-                model.addImportName(Temporal.class.getName());
-                model.addImportName(TemporalType.class.getName());
+                classModelSupport.addImportName(model, Temporal.class);
+                classModelSupport.addImportName(model, TemporalType.class);
             }
             if (attr.isTransient()) {
-                model.addImportName(Transient.class.getName());
+                classModelSupport.addImportName(model, Transient.class);
             } else {
-                model.addImportName(Column.class.getName());
+                classModelSupport.addImportName(model, Column.class);
             }
             if (attr.isVersion()) {
-                model.addImportName(Version.class.getName());
+                classModelSupport.addImportName(model, Version.class);
             }
-
-            String name = ClassUtil.getPackageName(attr.getAttributeClass());
-            if (name != null && !"java.lang".equals(name)) {
-                model.addImportName(attr.getAttributeClass().getName());
-            }
+            classModelSupport.addImportName(model, attr.getAttributeClass());
         }
         for (AssociationModel asso : model.getAssociationModelList()) {
             AssociationType associationType = asso.getAssociationType();
             if (associationType == AssociationType.ONE_TO_MANY) {
-                model.addImportName(List.class.getName());
+                classModelSupport.addImportName(model, List.class);
             }
-            model.addImportName(associationType.getAnnotation().getName());
+            classModelSupport.addImportName(model, associationType
+                    .getAnnotation());
             if (asso.getJoinColumnModel() != null) {
-                model.addImportName(JoinColumn.class.getName());
+                classModelSupport.addImportName(model, JoinColumn.class);
             }
             if (asso.getJoinColumnsModel() != null) {
-                model.addImportName(JoinColumn.class.getName());
-                model.addImportName(JoinColumns.class.getName());
+                classModelSupport.addImportName(model, JoinColumn.class);
+                classModelSupport.addImportName(model, JoinColumns.class);
             }
         }
         if (!model.getCompositeUniqueConstraintModelList().isEmpty()) {
-            model.addImportName(Table.class.getName());
-            model.addImportName(UniqueConstraint.class.getName());
+            classModelSupport.addImportName(model, Table.class);
+            classModelSupport.addImportName(model, UniqueConstraint.class);
         }
     }
 }

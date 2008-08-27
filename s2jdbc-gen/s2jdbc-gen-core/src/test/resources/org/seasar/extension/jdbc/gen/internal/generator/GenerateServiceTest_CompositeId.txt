@@ -1,5 +1,6 @@
 package hoge.service;
 
+import hoge.entity.CccNames;
 import java.math.BigDecimal;
 import org.seasar.extension.jdbc.gen.internal.generator.Ccc;
 
@@ -8,7 +9,7 @@ import org.seasar.extension.jdbc.gen.internal.generator.Ccc;
  * 
  * @author S2JDBC-Gen
  */
-public class CccService extends AbstractService<Ccc> {
+public class CccService extends AbstractService<Ccc> implements CccNames {
 
     /**
      * 識別子でエンティティを検索します。

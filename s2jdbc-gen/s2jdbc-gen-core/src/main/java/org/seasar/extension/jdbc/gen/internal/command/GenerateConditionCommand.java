@@ -22,7 +22,9 @@ import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.model.ClassModel;
 import org.seasar.extension.jdbc.gen.model.ConditionModel;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.framework.log.Logger;
@@ -429,17 +431,12 @@ public class GenerateConditionCommand extends AbstractCommand {
      *            テンプレート名
      * @return {@link GenerationContext}の実装
      */
-    protected GenerationContext createGenerationContext(ConditionModel model,
+    protected GenerationContext createGenerationContext(ClassModel model,
             String templateName) {
-        String packageName = model.getPackageName();
-        String shortClassName = model.getShortClassName();
-
-        File dir = new File(javaFileDestDir, packageName.replace('.',
-                File.separatorChar));
-        File file = new File(dir, shortClassName + ".java");
-
-        return factory.createGenerationContext(this, model, dir, file,
-                templateName, javaFileEncoding, overwrite);
+        File file = FileUtil.createJavaFile(javaFileDestDir, model
+                .getPackageName(), model.getShortClassName());
+        return factory.createGenerationContext(this, model, file, templateName,
+                javaFileEncoding, overwrite);
     }
 
     @Override

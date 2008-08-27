@@ -22,11 +22,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * 条件クラスのモデルです。
+ * 名前モデルです。
  * 
  * @author taedium
  */
-public class ConditionModel implements ClassModel {
+public class NamesModel implements ClassModel {
 
     /** パッケージ名 */
     protected String packageName;
@@ -40,11 +40,8 @@ public class ConditionModel implements ClassModel {
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();
 
-    /** 条件クラスの属性モデルのリスト */
-    protected List<ConditionAttributeModel> conditionAttributeModelList = new ArrayList<ConditionAttributeModel>();
-
-    /** 条件クラスの属性メソッドのリスト */
-    protected List<ConditionMethodModel> conditionMethodModelList = new ArrayList<ConditionMethodModel>();
+    /** 名前のリスト */
+    protected List<String> nameList = new ArrayList<String>();
 
     /**
      * パッケージ名を返します。
@@ -123,43 +120,22 @@ public class ConditionModel implements ClassModel {
     }
 
     /**
-     * 条件クラスの属性モデルのリストを返します。
+     * 名前のリストを返します。
      * 
-     * @return 条件クラスの属性モデルのリスト
+     * @return 名前のリスト
      */
-    public List<ConditionAttributeModel> getConditionAttributeModelList() {
-        return Collections.unmodifiableList(conditionAttributeModelList);
+    public List<String> getNameList() {
+        return Collections.unmodifiableList(nameList);
     }
 
     /**
-     * 条件クラスの属性モデルを追加します。
+     * 名前を追加します。
      * 
-     * @param conditionAttributeModel
-     *            条件クラスの属性モデル
+     * @param name
+     *            名前
      */
-    public void addConditionAttributeModel(
-            ConditionAttributeModel conditionAttributeModel) {
-        conditionAttributeModelList.add(conditionAttributeModel);
-    }
-
-    /**
-     * 条件クラスのメソッドモデルのリストを返します。
-     * 
-     * @return 条件クラスのメソッドモデルのリスト
-     */
-    public List<ConditionMethodModel> getConditionMethodModelList() {
-        return Collections.unmodifiableList(conditionMethodModelList);
-    }
-
-    /**
-     * 条件クラスのメソッドモデルを追加します。
-     * 
-     * @param conditionMethodModel
-     *            条件クラスのメソッドモデル
-     */
-    public void addConditionMethodModel(
-            ConditionMethodModel conditionMethodModel) {
-        conditionMethodModelList.add(conditionMethodModel);
+    public void addName(String name) {
+        nameList.add(name);
     }
 
 }

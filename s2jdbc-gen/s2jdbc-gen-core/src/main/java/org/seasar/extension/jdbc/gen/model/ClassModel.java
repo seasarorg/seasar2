@@ -15,34 +15,20 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.Collections;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
- * 抽象サービスモデルです。
- * 
  * @author taedium
+ * 
  */
-public class AbstServiceModel implements ClassModel {
-
-    /** パッケージ名 */
-    protected String packageName;
-
-    /** クラスの単純名 */
-    protected String shortClassName;
-
-    /** インポート名のソートされたセット */
-    protected SortedSet<String> importNameSet = new TreeSet<String>();
+public interface ClassModel {
 
     /**
      * パッケージ名を返します。
      * 
      * @return パッケージ名
      */
-    public String getPackageName() {
-        return packageName;
-    }
+    String getPackageName();
 
     /**
      * パッケージ名を設定します。
@@ -50,18 +36,14 @@ public class AbstServiceModel implements ClassModel {
      * @param packageName
      *            パッケージ名
      */
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
+    void setPackageName(String packageName);
 
     /**
      * クラスの単純名を返します。
      * 
      * @return
      */
-    public String getShortClassName() {
-        return shortClassName;
-    }
+    String getShortClassName();
 
     /**
      * クラスの単純名を設定します。
@@ -69,18 +51,14 @@ public class AbstServiceModel implements ClassModel {
      * @param shortClassName
      *            クラスの単純名
      */
-    public void setShortClassName(String shortClassName) {
-        this.shortClassName = shortClassName;
-    }
+    void setShortClassName(String shortClassName);
 
     /**
      * インポート名のソートされたセットを返します。
      * 
      * @return インポート名のソートされたセット
      */
-    public SortedSet<String> getImportNameSet() {
-        return Collections.unmodifiableSortedSet(importNameSet);
-    }
+    SortedSet<String> getImportNameSet();
 
     /**
      * インポート名を追加します。
@@ -88,7 +66,5 @@ public class AbstServiceModel implements ClassModel {
      * @param name
      *            インポート名
      */
-    public void addImportName(String name) {
-        importNameSet.add(name);
-    }
+    void addImportName(String name);
 }

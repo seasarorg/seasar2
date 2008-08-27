@@ -19,18 +19,19 @@ import java.io.File;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateNamesCommand;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceCommand;
 
 /**
- * エンティティに対するサービスクラスのJavaファイルを生成する{@link Task}です。
+ * エンティティに対する名前インタフェースのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
  * @see GenerateServiceCommand
  */
-public class GenerateServiceTask extends AbstractTask {
+public class GenerateNamesTask extends AbstractTask {
 
     /** コマンド */
-    protected GenerateServiceCommand command = new GenerateServiceCommand();
+    protected GenerateNamesCommand command = new GenerateNamesCommand();
 
     /**
      * 設定ファイルのパスを設定します。
@@ -80,68 +81,6 @@ public class GenerateServiceTask extends AbstractTask {
      */
     public void setClasspathDir(File classpathDir) {
         command.setClasspathDir(classpathDir);
-    }
-
-    /**
-     * サービスクラス名のサフィックスを設定します。
-     * 
-     * @param serviceClassNameSuffix
-     *            サービスクラス名のサフィックス
-     */
-    public void setServiceClassNameSuffix(String serviceClassNameSuffix) {
-        command.setServiceClassNameSuffix(serviceClassNameSuffix);
-    }
-
-    /**
-     * サービスクラスのパッケージ名を設定します。
-     * 
-     * @param servicePackageName
-     *            サービスクラスのパッケージ名
-     */
-    public void setServicePackageName(String servicePackageName) {
-        command.setServicePackageName(servicePackageName);
-    }
-
-    /**
-     * サービスクラスのテンプレート名を設定します。
-     * 
-     * @param serviceTemplateFileName
-     *            サービスクラスのテンプレート名
-     */
-    public void setServiceTemplateFileName(String serviceTemplateFileName) {
-        command.setServiceTemplateFileName(serviceTemplateFileName);
-    }
-
-    /**
-     * 抽象サービスクラスのテンプレート名を設定します。
-     * 
-     * @param abstractServiceTemplateFileName
-     *            抽象サービスクラスのテンプレート名
-     */
-    public void setAbstractServiceTemplateFileName(
-            String abstractServiceTemplateFileName) {
-        command
-                .setAbstractServiceTemplateFileName(abstractServiceTemplateFileName);
-    }
-
-    /**
-     * 名前インタフェース名のサフィックスを設定します。
-     * 
-     * @param namesInterfaceNameSuffix
-     *            名前インタフェース名のサフィックス
-     */
-    public void setNamesClassNameSuffix(String namesInterfaceNameSuffix) {
-        command.setNamesInterfaceNameSuffix(namesInterfaceNameSuffix);
-    }
-
-    /**
-     * 名前インタフェースのパッケージ名を設定します。
-     * 
-     * @param namesPackageName
-     *            名前インタフェースのパッケージ名
-     */
-    public void setNamesPackageName(String namesPackageName) {
-        command.setNamesPackageName(namesPackageName);
     }
 
     /**
@@ -236,13 +175,33 @@ public class GenerateServiceTask extends AbstractTask {
     }
 
     /**
-     * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を設定します。
+     * 名前インタフェース名のサフィックスを設定します。
      * 
-     * @param implementsNames
-     *            名前インタフェースを実装する場合{@code true}、しない場合{@code false}
+     * @param namesInterfaceNameSuffix
+     *            名前インタフェース名のサフィックス
      */
-    public void setImplementsNames(boolean implementsNames) {
-        command.setImplementsNames(implementsNames);
+    public void setNamesInterfaceNameSuffix(String namesInterfaceNameSuffix) {
+        command.setNamesInterfaceNameSuffix(namesInterfaceNameSuffix);
+    }
+
+    /**
+     * 名前インタフェースのパッケージ名を設定します。
+     * 
+     * @param namesPackageName
+     *            名前インタフェースのパッケージ名
+     */
+    public void setNamesPackageName(String namesPackageName) {
+        command.setNamesPackageName(namesPackageName);
+    }
+
+    /**
+     * 名前インタフェースのテンプレート名を設定します。
+     * 
+     * @param namesTemplateFileName
+     *            名前インタフェースのテンプレート名
+     */
+    public void setNamesTemplateFileName(String namesTemplateFileName) {
+        command.setNamesTemplateFileName(namesTemplateFileName);
     }
 
     @Override

@@ -194,6 +194,29 @@ public class FileUtil {
     }
 
     /**
+     * Javaファイルを作成します。
+     * 
+     * @param baseDir
+     *            ベースディレクトリ
+     * @param packageName
+     *            パッケージ名
+     * @param shortClassName
+     *            クラスの単純名
+     * @return Javaファイル
+     */
+    public static File createJavaFile(File baseDir, String packageName,
+            String shortClassName) {
+        File packageDir;
+        if (packageName == null) {
+            packageDir = baseDir;
+        } else {
+            packageDir = new File(baseDir, packageName.replace('.',
+                    File.separatorChar));
+        }
+        return new File(packageDir, shortClassName + ".java");
+    }
+
+    /**
      * ファイルを扱うインタフェースです・
      * 
      * @author taedium

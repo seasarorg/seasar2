@@ -1120,7 +1120,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected GenerationContext createGenerationContext(Object model, File dir,
             String fileName, String templateName) {
-        return factory.createGenerationContext(this, model, dir, new File(dir,
+        return factory.createGenerationContext(this, model, new File(dir,
                 fileName), templateName, ddlFileEncoding, true);
     }
 

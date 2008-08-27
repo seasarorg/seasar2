@@ -19,6 +19,8 @@ import java.io.File;
 
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
  * @author taedium
  * 
@@ -26,18 +28,25 @@ import org.junit.Test;
 public class FileUtilTest {
 
     /**
-     * Test method for
-     * {@link org.seasar.extension.jdbc.gen.internal.util.FileUtil#copyDir(java.io.File, java.io.File)}
-     * .
+     * 
      */
     @Test
-    public void testCopyDir() {
-        File f = new File("src");
-        for (File child : f.listFiles()) {
-            System.out.println(child.getAbsolutePath());
-            if (child.isDirectory()) {
+    public void testCreateJavaFile() {
+        File baseDir = new File("base");
+        File javaFile = new File(baseDir, "aaa");
+        javaFile = new File(javaFile, "bbb");
+        javaFile = new File(javaFile, "Ccc.java");
+        assertEquals(javaFile, FileUtil.createJavaFile(baseDir, "aaa.bbb",
+                "Ccc"));
+    }
 
-            }
-        }
+    /**
+     * 
+     */
+    @Test
+    public void testCreateJavaFile_defaultPackage() {
+        File baseDir = new File("base");
+        assertEquals(new File(baseDir, "Ccc.java"), FileUtil.createJavaFile(
+                baseDir, null, "Ccc"));
     }
 }

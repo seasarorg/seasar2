@@ -95,8 +95,7 @@ public class GenerateForeignKeyTest {
     @Test
     public void testCreate() throws Exception {
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "sql/create-foreignkey.ftl", "UTF-8",
-                false);
+                "file"), "sql/create-foreignkey.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
@@ -109,8 +108,7 @@ public class GenerateForeignKeyTest {
     @Test
     public void testDrop() throws Exception {
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "sql/drop-foreignkey.ftl", "UTF-8",
-                false);
+                "file"), "sql/drop-foreignkey.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Drop.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

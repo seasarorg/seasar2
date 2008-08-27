@@ -22,9 +22,12 @@ import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModel;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
+import org.seasar.extension.jdbc.gen.model.ClassModel;
+import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.framework.log.Logger;
@@ -38,7 +41,11 @@ import org.seasar.framework.util.ClassUtil;
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは、エンティティクラス１つにつき１つのサービスクラスのJavaファイルを生成します。
+ * このコマンドは、次のクラスの2種類のjavaコードを生成します。
+ * <ul>
+ * <li>エンティティクラスに対応するサービスクラス</li>
+ * <li>上記サービスクラスの親クラスとなる抽象サービスクラス</li>
+ * </ul>
  * </p>
  * 
  * @author taedium
@@ -64,6 +71,12 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** 抽象サービスクラスのテンプレート名 */
     protected String abstractServiceTemplateFileName = "java/abstract-service.ftl";
 
+    /** 名前インタフェース名のサフィックス */
+    protected String namesInterfaceNameSuffix = "Names";
+
+    /** 名前インタフェースのパッケージ名 */
+    protected String namesPackageName = "entity";
+
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
 
@@ -73,13 +86,16 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
+    /** 名前インタフェースを実装する場合{@code true} */
+    protected boolean implementsNames = true;
+
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
 
-    /** 上書きをする場合{@code true}、しない場合{@code false} */
+    /** サービスクラスを上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
 
     /** ルートパッケージ名 */
@@ -99,6 +115,9 @@ public class GenerateServiceCommand extends AbstractCommand {
 
     /** 抽象サービスモデルのファクトリ */
     protected AbstServiceModelFactory abstServiceModelFactory;
+
+    /** 名前モデルのファクトリ */
+    protected NamesModelFactory namesModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -203,6 +222,44 @@ public class GenerateServiceCommand extends AbstractCommand {
     public void setAbstractServiceTemplateFileName(
             String abstractServiceTemplateFileName) {
         this.abstractServiceTemplateFileName = abstractServiceTemplateFileName;
+    }
+
+    /**
+     * 名前インタフェース名のサフィックスを返します。
+     * 
+     * @return 名前インタフェース名のサフィックス
+     */
+    public String getNamesInterfaceNameSuffix() {
+        return namesInterfaceNameSuffix;
+    }
+
+    /**
+     * 名前インタフェース名のサフィックスを設定します。
+     * 
+     * @param namesInterfaceNameSuffix
+     *            名前インタフェース名のサフィックス
+     */
+    public void setNamesInterfaceNameSuffix(String namesInterfaceNameSuffix) {
+        this.namesInterfaceNameSuffix = namesInterfaceNameSuffix;
+    }
+
+    /**
+     * 名前インタフェースのパッケージ名を返します。
+     * 
+     * @return 名前インタフェースのパッケージ名
+     */
+    public String getNamesPackageName() {
+        return namesPackageName;
+    }
+
+    /**
+     * 名前インタフェースのパッケージ名を設定します。
+     * 
+     * @param namesPackageName
+     *            名前インタフェースのパッケージ名
+     */
+    public void setNamesPackageName(String namesPackageName) {
+        this.namesPackageName = namesPackageName;
     }
 
     /**
@@ -376,6 +433,25 @@ public class GenerateServiceCommand extends AbstractCommand {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
+    /**
+     * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return 名前インタフェースを実装する場合{@code true}、しない場合{@code false}
+     */
+    public boolean isImplementsNames() {
+        return implementsNames;
+    }
+
+    /**
+     * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param implementsNames
+     *            名前インタフェースを実装する場合{@code true}、しない場合{@code false}
+     */
+    public void setImplementsNames(boolean implementsNames) {
+        this.implementsNames = implementsNames;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -386,6 +462,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         entityMetaReader = createEntityMetaReader();
+        namesModelFactory = createNamesModelFactory();
         serviceModelFactory = createServiceModelFactory();
         abstServiceModelFactory = createAbstServiceModelFactory();
         generator = createGenerator();
@@ -408,10 +485,8 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     protected void generateAbstractService() {
         AbstServiceModel model = abstServiceModelFactory.getAbstServiceModel();
-        String packageName = model.getPackageName();
-        String shortClassName = model.getShortClassName();
         GenerationContext context = createGenerationContext(model,
-                abstractServiceTemplateFileName, packageName, shortClassName);
+                abstractServiceTemplateFileName, overwrite);
         generator.generate(context);
     }
 
@@ -423,11 +498,28 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     protected void generateService(EntityMeta entityMeta) {
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
-        String packageName = model.getPackageName();
-        String shortClassName = model.getShortClassName();
         GenerationContext context = createGenerationContext(model,
-                serviceTemplateFileName, packageName, shortClassName);
+                serviceTemplateFileName, overwrite);
         generator.generate(context);
+    }
+
+    /**
+     * {@link GenerationContext}の実装を作成します。
+     * 
+     * @param model
+     *            クラスモデル
+     * @param templateName
+     *            テンプレート名
+     * @param overwrite
+     *            上書きする場合{@code true}
+     * @return {@link GenerationContext}の実装
+     */
+    protected GenerationContext createGenerationContext(ClassModel model,
+            String templateName, boolean overwrite) {
+        File file = FileUtil.createJavaFile(javaFileDestDir, model
+                .getPackageName(), model.getShortClassName());
+        return factory.createGenerationContext(this, model, file, templateName,
+                javaFileEncoding, overwrite);
     }
 
     /**
@@ -449,7 +541,8 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     protected ServiceModelFactory createServiceModelFactory() {
         return factory.createServiceModelFactory(this, ClassUtil.concatName(
-                rootPackageName, servicePackageName), serviceClassNameSuffix);
+                rootPackageName, servicePackageName), serviceClassNameSuffix,
+                namesModelFactory, implementsNames);
     }
 
     /**
@@ -464,6 +557,16 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
+     * {@link NamesModelFactory}の実装を作成します。
+     * 
+     * @return {@link NamesModelFactory}の実装
+     */
+    protected NamesModelFactory createNamesModelFactory() {
+        return factory.createNamesModelFactory(this, ClassUtil.concatName(
+                rootPackageName, namesPackageName), namesInterfaceNameSuffix);
+    }
+
+    /**
      * {@link Generator}の実装を作成します。
      * 
      * @return {@link Generator}の実装
@@ -471,28 +574,6 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected Generator createGenerator() {
         return factory.createGenerator(this, templateFileEncoding,
                 templateFilePrimaryDir);
-    }
-
-    /**
-     * {@link GenerationContext}の実装を作成します。
-     * 
-     * @param model
-     *            モデル
-     * @param templateName
-     *            テンプレート名
-     * @param packageName
-     *            パッケージ
-     * @param shortClassName
-     *            クラスの単純名
-     * @return {@link GenerationContext}の実装
-     */
-    protected GenerationContext createGenerationContext(Object model,
-            String templateName, String packageName, String shortClassName) {
-        File dir = new File(javaFileDestDir, packageName.replace('.',
-                File.separatorChar));
-        File file = new File(dir, shortClassName + ".java");
-        return factory.createGenerationContext(this, model, dir, file,
-                templateName, javaFileEncoding, overwrite);
     }
 
     @Override

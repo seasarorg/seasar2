@@ -36,6 +36,7 @@ import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
+import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -295,10 +296,15 @@ public interface Factory {
      *            パッケージ名
      * @param serviceClassNameSuffix
      *            サービスクラス名のサフィックス
+     * @param namesModelFactory
+     *            名前モデルのファクトリ
+     * @param implementsNames
+     *            名前インタフェースを実装する場合{@code true}
      * @return {@link ServiceModelFactory}の実装
      */
     ServiceModelFactory createServiceModelFactory(Command command,
-            String packageName, String serviceClassNameSuffix);
+            String packageName, String serviceClassNameSuffix,
+            NamesModelFactory namesModelFactory, boolean implementsNames);
 
     /**
      * {@link AbstServiceModelFactory}の実装を作成します。
@@ -329,6 +335,20 @@ public interface Factory {
      */
     TestModelFactory createTestModelFactory(Command command, String configPath,
             String jdbcManagerName, String testClassNameSuffix);
+
+    /**
+     * {@link NamesModelFactory}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param packageName
+     *            パッケージ名
+     * @param namesInterfaceNameSuffix
+     *            名前インタフェース名のサフィックス
+     * @return {@link NamesModelFactory}の実装
+     */
+    NamesModelFactory createNamesModelFactory(Command command,
+            String packageName, String namesInterfaceNameSuffix);
 
     /**
      * {@link SchemaInfoTable}の実装を作成します。
@@ -393,8 +413,6 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param model
      *            データモデル
-     * @param dir
-     *            生成するファイルの出力先ディレクトリ
      * @param file
      *            生成するファイル
      * @param templateName
@@ -407,7 +425,6 @@ public interface Factory {
      * @return {@link GenerationContext}の実装
      */
     GenerationContext createGenerationContext(Command command, Object model,
-            File dir, File file, String templateName, String encoding,
-            boolean overwrite);
+            File file, String templateName, String encoding, boolean overwrite);
 
 }

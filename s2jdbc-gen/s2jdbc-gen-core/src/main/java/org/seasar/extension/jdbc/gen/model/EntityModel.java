@@ -26,7 +26,7 @@ import java.util.TreeSet;
  * 
  * @author taedium
  */
-public class EntityModel {
+public class EntityModel implements ClassModel {
 
     /** カタログ名 */
     protected String catalogName;

@@ -20,7 +20,6 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
-import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
@@ -53,8 +52,7 @@ public class GeneratorImplTest {
     @Test
     public void testGenerate() throws Exception {
         GenerationContext context = new GenerationContextImpl(new MyModel(
-                "hoge"), new File("dir"), new File("file"), getClass()
-                .getSimpleName()
+                "hoge"), new File("file"), getClass().getSimpleName()
                 + "_Generate.ftl", "UTF-8", false);
         generator.generate(context);
         assertEquals("hoge", generator.getResult());

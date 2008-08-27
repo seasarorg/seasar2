@@ -1,5 +1,6 @@
 package hoge.service;
 
+import hoge.entity.DddNames;
 import org.seasar.extension.jdbc.gen.internal.generator.Ddd;
 
 /**
@@ -7,5 +8,5 @@ import org.seasar.extension.jdbc.gen.internal.generator.Ddd;
  * 
  * @author S2JDBC-Gen
  */
-public class DddService extends AbstractService<Ddd> {
+public class DddService extends AbstractService<Ddd> implements DddNames {
 }

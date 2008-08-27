@@ -21,10 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionModel;
+import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -38,11 +36,11 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateConditionTest {
+public class GenerateNamesTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
-    private ConditionModelFactoryImpl conditionModelfactory;
+    private NamesModelFactoryImpl namesModelFactory;
 
     private GeneratorImplStub generator;
 
@@ -64,11 +62,7 @@ public class GenerateConditionTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
-        ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
-                "Condition");
-        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf,
-                "hoge.condition", "Condition");
+        namesModelFactory = new NamesModelFactoryImpl("hoge.entity", "Names");
         generator = new GeneratorImplStub();
     }
 
@@ -77,30 +71,14 @@ public class GenerateConditionTest {
      * @throws Exception
      */
     @Test
-    public void testManyToOne() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
-        ConditionModel model = conditionModelfactory
-                .getConditionModel(entityMeta);
+    public void test() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
+        NamesModel model = namesModelFactory.getNamesModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/condition.ftl", "UTF-8", false);
+                "file"), "java/names.ftl", "UTF-8", false);
         generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_ManyToOne.txt";
+        String path = getClass().getName().replace(".", "/") + ".txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testOneToOne() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
-        ConditionModel model = conditionModelfactory
-                .getConditionModel(entityMeta);
-        GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/condition.ftl", "UTF-8", false);
-        generator.generate(context);
-        String path = getClass().getName().replace(".", "/") + "_OneToMany.txt";
-        assertEquals(TextUtil.readUTF8(path), generator.getResult());
-    }
 }

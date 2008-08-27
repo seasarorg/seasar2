@@ -55,11 +55,9 @@ public class GenerateAbstractServiceTest {
     public void test() throws Exception {
         AbstServiceModel model = abstServiceModelFactory.getAbstServiceModel();
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "dir"), new File("file"), "java/abstract-service.ftl", "UTF-8",
-                false);
+                "file"), "java/abstract-service.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + ".txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
-
 }

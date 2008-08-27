@@ -65,7 +65,10 @@ public class ServiceModelFactoryImplTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        serviceModelFactory = new ServiceModelFactoryImpl("aaa.bbb", "Service");
+        NamesModelFactoryImpl namesModelFactory = new NamesModelFactoryImpl(
+                "aaa.ccc", "Names");
+        serviceModelFactory = new ServiceModelFactoryImpl("aaa.bbb", "Service",
+                namesModelFactory, true);
     }
 
     /**
@@ -83,8 +86,10 @@ public class ServiceModelFactoryImplTest {
                 .getShortClassName());
         assertEquals("Aaa", serviceModel.getShortEntityClassName());
         assertEquals(1, serviceModel.getIdPropertyMetaList().size());
-        assertEquals(1, serviceModel.getImportNameSet().size());
+        assertEquals(2, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
+        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$AaaNames", iterator
+                .next());
         assertEquals(Aaa.class.getName(), iterator.next());
     }
 
@@ -102,8 +107,10 @@ public class ServiceModelFactoryImplTest {
         assertEquals("ServiceModelFactoryImplTest$BbbService", serviceModel
                 .getShortClassName());
         assertEquals(2, serviceModel.getIdPropertyMetaList().size());
-        assertEquals(2, serviceModel.getImportNameSet().size());
+        assertEquals(3, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
+        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames", iterator
+                .next());
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
     }

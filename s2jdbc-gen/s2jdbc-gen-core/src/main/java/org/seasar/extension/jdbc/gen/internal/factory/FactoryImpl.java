@@ -46,6 +46,7 @@ import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryI
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
@@ -60,6 +61,7 @@ import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
+import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -186,9 +188,11 @@ public class FactoryImpl implements Factory {
     }
 
     public ServiceModelFactory createServiceModelFactory(Command command,
-            String packageName, String serviceClassNameSuffix) {
+            String packageName, String serviceClassNameSuffix,
+            NamesModelFactory namesModelFactory, boolean implementsNames) {
 
-        return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix);
+        return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix,
+                namesModelFactory, implementsNames);
     }
 
     public AbstServiceModelFactory createAbstServiceModelFactory(
@@ -204,6 +208,12 @@ public class FactoryImpl implements Factory {
 
         return new TestModelFactoryImpl(configPath, jdbcManagerName,
                 testClassNameSuffix);
+    }
+
+    public NamesModelFactory createNamesModelFactory(Command command,
+            String packageName, String namesInterfaceNameSuffix) {
+
+        return new NamesModelFactoryImpl(packageName, namesInterfaceNameSuffix);
     }
 
     public SchemaInfoTable createSchemaInfoTable(Command command,
@@ -229,10 +239,10 @@ public class FactoryImpl implements Factory {
     }
 
     public GenerationContext createGenerationContext(Command command,
-            Object model, File dir, File file, String templateName,
-            String encoding, boolean overwrite) {
+            Object model, File file, String templateName, String encoding,
+            boolean overwrite) {
 
-        return new GenerationContextImpl(model, dir, file, templateName,
-                encoding, overwrite);
+        return new GenerationContextImpl(model, file, templateName, encoding,
+                overwrite);
     }
 }

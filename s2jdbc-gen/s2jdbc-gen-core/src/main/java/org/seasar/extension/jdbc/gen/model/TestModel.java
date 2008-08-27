@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.JdbcManager;
  * 
  * @author taedium
  */
-public class TestModel {
+public class TestModel implements ClassModel {
 
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();

@@ -99,7 +99,12 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
-			overwrite="true"
+			classpathref="classpath"
+		/>
+		<gen-names
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
 			classpathref="classpath"
 		/>
 		<gen-service

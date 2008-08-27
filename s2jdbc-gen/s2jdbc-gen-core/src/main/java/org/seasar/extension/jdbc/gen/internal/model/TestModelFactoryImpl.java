@@ -46,6 +46,9 @@ public class TestModelFactoryImpl implements TestModelFactory {
     /** テストクラス名のサフィックス */
     protected String testClassNameSuffix;
 
+    /** クラスモデルのサポート */
+    protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
     /**
      * インスタンスを構築します。
      * 
@@ -95,14 +98,11 @@ public class TestModelFactoryImpl implements TestModelFactory {
      *            エンティティメタデータ
      */
     protected void doImportName(TestModel testModel, EntityMeta entityMeta) {
-        testModel.addImportName(JdbcManager.class.getName());
-        testModel.addImportName(S2TestCase.class.getName());
+        classModelSupport.addImportName(testModel, JdbcManager.class);
+        classModelSupport.addImportName(testModel, S2TestCase.class);
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            Class<?> propertyClass = propertyMeta.getPropertyClass();
-            String name = ClassUtil.getPackageName(propertyClass);
-            if (name != null && !"java.lang".equals(name)) {
-                testModel.addImportName(propertyClass.getName());
-            }
+            classModelSupport.addImportName(testModel, propertyMeta
+                    .getPropertyClass());
         }
     }
 

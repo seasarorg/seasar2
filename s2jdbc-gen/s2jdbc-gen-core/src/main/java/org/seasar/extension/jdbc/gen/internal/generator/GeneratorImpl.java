@@ -123,7 +123,10 @@ public class GeneratorImpl implements Generator {
         if (!context.isOverwrite() && exists) {
             return;
         }
-        mkdirs(context.getDir());
+        File dir = context.getFile().getParentFile();
+        if (dir != null) {
+            mkdirs(dir);
+        }
         Writer writer = openWriter(context);
         try {
             Template template = getTemplate(context.getTemplateName());

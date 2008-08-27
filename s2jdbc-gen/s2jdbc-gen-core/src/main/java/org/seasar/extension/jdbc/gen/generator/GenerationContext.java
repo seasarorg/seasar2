@@ -39,13 +39,6 @@ public interface GenerationContext {
     Object getModel();
 
     /**
-     * 生成するファイルのディレクトリを返します。
-     * 
-     * @return 生成するファイルのディレクトリ
-     */
-    public File getDir();
-
-    /**
      * 生成するファイルを返します。
      * 
      * @return 生成するファイル
