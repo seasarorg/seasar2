@@ -15,13 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen.internal.argtype;
 
-import java.io.File;
-
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
- * {@link File}を扱う{@link ArgumentType}の実装クラスです。
+ * {@link Class}を扱う{@link ArgumentType}の実装クラスです。
  * 
  * @author taedium
  * @param <T>
