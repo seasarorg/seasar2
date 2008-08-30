@@ -47,8 +47,8 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     /** dropファイル名のリスト */
     protected List<String> dropFileNameList = new ArrayList<String>();
 
-    /** 作成されたディレクトリのリスト */
-    protected List<File> makedDirList = new ArrayList<File>();
+    /** リカバリ対象のディレクトリのリスト */
+    protected List<File> recoveryDirList = new ArrayList<File>();
 
     /**
      * インスタンスを構築しいます。
@@ -82,11 +82,9 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
             File nextVersionDir = ddlVersionDirectory.getNextVersionDir();
             copyDirectory(currentVersionDir, nextVersionDir);
-            makedDirList.add(nextVersionDir);
             File createDir = ddlVersionDirectory.getCreateDir(nextVersionDir);
             File dropDir = ddlVersionDirectory.getDropDir(nextVersionDir);
-            callback.execute(createDir, dropDir, ddlVersionDirectory
-                    .getDdlInfoFile().getNextVersionNo());
+            incrementInternal(callback, createDir, dropDir);
             incrementVersionNo();
         } catch (RuntimeException e) {
             recover();
@@ -100,15 +98,15 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     protected void makeCurrentVersionDirs() {
         File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
         if (currentVersionDir.mkdirs()) {
-            makedDirList.add(currentVersionDir);
+            recoveryDirList.add(currentVersionDir);
         }
         File createDir = ddlVersionDirectory.getCreateDir(currentVersionDir);
         if (createDir.mkdirs()) {
-            makedDirList.add(createDir);
+            recoveryDirList.add(createDir);
         }
         File dropDir = ddlVersionDirectory.getDropDir(currentVersionDir);
         if (dropDir.mkdirs()) {
-            makedDirList.add(dropDir);
+            recoveryDirList.add(dropDir);
         }
     }
 
@@ -121,22 +119,41 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      *            コピー先のディレクトリ
      */
     protected void copyDirectory(File srcDir, File destDir) {
+        recoveryDirList.add(destDir);
         FileUtil.copyDirectory(srcDir, destDir, new CopyFilenameFilter());
+    }
+
+    /**
+     * バージョンのインクリメント処理を実行します。
+     * 
+     * @param callback
+     *            コールバック
+     * @param createDir
+     *            createディレクトリ
+     * @param dropDir
+     *            dropディレクトリ
+     */
+    protected void incrementInternal(Callback callback, File createDir,
+            File dropDir) {
+        recoveryDirList.add(createDir);
+        recoveryDirList.add(dropDir);
+        callback.execute(createDir, dropDir, ddlVersionDirectory
+                .getDdlInfoFile().getNextVersionNo());
     }
 
     /**
      * 作成したディレクトリを削除します。
      */
     protected void recover() {
-        try {
-            Collections.reverse(makedDirList);
-            for (File dir : makedDirList) {
-                if (dir.exists()) {
+        Collections.reverse(recoveryDirList);
+        for (File dir : recoveryDirList) {
+            if (dir.exists()) {
+                try {
                     FileUtil.deleteDirectory(dir);
+                } catch (Exception e) {
+                    logger.log(e);
                 }
             }
-        } catch (Exception e) {
-            logger.log(e);
         }
     }
 
@@ -200,7 +217,6 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             }
             return true;
         }
-
     }
 
 }
