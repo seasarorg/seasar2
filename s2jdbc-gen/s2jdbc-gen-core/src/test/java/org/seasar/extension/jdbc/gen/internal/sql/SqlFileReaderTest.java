@@ -23,8 +23,6 @@ import java.io.StringReader;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.internal.dialect.MssqlGenDialect;
-import org.seasar.extension.jdbc.gen.internal.sql.SqlFileReader;
-import org.seasar.extension.jdbc.gen.internal.sql.SqlFileTokenizer;
 
 import static org.junit.Assert.*;
 
@@ -139,6 +137,32 @@ public class SqlFileReaderTest {
         assertEquals("select 1", reader.readSql());
         assertEquals("select 2", reader.readSql());
         assertNull(reader.readSql());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testReadSql_lineNumber() throws Exception {
+        SqlFileReader reader = new SqlFileReader(new File("dummy"), "UTF-8",
+                tokenizer, dialect) {
+
+            @Override
+            protected BufferedReader createBufferedReader() throws IOException {
+                StringBuilder buf = new StringBuilder();
+                buf.append("/*\n");
+                buf.append(" *\n");
+                buf.append(" */\n");
+                buf.append("select 1\n");
+                buf.append("from \n");
+                buf.append("hoge\n");
+                StringReader reader = new StringReader(buf.toString());
+                return new BufferedReader(reader);
+            }
+        };
+        assertNotNull(reader.readSql());
+        assertEquals(4, reader.getLineNumber());
     }
 
 }

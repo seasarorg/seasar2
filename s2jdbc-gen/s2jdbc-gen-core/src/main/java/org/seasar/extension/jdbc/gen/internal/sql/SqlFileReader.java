@@ -59,7 +59,10 @@ public class SqlFileReader {
     /** ファイルの最後まで達した場合に{@code true} */
     protected boolean endOfFile;
 
-    /** 行番号 */
+    /** 行番号のカウント */
+    protected int lineCount;
+
+    /** 処理対象のSQLの先頭の行番号 */
     protected int lineNumber;
 
     /**
@@ -109,7 +112,7 @@ public class SqlFileReader {
             }
             SqlBuilder builder = new SqlBuilder();
             readLineLoop: for (;;) {
-                lineNumber++;
+                lineCount++;
                 tokenizer.addLine(reader.readLine());
                 builder.notifyLineChanged();
                 nextTokenLoop: for (;;) {
@@ -131,7 +134,7 @@ public class SqlFileReader {
     }
 
     /**
-     * 読み込んだ行番号を返します。
+     * 処理対象のSQLの先頭の行番号を返します。
      * <p>
      * 行番号は1から始まります。
      * </p>
@@ -207,6 +210,9 @@ public class SqlFileReader {
          *            トークン
          */
         protected void build(TokenType tokenType, String token) {
+            if (buf.length() == 0) {
+                lineNumber = lineCount;
+            }
             setTokenRequired(true);
             switch (tokenType) {
             case WORD:
