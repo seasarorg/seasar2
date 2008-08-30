@@ -19,6 +19,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.UserTransaction;
+
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
@@ -33,6 +35,7 @@ import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -75,8 +78,14 @@ public class LoadDataCommand extends AbstractCommand {
     /** データをロードする際のバッチサイズ */
     protected int loadBatchSize = 10;
 
+    /** トランザクション内で実行する場合{@code true}、そうでない場合{@code false} */
+    protected boolean transactional = false;
+
     /** 方言 */
     protected GenDialect dialect;
+
+    /** ユーザトランザクション */
+    protected UserTransaction userTransaction;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
@@ -251,6 +260,25 @@ public class LoadDataCommand extends AbstractCommand {
         this.loadBatchSize = loadBatchSize;
     }
 
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isTransactional() {
+        return transactional;
+    }
+
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param transactional
+     *            トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public void setTransactional(boolean transactional) {
+        this.transactional = transactional;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -261,6 +289,10 @@ public class LoadDataCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
+        if (transactional) {
+            userTransaction = SingletonS2Container
+                    .getComponent(UserTransaction.class);
+        }
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
@@ -327,7 +359,7 @@ public class LoadDataCommand extends AbstractCommand {
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
-                false);
+                userTransaction, false);
     }
 
     /**

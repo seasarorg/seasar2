@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
+import javax.transaction.UserTransaction;
+
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
@@ -31,6 +33,7 @@ import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -106,8 +109,14 @@ public class MigrateCommand extends AbstractCommand {
     /** データをロードする際のバッチサイズ */
     protected int loadBatchSize = 10;
 
+    /** トランザクション内で実行する場合{@code true}、そうでない場合{@code false} */
+    protected boolean transactional = false;
+
     /** 方言 */
     protected GenDialect dialect;
+
+    /** ユーザトランザクション */
+    protected UserTransaction userTransaction;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
@@ -456,6 +465,25 @@ public class MigrateCommand extends AbstractCommand {
         this.loadBatchSize = loadBatchSize;
     }
 
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isTransactional() {
+        return transactional;
+    }
+
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param transactional
+     *            トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public void setTransactional(boolean transactional) {
+        this.transactional = transactional;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -466,6 +494,10 @@ public class MigrateCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
+        if (transactional) {
+            userTransaction = SingletonS2Container
+                    .getComponent(UserTransaction.class);
+        }
         sqlFileExecutor = createSqlFileExecutor();
         schemaInfoTable = createSchemaInfoTable();
         ddlVersionDirectory = createDdlVersionDirectory();
@@ -575,7 +607,7 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
-                haltOnError);
+                userTransaction, haltOnError);
     }
 
     /**

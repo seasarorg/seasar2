@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
 
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -115,13 +116,16 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param dataSource
      *            データソース
+     * @param userTransaction
+     *            ユーザートランザクション、トランザクションを利用しない場合{@code false}
      * @param haltOnError
      *            エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}
      * 
      * @return {@link SqlUnitExecutor}の実装
      */
     SqlUnitExecutor createSqlUnitExecutor(Command command,
-            DataSource dataSource, boolean haltOnError);
+            DataSource dataSource, UserTransaction userTransaction,
+            boolean haltOnError);
 
     /**
      * {@link DbTableMetaReader}の実装を返します。

@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.List;
 
 import javax.sql.DataSource;
+import javax.transaction.UserTransaction;
 
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.gen.command.Command;
@@ -105,9 +106,10 @@ public class FactoryImpl implements Factory {
     }
 
     public SqlUnitExecutor createSqlUnitExecutor(Command command,
-            DataSource dataSource, boolean haltOnError) {
+            DataSource dataSource, UserTransaction userTransaction,
+            boolean haltOnError) {
 
-        return new SqlUnitExecutorImpl(dataSource, false);
+        return new SqlUnitExecutorImpl(dataSource, userTransaction, false);
     }
 
     public DbTableMetaReader createDbTableMetaReader(Command command,

@@ -46,7 +46,7 @@ public class MigraterImplTest {
     @Before
     public void setUp() {
         SqlUnitExecutorImpl sqlUnitExecutor = new SqlUnitExecutorImpl(
-                new MockDataSource(), false);
+                new MockDataSource(), null, false);
         SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
 
             public int getVersionNo() {

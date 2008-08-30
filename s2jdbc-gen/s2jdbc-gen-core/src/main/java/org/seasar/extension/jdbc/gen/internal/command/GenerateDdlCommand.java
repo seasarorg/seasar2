@@ -1092,7 +1092,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
-                false);
+                null, false);
     }
 
     /**

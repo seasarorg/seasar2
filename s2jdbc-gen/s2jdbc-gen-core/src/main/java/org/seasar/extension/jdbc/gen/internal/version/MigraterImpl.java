@@ -98,51 +98,36 @@ public class MigraterImpl implements Migrater {
         int to = ddlVersionDirectory.getDdlInfoFile().getVersionNo(version);
 
         logger.log("IS2JDBCGen0005", new Object[] { from, to });
-        drop(callback, from);
-        create(callback, to);
+        migrateInternal(callback, from, to);
         logger.log("IS2JDBCGen0006", new Object[] { from, to });
     }
 
     /**
-     * drop処理を実行します。
+     * マイグレーション処理を実行します。
      * 
      * @param callback
      *            コールバック
-     * @param versionNo
-     *            バージョン番号
+     * @param from
+     *            マイグレーション元のバージョン番号
+     * @param to
+     *            マイグレーション先のバージョン番号
      */
-    protected void drop(final Callback callback, int versionNo) {
-        File versionDir = ddlVersionDirectory.getVersionDir(versionNo);
-        File dropDir = ddlVersionDirectory.getDropDir(versionDir);
-        final List<File> fileList = getFileList(dropDir);
+    protected void migrateInternal(final Callback callback, int from, int to) {
+        File dropVersionDir = ddlVersionDirectory.getVersionDir(from);
+        File dropDir = ddlVersionDirectory.getDropDir(dropVersionDir);
+        final List<File> dropFileList = getFileList(dropDir);
+
+        File createVersionDir = ddlVersionDirectory.getVersionDir(to);
+        File createDir = ddlVersionDirectory.getCreateDir(createVersionDir);
+        final List<File> createFileList = getFileList(createDir);
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
-                for (File file : fileList) {
+                for (File file : dropFileList) {
                     callback.drop(context, file);
                 }
-            }
-        });
-    }
-
-    /**
-     * create処理を実行します。
-     * 
-     * @param callback
-     *            コールバック
-     * @param versionNo
-     *            バージョン番号
-     */
-    protected void create(final Callback callback, int versionNo) {
-        File versionDir = ddlVersionDirectory.getVersionDir(versionNo);
-        File createDir = ddlVersionDirectory.getCreateDir(versionDir);
-        final List<File> fileList = getFileList(createDir);
-
-        sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
-
-            public void execute(SqlExecutionContext context) {
-                for (File file : fileList) {
+                for (File file : createFileList) {
                     callback.create(context, file);
                 }
             }
