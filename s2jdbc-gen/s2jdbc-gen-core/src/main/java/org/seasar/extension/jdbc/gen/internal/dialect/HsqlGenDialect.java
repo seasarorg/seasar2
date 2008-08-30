@@ -80,6 +80,11 @@ public class HsqlGenDialect extends StandardGenDialect {
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * HSQLDB用の{@link ColumnType}の実装です。
      * 

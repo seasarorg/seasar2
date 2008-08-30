@@ -95,7 +95,7 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
                 dialect, entityMetaFactory);
         SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
         IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
-                colFactory, pkFactory, ukFactory);
+                ukFactory);
         return new TableDescFactoryImpl(dialect, colFactory, pkFactory,
                 ukFactory, fkFactory, seqFactory, idTabFactory);
     }

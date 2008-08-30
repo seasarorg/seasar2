@@ -31,7 +31,6 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.desc.ForeignKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -85,7 +84,8 @@ public class ForeignKeyDescFactoryImplTest {
     public void testSingleForeignKey() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
-                .getForeignKeyDesc(entityMeta.getPropertyMeta("bbb"));
+                .getForeignKeyDesc(entityMeta, entityMeta
+                        .getPropertyMeta("bbb"));
         assertNotNull(foreignKeyDesc);
         assertEquals(1, foreignKeyDesc.getColumnNameList().size());
         assertEquals("BBB_ID", foreignKeyDesc.getColumnNameList().get(0));
@@ -104,7 +104,8 @@ public class ForeignKeyDescFactoryImplTest {
     public void testCompositeForeignKey() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
-                .getForeignKeyDesc(entityMeta.getPropertyMeta("ccc"));
+                .getForeignKeyDesc(entityMeta, entityMeta
+                        .getPropertyMeta("ccc"));
         assertNotNull(foreignKeyDesc);
         assertEquals(2, foreignKeyDesc.getColumnNameList().size());
         assertEquals("CCC_ID1", foreignKeyDesc.getColumnNameList().get(0));
@@ -125,7 +126,7 @@ public class ForeignKeyDescFactoryImplTest {
     public void testNoForeignKey() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
-                .getForeignKeyDesc(entityMeta.getPropertyMeta("id"));
+                .getForeignKeyDesc(entityMeta, entityMeta.getPropertyMeta("id"));
         assertNull(foreignKeyDesc);
     }
 
@@ -137,7 +138,8 @@ public class ForeignKeyDescFactoryImplTest {
     public void testInverseRelationship() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
         ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
-                .getForeignKeyDesc(entityMeta.getPropertyMeta("aaas"));
+                .getForeignKeyDesc(entityMeta, entityMeta
+                        .getPropertyMeta("aaas"));
         assertNull(foreignKeyDesc);
     }
 

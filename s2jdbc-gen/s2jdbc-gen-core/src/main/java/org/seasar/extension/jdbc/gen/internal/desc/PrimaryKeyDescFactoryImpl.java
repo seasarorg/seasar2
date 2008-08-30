@@ -15,9 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.util.List;
-
 import org.seasar.extension.jdbc.ColumnMeta;
+import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDescFactory;
@@ -46,27 +45,28 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
         this.dialect = dialect;
     }
 
-    public PrimaryKeyDesc getPrimaryKeyDesc(
-            List<PropertyMeta> idPropertyMetaList) {
-        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
-        doColumnName(idPropertyMetaList, primaryKeyDesc);
-        if (primaryKeyDesc.getColumnNameList().isEmpty()) {
+    public PrimaryKeyDesc getPrimaryKeyDesc(EntityMeta entityMeta) {
+        if (entityMeta.getIdPropertyMetaList().isEmpty()) {
             return null;
         }
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        doColumnName(entityMeta, primaryKeyDesc);
         return primaryKeyDesc;
     }
 
     /**
      * カラムの名前を処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param idPropertyMetaList
      *            識別子のプロパティメタデータのリスト
      * @param primaryKeyDesc
      *            主キー記述
      */
-    protected void doColumnName(List<PropertyMeta> idPropertyMetaList,
+    protected void doColumnName(EntityMeta entityMeta,
             PrimaryKeyDesc primaryKeyDesc) {
-        for (PropertyMeta propertyMeta : idPropertyMetaList) {
+        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             ColumnMeta columnMeta = propertyMeta.getColumnMeta();
             primaryKeyDesc.addColumnName(columnMeta.getName());
         }

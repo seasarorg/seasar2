@@ -109,17 +109,17 @@ public abstract class AbstractTask extends Task {
      */
     protected void executeCommand() {
         Command command = getCommand();
-        String commadnName = command.getClass().getName();
+        String commandName = command.getClass().getName();
 
         ArgumentsBuilder builder = new ArgumentsBuilder(command);
         List<String> args = builder.build();
 
         Environment.Variable sysproperty = new Environment.Variable();
         sysproperty.setKey(CommandAdapter.COMMAND_KEY);
-        sysproperty.setValue(commadnName);
+        sysproperty.setValue(commandName);
 
-        String resultPropertyName = commadnName + RESULT_PROPERTY_NAME_SUFFIX;
-        String errorPropertyName = commadnName + ERROR_PROPERTY_NAME_SUFFIX;
+        String resultPropertyName = commandName + RESULT_PROPERTY_NAME_SUFFIX;
+        String errorPropertyName = commandName + ERROR_PROPERTY_NAME_SUFFIX;
 
         java.bindToOwner(this);
         java.addSysproperty(sysproperty);

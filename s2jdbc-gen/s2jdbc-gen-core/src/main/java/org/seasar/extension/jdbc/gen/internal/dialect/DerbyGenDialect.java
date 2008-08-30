@@ -82,6 +82,11 @@ public class DerbyGenDialect extends StandardGenDialect {
         return true;
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * Derby用の{@link ColumnType}の実装です。
      * 

@@ -93,6 +93,11 @@ public class SybaseGenDialect extends StandardGenDialect {
         return new SybaseSqlBlockContext();
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * Sybase用の{@link ColumnType}の実装です。
      * 

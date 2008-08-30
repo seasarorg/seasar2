@@ -150,6 +150,11 @@ public class MysqlGenDialect extends StandardGenDialect {
         return true;
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * MySQL用の{@link ColumnType}の実装です。
      * 

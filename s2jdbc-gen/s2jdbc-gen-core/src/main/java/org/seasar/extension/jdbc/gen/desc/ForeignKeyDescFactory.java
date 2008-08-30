@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.desc;
 
+import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
@@ -27,10 +28,13 @@ public interface ForeignKeyDescFactory {
     /**
      * 外部キー記述を返します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @return 存在する場合は外部キー記述、存在しない場合は{@code null}
      */
-    ForeignKeyDesc getForeignKeyDesc(PropertyMeta propertyMeta);
+    ForeignKeyDesc getForeignKeyDesc(EntityMeta entityMeta,
+            PropertyMeta propertyMeta);
 
 }

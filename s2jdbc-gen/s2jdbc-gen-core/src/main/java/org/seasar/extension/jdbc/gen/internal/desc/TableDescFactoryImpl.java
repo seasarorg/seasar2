@@ -212,8 +212,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
             Table table) {
         for (int i = 0; i < entityMeta.getColumnPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getColumnPropertyMeta(i);
-            ColumnDesc columnDesc = columnDescFactory
-                    .getColumnDesc(propertyMeta);
+            ColumnDesc columnDesc = columnDescFactory.getColumnDesc(entityMeta,
+                    propertyMeta);
             if (columnDesc != null) {
                 tableDesc.addColumnDesc(columnDesc);
             }
@@ -233,7 +233,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
     protected void doPrimaryKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
+                .getPrimaryKeyDesc(entityMeta);
         if (primaryKeyDesc != null) {
             tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
         }
@@ -254,7 +254,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
         for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
             ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
-                    .getForeignKeyDesc(propertyMeta);
+                    .getForeignKeyDesc(entityMeta, propertyMeta);
             if (foreignKeyDesc != null) {
                 tableDesc.addForeignKeyDesc(foreignKeyDesc);
             }

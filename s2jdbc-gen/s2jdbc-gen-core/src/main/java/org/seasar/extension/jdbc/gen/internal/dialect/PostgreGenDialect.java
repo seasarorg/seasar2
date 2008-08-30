@@ -135,6 +135,11 @@ public class PostgreGenDialect extends StandardGenDialect {
         return true;
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * PostgreSQL用の{@link ColumnType}の実装です。
      * 

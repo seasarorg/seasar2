@@ -21,7 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 単語を複数形に変換するための辞書となるクラスです。
+ * 単語を複数形に変換するクラスです。
  * 
  * @author taedium
  */

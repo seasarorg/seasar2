@@ -56,26 +56,29 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         this.entityMetaFactory = entityMetaFactory;
     }
 
-    public ForeignKeyDesc getForeignKeyDesc(PropertyMeta propertyMeta) {
+    public ForeignKeyDesc getForeignKeyDesc(EntityMeta entityMeta,
+            PropertyMeta propertyMeta) {
         if (!propertyMeta.isRelationship()
                 || propertyMeta.getMappedBy() != null) {
             return null;
         }
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
-        doColumn(propertyMeta, foreignKeyDesc);
-        doTable(propertyMeta, foreignKeyDesc);
+        doColumn(entityMeta, propertyMeta, foreignKeyDesc);
+        doTable(entityMeta, propertyMeta, foreignKeyDesc);
         return foreignKeyDesc;
     }
 
     /**
      * カラムを処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param foreignKeyDesc
      *            外部キー記述
      */
-    protected void doColumn(PropertyMeta propertyMeta,
+    protected void doColumn(EntityMeta entityMeta, PropertyMeta propertyMeta,
             ForeignKeyDesc foreignKeyDesc) {
         for (JoinColumnMeta jcm : propertyMeta.getJoinColumnMetaList()) {
             foreignKeyDesc.addColumnName(jcm.getName());
@@ -87,12 +90,14 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
     /**
      * テーブルを処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param foreignKeyDesc
      *            外部キー記述
      */
-    protected void doTable(PropertyMeta propertyMeta,
+    protected void doTable(EntityMeta entityMeta, PropertyMeta propertyMeta,
             ForeignKeyDesc foreignKeyDesc) {
         EntityMeta inverseEntityMeta = entityMetaFactory
                 .getEntityMeta(propertyMeta.getRelationshipClass());

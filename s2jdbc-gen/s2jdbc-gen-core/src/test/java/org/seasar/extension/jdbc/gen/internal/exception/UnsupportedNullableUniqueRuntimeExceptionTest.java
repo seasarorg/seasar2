@@ -13,19 +13,28 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.dialect;
+package org.seasar.extension.jdbc.gen.internal.exception;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * MaxDBの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class MaxdbGenDialect extends StandardGenDialect {
+public class UnsupportedNullableUniqueRuntimeExceptionTest {
 
     /**
-     * インスタンスを構築します。
+     * 
+     * @throws Exception
      */
-    public MaxdbGenDialect() {
+    @Test
+    public void test() throws Exception {
+        UnsupportedNullableUniqueRuntimeException e = new UnsupportedNullableUniqueRuntimeException(
+                "aaa", "bbb");
+        assertEquals("aaa", e.getEntityName());
+        assertEquals("bbb", e.getPropertyName());
+        System.out.println(e.getMessage());
     }
-
 }

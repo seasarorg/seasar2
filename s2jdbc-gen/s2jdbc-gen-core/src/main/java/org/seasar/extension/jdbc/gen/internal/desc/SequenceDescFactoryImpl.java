@@ -25,6 +25,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.framework.util.StringUtil;
 
@@ -55,6 +56,11 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
             generationType = dialect.getDefaultGenerationType();
         }
         if (generationType == GenerationType.SEQUENCE) {
+            if (!dialect.supportsSequence()) {
+                throw new UnsupportedGenerationTypeRuntimeException(
+                        GenerationType.SEQUENCE, entityMeta.getName(),
+                        propertyMeta.getName());
+            }
             SequenceGenerator generator = getSequenceGenerator(propertyMeta);
             SequenceDesc sequenceDesc = new SequenceDesc();
             String sequenceName = getSequenceName(entityMeta, propertyMeta,

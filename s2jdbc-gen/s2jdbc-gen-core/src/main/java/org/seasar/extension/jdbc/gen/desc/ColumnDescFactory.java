@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.desc;
 
+import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
@@ -27,10 +28,12 @@ public interface ColumnDescFactory {
     /**
      * カラム記述を返します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @return 存在する場合はカラム記述、存在しない場合は{@code null}
      */
-    ColumnDesc getColumnDesc(PropertyMeta propertyMeta);
+    ColumnDesc getColumnDesc(EntityMeta entityMeta, PropertyMeta propertyMeta);
 
 }

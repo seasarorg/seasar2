@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
-import org.seasar.extension.jdbc.gen.internal.desc.PrimaryKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.HsqlGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -73,7 +72,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
+                .getPrimaryKeyDesc(entityMeta);
         assertNotNull(primaryKeyDesc);
         assertEquals(1, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID", primaryKeyDesc.getColumnNameList().get(0));
@@ -87,7 +86,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testCompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Fff.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
+                .getPrimaryKeyDesc(entityMeta);
         assertNotNull(primaryKeyDesc);
         assertEquals(2, primaryKeyDesc.getColumnNameList().size());
         assertEquals("ID1", primaryKeyDesc.getColumnNameList().get(0));
@@ -102,7 +101,7 @@ public class PrimaryKeyDescFactoryImplTest {
     public void testNoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ggg.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
-                .getPrimaryKeyDesc(entityMeta.getIdPropertyMetaList());
+                .getPrimaryKeyDesc(entityMeta);
         assertNull(primaryKeyDesc);
     }
 

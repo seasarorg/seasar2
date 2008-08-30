@@ -29,14 +29,7 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.desc.ColumnDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.ForeignKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.IdTableDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.PrimaryKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.SequenceDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.TableDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.UniqueKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.internal.dialect.H2GenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -75,7 +68,7 @@ public class TableDescFactoryImplTest {
         entityMetaFactory.setPropertyMetaFactory(pmf);
         entityMetaFactory.setTableMetaFactory(tmf);
 
-        GenDialect dialect = new StandardGenDialect();
+        GenDialect dialect = new H2GenDialect();
         ColumnDescFactoryImpl colFactory = new ColumnDescFactoryImpl(dialect);
         PrimaryKeyDescFactoryImpl pkFactory = new PrimaryKeyDescFactoryImpl(
                 dialect);
@@ -86,7 +79,7 @@ public class TableDescFactoryImplTest {
         SequenceDescFactoryImpl seqFactory = new SequenceDescFactoryImpl(
                 dialect);
         IdTableDescFactoryImpl idTabFactory = new IdTableDescFactoryImpl(
-                dialect, colFactory, pkFactory, ukFactory);
+                dialect, ukFactory);
 
         tableDescFactory = new TableDescFactoryImpl(dialect, colFactory,
                 pkFactory, ukFactory, fkFactory, seqFactory, idTabFactory);

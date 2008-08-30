@@ -21,10 +21,13 @@ import javax.persistence.Column;
 import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.ColumnMeta;
+import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedNullableUniqueRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.StringUtil;
@@ -52,24 +55,27 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         this.dialect = dialect;
     }
 
-    public ColumnDesc getColumnDesc(PropertyMeta propertyMeta) {
+    public ColumnDesc getColumnDesc(EntityMeta entityMeta,
+            PropertyMeta propertyMeta) {
         if (propertyMeta.isTransient() || propertyMeta.isRelationship()) {
             return null;
         }
         Column column = getColumn(propertyMeta);
         ColumnDesc columnDesc = new ColumnDesc();
-        doName(propertyMeta, columnDesc, column);
-        doIdentity(propertyMeta, columnDesc, column);
-        doDefinition(propertyMeta, columnDesc, column);
-        doNullable(propertyMeta, columnDesc, column);
-        doUnique(propertyMeta, columnDesc, column);
-        doSqlType(propertyMeta, columnDesc, column);
+        doName(entityMeta, propertyMeta, columnDesc, column);
+        doIdentity(entityMeta, propertyMeta, columnDesc, column);
+        doDefinition(entityMeta, propertyMeta, columnDesc, column);
+        doNullable(entityMeta, propertyMeta, columnDesc, column);
+        doUnique(entityMeta, propertyMeta, columnDesc, column);
+        doSqlType(entityMeta, propertyMeta, columnDesc, column);
         return columnDesc;
     }
 
     /**
      * 名前を処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param columnDesc
@@ -77,8 +83,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      * @param column
      *            カラム
      */
-    protected void doName(PropertyMeta propertyMeta, ColumnDesc columnDesc,
-            Column column) {
+    protected void doName(EntityMeta entityMeta, PropertyMeta propertyMeta,
+            ColumnDesc columnDesc, Column column) {
         ColumnMeta columnMeta = propertyMeta.getColumnMeta();
         columnDesc.setName(columnMeta.getName());
     }
@@ -86,6 +92,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     /**
      * IDENTITYカラムを処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param columnDesc
@@ -93,13 +101,18 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      * @param column
      *            カラム
      */
-    protected void doIdentity(PropertyMeta propertyMeta, ColumnDesc columnDesc,
-            Column column) {
+    protected void doIdentity(EntityMeta entityMeta, PropertyMeta propertyMeta,
+            ColumnDesc columnDesc, Column column) {
         GenerationType generationType = propertyMeta.getGenerationType();
         if (generationType == GenerationType.AUTO) {
             generationType = dialect.getDefaultGenerationType();
         }
         if (generationType == GenerationType.IDENTITY) {
+            if (!dialect.supportsIdentity()) {
+                throw new UnsupportedGenerationTypeRuntimeException(
+                        GenerationType.IDENTITY, entityMeta.getName(),
+                        propertyMeta.getName());
+            }
             columnDesc.setIdentity(true);
         }
     }
@@ -107,6 +120,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     /**
      * 定義を処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param columnDesc
@@ -114,8 +129,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      * @param column
      *            カラム
      */
-    protected void doDefinition(PropertyMeta propertyMeta,
-            ColumnDesc columnDesc, Column column) {
+    protected void doDefinition(EntityMeta entityMeta,
+            PropertyMeta propertyMeta, ColumnDesc columnDesc, Column column) {
         int sqlType = propertyMeta.getValueType().getSqlType();
         SqlType type = dialect.getSqlType(sqlType);
         String dataType = type.getDataType(column.length(), column.precision(),
@@ -125,6 +140,9 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         if (!StringUtil.isEmpty(column.columnDefinition())) {
             if (StringUtil.startsWithIgnoreCase(column.columnDefinition(),
                     "default ")) {
+                definition = dataType + " " + column.columnDefinition();
+            } else if (StringUtil.startsWithIgnoreCase(column
+                    .columnDefinition(), "check ")) {
                 definition = dataType + " " + column.columnDefinition();
             } else {
                 definition = column.columnDefinition();
@@ -138,6 +156,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     /**
      * NULL可能かどうかを処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param columnDesc
@@ -145,8 +165,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      * @param column
      *            カラム
      */
-    protected void doNullable(PropertyMeta propertyMeta, ColumnDesc columnDesc,
-            Column column) {
+    protected void doNullable(EntityMeta entityMeta, PropertyMeta propertyMeta,
+            ColumnDesc columnDesc, Column column) {
         if (propertyMeta.isId()) {
             columnDesc.setNullable(false);
         } else if (column != AnnotationUtil.getDefaultColumn()) {
@@ -160,6 +180,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     /**
      * 一意性を処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param columnDesc
@@ -167,14 +189,22 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      * @param column
      *            カラム
      */
-    protected void doUnique(PropertyMeta propertyMeta, ColumnDesc columnDesc,
-            Column column) {
+    protected void doUnique(EntityMeta entityMeta, PropertyMeta propertyMeta,
+            ColumnDesc columnDesc, Column column) {
         columnDesc.setUnique(column.unique());
+        if (!dialect.supportsNullableUnique()) {
+            if (columnDesc.isNullable() && columnDesc.isUnique()) {
+                throw new UnsupportedNullableUniqueRuntimeException(entityMeta
+                        .getName(), propertyMeta.getName());
+            }
+        }
     }
 
     /**
      * SQL型を処理します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @param columnDesc
@@ -182,8 +212,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      * @param column
      *            カラム
      */
-    protected void doSqlType(PropertyMeta propertyMeta, ColumnDesc columnDesc,
-            Column column) {
+    protected void doSqlType(EntityMeta entityMeta, PropertyMeta propertyMeta,
+            ColumnDesc columnDesc, Column column) {
         int sqlType = propertyMeta.getValueType().getSqlType();
         columnDesc.setSqlType(dialect.getSqlType(sqlType));
     }

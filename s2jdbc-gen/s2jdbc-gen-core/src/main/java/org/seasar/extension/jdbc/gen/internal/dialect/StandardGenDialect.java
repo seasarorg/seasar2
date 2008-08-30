@@ -196,6 +196,14 @@ public class StandardGenDialect implements GenDialect {
         throw new UnsupportedOperationException("getIdentityInsertOffStatement");
     }
 
+    public boolean supportsNullableUnique() {
+        return true;
+    }
+
+    public boolean supportsIdentity() {
+        return false;
+    }
+
     /**
      * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
      * <p>

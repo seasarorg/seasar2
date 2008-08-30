@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
-import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.internal.dialect.H2GenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -110,7 +110,7 @@ public class ColumnDescFactoryImplTest {
         propertyMetaFactory = new PropertyMetaFactoryImpl();
         propertyMetaFactory.setPersistenceConvention(pc);
         propertyMetaFactory.setColumnMetaFactory(cmf);
-        columnDescFactory = new ColumnDescFactoryImpl(new StandardGenDialect());
+        columnDescFactory = new ColumnDescFactoryImpl(new H2GenDialect());
     }
 
     /**
@@ -122,7 +122,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("trnsient");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNull(columnDesc);
     }
 
@@ -135,7 +136,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("relationship");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNull(columnDesc);
     }
 
@@ -148,7 +150,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("string");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertEquals("STRING", columnDesc.getName());
     }
@@ -162,7 +165,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("string");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertEquals("varchar(255)", columnDesc.getDefinition());
     }
@@ -176,7 +180,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("customLengthString");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertEquals("varchar(10)", columnDesc.getDefinition());
     }
@@ -190,7 +195,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("customDefinitionString");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertEquals("VARCHAR2(10)", columnDesc.getDefinition());
     }
@@ -205,7 +211,8 @@ public class ColumnDescFactoryImplTest {
                 "customDefinitionDefaultString");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertEquals("varchar(255) default 'hoge'", columnDesc.getDefinition());
     }
@@ -219,7 +226,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("nullableReference");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertTrue(columnDesc.isNullable());
     }
@@ -233,7 +241,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("nonNullableReference");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertFalse(columnDesc.isNullable());
     }
@@ -247,7 +256,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("nullablePrimitive");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertTrue(columnDesc.isNullable());
     }
@@ -262,7 +272,8 @@ public class ColumnDescFactoryImplTest {
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
 
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertFalse(columnDesc.isNullable());
     }
@@ -277,7 +288,8 @@ public class ColumnDescFactoryImplTest {
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
 
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertFalse(columnDesc.isNullable());
     }
@@ -291,7 +303,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("string");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertFalse(columnDesc.isUnique());
     }
@@ -305,7 +318,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("unique");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertTrue(columnDesc.isUnique());
     }
@@ -319,7 +333,8 @@ public class ColumnDescFactoryImplTest {
         Field field = getClass().getDeclaredField("identityId");
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, new EntityMeta());
-        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(propertyMeta);
+        ColumnDesc columnDesc = columnDescFactory.getColumnDesc(
+                new EntityMeta(), propertyMeta);
         assertNotNull(columnDesc);
         assertTrue(columnDesc.isIdentity());
     }

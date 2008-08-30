@@ -29,10 +29,6 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.desc.ColumnDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.IdTableDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.PrimaryKeyDescFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.desc.UniqueKeyDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -76,11 +72,8 @@ public class IdTableDescFactoryImplTest {
         propertyMetaFactory.setColumnMetaFactory(cmf);
 
         GenDialect dialect = new StandardGenDialect();
-        ColumnDescFactoryImpl cdf = new ColumnDescFactoryImpl(dialect);
-        PrimaryKeyDescFactoryImpl pkdf = new PrimaryKeyDescFactoryImpl(dialect);
         UniqueKeyDescFactoryImpl ukdf = new UniqueKeyDescFactoryImpl(dialect);
-        idTableDescFactory = new IdTableDescFactoryImpl(dialect, cdf, pkdf,
-                ukdf);
+        idTableDescFactory = new IdTableDescFactoryImpl(dialect, ukdf);
     }
 
     /**

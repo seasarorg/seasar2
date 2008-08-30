@@ -97,7 +97,7 @@ public interface GenDialect {
     String unquote(String value);
 
     /**
-     * シーケンスをサポートする場合{@code true}、しない場合{@code false}を返します。
+     * シーケンスをサポートする場合{@code true}を返します。
      * 
      * @return シーケンスをサポートする場合{@code true}、しない場合{@code false}
      */
@@ -165,14 +165,14 @@ public interface GenDialect {
     SqlBlockContext createSqlBlockContext();
 
     /**
-     * IDENTITYカラムに対するinsertをサポートしている場合{@code true}
+     * IDENTITYカラムに対するinsertをサポートしている場合{@code true}を返します。
      * 
      * @return IDENTITYカラムに対するinsertをサポートしている場合{@code true}
      */
     boolean supportsIdentityInsert();
 
     /**
-     * IDENTITYカラムに対するinsertの有効/無効を制御するステートメントをサポートしている場合{@code true}
+     * IDENTITYカラムに対するinsertの有効/無効を制御するステートメントをサポートしている場合{@code true}を返します。
      * 
      * @return IDENTITYカラムに対するinsertをサポートしている場合{@code true}
      */
@@ -195,6 +195,20 @@ public interface GenDialect {
      * @return IDENTITYカラムに対するinsertを無効化するステートメント
      */
     String getIdentityInsertDisableStatement(String tableName);
+
+    /**
+     * NULLが可能な一意制約をサポートしている場合{@code true}を返します。
+     * 
+     * @return NOT NULL制約のない一意制約をサポートしている場合{@code true}
+     */
+    boolean supportsNullableUnique();
+
+    /**
+     * IDENTITYカラムをサポートしている場合{@code true}を返します。
+     * 
+     * @return IDENTITYカラムをサポートしている場合{@code true}
+     */
+    boolean supportsIdentity();
 
     /**
      * カラム型です。

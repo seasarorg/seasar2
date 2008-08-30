@@ -111,6 +111,11 @@ public class Db2GenDialect extends StandardGenDialect {
         return true;
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * 原因となった、もしくは関連付けられたすべての{@link SQLException}を取得します。
      * 
@@ -139,6 +144,11 @@ public class Db2GenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new Db2SqlBlockContext();
+    }
+
+    @Override
+    public boolean supportsNullableUnique() {
+        return false;
     }
 
     /**

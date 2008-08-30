@@ -86,6 +86,11 @@ public class H2GenDialect extends StandardGenDialect {
         return true;
     }
 
+    @Override
+    public boolean supportsIdentity() {
+        return true;
+    }
+
     /**
      * H2用の{@link ColumType}の実装です。
      * 

@@ -13,19 +13,30 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.dialect;
+package org.seasar.extension.jdbc.gen.internal.exception;
+
+import javax.persistence.GenerationType;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * MaxDBの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class MaxdbGenDialect extends StandardGenDialect {
+public class UnsupportedGenerationTypeRuntimeExceptionTest {
 
     /**
-     * インスタンスを構築します。
+     * 
+     * @throws Exception
      */
-    public MaxdbGenDialect() {
+    @Test
+    public void test() throws Exception {
+        UnsupportedGenerationTypeRuntimeException e = new UnsupportedGenerationTypeRuntimeException(
+                GenerationType.IDENTITY, "aaa", "bbb");
+        assertEquals("aaa", e.getEntityName());
+        assertEquals("bbb", e.getPropertyName());
+        System.out.println(e.getMessage());
     }
-
 }
