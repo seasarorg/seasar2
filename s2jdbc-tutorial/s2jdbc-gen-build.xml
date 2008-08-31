@@ -1,0 +1,35 @@
+<project name="s2jdbc-tutorial-s2jdbc-gen" default="gen-entity" basedir=".">
+
+	<path id="classpath">
+		<pathelement location="build/classes"/>
+		<fileset dir="lib">
+			<exclude name="**/*-sources.jar"/>
+		</fileset>
+	</path>
+
+	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+
+	<target name="gen-entity">
+		<gen-entity
+			rootpackagename="examples"
+			classpathref="classpath"
+		/>
+	</target>
+
+	<target name="gen-ddl">
+		<gen-ddl
+			classpathdir="build/classes"
+			rootpackagename="examples"
+			classpathref="classpath"
+		/>
+	</target>
+
+	<target name="migrate">
+		<migrate
+			classpathdir="build/classes"
+			rootpackagename="examples"
+			classpathref="classpath"
+		/>
+	</target>
+
+</project>

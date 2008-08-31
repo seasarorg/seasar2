@@ -3,15 +3,20 @@
 		<copy todir="lib" file="../seasar2/s2-framework/target/s2-framework-${ver}.jar"/>
 		<copy todir="lib" file="../seasar2/s2-extension/target/s2-extension-${ver}.jar"/>
 		<copy todir="lib" file="../s2-tiger/target/s2-tiger-${ver}.jar"/>
+		<copy todir="lib" file="../s2jdbc-gen-core/target/s2jdbc-gen-core-${ver}.jar"/>
 		<copy todir="lib/sources" file="../seasar2/s2-framework/target/s2-framework-${ver}-sources.jar"/>
 		<copy todir="lib/sources" file="../seasar2/s2-extension/target/s2-extension-${ver}-sources.jar"/>
 	    <copy todir="lib/sources" file="../s2-tiger/target/s2-tiger-${ver}-sources.jar"/>		
+	    <copy todir="lib/sources" file="../s2jdbc-gen-core/target/s2jdbc-gen-core-${ver}-sources.jar"/>		
 	</target>
 
 	<target name="dist" depends="copy">
 		<mkdir dir="${zipDir}"/>
 		<zip zipfile="${zipDir}/S2JDBC-Tutorial-${ver}.zip">
 			<zipfileset prefix="s2jdbc-tutorial" dir=".">
+				<exclude name="src/main/java/examples/entity/Address.java"/>
+				<exclude name="src/main/java/examples/entity/Department.java"/>
+				<exclude name="src/main/java/examples/entity/Employee.java"/>
 				<exclude name="**/build/**"/>
 				<exclude name="**/target/**"/>
 				<exclude name="**/site/**"/>
