@@ -53,8 +53,9 @@ public class TimeType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.TIME);
+        } else {
+            ps.setTime(index, TimeConversionUtil.toTime(value, "hh:mm:ss"));
         }
-        ps.setTime(index, TimeConversionUtil.toTime(value, "hh:mm:ss"));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

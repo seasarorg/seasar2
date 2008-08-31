@@ -53,8 +53,9 @@ public class TimestampType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.TIMESTAMP);
+        } else {
+            ps.setTimestamp(index, toTimestamp(value));
         }
-        ps.setTimestamp(index, toTimestamp(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

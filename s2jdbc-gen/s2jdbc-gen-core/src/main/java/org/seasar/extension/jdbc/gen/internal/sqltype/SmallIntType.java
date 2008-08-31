@@ -52,8 +52,9 @@ public class SmallIntType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.SMALLINT);
+        } else {
+            ps.setShort(index, ShortConversionUtil.toPrimitiveShort(value));
         }
-        ps.setShort(index, ShortConversionUtil.toPrimitiveShort(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

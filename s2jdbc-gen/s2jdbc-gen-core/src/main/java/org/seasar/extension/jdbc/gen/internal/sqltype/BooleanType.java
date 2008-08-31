@@ -51,8 +51,10 @@ public class BooleanType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.BOOLEAN);
+        } else {
+            ps.setBoolean(index, BooleanConversionUtil
+                    .toPrimitiveBoolean(value));
         }
-        ps.setBoolean(index, BooleanConversionUtil.toPrimitiveBoolean(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

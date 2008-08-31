@@ -36,7 +36,6 @@ public class ClobType extends AbstractSqlType {
      * インスタンスを構築します。
      */
     public ClobType() {
-
         this("clob");
     }
 
@@ -54,8 +53,10 @@ public class ClobType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.CLOB);
+        } else {
+            ps.setCharacterStream(index, new StringReader(value), value
+                    .length());
         }
-        ps.setCharacterStream(index, new StringReader(value), value.length());
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

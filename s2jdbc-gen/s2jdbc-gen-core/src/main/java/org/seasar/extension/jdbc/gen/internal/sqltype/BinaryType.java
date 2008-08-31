@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.Base64Util;
 
 /**
- * {@link Types#BIGINT}に対応する{@link SqlType}です。
+ * {@link Types#BINARY}に対応する{@link SqlType}です。
  * 
  * @author taedium
  */
@@ -50,9 +50,10 @@ public class BinaryType extends AbstractSqlType {
     public void bindValue(PreparedStatement ps, int index, String value)
             throws SQLException {
         if (value == null) {
-            ps.setNull(index, Types.BIGINT);
+            ps.setNull(index, Types.BINARY);
+        } else {
+            ps.setBytes(index, Base64Util.decode(value));
         }
-        ps.setBytes(index, Base64Util.decode(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

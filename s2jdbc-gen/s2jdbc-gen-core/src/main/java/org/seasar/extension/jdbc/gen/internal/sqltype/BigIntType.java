@@ -54,8 +54,10 @@ public class BigIntType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.BIGINT);
+        } else {
+            ps.setBigDecimal(index, BigDecimalConversionUtil
+                    .toBigDecimal(value));
         }
-        ps.setBigDecimal(index, BigDecimalConversionUtil.toBigDecimal(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

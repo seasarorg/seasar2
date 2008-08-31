@@ -52,8 +52,9 @@ public class DoubleType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.DOUBLE);
+        } else {
+            ps.setDouble(index, DoubleConversionUtil.toPrimitiveDouble(value));
         }
-        ps.setDouble(index, DoubleConversionUtil.toPrimitiveDouble(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

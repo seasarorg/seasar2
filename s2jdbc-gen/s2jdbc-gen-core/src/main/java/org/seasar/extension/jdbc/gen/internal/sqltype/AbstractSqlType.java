@@ -19,8 +19,9 @@ import org.seasar.extension.jdbc.gen.internal.util.ColumnDataTypeUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
- * @author taedium
+ * {@link SqlType}の抽象クラスです。
  * 
+ * @author taedium
  */
 public abstract class AbstractSqlType implements SqlType {
 

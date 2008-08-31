@@ -50,8 +50,9 @@ public class CharType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.CHAR);
+        } else {
+            ps.setString(index, value);
         }
-        ps.setString(index, value);
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

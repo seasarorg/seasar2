@@ -52,8 +52,9 @@ public class IntegerType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.INTEGER);
+        } else {
+            ps.setInt(index, IntegerConversionUtil.toPrimitiveInt(value));
         }
-        ps.setInt(index, IntegerConversionUtil.toPrimitiveInt(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

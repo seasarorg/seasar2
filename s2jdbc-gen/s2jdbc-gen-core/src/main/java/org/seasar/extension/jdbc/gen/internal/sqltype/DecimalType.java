@@ -53,8 +53,10 @@ public class DecimalType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.DECIMAL);
+        } else {
+            ps.setBigDecimal(index, BigDecimalConversionUtil
+                    .toBigDecimal(value));
         }
-        ps.setBigDecimal(index, BigDecimalConversionUtil.toBigDecimal(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

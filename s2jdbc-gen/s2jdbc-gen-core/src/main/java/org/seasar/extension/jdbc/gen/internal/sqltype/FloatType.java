@@ -52,8 +52,9 @@ public class FloatType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.FLOAT);
+        } else {
+            ps.setFloat(index, FloatConversionUtil.toPrimitiveFloat(value));
         }
-        ps.setFloat(index, FloatConversionUtil.toPrimitiveFloat(value));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

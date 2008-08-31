@@ -56,11 +56,11 @@ public class BlobType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.BLOB);
+        } else {
+            byte[] bytes = Base64Util.decode(value);
+            ps.setBinaryStream(index, new ByteArrayInputStream(bytes),
+                    bytes.length);
         }
-        byte[] bytes = Base64Util.decode(value);
-        ps
-                .setBinaryStream(index, new ByteArrayInputStream(bytes),
-                        bytes.length);
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

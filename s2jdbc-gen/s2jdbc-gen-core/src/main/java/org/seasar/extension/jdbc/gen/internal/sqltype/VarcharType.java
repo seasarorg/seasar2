@@ -50,8 +50,9 @@ public class VarcharType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.VARCHAR);
+        } else {
+            ps.setString(index, value);
         }
-        ps.setString(index, value);
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {

@@ -53,8 +53,11 @@ public class DateType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.DATE);
+        } else {
+            ps
+                    .setDate(index, SqlDateConversionUtil.toDate(value,
+                            "yyyy-MM-dd"));
         }
-        ps.setDate(index, SqlDateConversionUtil.toDate(value, "yyyy-MM-dd"));
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
