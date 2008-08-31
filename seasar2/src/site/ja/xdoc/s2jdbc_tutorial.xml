@@ -13,6 +13,11 @@
 				</li>
 				<li>
 					<p>
+						<a href="#エンティティクラスの自動生成">エンティティクラスの自動生成</a>
+					</p>
+				</li>
+				<li>
+					<p>
 						<a href="#エンティティ">エンティティ</a>
 					</p>
 				</li>
@@ -106,10 +111,59 @@
 				S2JDBC-Tutorial-xxx.zipを解凍し、その中にあるs2jdbc-tutorialを
 				Eclipseにインポートしてください。これだけでセットアップは完了です。
 			</p>
-			このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、 起動など特に必要ありません。
-			データの追加や変更をしたい場合は、src/test/resources/data/test.script
-			を適当に変更してください。
-			<p></p>
+			<p>
+				存在しないエンティティクラスに対するテストコードが含まれているためビルドエラーが発生しますが、この時点では気にしないでください。
+				次のセクションでエンティティクラスを自動生成する方法を説明します。
+			</p>
+			<p>
+				このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、 起動など特に必要ありません。
+				データの追加や変更をしたい場合は、src/test/resources/data/test.script
+				を適当に変更してください。
+			</p>
+		</section>
+
+		<section name="エンティティクラスの自動生成">
+			<p>
+				S2JDBC-GenというAntベースのツールを使うと、データベースからエンティティクラスのJavaコードを自動生成できます。
+				S2JDBC-Genはこのチュートリアルに含まれています。
+				エンティティクラスを生成するにはs2jdbc-gen-build.xmlに定義されたgen-entityという名前のターゲットを実行します。
+			</p>
+			<p>
+				Antをコマンドラインから実行する場合は、s2jdbc-gen-build.xmlが存在する階層に移動し、次のコマンドを実行してください。
+				（Antは事前にインストールしておく必要があります。）
+			<source><![CDATA[
+ant -f s2jdbc-gen-build.xml
+]]></source>
+			</p>
+			<p>
+				AntをEclipse上で起動する場合は、s2jdbc-gen-build.xmlをAntエディタで開き、実行してください。<br />
+				ただし、Windows上でEclipse 3.4を利用している場合は、Console EncodingにMS932を指定して実行する必要があります。
+				MS932を指定しない場合、ログがコンソールに正しく出力されません。
+				Console Encodingを指定して実行する手順は次のようになります。
+				<ol>
+					<li>s2jdbc-gen-build.xmlをAntエディタで開きます。</li>
+					<li>メニューから「Run」-「Extenal Tools」-「Extenal Tools Configurations...」を選択します。Extenal Tools Configurationsダイアログが開きます。</li>
+					<li>左側のメニューにある「Ant Build」という項目をダブルクリックし、s2jdbc-gen-build.xmlに対する設定を新規作成します。</li>
+					<li>ダイアログの「Common」タブの「Console Encoding」にMS932を指定します。MS932がコンボボックスに表示されていない場合は一旦ワークスペースやプロジェクトのエンコーディングをMS932に変更すると登場するようになります。</li>
+					<li>ダイアログの「Run」ボタンを押しAntを実行します。</li>
+				</ol>
+			</p>
+			<p>
+				Antを実行すると次の3つのクラスがexamples.entityパッケージの下に作成されます。
+				<ul>
+					<li>Address</li>
+					<li>Employee</li>
+					<li>Department</li>
+				</ul>
+				出力されるEmployeeクラスのjobTypeプロパティはInteger型ですが、このチュートリアルでは列挙型にマッピングさせて扱います。
+				Integer型を次のようにJobType型に修正してください。
+				<source><![CDATA[
+public JobType jobType;
+]]></source>
+			</p>
+			<p>
+				ここまでの操作でビルドが成功する状態になります。
+			</p>
 		</section>
 
 		<section name="エンティティ">
@@ -124,39 +178,59 @@
 			<source><![CDATA[
 package examples.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
+/**
+ * Employeeエンティティクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
 @Entity
 public class Employee {
 
+    /** idプロパティ */
     @Id
     @GeneratedValue
+    @Column(columnDefinition = "integer")
     public Integer id;
 
+    /** nameプロパティ */
+    @Column(columnDefinition = "varchar(255)", nullable = false, unique = false)
     public String name;
 
+    /** jobTypeプロパティ */
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
     public JobType jobType;
 
+    /** salaryプロパティ */
+    @Column(columnDefinition = "integer", nullable = true, unique = false)
     public Integer salary;
 
+    /** departmentIdプロパティ */
+    @Column(columnDefinition = "integer", nullable = true, unique = false)
     public Integer departmentId;
 
-    @ManyToOne
-    public Department department;
-
+    /** addressIdプロパティ */
+    @Column(columnDefinition = "integer", nullable = true, unique = false)
     public Integer addressId;
 
+    /** versionプロパティ */
+    @Version
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    public Integer version;
+
+    /** address関連プロパティ */
     @OneToOne
     public Address address;
 
-    @Version
-    public Integer version;
+    /** department関連プロパティ */
+    @ManyToOne
+    public Department department;
 }
 ]]></source>
 			<p>
@@ -176,12 +250,18 @@ public class Employee {
 				を参照してください。
 			</p>
 			<p>
-				カラム名とプロパティ名が同じなら、カラム用のアノテーションは特に必要ありません。
+				カラム名とプロパティ名が同じなら、カラム用のアノテーションである@Columnにカラム名を指定する必要ありません。
 				また、AAA_BBBのようなカラム名用の'_'記法を、
 				aaaBbbのようなプロパティ名用のキャメル記法へ変換することも Seasar2によって自動的に行われるので、
-				アノテーションを指定する必要はありません。 詳しくは、
+				カラム名を@Columnに指定する必要はありません。 詳しくは、
 				<a href="s2jdbc_entity.html#カラム定義">カラム定義</a>
 				を参照してください。
+			</p>
+			<p>
+				@ColumnのcolumnDefinition、nullable、uniqueといった情報は、
+				エンティティクラスからDDL(Data Difinition Language)を生成する際に使用されます。
+				s2jdbc-gen-build.xmlに定義されたgen-ddlという名前のターゲットを実行することで
+				実際にDDLを生成することができます。
 			</p>
 			<p>
 				JobTypeは次のような列挙型です。 実際のソースではもう少し複雑ですが、
