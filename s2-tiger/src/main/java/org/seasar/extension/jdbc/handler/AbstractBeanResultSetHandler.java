@@ -34,7 +34,6 @@ import org.seasar.extension.jdbc.impl.PropertyTypeImpl;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -119,9 +118,9 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
     }
 
     /**
-     * {@link Column}アノテーションのついた {@link PropertyDesc}の {@link Map}を作成します。
+     * {@link Column}アノテーションのname属性をもつ {@link PropertyDesc}の {@link Map}を作成します。
      * 
-     * @return {@link Column}アノテーションのついた {@link PropertyDesc}の {@link Map}
+     * @return {@link Column}アノテーションのname属性をもつ {@link PropertyDesc}の {@link Map}
      */
     protected CaseInsensitiveMap createPropertyDescMapWithColumn() {
         CaseInsensitiveMap map = new CaseInsensitiveMap();
@@ -136,7 +135,7 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
             if (column != null) {
                 String name = column.name();
                 if (StringUtil.isEmpty(name)) {
-                    throw new EmptyRuntimeException("name");
+                    continue;
                 }
                 map.put(name, pd);
             }

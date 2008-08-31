@@ -34,7 +34,6 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
-import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
@@ -79,12 +78,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      */
     public void testCreatePropertyDescMapWithColumn_emptyName() {
         MyHandler handler = new MyHandler(Aaa4Dto.class, new StandardDialect());
-        try {
-            handler.createPropertyDescMapWithColumn();
-            fail();
-        } catch (EmptyRuntimeException e) {
-            System.out.println(e);
-        }
+        CaseInsensitiveMap map = handler.createPropertyDescMapWithColumn();
+        assertEquals(0, map.size());
     }
 
     /**
