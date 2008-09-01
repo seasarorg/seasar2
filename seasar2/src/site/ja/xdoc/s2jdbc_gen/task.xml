@@ -85,10 +85,10 @@
 			</p>
 			<table border="1" cellpadding="2" cellspacing="0">
 				<tr><th>タスク名</th><th>説明</th></tr>
-				<tr><td><a href="#GenerateTestTask">GenerateTestTask</a></td><td>エンティティクラスからテストクラスを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
-				<tr><td><a href="#GenerateConditionTask">GenerateConditionTask</a></td><td>エンティティクラスから条件クラスを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
-				<tr><td><a href="#GenerateNamesTask">GenerateNamesTask</a></td><td>エンティティクラスから名前インタフェースを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
-				<tr><td><a href="#GenerateServiceTask">GenerateServiceTask</a></td><td>エンティティクラスからサービスクラスを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
+				<tr><td><a href="#GenerateTestTask">GenerateTestTask</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
+				<tr><td><a href="#GenerateConditionTask">GenerateConditionTask</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
+				<tr><td><a href="#GenerateNamesTask">GenerateNamesTask</a></td><td>エンティティクラスから名前インタフェースのJavaコードを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
+				<tr><td><a href="#GenerateServiceTask">GenerateServiceTask</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
 			</table>
 			<p>
 				ユーティリティタスク
@@ -130,7 +130,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -173,7 +173,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -206,7 +206,6 @@
 			<subsection name="パラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
-					<tr><td>sqlFileList</td><td>SQLファイルのリストです。</td><td>-</td><td>YES</td></tr>
 					<tr><td>sqlFileEncoding</td><td>SQLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
 					<tr><td>blockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
@@ -220,12 +219,15 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					sqlFileList
 				</h4>
 				<p>
 					SQLファイルを指定するためには、&lt;sqlFileList&gt;要素を使用します。
+					この要素はひとつ以上の指定が必須です。
+				</p>
+				<p>
 					&lt;sqlFileList&gt;はAntの&lt;filelist&gt;と同じデータ型です。
 					使用可能な属性やネストした要素についてはAntのドキュメントを参照してください。
 				</p>
@@ -286,7 +288,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -365,7 +367,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -404,6 +406,12 @@
 					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないテーブル名の正規表現です。</td><td>"(SCHEMA_INFO|.*\$.*)"</td><td>NO</td></tr>
 					<tr><td>versionColumnName</td><td>エンティティのプロパティに@Versionを付与するカラム名です。大文字小文字の違いは考慮されません。</td><td>"version"</td><td>NO</td></tr>
 					<tr><td>pluralFormFile</td><td>@OneToManyの関連プロパティ名を複数形で作成する際に使用される辞書ファイルです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>showCatalogName</td><td>"true"の場合、@Tableのcatalog属性にカタログ名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showSchemaName</td><td>"true"の場合、@Tableのschema属性にスキーマ名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showTableName</td><td>"true"の場合、@Tableのname属性にテーブル名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showColumnName</td><td>"true"の場合、@Columnのname属性にカラム名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showColumnDefinition</td><td>"true"の場合、@ColumnのcolumnDefinition属性にカラム定義を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showJoinColumn</td><td>"true"の場合、@JoinColumnを明記します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>entityTemplateFileName</td><td>エンティティクラスのテンプレートファイル名です。</td><td>"java/entity.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
@@ -420,7 +428,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -472,7 +480,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -528,7 +536,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -579,7 +587,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -627,7 +635,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
@@ -686,7 +694,7 @@
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
 			</subsection>
-			<subsection name="ネストした要素として指定されるパラメタ">
+			<subsection name="ネストした要素として指定されるパラメータ">
 				<h4>
 					jvmArg
 				</h4>
