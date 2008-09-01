@@ -481,8 +481,8 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             if (targetClass == null) {
                 return value;
             }
-            for (Class<?> clazz = targetClass; clazz != Object.class; clazz = clazz
-                    .getSuperclass()) {
+            for (Class<?> clazz = targetClass; clazz != Object.class
+                    && clazz != null; clazz = clazz.getSuperclass()) {
                 converter = findConverter(clazz);
                 if (converter != null) {
                     break;

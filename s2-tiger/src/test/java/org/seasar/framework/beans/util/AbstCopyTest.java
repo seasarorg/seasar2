@@ -163,11 +163,13 @@ public class AbstCopyTest extends TestCase {
         src.aaa = "aaa";
         src.bbb = "bbb";
         src.ccc = "ccc";
+        src.eee = "1";
         DestBean dest = new DestBean();
         new MyCopy().copyBeanToBean(src, dest);
         assertNull(dest.bbb);
         assertEquals("ccc", dest.ccc);
         assertNull(dest.ddd);
+        assertEquals(1, dest.eee);
     }
 
     /**
@@ -791,6 +793,11 @@ public class AbstCopyTest extends TestCase {
         /**
          * 
          */
+        public String eee;
+
+        /**
+         * 
+         */
         public String search_eee$fff;
 
         /**
@@ -833,6 +840,11 @@ public class AbstCopyTest extends TestCase {
         private String ccc;
 
         private String ddd;
+
+        /**
+         * 
+         */
+        public int eee;
 
         /**
          * 
