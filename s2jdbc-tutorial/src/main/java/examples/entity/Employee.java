@@ -1,6 +1,20 @@
+/*
+ * Copyright 2004-2008 the Seasar Foundation and the Others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package examples.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,49 +23,60 @@ import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
 /**
- * Employeeエンティティクラスです。
+ * 従業員です。
  * 
- * @author S2JDBC-Gen
+ * @author higa
+ * 
  */
 @Entity
 public class Employee {
 
-    /** idプロパティ */
+    /**
+     * 識別子です。
+     */
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "integer")
     public Integer id;
 
-    /** nameプロパティ */
-    @Column(columnDefinition = "varchar(255)", nullable = false, unique = false)
+    /**
+     * 名前です。
+     */
     public String name;
 
-    /** jobTypeプロパティ */
-    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    /**
+     * 仕事のタイプです。
+     */
     public JobType jobType;
 
-    /** salaryプロパティ */
-    @Column(columnDefinition = "integer", nullable = true, unique = false)
+    /**
+     * 給与です。
+     */
     public Integer salary;
 
-    /** departmentIdプロパティ */
-    @Column(columnDefinition = "integer", nullable = true, unique = false)
+    /**
+     * 部署の識別子です。
+     */
     public Integer departmentId;
 
-    /** addressIdプロパティ */
-    @Column(columnDefinition = "integer", nullable = true, unique = true)
-    public Integer addressId;
-
-    /** versionプロパティ */
-    @Version
-    @Column(columnDefinition = "integer", nullable = false, unique = false)
-    public Integer version;
-
-    /** address関連プロパティ */
-    @OneToOne
-    public Address address;
-
-    /** department関連プロパティ */
+    /**
+     * 部署です。
+     */
     @ManyToOne
     public Department department;
+
+    /**
+     * 住所の識別子です。
+     */
+    public Integer addressId;
+
+    /**
+     * 住所です。
+     */
+    @OneToOne
+    public Address address;
+    /**
+     * バージョンです。
+     */
+    @Version
+    public Integer version;
 }
