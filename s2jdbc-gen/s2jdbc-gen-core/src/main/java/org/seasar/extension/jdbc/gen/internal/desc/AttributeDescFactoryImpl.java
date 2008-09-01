@@ -156,10 +156,9 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
             attributeDesc.setLob(columnType.isLob());
             attributeDesc.setTemporalType(columnType.getTemporalType());
         } else {
+            attributeDesc.setUnsupportedColumnType(true);
             attributeDesc.setAttributeClass(String.class);
-            attributeDesc.setColumnDefinition(null);
             attributeDesc.setLob(false);
-            attributeDesc.setTemporalType(null);
         }
     }
 

@@ -58,10 +58,11 @@ public class GenerateEntityTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new EntityModelFactoryImpl("hoge.entity", true,
-                new AttributeModelFactoryImpl(),
-                new AssociationModelFactoryImpl(),
-                new CompositeUniqueConstraintModelFactoryImpl());
+        factory = new EntityModelFactoryImpl("hoge.entity",
+                new AttributeModelFactoryImpl(false, true),
+                new AssociationModelFactoryImpl(false),
+                new CompositeUniqueConstraintModelFactoryImpl(), true, true,
+                false);
         generator = new GeneratorImplStub();
     }
 
@@ -217,13 +218,13 @@ public class GenerateEntityTest {
      * @throws Exception
      */
     @Test
-    public void testNullColumnDefinition() throws Exception {
+    public void testUnsupportedColumnType() throws Exception {
         AttributeDesc name = new AttributeDesc();
         name.setName("name");
         name.setAttributeClass(String.class);
         name.setColumnName("NAME");
         name.setColumnTypeName("hoge");
-        name.setColumnDefinition(null);
+        name.setUnsupportedColumnType(true);
         name.setNullable(false);
 
         EntityDesc entityDesc = new EntityDesc();
@@ -239,7 +240,7 @@ public class GenerateEntityTest {
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
-                + "_NullColumnDefinition.txt";
+                + "_UnsupportedColumnType.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 

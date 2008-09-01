@@ -25,7 +25,7 @@ public class Foo {
     /** idプロパティ */
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "integer")
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
     public int id;
 
     /** nameプロパティ */

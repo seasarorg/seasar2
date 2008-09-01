@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
+import javax.persistence.JoinColumn;
+
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
@@ -67,6 +69,24 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
+
+    /** カタログ名を表示する場合{@code true} */
+    protected boolean showCatalogName = false;
+
+    /** スキーマ名を表示する場合{@code true} */
+    protected boolean showSchemaName = false;
+
+    /** テーブル名を表示する場合{@code true} */
+    protected boolean showTableName = false;
+
+    /** カラム名を表示する場合{@code true} */
+    protected boolean showColumnName = false;
+
+    /** カラム定義を表示する場合{@code true} */
+    protected boolean showColumnDefinition = false;
+
+    /** {@link JoinColumn}を表示する場合{@code true} */
+    protected boolean showJoinColumn = false;
 
     /** エンティティクラスのテンプレート名 */
     protected String entityTemplateFileName = "java/entity.ftl";
@@ -360,6 +380,120 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.pluralFormFile = pluralFormFile;
     }
 
+    /**
+     * カタログ名を表示する場合{@code true}を返します。
+     * 
+     * @return カタログ名を表示する場合{@code true}
+     */
+    public boolean isShowCatalogName() {
+        return showCatalogName;
+    }
+
+    /**
+     * カタログ名を表示する場合{@code true}を設定します。
+     * 
+     * @param showCatalogName
+     *            カタログ名を表示する場合{@code true}
+     */
+    public void setShowCatalogName(boolean showCatalogName) {
+        this.showCatalogName = showCatalogName;
+    }
+
+    /**
+     * スキーマ名を表示する場合{@code true}を返します。
+     * 
+     * @return スキーマ名を表示する場合{@code true}
+     */
+    public boolean isShowSchemaName() {
+        return showSchemaName;
+    }
+
+    /**
+     * スキーマ名を表示する場合{@code true}を設定します。
+     * 
+     * @param showSchemaName
+     *            スキーマ名を表示する場合{@code true}
+     */
+    public void setShowSchemaName(boolean showSchemaName) {
+        this.showSchemaName = showSchemaName;
+    }
+
+    /**
+     * テーブル名を表示する場合{@code true}を返します。
+     * 
+     * @return テーブル名を表示する場合{@code true}
+     */
+    public boolean isShowTableName() {
+        return showTableName;
+    }
+
+    /**
+     * テーブル名を表示する場合{@code true}を設定します。
+     * 
+     * @param showTableName
+     *            テーブル名を表示する場合{@code true}
+     */
+    public void setShowTableName(boolean showTableName) {
+        this.showTableName = showTableName;
+    }
+
+    /**
+     * カラム名を表示する場合{@code true}を返します。
+     * 
+     * @return カラム名を表示する場合{@code true}
+     */
+    public boolean isShowColumnName() {
+        return showColumnName;
+    }
+
+    /**
+     * カラム名を表示する場合{@code true}を設定します。
+     * 
+     * @param showColumnName
+     *            カラム名を表示する場合{@code true}
+     */
+    public void setShowColumnName(boolean showColumnName) {
+        this.showColumnName = showColumnName;
+    }
+
+    /**
+     * カラム定義を表示する場合{@code true}を返します。
+     * 
+     * @return カラム定義を表示する場合{@code true}
+     */
+    public boolean isShowColumnDefinition() {
+        return showColumnDefinition;
+    }
+
+    /**
+     * カラム定義を表示する場合{@code true}を設定します。
+     * 
+     * @param showColumnDefinition
+     *            カラム定義を表示する場合{@code true}を設定します。
+     */
+    public void setShowColumnDefinition(boolean showColumnDefinition) {
+        this.showColumnDefinition = showColumnDefinition;
+    }
+
+    /**
+     * {@link JoinColumn}を表示する場合{@code true}を返します。
+     * 
+     * @return {@link JoinColumn}を表示する場合{@code true}
+     */
+    public boolean isShowJoinColumn() {
+        return showJoinColumn;
+    }
+
+    /**
+     * {@link JoinColumn}を表示する場合{@code true}を設定します。
+     * 
+     * @param showJoinColumn
+     *            {@link JoinColumn}を表示する場合{@code true}
+     */
+    public void setShowJoinColumn(boolean showJoinColumn) {
+        this.showJoinColumn = showJoinColumn;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -432,7 +566,9 @@ public class GenerateEntityCommand extends AbstractCommand {
      */
     protected EntityModelFactory createEntityModelFactory() {
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
-                rootPackageName, entityPackageName), schemaName != null);
+                rootPackageName, entityPackageName), showCatalogName,
+                showSchemaName, showTableName, showColumnName,
+                showColumnDefinition, showJoinColumn);
     }
 
     /**

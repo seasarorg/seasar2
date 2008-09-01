@@ -55,9 +55,6 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** パッケージ名 */
     protected String packageName;
 
-    /** テーブル名をカタログ名とスキーマ名で修飾する場合{@code true}、修飾しない場合{@code false} */
-    protected boolean tableNameQualified;
-
     /** 属性モデルのファクトリ */
     protected AttributeModelFactory attributeModelFactory;
 
@@ -66,6 +63,15 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
 
     /** 複合一意制約モデルのファクトリ */
     protected CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory;
+
+    /** カタログ名を表示する場合{@code true} */
+    protected boolean showCatalogName;
+
+    /** スキーマ名を表示する場合{@code true} */
+    protected boolean showSchemaName;
+
+    /** テーブル名を表示する場合{@code true} */
+    protected boolean showTableName;
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
@@ -83,13 +89,20 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      *            関連モデルのファクトリ
      * @param compositeUniqueConstraintModelFactory
      *            複合一意制約モデルのファクトリ
+     * @param showCatalogName
+     *            カタログ名を表示する場合{@code true}
+     * @param showSchemaName
+     *            スキーマ名を表示する場合{@code true}
+     * @param showTableName
+     *            テーブル名を表示する場合{@code true}
      */
     public EntityModelFactoryImpl(
             String packageName,
-            boolean tableNameQualified,
             AttributeModelFactory attributeModelFactory,
             AssociationModelFactory associationModelFactory,
-            CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory) {
+            CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory,
+            boolean showCatalogName, boolean showSchemaName,
+            boolean showTableName) {
         if (attributeModelFactory == null) {
             throw new NullPointerException("attributeModelFactory");
         }
@@ -101,17 +114,24 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
                     "compositeUniqueConstraintModelFactory");
         }
         this.packageName = packageName;
-        this.tableNameQualified = tableNameQualified;
         this.attributeModelFactory = attributeModelFactory;
         this.associationModelFactory = associationModelFactory;
         this.compositeUniqueConstraintModelFactory = compositeUniqueConstraintModelFactory;
+        this.showCatalogName = showCatalogName;
+        this.showSchemaName = showSchemaName;
+        this.showTableName = showTableName;
     }
 
     public EntityModel getEntityModel(EntityDesc entityDesc) {
         EntityModel entityModel = new EntityModel();
-        if (tableNameQualified) {
+        if (showCatalogName) {
             entityModel.setCatalogName(entityDesc.getCatalogName());
+        }
+        if (showSchemaName) {
             entityModel.setSchemaName(entityDesc.getSchemaName());
+        }
+        if (showTableName) {
+            entityModel.setTableName(entityDesc.getTableName());
         }
         entityModel.setPackageName(packageName);
         entityModel.setShortClassName(entityDesc.getName());
@@ -187,7 +207,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      */
     protected void doImportName(EntityModel model, EntityDesc entityDesc) {
         classModelSupport.addImportName(model, Entity.class);
-        if (model.getCatalogName() != null || model.getSchemaName() != null) {
+        if (model.getCatalogName() != null || model.getSchemaName() != null
+                || model.getTableName() != null) {
             classModelSupport.addImportName(model, Table.class);
         }
         for (AttributeModel attr : model.getAttributeModelList()) {

@@ -34,6 +34,9 @@ public class EntityModel implements ClassModel {
     /** スキーマ名 */
     protected String schemaName;
 
+    /** テーブル名 */
+    protected String tableName;
+
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();
 
@@ -91,6 +94,25 @@ public class EntityModel implements ClassModel {
      */
     public void setSchemaName(String schemaName) {
         this.schemaName = schemaName;
+    }
+
+    /**
+     * テーブル名を返します。
+     * 
+     * @return テーブル名
+     */
+    public String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * テーブル名を設定します。
+     * 
+     * @param tableName
+     *            テーブル名
+     */
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     /**

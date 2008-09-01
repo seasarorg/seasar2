@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.desc.AttributeDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -144,6 +143,22 @@ public class AttributeDescFactoryImplTest {
         assertEquals(10, attributeDesc.getPrecision());
         assertEquals(5, attributeDesc.getScale());
         assertTrue(attributeDesc.isNullable());
+        assertFalse(attributeDesc.isUnsupportedColumnType());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testColumn_unsupportedType() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("HOGE");
+        columnMeta.setTypeName("unsupported");
+        columnMeta.setLength(10);
+        columnMeta.setScale(5);
+        columnMeta.setNullable(true);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        assertTrue(attributeDesc.isUnsupportedColumnType());
+    }
 }

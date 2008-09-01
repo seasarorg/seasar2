@@ -13,18 +13,18 @@ import ${importName};
  * @author S2JDBC-Gen
  */
 @Entity
-<#if catalogName?? || schemaName?? || compositeUniqueConstraintModelList?size gt 0>
-@Table(<#if catalogName??>catalog = "${catalogName}"</#if><#if schemaName??><#if catalogName??>, </#if>schema = "${schemaName}"</#if><#if compositeUniqueConstraintModelList?size gt 0><#if catalogName?? || schemaName??>, </#if>uniqueConstraints = { <#list compositeUniqueConstraintModelList as uniqueConstraint>@UniqueConstraint(columnNames = { <#list uniqueConstraint.columnNameList as columnName>"${columnName}"<#if columnName_has_next>, </#if></#list> })<#if uniqueConstraint_has_next>, </#if></#list> }</#if>)
+<#if catalogName?? || schemaName?? || tableName?? || compositeUniqueConstraintModelList?size gt 0>
+@Table(<#if catalogName??>catalog = "${catalogName}"</#if><#if schemaName??><#if catalogName??>, </#if>schema = "${schemaName}"</#if><#if tableName??><#if catalogName?? || schemaName??>, </#if>name = "${tableName}"</#if><#if compositeUniqueConstraintModelList?size gt 0><#if catalogName?? || schemaName?? || tableName??>, </#if>uniqueConstraints = { <#list compositeUniqueConstraintModelList as uniqueConstraint>@UniqueConstraint(columnNames = { <#list uniqueConstraint.columnNameList as columnName>"${columnName}"<#if columnName_has_next>, </#if></#list> })<#if uniqueConstraint_has_next>, </#if></#list> }</#if>)
 </#if>
 public class ${shortClassName} {
 <#list attributeModelList as attr>
 
-  <#if attr.transient || attr.columnDefinition??>
-    /** ${attr.name}プロパティ */
-  <#else>
+  <#if attr.unsupportedColumnType>
     /**
      * FIXME このプロパティに対応するカラムの型(${attr.columnTypeName})はサポート対象外です。
      */
+  <#else>
+    /** ${attr.name}プロパティ */
   </#if>
   <#if attr.id>
     @Id
@@ -45,7 +45,7 @@ public class ${shortClassName} {
     @Version
   </#if>
   <#if !attr.transient>
-    @Column(columnDefinition = <#if attr.columnDefinition??>"${attr.columnDefinition}"<#else>null</#if><#if !attr.id>, nullable = ${attr.nullable?string}, unique = ${attr.unique?string}</#if>)
+    @Column(<#if attr.columnName??>name = "${attr.columnName}"</#if><#if attr.columnDefinition??><#if attr.columnName??>, </#if>columnDefinition = "${attr.columnDefinition}"</#if><#if attr.columnName?? || attr.columnDefinition??>, </#if>nullable = ${attr.nullable?string}, unique = ${attr.unique?string})
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>

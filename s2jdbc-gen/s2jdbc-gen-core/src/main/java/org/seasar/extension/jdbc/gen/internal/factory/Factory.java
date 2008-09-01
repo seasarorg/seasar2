@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.factory;
 import java.io.File;
 import java.util.List;
 
+import javax.persistence.JoinColumn;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
@@ -284,12 +285,26 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
-     * @param tableNameQualified
-     *            テーブル名をカタログ名とスキーマ名で修飾する場合{@code true}、修飾しない場合{@code false}
+     * @param showCatalogName
+     *            カタログ名を表示する場合{@code true}
+     * @param showSchemaName
+     *            スキーマ名を表示する場合{@code true}
+     * @param showTableName
+     *            テーブル名を表示する場合{@code true}
+     * @param showColumnName
+     *            カラム名を表示する場合{@code true}
+     * @param showColumnDefinition
+     *            カラム定義を表示する場合{@code true}
+     * @param showJoinColumn
+     *            {@link JoinColumn}を表示する場合{@code true}
+     * 
      * @return {@link EntityModelFactory}の実装
      */
     EntityModelFactory createEntityModelFactory(Command command,
-            String packageName, boolean tableNameQualified);
+            String packageName, boolean showCatalogName,
+            boolean showSchemaName, boolean showTableName,
+            boolean showColumnName, boolean showColumnDefinition,
+            boolean showJoinColumn);
 
     /**
      * {@link ServiceModelFactory}の実装を作成します。

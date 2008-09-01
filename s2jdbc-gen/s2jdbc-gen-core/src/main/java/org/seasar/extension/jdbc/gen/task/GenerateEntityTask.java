@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import javax.persistence.JoinColumn;
+
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
@@ -203,6 +205,66 @@ public class GenerateEntityTask extends AbstractTask {
      */
     public void setPluralFormFile(File pluralFormFile) {
         command.setPluralFormFile(pluralFormFile);
+    }
+
+    /**
+     * カタログ名を表示する場合{@code true}を設定します。
+     * 
+     * @param showCatalogName
+     *            カタログ名を表示する場合{@code true}
+     */
+    public void setShowCatalogName(boolean showCatalogName) {
+        command.setShowCatalogName(showCatalogName);
+    }
+
+    /**
+     * カラム定義を表示する場合{@code true}を設定します。
+     * 
+     * @param showColumnDefinition
+     *            カラム定義を表示する場合{@code true}を設定します。
+     */
+    public void setShowColumnDefinition(boolean showColumnDefinition) {
+        command.setShowColumnDefinition(showColumnDefinition);
+    }
+
+    /**
+     * カラム名を表示する場合{@code true}を設定します。
+     * 
+     * @param showColumnName
+     *            カラム名を表示する場合{@code true}
+     */
+    public void setShowColumnName(boolean showColumnName) {
+        command.setShowColumnName(showColumnName);
+    }
+
+    /**
+     * {@link JoinColumn}を表示する場合{@code true}を設定します。
+     * 
+     * @param showJoinColumn
+     *            {@link JoinColumn}を表示する場合{@code true}
+     */
+    public void setShowJoinColumn(boolean showJoinColumn) {
+        command.setShowJoinColumn(showJoinColumn);
+    }
+
+    /**
+     * スキーマ名を表示する場合{@code true}を設定します。
+     * 
+     * @param showSchemaName
+     *            スキーマ名を表示する場合{@code true}
+     */
+    public void setShowSchemaName(boolean showSchemaName) {
+        command.setShowSchemaName(showSchemaName);
+    }
+
+    /**
+     * テーブル名を表示する場合{@code true}を設定します。
+     * 
+     * @param showTableName
+     *            テーブル名を表示する場合{@code true}
+     */
+    public void setShowTableName(boolean showTableName) {
+        command.setShowTableName(showTableName);
     }
 
 }

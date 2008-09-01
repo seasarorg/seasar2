@@ -60,11 +60,20 @@ public class AttributeModel {
     /** スケール */
     protected int scale;
 
+    /** カラム名 */
+    protected String columnName;
+
     /** カラム定義 */
     protected String columnDefinition;
 
     /** カラムの型名 */
     protected String columnTypeName;
+
+    /** サポートされていないカラム型の場合{@code true} */
+    protected boolean unsupportedColumnType;
+
+    /** 数値の場合{@code true} */
+    protected boolean number;
 
     /**
      * 名前を返します。
@@ -295,6 +304,25 @@ public class AttributeModel {
     }
 
     /**
+     * カラム名を返します。
+     * 
+     * @return カラム名
+     */
+    public String getColumnName() {
+        return columnName;
+    }
+
+    /**
+     * カラム名を設定します。
+     * 
+     * @param columnName
+     *            カラム名
+     */
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+    /**
      * カラム定義を返します。
      * 
      * @return カラム定義
@@ -330,6 +358,44 @@ public class AttributeModel {
      */
     public void setColumnTypeName(String columnTypeName) {
         this.columnTypeName = columnTypeName;
+    }
+
+    /**
+     * サポートされていないカラム型の場合{@code true}を返します。
+     * 
+     * @return サポートされていないカラム型の場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isUnsupportedColumnType() {
+        return unsupportedColumnType;
+    }
+
+    /**
+     * サポートされていないカラム型の場合{@code true}を設定します。
+     * 
+     * @param unsupportedColumnType
+     *            サポートされていないカラム型の場合{@code true}、そうでない場合{@code false}
+     */
+    public void setUnsupportedColumnType(boolean unsupportedColumnType) {
+        this.unsupportedColumnType = unsupportedColumnType;
+    }
+
+    /**
+     * 数値の場合{@code true}を返します。
+     * 
+     * @return 数値の場合{@code true}
+     */
+    public boolean isNumber() {
+        return number;
+    }
+
+    /**
+     * 数値の場合{@code true}を設定します。
+     * 
+     * @param number
+     *            数値の場合{@code true}
+     */
+    public void setNumber(boolean number) {
+        this.number = number;
     }
 
 }

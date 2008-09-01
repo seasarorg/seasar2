@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import javax.persistence.JoinColumn;
+
 import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
 import org.seasar.extension.jdbc.gen.desc.AssociationType;
 import org.seasar.extension.jdbc.gen.model.AssociationModel;
@@ -28,6 +30,19 @@ import org.seasar.extension.jdbc.gen.model.JoinColumnsModel;
  * @author taedium
  */
 public class AssociationModelFactoryImpl implements AssociationModelFactory {
+
+    /** {@link JoinColumn}を表示する場合{@code true} */
+    protected boolean showJoinColumn;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param showJoinColumn
+     *            {@link JoinColumn}を表示する場合{@code true}
+     */
+    public AssociationModelFactoryImpl(boolean showJoinColumn) {
+        this.showJoinColumn = showJoinColumn;
+    }
 
     public AssociationModel getAssociationModel(AssociationDesc associationDesc) {
         AssociationModel model = new AssociationModel();
@@ -64,18 +79,18 @@ public class AssociationModelFactoryImpl implements AssociationModelFactory {
         String columnName = associationDesc.getColumnNameList().get(0);
         String referencedColumnName = associationDesc
                 .getReferencedColumnNameList().get(0);
-        if (matchesJoinColumnNamingConvention(propertyName, columnName,
-                referencedColumnName)) {
-            return;
+        if (showJoinColumn
+                || !matchesDefaultMappingRule(propertyName, columnName,
+                        referencedColumnName)) {
+            JoinColumnModel joinColumnModel = new JoinColumnModel();
+            joinColumnModel.setName(columnName);
+            joinColumnModel.setReferencedColumnName(referencedColumnName);
+            associationModel.setJoinColumnModel(joinColumnModel);
         }
-        JoinColumnModel joinColumnModel = new JoinColumnModel();
-        joinColumnModel.setName(columnName);
-        joinColumnModel.setReferencedColumnName(referencedColumnName);
-        associationModel.setJoinColumnModel(joinColumnModel);
     }
 
     /**
-     * 結合カラムの命名規約に合致する場合{@code true}を返します。
+     * 結合カラムのデフォルトのマッピングルールに合致する場合{@code true}を返します。
      * 
      * @param propertyName
      *            プロパティ名
@@ -85,7 +100,7 @@ public class AssociationModelFactoryImpl implements AssociationModelFactory {
      *            参照される側のカラム名
      * @return 結合カラムの命名規約に合致する場合{@code true}
      */
-    protected boolean matchesJoinColumnNamingConvention(String propertyName,
+    protected boolean matchesDefaultMappingRule(String propertyName,
             String columnName, String referencedColumnName) {
         return columnName.equalsIgnoreCase(propertyName + "_"
                 + referencedColumnName);

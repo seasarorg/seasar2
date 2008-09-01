@@ -69,6 +69,9 @@ public class AttributeDesc {
     /** カラムの型名 */
     protected String columnTypeName;
 
+    /** サポートされていないカラム型の場合{@code true} */
+    protected boolean unsupportedColumnType;
+
     /**
      * インスタンスを構築します。
      */
@@ -358,6 +361,25 @@ public class AttributeDesc {
      */
     public void setColumnTypeName(String columnTypeName) {
         this.columnTypeName = columnTypeName;
+    }
+
+    /**
+     * サポートされていないカラム型の場合{@code true}を返します。
+     * 
+     * @return サポートされていないカラム型の場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isUnsupportedColumnType() {
+        return unsupportedColumnType;
+    }
+
+    /**
+     * サポートされていないカラム型の場合{@code true}を設定します。
+     * 
+     * @param unsupportedColumnType
+     *            サポートされていないカラム型の場合{@code true}、そうでない場合{@code false}
+     */
+    public void setUnsupportedColumnType(boolean unsupportedColumnType) {
+        this.unsupportedColumnType = unsupportedColumnType;
     }
 
 }

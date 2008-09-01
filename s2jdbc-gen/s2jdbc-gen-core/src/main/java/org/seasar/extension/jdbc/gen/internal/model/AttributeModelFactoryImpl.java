@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.model;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.model.AttributeModel;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link AttributeModelFactory}の実装クラスです。
@@ -25,6 +26,26 @@ import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
  * @author taedium
  */
 public class AttributeModelFactoryImpl implements AttributeModelFactory {
+
+    /** カラム名を表示する場合{@code true} */
+    protected boolean showColumnName;
+
+    /** カラム定義を表示する場合{@code true} */
+    protected boolean showColumnDefinition;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param showColumnName
+     *            カラム名を表示する場合{@code true}
+     * @param showColumnDefinition
+     *            カラム定義を表示する場合{@code true}
+     */
+    public AttributeModelFactoryImpl(boolean showColumnName,
+            boolean showColumnDefinition) {
+        this.showColumnName = showColumnName;
+        this.showColumnDefinition = showColumnDefinition;
+    }
 
     public AttributeModel getAttributeModel(AttributeDesc attributeDesc) {
         AttributeModel attributeModel = new AttributeModel();
@@ -36,10 +57,36 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setNullable(attributeDesc.isNullable());
         attributeModel.setUnique(attributeDesc.isUnique());
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
+        attributeModel.setLength(attributeDesc.getLength());
+        attributeModel.setPrecision(attributeDesc.getPrecision());
+        attributeModel.setScale(attributeDesc.getScale());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
-        attributeModel.setColumnDefinition(attributeDesc.getColumnDefinition());
+        if (isNumber(attributeDesc.getAttributeClass())) {
+            attributeModel.setNumber(true);
+        }
+        if (showColumnName) {
+            attributeModel.setColumnName(attributeDesc.getColumnName());
+        }
+        if (showColumnDefinition) {
+            attributeModel.setColumnDefinition(attributeDesc
+                    .getColumnDefinition());
+            attributeModel.setUnsupportedColumnType(attributeDesc
+                    .isUnsupportedColumnType());
+        }
         attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
         return attributeModel;
+    }
+
+    /**
+     * 数値を表すクラスの場合{@code true}を返します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return 数値を表すクラスの場合{@code true}
+     */
+    public boolean isNumber(Class<?> clazz) {
+        Class<?> wrapperClass = ClassUtil.getWrapperClassIfPrimitive(clazz);
+        return Number.class.isAssignableFrom(wrapperClass);
     }
 
 }

@@ -16,11 +16,11 @@ public class Foo {
 
     /** id1プロパティ */
     @Id
-    @Column(columnDefinition = "integer")
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
     public int id1;
 
     /** id2プロパティ */
     @Id
-    @Column(columnDefinition = "integer")
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
     public int id2;
 }
