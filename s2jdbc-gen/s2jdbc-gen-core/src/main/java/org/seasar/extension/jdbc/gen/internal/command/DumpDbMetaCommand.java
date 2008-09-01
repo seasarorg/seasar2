@@ -42,7 +42,7 @@ public class DumpDbMetaCommand extends AbstractCommand {
     protected String tableNamePattern = ".*";
 
     /** Javaコード生成の対象としないテーブル名の正規表現 */
-    protected String ignoreTableNamePattern = ".*\\.*";
+    protected String ignoreTableNamePattern = ".*\\$.*";
 
     /** 方言 */
     protected GenDialect dialect;
