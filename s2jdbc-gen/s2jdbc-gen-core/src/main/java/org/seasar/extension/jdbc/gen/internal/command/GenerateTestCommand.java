@@ -52,6 +52,9 @@ public class GenerateTestCommand extends AbstractCommand {
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
+
     /** エンティティパッケージ名 */
     protected String entityPackageName = "entity";
 
@@ -61,14 +64,11 @@ public class GenerateTestCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
-    /** Javaファイルのエンコーディング */
-    protected String javaFileEncoding = "UTF-8";
+    /** テストクラス名のサフィックス */
+    protected String testClassNameSuffix = "Test";
 
-    /** 上書きをする場合{@code true}、しない場合{@code false} */
-    protected boolean overwrite = false;
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName = "";
+    /** テストクラスのテンプレート名 */
+    protected String templateFileName = "java/test.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -76,14 +76,14 @@ public class GenerateTestCommand extends AbstractCommand {
     /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
 
-    /** テストクラス名のサフィックス */
-    protected String testClassNameSuffix = "Test";
-
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "test"), "java");
 
-    /** テストクラスのテンプレート名 */
-    protected String templateFileName = "java/test.ftl";
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding = "UTF-8";
+
+    /** 上書きをする場合{@code true}、しない場合{@code false} */
+    protected boolean overwrite = false;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;

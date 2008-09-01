@@ -52,14 +52,8 @@ public class GenerateNamesCommand extends AbstractCommand {
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
-    /** 名前インタフェース名のサフィックス */
-    protected String namesInterfaceNameSuffix = "Names";
-
-    /** 名前インタフェースのパッケージ名 */
-    protected String namesPackageName = "entity";
-
-    /** 名前インタフェースのテンプレート名 */
-    protected String namesTemplateFileName = "java/names.ftl";
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
 
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
@@ -70,6 +64,21 @@ public class GenerateNamesCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
+    /** 名前インタフェースのパッケージ名 */
+    protected String namesPackageName = "entity";
+
+    /** 名前インタフェース名のサフィックス */
+    protected String namesInterfaceNameSuffix = "Names";
+
+    /** 名前インタフェースのテンプレート名 */
+    protected String namesTemplateFileName = "java/names.ftl";
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
+    /** テンプレートファイルを格納したプライマリディレクトリ */
+    protected File templateFilePrimaryDir = null;
+
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
@@ -78,15 +87,6 @@ public class GenerateNamesCommand extends AbstractCommand {
 
     /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = true;
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName = "";
-
-    /** テンプレートファイルのエンコーディング */
-    protected String templateFileEncoding = "UTF-8";
-
-    /** テンプレートファイルを格納したプライマリディレクトリ */
-    protected File templateFilePrimaryDir = null;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;

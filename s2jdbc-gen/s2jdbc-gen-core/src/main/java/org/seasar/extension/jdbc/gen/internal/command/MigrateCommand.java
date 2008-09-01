@@ -67,44 +67,38 @@ public class MigrateCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
-    /** SQLステートメントの区切り文字 */
-    protected char statementDelimiter = ';';
-
-    /** SQLブロックの区切り文字 */
-    protected String blockDelimiter = null;
-
-    /** エラー発生時に処理を中止する場合{@code true} */
-    protected boolean haltOnError = false;
-
     /** スキーマ情報を格納するテーブル名 */
     protected String schemaInfoFullTableName = "SCHEMA_INFO";
 
     /** スキーマのバージョン番号を格納するカラム名 */
     protected String schemaInfoColumnName = "VERSION";
 
-    /** DDLファイルのエンコーディング */
-    protected String ddlFileEncoding = "UTF-8";
-
     /** マイグレーションのディレクトリ */
     protected File migrateDir = new File("db", "migrate");
-
-    /** バージョン番号のパターン */
-    protected String versionNoPattern = "0000";
 
     /** DDL情報ファイル */
     protected File ddlInfoFile = new File("db", "ddl-info.txt");
 
+    /** バージョン番号のパターン */
+    protected String versionNoPattern = "0000";
+
     /** マイグレーション先のバージョン */
     protected String version = "latest";
 
-    /** スキーマ作成用のSQLファイルを格納するディレクトリ名 */
-    protected String createDirName = "create";
+    /** SQLステートメントの区切り文字 */
+    protected char statementDelimiter = ';';
 
-    /** スキーマ削除用のSQLファイルを格納するディレクトリ名 */
-    protected String dropDirName = "drop";
+    /** SQLブロックの区切り文字 */
+    protected String blockDelimiter = null;
+
+    /** DDLファイルのエンコーディング */
+    protected String ddlFileEncoding = "UTF-8";
 
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
+
+    /** エラー発生時に処理を中止する場合{@code true} */
+    protected boolean haltOnError = true;
 
     /** データをロードする際のバッチサイズ */
     protected int loadBatchSize = 10;

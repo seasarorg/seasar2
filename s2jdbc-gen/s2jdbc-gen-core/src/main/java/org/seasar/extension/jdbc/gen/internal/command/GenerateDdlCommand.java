@@ -74,6 +74,18 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
+
+    /** エンティティクラスのパッケージ名 */
+    protected String entityPackageName = "entity";
+
+    /** 対象とするエンティティ名の正規表現 */
+    protected String entityNamePattern = ".*";
+
+    /** 対象としないエンティティ名の正規表現 */
+    protected String ignoreEntityNamePattern = "";
+
     /** テーブルを作成するDDLファイル名 */
     protected String createTableDdlFileName = "010-create-table.sql";
 
@@ -82,9 +94,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** シーケンスを生成するDDLファイル */
     protected String createSequenceDdlFileName = "030-create-sequence.sql";
-
-    /** ダンプディレクトリ名 */
-    protected String dumpDirName = "040-dump";
 
     /** 外部キーを作成するDDLファイル名 */
     protected String createForeignKeyDdlFileName = "050-create-foreignkey.sql";
@@ -101,23 +110,38 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 外部キーを削除するDDLファイル名 */
     protected String dropForeignKeyDdlFileName = "010-drop-foreignkey.sql";
 
+    /** DDLファイルのエンコーディング */
+    protected String ddlFileEncoding = "UTF-8";
+
+    /** SQLのキーワードの大文字小文字を変換するかどうかを示す値 */
+    protected SqlKeywordCaseType sqlKeywordCaseType = SqlKeywordCaseType.ORIGINALCASE;
+
+    /** SQLの識別子の大文字小文字を変換するかどうかを示す値 */
+    protected SqlIdentifierCaseType sqlIdentifierCaseType = SqlIdentifierCaseType.ORIGINALCASE;
+
+    /** データをダンプする場合{@code true}、しない場合{@code false} */
+    protected boolean dump = true;
+
+    /** ダンプディレクトリ名 */
+    protected String dumpDirName = "040-dump";
+
+    /** ダンプファイルのエンコーディング */
+    protected String dumpFileEncoding = "UTF-8";
+
     /** テーブルを作成するDDLのテンプレートファイル名 */
     protected String createTableTemplateFileName = "sql/create-table.ftl";
 
     /** 一意キーを作成するDDLのテンプレートファイル名 */
     protected String createUniqueKeyTemplateFileName = "sql/create-uniquekey.ftl";
 
-    /** 外部キーを作成するDDLのテンプレートファイル名 */
-    protected String createForeignKeyTemplateFileName = "sql/create-foreignkey.ftl";
-
     /** シーケンスを生成するDDLのテンプレートファイル */
     protected String createSequenceTemplateFileName = "sql/create-sequence.ftl";
 
+    /** 外部キーを作成するDDLのテンプレートファイル名 */
+    protected String createForeignKeyTemplateFileName = "sql/create-foreignkey.ftl";
+
     /** テーブルを削除するDDLのテンプレートファイル名 */
     protected String dropTableTemplateFileName = "sql/drop-table.ftl";
-
-    /** 外部キーを削除するDDLのテンプレートファイル名 */
-    protected String dropForeignKeyTemplateFileName = "sql/drop-foreignkey.ftl";
 
     /** 一意キーを削除するDDLのテンプレートファイル名 */
     protected String dropUniqueKeyTemplateFileName = "sql/drop-uniquekey.ftl";
@@ -125,26 +149,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** シーケンスを削除するDDLのテンプレートファイル名 */
     protected String dropSequenceTemplateFileName = "sql/drop-sequence.ftl";
 
-    /** エンティティクラスのパッケージ名 */
-    protected String entityPackageName = "entity";
-
-    /** 対象とするエンティティ名の正規表現 */
-    protected String entityNamePattern = ".*";
-
-    /** 対象としないエンティティ名の正規表現 */
-    protected String ignoreEntityNamePattern = "";
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName = "";
-
-    /** マイグレーションのディレクトリ */
-    protected File migrateDir = new File("db", "migrate");
-
-    /** DDLファイルのエンコーディング */
-    protected String ddlFileEncoding = "UTF-8";
-
-    /** SQLステートメントの区切り文字 */
-    protected char statementDelimiter = ';';
+    /** 外部キーを削除するDDLのテンプレートファイル名 */
+    protected String dropForeignKeyTemplateFileName = "sql/drop-foreignkey.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -152,11 +158,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
 
-    /** スキーマ情報を格納する完全なテーブル名 */
-    protected String schemaInfoFullTableName = "SCHEMA_INFO";
-
-    /** スキーマのバージョン番号を格納するカラム名 */
-    protected String schemaInfoColumnName = "VERSION";
+    /** マイグレーションのディレクトリ */
+    protected File migrateDir = new File("db", "migrate");
 
     /** DDLのバージョンファイル */
     protected File ddlInfoFile = new File("db", "ddl-info.txt");
@@ -164,20 +167,17 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
-    /** ダンプファイルのエンコーディング */
-    protected String dumpFileEncoding = "UTF-8";
+    /** SQLステートメントの区切り文字 */
+    protected char statementDelimiter = ';';
+
+    /** スキーマ情報を格納する完全なテーブル名 */
+    protected String schemaInfoFullTableName = "SCHEMA_INFO";
+
+    /** スキーマのバージョン番号を格納するカラム名 */
+    protected String schemaInfoColumnName = "VERSION";
 
     /** テーブルオプション */
     protected String tableOption = null;
-
-    /** データをダンプする場合{@code true}、しない場合{@code false} */
-    protected boolean dump = true;
-
-    /** SQLのキーワードの大文字小文字を変換するかどうかを示す値 */
-    protected SqlKeywordCaseType sqlKeywordCaseType = SqlKeywordCaseType.ORIGINALCASE;
-
-    /** SQLの識別子の大文字小文字を変換するかどうかを示す値 */
-    protected SqlIdentifierCaseType sqlIdentifierCaseType = SqlIdentifierCaseType.ORIGINALCASE;
 
     /** 方言 */
     protected GenDialect dialect;

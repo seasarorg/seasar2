@@ -52,14 +52,8 @@ public class GenerateConditionCommand extends AbstractCommand {
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
-    /** 条件クラス名のサフィックス */
-    protected String conditionClassNameSuffix = "Condition";
-
-    /** 条件クラスのパッケージ名 */
-    protected String conditionPackageName = "condition";
-
-    /** 条件クラスのテンプレート名 */
-    protected String conditionTemplateFileName = "java/condition.ftl";
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
 
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
@@ -70,6 +64,21 @@ public class GenerateConditionCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
+    /** 条件クラスのパッケージ名 */
+    protected String conditionPackageName = "condition";
+
+    /** 条件クラス名のサフィックス */
+    protected String conditionClassNameSuffix = "Condition";
+
+    /** 条件クラスのテンプレート名 */
+    protected String conditionTemplateFileName = "java/condition.ftl";
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
+    /** テンプレートファイルを格納したプライマリディレクトリ */
+    protected File templateFilePrimaryDir = null;
+
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
@@ -78,15 +87,6 @@ public class GenerateConditionCommand extends AbstractCommand {
 
     /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = true;
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName = "";
-
-    /** テンプレートファイルのエンコーディング */
-    protected String templateFileEncoding = "UTF-8";
-
-    /** テンプレートファイルを格納したプライマリディレクトリ */
-    protected File templateFilePrimaryDir = null;
 
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;

@@ -53,32 +53,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected static Logger logger = Logger
             .getLogger(GenerateEntityCommand.class);
 
-    /** エンティティクラスのパッケージ名 */
-    protected String entityPackageName = "entity";
-
-    /** エンティティクラスのテンプレート名 */
-    protected String entityTemplateFileName = "java/entity.ftl";
-
-    /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaFileDestDir = new File(new File("src", "main"), "java");
-
-    /** Javaファイルのエンコーディング */
-    protected String javaFileEncoding = "UTF-8";
-
-    /** 上書きをする場合{@code true}、しない場合{@code false} */
-    protected boolean overwrite = false;
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName = "";
-
     /** スキーマ名 */
     protected String schemaName = null;
-
-    /** テンプレートファイルのエンコーディング */
-    protected String templateFileEncoding = "UTF-8";
-
-    /** テンプレートファイルを格納するプライマリディレクトリ */
-    protected File templateFilePrimaryDir = null;
 
     /** Javaコード生成の対象とするテーブル名の正規表現 */
     protected String tableNamePattern = ".*";
@@ -91,6 +67,30 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
+
+    /** エンティティクラスのテンプレート名 */
+    protected String entityTemplateFileName = "java/entity.ftl";
+
+    /** テンプレートファイルのエンコーディング */
+    protected String templateFileEncoding = "UTF-8";
+
+    /** テンプレートファイルを格納するプライマリディレクトリ */
+    protected File templateFilePrimaryDir = null;
+
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
+
+    /** エンティティクラスのパッケージ名 */
+    protected String entityPackageName = "entity";
+
+    /** 生成するJavaファイルの出力先ディレクトリ */
+    protected File javaFileDestDir = new File(new File("src", "main"), "java");
+
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding = "UTF-8";
+
+    /** 上書きをする場合{@code true}、しない場合{@code false} */
+    protected boolean overwrite = false;
 
     /** 方言 */
     protected GenDialect dialect;

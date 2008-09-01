@@ -59,23 +59,8 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** クラスパスのディレクトリ */
     protected File classpathDir;
 
-    /** サービスクラス名のサフィックス */
-    protected String serviceClassNameSuffix = "Service";
-
-    /** サービスクラスのパッケージ名 */
-    protected String servicePackageName = "service";
-
-    /** サービスクラスのテンプレート名 */
-    protected String serviceTemplateFileName = "java/service.ftl";
-
-    /** 抽象サービスクラスのテンプレート名 */
-    protected String abstractServiceTemplateFileName = "java/abstract-service.ftl";
-
-    /** 名前インタフェース名のサフィックス */
-    protected String namesInterfaceNameSuffix = "Names";
-
-    /** 名前インタフェースのパッケージ名 */
-    protected String namesPackageName = "entity";
+    /** ルートパッケージ名 */
+    protected String rootPackageName = "";
 
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
@@ -86,8 +71,26 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
+    /** サービスクラスのパッケージ名 */
+    protected String servicePackageName = "service";
+
+    /** サービスクラス名のサフィックス */
+    protected String serviceClassNameSuffix = "Service";
+
+    /** 抽象サービスクラスのテンプレート名 */
+    protected String abstractServiceTemplateFileName = "java/abstract-service.ftl";
+
+    /** サービスクラスのテンプレート名 */
+    protected String serviceTemplateFileName = "java/service.ftl";
+
     /** 名前インタフェースを実装する場合{@code true} */
     protected boolean implementsNames = true;
+
+    /** 名前インタフェース名のサフィックス */
+    protected String namesInterfaceNameSuffix = "Names";
+
+    /** 名前インタフェースのパッケージ名 */
+    protected String namesPackageName = "entity";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "main"), "java");
@@ -97,9 +100,6 @@ public class GenerateServiceCommand extends AbstractCommand {
 
     /** サービスクラスを上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
-
-    /** ルートパッケージ名 */
-    protected String rootPackageName = "";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";

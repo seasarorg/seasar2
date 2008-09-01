@@ -45,20 +45,20 @@ public class ExecuteSqlCommand extends AbstractCommand {
     /** ロガー */
     protected static Logger logger = Logger.getLogger(ExecuteSqlCommand.class);
 
-    /** SQLブロックの区切り文字 */
-    protected String blockDelimiter = null;
-
-    /** エラー発生時に処理を中止する場合{@code true} */
-    protected boolean haltOnError = false;
+    /** 実行するSQLファイルのリスト */
+    protected List<File> sqlFileList = new ArrayList<File>();
 
     /** SQLファイルのエンコーディング */
     protected String sqlFileEncoding = "UTF-8";
 
-    /** 実行するSQLファイルのリスト */
-    protected List<File> sqlFileList = new ArrayList<File>();
-
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
+
+    /** SQLブロックの区切り文字 */
+    protected String blockDelimiter = null;
+
+    /** エラー発生時に処理を中止する場合{@code true} */
+    protected boolean haltOnError = true;
 
     /** すべてのSQLを単一のトランザクションで実行する場合{@code true}、そうでない場合{@code false} */
     protected boolean transactional = false;
