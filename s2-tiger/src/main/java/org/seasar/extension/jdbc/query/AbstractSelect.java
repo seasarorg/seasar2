@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.Select;
+import org.seasar.extension.jdbc.StatementHandler;
 import org.seasar.extension.jdbc.exception.SNoResultException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -205,8 +206,7 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         List<T> ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
-            ResultSet rs = createResultSet(jdbcContext);
-            ret = (List<T>) handleResultSet(handler, rs);
+            ret = (List<T>) processResultSet(jdbcContext, handler);
             if (disallowNoResult && ret.isEmpty()) {
                 throw new SNoResultException(executedSql);
             }
@@ -229,8 +229,7 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         T ret = null;
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
-            ResultSet rs = createResultSet(jdbcContext);
-            ret = (T) handleResultSet(handler, rs);
+            ret = (T) processResultSet(jdbcContext, handler);
             if (disallowNoResult && ret == null) {
                 throw new SNoResultException(executedSql);
             }
@@ -257,8 +256,7 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         final ResultSetHandler handler = createIterateResultSetHandler(callback);
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
-            final ResultSet rs = createResultSet(jdbcContext);
-            return (RESULT) handleResultSet(handler, rs);
+            return (RESULT) processResultSet(jdbcContext, handler);
         } finally {
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
@@ -267,31 +265,46 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     }
 
     /**
-     * 準備されたステートメントを返します。
+     * 準備されたステートメントを処理します。
      * 
      * @param jdbcContext
      *            JDBCコンテキスト
-     * @return 準備されたステートメント
+     * @param handler
+     *            準備されたステートメントを処理するハンドラ
+     * @return 準備されたステートメントを処理した結果
      */
-    protected PreparedStatement getPreparedStatement(JdbcContext jdbcContext) {
-        PreparedStatement ps = jdbcContext.getPreparedStatement(executedSql);
-        setupPreparedStatement(ps);
-        return ps;
+    protected Object processPreparedStatement(final JdbcContext jdbcContext,
+            final StatementHandler<Object, PreparedStatement> handler) {
+        return jdbcContext.usingPreparedStatement(executedSql,
+                new StatementHandler<Object, PreparedStatement>() {
+
+                    public Object handle(final PreparedStatement ps) {
+                        setupPreparedStatement(ps);
+                        return handler.handle(ps);
+                    }
+                });
     }
 
     /**
-     * カーソルつきの準備されたステートメントを返します。
+     * カーソルつきの準備されたステートメントを処理します。
      * 
      * @param jdbcContext
      *            JDBCコンテキスト
-     * @return 準備されたステートメント
+     * @param handler
+     *            準備されたステートメントを処理するハンドラ
+     * @return 準備されたステートメントを処理した結果
      */
-    protected PreparedStatement getCursorPreparedStatement(
-            JdbcContext jdbcContext) {
-        PreparedStatement ps = jdbcContext
-                .getCursorPreparedStatement(executedSql);
-        setupPreparedStatement(ps);
-        return ps;
+    protected Object processCursorPreparedStatement(
+            final JdbcContext jdbcContext,
+            final StatementHandler<Object, PreparedStatement> handler) {
+        return jdbcContext.usingCursorPreparedStatement(executedSql,
+                new StatementHandler<Object, PreparedStatement>() {
+
+                    public Object handle(final PreparedStatement ps) {
+                        setupPreparedStatement(ps);
+                        return handler.handle(ps);
+                    }
+                });
     }
 
     /**
@@ -339,38 +352,67 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
             final IterationCallback<T, ?> callback);
 
     /**
-     * 結果セットを作成します。
+     * 結果セットを処理します。
      * 
      * @param jdbcContext
      *            JDBCコンテキスト
-     * @return 結果セット
+     * @param handler
+     *            結果セットを処理するハンドラ
+     * @return 結果セットを処理した結果
      */
-    protected ResultSet createResultSet(JdbcContext jdbcContext) {
-        DbmsDialect dialect = jdbcManager.getDialect();
+    protected Object processResultSet(final JdbcContext jdbcContext,
+            final ResultSetHandler handler) {
+        final DbmsDialect dialect = jdbcManager.getDialect();
         if (offset > 0) {
             if (dialect.supportsOffset()
                     && (limit > 0 || limit == 0
                             && dialect.supportsOffsetWithoutLimit())) {
-                PreparedStatement ps = getPreparedStatement(jdbcContext);
-                return PreparedStatementUtil.executeQuery(ps);
+                return processPreparedStatement(jdbcContext,
+                        new StatementHandler<Object, PreparedStatement>() {
+
+                            public Object handle(final PreparedStatement ps) {
+                                final ResultSet rs = PreparedStatementUtil
+                                        .executeQuery(ps);
+                                return handleResultSet(handler, rs);
+                            }
+                        });
             } else if (dialect.supportsCursor()) {
-                PreparedStatement ps = getCursorPreparedStatement(jdbcContext);
-                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
-                ResultSetUtil.absolute(rs, offset);
-                return rs;
+                return processCursorPreparedStatement(jdbcContext,
+                        new StatementHandler<Object, PreparedStatement>() {
+
+                            public Object handle(final PreparedStatement ps) {
+                                final ResultSet rs = PreparedStatementUtil
+                                        .executeQuery(ps);
+                                ResultSetUtil.absolute(rs, offset);
+                                return handleResultSet(handler, rs);
+                            }
+                        });
             } else {
-                PreparedStatement ps = getPreparedStatement(jdbcContext);
-                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
-                for (int i = 0; i < offset; i++) {
-                    if (!ResultSetUtil.next(rs)) {
-                        break;
-                    }
-                }
-                return rs;
+                return processPreparedStatement(jdbcContext,
+                        new StatementHandler<Object, PreparedStatement>() {
+
+                            public Object handle(final PreparedStatement ps) {
+                                final ResultSet rs = PreparedStatementUtil
+                                        .executeQuery(ps);
+                                for (int i = 0; i < offset; i++) {
+                                    if (!ResultSetUtil.next(rs)) {
+                                        break;
+                                    }
+                                }
+                                return handleResultSet(handler, rs);
+                            }
+                        });
             }
         }
-        PreparedStatement ps = getPreparedStatement(jdbcContext);
-        return PreparedStatementUtil.executeQuery(ps);
+        return processPreparedStatement(jdbcContext,
+                new StatementHandler<Object, PreparedStatement>() {
+
+                    public Object handle(final PreparedStatement ps) {
+                        final ResultSet rs = PreparedStatementUtil
+                                .executeQuery(ps);
+                        return handleResultSet(handler, rs);
+                    }
+                });
     }
 
     /**

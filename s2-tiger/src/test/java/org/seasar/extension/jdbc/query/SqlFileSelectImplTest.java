@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -39,6 +40,7 @@ import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.extension.sql.cache.NodeCache;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
@@ -341,24 +343,29 @@ public class SqlFileSelectImplTest extends TestCase {
                 Aaa.class, PATH, dto) {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("ID");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("NAME");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("BBB_ID");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("ID", 1);
-                data.put("NAME", "AAA");
-                data.put("BBB_ID", 2);
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("ID");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("NAME");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("BBB_ID");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("ID", 1);
+                    data.put("NAME", "AAA");
+                    data.put("BBB_ID", 2);
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -386,24 +393,29 @@ public class SqlFileSelectImplTest extends TestCase {
                 Aaa.class, PATH, dto) {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("ID");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("NAME");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("BBB_ID");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("ID", 1);
-                data.put("NAME", "AAA");
-                data.put("BBB_ID", 2);
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("ID");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("NAME");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("BBB_ID");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("ID", 1);
+                    data.put("NAME", "AAA");
+                    data.put("BBB_ID", 2);
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };

@@ -15,13 +15,14 @@
  */
 package org.seasar.extension.jdbc.query;
 
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.JdbcContext;
+import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLog;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
@@ -34,6 +35,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
@@ -185,20 +187,25 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -219,20 +226,25 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -249,20 +261,25 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -286,20 +303,25 @@ public class SqlSelectImplTest extends TestCase {
                 "111", "222") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
         };
         List<AaaDto> ret = query.getResultList();
@@ -324,20 +346,25 @@ public class SqlSelectImplTest extends TestCase {
                 "111", "222") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
         };
         List<AaaDto> ret = query.limit(10).offset(5).getResultList();
@@ -359,20 +386,25 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -392,20 +424,25 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -422,20 +459,25 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -456,16 +498,21 @@ public class SqlSelectImplTest extends TestCase {
                 Integer.class, "select count(*) as cnt from aaa") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("CNT");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("CNT", 5);
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("CNT");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("CNT", 5);
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -481,15 +528,20 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                return new MockResultSet(rsMeta);
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    return handler.handle(new MockResultSet(rsMeta));
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -507,24 +559,29 @@ public class SqlSelectImplTest extends TestCase {
                 AaaDto.class, "select foo2, aaa_bbb from hoge where aaa = ?") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                data = new ArrayMap();
-                data.put("FOO2", "111x");
-                data.put("AAA_BBB", "222x");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    data = new ArrayMap();
+                    data.put("FOO2", "111x");
+                    data.put("AAA_BBB", "222x");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -546,20 +603,25 @@ public class SqlSelectImplTest extends TestCase {
                 "111", "222") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
         };
         AaaDto dto = query.getSingleResult();
@@ -583,20 +645,25 @@ public class SqlSelectImplTest extends TestCase {
                 "111", "222") {
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
         };
         AaaDto dto = query.limit(10).offset(5).getSingleResult();

@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
+import org.seasar.extension.jdbc.StatementHandler;
 import org.seasar.extension.jdbc.dialect.Db2Dialect;
 import org.seasar.extension.jdbc.dialect.MysqlDialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
@@ -46,6 +47,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
@@ -169,12 +171,23 @@ public class AbsSelectTest extends TestCase {
         query.queryTimeout = 30;
         query.executedSql = sql;
         JdbcContext jdbcContext = manager.getJdbcContext();
-        PreparedStatement ps = query.getPreparedStatement(jdbcContext);
-        assertNotNull(ps);
-        assertEquals(ResultSet.TYPE_FORWARD_ONLY, ps.getResultSetType());
-        assertEquals(10, ps.getFetchSize());
-        assertEquals(20, ps.getMaxRows());
-        assertEquals(30, ps.getQueryTimeout());
+        query.processPreparedStatement(jdbcContext,
+                new StatementHandler<Object, PreparedStatement>() {
+
+                    public Object handle(PreparedStatement ps) {
+                        try {
+                            assertNotNull(ps);
+                            assertEquals(ResultSet.TYPE_FORWARD_ONLY, ps
+                                    .getResultSetType());
+                            assertEquals(10, ps.getFetchSize());
+                            assertEquals(20, ps.getMaxRows());
+                            assertEquals(30, ps.getQueryTimeout());
+                        } catch (SQLException e) {
+                            throw new SQLRuntimeException(e);
+                        }
+                        return null;
+                    }
+                });
     }
 
     /**
@@ -189,11 +202,22 @@ public class AbsSelectTest extends TestCase {
         query.queryTimeout = 30;
         query.executedSql = sql;
         JdbcContext jdbcContext = manager.getJdbcContext();
-        PreparedStatement ps = query.getCursorPreparedStatement(jdbcContext);
-        assertEquals(ResultSet.TYPE_SCROLL_INSENSITIVE, ps.getResultSetType());
-        assertEquals(10, ps.getFetchSize());
-        assertEquals(20, ps.getMaxRows());
-        assertEquals(30, ps.getQueryTimeout());
+        query.processCursorPreparedStatement(jdbcContext,
+                new StatementHandler<Object, PreparedStatement>() {
+
+                    public Object handle(PreparedStatement ps) {
+                        try {
+                            assertEquals(ResultSet.TYPE_SCROLL_INSENSITIVE, ps
+                                    .getResultSetType());
+                            assertEquals(10, ps.getFetchSize());
+                            assertEquals(20, ps.getMaxRows());
+                            assertEquals(30, ps.getQueryTimeout());
+                        } catch (SQLException e) {
+                            throw new SQLRuntimeException(e);
+                        }
+                        return null;
+                    }
+                });
     }
 
     /**
@@ -203,9 +227,15 @@ public class AbsSelectTest extends TestCase {
     public void testCreateResultSet_noPaging() throws Exception {
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         JdbcContext jdbcContext = manager.getJdbcContext();
-        ResultSet rs = query.createResultSet(jdbcContext);
-        assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
-        assertEquals(0, rs.getRow());
+        query.processResultSet(jdbcContext, new ResultSetHandler() {
+
+            public Object handle(ResultSet rs) throws SQLException {
+                assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
+                assertEquals(0, rs.getRow());
+                return null;
+            }
+
+        });
     }
 
     /**
@@ -218,9 +248,15 @@ public class AbsSelectTest extends TestCase {
         query.offset = 5;
         query.limit = 10;
         JdbcContext jdbcContext = manager.getJdbcContext();
-        ResultSet rs = query.createResultSet(jdbcContext);
-        assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
-        assertEquals(0, rs.getRow());
+        query.processResultSet(jdbcContext, new ResultSetHandler() {
+
+            public Object handle(ResultSet rs) throws SQLException {
+                assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
+                assertEquals(0, rs.getRow());
+                return null;
+            }
+
+        });
     }
 
     /**
@@ -233,9 +269,15 @@ public class AbsSelectTest extends TestCase {
         MySelect<Aaa> query = new MySelect<Aaa>(manager, Aaa.class);
         query.offset = 5;
         JdbcContext jdbcContext = manager.getJdbcContext();
-        ResultSet rs = query.createResultSet(jdbcContext);
-        assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
-        assertEquals(0, rs.getRow());
+        query.processResultSet(jdbcContext, new ResultSetHandler() {
+
+            public Object handle(ResultSet rs) throws SQLException {
+                assertEquals(ResultSet.TYPE_FORWARD_ONLY, rs.getType());
+                assertEquals(0, rs.getRow());
+                return null;
+            }
+
+        });
     }
 
     /**
@@ -250,8 +292,9 @@ public class AbsSelectTest extends TestCase {
             MockResultSet rs = new MockResultSet();
 
             @Override
-            protected PreparedStatement getCursorPreparedStatement(
-                    JdbcContext jdbcContext) {
+            protected Object processCursorPreparedStatement(
+                    final JdbcContext jdbcContext,
+                    final StatementHandler<Object, PreparedStatement> handler) {
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
@@ -268,15 +311,20 @@ public class AbsSelectTest extends TestCase {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                return ps;
+                return handler.handle(ps);
             }
 
         };
         query.offset = 1;
         JdbcContext jdbcContext = manager.getJdbcContext();
-        ResultSet rs = query.createResultSet(jdbcContext);
-        assertEquals(ResultSet.TYPE_SCROLL_INSENSITIVE, rs.getType());
-        assertEquals(1, rs.getRow());
+        query.processResultSet(jdbcContext, new ResultSetHandler() {
+
+            public Object handle(ResultSet rs) throws SQLException {
+                assertEquals(ResultSet.TYPE_SCROLL_INSENSITIVE, rs.getType());
+                assertEquals(1, rs.getRow());
+                return null;
+            }
+        });
     }
 
     /**
@@ -290,8 +338,9 @@ public class AbsSelectTest extends TestCase {
             MockResultSet rs = new MockResultSet();
 
             @Override
-            protected PreparedStatement getCursorPreparedStatement(
-                    JdbcContext jdbcContext) {
+            protected Object processCursorPreparedStatement(
+                    final JdbcContext jdbcContext,
+                    final StatementHandler<Object, PreparedStatement> handler) {
                 MockPreparedStatement ps = new MockPreparedStatement(null, null) {
 
                     @Override
@@ -308,16 +357,21 @@ public class AbsSelectTest extends TestCase {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                return ps;
+                return handler.handle(ps);
             }
 
         };
         query.offset = 1;
         query.limit = 10;
         JdbcContext jdbcContext = manager.getJdbcContext();
-        ResultSet rs = query.createResultSet(jdbcContext);
-        assertEquals(ResultSet.TYPE_SCROLL_INSENSITIVE, rs.getType());
-        assertEquals(1, rs.getRow());
+        query.processResultSet(jdbcContext, new ResultSetHandler() {
+
+            public Object handle(ResultSet rs) throws SQLException {
+                assertEquals(ResultSet.TYPE_SCROLL_INSENSITIVE, rs.getType());
+                assertEquals(1, rs.getRow());
+                return null;
+            }
+        });
     }
 
     /**
@@ -335,20 +389,25 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -375,16 +434,21 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -407,16 +471,21 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -441,20 +510,25 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -478,16 +552,21 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -509,16 +588,21 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -546,20 +630,25 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                ArrayMap data = new ArrayMap();
-                data.put("FOO2", "111");
-                data.put("AAA_BBB", "222");
-                rs.addRowData(data);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    ArrayMap data = new ArrayMap();
+                    data.put("FOO2", "111");
+                    data.put("AAA_BBB", "222");
+                    rs.addRowData(data);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
@@ -594,16 +683,21 @@ public class AbsSelectTest extends TestCase {
             }
 
             @Override
-            protected ResultSet createResultSet(JdbcContext jdbcContext) {
-                MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-                MockColumnMetaData columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("FOO2");
-                rsMeta.addColumnMetaData(columnMeta);
-                columnMeta = new MockColumnMetaData();
-                columnMeta.setColumnLabel("AAA_BBB");
-                rsMeta.addColumnMetaData(columnMeta);
-                MockResultSet rs = new MockResultSet(rsMeta);
-                return rs;
+            protected Object processResultSet(final JdbcContext jdbcContext,
+                    final ResultSetHandler handler) {
+                try {
+                    MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+                    MockColumnMetaData columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("FOO2");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    columnMeta = new MockColumnMetaData();
+                    columnMeta.setColumnLabel("AAA_BBB");
+                    rsMeta.addColumnMetaData(columnMeta);
+                    MockResultSet rs = new MockResultSet(rsMeta);
+                    return handler.handle(rs);
+                } catch (SQLException e) {
+                    throw new SQLRuntimeException(e);
+                }
             }
 
         };
