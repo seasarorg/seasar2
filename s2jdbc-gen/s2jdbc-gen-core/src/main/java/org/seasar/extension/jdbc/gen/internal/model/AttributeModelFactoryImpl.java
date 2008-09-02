@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.model.AttributeModel;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
@@ -57,36 +61,96 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setNullable(attributeDesc.isNullable());
         attributeModel.setUnique(attributeDesc.isUnique());
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
-        attributeModel.setLength(attributeDesc.getLength());
-        attributeModel.setPrecision(attributeDesc.getPrecision());
-        attributeModel.setScale(attributeDesc.getScale());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
-        if (isNumber(attributeDesc.getAttributeClass())) {
-            attributeModel.setNumber(true);
-        }
+        attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
         if (showColumnName) {
             attributeModel.setColumnName(attributeDesc.getColumnName());
         }
         if (showColumnDefinition) {
-            attributeModel.setColumnDefinition(attributeDesc
-                    .getColumnDefinition());
-            attributeModel.setUnsupportedColumnType(attributeDesc
-                    .isUnsupportedColumnType());
+            doColumnDefinition(attributeModel, attributeDesc);
+        } else {
+            doLength(attributeModel, attributeDesc);
+            doPrecision(attributeModel, attributeDesc);
+            doScale(attributeModel, attributeDesc);
         }
-        attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
         return attributeModel;
     }
 
     /**
-     * 数値を表すクラスの場合{@code true}を返します。
+     * カラム定義を処理します。
      * 
-     * @param clazz
-     *            クラス
-     * @return 数値を表すクラスの場合{@code true}
+     * @param attributeModel
+     *            属性モデル
+     * @param attributeDesc
+     *            属性記述
      */
-    public boolean isNumber(Class<?> clazz) {
-        Class<?> wrapperClass = ClassUtil.getWrapperClassIfPrimitive(clazz);
-        return Number.class.isAssignableFrom(wrapperClass);
+    protected void doColumnDefinition(AttributeModel attributeModel,
+            AttributeDesc attributeDesc) {
+        attributeModel.setColumnDefinition(attributeDesc.getColumnDefinition());
+        attributeModel.setUnsupportedColumnType(attributeDesc
+                .isUnsupportedColumnType());
     }
 
+    /**
+     * 長さを処理します。
+     * 
+     * @param attributeModel
+     *            属性モデル
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doLength(AttributeModel attributeModel,
+            AttributeDesc attributeDesc) {
+        if (attributeDesc.getLength() < 1) {
+            return;
+        }
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                .getAttributeClass());
+        if (!Number.class.isAssignableFrom(clazz)
+                && !Date.class.isAssignableFrom(clazz)
+                && !Calendar.class.isAssignableFrom(clazz)) {
+            attributeModel.setLength(attributeDesc.getLength());
+        }
+    }
+
+    /**
+     * 精度を処理します。
+     * 
+     * @param attributeModel
+     *            属性モデル
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doPrecision(AttributeModel attributeModel,
+            AttributeDesc attributeDesc) {
+        if (attributeDesc.getPrecision() < 1) {
+            return;
+        }
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                .getAttributeClass());
+        if (Number.class.isAssignableFrom(clazz)) {
+            attributeModel.setPrecision(attributeDesc.getPrecision());
+        }
+    }
+
+    /**
+     * スケールを処理します。
+     * 
+     * @param attributeModel
+     *            属性モデル
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doScale(AttributeModel attributeModel,
+            AttributeDesc attributeDesc) {
+        if (attributeDesc.getScale() < 1) {
+            return;
+        }
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                .getAttributeClass());
+        if (clazz == BigDecimal.class || clazz == Float.class
+                || clazz == Double.class) {
+            attributeModel.setScale(attributeDesc.getScale());
+        }
+    }
 }

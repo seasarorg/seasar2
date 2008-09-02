@@ -238,11 +238,11 @@ public class GenerateServiceTask extends AbstractTask {
     /**
      * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param implementsNames
+     * @param implementNames
      *            名前インタフェースを実装する場合{@code true}、しない場合{@code false}
      */
-    public void setImplementsNames(boolean implementsNames) {
-        command.setImplementsNames(implementsNames);
+    public void setImplementNames(boolean implementNames) {
+        command.setImplementNames(implementNames);
     }
 
     @Override

@@ -45,7 +45,7 @@ public class ${shortClassName} {
     @Version
   </#if>
   <#if !attr.transient>
-    @Column(<#if attr.columnName??>name = "${attr.columnName}"</#if><#if attr.columnDefinition??><#if attr.columnName??>, </#if>columnDefinition = "${attr.columnDefinition}"</#if><#if attr.columnName?? || attr.columnDefinition??>, </#if>nullable = ${attr.nullable?string}, unique = ${attr.unique?string})
+    @Column(<#if attr.columnName??>name = "${attr.columnName}", </#if><#if attr.columnDefinition??>columnDefinition = "${attr.columnDefinition}", <#else><#if attr.length??>length = ${attr.length}, </#if><#if attr.precision??>precision = ${attr.precision}, </#if><#if attr.scale??>scale = ${attr.scale}, </#if></#if>nullable = ${attr.nullable?string}, unique = ${attr.unique?string})
   </#if>
     public ${attr.attributeClass.simpleName} ${attr.name};
 </#list>

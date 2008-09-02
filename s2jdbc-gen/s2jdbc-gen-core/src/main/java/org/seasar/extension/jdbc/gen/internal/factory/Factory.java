@@ -317,13 +317,13 @@ public interface Factory {
      *            サービスクラス名のサフィックス
      * @param namesModelFactory
      *            名前モデルのファクトリ
-     * @param implementsNames
+     * @param implementsName
      *            名前インタフェースを実装する場合{@code true}
      * @return {@link ServiceModelFactory}の実装
      */
     ServiceModelFactory createServiceModelFactory(Command command,
             String packageName, String serviceClassNameSuffix,
-            NamesModelFactory namesModelFactory, boolean implementsNames);
+            NamesModelFactory namesModelFactory, boolean implementsName);
 
     /**
      * {@link AbstServiceModelFactory}の実装を作成します。

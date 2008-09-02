@@ -40,7 +40,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
     protected NamesModelFactory namesModelFactory;
 
     /** 名前インタフェースを実装する場合{@code true} */
-    protected boolean implementsNames;
+    protected boolean implementNames;
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
@@ -54,12 +54,12 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      *            名前モデルのファクトリ
      * @param serviceClassNameSuffix
      *            サービスクラス名のサフィックス
-     * @param implementsNames
+     * @param implementNames
      *            名前インタフェースを実装する場合{@code true}
      */
     public ServiceModelFactoryImpl(String packageName,
             String serviceClassNameSuffix, NamesModelFactory namesModelFactory,
-            boolean implementsNames) {
+            boolean implementNames) {
         if (serviceClassNameSuffix == null) {
             throw new NullPointerException("serviceClassNameSuffix");
         }
@@ -69,7 +69,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         this.packageName = packageName;
         this.serviceClassNameSuffix = serviceClassNameSuffix;
         this.namesModelFactory = namesModelFactory;
-        this.implementsNames = implementsNames;
+        this.implementNames = implementNames;
     }
 
     public ServiceModel getServiceModel(EntityMeta entityMeta) {
@@ -96,7 +96,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      *            エンティティメタデータ
      */
     protected void doNamesModel(ServiceModel serviceModel, EntityMeta entityMeta) {
-        if (implementsNames) {
+        if (implementNames) {
             NamesModel namesModel = namesModelFactory.getNamesModel(entityMeta);
             serviceModel.setNamesModel(namesModel);
             String namesClassName = ClassUtil.concatName(namesModel

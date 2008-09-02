@@ -196,10 +196,10 @@ public class FactoryImpl implements Factory {
 
     public ServiceModelFactory createServiceModelFactory(Command command,
             String packageName, String serviceClassNameSuffix,
-            NamesModelFactory namesModelFactory, boolean implementsNames) {
+            NamesModelFactory namesModelFactory, boolean implementNames) {
 
         return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix,
-                namesModelFactory, implementsNames);
+                namesModelFactory, implementNames);
     }
 
     public AbstServiceModelFactory createAbstServiceModelFactory(

@@ -52,13 +52,13 @@ public class AttributeModel {
     protected boolean unique;
 
     /** 長さ */
-    protected int length;
+    protected Integer length;
 
     /** 精度 */
-    protected int precision;
+    protected Integer precision;
 
     /** スケール */
-    protected int scale;
+    protected Integer scale;
 
     /** カラム名 */
     protected String columnName;
@@ -71,9 +71,6 @@ public class AttributeModel {
 
     /** サポートされていないカラム型の場合{@code true} */
     protected boolean unsupportedColumnType;
-
-    /** 数値の場合{@code true} */
-    protected boolean number;
 
     /**
      * 名前を返します。
@@ -213,7 +210,7 @@ public class AttributeModel {
      * 
      * @return 長さ
      */
-    public int getLength() {
+    public Integer getLength() {
         return length;
     }
 
@@ -223,7 +220,7 @@ public class AttributeModel {
      * @param length
      *            長さ
      */
-    public void setLength(int length) {
+    public void setLength(Integer length) {
         this.length = length;
     }
 
@@ -232,7 +229,7 @@ public class AttributeModel {
      * 
      * @return 精度
      */
-    public int getPrecision() {
+    public Integer getPrecision() {
         return precision;
     }
 
@@ -242,7 +239,7 @@ public class AttributeModel {
      * @param precision
      *            精度
      */
-    public void setPrecision(int precision) {
+    public void setPrecision(Integer precision) {
         this.precision = precision;
     }
 
@@ -251,7 +248,7 @@ public class AttributeModel {
      * 
      * @return スケール
      */
-    public int getScale() {
+    public Integer getScale() {
         return scale;
     }
 
@@ -261,7 +258,7 @@ public class AttributeModel {
      * @param scale
      *            スケール
      */
-    public void setScale(int scale) {
+    public void setScale(Integer scale) {
         this.scale = scale;
     }
 
@@ -377,25 +374,6 @@ public class AttributeModel {
      */
     public void setUnsupportedColumnType(boolean unsupportedColumnType) {
         this.unsupportedColumnType = unsupportedColumnType;
-    }
-
-    /**
-     * 数値の場合{@code true}を返します。
-     * 
-     * @return 数値の場合{@code true}
-     */
-    public boolean isNumber() {
-        return number;
-    }
-
-    /**
-     * 数値の場合{@code true}を設定します。
-     * 
-     * @param number
-     *            数値の場合{@code true}
-     */
-    public void setNumber(boolean number) {
-        this.number = number;
     }
 
 }

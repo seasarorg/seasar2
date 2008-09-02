@@ -84,7 +84,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected String serviceTemplateFileName = "java/service.ftl";
 
     /** 名前インタフェースを実装する場合{@code true} */
-    protected boolean implementsNames = true;
+    protected boolean implementNames = true;
 
     /** 名前インタフェース名のサフィックス */
     protected String namesInterfaceNameSuffix = "Names";
@@ -438,18 +438,18 @@ public class GenerateServiceCommand extends AbstractCommand {
      * 
      * @return 名前インタフェースを実装する場合{@code true}、しない場合{@code false}
      */
-    public boolean isImplementsNames() {
-        return implementsNames;
+    public boolean isImplementNames() {
+        return implementNames;
     }
 
     /**
      * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param implementsNames
+     * @param implementNames
      *            名前インタフェースを実装する場合{@code true}、しない場合{@code false}
      */
-    public void setImplementsNames(boolean implementsNames) {
-        this.implementsNames = implementsNames;
+    public void setImplementNames(boolean implementNames) {
+        this.implementNames = implementNames;
     }
 
     @Override
@@ -542,7 +542,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected ServiceModelFactory createServiceModelFactory() {
         return factory.createServiceModelFactory(this, ClassUtil.concatName(
                 rootPackageName, servicePackageName), serviceClassNameSuffix,
-                namesModelFactory, implementsNames);
+                namesModelFactory, implementNames);
     }
 
     /**
