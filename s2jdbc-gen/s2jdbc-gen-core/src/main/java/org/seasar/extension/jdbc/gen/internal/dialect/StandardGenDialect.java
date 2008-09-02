@@ -327,10 +327,10 @@ public class StandardGenDialect implements GenDialect {
                 "smallint", Short.class);
 
         private static StandardColumnType TIME = new StandardColumnType("time",
-                Date.class, TemporalType.DATE);
+                Date.class, TemporalType.TIME);
 
         private static StandardColumnType TIMESTAMP = new StandardColumnType(
-                "timestamp", Date.class, TemporalType.DATE);
+                "timestamp", Date.class, TemporalType.TIMESTAMP);
 
         private static StandardColumnType TINYINT = new StandardColumnType(
                 "tinyint", Short.class);

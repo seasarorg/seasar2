@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.sql.Types;
 
+import javax.persistence.TemporalType;
+
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
@@ -83,6 +85,26 @@ public class StandardGenDialectTest {
         GenDialect.ColumnType columnType = dialect.getColumnType("integer");
         String definition = columnType.getColumnDefinition(10, 0, 0, "5");
         assertEquals("integer default 5", definition);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetTemporalType_time() throws Exception {
+        GenDialect.ColumnType columnType = dialect.getColumnType("time");
+        assertEquals(TemporalType.TIME, columnType.getTemporalType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetTemporalType_timestamp() throws Exception {
+        GenDialect.ColumnType columnType = dialect.getColumnType("timestamp");
+        assertEquals(TemporalType.TIMESTAMP, columnType.getTemporalType());
     }
 
     /**
