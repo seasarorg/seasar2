@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - セットアップ</title>
+	</properties>
+	<body>
+		<section name="セットアップ">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#概要">概要</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#ビルドファイル">ビルドファイル</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#Antタスクの実行">Antタスクの実行</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+		<section name="概要">
+			<p>
+				S2JDBC-Genのセットアップの前に<a href="../s2jdbc_setup.html">S2JDBCのセットアップ</a>をしてください。
+			</p>
+			<p>
+				S2JDBC-Genの動作にはSeasar2、FreeMarkerが必要です。
+				S2JDBC-Gen-x.x.x.zipを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-core-x.x.x.jar）とFreeMarkerのjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
+				S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
+			</p>
+		</section>
+		<section name="ビルドファイルの準備">
+			<p>
+				S2JDBC-GenのAntタスクを実行するにはAntのビルドファイルが必要です。
+				典型的なビルドファイルは次のようになります。
+			</p>
+<source><![CDATA[<project name="sample" default="gen-entity" basedir=".">
+
+    <path id="classpath">
+        <pathelement location="build/classes"/>
+        <fileset dir="lib"/>
+    </path>
+
+    <taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+
+    <target name="gen-entity">
+        <gen-entity
+            rootpackagename="examples"
+            classpathref="classpath"
+        />
+    </target>
+
+    <target name="gen-ddl">
+        <gen-ddl
+            classpathdir="build/classes"
+            rootpackagename="examples"
+            classpathref="classpath"
+        />
+    </target>
+
+    <target name="migrate">
+        <migrate
+            classpathdir="build/classes"
+            rootpackagename="examples"
+            classpathref="classpath"
+        />
+    </target>
+
+</project>]]></source>
+			<subsection name="解説:クラスパスの設定">
+				<p>
+					S2JDBC-GenのAntタスクの多くは、実行時にエンティティクラスを参照します。
+					また、S2JDBCの動作に必要なjarファイルに加え、s2jdbc-gen-core-x.x.x.jarとfreemarker-2.3.x.jarが必要です。
+					すべてのAntタスクからエンティティクラスやjarファイルを参照できるように、あらかじめクラスパスを設定しておきます。
+				</p>
+<source><![CDATA[<path id="classpath">
+    <pathelement location="build/classes"/>
+    <fileset dir="lib"/>
+</path>]]></source>
+				<p>
+					ここでは、"build/classes"がエンティティクラスを格納するディレクトリとします。
+					また、"lib"が必要なjarファイルを格納するディレクトリだとします。
+				</p>
+			</subsection>
+			<subsection name="解説:タスク定義の参照">
+				<p>
+					S2JDBC-Genのタスク定義は、s2jdbc-gen-core-x.x.x.jar内のs2jdbc-gen-task.propertiesに含まれています。
+					これを参照するためのに&lt;taskdef&gt;の定義が必要です。
+				</p>
+<source><![CDATA[<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>]]></source>
+				<p>
+					classpathref属性でs2jdbc-gen-core-x.x.x.jarを含めたクラスパスを参照するようにします。
+				</p>
+			</subsection>
+			<subsection name="解説:タスクの記述">
+				<p>
+					S2JDBC-Genのタスクを&lt;target&gt;要素の内側に記述します。
+				</p>
+<source><![CDATA[<target name="gen-entity">
+    <gen-entity
+        rootpackagename="examples"
+        classpathref="classpath"
+    />
+</target>]]></source>
+				<p>
+					classpathref属性の指定を忘れないようにしてください。
+					S2JDBC-Genのタスク一覧や、タスクに記述できる属性については<a href="task.html#タスク">タスク</a>を参照ください。
+				</p>
+			</subsection>
+		</section>
+		<section name="Antタスクの実行">
+			<p>
+				以下、ビルドファイルの名前をs2jdbc-gen-build.xmlだとします。
+			</p>
+			<subsection name="コマンドラインからの実行">
+				<p>
+					Antをコマンドラインから実行する場合は、ビルドファイルが存在する階層に移動し、次のコマンドを実行してください。
+			<source><![CDATA[
+ant -f s2jdbc-gen-build.xml ターゲット名
+]]></source>
+				</p>
+			</subsection>
+			<subsection name="Eclipseからの実行">
+				<p>
+					AntをEclipse上で起動する場合は、s2jdbc-gen-build.xmlをAntエディタで開き、実行してください。<br />
+					ただし、Windows上でEclipse 3.4を利用している場合は、Console EncodingにMS932を指定して実行する必要があります。
+					MS932を指定しない場合、ログがコンソールに正しく出力されません。
+					Console Encodingを指定して実行する手順は次のようになります。
+					<ol>
+						<li>s2jdbc-gen-build.xmlをAntエディタで開きます。</li>
+						<li>メニューから「Run」-「Extenal Tools」-「Extenal Tools Configurations...」を選択します。Extenal Tools Configurationsダイアログが開きます。</li>
+						<li>左側のメニューにある「Ant Build」という項目をダブルクリックし、s2jdbc-gen-build.xmlに対する設定を新規作成します。</li>
+						<li>ダイアログの「Common」タブの「Console Encoding」にMS932を指定します。MS932がコンボボックスに表示されていない場合は一旦ワークスペースやプロジェクトのエンコーディングをMS932に変更すると登場するようになります。</li>
+						<li>ダイアログの「Run」ボタンを押しAntを実行します。</li>
+					</ol>
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

@@ -9,7 +9,7 @@
 			<ul>
 				<li>
 					<p>
-						<a href="#概要">概要</a>
+						<a href="#タスクの一覧">タスクの一覧</a>
 					</p>
 				</li>
 				<li>
@@ -69,37 +69,36 @@
 				</li>
 			</ul>
 		</section>
-		<section name="概要">
-			S2JDBC-Genでは次のタスクを提供します。
+		<section name="タスクの一覧">
 			<p>
-				主要タスク
+				S2JDBC-Genでは以下のタスクを提供します。
 			</p>
-			<table border="1" cellpadding="2" cellspacing="0">
-				<tr><th>タスク名</th><th>説明</th></tr>
-				<tr><td><a href="#GenerateEntityTask">GenerateEntityTask</a></td><td>データベースのテーブルからエンティティクラスのJavaコードを生成するタスクです。</td></tr>
-				<tr><td><a href="#GenerateDdlTask">GenerateDdlTask</a></td><td>エンティティクラスからバージョン管理されたDDLを生成するタスクです。</td></tr>
-				<tr><td><a href="#MigrateTask">MigrateTask</a></td><td>バージョン管理されたDDLを使いデータベーススキーマのマイグレーションを実行するタスクです。</td></tr>
-			</table>
-			<p>
-				オプションタスク
-			</p>
-			<table border="1" cellpadding="2" cellspacing="0">
-				<tr><th>タスク名</th><th>説明</th></tr>
-				<tr><td><a href="#GenerateTestTask">GenerateTestTask</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
-				<tr><td><a href="#GenerateConditionTask">GenerateConditionTask</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
-				<tr><td><a href="#GenerateNamesTask">GenerateNamesTask</a></td><td>エンティティクラスから名前インタフェースのJavaコードを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
-				<tr><td><a href="#GenerateServiceTask">GenerateServiceTask</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
-			</table>
-			<p>
-				ユーティリティタスク
-			</p>
-			<table border="1" cellpadding="2" cellspacing="0">
-				<tr><th>タスク名</th><th>説明</th></tr>
-				<tr><td><a href="#DumpDbMetaTask">DumpDbMetaTask</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
-				<tr><td><a href="#DumpDataTask">DumpDataTask</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGenerateDdlTaskに含まれていますが、GenerateDdlTaskとは別にダンプを行いたい場合に使用できます。</td></tr>
-				<tr><td><a href="#LoadDataTask">LoadDataTask</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateTaskに含まれていますが、MigrateTaskとは別にロードを行いたい場合に使用できます。</td></tr>
-				<tr><td><a href="#ExecuteSqlTask">ExecuteSqlTask</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
-			</table>
+			<subsection name="コアタスク">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>タスク名</th><th>説明</th></tr>
+					<tr><td><a href="#GenerateEntityTask">GenerateEntityTask</a></td><td>データベースのテーブルからエンティティクラスのJavaコードを生成するタスクです。</td></tr>
+					<tr><td><a href="#GenerateDdlTask">GenerateDdlTask</a></td><td>エンティティクラスからバージョン管理されたDDLを生成するタスクです。</td></tr>
+					<tr><td><a href="#MigrateTask">MigrateTask</a></td><td>バージョン管理されたDDLを使いデータベーススキーマのマイグレーションを実行するタスクです。</td></tr>
+				</table>
+			</subsection>
+			<subsection name="オプションタスク">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>タスク名</th><th>説明</th></tr>
+					<tr><td><a href="#GenerateTestTask">GenerateTestTask</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
+					<tr><td><a href="#GenerateConditionTask">GenerateConditionTask</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
+					<tr><td><a href="#GenerateNamesTask">GenerateNamesTask</a></td><td>エンティティクラスから名前インタフェースのJavaコードを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
+					<tr><td><a href="#GenerateServiceTask">GenerateServiceTask</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
+				</table>
+			</subsection>
+			<subsection name="ユーティリティタスク">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>タスク名</th><th>説明</th></tr>
+					<tr><td><a href="#DumpDbMetaTask">DumpDbMetaTask</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
+					<tr><td><a href="#DumpDataTask">DumpDataTask</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGenerateDdlTaskに含まれていますが、GenerateDdlTaskとは別にダンプを行いたい場合に使用できます。</td></tr>
+					<tr><td><a href="#LoadDataTask">LoadDataTask</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateTaskに含まれていますが、MigrateTaskとは別にロードを行いたい場合に使用できます。</td></tr>
+					<tr><td><a href="#ExecuteSqlTask">ExecuteSqlTask</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
+				</table>
+			</subsection>
 		</section>
 		<section name="DumpDataTask">
 			<subsection name="説明">
@@ -353,7 +352,7 @@
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db\migrate"</td><td>NO</td></tr>
 					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db\ddl-info.txt"</td><td>NO</td></tr>
-					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名にしようされます。</td><td>"0000"</td><td>NO</td></tr>
+					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
 					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
 					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
 					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
@@ -520,7 +519,7 @@
 					<tr><td>serviceClassNameSuffix</td><td>サービスクラス名のサフィックスです。</td><td>"Service"</td><td>NO</td></tr>
 					<tr><td>abstractServiceTemplateFileName</td><td>抽象サービスクラスのテンプレートファイル名です。</td><td>"java/abstract-service.ftl"</td><td>NO</td></tr>
 					<tr><td>serviceTemplateFileName</td><td>サービスクラスのテンプレートファイル名です。</td><td>"java/service.ftl"</td><td>NO</td></tr>
-					<tr><td>implementsNames</td><td>"true"の場合、名前インタフェースを実装します。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>implementNames</td><td>"true"の場合、名前インタフェースを実装します。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>namesInterfaceNameSuffix</td><td>名前インタフェース名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
 					<tr><td>namesPackageName</td><td>名前インタフェースのパッケージ名です。名前インタフェースは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
