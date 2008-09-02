@@ -5,9 +5,9 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/ant-1.7.0.jar" sourcepath="lib/sources/ant-1.7.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/ant-1.7.0.jar" sourcepath="libsrc/ant-1.7.0-sources.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
-	<classpathentry kind="lib" path="lib/freemarker-2.3.13.jar" sourcepath="lib/sources/freemarker-2.3.13-sources.jar"/>
+	<classpathentry kind="lib" path="lib/freemarker-2.3.13.jar" sourcepath="libsrc/freemarker-2.3.13-sources.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

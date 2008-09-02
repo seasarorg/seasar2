@@ -1,0 +1,24 @@
+<project name="s2jdbc-gen-tutorial" default="dist" basedir=".">
+	<target name="dist">
+		<mkdir dir="${zipDir}"/>
+		<zip zipfile="${zipDir}/S2JDBC-Gen-${ver}.zip">
+			<zipfileset prefix="s2jdbc-gen" dir=".">
+				<exclude name="**/build/**"/>
+				<exclude name="**/target/**"/>
+				<exclude name="**/site/**"/>
+				<exclude name="build.xml"/>
+			</zipfileset>
+			<zipfileset prefix="s2jdbc-gen/lib" dir="target">
+				<include name="s2jdbc-gen-core-${ver}.jar"/>
+			</zipfileset>
+			<zipfileset prefix="s2jdbc-gen/libsrc" dir="target">
+				<include name="s2jdbc-gen-core-${ver}-sources.jar"/>
+			</zipfileset>
+			<zipfileset prefix="s2jdbc-gen/doc" dir="../seasar2/target/site/ja">
+				<include name="**/css/**"/>
+				<include name="**/images/**"/>
+				<include name="**/s2jdbc_gen/**"/>
+			</zipfileset>
+		</zip>
+	</target>
+</project>
