@@ -45,6 +45,13 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2008/09/02</dt>
+				<dd>
+					<div>
+						<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a> 0.9.0 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+					</div>
+				</dd>
 				<dt>2008/08/26</dt>
 				<dd>
 					<div>
