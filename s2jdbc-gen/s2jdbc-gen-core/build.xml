@@ -9,10 +9,10 @@
 				<exclude name="build.xml"/>
 			</zipfileset>
 			<zipfileset prefix="s2jdbc-gen/lib" dir="target">
-				<include name="s2jdbc-gen-core-${ver}.jar"/>
+				<include name="s2jdbc-gen-${ver}.jar"/>
 			</zipfileset>
 			<zipfileset prefix="s2jdbc-gen/libsrc" dir="target">
-				<include name="s2jdbc-gen-core-${ver}-sources.jar"/>
+				<include name="s2jdbc-gen-${ver}-sources.jar"/>
 			</zipfileset>
 			<zipfileset prefix="s2jdbc-gen/doc" dir="../seasar2/target/site/ja">
 				<include name="**/css/**"/>

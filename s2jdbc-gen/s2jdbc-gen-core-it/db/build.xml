@@ -16,13 +16,13 @@
 	
 	<path id="classpath">
 		<pathelement location="${build}"/>
-		<pathelement location="../../s2jdbc-gen-core/build/classes"/>
+		<pathelement location="../../s2jdbc-gen/build/classes"/>
 		<pathelement location="../../seasar2/build/classes"/>
 		<pathelement location="../../s2-tiger/build/classes"/>
 		<fileset dir="../lib">
 			<exclude name="**/*-sources.jar"/>
 		</fileset>
-		<fileset dir="../../s2jdbc-gen-core/lib">
+		<fileset dir="../../s2jdbc-gen/lib">
 			<exclude name="**/*-sources.jar"/>
 		</fileset>
 		<fileset dir="../../seasar2/lib">
