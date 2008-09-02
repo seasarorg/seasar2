@@ -6,73 +6,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <!-- The Basics -->
-  <groupId>org.seasar.container</groupId>
-  <artifactId>s2jdbc-gen-core</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
+  <artifactId>s2jdbc-gen</artifactId>
+  <version>0.9.0</version>
   <packaging>jar</packaging>
+  <parent>
+    <groupId>org.seasar.container</groupId>
+    <artifactId>s2-container-project</artifactId>
+    <version>2.4.28</version>
+    <relativePath>../seasar2</relativePath>
+  </parent>
 
   <!-- More Project Information -->
   <name>S2JDBC-Gen</name>
   <url>http://s2container.seasar.org/</url>
-
-  <!-- Environment Settings -->
-  <issueManagement>
-    <system>JIRA</system>
-    <url><![CDATA[https://www.seasar.org/issues/browse/CONTAINER]]></url>
-  </issueManagement>
-  <mailingLists>
-    <mailingList>
-      <name>Seasar-user</name>
-      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-user</subscribe>
-      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-user</unsubscribe>
-      <post>seasar-user@ml.seasar.org</post>
-      <archive>https://www.seasar.org/mailman/listinfo/seasar-user</archive>
-    </mailingList>
-    <mailingList>
-      <name>Seasar-dev</name>
-      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-dev</subscribe>
-      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-dev</unsubscribe>
-      <post>seasar-dev@ml.seasar.org</post>
-      <archive>https://www.seasar.org/mailman/listinfo/seasar-dev</archive>
-    </mailingList>
-    <mailingList>
-      <name>Seasar-user-en</name>
-      <subscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</subscribe>
-      <unsubscribe>https://www.seasar.org/mailman/listinfo/seasar-user-en</unsubscribe>
-      <post>seasar-user-en@ml.seasar.org</post>
-      <archive>http://ml.seasar.org/archives/seasar-user-en/</archive>
-    </mailingList>
-  </mailingLists>
-  <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/s2container/trunk/seasar2/</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/s2container/trunk/seasar2/</developerConnection>
-    <url>http://svn.seasar.org/browse/?root=s2container</url>
-  </scm>
-  <repositories>
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-  </repositories>
-  <distributionManagement>
-    <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2</url>
-    </repository>
-    <snapshotRepository>
-      <uniqueVersion>true</uniqueVersion>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Snapshot Repository</name>
-      <url>dav:https://www.seasar.org/maven/maven2-snapshot</url>
-    </snapshotRepository>
-    <site>
-      <id>maven.seasar.org</id>
-      <url>dav:https://www.seasar.org/site/s2container/2.4</url>
-    </site>
-  </distributionManagement>
 
   <!-- Build Settings -->
   <build>
@@ -89,20 +35,6 @@
         </plugin>
       </plugins>
     </pluginManagement>
-    <plugins>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>source-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
   </build>
 
   <!-- Dependency Settings -->
@@ -110,19 +42,19 @@
     <dependency>
       <groupId>org.seasar.container</groupId>
       <artifactId>s2-tiger</artifactId>
-      <version>2.4.28</version>
-      <type>jar</type>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.ant</groupId>
-      <artifactId>ant</artifactId>
-      <version>1.7.0</version>
+      <version>${parent.version}</version>
       <type>jar</type>
     </dependency>
     <dependency>
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
       <version>2.3.13</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.7.0</version>
       <type>jar</type>
     </dependency>
     <dependency>
