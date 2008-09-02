@@ -1,5 +1,13 @@
-<project name="s2jdbc-gen-tutorial" default="dist" basedir=".">
+<project name="s2jdbc-gen" default="dist" basedir=".">
+	<tstamp>
+		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
+	</tstamp>
+	<property name="zipDir" value="target/site/download/${releaseDate}"/>
+
 	<target name="dist">
+		<ant antfile="../seasar2/build.xml" target="fix-site">
+			<property name="site" value="${basedir}/target/site"/>
+		</ant>
 		<mkdir dir="${zipDir}"/>
 		<zip zipfile="${zipDir}/S2JDBC-Gen-${ver}.zip">
 			<zipfileset prefix="s2jdbc-gen" dir=".">
