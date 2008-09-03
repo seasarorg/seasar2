@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.util.regex.Pattern;
+
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
@@ -34,8 +36,8 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
-    /** バージョンカラム */
-    protected String versionColumnName;
+    /** バージョンカラム名のパターン */
+    protected Pattern versionColumnNamePattern;
 
     /**
      * インスタンスを構築します。
@@ -44,24 +46,25 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      *            永続化層の命名規約
      * @param dialect
      *            方言
-     * @param versionColumnName
-     *            バージョンカラム
+     * @param versionColumnNamePattern
+     *            バージョンカラム名のパターン
      */
     public AttributeDescFactoryImpl(
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName) {
+            String versionColumnNamePattern) {
         if (persistenceConvention == null) {
             throw new NullPointerException("persistenceConvention");
         }
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
-        if (versionColumnName == null) {
-            throw new NullPointerException("versionColumnName");
+        if (versionColumnNamePattern == null) {
+            throw new NullPointerException("versionColumnNamePattern");
         }
         this.persistenceConvention = persistenceConvention;
         this.dialect = dialect;
-        this.versionColumnName = versionColumnName;
+        this.versionColumnNamePattern = Pattern
+                .compile(versionColumnNamePattern);
     }
 
     public AttributeDesc getAttributeDesc(DbColumnMeta columnMeta) {
@@ -121,7 +124,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      */
     protected void doVersion(DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        if (versionColumnName.equalsIgnoreCase(columnMeta.getName())) {
+        if (versionColumnNamePattern.matcher(columnMeta.getName()).matches()) {
             attributeDesc.setVersion(true);
         }
     }

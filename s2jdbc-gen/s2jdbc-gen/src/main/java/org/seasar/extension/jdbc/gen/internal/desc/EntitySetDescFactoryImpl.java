@@ -52,8 +52,8 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
-    /** バージョンカラム名 */
-    protected String versionColumnName;
+    /** バージョンカラム名のパターン */
+    protected String versionColumnNamePattern;
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile;
@@ -70,14 +70,14 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      *            方言
      * @param persistenceConvention
      *            永続化層の命名規約
-     * @param versionColumnName
-     *            バージョンカラム名
+     * @param versionColumnNamePattern
+     *            バージョンカラム名のパターン
      * @param pluralFormFile
      *            単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null}
      */
     public EntitySetDescFactoryImpl(DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName, File pluralFormFile) {
+            String versionColumnNamePattern, File pluralFormFile) {
         if (dbTableMetaReader == null) {
             throw new NullPointerException("dbTableMetaReader");
         }
@@ -87,13 +87,13 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
         if (persistenceConvention == null) {
             throw new NullPointerException("persistenceConvention");
         }
-        if (versionColumnName == null) {
-            throw new NullPointerException("versionColumnName");
+        if (versionColumnNamePattern == null) {
+            throw new NullPointerException("versionColumnNamePattern");
         }
         this.dbTableMetaReader = dbTableMetaReader;
         this.dialect = dialect;
         this.persistenceConvention = persistenceConvention;
-        this.versionColumnName = versionColumnName;
+        this.versionColumnNamePattern = versionColumnNamePattern;
         this.pluralFormFile = pluralFormFile;
         entityDescFactory = createEntityDescFactory();
     }
@@ -124,7 +124,7 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      */
     protected EntityDescFactory createEntityDescFactory() {
         AttributeDescFactory attributeDescFactory = new AttributeDescFactoryImpl(
-                persistenceConvention, dialect, versionColumnName);
+                persistenceConvention, dialect, versionColumnNamePattern);
         CompositeUniqueConstraintDescFactory compositeUniqueConstraintDescFactory = new CompositeUniqueConstraintDescFactoryImpl();
         return new EntityDescFactoryImpl(persistenceConvention,
                 attributeDescFactory, compositeUniqueConstraintDescFactory);

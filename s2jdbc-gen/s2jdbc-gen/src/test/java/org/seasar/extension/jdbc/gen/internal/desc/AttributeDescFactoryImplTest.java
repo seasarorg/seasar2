@@ -43,7 +43,8 @@ public class AttributeDescFactoryImplTest {
     public void setUp() {
         PersistenceConvention convention = new PersistenceConventionImpl();
         GenDialect dialect = new StandardGenDialect();
-        factory = new AttributeDescFactoryImpl(convention, dialect, "VERSION");
+        factory = new AttributeDescFactoryImpl(convention, dialect,
+                "(?i)(version|version[_]?no)");
     }
 
     /**
@@ -117,9 +118,35 @@ public class AttributeDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testIsVersion() throws Exception {
+    public void testIsVersion_VERSION() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
-        columnMeta.setName("version");
+        columnMeta.setName("VERSION");
+        columnMeta.setTypeName("integer");
+        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        assertTrue(attributeDesc.isVersion());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIsVersion_VERSION_NO() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("VERSION_NO");
+        columnMeta.setTypeName("integer");
+        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        assertTrue(attributeDesc.isVersion());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIsVersion_VERSIONNO() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("VERSIONNO");
         columnMeta.setTypeName("integer");
         AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
         assertTrue(attributeDesc.isVersion());

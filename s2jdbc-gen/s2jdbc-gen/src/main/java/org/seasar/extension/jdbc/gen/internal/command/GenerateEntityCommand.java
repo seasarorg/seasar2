@@ -64,8 +64,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** Javaコード生成の対象としないテーブル名の正規表現 */
     protected String ignoreTableNamePattern = "(SCHEMA_INFO|.*\\$.*)";
 
-    /** バージョンカラムの名前 */
-    protected String versionColumnName = "version";
+    /** バージョンカラム名のパターン */
+    protected String versionColumnNamePattern = "(?i)(version|version[_]?no)";
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
@@ -343,22 +343,22 @@ public class GenerateEntityCommand extends AbstractCommand {
     }
 
     /**
-     * バージョンカラムの名前を返します。
+     * バージョンカラム名のパターンを返します。
      * 
-     * @return バージョンカラムの名前
+     * @return バージョンカラム名のパターン
      */
-    public String getVersionColumnName() {
-        return versionColumnName;
+    public String getVersionColumnNamePattern() {
+        return versionColumnNamePattern;
     }
 
     /**
-     * バージョンカラムの名前を設定します。
+     *バージョンカラム名のパターンを設定します。
      * 
-     * @param versionColumnName
-     *            バージョンカラムの名前
+     * @param versionColumnNamePattern
+     *            バージョンカラム名のパターン
      */
-    public void setVersionColumnName(String versionColumnName) {
-        this.versionColumnName = versionColumnName;
+    public void setVersionColumnNamePattern(String versionColumnNamePattern) {
+        this.versionColumnNamePattern = versionColumnNamePattern;
     }
 
     /**
@@ -556,7 +556,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected EntitySetDescFactory createEntitySetDescFactory() {
         return factory.createEntitySetDescFactory(this, dbTableMetaReader,
                 jdbcManager.getPersistenceConvention(), dialect,
-                versionColumnName, pluralFormFile);
+                versionColumnNamePattern, pluralFormFile);
     }
 
     /**

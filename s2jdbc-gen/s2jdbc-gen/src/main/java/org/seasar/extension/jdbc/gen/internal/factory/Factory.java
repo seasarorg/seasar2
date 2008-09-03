@@ -267,8 +267,8 @@ public interface Factory {
      *            永続化層の命名規約
      * @param dialect
      *            方言
-     * @param versionColumnName
-     *            バージョンカラム名
+     * @param versionColumnNamePattern
+     *            バージョンカラム名のパターン
      * @param pluralFormFile
      *            単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null}
      * @return {@link EntitySetDescFactory}の実装
@@ -276,7 +276,7 @@ public interface Factory {
     EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnName, File pluralFormFile);
+            String versionColumnNamePattern, File pluralFormFile);
 
     /**
      * {@link EntityModelFactory}の実装を作成します。
