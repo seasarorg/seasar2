@@ -63,8 +63,8 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         }
         this.persistenceConvention = persistenceConvention;
         this.dialect = dialect;
-        this.versionColumnNamePattern = Pattern
-                .compile(versionColumnNamePattern);
+        this.versionColumnNamePattern = Pattern.compile(
+                versionColumnNamePattern, Pattern.CASE_INSENSITIVE);
     }
 
     public AttributeDesc getAttributeDesc(DbColumnMeta columnMeta) {

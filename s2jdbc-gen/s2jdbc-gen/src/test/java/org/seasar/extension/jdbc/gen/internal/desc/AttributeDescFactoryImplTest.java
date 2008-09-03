@@ -44,7 +44,7 @@ public class AttributeDescFactoryImplTest {
         PersistenceConvention convention = new PersistenceConventionImpl();
         GenDialect dialect = new StandardGenDialect();
         factory = new AttributeDescFactoryImpl(convention, dialect,
-                "(?i)(version|version[_]?no)");
+                "(VERSION|VERSION[_]?NO)");
     }
 
     /**
