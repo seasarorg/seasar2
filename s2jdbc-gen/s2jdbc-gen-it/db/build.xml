@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="s2jdbc-gen-core-it" default="showRdbmsName" basedir=".">
+<project name="s2jdbc-gen-it" default="showRdbmsName" basedir=".">
 	
 	<property name="rdbms" value="hsql"/>
 	<property name="temp" value="${rdbms}/temp"/>
@@ -16,21 +16,7 @@
 	
 	<path id="classpath">
 		<pathelement location="${build}"/>
-		<pathelement location="../../s2jdbc-gen/build/classes"/>
-		<pathelement location="../../seasar2/build/classes"/>
-		<pathelement location="../../s2-tiger/build/classes"/>
-		<fileset dir="../lib">
-			<exclude name="**/*-sources.jar"/>
-		</fileset>
-		<fileset dir="../../s2jdbc-gen/lib">
-			<exclude name="**/*-sources.jar"/>
-		</fileset>
-		<fileset dir="../../seasar2/lib">
-			<exclude name="**/*-sources.jar"/>
-		</fileset>
-		<fileset dir="../../s2-tiger/lib">
-			<exclude name="**/*-sources.jar"/>
-		</fileset>
+		<fileset dir="../lib"/>
 	</path>
 
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
@@ -39,7 +25,17 @@
 		<echo>${rdbms}</echo>
 	</target>
 
-	<target name="testFromDbToEntity" depends="showRdbmsName, setup">
+	<target name="testAll">
+		<antcall target="testFromDbToEntity"/>
+		<antcall target="testFromEntityToDb"/>
+		<antcall target="testGenerateDdl"/>
+		<antcall target="testMigrate"/>
+		<antcall target="testDumpDbMeta"/>
+		<antcall target="testDumpData"/>
+		<antcall target="testLoadData"/>
+	</target>
+
+	<target name="testFromDbToEntity" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<exec-sql 
 			classpathref="classpath">
@@ -78,7 +74,7 @@
 		</exec-sql>
 	</target>
 	
-	<target name="testFromEntityToDb" depends="showRdbmsName, setup">
+	<target name="testFromEntityToDb" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -157,7 +153,7 @@
 		/>
 	</target>
 
-	<target name="testGenerateDdl" depends="showRdbmsName, setup">
+	<target name="testGenerateDdl" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
 			destdir="${build}"
@@ -179,7 +175,7 @@
 		/>
 	</target>
 	
-	<target name="testMigrate" depends="showRdbmsName, setup">
+	<target name="testMigrate" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
 			destdir="${build}"
@@ -235,7 +231,7 @@
 		/>
 	</target>
 
-	<target name="testDumpDbMeta" depends="showRdbmsName, setup">
+	<target name="testDumpDbMeta" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<exec-sql 
 			classpathref="classpath">
@@ -256,7 +252,7 @@
 		</exec-sql>
 	</target>
 
-	<target name="testDumpData" depends="showRdbmsName, setup">
+	<target name="testDumpData" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -288,7 +284,7 @@
 		</exec-sql>
 	</target>
 
-	<target name="testLoadData" depends="showRdbmsName, setup">
+	<target name="testLoadData" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -334,9 +330,6 @@
 		</exec-sql>
 	</target>
 
-	<target name="setup" depends="clean">
-	</target>
-	
 	<target name="clean">
 		<delete dir="${temp}"/>
 		<mkdir dir="${build}"/>
