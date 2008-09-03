@@ -321,7 +321,7 @@
 			<subsection name="パラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
-					<tr><td>classpathDirclasspathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
+					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
@@ -335,8 +335,8 @@
 					<tr><td>dropSequenceDdlFileName</td><td>シーケンスを削除するDDLファイル名です。</td><td>"020-drop-sequence.sql"</td><td>NO</td></tr>
 					<tr><td>dropForeignKeyDdlFileName</td><td>外部キーを削除するDDLファイル名です。</td><td>"010-drop-foreignkey.sql"</td><td>NO</td></tr>
 					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
-					<tr><td>sqlKeywordCaseType</td><td>SQLのキーワードを大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。テンプレートに記述された文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
-					<tr><td>sqlIdentifierCaseType</td><td>SQLの識別子を大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。エンティティに記述した文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
+					<tr><td>sqlKeywordCase</td><td>SQLのキーワードを大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。テンプレートに記述された文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
+					<tr><td>sqlIdentifierCase</td><td>SQLの識別子を大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。エンティティに記述した文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
 					<tr><td>dump</td><td>"true"の場合、データベースのデータのダンプ出力を行います。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
@@ -441,7 +441,7 @@
 <source><![CDATA[    <gen-entity
       rootpackagename="examples"
       classpathref="classpath"
-   />]]></source>
+    />]]></source>
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
@@ -493,7 +493,7 @@
 <source><![CDATA[    <gen-names
       rootpackagename="examples"
       classpathref="classpath"
-   />]]></source>
+    />]]></source>
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
@@ -549,7 +549,7 @@
 <source><![CDATA[    <gen-service
       rootpackagename="examples"
       classpathref="classpath"
-   />]]></source>
+    />]]></source>
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
@@ -600,7 +600,7 @@
 <source><![CDATA[    <gen-test
       rootpackagename="examples"
       classpathref="classpath"
-   />]]></source>
+    />]]></source>
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
@@ -649,7 +649,7 @@
       rootpackagename="examples"
       loadBatchSize="20"
       classpathref="classpath"
-   />]]></source>
+    />]]></source>
 				<p>
 					バッチサイズを変更してタスクを実行します。
 				</p>
@@ -672,18 +672,18 @@
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
-					<tr><td>schemaInfoFuschemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
-					<tr><td>schemaInfoCoschemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
+					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
+					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
 					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
 					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
 					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名にしようされます。</td><td>"0000"</td><td>NO</td></tr>
 					<tr><td>version</td><td>マイグレーション先のバージョンです。</td><td>"latest"</td><td>NO</td></tr>
-					<tr><td>statementDelstatementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
-					<tr><td>blockDelimitblockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
-					<tr><td>ddlFileEncodddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
-					<tr><td>dumpFileEncodumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
+					<tr><td>blockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>haltOnError</td><td>"true"の場合、SQLの実行が失敗すると即座にエラーを返します。</td><td>"true"</td><td>NO</td></tr>
-					<tr><td>loadBatchSizloadBatchSize</td><td>ダンプファイルのデータをロードする際のバッチサイズです。</td><td>"10"</td><td>NO</td></tr>
+					<tr><td>loadBatchSize</td><td>ダンプファイルのデータをロードする際のバッチサイズです。</td><td>"10"</td><td>NO</td></tr>
 					<tr><td>transactional</td><td>"true"の場合、単一のトランザクションとして実行します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
@@ -708,7 +708,7 @@
       rootpackagename="examples"
       version="15"
       classpathref="classpath"
-    >]]></source>
+    />]]></source>
 				<p>
 					マイグレーション先のバージョン番号を指定してタスクを実行します。
 				</p>

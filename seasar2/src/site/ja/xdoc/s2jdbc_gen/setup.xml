@@ -39,7 +39,7 @@
 				S2JDBC-GenのAntタスクを実行するにはAntのビルドファイルが必要です。
 				典型的なビルドファイルは次のようになります。
 			</p>
-<source><![CDATA[<project name="sample" default="gen-entity" basedir=".">
+<source><![CDATA[<project name="sample" default="gen-ddl" basedir=".">
 
     <path id="classpath">
         <pathelement location="build/classes"/>
