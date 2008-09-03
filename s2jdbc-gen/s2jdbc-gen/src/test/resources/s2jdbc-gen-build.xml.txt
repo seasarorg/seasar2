@@ -1,0 +1,87 @@
+<project name="sample" default="gen-ddl" basedir=".">
+
+	<property name="classpathdir" value="build/classes"/>
+	<property name="libdir" value="lib"/>
+	<property name="rootpackagename" value="examples"/>
+	<property name="entitypackagename" value="entity"/>
+	<property name="javafiledestdir" value="src/main/java"/>
+	<property name="testjavafiledestdir" value="src/test/java"/>
+	<property name="javafileencoding" value="UTF-8"/>
+
+	<path id="classpath">
+		<pathelement location="${classpathdir}"/>
+		<fileset dir="${libdir}"/>
+	</path>
+
+	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+
+	<target name="gen-entity">
+		<gen-entity
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			javafiledestdir="${javafiledestdir}"
+			javafileencoding="${javafileencoding}"
+			classpathref="classpath"
+		/>
+		<javac 
+			srcdir="${javafiledestdir}"
+			destdir="${classpathdir}"
+			encoding="${javafileencoding}"
+			fork="true"
+			debug="on"
+			classpathref="classpath">
+			<include name="${rootpackagename}/${entitypackagename}/**"/>
+		</javac>
+		<gen-test
+			classpathdir="${classpathdir}"
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			javafiledestdir="${testjavafiledestdir}"
+			javafileencoding="${javafileencoding}"
+			classpathref="classpath"
+		/>
+		<gen-condition
+			classpathdir="${classpathdir}"
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			javafiledestdir="${javafiledestdir}"
+			javafileencoding="${javafileencoding}"
+			classpathref="classpath"
+		/>
+		<gen-names
+			classpathdir="${classpathdir}"
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			javafiledestdir="${javafiledestdir}"
+			javafileencoding="${javafileencoding}"
+			classpathref="classpath"
+		/>
+		<gen-service
+			classpathdir="${classpathdir}"
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			javafiledestdir="${javafiledestdir}"
+			javafileencoding="${javafileencoding}"
+			classpathref="classpath"
+		/>
+	</target>
+
+	<target name="gen-ddl">
+		<gen-ddl
+			classpathdir="${classpathdir}"
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			classpathref="classpath"
+		/>
+	</target>
+
+	<target name="migrate">
+		<migrate
+			classpathdir="${classpathdir}"
+			rootpackagename="${rootpackagename}"
+			entitypackagename="${entitypackagename}"
+			classpathref="classpath"
+		/>
+	</target>
+
+</project>
