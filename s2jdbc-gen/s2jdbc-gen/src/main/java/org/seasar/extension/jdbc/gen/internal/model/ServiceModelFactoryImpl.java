@@ -82,6 +82,10 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         for (PropertyMeta idPropertyMeta : entityMeta.getIdPropertyMetaList()) {
             serviceModel.addIdPropertyMeta(idPropertyMeta);
         }
+        if (entityMeta.hasVersionPropertyMeta()) {
+            serviceModel.setVersionPropertyMeta(entityMeta
+                    .getVersionPropertyMeta());
+        }
         doNamesModel(serviceModel, entityMeta);
         doImportName(serviceModel, entityMeta);
         return serviceModel;
@@ -116,7 +120,12 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
     protected void doImportName(ServiceModel serviceModel, EntityMeta entityMeta) {
         classModelSupport.addImportName(serviceModel, entityMeta
                 .getEntityClass());
-        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
+        for (PropertyMeta propertyMeta : serviceModel.getIdPropertyMetaList()) {
+            classModelSupport.addImportName(serviceModel, propertyMeta
+                    .getPropertyClass());
+        }
+        PropertyMeta propertyMeta = serviceModel.getVersionPropertyMeta();
+        if (propertyMeta != null) {
             classModelSupport.addImportName(serviceModel, propertyMeta
                     .getPropertyClass());
         }

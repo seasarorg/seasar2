@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * @author taedium
@@ -34,4 +35,8 @@ public class Ccc {
     /** */
     @Id
     public BigDecimal id2;
+
+    /** */
+    @Version
+    public Integer version;
 }

@@ -48,6 +48,9 @@ public class ServiceModel implements ClassModel {
     /** 識別子のプロパティメタデータのリスト */
     protected List<PropertyMeta> idPropertyMetaList = new ArrayList<PropertyMeta>();
 
+    /** バージョンを表すプロパティメタデータ */
+    protected PropertyMeta versionPropertyMeta;
+
     /**
      * パッケージ名を返します。
      * 
@@ -160,6 +163,25 @@ public class ServiceModel implements ClassModel {
      */
     public List<PropertyMeta> getIdPropertyMetaList() {
         return Collections.unmodifiableList(idPropertyMetaList);
+    }
+
+    /**
+     * バージョンを表すプロパティメタデータを返します。
+     * 
+     * @return バージョンを表すプロパティメタデータ
+     */
+    public PropertyMeta getVersionPropertyMeta() {
+        return versionPropertyMeta;
+    }
+
+    /**
+     * バージョンを表すプロパティメタデータを設定します。
+     * 
+     * @param versionPropertyMeta
+     *            バージョンを表すプロパティメタデータ
+     */
+    public void setVersionPropertyMeta(PropertyMeta versionPropertyMeta) {
+        this.versionPropertyMeta = versionPropertyMeta;
     }
 
 }

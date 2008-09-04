@@ -20,4 +20,17 @@ public class AaaService extends AbstractService<Aaa> implements AaaNames {
     public Aaa findById(Integer id) {
         return select().id(id).getSingleResult();
     }
+
+    /**
+     * 識別子とバージョン番号でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @param version
+     *            バージョン番号
+     * @return エンティティ
+     */
+    public Aaa findByIdVersion(Integer id, Integer version) {
+        return select().id(id).version(version).getSingleResult();
+    }
 }
