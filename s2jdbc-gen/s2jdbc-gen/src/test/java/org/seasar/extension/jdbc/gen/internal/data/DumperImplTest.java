@@ -65,7 +65,6 @@ public class DumperImplTest {
         tableDesc.addColumnDesc(columnDesc1);
         tableDesc.addColumnDesc(columnDesc2);
 
-        assertEquals("select column1, column2 from AAA.BBB.HOGE", dumper
-                .buildSql(tableDesc));
+        assertEquals("select * from AAA.BBB.HOGE", dumper.buildSql(tableDesc));
     }
 }

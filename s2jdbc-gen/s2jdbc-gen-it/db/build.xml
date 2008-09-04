@@ -184,6 +184,10 @@
 			debug="on"
 			classpathref="classpath">
 			<src path="../src/main/java"/>
+			<include name="example/entity/Address.java"/>
+			<include name="example/entity/Department.java"/>
+			<include name="example/entity/Employee.java"/>
+			<include name="example/entity/Foo.java"/>
 		</javac>
 		<!-- test -->
 		<gen-ddl 
@@ -202,10 +206,23 @@
 		/>
 		<exec-sql 
 			classpathref="classpath">
-			<sqlFileList dir="${sql}/testDumpData">
+			<sqlFileList dir="${sql}/testMigrate">
 				<file name="insert.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<delete dir="${build}/example"/>
+		<javac 
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath">
+			<src path="../src/main/java2"/>
+			<include name="example/entity/Address.java"/>
+			<include name="example/entity/Department.java"/>
+			<include name="example/entity/Employee.java"/>
+			<include name="example/entity/Hoge.java"/>
+		</javac>
 		<gen-ddl 
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"

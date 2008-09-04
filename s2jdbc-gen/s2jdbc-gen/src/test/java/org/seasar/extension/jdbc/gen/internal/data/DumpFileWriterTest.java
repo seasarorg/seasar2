@@ -18,16 +18,17 @@ package org.seasar.extension.jdbc.gen.internal.data;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.data.DumpFileWriter;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
-import org.seasar.extension.jdbc.gen.sqltype.SqlType;
+import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
+import org.seasar.framework.mock.sql.MockResultSetMetaData;
 import org.seasar.framework.util.ArrayMap;
 
 import static org.junit.Assert.*;
@@ -55,10 +56,26 @@ public class DumpFileWriterTest {
         separator = System.getProperty("line.separator");
         stringWriter = new StringWriter();
         bufferedWriter = new BufferedWriter(stringWriter);
-        List<SqlType> sqlTypeList = Arrays.<SqlType> asList(new VarcharType(),
-                new IntegerType());
-        dumpFileWriter = new DumpFileWriter(new File("file"), sqlTypeList,
-                "UTF-8", ',') {
+
+        ColumnDesc aaa = new ColumnDesc();
+        aaa.setName("aaa");
+        aaa.setSqlType(new VarcharType());
+
+        ColumnDesc bbb = new ColumnDesc();
+        bbb.setName("bbb");
+        bbb.setSqlType(new VarcharType());
+
+        ColumnDesc ccc = new ColumnDesc();
+        ccc.setName("ccc");
+        ccc.setSqlType(new IntegerType());
+
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.addColumnDesc(aaa);
+        tableDesc.addColumnDesc(bbb);
+        tableDesc.addColumnDesc(ccc);
+
+        dumpFileWriter = new DumpFileWriter(new File("file"), tableDesc,
+                new StandardGenDialect(), "UTF-8", ',') {
 
             @Override
             protected BufferedWriter createBufferdWriter() {
@@ -74,10 +91,17 @@ public class DumpFileWriterTest {
      */
     @Test
     public void testWriteHeader() throws Exception {
-        dumpFileWriter.writeHeader(Arrays.asList("aaa", "bbb", "ccc"));
+        MockColumnMetaData columnMetaData1 = new MockColumnMetaData();
+        columnMetaData1.setColumnLabel("aaa");
+        MockColumnMetaData columnMetaData2 = new MockColumnMetaData();
+        columnMetaData2.setColumnLabel("ccc");
+        MockResultSetMetaData metaData = new MockResultSetMetaData();
+        metaData.addColumnMetaData(columnMetaData1);
+        metaData.addColumnMetaData(columnMetaData2);
+
+        dumpFileWriter.writeHeader(metaData);
         bufferedWriter.flush();
-        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator, stringWriter
-                .toString());
+        assertEquals("\"aaa\",\"ccc\"" + separator, stringWriter.toString());
     }
 
     /**
@@ -86,18 +110,26 @@ public class DumpFileWriterTest {
      */
     @Test
     public void testWriteRowData() throws Exception {
+        MockColumnMetaData columnMetaData1 = new MockColumnMetaData();
+        columnMetaData1.setColumnLabel("aaa");
+        MockColumnMetaData columnMetaData2 = new MockColumnMetaData();
+        columnMetaData2.setColumnLabel("ccc");
+        MockResultSetMetaData metaData = new MockResultSetMetaData();
+        metaData.addColumnMetaData(columnMetaData1);
+        metaData.addColumnMetaData(columnMetaData2);
         MockResultSet rs = new MockResultSet();
+        rs.setMockMetaData(metaData);
         ArrayMap row = new ArrayMap();
-        row.put("column1", "hoge");
-        row.put("column2", 100);
+        row.put("aaa", "hoge");
+        row.put("ccc", 100);
         rs.addRowData(row);
         row = new ArrayMap();
-        row.put("column1", "f\"oo");
-        row.put("column2", 200);
+        row.put("aaa", "f\"oo");
+        row.put("ccc", 200);
         rs.addRowData(row);
 
         for (; rs.next();) {
-            dumpFileWriter.writeRowData(rs);
+            dumpFileWriter.writeRowData(rs, metaData);
         }
         bufferedWriter.flush();
         assertEquals("hoge,100" + separator + "\"f\"\"oo\",200" + separator,

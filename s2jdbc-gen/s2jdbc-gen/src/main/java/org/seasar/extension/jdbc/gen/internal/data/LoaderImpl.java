@@ -31,10 +31,7 @@ import org.seasar.extension.jdbc.gen.exception.LoadFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.DumpFileEmptyRuntimeException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
-import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.PreparedStatementUtil;
-import org.seasar.framework.util.StatementUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -113,7 +110,7 @@ public class LoaderImpl implements Loader {
                 preLoadData(sqlExecutionContext, tableDesc);
                 loadData(sqlExecutionContext, reader, sqlTypeList, sql);
                 postLoadData(sqlExecutionContext, tableDesc);
-            } catch (SQLRuntimeException e) {
+            } catch (SQLException e) {
                 if (dialect.isTableNotFound(e)) {
                     logger.log("DS2JDBCGen0012", new Object[] { tableDesc
                             .getFullName() });
@@ -142,15 +139,17 @@ public class LoaderImpl implements Loader {
      *            SQL実行コンテキスト
      * @param tableDesc
      *            テーブル記述
+     * @throws SQLException
+     *             SQL例外が発生した場合
      */
     protected void preLoadData(SqlExecutionContext sqlExecutionContext,
-            TableDesc tableDesc) {
+            TableDesc tableDesc) throws SQLException {
         if (tableDesc.hasIdentityColumn()
                 && dialect.supportsIdentityInsertControlStatement()) {
             Statement statement = sqlExecutionContext.getStatement();
             String sql = dialect.getIdentityInsertEnableStatement(tableDesc
                     .getFullName());
-            StatementUtil.execute(statement, sql);
+            statement.execute(sql);
         }
     }
 
@@ -165,24 +164,27 @@ public class LoaderImpl implements Loader {
      *            {@link SqlType}のリスト
      * @param sql
      *            SQL
+     * @throws SQLException
+     *             SQL例外が発生した場合
      */
     protected void loadData(SqlExecutionContext sqlExecutionContext,
-            DumpFileReader reader, List<SqlType> sqlTypeList, String sql) {
+            DumpFileReader reader, List<SqlType> sqlTypeList, String sql)
+            throws SQLException {
         PreparedStatement ps = sqlExecutionContext.getPreparedStatement(sql);
         List<String> valueList = null;
         boolean remaining = false;
         for (int i = 0; (valueList = reader.readLine()) != null; i++) {
             bindArgs(ps, sqlTypeList, valueList);
-            PreparedStatementUtil.addBatch(ps);
+            ps.addBatch();
             if (batchSize > 0 && (i + 1) % batchSize == 0) {
-                PreparedStatementUtil.executeBatch(ps);
+                ps.executeBatch();
                 remaining = false;
             } else {
                 remaining = true;
             }
         }
         if (remaining) {
-            PreparedStatementUtil.executeBatch(ps);
+            ps.executeBatch();
         }
     }
 
@@ -193,15 +195,17 @@ public class LoaderImpl implements Loader {
      *            SQL実行コンテキスト
      * @param tableDesc
      *            テーブル記述
+     * @throws SQLException
+     *             SQL例外が発生した場合
      */
     protected void postLoadData(SqlExecutionContext sqlExecutionContext,
-            TableDesc tableDesc) {
+            TableDesc tableDesc) throws SQLException {
         if (tableDesc.hasIdentityColumn()
                 && dialect.supportsIdentityInsertControlStatement()) {
             Statement statement = sqlExecutionContext.getStatement();
             String sql = dialect.getIdentityInsertDisableStatement(tableDesc
                     .getFullName());
-            StatementUtil.execute(statement, sql);
+            statement.execute(sql);
         }
     }
 
@@ -214,17 +218,15 @@ public class LoaderImpl implements Loader {
      *            {@link SqlType}のリスト
      * @param valueList
      *            値のリスト
+     * @throws SQLException
+     *             SQL例外が発生した場合
      */
     protected void bindArgs(PreparedStatement ps, List<SqlType> sqlTypeList,
-            List<String> valueList) {
-        try {
-            for (int i = 0; i < sqlTypeList.size(); i++) {
-                SqlType sqlType = sqlTypeList.get(i);
-                String value = valueList.get(i);
-                sqlType.bindValue(ps, i + 1, value);
-            }
-        } catch (SQLException e) {
-            throw new SQLRuntimeException(e);
+            List<String> valueList) throws SQLException {
+        for (int i = 0; i < sqlTypeList.size(); i++) {
+            SqlType sqlType = sqlTypeList.get(i);
+            String value = valueList.get(i);
+            sqlType.bindValue(ps, i + 1, value);
         }
     }
 

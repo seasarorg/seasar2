@@ -29,9 +29,6 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.PreparedStatementUtil;
-import org.seasar.framework.util.ResultSetUtil;
-import org.seasar.framework.util.StatementUtil;
 
 /**
  * {@link SchemaInfoTable}の実装クラスです。
@@ -95,28 +92,30 @@ public class SchemaInfoTableImpl implements SchemaInfoTable {
     public int getVersionNo() {
         Connection conn = DataSourceUtil.getConnection(dataSource);
         try {
-            PreparedStatement ps = ConnectionUtil.prepareStatement(conn, sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
             try {
-                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+                ResultSet rs = ps.executeQuery();
                 try {
                     if (rs.next()) {
                         return rs.getInt(1);
                     }
                     throw new NoResultRuntimeException(fullTableName);
-                } catch (SQLException e) {
-                    throw new SQLRuntimeException(e);
                 } finally {
-                    ResultSetUtil.close(rs);
+                    if (rs != null) {
+                        rs.close();
+                    }
                 }
             } finally {
-                StatementUtil.close(ps);
+                if (ps != null) {
+                    ps.close();
+                }
             }
-        } catch (SQLRuntimeException e) {
+        } catch (SQLException e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("IS2JDBCGen0004", new Object[] { fullTableName });
                 return 0;
             }
-            throw e;
+            throw new SQLRuntimeException(e);
         } finally {
             ConnectionUtil.close(conn);
         }

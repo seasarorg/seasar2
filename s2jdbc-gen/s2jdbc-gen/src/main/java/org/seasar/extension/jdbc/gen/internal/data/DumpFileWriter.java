@@ -22,14 +22,19 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Map;
 
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.internal.util.DumpUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 /**
@@ -45,11 +50,18 @@ public class DumpFileWriter {
     /** ダンプファイル */
     protected File dumpFile;
 
+    /** 方言 */
+    protected GenDialect dialect;
+
+    /** テーブル記述 */
+    protected TableDesc tableDesc;
+
     /** エンコーディング */
     protected String encoding;
 
-    /** SQL型のリスト */
-    protected List<SqlType> sqlTypeList;
+    /** カラム名をキー、カラム記述を値とするマップ */
+    @SuppressWarnings("unchecked")
+    protected Map<String, ColumnDesc> columnDescMap = new ArrayMap();
 
     /** 区切り文字 */
     protected char delimiter;
@@ -62,50 +74,74 @@ public class DumpFileWriter {
      * 
      * @param dumpFile
      *            ダンプファイル
-     * @param sqlTypeList
-     *            SQL型のリスト
+     * @param tableDesc
+     *            テーブル記述
+     * @param dialect
+     *            方言
      * @param encoding
      *            エンコーディング
      * @param delimiter
      *            区切り文字
      */
-    public DumpFileWriter(File dumpFile, List<SqlType> sqlTypeList,
-            String encoding, char delimiter) {
+    public DumpFileWriter(File dumpFile, TableDesc tableDesc,
+            GenDialect dialect, String encoding, char delimiter) {
         if (dumpFile == null) {
             throw new NullPointerException("dumpFile");
         }
-        if (sqlTypeList == null) {
-            throw new NullPointerException("sqlTypeList");
+        if (tableDesc == null) {
+            throw new NullPointerException("tableDesc");
+        }
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
         }
         if (encoding == null) {
             throw new NullPointerException("encoding");
         }
         this.dumpFile = dumpFile;
-        this.sqlTypeList = sqlTypeList;
+        this.dialect = dialect;
+        this.tableDesc = tableDesc;
         this.encoding = encoding;
         this.delimiter = delimiter;
+        setupColumnDescMap();
+    }
+
+    /**
+     * カラム記述のマップを用意します。
+     */
+    protected void setupColumnDescMap() {
+        for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (columnDesc.isIdentity() && !dialect.supportsIdentityInsert()) {
+                continue;
+            }
+            columnDescMap.put(columnDesc.getName(), columnDesc);
+        }
     }
 
     /**
      * ヘッダーを書き込みます。
      * 
-     * @param columnNameList
-     *            カラム名のリスト
+     * @param metaData
+     *            結果セットのメタデータ
+     * @throws SQLException
+     *             SQL例外が発生した場合
      */
-    public void writeHeader(List<String> columnNameList) {
-        StringBuilder buf = new StringBuilder(columnNameList.size() * 10);
-        try {
-            for (String columnName : columnNameList) {
-                buf.append(DumpUtil.quote(columnName));
-                buf.append(delimiter);
+    public void writeHeader(ResultSetMetaData metaData) throws SQLException {
+        int columnCount = metaData.getColumnCount();
+        StringBuilder buf = new StringBuilder(columnCount * 10);
+        for (int i = 0; i < columnCount; i++) {
+            String columnLabel = metaData.getColumnLabel(i + 1);
+            if (!columnDescMap.containsKey(columnLabel)) {
+                continue;
             }
-            if (buf.length() > 0) {
-                buf.setLength(buf.length() - 1);
-            }
-            writeLine(buf.toString());
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
+            ColumnDesc columnDesc = columnDescMap.get(columnLabel);
+            String columnName = columnDesc.getName();
+            buf.append(DumpUtil.quote(columnName));
+            buf.append(delimiter);
         }
+        if (buf.length() > 0) {
+            buf.setLength(buf.length() - 1);
+        }
+        writeLine(buf.toString());
     }
 
     /**
@@ -113,28 +149,30 @@ public class DumpFileWriter {
      * 
      * @param resultSet
      *            結果セット
+     * @param metaData
+     *            結果セットのメタデータ
+     * @throws SQLException
+     *             SQL例外が発生した場合
      */
-    public void writeRowData(ResultSet resultSet) {
-        StringBuilder buf = new StringBuilder(sqlTypeList.size() * 10);
-        try {
-            for (int i = 0; i < sqlTypeList.size(); i++) {
-                String value = null;
-                try {
-                    SqlType sqlType = sqlTypeList.get(i);
-                    value = sqlType.getValue(resultSet, i + 1);
-                } catch (SQLException ignore) {
-                    logger.log(ignore);
-                }
-                buf.append(DumpUtil.encode(value));
-                buf.append(delimiter);
+    public void writeRowData(ResultSet resultSet, ResultSetMetaData metaData)
+            throws SQLException {
+        int columnCount = metaData.getColumnCount();
+        StringBuilder buf = new StringBuilder(columnCount * 10);
+        for (int i = 0; i < columnCount; i++) {
+            String columnLabel = metaData.getColumnLabel(i + 1);
+            if (!columnDescMap.containsKey(columnLabel)) {
+                continue;
             }
-            if (buf.length() > 0) {
-                buf.setLength(buf.length() - 1);
-            }
-            writeLine(buf.toString());
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
+            ColumnDesc columnDesc = columnDescMap.get(columnLabel);
+            SqlType sqlType = columnDesc.getSqlType();
+            String value = sqlType.getValue(resultSet, i + 1);
+            buf.append(DumpUtil.encode(value));
+            buf.append(delimiter);
         }
+        if (buf.length() > 0) {
+            buf.setLength(buf.length() - 1);
+        }
+        writeLine(buf.toString());
     }
 
     /**
@@ -142,15 +180,17 @@ public class DumpFileWriter {
      * 
      * @param line
      *            行
-     * @throws IOException
-     *             何らかのIO例外が発生した場合
      */
-    protected void writeLine(String line) throws IOException {
+    protected void writeLine(String line) {
         if (writer == null) {
             writer = createBufferdWriter();
         }
-        writer.write(line);
-        writer.newLine();
+        try {
+            writer.write(line);
+            writer.newLine();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
     }
 
     /**

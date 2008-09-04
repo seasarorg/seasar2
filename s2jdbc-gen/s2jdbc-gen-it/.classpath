@@ -19,7 +19,6 @@
 	<classpathentry kind="lib" path="lib/s2-extension-2.4.28.jar" sourcepath="libsrc/s2-extension-2.4.28-sources.jar"/>
 	<classpathentry kind="lib" path="lib/s2-framework-2.4.28.jar" sourcepath="libsrc/s2-framework-2.4.28-sources.jar"/>
 	<classpathentry kind="lib" path="lib/s2-tiger-2.4.28.jar" sourcepath="libsrc/s2-tiger-2.4.28-sources.jar"/>
-	<classpathentry kind="lib" path="lib/s2jdbc-gen-0.9.0.jar" sourcepath="libsrc/s2jdbc-gen-0.9.0-sources.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

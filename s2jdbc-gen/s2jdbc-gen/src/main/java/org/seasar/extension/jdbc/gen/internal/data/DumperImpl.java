@@ -17,21 +17,17 @@ package org.seasar.extension.jdbc.gen.internal.data;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.seasar.extension.jdbc.gen.data.Dumper;
-import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.util.StatementUtil;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
-import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.ResultSetUtil;
 
 /**
  * {@link Dumper}の実装クラスです。
@@ -104,26 +100,28 @@ public class DumperImpl implements Dumper {
      */
     protected void dumpTable(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, DumpFileWriter writer) {
-        List<String> columnNameList = getColumnNameList(tableDesc);
-        writer.writeHeader(columnNameList);
         String sql = buildSql(tableDesc);
         Statement statement = sqlExecutionContext.getStatement();
         try {
-            ResultSet rs = StatementUtil.executeQuery(statement, sql);
+            ResultSet rs = statement.executeQuery(sql);
             try {
-                for (; ResultSetUtil.next(rs);) {
-                    writer.writeRowData(rs);
+                ResultSetMetaData metaData = rs.getMetaData();
+                writer.writeHeader(metaData);
+                while (rs.next()) {
+                    writer.writeRowData(rs, metaData);
                 }
             } finally {
-                ResultSetUtil.close(rs);
+                if (rs != null) {
+                    rs.close();
+                }
             }
-        } catch (SQLRuntimeException e) {
+        } catch (SQLException e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("DS2JDBCGen0012", new Object[] { tableDesc
                         .getFullName() });
                 sqlExecutionContext.notifyException();
             } else {
-                sqlExecutionContext.addException(e);
+                sqlExecutionContext.addException(new SQLRuntimeException(e));
             }
         }
     }
@@ -136,50 +134,7 @@ public class DumperImpl implements Dumper {
      * @return SQL
      */
     protected String buildSql(TableDesc tableDesc) {
-        StringBuilder buf = new StringBuilder(200);
-        buf.append("select ");
-        for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            if (isIgnoreColumn(columnDesc)) {
-                continue;
-            }
-            buf.append(columnDesc.getName());
-            buf.append(", ");
-        }
-        if (!tableDesc.getColumnDescList().isEmpty()) {
-            buf.setLength(buf.length() - 2);
-        }
-        buf.append(" from ");
-        buf.append(tableDesc.getFullName());
-        return buf.toString();
-    }
-
-    /**
-     * カラム名のリストを返します。
-     * 
-     * @param tableDesc
-     *            テーブル記述
-     * @return カラム名のリスト
-     */
-    protected List<String> getColumnNameList(TableDesc tableDesc) {
-        List<String> columnNameList = new ArrayList<String>();
-        for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            if (isIgnoreColumn(columnDesc)) {
-                continue;
-            }
-            columnNameList.add(columnDesc.getName());
-        }
-        return columnNameList;
-    }
-
-    /**
-     * 無視すべきカラムの場合{@code true}を返します。
-     * 
-     * @param columnDesc
-     *            カラム記述
-     * @return 無視すべきカラムの場合{@code true}
-     */
-    protected boolean isIgnoreColumn(ColumnDesc columnDesc) {
-        return columnDesc.isIdentity() && !dialect.supportsIdentityInsert();
+        return "select * from " + tableDesc.getFullName();
     }
 
     /**
@@ -193,28 +148,8 @@ public class DumperImpl implements Dumper {
      */
     protected DumpFileWriter createDumpFileWriter(File dumpFile,
             TableDesc tableDesc) {
-        List<SqlType> sqlTypeList = getSqlTypeList(tableDesc);
-        return new DumpFileWriter(dumpFile, sqlTypeList, dumpFileEncoding,
-                delimiter);
+        return new DumpFileWriter(dumpFile, tableDesc, dialect,
+                dumpFileEncoding, delimiter);
     }
 
-    /**
-     * SQL型のリスト
-     * 
-     * @param tableDesc
-     *            テーブル記述
-     * @return SQL型のリスト
-     */
-    protected List<SqlType> getSqlTypeList(TableDesc tableDesc) {
-        int size = tableDesc.getColumnDescList().size();
-        List<SqlType> sqlTypeList = new ArrayList<SqlType>(size);
-        for (int i = 0; i < tableDesc.getColumnDescList().size(); i++) {
-            ColumnDesc columnDesc = tableDesc.getColumnDescList().get(i);
-            if (isIgnoreColumn(columnDesc)) {
-                continue;
-            }
-            sqlTypeList.add(columnDesc.getSqlType());
-        }
-        return sqlTypeList;
-    }
 }
