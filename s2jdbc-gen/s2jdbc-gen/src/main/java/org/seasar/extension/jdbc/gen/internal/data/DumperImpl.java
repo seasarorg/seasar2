@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc.gen.internal.data;
 
 import java.io.File;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.seasar.extension.jdbc.gen.data.Dumper;
@@ -26,8 +24,9 @@ import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
-import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ResultSetUtil;
 
 /**
  * {@link Dumper}の実装クラスです。
@@ -105,23 +104,19 @@ public class DumperImpl implements Dumper {
         try {
             ResultSet rs = statement.executeQuery(sql);
             try {
-                ResultSetMetaData metaData = rs.getMetaData();
-                writer.writeHeader(metaData);
-                while (rs.next()) {
-                    writer.writeRowData(rs, metaData);
-                }
+                writer.writeRows(rs);
             } finally {
-                if (rs != null) {
-                    rs.close();
-                }
+                ResultSetUtil.close(rs);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("DS2JDBCGen0012", new Object[] { tableDesc
                         .getFullName() });
                 sqlExecutionContext.notifyException();
+                writer.writeHeaderOnly();
             } else {
-                sqlExecutionContext.addException(new SQLRuntimeException(e));
+                sqlExecutionContext.addException(new SRuntimeException(
+                        "ES2JDBCGen0021", new Object[] { e }, e));
             }
         }
     }

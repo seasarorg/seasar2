@@ -16,6 +16,7 @@
 	
 	<path id="classpath">
 		<pathelement location="${build}"/>
+		<pathelement location="../../s2jdbc-gen/build/classes"/>
 		<fileset dir="../lib"/>
 	</path>
 

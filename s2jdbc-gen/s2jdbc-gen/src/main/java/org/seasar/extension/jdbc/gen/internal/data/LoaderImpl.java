@@ -110,7 +110,7 @@ public class LoaderImpl implements Loader {
                 preLoadData(sqlExecutionContext, tableDesc);
                 loadData(sqlExecutionContext, reader, sqlTypeList, sql);
                 postLoadData(sqlExecutionContext, tableDesc);
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 if (dialect.isTableNotFound(e)) {
                     logger.log("DS2JDBCGen0012", new Object[] { tableDesc
                             .getFullName() });

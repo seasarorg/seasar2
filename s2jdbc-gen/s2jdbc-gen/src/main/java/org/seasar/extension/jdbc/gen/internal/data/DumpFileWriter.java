@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Set;
 
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
@@ -34,7 +35,8 @@ import org.seasar.extension.jdbc.gen.internal.util.DumpUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.ArrayMap;
+import org.seasar.framework.util.CaseInsensitiveMap;
+import org.seasar.framework.util.CaseInsensitiveSet;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 /**
@@ -61,7 +63,7 @@ public class DumpFileWriter {
 
     /** カラム名をキー、カラム記述を値とするマップ */
     @SuppressWarnings("unchecked")
-    protected Map<String, ColumnDesc> columnDescMap = new ArrayMap();
+    protected Map<String, ColumnDesc> columnDescMap = new CaseInsensitiveMap();
 
     /** 区切り文字 */
     protected char delimiter;
@@ -118,6 +120,39 @@ public class DumpFileWriter {
     }
 
     /**
+     * ヘッダーのみを書き込みます。
+     */
+    public void writeHeaderOnly() {
+        int size = tableDesc.getColumnDescList().size();
+        StringBuilder buf = new StringBuilder(size * 10);
+        for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            String columnName = columnDesc.getName();
+            buf.append(DumpUtil.quote(columnName));
+            buf.append(delimiter);
+        }
+        if (buf.length() > 0) {
+            buf.setLength(buf.length() - 1);
+        }
+        writeLine(buf.toString());
+    }
+
+    /**
+     * ヘッダーとデータ行を書き込みます。
+     * 
+     * @param rs
+     *            結果セット
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    public void writeRows(ResultSet rs) throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
+        writeHeader(metaData);
+        while (rs.next()) {
+            writeRowData(rs, metaData);
+        }
+    }
+
+    /**
      * ヘッダーを書き込みます。
      * 
      * @param metaData
@@ -125,7 +160,12 @@ public class DumpFileWriter {
      * @throws SQLException
      *             SQL例外が発生した場合
      */
-    public void writeHeader(ResultSetMetaData metaData) throws SQLException {
+    protected void writeHeader(ResultSetMetaData metaData) throws SQLException {
+        @SuppressWarnings("unchecked")
+        Map<String, ColumnDesc> absentColumnDescMap = new CaseInsensitiveMap();
+        for (Map.Entry<String, ColumnDesc> entry : columnDescMap.entrySet()) {
+            absentColumnDescMap.put(entry.getKey(), entry.getValue());
+        }
         int columnCount = metaData.getColumnCount();
         StringBuilder buf = new StringBuilder(columnCount * 10);
         for (int i = 0; i < columnCount; i++) {
@@ -136,6 +176,11 @@ public class DumpFileWriter {
             ColumnDesc columnDesc = columnDescMap.get(columnLabel);
             String columnName = columnDesc.getName();
             buf.append(DumpUtil.quote(columnName));
+            buf.append(delimiter);
+            absentColumnDescMap.remove(columnLabel);
+        }
+        for (ColumnDesc columnDesc : absentColumnDescMap.values()) {
+            buf.append(DumpUtil.quote(columnDesc.getName()));
             buf.append(delimiter);
         }
         if (buf.length() > 0) {
@@ -154,8 +199,11 @@ public class DumpFileWriter {
      * @throws SQLException
      *             SQL例外が発生した場合
      */
-    public void writeRowData(ResultSet resultSet, ResultSetMetaData metaData)
+    protected void writeRowData(ResultSet resultSet, ResultSetMetaData metaData)
             throws SQLException {
+        @SuppressWarnings("unchecked")
+        Set<String> absentColumnNameSet = new CaseInsensitiveSet(columnDescMap
+                .keySet());
         int columnCount = metaData.getColumnCount();
         StringBuilder buf = new StringBuilder(columnCount * 10);
         for (int i = 0; i < columnCount; i++) {
@@ -167,6 +215,11 @@ public class DumpFileWriter {
             SqlType sqlType = columnDesc.getSqlType();
             String value = sqlType.getValue(resultSet, i + 1);
             buf.append(DumpUtil.encode(value));
+            buf.append(delimiter);
+            absentColumnNameSet.remove(columnLabel);
+        }
+        for (int i = 0; i < absentColumnNameSet.size(); i++) {
+            buf.append(DumpUtil.encode(null));
             buf.append(delimiter);
         }
         if (buf.length() > 0) {

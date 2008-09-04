@@ -57,22 +57,20 @@ public class DumpFileWriterTest {
         stringWriter = new StringWriter();
         bufferedWriter = new BufferedWriter(stringWriter);
 
-        ColumnDesc aaa = new ColumnDesc();
-        aaa.setName("aaa");
-        aaa.setSqlType(new VarcharType());
-
-        ColumnDesc bbb = new ColumnDesc();
-        bbb.setName("bbb");
-        bbb.setSqlType(new VarcharType());
-
-        ColumnDesc ccc = new ColumnDesc();
-        ccc.setName("ccc");
-        ccc.setSqlType(new IntegerType());
+        ColumnDesc columnDesc1 = new ColumnDesc();
+        columnDesc1.setName("aaa");
+        columnDesc1.setSqlType(new VarcharType());
+        ColumnDesc columnDesc2 = new ColumnDesc();
+        columnDesc2.setName("bbb");
+        columnDesc2.setSqlType(new VarcharType());
+        ColumnDesc columnDesc3 = new ColumnDesc();
+        columnDesc3.setName("ccc");
+        columnDesc3.setSqlType(new IntegerType());
 
         TableDesc tableDesc = new TableDesc();
-        tableDesc.addColumnDesc(aaa);
-        tableDesc.addColumnDesc(bbb);
-        tableDesc.addColumnDesc(ccc);
+        tableDesc.addColumnDesc(columnDesc1);
+        tableDesc.addColumnDesc(columnDesc2);
+        tableDesc.addColumnDesc(columnDesc3);
 
         dumpFileWriter = new DumpFileWriter(new File("file"), tableDesc,
                 new StandardGenDialect(), "UTF-8", ',') {
@@ -90,18 +88,11 @@ public class DumpFileWriterTest {
      * @throws Exception
      */
     @Test
-    public void testWriteHeader() throws Exception {
-        MockColumnMetaData columnMetaData1 = new MockColumnMetaData();
-        columnMetaData1.setColumnLabel("aaa");
-        MockColumnMetaData columnMetaData2 = new MockColumnMetaData();
-        columnMetaData2.setColumnLabel("ccc");
-        MockResultSetMetaData metaData = new MockResultSetMetaData();
-        metaData.addColumnMetaData(columnMetaData1);
-        metaData.addColumnMetaData(columnMetaData2);
-
-        dumpFileWriter.writeHeader(metaData);
+    public void testWriteHeaderOnly() throws Exception {
+        dumpFileWriter.writeHeaderOnly();
         bufferedWriter.flush();
-        assertEquals("\"aaa\",\"ccc\"" + separator, stringWriter.toString());
+        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator, stringWriter
+                .toString());
     }
 
     /**
@@ -109,14 +100,16 @@ public class DumpFileWriterTest {
      * @throws Exception
      */
     @Test
-    public void testWriteRowData() throws Exception {
+    public void testWrite_javaColumn_gt_dbColumn() throws Exception {
         MockColumnMetaData columnMetaData1 = new MockColumnMetaData();
         columnMetaData1.setColumnLabel("aaa");
         MockColumnMetaData columnMetaData2 = new MockColumnMetaData();
         columnMetaData2.setColumnLabel("ccc");
+
         MockResultSetMetaData metaData = new MockResultSetMetaData();
         metaData.addColumnMetaData(columnMetaData1);
         metaData.addColumnMetaData(columnMetaData2);
+
         MockResultSet rs = new MockResultSet();
         rs.setMockMetaData(metaData);
         ArrayMap row = new ArrayMap();
@@ -128,11 +121,54 @@ public class DumpFileWriterTest {
         row.put("ccc", 200);
         rs.addRowData(row);
 
-        for (; rs.next();) {
-            dumpFileWriter.writeRowData(rs, metaData);
-        }
+        dumpFileWriter.writeRows(rs);
         bufferedWriter.flush();
-        assertEquals("hoge,100" + separator + "\"f\"\"oo\",200" + separator,
-                stringWriter.toString());
+        assertEquals("\"aaa\",\"ccc\",\"bbb\"" + separator + "hoge,100,"
+                + separator + "\"f\"\"oo\",200," + separator, stringWriter
+                .toString());
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testWriteHeader_javaColumn_lt_dbColumn() throws Exception {
+        MockColumnMetaData columnMetaData1 = new MockColumnMetaData();
+        columnMetaData1.setColumnLabel("aaa");
+        MockColumnMetaData columnMetaData2 = new MockColumnMetaData();
+        columnMetaData2.setColumnLabel("bbb");
+        MockColumnMetaData columnMetaData3 = new MockColumnMetaData();
+        columnMetaData3.setColumnLabel("ccc");
+        MockColumnMetaData columnMetaData4 = new MockColumnMetaData();
+        columnMetaData4.setColumnLabel("ddd");
+        MockResultSetMetaData metaData = new MockResultSetMetaData();
+
+        metaData.addColumnMetaData(columnMetaData1);
+        metaData.addColumnMetaData(columnMetaData2);
+        metaData.addColumnMetaData(columnMetaData3);
+        metaData.addColumnMetaData(columnMetaData4);
+
+        MockResultSet rs = new MockResultSet();
+        rs.setMockMetaData(metaData);
+        ArrayMap row = new ArrayMap();
+        row.put("aaa", "hoge");
+        row.put("bbb", "bar");
+        row.put("ccc", 100);
+        row.put("ddd", 200);
+        rs.addRowData(row);
+        row = new ArrayMap();
+        row.put("aaa", "f\"oo");
+        row.put("bbb", "baz");
+        row.put("ccc", 200);
+        row.put("ddd", 300);
+        rs.addRowData(row);
+
+        dumpFileWriter.writeRows(rs);
+        bufferedWriter.flush();
+        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator + "hoge,bar,100"
+                + separator + "\"f\"\"oo\",baz,200" + separator, stringWriter
+                .toString());
+    }
+
 }

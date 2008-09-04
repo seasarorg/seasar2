@@ -18,17 +18,18 @@ package org.seasar.extension.jdbc.gen.internal.version;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.exception.NoResultRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.util.StatementUtil;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
-import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.exception.SRuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.ResultSetUtil;
 
 /**
  * {@link SchemaInfoTable}の実装クラスです。
@@ -101,21 +102,17 @@ public class SchemaInfoTableImpl implements SchemaInfoTable {
                     }
                     throw new NoResultRuntimeException(fullTableName);
                 } finally {
-                    if (rs != null) {
-                        rs.close();
-                    }
+                    ResultSetUtil.close(rs);
                 }
             } finally {
-                if (ps != null) {
-                    ps.close();
-                }
+                StatementUtil.close(ps);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("IS2JDBCGen0004", new Object[] { fullTableName });
                 return 0;
             }
-            throw new SQLRuntimeException(e);
+            throw new SRuntimeException("ES2JDBCGen0021", new Object[] { e }, e);
         } finally {
             ConnectionUtil.close(conn);
         }
