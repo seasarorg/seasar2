@@ -51,6 +51,17 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
+    public void testGetColumnType_varchar2() throws Exception {
+        ColumnType type = dialect.getColumnType("varchar2");
+        assertEquals("varchar2(10)", type.getColumnDefinition(10, 0, 0, null));
+        assertEquals(String.class, type.getAttributeClass(10, 0, 0));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testGetSqlType_binary() throws Exception {
         SqlType type = dialect.getSqlType(Types.BINARY);
         assertEquals("raw(2000)", type.getDataType(2000, 0, 0, false));

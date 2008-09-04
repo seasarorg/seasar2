@@ -197,7 +197,7 @@ public class OracleGenDialect extends StandardGenDialect {
                 "timestamp($s)", Date.class, TemporalType.TIMESTAMP);
 
         private static OracleColumnType VARCHAR2 = new OracleColumnType(
-                "varchar2($l)", byte[].class);
+                "varchar2($l)", String.class);
 
         /**
          * インスタンスを構築します。
