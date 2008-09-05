@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.util;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.util.DumpUtil;
 
 import static org.junit.Assert.*;
 
@@ -31,13 +30,8 @@ public class DumpUtilTest {
      */
     @Test
     public void testEncode() {
-        assertEquals("aaa", DumpUtil.encode("aaa"));
-        assertEquals("\"aa\"\"a\"", DumpUtil.encode("aa\"a"));
-        assertEquals("\"aa\r\na\"", DumpUtil.encode("aa\r\na"));
-        assertEquals("\"aa\ra\"", DumpUtil.encode("aa\ra"));
-        assertEquals("\"aa\na\"", DumpUtil.encode("aa\na"));
-        assertEquals("\"aa,a\"", DumpUtil.encode("aa,a"));
-        assertEquals("", DumpUtil.encode(""));
+        assertEquals("\"aaa\"", DumpUtil.encode("aaa"));
+        assertEquals("\"\"", DumpUtil.encode(""));
         assertEquals("", DumpUtil.encode(null));
     }
 

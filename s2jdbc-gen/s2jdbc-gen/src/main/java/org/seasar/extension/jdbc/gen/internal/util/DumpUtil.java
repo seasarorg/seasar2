@@ -30,10 +30,6 @@ public class DumpUtil {
     /** エスケープされた引用符 */
     protected static String ESCAPED_QUOTE = "\"\"";
 
-    /** エンード対象の文字列を判別するための正規表現 */
-    protected static Pattern ENCODE_TARGET_PATTERN = Pattern
-            .compile(".*(\"|\\r\\n|\\r|\\n|,).*");
-
     /** デコード対象の文字列を判別するための正規表現 */
     protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile("^\".+\"");
 
@@ -54,11 +50,8 @@ public class DumpUtil {
         if (value == null) {
             return "";
         }
-        if (ENCODE_TARGET_PATTERN.matcher(value).matches()) {
-            String s = value.replace(QUOTE, ESCAPED_QUOTE);
-            return quote(s);
-        }
-        return value;
+        String s = value.replace(QUOTE, ESCAPED_QUOTE);
+        return quote(s);
     }
 
     /**

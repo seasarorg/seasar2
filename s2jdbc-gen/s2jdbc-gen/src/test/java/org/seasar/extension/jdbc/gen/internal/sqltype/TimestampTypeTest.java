@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.internal.sqltype;
 import java.sql.Timestamp;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 
 import static org.junit.Assert.*;
 
@@ -36,7 +35,7 @@ public class TimestampTypeTest {
     public void testToTimestamp() throws Exception {
         TimestampType timestampType = new TimestampType();
         Timestamp timestamp = timestampType
-                .toTimestamp("2008-01-01 12:11:10.123456");
+                .toTimestamp("2008/01/01 12:11:10.123456");
         assertEquals(123456000, timestamp.getNanos());
     }
 
@@ -48,7 +47,7 @@ public class TimestampTypeTest {
     public void testToTimestamp_zero() throws Exception {
         TimestampType timestampType = new TimestampType();
         Timestamp timestamp = timestampType
-                .toTimestamp("2008-01-01 12:11:10.000");
+                .toTimestamp("2008/01/01 12:11:10.000");
         assertEquals(0, timestamp.getNanos());
     }
 }

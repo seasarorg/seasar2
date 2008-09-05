@@ -123,9 +123,9 @@ public class DumpFileWriterTest {
 
         dumpFileWriter.writeRows(rs);
         bufferedWriter.flush();
-        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator + "hoge,,100"
-                + separator + "\"f\"\"oo\",,200" + separator, stringWriter
-                .toString());
+        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator
+                + "\"hoge\",,\"100\"" + separator + "\"f\"\"oo\",,\"200\""
+                + separator, stringWriter.toString());
     }
 
     /**
@@ -166,8 +166,9 @@ public class DumpFileWriterTest {
 
         dumpFileWriter.writeRows(rs);
         bufferedWriter.flush();
-        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator + "hoge,bar,100"
-                + separator + "\"f\"\"oo\",baz,200" + separator, stringWriter
+        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator
+                + "\"hoge\",\"bar\",\"100\"" + separator
+                + "\"f\"\"oo\",\"baz\",\"200\"" + separator, stringWriter
                 .toString());
     }
 

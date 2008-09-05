@@ -54,16 +54,20 @@ public class DateType extends AbstractSqlType {
         if (value == null) {
             ps.setNull(index, Types.DATE);
         } else {
-            ps
-                    .setDate(index, SqlDateConversionUtil.toDate(value,
-                            "yyyy-MM-dd"));
+            String pattern = null;
+            if (value.contains("-")) {
+                pattern = "yyyy-MM-dd";
+            } else {
+                pattern = "yyyy/MM/dd";
+            }
+            ps.setDate(index, SqlDateConversionUtil.toDate(value, pattern));
         }
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
         Date value = resultSet.getDate(index);
         return value != null ? StringConversionUtil.toString(value,
-                "yyyy-MM-dd") : null;
+                "yyyy/MM/dd") : null;
     }
 
 }

@@ -60,7 +60,10 @@ public class TimestampType extends AbstractSqlType {
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
         Timestamp value = resultSet.getTimestamp(index);
-        return value != null ? value.toString() : null;
+        if (value == null) {
+            return null;
+        }
+        return value.toString().replace('-', '/');
     }
 
     /**
@@ -74,8 +77,14 @@ public class TimestampType extends AbstractSqlType {
      * @return {@link Timestamp}の値
      */
     protected Timestamp toTimestamp(String value) {
+        String pattern = null;
+        if (value.contains("-")) {
+            pattern = "yyyy-MM-dd hh:mm:ss";
+        } else {
+            pattern = "yyyy/MM/dd hh:mm:ss";
+        }
         Timestamp timestamp = TimestampConversionUtil.toTimestamp(value,
-                "yyyy-MM-dd hh:mm:ss");
+                pattern);
         int pos = value.indexOf('.');
         if (pos > -1) {
             int nanos = IntegerConversionUtil.toPrimitiveInt(value
@@ -90,5 +99,4 @@ public class TimestampType extends AbstractSqlType {
         }
         return timestamp;
     }
-
 }
