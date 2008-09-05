@@ -21,8 +21,10 @@ import java.sql.DatabaseMetaData;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
+import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 import org.seasar.extension.jdbc.gen.internal.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
@@ -34,7 +36,6 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.ClassUtil;
 
 /**
  * コマンドの抽象クラスです。
@@ -189,7 +190,7 @@ public abstract class AbstractCommand implements Command {
      * 初期化します。
      */
     protected final void init() {
-        factory = (Factory) ClassUtil.newInstance(factoryClassName);
+        factory = ReflectUtil.newInstance(Factory.class, factoryClassName);
         containerFactorySupport = new SingletonS2ContainerFactorySupport(
                 configPath, env);
         containerFactorySupport.init();
@@ -231,6 +232,21 @@ public abstract class AbstractCommand implements Command {
         } finally {
             ConnectionUtil.close(conn);
         }
+    }
+
+    /**
+     * {@link GenDialect}の実装クラスを返します。
+     * 
+     * @param genDialectClassName
+     *            {@link GenDialect}の実装クラス名
+     * @return {@link GenDialect}の実装クラス
+     */
+    protected GenDialect getGenDialect(String genDialectClassName) {
+        if (genDialectClassName != null) {
+            return ReflectUtil.newInstance(GenDialect.class,
+                    genDialectClassName);
+        }
+        return GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
     }
 
     /**

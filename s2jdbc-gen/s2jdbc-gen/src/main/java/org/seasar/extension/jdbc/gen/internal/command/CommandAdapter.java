@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.command;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.internal.arg.ArgumentsParser;
 import org.seasar.extension.jdbc.gen.internal.exception.SystemPropertyNotFoundRuntimeException;
-import org.seasar.framework.util.ClassUtil;
+import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 
 /**
  * {@link Command}のアダプタとなるクラスです。
@@ -40,7 +40,7 @@ public class CommandAdapter {
         if (className == null) {
             throw new SystemPropertyNotFoundRuntimeException(COMMAND_KEY);
         }
-        Command command = (Command) ClassUtil.newInstance(className);
+        Command command = ReflectUtil.newInstance(Command.class, className);
         ArgumentsParser parser = new ArgumentsParser(command);
         parser.parse(args);
         command.execute();

@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.command.MigrateCommand;
 
 /**
@@ -257,4 +258,13 @@ public class MigrateTask extends AbstractTask {
         command.setTransactional(transactional);
     }
 
+    /**
+     * {@link GenDialect}の実装クラス名を設定します。
+     * 
+     * @param genDialectClassName
+     *            {@link GenDialect}の実装クラス名
+     */
+    public void setGenDialectClassName(String genDialectClassName) {
+        command.setGenDialectClassName(genDialectClassName);
+    }
 }

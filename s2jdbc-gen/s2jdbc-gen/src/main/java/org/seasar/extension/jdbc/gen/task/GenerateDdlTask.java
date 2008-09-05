@@ -19,6 +19,7 @@ import java.io.File;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateDdlCommand;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -461,6 +462,16 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setDump(boolean dump) {
         command.setDump(dump);
+    }
+
+    /**
+     * {@link GenDialect}の実装クラス名を設定します。
+     * 
+     * @param genDialectClassName
+     *            {@link GenDialect}の実装クラス名
+     */
+    public void setGenDialectClassName(String genDialectClassName) {
+        command.setGenDialectClassName(genDialectClassName);
     }
 
 }

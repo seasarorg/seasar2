@@ -26,7 +26,6 @@ import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
@@ -80,6 +79,9 @@ public class LoadDataCommand extends AbstractCommand {
 
     /** トランザクション内で実行する場合{@code true}、そうでない場合{@code false} */
     protected boolean transactional = false;
+
+    /** {@link GenDialect}の実装クラス名 */
+    protected String genDialectClassName = null;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -279,6 +281,25 @@ public class LoadDataCommand extends AbstractCommand {
         this.transactional = transactional;
     }
 
+    /**
+     * {@link GenDialect}の実装クラス名を返します。
+     * 
+     * @return {@link GenDialect}の実装クラス名
+     */
+    public String getGenDialectClassName() {
+        return genDialectClassName;
+    }
+
+    /**
+     * {@link GenDialect}の実装クラス名を設定します。
+     * 
+     * @param genDialectClassName
+     *            {@link GenDialect}の実装クラス名
+     */
+    public void setGenDialectClassName(String genDialectClassName) {
+        this.genDialectClassName = genDialectClassName;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -288,7 +309,7 @@ public class LoadDataCommand extends AbstractCommand {
 
     @Override
     protected void doInit() {
-        dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
+        dialect = getGenDialect(genDialectClassName);
         if (transactional) {
             userTransaction = SingletonS2Container
                     .getComponent(UserTransaction.class);

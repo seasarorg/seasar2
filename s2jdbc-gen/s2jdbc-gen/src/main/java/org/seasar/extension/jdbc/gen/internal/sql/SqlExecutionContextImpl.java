@@ -25,11 +25,11 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.seasar.extension.jdbc.gen.internal.util.StatementUtil;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.StatementUtil;
 
 /**
  * {@link SqlExecutionContext}の実装クラスです。

@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
@@ -43,6 +42,9 @@ public class DumpDbMetaCommand extends AbstractCommand {
 
     /** Javaコード生成の対象としないテーブル名の正規表現 */
     protected String ignoreTableNamePattern = ".*\\$.*";
+
+    /** {@link GenDialect}の実装クラス名 */
+    protected String genDialectClassName = null;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -113,6 +115,25 @@ public class DumpDbMetaCommand extends AbstractCommand {
         this.ignoreTableNamePattern = ignoreTableNamePattern;
     }
 
+    /**
+     * {@link GenDialect}の実装クラス名を返します。
+     * 
+     * @return {@link GenDialect}の実装クラス名
+     */
+    public String getGenDialectClassName() {
+        return genDialectClassName;
+    }
+
+    /**
+     * {@link GenDialect}の実装クラス名を設定します。
+     * 
+     * @param genDialectClassName
+     *            {@link GenDialect}の実装クラス名
+     */
+    public void setGenDialectClassName(String genDialectClassName) {
+        this.genDialectClassName = genDialectClassName;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -122,7 +143,7 @@ public class DumpDbMetaCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        dialect = GenDialectRegistry.getGenDialect(jdbcManager.getDialect());
+        dialect = getGenDialect(genDialectClassName);
         dbTableMetaReader = createDbTableMetaReader();
 
         logRdbmsAndGenDialect(dialect);
