@@ -193,7 +193,7 @@ public class GenerateEntityTask extends AbstractTask {
      * @param versionColumnNamePattern
      *            バージョンカラム名のパターンを
      */
-    public void setVersionColumnName(String versionColumnNamePattern) {
+    public void setVersionColumnNamePattern(String versionColumnNamePattern) {
         command.setVersionColumnNamePattern(versionColumnNamePattern);
     }
 
