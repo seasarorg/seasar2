@@ -64,7 +64,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String ignoreTableNamePattern = "(SCHEMA_INFO|.*\\$.*)";
 
     /** バージョンカラム名のパターン */
-    protected String versionColumnNamePattern = "(VERSION|VERSION[_]?NO)";
+    protected String versionColumnNamePattern = "VERSION([_]?NO)?";
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
