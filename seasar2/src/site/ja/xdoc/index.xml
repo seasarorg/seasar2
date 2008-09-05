@@ -45,6 +45,20 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2008/09/05</dt>
+				<dd>
+					<div>
+						Seasar2 2.4.29 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#s2f8df08">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#q58add5e">移行ガイド</a>)
+					</div>
+					<div>
+						<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a> 0.9.1 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#y0f0430b">Change Log</a>)
+					</div>
+				</dd>
 				<dt>2008/09/02</dt>
 				<dd>
 					<div>
