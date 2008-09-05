@@ -121,6 +121,7 @@
 					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>dumpDir</td><td>ダンプファイルを出力するディレクトリです。</td><td>"db/dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
@@ -164,6 +165,7 @@
 					<tr><td>schemaName</td><td>このタスクが対象とするスキーマ名です。</td><td>-</td><td>NO</td></tr>
 					<tr><td>tableNamePattern</td><td>このタスクが対象とするテーブル名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないこのタスクが対象としないテーブル名の正規表現です。</td><td>".*\$.*"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
@@ -210,6 +212,7 @@
 					<tr><td>blockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>haltOnError</td><td>"true"の場合、SQLの実行が失敗すると即座にエラーを返します。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>transactional</td><td>"true"の場合、単一のトランザクションとして実行します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
@@ -357,6 +360,7 @@
 					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
 					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
 					<tr><td>tableOption</td><td>CREATE TABLE文の最後に付与されるオプションです。MySQLで、データベースのエンジンを指定する場合、たとえば、"ENGINE = INNODB"というように指定できます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>
@@ -403,7 +407,7 @@
 					<tr><td>schemaName</td><td>このタスクが対象とするスキーマ名です。</td><td>-</td><td>NO</td></tr>
 					<tr><td>tableNamePattern</td><td>このタスクが対象とするテーブル名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないテーブル名の正規表現です。</td><td>"(SCHEMA_INFO|.*\$.*)"</td><td>NO</td></tr>
-					<tr><td>versionColumnName</td><td>エンティティのプロパティに@Versionを付与するカラム名です。大文字小文字の違いは考慮されません。</td><td>"version"</td><td>NO</td></tr>
+					<tr><td>versionColumnNamePattern</td><td>エンティティのプロパティに@Versionを付与するカラム名の正規表現です。大文字小文字の違いは考慮されません。</td><td>"(VERSION|VERSION[_]?NO)"</td><td>NO</td></tr>
 					<tr><td>pluralFormFile</td><td>@OneToManyの関連プロパティ名を複数形で作成する際に使用される辞書ファイルです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>showCatalogName</td><td>"true"の場合、@Tableのcatalog属性にカタログ名を明記します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>showSchemaName</td><td>"true"の場合、@Tableのschema属性にスキーマ名を明記します。</td><td>"false"</td><td>NO</td></tr>
@@ -419,6 +423,7 @@
 					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
 					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>overwrite</td><td>"true"の場合、エンティティクラスのJavaファイルを上書きします。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
@@ -626,6 +631,7 @@
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>loadBatchSize</td><td>ダンプファイルのデータをロードする際のバッチサイズです。</td><td>"10"</td><td>NO</td></tr>
 					<tr><td>transactional</td><td>"true"の場合、単一のトランザクションとして実行します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
@@ -685,6 +691,7 @@
 					<tr><td>haltOnError</td><td>"true"の場合、SQLの実行が失敗すると即座にエラーを返します。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>loadBatchSize</td><td>ダンプファイルのデータをロードする際のバッチサイズです。</td><td>"10"</td><td>NO</td></tr>
 					<tr><td>transactional</td><td>"true"の場合、単一のトランザクションとして実行します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
