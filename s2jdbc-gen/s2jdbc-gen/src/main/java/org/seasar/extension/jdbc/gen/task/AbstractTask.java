@@ -118,8 +118,11 @@ public abstract class AbstractTask extends Task {
         sysproperty.setKey(CommandAdapter.COMMAND_KEY);
         sysproperty.setValue(commandName);
 
-        String resultPropertyName = commandName + RESULT_PROPERTY_NAME_SUFFIX;
-        String errorPropertyName = commandName + ERROR_PROPERTY_NAME_SUFFIX;
+        long time = System.currentTimeMillis();
+        String resultPropertyName = commandName + time
+                + RESULT_PROPERTY_NAME_SUFFIX;
+        String errorPropertyName = commandName + time
+                + ERROR_PROPERTY_NAME_SUFFIX;
 
         java.bindToOwner(this);
         java.addSysproperty(sysproperty);
