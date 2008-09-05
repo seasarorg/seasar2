@@ -123,8 +123,8 @@ public class DumpFileWriterTest {
 
         dumpFileWriter.writeRows(rs);
         bufferedWriter.flush();
-        assertEquals("\"aaa\",\"ccc\",\"bbb\"" + separator + "hoge,100,"
-                + separator + "\"f\"\"oo\",200," + separator, stringWriter
+        assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator + "hoge,,100"
+                + separator + "\"f\"\"oo\",,200" + separator, stringWriter
                 .toString());
     }
 

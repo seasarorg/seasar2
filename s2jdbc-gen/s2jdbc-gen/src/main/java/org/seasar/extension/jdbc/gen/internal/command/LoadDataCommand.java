@@ -380,7 +380,7 @@ public class LoadDataCommand extends AbstractCommand {
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
-                userTransaction, false);
+                userTransaction, true);
     }
 
     /**

@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
-import java.sql.SQLException;
-
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
@@ -49,7 +47,7 @@ public class SqlFailedRuntimeException extends SRuntimeException {
      * @param sql
      *            SQL
      */
-    public SqlFailedRuntimeException(SQLException cause, String sqlFilePath,
+    public SqlFailedRuntimeException(Exception cause, String sqlFilePath,
             int lineNumber, String sql) {
         super("ES2JDBCGen0003", new Object[] { sqlFilePath, lineNumber, sql,
                 cause }, cause);

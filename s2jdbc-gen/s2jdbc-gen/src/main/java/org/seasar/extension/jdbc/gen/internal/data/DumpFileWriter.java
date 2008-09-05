@@ -24,8 +24,9 @@ import java.nio.charset.Charset;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
@@ -36,7 +37,6 @@ import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
-import org.seasar.framework.util.CaseInsensitiveSet;
 import org.seasar.framework.util.FileOutputStreamUtil;
 
 /**
@@ -112,7 +112,7 @@ public class DumpFileWriter {
      */
     protected void setupColumnDescMap() {
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
-            if (columnDesc.isIdentity() && !dialect.supportsIdentityInsert()) {
+            if (isIgnoreColumn(columnDesc)) {
                 continue;
             }
             columnDescMap.put(columnDesc.getName(), columnDesc);
@@ -126,6 +126,9 @@ public class DumpFileWriter {
         int size = tableDesc.getColumnDescList().size();
         StringBuilder buf = new StringBuilder(size * 10);
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (isIgnoreColumn(columnDesc)) {
+                continue;
+            }
             String columnName = columnDesc.getName();
             buf.append(DumpUtil.quote(columnName));
             buf.append(delimiter);
@@ -134,6 +137,17 @@ public class DumpFileWriter {
             buf.setLength(buf.length() - 1);
         }
         writeLine(buf.toString());
+    }
+
+    /**
+     * 無視するカラムの場合{@code true}を返します。
+     * 
+     * @param columnDesc
+     *            カラム記述
+     * @return 無視するカラムの場合{@code true}
+     */
+    protected boolean isIgnoreColumn(ColumnDesc columnDesc) {
+        return columnDesc.isIdentity() && !dialect.supportsIdentityInsert();
     }
 
     /**
@@ -146,41 +160,24 @@ public class DumpFileWriter {
      */
     public void writeRows(ResultSet rs) throws SQLException {
         ResultSetMetaData metaData = rs.getMetaData();
-        writeHeader(metaData);
+        Header header = createHeader(metaData);
+        writeHeader(header);
         while (rs.next()) {
-            writeRowData(rs, metaData);
+            writeRowData(rs, header);
         }
     }
 
     /**
      * ヘッダーを書き込みます。
      * 
-     * @param metaData
-     *            結果セットのメタデータ
-     * @throws SQLException
-     *             SQL例外が発生した場合
+     * @param header
+     *            ヘッダー
      */
-    protected void writeHeader(ResultSetMetaData metaData) throws SQLException {
-        @SuppressWarnings("unchecked")
-        Map<String, ColumnDesc> absentColumnDescMap = new CaseInsensitiveMap();
-        for (Map.Entry<String, ColumnDesc> entry : columnDescMap.entrySet()) {
-            absentColumnDescMap.put(entry.getKey(), entry.getValue());
-        }
-        int columnCount = metaData.getColumnCount();
-        StringBuilder buf = new StringBuilder(columnCount * 10);
-        for (int i = 0; i < columnCount; i++) {
-            String columnLabel = metaData.getColumnLabel(i + 1);
-            if (!columnDescMap.containsKey(columnLabel)) {
-                continue;
-            }
-            ColumnDesc columnDesc = columnDescMap.get(columnLabel);
-            String columnName = columnDesc.getName();
+    protected void writeHeader(Header header) {
+        StringBuilder buf = new StringBuilder(header.columnList.size() * 10);
+        for (HeaderColumn headerColumn : header.columnList) {
+            String columnName = headerColumn.columnDesc.getName();
             buf.append(DumpUtil.quote(columnName));
-            buf.append(delimiter);
-            absentColumnDescMap.remove(columnLabel);
-        }
-        for (ColumnDesc columnDesc : absentColumnDescMap.values()) {
-            buf.append(DumpUtil.quote(columnDesc.getName()));
             buf.append(delimiter);
         }
         if (buf.length() > 0) {
@@ -194,32 +191,21 @@ public class DumpFileWriter {
      * 
      * @param resultSet
      *            結果セット
-     * @param metaData
-     *            結果セットのメタデータ
+     * @param header
+     *            ヘッダー
      * @throws SQLException
      *             SQL例外が発生した場合
      */
-    protected void writeRowData(ResultSet resultSet, ResultSetMetaData metaData)
+    protected void writeRowData(ResultSet resultSet, Header header)
             throws SQLException {
-        @SuppressWarnings("unchecked")
-        Set<String> absentColumnNameSet = new CaseInsensitiveSet(columnDescMap
-                .keySet());
-        int columnCount = metaData.getColumnCount();
-        StringBuilder buf = new StringBuilder(columnCount * 10);
-        for (int i = 0; i < columnCount; i++) {
-            String columnLabel = metaData.getColumnLabel(i + 1);
-            if (!columnDescMap.containsKey(columnLabel)) {
-                continue;
+        StringBuilder buf = new StringBuilder(header.columnList.size() * 10);
+        for (HeaderColumn headerColumn : header.columnList) {
+            String value = null;
+            if (headerColumn.present) {
+                SqlType sqlType = headerColumn.columnDesc.getSqlType();
+                value = sqlType.getValue(resultSet, headerColumn.index);
             }
-            ColumnDesc columnDesc = columnDescMap.get(columnLabel);
-            SqlType sqlType = columnDesc.getSqlType();
-            String value = sqlType.getValue(resultSet, i + 1);
             buf.append(DumpUtil.encode(value));
-            buf.append(delimiter);
-            absentColumnNameSet.remove(columnLabel);
-        }
-        for (int i = 0; i < absentColumnNameSet.size(); i++) {
-            buf.append(DumpUtil.encode(null));
             buf.append(delimiter);
         }
         if (buf.length() > 0) {
@@ -264,6 +250,71 @@ public class DumpFileWriter {
      */
     public void close() {
         CloseableUtil.close(writer);
+    }
+
+    /**
+     * ヘッダーを作成します。
+     * 
+     * @param metaData
+     *            結果セットのメタデータ
+     * @return ヘッダー
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    protected Header createHeader(ResultSetMetaData metaData)
+            throws SQLException {
+        Header header = new Header();
+        @SuppressWarnings("unchecked")
+        Map<String, Integer> indexMap = new CaseInsensitiveMap();
+        for (int i = 0; i < metaData.getColumnCount(); i++) {
+            int index = i + 1;
+            String columnLabel = metaData.getColumnLabel(index);
+            indexMap.put(columnLabel, index);
+        }
+        for (Map.Entry<String, ColumnDesc> entry : columnDescMap.entrySet()) {
+            String columnLabel = entry.getKey();
+            if (indexMap.containsKey(columnLabel)) {
+                int index = indexMap.get(columnLabel);
+                HeaderColumn headerColumn = new HeaderColumn();
+                headerColumn.columnDesc = entry.getValue();
+                headerColumn.index = index;
+                headerColumn.present = true;
+                header.columnList.add(headerColumn);
+            } else {
+                HeaderColumn headerColumn = new HeaderColumn();
+                headerColumn.columnDesc = entry.getValue();
+                header.columnList.add(headerColumn);
+            }
+        }
+        return header;
+    }
+
+    /**
+     * ダンプファイルのヘッダーです。
+     * 
+     * @author taedium
+     */
+    protected static class Header {
+
+        /** ダンプファイルのヘッダーカラムのリスト */
+        protected List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
+    }
+
+    /**
+     * ダンプファイルのヘッダーのカラムです。
+     * 
+     * @author taedium
+     */
+    protected static class HeaderColumn {
+
+        /** カラム記述 */
+        protected ColumnDesc columnDesc;
+
+        /** 対応するカラムがデータベースに存在する場合{@code true} */
+        protected boolean present;
+
+        /** データベースのカラムのインデックス */
+        protected int index;
     }
 
 }

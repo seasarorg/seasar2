@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.sql;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
@@ -88,7 +87,7 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
                 Statement statement = context.getStatement();
                 try {
                     statement.execute(sql);
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     context.addException(new SqlFailedRuntimeException(e,
                             sqlFile.getPath(), reader.getLineNumber(), sql));
                 }

@@ -109,7 +109,7 @@ public class FactoryImpl implements Factory {
             DataSource dataSource, UserTransaction userTransaction,
             boolean haltOnError) {
 
-        return new SqlUnitExecutorImpl(dataSource, userTransaction, false);
+        return new SqlUnitExecutorImpl(dataSource, userTransaction, haltOnError);
     }
 
     public DbTableMetaReader createDbTableMetaReader(Command command,
