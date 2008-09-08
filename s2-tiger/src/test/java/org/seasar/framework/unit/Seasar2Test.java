@@ -59,6 +59,7 @@ import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.warmdeploy.WarmdeployBehavior;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.env.Env;
+import org.seasar.framework.mock.servlet.MockHttpServletRequest;
 import org.seasar.framework.unit.annotation.EasyMock;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.unit.annotation.Mock;
@@ -66,11 +67,13 @@ import org.seasar.framework.unit.annotation.Mocks;
 import org.seasar.framework.unit.annotation.PostBindFields;
 import org.seasar.framework.unit.annotation.PreUnbindFields;
 import org.seasar.framework.unit.annotation.Prerequisite;
+import org.seasar.framework.unit.annotation.PublishedTestContext;
 import org.seasar.framework.unit.annotation.RegisterNamingConvention;
 import org.seasar.framework.unit.annotation.RootDicon;
 import org.seasar.framework.unit.annotation.TxBehavior;
 import org.seasar.framework.unit.annotation.TxBehaviorType;
 import org.seasar.framework.unit.annotation.WarmDeploy;
+import org.seasar.framework.unit.impl.InternalTestContextImpl;
 import org.seasar.framework.util.TransactionManagerUtil;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
@@ -415,8 +418,7 @@ public class Seasar2Test extends TestCase {
         /**
          * @param a
          */
-        public void eee(@SuppressWarnings("unused")
-        String a) {
+        public void eee(@SuppressWarnings("unused") String a) {
             log += "e";
         }
 
@@ -1984,6 +1986,80 @@ public class Seasar2Test extends TestCase {
         assertEquals(2, log.length());
         assertTrue(log.contains("a"));
         assertTrue(log.contains("b"));
+    }
+
+    /**
+     * 
+     */
+    @RunWith(Seasar2.class)
+    public static class PublishedTestContextTest {
+
+        private MyTestContext context;
+
+        /**
+         * 
+         */
+        public void before() {
+            log += context != null;
+        }
+
+        /**
+         * 
+         */
+        public void aaa() {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPublishedTestContext() throws Exception {
+        S2TestMethodRunner.s2junit4Path = PublishedTestContextTest.class
+                .getName().replace(".", "/")
+                + ".s2junit4.dicon";
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(PublishedTestContextTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("true", log);
+    }
+
+    /**
+     * 
+     * @author taedium
+     */
+    @PublishedTestContext
+    public static class MyTestContext extends InternalTestContextImpl {
+    }
+
+    /**
+     * 
+     */
+    @RunWith(Seasar2.class)
+    public static class MockHttpServletRequestTest {
+
+        private MockHttpServletRequest request;
+
+        /**
+         * 
+         */
+        public void aaa() {
+            assertNotNull(request);
+            log += "a";
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testMockHttpServletRequest() throws Exception {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(MockHttpServletRequestTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals("a", log);
     }
 
     /**

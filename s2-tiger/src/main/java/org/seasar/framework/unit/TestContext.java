@@ -18,6 +18,7 @@ package org.seasar.framework.unit;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.framework.aop.interceptors.MockInterceptor;
 import org.seasar.framework.container.ComponentDef;
+import org.seasar.framework.unit.annotation.PublishedTestContext;
 
 /**
  * S2JUnit4を使ったテストの実行コンテキストを表すインターフェースです。
@@ -39,6 +40,7 @@ import org.seasar.framework.container.ComponentDef;
  * @author taedium
  * 
  */
+@PublishedTestContext
 public interface TestContext {
 
     /**
@@ -139,7 +141,8 @@ public interface TestContext {
     /**
      * テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>を返します。
      * 
-     * @return テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>、そうでない場合は<code>false</code>
+     * @return テストデータの文字列に含まれる空白を取り除く場合は<code>true</code>、そうでない場合は
+     *         <code>false</code>
      */
     boolean isTrimString();
 
@@ -168,7 +171,8 @@ public interface TestContext {
      * 
      * @param componentKey
      *            コンポーネントを取得するためのキー
-     * @return キーに対応するコンポーネント定義が存在する場合<code>true</code>、そうでない場合は<code>false</code>
+     * @return キーに対応するコンポーネント定義が存在する場合<code>true</code>、そうでない場合は
+     *         <code>false</code>
      */
     boolean hasComponentDef(Object componentKey);
 

@@ -42,6 +42,7 @@ import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.NoSuchMethodRuntimeException;
+import org.seasar.framework.unit.annotation.PublishedTestContext;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
@@ -314,8 +315,11 @@ public class S2TestMethodRunner {
             final Field[] fields = clazz.getDeclaredFields();
             for (int i = 0; i < fields.length; ++i) {
                 final Field field = fields[i];
+                final Class<?> fieldClass = field.getType();
                 if (isAutoBindable(field)
-                        && field.getType() == TestContext.class) {
+                        && fieldClass.isAssignableFrom(testContext.getClass())
+                        && fieldClass
+                                .isAnnotationPresent(PublishedTestContext.class)) {
                     field.setAccessible(true);
                     if (ReflectionUtil.getValue(field, test) != null) {
                         continue;
@@ -493,21 +497,12 @@ public class S2TestMethodRunner {
             final String name = resolveComponentName(field);
             Object component = null;
             if (testContext.hasComponentDef(name)) {
-                Class<?> componentClass = testContext.getComponentDef(name)
-                        .getComponentClass();
-                if (componentClass == null) {
-                    component = testContext.getComponent(name);
-                    if (component != null) {
-                        componentClass = component.getClass();
+                component = testContext.getComponent(name);
+                if (component != null) {
+                    Class<?> componentClass = component.getClass();
+                    if (!field.getType().isAssignableFrom(componentClass)) {
+                        component = null;
                     }
-                }
-                if (componentClass != null
-                        && field.getType().isAssignableFrom(componentClass)) {
-                    if (component == null) {
-                        component = testContext.getComponent(name);
-                    }
-                } else {
-                    component = null;
                 }
             }
             if (component == null
@@ -635,7 +630,8 @@ public class S2TestMethodRunner {
     /**
      * テストが失敗していない場合かつトランザクションをコミットするように設定されている場合に<code>true</code>を返します。
      * 
-     * @return テストが失敗していない場合かつトランザクションをコミットするように設定されている場合に<code>true</code>、そうでない場合<code>false</code>
+     * @return テストが失敗していない場合かつトランザクションをコミットするように設定されている場合に<code>true</code>
+     *         、そうでない場合<code>false</code>
      */
     protected boolean requiresTransactionCommitment() {
         return !testFailed
@@ -685,7 +681,8 @@ public class S2TestMethodRunner {
     /**
      * テストの実行で例外が発生することが期待されている場合<code>true</code>を返します。
      * 
-     * @return テストの実行で例外が発生することが期待されている場合<code>true</code>、そうでない場合<code>false</code>
+     * @return テストの実行で例外が発生することが期待されている場合<code>true</code>、そうでない場合
+     *         <code>false</code>
      */
     protected boolean expectsException() {
         return expectedException() != null;
