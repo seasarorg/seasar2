@@ -73,7 +73,7 @@ public class EnvAwareFilenameFilter implements FilenameFilter {
             return null;
         }
         String s = name.substring(0, pos);
-        pos = name.lastIndexOf('_');
+        pos = name.lastIndexOf(EnvUtil.DELIMITER);
         if (pos < 1) {
             return null;
         }

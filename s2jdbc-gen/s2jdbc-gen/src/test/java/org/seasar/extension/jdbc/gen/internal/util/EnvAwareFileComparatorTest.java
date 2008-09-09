@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.internal.util;
 import java.io.File;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
 
 import static org.junit.Assert.*;
 
@@ -43,7 +42,7 @@ public class EnvAwareFileComparatorTest {
      */
     @Test
     public void testRemoveEnv() {
-        assertEquals("hoge", comparator.removeEnvSuffix("hoge_ut"));
+        assertEquals("hoge", comparator.removeEnvSuffix("hoge#ut"));
     }
 
     /**

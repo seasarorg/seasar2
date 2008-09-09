@@ -42,7 +42,7 @@ public class EnvAwareFileComparator implements Comparator<File> {
         if (env == null) {
             throw new NullPointerException("env");
         }
-        this.envSuffix = "_" + env;
+        this.envSuffix = EnvUtil.DELIMITER + env;
     }
 
     public int compare(File file1, File file2) {

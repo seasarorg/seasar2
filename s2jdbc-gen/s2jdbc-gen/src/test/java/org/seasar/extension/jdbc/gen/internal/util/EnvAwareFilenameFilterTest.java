@@ -32,10 +32,10 @@ public class EnvAwareFilenameFilterTest {
     @Test
     public void testAccept() throws Exception {
         EnvAwareFilenameFilter filter = new EnvAwareFilenameFilter("ut");
-        assertTrue(filter.accept(null, "aaa_ut.txt"));
-        assertTrue(filter.accept(null, "aaa_it"));
-        assertTrue(filter.accept(null, "_it.txt"));
-        assertTrue(filter.accept(null, "_"));
-        assertFalse(filter.accept(null, "aaa_it.txt"));
+        assertTrue(filter.accept(null, "aaa#ut.txt"));
+        assertTrue(filter.accept(null, "aaa#it"));
+        assertTrue(filter.accept(null, "#it.txt"));
+        assertTrue(filter.accept(null, "#"));
+        assertFalse(filter.accept(null, "aaa#it.txt"));
     }
 }

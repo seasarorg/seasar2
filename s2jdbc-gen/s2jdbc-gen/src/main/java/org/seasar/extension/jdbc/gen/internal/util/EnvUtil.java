@@ -27,6 +27,9 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class EnvUtil {
 
+    /** 環境名と環境名以外の区切り文字 */
+    public static char DELIMITER = '#';
+
     /** {@link Env}の環境名を保持するフィールド */
     protected static Field VALUE_FIELD;
     static {

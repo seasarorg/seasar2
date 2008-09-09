@@ -88,7 +88,7 @@ public class MigraterImplTest {
         File v010 = new File(baseDir, "v010");
         File drop = new File(v010, "drop");
         assertEquals(new File(drop, "drop.sql"), dropFileList.get(0));
-        assertEquals(new File(drop, "drop_ut.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "drop#ut.sql"), dropFileList.get(1));
 
         assertEquals(1, createFileList.size());
         File v011 = new File(baseDir, "v011");
