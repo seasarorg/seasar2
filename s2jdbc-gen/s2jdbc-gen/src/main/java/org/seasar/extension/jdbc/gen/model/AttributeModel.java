@@ -30,6 +30,9 @@ public class AttributeModel {
     /** 属性のクラス */
     protected Class<?> attributeClass;
 
+    /** 数値型の場合{@code true} */
+    protected boolean number;
+
     /** 識別子の場合{@code true} */
     protected boolean id;
 
@@ -298,6 +301,25 @@ public class AttributeModel {
      */
     public void setAttributeClass(Class<?> attributeClass) {
         this.attributeClass = attributeClass;
+    }
+
+    /**
+     * 数値型の場合{@code true}を返します。
+     * 
+     * @return 数値型の場合{@code true}
+     */
+    public boolean isNumber() {
+        return number;
+    }
+
+    /**
+     * 数値型の場合{@code true}を設定します。
+     * 
+     * @param number
+     *            数値型の場合{@code true}
+     */
+    public void setNumber(boolean number) {
+        this.number = number;
     }
 
     /**

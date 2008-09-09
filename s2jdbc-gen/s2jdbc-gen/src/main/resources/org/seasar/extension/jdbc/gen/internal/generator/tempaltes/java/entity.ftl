@@ -28,7 +28,7 @@ public class ${shortClassName} {
   </#if>
   <#if attr.id>
     @Id
-    <#if !hasCompositeId()>
+    <#if !hasCompositeId() && attr.number>
     @GeneratedValue
     </#if>
   </#if>

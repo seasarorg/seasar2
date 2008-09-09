@@ -1,0 +1,22 @@
+package hoge.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * Fooエンティティクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo {
+
+    /** idプロパティ */
+    @Id
+    @Column(columnDefinition = "varchar", nullable = false, unique = false)
+    public String id;
+}

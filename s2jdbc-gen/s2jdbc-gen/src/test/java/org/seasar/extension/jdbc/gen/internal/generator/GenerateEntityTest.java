@@ -153,6 +153,37 @@ public class GenerateEntityTest {
      * @throws Exception
      */
     @Test
+    public void testSingleIdString() throws Exception {
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setAttributeClass(String.class);
+        id.setColumnName("ID");
+        id.setColumnDefinition("varchar");
+        id.setNullable(false);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+        entityDesc.addAttributeDesc(id);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_SingleIdString.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testCompositeId() throws Exception {
         AttributeDesc id1 = new AttributeDesc();
         id1.setName("id1");
