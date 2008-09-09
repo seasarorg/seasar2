@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -148,8 +149,19 @@ public class TableDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testUniqueKeyDescList() throws Exception {
+    public void testUniqueKeyDescList_uniqueConstraints() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
+        assertEquals(1, tableDesc.getUniqueKeyDescList().size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testUniqueKeyDescList_unique() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
         TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
         assertEquals(1, tableDesc.getUniqueKeyDescList().size());
     }
@@ -214,6 +226,20 @@ public class TableDescFactoryImplTest {
         @GeneratedValue(strategy = GenerationType.TABLE)
         public Integer id;
 
+    }
+
+    /** */
+    @Entity
+    public static class Ddd {
+
+        /** */
+        @Id
+        @Column(unique = true)
+        public Integer id;
+
+        /** */
+        @Column(unique = true)
+        public Integer hoge;
     }
 
 }

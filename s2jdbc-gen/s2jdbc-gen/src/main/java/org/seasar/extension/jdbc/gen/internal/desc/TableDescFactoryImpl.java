@@ -273,7 +273,16 @@ public class TableDescFactoryImpl implements TableDescFactory {
      */
     protected void doUniqueKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
+        String singlePkColumnName = null;
+        PrimaryKeyDesc primaryKeyDesc = tableDesc.getPrimaryKeyDesc();
+        if (primaryKeyDesc != null
+                && primaryKeyDesc.getColumnNameList().size() == 1) {
+            singlePkColumnName = primaryKeyDesc.getColumnNameList().get(0);
+        }
         for (ColumnDesc columnDesc : tableDesc.getColumnDescList()) {
+            if (columnDesc.getName().equals(singlePkColumnName)) {
+                continue;
+            }
             UniqueKeyDesc uniqueKeyDesc = uniqueKeyDescFactory
                     .getSingleUniqueKeyDesc(columnDesc);
             if (uniqueKeyDesc != null) {
