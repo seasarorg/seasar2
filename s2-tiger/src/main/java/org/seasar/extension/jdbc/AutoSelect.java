@@ -481,6 +481,16 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     AutoSelect<T> where(Where where);
 
     /**
+     * where句の条件を指定します。
+     * 
+     * @param wheres
+     *            where句のビルダーの並び
+     * 
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> where(Where... wheres);
+
+    /**
      * ソート順を指定します。
      * 
      * @param orderBy

@@ -1283,6 +1283,21 @@ public class AutoSelectImplTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testWhere_wheres() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        assertSame(query, query.where(new SimpleWhere().eq("id", 1),
+                new SimpleWhere().eq("name", "aaa")));
+        query.prepare("getResultList");
+        assertEquals("(id = ?) and (name = ?)", query.criteria);
+        assertEquals(2, query.getParamSize());
+        assertEquals(1, query.getParam(0).value);
+        assertEquals("aaa", query.getParam(1).value);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testWhere_emptyWhere() throws Exception {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         assertSame(query, query.where(new SimpleWhere().eq("name", null)));

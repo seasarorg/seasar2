@@ -62,6 +62,7 @@ import org.seasar.extension.jdbc.mapper.OneToManyEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.OneToOneEntityMapperImpl;
 import org.seasar.extension.jdbc.mapper.PropertyMapperImpl;
 import org.seasar.extension.jdbc.util.QueryTokenizer;
+import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.message.MessageFormatter;
@@ -847,6 +848,26 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         this.criteria = criteria;
         this.criteriaParams = where.getParams();
         this.criteriaPropertyNames = where.getPropertyNames();
+        return this;
+    }
+
+    public AutoSelect<T> where(Where... wheres) {
+        if (wheres == null) {
+            throw new NullPointerException("whereList");
+        }
+        if (wheres.length > 0) {
+            final ComplexWhere where = new ComplexWhere();
+            for (final Where w : wheres) {
+                where.and(w);
+            }
+            String criteria = where.getCriteria().trim();
+            if (StringUtil.isEmpty(criteria)) {
+                return this;
+            }
+            this.criteria = criteria;
+            this.criteriaParams = where.getParams();
+            this.criteriaPropertyNames = where.getPropertyNames();
+        }
         return this;
     }
 
