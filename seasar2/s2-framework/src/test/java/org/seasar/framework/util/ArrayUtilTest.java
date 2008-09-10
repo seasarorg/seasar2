@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Array;
+import java.util.List;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -206,5 +207,15 @@ public class ArrayUtilTest extends TestCase {
             fail();
         } catch (IllegalArgumentException e) {
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testToList() throws Exception {
+        final Object a = new int[] { 1, 5 };
+        List list = ArrayUtil.toList(a);
+        assertEquals(new Integer(1), list.get(0));
+        assertEquals(new Integer(5), list.get(1));
     }
 }

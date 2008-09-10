@@ -16,6 +16,7 @@
 package org.seasar.framework.util;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -298,5 +299,21 @@ public class ArrayUtil {
             array[i] = Array.get(obj, i);
         }
         return array;
+    }
+
+    /**
+     * 配列をリストに変換します。
+     * 
+     * @param obj
+     *            配列
+     * @return リスト
+     */
+    public static List toList(Object obj) {
+        int length = Array.getLength(obj);
+        List list = new ArrayList(length);
+        for (int i = 0; i < length; i++) {
+            list.add(Array.get(obj, i));
+        }
+        return list;
     }
 }
