@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Map;
 
 import org.seasar.extension.jdbc.parameter.Parameter;
@@ -480,12 +481,20 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
     AutoSelect<T> where(Where where);
 
     /**
-     * ソート順を追加します。
+     * ソート順を指定します。
      * 
      * @param orderBy
      * @return このインスタンス自身
      */
     AutoSelect<T> orderBy(String orderBy);
+
+    /**
+     * ソート順を指定します。
+     * 
+     * @param orderByItems
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> orderBy(OrderByItem... orderByItems);
 
     /**
      * FOR UPDATEを追加します。

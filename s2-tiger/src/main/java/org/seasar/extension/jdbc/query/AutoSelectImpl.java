@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.JoinMeta;
 import org.seasar.extension.jdbc.JoinType;
 import org.seasar.extension.jdbc.OrderByClause;
+import org.seasar.extension.jdbc.OrderByItem;
 import org.seasar.extension.jdbc.PropertyMapper;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ResultSetHandler;
@@ -1076,6 +1077,22 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             throw new NullPointerException("orderBy");
         }
         this.orderBy = orderBy;
+        return this;
+    }
+
+    public AutoSelect<T> orderBy(final OrderByItem... orderByItems) {
+        if (orderByItems == null) {
+            throw new NullPointerException("orderByItems");
+        }
+        if (orderByItems.length > 0) {
+            final StringBuilder buf = new StringBuilder(
+                    20 * orderByItems.length);
+            for (final OrderByItem item : orderByItems) {
+                buf.append(item.getCriteria()).append(", ");
+            }
+            buf.setLength(buf.length() - 2);
+            orderBy = new String(buf);
+        }
         return this;
     }
 

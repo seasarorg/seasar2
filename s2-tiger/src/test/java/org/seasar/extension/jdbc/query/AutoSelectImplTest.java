@@ -34,12 +34,14 @@ import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.JoinMeta;
 import org.seasar.extension.jdbc.JoinType;
+import org.seasar.extension.jdbc.OrderByItem;
 import org.seasar.extension.jdbc.PropertyMapper;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.OrderByItem.OrderingSpec;
 import org.seasar.extension.jdbc.dialect.Db2Dialect;
 import org.seasar.extension.jdbc.dialect.HsqlDialect;
 import org.seasar.extension.jdbc.dialect.MssqlDialect;
@@ -495,7 +497,8 @@ public class AutoSelectImplTest extends TestCase {
         String tableAlias = query.prepareTableAlias(null);
         query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
                 idIndexList);
-        assertEquals("T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_",
+        assertEquals(
+                "T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_",
                 query.selectClause.toSql());
     }
 
@@ -1137,8 +1140,10 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.id(1);
         query.prepare("getResultList");
-        assertEquals("select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_ "
-                + "from AAA T1_ " + "where T1_.ID = ?", query.executedSql);
+        assertEquals(
+                "select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_ "
+                        + "from AAA T1_ " + "where T1_.ID = ?",
+                query.executedSql);
     }
 
     /**
@@ -1855,8 +1860,19 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.leftOuterJoin("bbb").orderBy("name, bbb.id desc");
         query.prepare("getResultList");
-        assertEquals(" order by C2_, C5_ desc", query.orderByClause
-                .toSql());
+        assertEquals(" order by C2_, C5_ desc", query.orderByClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareOrderByItems() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb").orderBy(new OrderByItem("name"),
+                new OrderByItem("bbb.id", OrderingSpec.DESC));
+        assertEquals("name, bbb.id desc", query.orderBy);
+        query.prepare("getResultList");
+        assertEquals(" order by C2_, C5_ desc", query.orderByClause.toSql());
     }
 
     /**
@@ -2337,8 +2353,9 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.hint("index(Aaa index)");
         query.prepare("getResultList");
-        assertEquals("select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_ "
-                + "from AAA T1_", query.executedSql);
+        assertEquals(
+                "select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_ "
+                        + "from AAA T1_", query.executedSql);
     }
 
     /**
