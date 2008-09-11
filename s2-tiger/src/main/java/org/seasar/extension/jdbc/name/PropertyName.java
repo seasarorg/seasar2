@@ -15,30 +15,20 @@
  */
 package org.seasar.extension.jdbc.name;
 
+import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.util.StringUtil;
+
 /**
  * プロパティ名をあらわすクラスです。ネストしたプロパティに対応しています。
  * 
  * @author higa
- * 
  */
-public class PropertyName {
+public class PropertyName implements CharSequence {
 
     /**
-     * 自分自身の名前です。
+     * プロパティの名前です。
      */
-    protected String name;
-
-    /**
-     * 親です。
-     */
-    protected PropertyName parent;
-
-    /**
-     * コンストラクタです。
-     */
-    public PropertyName() {
-        this(null);
-    }
+    protected final String name;
 
     /**
      * コンストラクタです。
@@ -46,8 +36,8 @@ public class PropertyName {
      * @param name
      *            名前
      */
-    public PropertyName(String name) {
-        this.name = name;
+    public PropertyName(final String name) {
+        this(null, name);
     }
 
     /**
@@ -58,24 +48,35 @@ public class PropertyName {
      * @param name
      *            名前
      */
-    public PropertyName(PropertyName parent, String name) {
-        this.parent = parent;
-        this.name = name;
+    public PropertyName(final PropertyName parent, final String name) {
+        if (name == null) {
+            throw new NullPointerException("name");
+        }
+        if (StringUtil.isEmpty(name)) {
+            throw new EmptyRuntimeException("name");
+        }
+        if (parent == null) {
+            this.name = name;
+            return;
+        }
+        this.name = parent + "." + name;
     }
 
-    /**
-     * 親を含んだプロパティ名に変換します。
-     * 
-     * @return 親を含んだプロパティ名
-     */
-    public String toPropertyName() {
-        if (parent == null) {
-            return name;
-        }
-        String parentName = parent.toPropertyName();
-        if (parentName == null) {
-            return name;
-        }
-        return parentName + "." + name;
+    public char charAt(final int index) {
+        return name.charAt(index);
     }
+
+    public int length() {
+        return name.length();
+    }
+
+    public CharSequence subSequence(final int start, final int end) {
+        return name.substring(start, end);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
 }

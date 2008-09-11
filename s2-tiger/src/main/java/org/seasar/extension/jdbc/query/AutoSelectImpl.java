@@ -229,87 +229,95 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         super(jdbcManager, baseClass);
     }
 
-    public AutoSelect<T> innerJoin(String name) {
+    public AutoSelect<T> innerJoin(CharSequence name) {
         return join(name, JoinType.INNER);
     }
 
-    public AutoSelect<T> innerJoin(String name, String condition,
+    public AutoSelect<T> innerJoin(CharSequence name, String condition,
             Object... params) {
         return join(name, JoinType.INNER, condition, params);
     }
 
-    public AutoSelect<T> innerJoin(String name, Where condition) {
+    public AutoSelect<T> innerJoin(CharSequence name, Where condition) {
         return join(name, JoinType.INNER, condition);
     }
 
-    public AutoSelect<T> innerJoin(String name, boolean fetch) {
+    public AutoSelect<T> innerJoin(CharSequence name, boolean fetch) {
         return join(name, JoinType.INNER, fetch);
     }
 
-    public AutoSelect<T> innerJoin(String name, boolean fetch,
+    public AutoSelect<T> innerJoin(CharSequence name, boolean fetch,
             String condition, Object... params) {
         return join(name, JoinType.INNER, fetch, condition, params);
     }
 
-    public AutoSelect<T> innerJoin(String name, boolean fetch, Where condition) {
+    public AutoSelect<T> innerJoin(CharSequence name, boolean fetch,
+            Where condition) {
         return join(name, JoinType.INNER, fetch, condition);
     }
 
-    public AutoSelect<T> leftOuterJoin(String name) {
+    public AutoSelect<T> leftOuterJoin(CharSequence name) {
         return join(name, JoinType.LEFT_OUTER);
     }
 
-    public AutoSelect<T> leftOuterJoin(String name, String condition,
+    public AutoSelect<T> leftOuterJoin(CharSequence name, String condition,
             Object... params) {
         return join(name, JoinType.LEFT_OUTER, condition, params);
     }
 
-    public AutoSelect<T> leftOuterJoin(String name, Where condition) {
+    public AutoSelect<T> leftOuterJoin(CharSequence name, Where condition) {
         return join(name, JoinType.LEFT_OUTER, condition);
     }
 
-    public AutoSelect<T> leftOuterJoin(String name, boolean fetch) {
+    public AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch) {
         return join(name, JoinType.LEFT_OUTER, fetch);
     }
 
-    public AutoSelect<T> leftOuterJoin(String name, boolean fetch,
+    public AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch,
             String condition, Object... params) {
         return join(name, JoinType.LEFT_OUTER, fetch, condition, params);
     }
 
-    public AutoSelect<T> leftOuterJoin(String name, boolean fetch,
+    public AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch,
             Where condition) {
         return join(name, JoinType.LEFT_OUTER, fetch, condition);
     }
 
-    public AutoSelect<T> join(String name, JoinType joinType) {
+    public AutoSelect<T> join(CharSequence name, JoinType joinType) {
         return join(name, joinType, true);
     }
 
-    public AutoSelect<T> join(String name, JoinType joinType, String condition,
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            String condition,
             Object... params) {
         return join(name, joinType, true, condition, params);
     }
 
-    public AutoSelect<T> join(String name, JoinType joinType, Where condition) {
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            Where condition) {
         return join(name, joinType, true, condition);
     }
 
-    public AutoSelect<T> join(String name, JoinType joinType, boolean fetch) {
-        joinMetaList.add(new JoinMeta(name, joinType, fetch));
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            boolean fetch) {
+        joinMetaList.add(new JoinMeta(name.toString(), joinType, fetch));
         return this;
     }
 
-    public AutoSelect<T> join(String name, JoinType joinType, boolean fetch,
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            boolean fetch,
             String condition, Object... params) {
         joinMetaList
-                .add(new JoinMeta(name, joinType, fetch, condition, params));
+                .add(new JoinMeta(name.toString(), joinType, fetch,
+                condition, params));
         return this;
     }
 
-    public AutoSelect<T> join(String name, JoinType joinType, boolean fetch,
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            boolean fetch,
             Where condition) {
-        joinMetaList.add(new JoinMeta(name, joinType, fetch, condition
+        joinMetaList.add(new JoinMeta(name.toString(), joinType, fetch,
+                condition
                 .getCriteria(), condition.getParams(), condition
                 .getPropertyNames()));
         return this;

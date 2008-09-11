@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc;
 
-
 /**
  * OrderByの項目を組み立てるインターフェースです。
  * 
@@ -50,8 +49,8 @@ public class OrderByItem {
      * @param propertyName
      *            プロパティ名
      */
-    public OrderByItem(final String propertyName) {
-        sql = propertyName;
+    public OrderByItem(final CharSequence propertyName) {
+        sql = propertyName.toString();
     }
 
     /**
@@ -62,7 +61,7 @@ public class OrderByItem {
      * @param spec
      *            昇順・降順
      */
-    public OrderByItem(String propertyName, OrderingSpec spec) {
+    public OrderByItem(final CharSequence propertyName, final OrderingSpec spec) {
         sql = propertyName + " " + spec;
     }
 
