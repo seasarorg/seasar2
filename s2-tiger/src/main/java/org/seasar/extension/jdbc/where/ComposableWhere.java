@@ -22,14 +22,24 @@ import org.seasar.extension.jdbc.Where;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
 /**
+ * 複数の構成要素からなる条件を組み立てるための抽象クラスです。
+ * 
  * @author koichik
  */
 public abstract class ComposableWhere implements Where {
 
+    /** 条件に追加される子供の条件です。 */
     protected List<Where> children = CollectionsUtil.newArrayList();
 
+    /** 条件を組み立てるためのコンテキストです。 */
     protected ComposableWhereContext context;
 
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param children
+     *            子供の条件
+     */
     public ComposableWhere(final Where... children) {
         this.children.addAll(Arrays.asList(children));
     }
@@ -50,11 +60,24 @@ public abstract class ComposableWhere implements Where {
         return context.getPropertyNames();
     }
 
-    protected ComposableWhere addChildren(Where... children) {
+    /**
+     * 子供の条件を追加します。
+     * 
+     * @param children
+     *            子供の条件
+     * @return このインスタンス自身
+     */
+    protected ComposableWhere addChildren(final Where... children) {
         this.children.addAll(Arrays.asList(children));
         return this;
     }
 
+    /**
+     * コンテキストに対して条件を組み立てます。
+     * 
+     * @param context
+     *            条件を組み立てるコンテキスト
+     */
     protected abstract void visit(ComposableWhereContext context);
 
 }

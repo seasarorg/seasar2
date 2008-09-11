@@ -15,46 +15,85 @@
  */
 package org.seasar.extension.jdbc.where;
 
+import java.math.BigDecimal;
+
+import org.seasar.extension.jdbc.impl.Employee;
 import org.seasar.extension.jdbc.name.PropertyName;
+import org.seasar.extension.jdbc.operation.S2JdbcOperations;
+import org.seasar.extension.jdbc.where.DepartmentNames._DepartmentNames;
 
 /**
  * @author higa
  * 
  */
-public class EmployeeNames extends PropertyName {
+public class EmployeeNames extends S2JdbcOperations {
 
     /**
-     * 
+     * @return
      */
-    public EmployeeNames() {
-    }
-
-    /**
-     * @param name
-     */
-    public EmployeeNames(String name) {
-        super(name);
-    }
-
-    /**
-     * @param parent
-     * @param name
-     */
-    public EmployeeNames(PropertyName parent, String name) {
-        super(parent, name);
+    public static PropertyName<BigDecimal> id() {
+        return new PropertyName<BigDecimal>("id");
     }
 
     /**
      * @return
      */
-    public PropertyName id() {
-        return new PropertyName(this, "id");
+    public static PropertyName<String> name() {
+        return new PropertyName<String>("name");
     }
 
     /**
      * @return
      */
-    public DepartmentNames department() {
-        return new DepartmentNames(this, "department");
+    public static _DepartmentNames department() {
+        return new _DepartmentNames("department");
+    }
+
+    /**
+     * @author koichik
+     */
+    public static class _EmployeeNames extends PropertyName<Employee> {
+
+        /**
+         * 
+         */
+        public _EmployeeNames() {
+        }
+
+        /**
+         * @param name
+         */
+        public _EmployeeNames(String name) {
+            super(name);
+        }
+
+        /**
+         * @param parent
+         * @param name
+         */
+        public _EmployeeNames(PropertyName<?> parent, String name) {
+            super(parent, name);
+        }
+
+        /**
+         * @return
+         */
+        public PropertyName<BigDecimal> id() {
+            return new PropertyName<BigDecimal>(this, "id");
+        }
+
+        /**
+         * @return
+         */
+        public PropertyName<String> name() {
+            return new PropertyName<String>(this, "name");
+        }
+
+        /**
+         * @return
+         */
+        public _DepartmentNames department() {
+            return new _DepartmentNames(this, "department");
+        }
     }
 }

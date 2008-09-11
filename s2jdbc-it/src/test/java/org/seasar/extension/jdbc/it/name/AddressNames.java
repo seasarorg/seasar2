@@ -13,53 +13,61 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.where;
+package org.seasar.extension.jdbc.it.name;
 
 import org.seasar.extension.jdbc.name.PropertyName;
 import org.seasar.extension.jdbc.operation.S2JdbcOperations;
+import org.seasar.extension.jdbc.where.Department;
 import org.seasar.extension.jdbc.where.EmployeeNames._EmployeeNames;
 
 /**
- * @author higa
+ * @author koichik
  */
-public class DepartmentNames extends S2JdbcOperations {
+public class AddressNames extends S2JdbcOperations {
 
     /**
      * @return
      */
-    public static PropertyName<Integer> id() {
-        return new PropertyName<Integer>("id");
+    public static PropertyName<Integer> addressId() {
+        return new PropertyName<Integer>("addressId");
     }
 
     /**
      * @return
      */
-    public static PropertyName<String> name() {
-        return new PropertyName<String>("name");
+    public static PropertyName<String> street() {
+        return new PropertyName<String>("street");
     }
 
     /**
      * @return
      */
-    public static _EmployeeNames employees() {
-        return new _EmployeeNames("employees");
+    public static PropertyName<Integer> version() {
+        return new PropertyName<Integer>("version");
+    }
+
+    /**
+     * @return
+     */
+    public static _EmployeeNames employee() {
+        return new _EmployeeNames("employee");
     }
 
     /**
      * @author koichik
      */
-    public static class _DepartmentNames extends PropertyName<Department> {
+    public static class _AddressNames extends PropertyName<Department> {
 
         /**
          * 
          */
-        public _DepartmentNames() {
+        public _AddressNames() {
         }
 
         /**
          * @param name
          */
-        public _DepartmentNames(String name) {
+        public _AddressNames(final String name) {
             super(name);
         }
 
@@ -67,29 +75,36 @@ public class DepartmentNames extends S2JdbcOperations {
          * @param parent
          * @param name
          */
-        public _DepartmentNames(PropertyName<?> parent, String name) {
+        public _AddressNames(final PropertyName<?> parent, final String name) {
             super(parent, name);
         }
 
         /**
          * @return
          */
-        public PropertyName<Integer> id() {
-            return new PropertyName<Integer>(this, "id");
+        public PropertyName<Integer> addressId() {
+            return new PropertyName<Integer>(this, "addressId");
         }
 
         /**
          * @return
          */
-        public PropertyName<String> name() {
-            return new PropertyName<String>(this, "name");
+        public PropertyName<String> street() {
+            return new PropertyName<String>(this, "street");
         }
 
         /**
          * @return
          */
-        public _EmployeeNames employees() {
-            return new _EmployeeNames(this, "employees");
+        public PropertyName<Integer> version() {
+            return new PropertyName<Integer>(this, "version");
+        }
+
+        /**
+         * @return
+         */
+        public _EmployeeNames employee() {
+            return new _EmployeeNames(this, "employee");
         }
 
     }

@@ -18,26 +18,26 @@ package org.seasar.extension.jdbc.where;
 import org.seasar.extension.jdbc.Where;
 
 /**
+ * ANDやORなど、複数の{@link Where 検索条件}を演算子で連結する検索条件です。
+ * 
  * @author koichik
  */
-public class ComposableAndOr extends ComposableWhere {
+public class CompositeWhere extends ComposableWhere {
+
+    /** ANDやORといった演算子です。 */
+    protected String operator;
 
     /**
-     * ANDやORといった表現です。
-     */
-    protected String expression;
-
-    /**
-     * コンストラクタです。
+     * インスタンスを構築します。
      * 
-     * @param expression
-     *            ANDやORといった表現
+     * @param operator
+     *            ANDやORといった演算子
      * @param children
-     *            子供たちです。
+     *            子供となる{@link Where 検索条件}
      */
-    public ComposableAndOr(final String expression, final Where... children) {
+    public CompositeWhere(final String operator, final Where... children) {
         super(children);
-        this.expression = expression;
+        this.operator = operator;
     }
 
     @Override
@@ -45,11 +45,19 @@ public class ComposableAndOr extends ComposableWhere {
         if (children.isEmpty()) {
             return;
         }
+        context.append('(');
+        int len = context.getCriteriaLength();
+        int cutBack = 1;
         for (final Where child : children) {
-            context.append("(").append(child).append(") ").append(expression)
-                    .append(' ');
+            final int newLen = context.append(child).getCriteriaLength();
+            if (len == newLen) {
+                continue;
+            }
+            len = context.append(") ").append(operator).append(" (")
+                    .getCriteriaLength();
+            cutBack = operator.length() + 3;
         }
-        context.cutBack(expression.length() + 2);
+        context.cutBack(cutBack);
     }
 
 }

@@ -15,23 +15,30 @@
  */
 package org.seasar.extension.jdbc.where;
 
-import org.seasar.extension.jdbc.Where;
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
- * ANDをあらわすクラスです。
- * 
- * @author higa
- * 
+ * @author koichik
  */
-public class And extends AbstractAndOr {
+@Entity
+public class Department {
 
-    /**
-     * コンストラクタです。
-     * 
-     * @param children
-     *            子供たちです。
-     */
-    public And(Where... children) {
-        super("AND", children);
-    }
+    /** */
+    @Id
+    @GeneratedValue
+    public BigDecimal id;
+
+    /** */
+    public String name;
+
+    /** */
+    @OneToMany(mappedBy = "department")
+    public List<Employee> employees;
+
 }

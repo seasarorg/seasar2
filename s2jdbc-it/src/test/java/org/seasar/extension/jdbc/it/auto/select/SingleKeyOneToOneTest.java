@@ -24,6 +24,7 @@ import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.framework.unit.Seasar2;
 
 import static junit.framework.Assert.*;
+import static org.seasar.extension.jdbc.it.name.EmployeeNames.*;
 
 /**
  * @author taedium
@@ -43,6 +44,22 @@ public class SingleKeyOneToOneTest {
             jdbcManager
                 .from(Employee.class)
                 .leftOuterJoin("address")
+                .getResultList();
+        assertEquals(14, list.size());
+        for (Employee e : list) {
+            assertNotNull(e.address);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testLeftOuterJoin_fromOwnerToInverse_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .leftOuterJoin(address())
                 .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {

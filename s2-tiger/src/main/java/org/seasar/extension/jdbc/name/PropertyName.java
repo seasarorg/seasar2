@@ -15,20 +15,28 @@
  */
 package org.seasar.extension.jdbc.name;
 
-import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.util.StringUtil;
 
 /**
  * プロパティ名をあらわすクラスです。ネストしたプロパティに対応しています。
  * 
  * @author higa
+ * @param <T>
+ *            プロパティの型です。
  */
-public class PropertyName implements CharSequence {
+public class PropertyName<T> implements CharSequence {
 
     /**
      * プロパティの名前です。
      */
     protected final String name;
+
+    /**
+     * コンストラクタです。
+     */
+    public PropertyName() {
+        this(null, null);
+    }
 
     /**
      * コンストラクタです。
@@ -48,14 +56,12 @@ public class PropertyName implements CharSequence {
      * @param name
      *            名前
      */
-    public PropertyName(final PropertyName parent, final String name) {
-        if (name == null) {
-            throw new NullPointerException("name");
-        }
+    public PropertyName(final PropertyName<?> parent, final String name) {
         if (StringUtil.isEmpty(name)) {
-            throw new EmptyRuntimeException("name");
+            this.name = "";
+            return;
         }
-        if (parent == null) {
+        if (parent == null || parent.length() == 0) {
             this.name = name;
             return;
         }

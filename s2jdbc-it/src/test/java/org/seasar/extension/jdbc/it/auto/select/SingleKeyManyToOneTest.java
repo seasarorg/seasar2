@@ -23,6 +23,7 @@ import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
+import static org.seasar.extension.jdbc.it.name.EmployeeNames.*;
 
 /**
  * @author taedium
@@ -42,6 +43,23 @@ public class SingleKeyManyToOneTest {
             jdbcManager
                 .from(Employee.class)
                 .leftOuterJoin("department")
+                .getResultList();
+        assertEquals(14, list.size());
+        for (Employee e : list) {
+            assertNotNull(e);
+            assertNotNull(e.department);
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testLeftOuterJoin_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .leftOuterJoin(department())
                 .getResultList();
         assertEquals(14, list.size());
         for (Employee e : list) {

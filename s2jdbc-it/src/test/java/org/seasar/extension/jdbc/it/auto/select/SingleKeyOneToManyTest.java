@@ -23,6 +23,7 @@ import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
+import static org.seasar.extension.jdbc.it.name.DepartmentNames.*;
 
 /**
  * @author taedium
@@ -42,6 +43,24 @@ public class SingleKeyOneToManyTest {
             jdbcManager
                 .from(Department.class)
                 .leftOuterJoin("employees")
+                .getResultList();
+        assertEquals(4, list.size());
+        assertNotNull(list.get(0).employees);
+        assertNotNull(list.get(1).employees);
+        assertNotNull(list.get(2).employees);
+        assertNotNull(list.get(3).employees);
+        assertTrue(list.get(3).employees.isEmpty());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testLeftOuterJoin_names() throws Exception {
+        List<Department> list =
+            jdbcManager
+                .from(Department.class)
+                .leftOuterJoin(employees())
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);

@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
+import static org.seasar.extension.jdbc.it.name.EmployeeNames.*;
 
 /**
  * @author taedium
@@ -74,6 +75,17 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
+    public void testWhere_contains_names() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                contains(employeeName(), "LL")).getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_ends() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
@@ -89,6 +101,19 @@ public class AutoSelectWhereTest {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new EmployeeCondition().employeeName.ends("S")).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_ends_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(ends(employeeName(), "S"))
+                .getResultList();
         assertEquals(3, list.size());
     }
 
@@ -112,6 +137,20 @@ public class AutoSelectWhereTest {
             jdbcManager
                 .from(Employee.class)
                 .where(new EmployeeCondition().employeeName.eq("SMITH"))
+                .getResultList();
+        assertEquals(1, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_eq_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(eq(employeeName(), "SMITH"))
+                .orderBy(asc(employeeId()))
                 .getResultList();
         assertEquals(1, list.size());
     }
@@ -175,6 +214,23 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
+    public void testWhere_ge_le_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(
+                    and(ge(salary(), new BigDecimal("1100")), le(
+                        salary(),
+                        new BigDecimal("2000"))))
+                .orderBy(asc(employeeId()))
+                .getResultList();
+        assertEquals(6, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_gt_lt() throws Exception {
         List<Employee> list =
             jdbcManager
@@ -196,6 +252,19 @@ public class AutoSelectWhereTest {
                     new EmployeeCondition().salary.gt(new BigDecimal("1100")).salary
                         .lt(new BigDecimal("2000")))
                 .getResultList();
+        assertEquals(5, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_gt_lt_names() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                and(gt(salary(), new BigDecimal("1100")), lt(
+                    salary(),
+                    new BigDecimal("2000")))).getResultList();
         assertEquals(5, list.size());
     }
 
@@ -229,6 +298,17 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
+    public void testWhere_in_names() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                in(employeeNo(), 7654, 7900, 7934)).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_isNotNull() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
@@ -244,6 +324,20 @@ public class AutoSelectWhereTest {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 new EmployeeCondition().managerId.isNotNull()).getResultList();
+        assertEquals(13, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_isNotNull_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(isNotNull(managerId()))
+                .orderBy(asc(employeeId()))
+                .getResultList();
         assertEquals(13, list.size());
     }
 
@@ -297,6 +391,19 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
+    public void testWhere_isNull_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(isNull(managerId()))
+                .getResultList();
+        assertEquals(1, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_isNull_false() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
@@ -335,6 +442,19 @@ public class AutoSelectWhereTest {
             jdbcManager
                 .from(Employee.class)
                 .where(new EmployeeCondition().employeeName.like("S%"))
+                .getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_like_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(like(employeeName(), "S%"))
                 .getResultList();
         assertEquals(2, list.size());
     }
@@ -414,6 +534,20 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
+    public void testWhere_ne_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(ne(employeeName(), "SMITH"))
+                .orderBy(asc(employeeId()))
+                .getResultList();
+        assertEquals(13, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testWhere_notIn() throws Exception {
         List<Employee> list =
             jdbcManager
@@ -434,6 +568,17 @@ public class AutoSelectWhereTest {
                 .where(
                     new EmployeeCondition().employeeNo.notIn(7654, 7900, 7934))
                 .getResultList();
+        assertEquals(11, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn_names() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                notIn(employeeNo(), 7654, 7900, 7934)).getResultList();
         assertEquals(11, list.size());
     }
 
@@ -527,6 +672,19 @@ public class AutoSelectWhereTest {
             jdbcManager
                 .from(Employee.class)
                 .where(new EmployeeCondition().employeeName.starts("S"))
+                .getResultList();
+        assertEquals(2, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_starts_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(starts(employeeName(), "S"))
                 .getResultList();
         assertEquals(2, list.size());
     }

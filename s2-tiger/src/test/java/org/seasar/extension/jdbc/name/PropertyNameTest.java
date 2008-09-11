@@ -28,7 +28,7 @@ public class PropertyNameTest extends TestCase {
      * @throws Exception
      */
     public void testSimple() throws Exception {
-        assertEquals("aaa1", new Aaa().aaa1().toPropertyName());
+        assertEquals("aaa1", new Aaa().aaa1().toString());
     }
 
     /**
@@ -36,7 +36,7 @@ public class PropertyNameTest extends TestCase {
      * @throws Exception
      */
     public void testRelationship() throws Exception {
-        assertEquals("bbb", new Aaa().bbb().toPropertyName());
+        assertEquals("bbb", new Aaa().bbb().toString());
     }
 
     /**
@@ -44,8 +44,8 @@ public class PropertyNameTest extends TestCase {
      * @throws Exception
      */
     public void testRelationshipProperty() throws Exception {
-        assertEquals("bbb.bbb1", new Aaa().bbb().bbb1().toPropertyName());
-        assertEquals("ccc.ccc1", new Bbb().ccc().ccc1().toPropertyName());
+        assertEquals("bbb.bbb1", new Aaa().bbb().bbb1().toString());
+        assertEquals("ccc.ccc1", new Bbb().ccc().ccc1().toString());
     }
 
     /**
@@ -53,9 +53,8 @@ public class PropertyNameTest extends TestCase {
      * @throws Exception
      */
     public void testNestRelationship() throws Exception {
-        assertEquals("bbb.ccc", new Aaa().bbb().ccc().toPropertyName());
-        assertEquals("bbb.aaa.bbb", new Aaa().bbb().aaa().bbb()
-                .toPropertyName());
+        assertEquals("bbb.ccc", new Aaa().bbb().ccc().toString());
+        assertEquals("bbb.aaa.bbb", new Aaa().bbb().aaa().bbb().toString());
     }
 
     /**
@@ -64,13 +63,13 @@ public class PropertyNameTest extends TestCase {
      */
     public void testNestRelationshipProperty() throws Exception {
         assertEquals("bbb.ccc.ccc1", new Aaa().bbb().ccc().ccc1()
-                .toPropertyName());
+                .toString());
     }
 
     /**
      * 
      */
-    public static class Aaa extends PropertyName {
+    public static class Aaa extends PropertyName<Void> {
 
         /**
          * 
@@ -89,15 +88,15 @@ public class PropertyNameTest extends TestCase {
          * @param parent
          * @param name
          */
-        public Aaa(PropertyName parent, String name) {
+        public Aaa(PropertyName<?> parent, String name) {
             super(parent, name);
         }
 
         /**
          * @return
          */
-        public PropertyName aaa1() {
-            return new PropertyName(this, "aaa1");
+        public PropertyName<Integer> aaa1() {
+            return new PropertyName<Integer>(this, "aaa1");
         }
 
         /**
@@ -111,7 +110,7 @@ public class PropertyNameTest extends TestCase {
     /**
      * 
      */
-    public static class Bbb extends PropertyName {
+    public static class Bbb extends PropertyName<Void> {
 
         /**
          * 
@@ -130,15 +129,15 @@ public class PropertyNameTest extends TestCase {
          * @param parent
          * @param name
          */
-        public Bbb(PropertyName parent, String name) {
+        public Bbb(PropertyName<?> parent, String name) {
             super(parent, name);
         }
 
         /**
          * @return
          */
-        public PropertyName bbb1() {
-            return new PropertyName(this, "bbb1");
+        public PropertyName<Integer> bbb1() {
+            return new PropertyName<Integer>(this, "bbb1");
         }
 
         /**
@@ -159,7 +158,7 @@ public class PropertyNameTest extends TestCase {
     /**
      * 
      */
-    public static class Ccc extends PropertyName {
+    public static class Ccc extends PropertyName<Void> {
 
         /**
          * 
@@ -178,15 +177,15 @@ public class PropertyNameTest extends TestCase {
          * @param parent
          * @param name
          */
-        public Ccc(PropertyName parent, String name) {
+        public Ccc(PropertyName<?> parent, String name) {
             super(parent, name);
         }
 
         /**
          * @return
          */
-        public PropertyName ccc1() {
-            return new PropertyName(this, "ccc1");
+        public PropertyName<String> ccc1() {
+            return new PropertyName<String>(this, "ccc1");
         }
     }
 }
