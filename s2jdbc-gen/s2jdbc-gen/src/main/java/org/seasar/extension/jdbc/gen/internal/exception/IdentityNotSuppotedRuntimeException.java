@@ -13,27 +13,23 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.desc;
+package org.seasar.extension.jdbc.gen.internal.exception;
 
-import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
-import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
- * {@link AttributeDesc 属性記述}のファクトリです。
- * 
  * @author taedium
+ * 
  */
-public interface AttributeDescFactory {
+public class IdentityNotSuppotedRuntimeException extends SRuntimeException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 属性記述を返します。
+     * インスタンスを構築します。
      * 
-     * @param tableMeta
-     *            テーブルメタデータ
-     * @param columnMeta
-     *            カラムメタデータ
-     * @return 属性記述
      */
-    AttributeDesc getAttributeDesc(DbTableMeta tableMeta,
-            DbColumnMeta columnMeta);
+    public IdentityNotSuppotedRuntimeException() {
+        super("ES2JDBCGen0024", new Object[] {});
+    }
 }

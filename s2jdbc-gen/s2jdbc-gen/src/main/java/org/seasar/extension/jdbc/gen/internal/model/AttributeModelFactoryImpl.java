@@ -55,6 +55,9 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         AttributeModel attributeModel = new AttributeModel();
         attributeModel.setName(attributeDesc.getName());
         attributeModel.setId(attributeDesc.isId());
+        attributeModel.setGenerationType(attributeDesc.getGenerationType());
+        attributeModel.setInitialValue(attributeDesc.getInitialValue());
+        attributeModel.setAllocationSize(attributeDesc.getAllocationSize());
         attributeModel.setLob(attributeDesc.isLob());
         attributeModel.setTransient(attributeDesc.isTransient());
         attributeModel.setVersion(attributeDesc.isVersion());
@@ -63,7 +66,6 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
         attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
-        doNumber(attributeModel, attributeDesc);
         if (showColumnName) {
             attributeModel.setColumnName(attributeDesc.getColumnName());
         }
@@ -75,23 +77,6 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
             doScale(attributeModel, attributeDesc);
         }
         return attributeModel;
-    }
-
-    /**
-     * 数値型を処理します。
-     * 
-     * @param attributeModel
-     *            属性モデル
-     * @param attributeDesc
-     *            属性記述
-     */
-    protected void doNumber(AttributeModel attributeModel,
-            AttributeDesc attributeDesc) {
-        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
-                .getAttributeClass());
-        if (Number.class.isAssignableFrom(clazz)) {
-            attributeModel.setNumber(true);
-        }
     }
 
     /**

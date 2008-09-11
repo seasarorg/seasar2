@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 /**
@@ -30,11 +31,17 @@ public class AttributeModel {
     /** 属性のクラス */
     protected Class<?> attributeClass;
 
-    /** 数値型の場合{@code true} */
-    protected boolean number;
-
     /** 識別子の場合{@code true} */
     protected boolean id;
+
+    /** 識別子の生成方法を示す列挙型、生成しない場合{@code null} */
+    protected GenerationType generationType;
+
+    /** 識別子の初期値 */
+    protected int initialValue;
+
+    /** 識別子の割り当てサイズ */
+    protected int allocationSize;
 
     /** 時制の種別 */
     protected TemporalType temporalType;
@@ -304,25 +311,6 @@ public class AttributeModel {
     }
 
     /**
-     * 数値型の場合{@code true}を返します。
-     * 
-     * @return 数値型の場合{@code true}
-     */
-    public boolean isNumber() {
-        return number;
-    }
-
-    /**
-     * 数値型の場合{@code true}を設定します。
-     * 
-     * @param number
-     *            数値型の場合{@code true}
-     */
-    public void setNumber(boolean number) {
-        this.number = number;
-    }
-
-    /**
      * カラム名を返します。
      * 
      * @return カラム名
@@ -398,4 +386,60 @@ public class AttributeModel {
         this.unsupportedColumnType = unsupportedColumnType;
     }
 
+    /**
+     * 識別子の生成方法を示す列挙型を返します。
+     * 
+     * @return 識別子の生成方法を示す列挙型、生成しない場合{@code null}
+     */
+    public GenerationType getGenerationType() {
+        return generationType;
+    }
+
+    /**
+     * 識別子の生成方法を示す列挙型を設定します。
+     * 
+     * @param generationType
+     *            識別子の生成方法を示す列挙型、生成しない場合{@code null}
+     */
+    public void setGenerationType(GenerationType generationType) {
+        this.generationType = generationType;
+    }
+
+    /**
+     * 識別子の初期値を返します。
+     * 
+     * @return 識別子の初期値
+     */
+    public int getInitialValue() {
+        return initialValue;
+    }
+
+    /**
+     * 識別子の初期値を設定します。
+     * 
+     * @param initialValue
+     *            識別子の初期値
+     */
+    public void setInitialValue(int initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    /**
+     * 識別子の割り当てサイズを返します。
+     * 
+     * @return 識別子の割り当てサイズ
+     */
+    public int getAllocationSize() {
+        return allocationSize;
+    }
+
+    /**
+     * 識別子の割り当てサイズを設定します。
+     * 
+     * @param allocationSize
+     *            識別子の割り当てサイズ
+     */
+    public void setAllocationSize(int allocationSize) {
+        this.allocationSize = allocationSize;
+    }
 }

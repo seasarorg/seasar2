@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.factory;
 import java.io.File;
 import java.util.List;
 
+import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
@@ -271,12 +272,20 @@ public interface Factory {
      *            バージョンカラム名のパターン
      * @param pluralFormFile
      *            単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null}
+     * @param generationType
+     *            エンティティの識別子の生成方法を示す列挙型 、生成しない場合は{@code null}
+     * @param initialValue
+     *            エンティティの識別子の初期値、指定しない場合は{@code null}
+     * @param allocationSize
+     *            エンティティの識別子の割り当てサイズ、指定しない場合は{@code null}
      * @return {@link EntitySetDescFactory}の実装
      */
     EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnNamePattern, File pluralFormFile);
+            String versionColumnNamePattern, File pluralFormFile,
+            GenerationType generationType, Integer initialValue,
+            Integer allocationSize);
 
     /**
      * {@link EntityModelFactory}の実装を作成します。

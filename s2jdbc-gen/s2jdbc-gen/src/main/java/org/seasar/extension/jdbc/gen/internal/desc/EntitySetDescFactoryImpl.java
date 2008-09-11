@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import javax.persistence.GenerationType;
+
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.desc.CompositeUniqueConstraintDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
@@ -55,8 +57,17 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
     /** バージョンカラム名のパターン */
     protected String versionColumnNamePattern;
 
-    /** 単語を複数系に変換するための辞書ファイル */
+    /** 単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null} */
     protected File pluralFormFile;
+
+    /** エンティティの識別子の生成方法を示す列挙型 、生成しない場合は{@code null} */
+    protected GenerationType generationType;
+
+    /** エンティティの識別子の初期値、指定しない場合は{@code null} */
+    protected Integer initialValue;
+
+    /** エンティティの識別子の割り当てサイズ、指定しない場合は{@code null} */
+    protected Integer allocationSize;
 
     /** エンティティ記述のファクトリ */
     protected EntityDescFactory entityDescFactory;
@@ -74,10 +85,18 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      *            バージョンカラム名のパターン
      * @param pluralFormFile
      *            単語を複数系に変換するための辞書ファイル、使用しない場合は{@code null}
+     * @param generationType
+     *            エンティティの識別子の生成方法を示す列挙型 、生成しない場合は{@code null}
+     * @param initialValue
+     *            エンティティの識別子の初期値、指定しない場合は{@code null}
+     * @param allocationSize
+     *            エンティティの識別子の割り当てサイズ、指定しない場合は{@code null}
      */
     public EntitySetDescFactoryImpl(DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnNamePattern, File pluralFormFile) {
+            String versionColumnNamePattern, File pluralFormFile,
+            GenerationType generationType, Integer initialValue,
+            Integer allocationSize) {
         if (dbTableMetaReader == null) {
             throw new NullPointerException("dbTableMetaReader");
         }
@@ -95,6 +114,9 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
         this.persistenceConvention = persistenceConvention;
         this.versionColumnNamePattern = versionColumnNamePattern;
         this.pluralFormFile = pluralFormFile;
+        this.generationType = generationType;
+        this.initialValue = initialValue;
+        this.allocationSize = allocationSize;
         entityDescFactory = createEntityDescFactory();
     }
 
@@ -124,7 +146,8 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      */
     protected EntityDescFactory createEntityDescFactory() {
         AttributeDescFactory attributeDescFactory = new AttributeDescFactoryImpl(
-                persistenceConvention, dialect, versionColumnNamePattern);
+                persistenceConvention, dialect, versionColumnNamePattern,
+                generationType, initialValue, allocationSize);
         CompositeUniqueConstraintDescFactory compositeUniqueConstraintDescFactory = new CompositeUniqueConstraintDescFactoryImpl();
         return new EntityDescFactoryImpl(persistenceConvention,
                 attributeDescFactory, compositeUniqueConstraintDescFactory);

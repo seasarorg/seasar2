@@ -46,6 +46,9 @@ public class DbColumnMeta {
     /** 主キーの場合{@code true} */
     protected boolean primaryKey;
 
+    /** 値が自動的に増分される場合{@code true} */
+    protected boolean autoIncrement;
+
     /** 一意の場合{@code true} */
     protected boolean unique;
 
@@ -200,6 +203,25 @@ public class DbColumnMeta {
      */
     public void setPrimaryKey(boolean primaryKey) {
         this.primaryKey = primaryKey;
+    }
+
+    /**
+     * 値が自動的に増分される場合{@code true}を返します。
+     * 
+     * @return 値が自動的に増分される場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isAutoIncrement() {
+        return autoIncrement;
+    }
+
+    /**
+     * 値が自動的に増分される場合{@code true}を設定します。
+     * 
+     * @param autoIncrement
+     *            値が自動的に増分される場合{@code true}、そうでない場合{@code false}
+     */
+    public void setAutoIncrement(boolean autoIncrement) {
+        this.autoIncrement = autoIncrement;
     }
 
     /**

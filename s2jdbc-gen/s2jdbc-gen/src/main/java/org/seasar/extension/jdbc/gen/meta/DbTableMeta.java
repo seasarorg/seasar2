@@ -188,4 +188,13 @@ public class DbTableMeta {
         }
         return buf.append(name).toString();
     }
+
+    /**
+     * 複合主キーを持つ場合{@code true}を返します。
+     * 
+     * @return 複合主キーを持つ場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean hasCompositePrimaryKey() {
+        return primaryKeyColumnMetaList.size() > 1;
+    }
 }

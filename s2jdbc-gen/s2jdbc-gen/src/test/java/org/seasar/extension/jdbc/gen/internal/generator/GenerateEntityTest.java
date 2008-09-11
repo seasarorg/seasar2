@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.generator;
 import java.io.File;
 import java.math.BigDecimal;
 
+import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.junit.Before;
@@ -75,6 +76,9 @@ public class GenerateEntityTest {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
+        id.setGenerationType(GenerationType.SEQUENCE);
+        id.setInitialValue(100);
+        id.setAllocationSize(50);
         id.setAttributeClass(int.class);
         id.setColumnName("ID");
         id.setColumnDefinition("integer");

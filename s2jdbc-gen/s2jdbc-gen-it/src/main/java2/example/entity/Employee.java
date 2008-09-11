@@ -40,7 +40,7 @@ public class Employee {
     public String firstName;
 
     /** */
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = false)
     public Integer age;
 
     /** */

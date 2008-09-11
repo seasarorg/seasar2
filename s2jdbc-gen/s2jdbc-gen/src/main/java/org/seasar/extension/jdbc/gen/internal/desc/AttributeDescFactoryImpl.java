@@ -17,10 +17,18 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import java.util.regex.Pattern;
 
+import javax.persistence.GenerationType;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.TableGenerator;
+
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.exception.IdentityNotSuppotedRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.SequenceNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 
 /**
@@ -39,6 +47,15 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     /** バージョンカラム名のパターン */
     protected Pattern versionColumnNamePattern;
 
+    /** エンティティの識別子の生成方法を示す列挙型 、生成しない場合は{@code null} */
+    protected GenerationType generationType;
+
+    /** エンティティの識別子の初期値 */
+    protected int initialValue;
+
+    /** エンティティの識別子の割り当てサイズ */
+    protected int allocationSize;
+
     /**
      * インスタンスを構築します。
      * 
@@ -48,10 +65,17 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      *            方言
      * @param versionColumnNamePattern
      *            バージョンカラム名のパターン
+     * @param generationType
+     *            エンティティの識別子の生成方法を示す列挙型 、生成しない場合は{@code null}
+     * @param initialValue
+     *            エンティティの識別子の初期値、指定しない場合は{@code null}
+     * @param allocationSize
+     *            エンティティの識別子の割り当てサイズ、指定しない場合は{@code null}
      */
     public AttributeDescFactoryImpl(
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnNamePattern) {
+            String versionColumnNamePattern, GenerationType generationType,
+            Integer initialValue, Integer allocationSize) {
         if (persistenceConvention == null) {
             throw new NullPointerException("persistenceConvention");
         }
@@ -65,27 +89,56 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         this.dialect = dialect;
         this.versionColumnNamePattern = Pattern.compile(
                 versionColumnNamePattern, Pattern.CASE_INSENSITIVE);
+
+        this.generationType = generationType == GenerationType.AUTO ? dialect
+                .getDefaultGenerationType() : generationType;
+        if (this.generationType == GenerationType.IDENTITY) {
+            if (!dialect.supportsIdentity()) {
+                throw new IdentityNotSuppotedRuntimeException();
+            }
+        } else if (this.generationType == GenerationType.SEQUENCE) {
+            if (!dialect.supportsSequence()) {
+                throw new SequenceNotSupportedRuntimeException();
+            }
+            SequenceGenerator generator = AnnotationUtil
+                    .getDefaultSequenceGenerator();
+            this.initialValue = initialValue != null ? initialValue : generator
+                    .initialValue();
+            this.allocationSize = allocationSize != null ? allocationSize
+                    : generator.allocationSize();
+        } else if (this.generationType == GenerationType.TABLE) {
+            TableGenerator generator = AnnotationUtil
+                    .getDefaultTableGenerator();
+            this.initialValue = initialValue != null ? initialValue : generator
+                    .initialValue();
+            this.allocationSize = allocationSize != null ? allocationSize
+                    : generator.allocationSize();
+        }
     }
 
-    public AttributeDesc getAttributeDesc(DbColumnMeta columnMeta) {
+    public AttributeDesc getAttributeDesc(DbTableMeta tableMeta,
+            DbColumnMeta columnMeta) {
         AttributeDesc attributeDesc = new AttributeDesc();
-        doName(columnMeta, attributeDesc);
-        doId(columnMeta, attributeDesc);
-        doTransient(columnMeta, attributeDesc);
-        doVersion(columnMeta, attributeDesc);
-        doColumn(columnMeta, attributeDesc);
+        doName(tableMeta, columnMeta, attributeDesc);
+        doId(tableMeta, columnMeta, attributeDesc);
+        doTransient(tableMeta, columnMeta, attributeDesc);
+        doVersion(tableMeta, columnMeta, attributeDesc);
+        doColumn(tableMeta, columnMeta, attributeDesc);
         return attributeDesc;
     }
 
     /**
      * 名前を処理します。
      * 
+     * @param tableMeta
+     *            テーブルメタデータ
      * @param columnMeta
      *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
-    protected void doName(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
+    protected void doName(DbTableMeta tableMeta, DbColumnMeta columnMeta,
+            AttributeDesc attributeDesc) {
         attributeDesc.setName(persistenceConvention
                 .fromColumnNameToPropertyName(columnMeta.getName()));
     }
@@ -93,36 +146,54 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     /**
      * 識別子を処理します。
      * 
+     * @param tableMeta
+     *            テーブルメタデータ
      * @param columnMeta
      *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
-    protected void doId(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
-        attributeDesc.setId(columnMeta.isPrimaryKey());
+    protected void doId(DbTableMeta tableMeta, DbColumnMeta columnMeta,
+            AttributeDesc attributeDesc) {
+        if (columnMeta.isPrimaryKey()) {
+            attributeDesc.setId(true);
+            if (!tableMeta.hasCompositePrimaryKey()) {
+                if (columnMeta.isAutoIncrement()) {
+                    attributeDesc.setGenerationType(GenerationType.IDENTITY);
+                } else {
+                    attributeDesc.setGenerationType(generationType);
+                    attributeDesc.setInitialValue(initialValue);
+                    attributeDesc.setAllocationSize(allocationSize);
+                }
+            }
+        }
     }
 
     /**
      * 一時的なプロパティを処理します。
      * 
+     * @param tableMeta
+     *            テーブルメタデータ
      * @param columnMeta
      *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
-    protected void doTransient(DbColumnMeta columnMeta,
+    protected void doTransient(DbTableMeta tableMeta, DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
     }
 
     /**
      * バージョンを処理します。
      * 
+     * @param tableMeta
+     *            テーブルメタデータ
      * @param columnMeta
      *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
-    protected void doVersion(DbColumnMeta columnMeta,
+    protected void doVersion(DbTableMeta tableMeta, DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
         if (versionColumnNamePattern.matcher(columnMeta.getName()).matches()) {
             attributeDesc.setVersion(true);
@@ -132,12 +203,15 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
     /**
      * カラムを処理します。
      * 
+     * @param tableMeta
+     *            テーブルメタデータ
      * @param columnMeta
      *            カラムメタデータ
      * @param attributeDesc
      *            属性記述
      */
-    protected void doColumn(DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
+    protected void doColumn(DbTableMeta tableMeta, DbColumnMeta columnMeta,
+            AttributeDesc attributeDesc) {
         attributeDesc.setColumnName(columnMeta.getName());
         attributeDesc.setColumnTypeName(columnMeta.getTypeName());
         attributeDesc.setLength(columnMeta.getLength());

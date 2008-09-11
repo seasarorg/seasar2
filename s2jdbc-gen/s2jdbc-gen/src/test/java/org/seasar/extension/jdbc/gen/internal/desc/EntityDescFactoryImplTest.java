@@ -48,7 +48,7 @@ public class EntityDescFactoryImplTest {
         PersistenceConvention convention = new PersistenceConventionImpl();
         GenDialect dialect = new StandardGenDialect();
         AttributeDescFactoryImpl attributeDescFactory = new AttributeDescFactoryImpl(
-                convention, dialect, "VERSION");
+                convention, dialect, "VERSION", null, null, null);
         CompositeUniqueConstraintDescFactoryImpl uniqueConstraintDescFactory = new CompositeUniqueConstraintDescFactoryImpl();
         factory = new EntityDescFactoryImpl(convention, attributeDescFactory,
                 uniqueConstraintDescFactory);

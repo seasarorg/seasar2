@@ -166,9 +166,6 @@ public class EntityDesc {
         attributeDescList.add(attributeDesc);
         if (attributeDesc.isId()) {
             idAttributeDescList.add(attributeDesc);
-            if (idAttributeDescList.size() > 1) {
-                compositeId = true;
-            }
         }
     }
 
@@ -247,7 +244,7 @@ public class EntityDesc {
      * @return 複合識別子を持つならば{@code true}、そうでないならば{@code false}
      */
     public boolean hasCompositeId() {
-        return compositeId;
+        return idAttributeDescList.size() > 1;
     }
 
 }

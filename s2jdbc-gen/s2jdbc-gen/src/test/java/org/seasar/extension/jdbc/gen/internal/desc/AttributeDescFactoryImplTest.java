@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.junit.Before;
@@ -23,6 +24,7 @@ import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
+import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
@@ -44,7 +46,7 @@ public class AttributeDescFactoryImplTest {
         PersistenceConvention convention = new PersistenceConventionImpl();
         GenDialect dialect = new StandardGenDialect();
         factory = new AttributeDescFactoryImpl(convention, dialect,
-                "VERSION([_]?NO)?");
+                "VERSION([_]?NO)?", GenerationType.TABLE, 100, 200);
     }
 
     /**
@@ -56,7 +58,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("HOGE");
         columnMeta.setTypeName("varchar");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertEquals("hoge", attributeDesc.getName());
     }
 
@@ -70,8 +73,29 @@ public class AttributeDescFactoryImplTest {
         columnMeta.setName("hoge");
         columnMeta.setTypeName("varchar");
         columnMeta.setPrimaryKey(true);
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isId());
+        assertEquals(GenerationType.TABLE, attributeDesc.getGenerationType());
+        assertEquals(100, attributeDesc.getInitialValue());
+        assertEquals(200, attributeDesc.getAllocationSize());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIsId_autoIncrement() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("hoge");
+        columnMeta.setTypeName("varchar");
+        columnMeta.setPrimaryKey(true);
+        columnMeta.setAutoIncrement(true);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
+        assertTrue(attributeDesc.isId());
+        assertEquals(GenerationType.IDENTITY, attributeDesc.getGenerationType());
     }
 
     /**
@@ -83,7 +107,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
         columnMeta.setTypeName("varchar");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertEquals(String.class, attributeDesc.getAttributeClass());
     }
 
@@ -96,7 +121,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
         columnMeta.setTypeName("date");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertEquals(TemporalType.DATE, attributeDesc.getTemporalType());
     }
 
@@ -109,7 +135,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
         columnMeta.setTypeName("blob");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isLob());
     }
 
@@ -122,7 +149,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("VERSION");
         columnMeta.setTypeName("integer");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isVersion());
     }
 
@@ -135,7 +163,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("VERSION_NO");
         columnMeta.setTypeName("integer");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isVersion());
     }
 
@@ -148,7 +177,8 @@ public class AttributeDescFactoryImplTest {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("VERSIONNO");
         columnMeta.setTypeName("integer");
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isVersion());
     }
 
@@ -164,7 +194,8 @@ public class AttributeDescFactoryImplTest {
         columnMeta.setLength(10);
         columnMeta.setScale(5);
         columnMeta.setNullable(true);
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertEquals("HOGE", attributeDesc.getColumnName());
         assertEquals(10, attributeDesc.getLength());
         assertEquals(10, attributeDesc.getPrecision());
@@ -185,7 +216,8 @@ public class AttributeDescFactoryImplTest {
         columnMeta.setLength(10);
         columnMeta.setScale(5);
         columnMeta.setNullable(true);
-        AttributeDesc attributeDesc = factory.getAttributeDesc(columnMeta);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isUnsupportedColumnType());
     }
 }

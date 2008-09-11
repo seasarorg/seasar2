@@ -17,13 +17,11 @@ package org.seasar.extension.jdbc.gen.internal.exception;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * @author taedium
  * 
  */
-public class UnsupportedNullableUniqueRuntimeExceptionTest {
+public class SequenceNotSupportedRuntimeExceptionTest {
 
     /**
      * 
@@ -31,10 +29,7 @@ public class UnsupportedNullableUniqueRuntimeExceptionTest {
      */
     @Test
     public void test() throws Exception {
-        UnsupportedNullableUniqueRuntimeException e = new UnsupportedNullableUniqueRuntimeException(
-                "aaa", "bbb");
-        assertEquals("aaa", e.getEntityName());
-        assertEquals("bbb", e.getPropertyName());
+        SequenceNotSupportedRuntimeException e = new SequenceNotSupportedRuntimeException();
         System.out.println(e.getMessage());
     }
 }

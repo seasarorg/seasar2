@@ -17,7 +17,9 @@ package org.seasar.extension.jdbc.gen.internal.meta;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +43,7 @@ import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.ResultSetUtil;
+import org.seasar.framework.util.StatementUtil;
 
 /**
  * {@code DbTableMetaReader}の実装クラスです。
@@ -160,6 +163,10 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
         for (DbColumnMeta columnMeta : getDbColumnMetaList(metaData, tableMeta)) {
             if (primaryKeySet.contains(columnMeta.getName())) {
                 columnMeta.setPrimaryKey(true);
+                if (primaryKeySet.size() == 1) {
+                    columnMeta.setAutoIncrement(isAutoIncrement(metaData,
+                            tableMeta, columnMeta.getName()));
+                }
             }
             for (DbUniqueKeyMeta ukMeta : tableMeta.getUniqueKeyMetaList()) {
                 if (ukMeta.getColumnNameList().size() == 1) {
@@ -405,6 +412,41 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
             DbUniqueKeyMeta[] array = map.values().toArray(
                     new DbUniqueKeyMeta[map.size()]);
             return Arrays.asList(array);
+        } catch (SQLException ex) {
+            throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * 列の値が自動的に増分される場合{@code true}を返します。
+     * 
+     * @param metaData
+     *            データベースメタデータ
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @param columnName
+     *            カラム名
+     * @return 列が自動的に増分される場合{@code true}、そうでない場合{@code false}
+     */
+    protected boolean isAutoIncrement(DatabaseMetaData metaData,
+            DbTableMeta tableMeta, String columnName) {
+        String sql = "select " + columnName + " from "
+                + tableMeta.getFullTableName() + " where 1 = null";
+        Connection conn;
+        try {
+            conn = metaData.getConnection();
+            PreparedStatement ps = ConnectionUtil.prepareStatement(conn, sql);
+            try {
+                ResultSet rs = ps.executeQuery();
+                try {
+                    ResultSetMetaData rsMetaData = rs.getMetaData();
+                    return rsMetaData.isAutoIncrement(1);
+                } finally {
+                    ResultSetUtil.close(rs);
+                }
+            } finally {
+                StatementUtil.close(ps);
+            }
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
         }

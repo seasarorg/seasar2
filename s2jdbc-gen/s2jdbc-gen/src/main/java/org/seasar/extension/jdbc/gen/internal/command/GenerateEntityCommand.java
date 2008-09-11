@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
+import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 
 import org.seasar.extension.jdbc.gen.command.Command;
@@ -68,6 +69,15 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
+
+    /** エンティティの識別子の生成方法を示す列挙型、生成しない場合は{@code null}。 */
+    protected GenerationType generationType = null;
+
+    /** エンティティの識別子の初期値、指定しない場合は{@code null} */
+    protected Integer initialValue = null;
+
+    /** エンティティの識別子の割り当てサイズ、指定しない場合は{@code null} */
+    protected Integer allocationSize = null;
 
     /** カタログ名を表示する場合{@code true} */
     protected boolean showCatalogName = false;
@@ -515,6 +525,63 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.genDialectClassName = genDialectClassName;
     }
 
+    /**
+     * エンティティの識別子の生成方法を示す列挙型を返します。
+     * 
+     * @return エンティティの識別子の生成方法を示す列挙型、生成しない場合は{@code null}
+     */
+    public GenerationType getGenerationType() {
+        return generationType;
+    }
+
+    /**
+     * エンティティの識別子の生成方法を示す列挙型を設定します。
+     * 
+     * @param generationType
+     *            エンティティの識別子の生成方法を示す列挙型、生成しない場合は{@code null}
+     */
+    public void setGenerationType(GenerationType generationType) {
+        this.generationType = generationType;
+    }
+
+    /**
+     * エンティティの識別子の初期値を返します。
+     * 
+     * @return エンティティの識別子の初期値、指定しない場合は{@code null}
+     */
+    public Integer getInitialValue() {
+        return initialValue;
+    }
+
+    /**
+     * エンティティの識別子の初期値を設定します。
+     * 
+     * @param initialValue
+     *            エンティティの識別子の初期値、指定しない場合は{@code null}
+     */
+    public void setInitialValue(Integer initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    /**
+     * エンティティの識別子の割り当てサイズを返します。
+     * 
+     * @return エンティティの識別子の割り当てサイズ、指定しない場合は{@code null}
+     */
+    public Integer getAllocationSize() {
+        return allocationSize;
+    }
+
+    /**
+     * エンティティの識別子の割り当てサイズを設定します。
+     * 
+     * @param allocationSize
+     *            エンティティの識別子の割り当てサイズ、指定しない場合は{@code null}
+     */
+    public void setAllocationSize(Integer allocationSize) {
+        this.allocationSize = allocationSize;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -577,7 +644,8 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected EntitySetDescFactory createEntitySetDescFactory() {
         return factory.createEntitySetDescFactory(this, dbTableMetaReader,
                 jdbcManager.getPersistenceConvention(), dialect,
-                versionColumnNamePattern, pluralFormFile);
+                versionColumnNamePattern, pluralFormFile, generationType,
+                initialValue, allocationSize);
     }
 
     /**

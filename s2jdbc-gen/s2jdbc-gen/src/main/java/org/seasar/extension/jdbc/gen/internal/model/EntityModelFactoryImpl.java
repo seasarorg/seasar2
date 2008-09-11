@@ -20,11 +20,14 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -217,6 +220,17 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
                 if (!model.hasCompositeId()) {
                     classModelSupport
                             .addImportName(model, GeneratedValue.class);
+                }
+            }
+            if (attr.getGenerationType() != null) {
+                classModelSupport.addImportName(model, GeneratedValue.class);
+                classModelSupport.addImportName(model, GenerationType.class);
+                if (attr.getGenerationType() == GenerationType.SEQUENCE) {
+                    classModelSupport.addImportName(model,
+                            SequenceGenerator.class);
+                } else if (attr.getGenerationType() == GenerationType.TABLE) {
+                    classModelSupport
+                            .addImportName(model, TableGenerator.class);
                 }
             }
             if (attr.isLob()) {

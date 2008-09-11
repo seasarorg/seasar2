@@ -28,8 +28,13 @@ public class ${shortClassName} {
   </#if>
   <#if attr.id>
     @Id
-    <#if !hasCompositeId() && attr.number>
-    @GeneratedValue
+    <#if attr.generationType??>
+    @GeneratedValue(strategy = GenerationType.${attr.generationType}<#if attr.generationType?matches("SEQUENCE|TABLE")>, generator = "generator"</#if>)
+      <#if attr.generationType == "SEQUENCE">
+    @SequenceGenerator(name = "generator", initialValue = ${attr.initialValue}, allocationSize = ${attr.allocationSize})
+      <#elseif attr.generationType == "TABLE">
+    @TableGenerator(name = "generator", initialValue = ${attr.initialValue}, allocationSize = ${attr.allocationSize})
+      </#if>
     </#if>
   </#if>
   <#if attr.lob>

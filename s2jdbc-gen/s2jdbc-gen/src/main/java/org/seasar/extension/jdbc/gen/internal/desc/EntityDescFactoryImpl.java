@@ -120,7 +120,7 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
     protected void doAttributeDesc(DbTableMeta tableMeta, EntityDesc entityDesc) {
         for (DbColumnMeta columnMeta : tableMeta.getColumnMetaList()) {
             AttributeDesc attributeDesc = attributeDescFactory
-                    .getAttributeDesc(columnMeta);
+                    .getAttributeDesc(tableMeta, columnMeta);
             entityDesc.addAttributeDesc(attributeDesc);
         }
     }

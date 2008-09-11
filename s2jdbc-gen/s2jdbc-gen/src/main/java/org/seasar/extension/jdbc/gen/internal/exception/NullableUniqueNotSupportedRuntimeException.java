@@ -22,7 +22,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author taedium
  */
-public class UnsupportedNullableUniqueRuntimeException extends
+public class NullableUniqueNotSupportedRuntimeException extends
         SRuntimeException {
 
     private static final long serialVersionUID = 1L;
@@ -41,7 +41,7 @@ public class UnsupportedNullableUniqueRuntimeException extends
      * @param propertyName
      *            プロパティ名
      */
-    public UnsupportedNullableUniqueRuntimeException(String entityName,
+    public NullableUniqueNotSupportedRuntimeException(String entityName,
             String propertyName) {
         super("ES2JDBCGen0019", new Object[] { entityName, propertyName });
         this.entityName = entityName;

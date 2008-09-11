@@ -17,10 +17,12 @@ package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
 
+import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
 
 /**
@@ -265,6 +267,51 @@ public class GenerateEntityTask extends AbstractTask {
      */
     public void setShowTableName(boolean showTableName) {
         command.setShowTableName(showTableName);
+    }
+
+    /**
+     * {@link GenDialect}の実装クラス名を設定します。
+     * 
+     * @param genDialectClassName
+     *            {@link GenDialect}の実装クラス名
+     */
+    public void setGenDialectClassName(String genDialectClassName) {
+        command.setGenDialectClassName(genDialectClassName);
+    }
+
+    /**
+     * エンティティの識別子の生成方法を示す列挙型を設定します。
+     * 
+     * @param idGeneration
+     *            エンティティの識別子の生成方法を示す列挙型
+     */
+    public void setIdGeneration(IdGeneration idGeneration) {
+        GenerationType generationType = null;
+        String value = idGeneration.getValue();
+        if (!IdGeneration.ASSIGNED.equals(value)) {
+            generationType = GenerationType.valueOf(value.toUpperCase());
+        }
+        command.setGenerationType(generationType);
+    }
+
+    /**
+     * エンティティの識別子の初期値を設定します。
+     * 
+     * @param initialValue
+     *            エンティティの識別子の初期値、指定しない場合は{@code null}
+     */
+    public void setInitialValue(Integer initialValue) {
+        command.setInitialValue(initialValue);
+    }
+
+    /**
+     * エンティティの識別子の割り当てサイズを設定します。
+     * 
+     * @param allocationSize
+     *            エンティティの識別子の割り当てサイズ、指定しない場合は{@code null}
+     */
+    public void setAllocationSize(Integer allocationSize) {
+        command.setAllocationSize(allocationSize);
     }
 
 }

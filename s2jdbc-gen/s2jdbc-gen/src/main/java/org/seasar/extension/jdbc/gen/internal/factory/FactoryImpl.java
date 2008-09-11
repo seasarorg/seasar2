@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.factory;
 import java.io.File;
 import java.util.List;
 
+import javax.persistence.GenerationType;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
@@ -173,11 +174,13 @@ public class FactoryImpl implements Factory {
     public EntitySetDescFactory createEntitySetDescFactory(Command command,
             DbTableMetaReader dbTableMetaReader,
             PersistenceConvention persistenceConvention, GenDialect dialect,
-            String versionColumnNamePattern, File pluralFormFile) {
+            String versionColumnNamePattern, File pluralFormFile,
+            GenerationType generationType, Integer initialValue,
+            Integer allocationSize) {
 
         return new EntitySetDescFactoryImpl(dbTableMetaReader,
                 persistenceConvention, dialect, versionColumnNamePattern,
-                pluralFormFile);
+                pluralFormFile, generationType, initialValue, allocationSize);
     }
 
     public EntityModelFactory createEntityModelFactory(Command command,
