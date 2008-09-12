@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.dxo.meta.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.seasar.extension.dxo.builder.DxoCommandBuilder;
@@ -23,6 +22,7 @@ import org.seasar.extension.dxo.meta.DxoMetadata;
 import org.seasar.extension.dxo.meta.DxoMetadataFactory;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.MapUtil;
 
 /**
  * Dxoのメタデータを生成するファクトリの実装クラスです。
@@ -32,13 +32,13 @@ import org.seasar.framework.util.DisposableUtil;
 public class DxoMetadataFactoryImpl implements DxoMetadataFactory, Disposable {
 
     /** インスタンスが初期化済みの状態なら<code>true</code>です。 */
-    protected boolean initialized;
+    protected volatile boolean initialized;
 
     /** コマンドを構築するビルダの配列です。 */
     protected DxoCommandBuilder[] builders;
 
     /** メタデータを保持するキャッシュです。 */
-    protected final Map metadataCache = new HashMap();
+    protected final Map metadataCache = MapUtil.createHashMap();
 
     /**
      * インスタンスを構築します。

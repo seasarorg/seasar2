@@ -25,6 +25,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.MapUtil;
 
 /**
  * コンバータファクトリの実装クラスです。
@@ -48,7 +49,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
     }
 
     /** インスタンスが初期化済みであることを示します。 */
-    protected boolean initialized;
+    protected volatile boolean initialized;
 
     /** このファクトリを管理しているS2コンテナです。 */
     protected S2Container container;
@@ -57,7 +58,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
     protected Converter[] converters;
 
     /** コンバータのキャッシュです。 */
-    protected Map converterCache = new HashMap();
+    protected final Map converterCache = MapUtil.createHashMap();
 
     /**
      * <code>ConverterFactoryImpl</code>のインスタンスを構築します。
@@ -93,7 +94,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
      * キャッシュ情報等を破棄し、インスタンスを未初期化状態に戻します。
      * 
      */
-    public void dispose() {
+    public synchronized void dispose() {
         converters = null;
         converterCache.clear();
         initialized = false;
