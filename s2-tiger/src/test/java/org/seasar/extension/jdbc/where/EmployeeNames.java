@@ -19,14 +19,14 @@ import java.math.BigDecimal;
 
 import org.seasar.extension.jdbc.impl.Employee;
 import org.seasar.extension.jdbc.name.PropertyName;
-import org.seasar.extension.jdbc.operation.S2JdbcOperations;
+import org.seasar.extension.jdbc.operation.Operations;
 import org.seasar.extension.jdbc.where.DepartmentNames._DepartmentNames;
 
 /**
  * @author higa
  * 
  */
-public class EmployeeNames extends S2JdbcOperations {
+public class EmployeeNames extends Operations {
 
     /**
      * @return

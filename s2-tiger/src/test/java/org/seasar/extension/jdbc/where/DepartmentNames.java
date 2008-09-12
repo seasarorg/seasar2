@@ -16,13 +16,13 @@
 package org.seasar.extension.jdbc.where;
 
 import org.seasar.extension.jdbc.name.PropertyName;
-import org.seasar.extension.jdbc.operation.S2JdbcOperations;
+import org.seasar.extension.jdbc.operation.Operations;
 import org.seasar.extension.jdbc.where.EmployeeNames._EmployeeNames;
 
 /**
  * @author higa
  */
-public class DepartmentNames extends S2JdbcOperations {
+public class DepartmentNames extends Operations {
 
     /**
      * @return

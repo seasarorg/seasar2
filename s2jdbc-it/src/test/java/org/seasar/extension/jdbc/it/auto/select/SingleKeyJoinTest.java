@@ -29,6 +29,8 @@ import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
+import static org.seasar.extension.jdbc.it.name.EmployeeNames.*;
+import static org.seasar.extension.jdbc.operation.Operations.*;
 
 /**
  * @author taedium
@@ -149,6 +151,25 @@ public class SingleKeyJoinTest {
      * 
      * @throws Exception
      */
+    public void testJoin_star_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .innerJoin(manager())
+                .leftOuterJoin(department())
+                .leftOuterJoin(address())
+                .where(
+                    ge(salary(), new BigDecimal("2000")),
+                    eq(department().departmentName(), "RESEARCH"),
+                    starts(address().street(), "STREET"))
+                .getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testJoin_illegalPropertyName() throws Exception {
         try {
             jdbcManager
@@ -195,12 +216,40 @@ public class SingleKeyJoinTest {
      * 
      * @throws Exception
      */
+    public void testJoin_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .innerJoin(department(), eq(managerId(), 9))
+                .where(gt(salary(), new BigDecimal(2000)))
+                .getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testJoin_condition_where() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
                 .innerJoin("department", new SimpleWhere().eq("managerId", 9))
                 .where(new SimpleWhere().gt("salary", new BigDecimal(2000)))
+                .getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testJoin_condition_where_names() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .innerJoin(department(), eq(managerId(), 9))
+                .where(gt(salary(), new BigDecimal(2000)))
                 .getResultList();
         assertEquals(3, list.size());
     }

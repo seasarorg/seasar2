@@ -19,14 +19,14 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.Where;
 
-import static org.seasar.extension.jdbc.operation.S2JdbcOperations.*;
+import static org.seasar.extension.jdbc.operation.Operations.*;
 import static org.seasar.extension.jdbc.where.EmployeeNames.*;
 
 /**
  * @author koichik
  * 
  */
-public class S2JdbcOperationsTest extends TestCase {
+public class OperationsTest extends TestCase {
 
     /**
      * 

@@ -34,7 +34,7 @@ import org.seasar.extension.jdbc.where.SingleValueOperator;
  * 
  * @author koichik
  */
-public class S2JdbcOperations {
+public class Operations {
 
     /**
      * <code>=</code>演算子による{@link Where 検索条件}を作成します。
@@ -47,8 +47,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> SingleValueOperator eq(PropertyName<T> propertyName,
-            T param) {
+    public static <T> SingleValueOperator eq(
+            final PropertyName<T> propertyName, final T param) {
         return new SingleValueOperator(ConditionType.EQ, propertyName, param);
     }
 
@@ -63,8 +63,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> SingleValueOperator ne(PropertyName<T> propertyName,
-            T param) {
+    public static <T> SingleValueOperator ne(
+            final PropertyName<T> propertyName, final T param) {
         return new SingleValueOperator(ConditionType.NE, propertyName, param);
     }
 
@@ -79,8 +79,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> SingleValueOperator gt(PropertyName<T> propertyName,
-            T param) {
+    public static <T> SingleValueOperator gt(
+            final PropertyName<T> propertyName, final T param) {
         return new SingleValueOperator(ConditionType.GT, propertyName, param);
     }
 
@@ -95,8 +95,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> SingleValueOperator ge(PropertyName<T> propertyName,
-            T param) {
+    public static <T> SingleValueOperator ge(
+            final PropertyName<T> propertyName, final T param) {
         return new SingleValueOperator(ConditionType.GE, propertyName, param);
     }
 
@@ -111,8 +111,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> SingleValueOperator lt(PropertyName<T> propertyName,
-            T param) {
+    public static <T> SingleValueOperator lt(
+            final PropertyName<T> propertyName, final T param) {
         return new SingleValueOperator(ConditionType.LT, propertyName, param);
     }
 
@@ -127,8 +127,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> SingleValueOperator le(PropertyName<T> propertyName,
-            T param) {
+    public static <T> SingleValueOperator le(
+            final PropertyName<T> propertyName, final T param) {
         return new SingleValueOperator(ConditionType.LE, propertyName, param);
     }
 
@@ -143,8 +143,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> MultiValueOperator in(PropertyName<T> propertyName,
-            T... params) {
+    public static <T> MultiValueOperator in(final PropertyName<T> propertyName,
+            final T... params) {
         return new MultiValueOperator(ConditionType.IN, propertyName, params);
     }
 
@@ -159,8 +159,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static <T> MultiValueOperator notIn(PropertyName<T> propertyName,
-            T... params) {
+    public static <T> MultiValueOperator notIn(
+            final PropertyName<T> propertyName, final T... params) {
         return new MultiValueOperator(ConditionType.NOT_IN, propertyName,
                 params);
     }
@@ -176,7 +176,7 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static SingleValueOperator isNull(PropertyName<?> propertyName) {
+    public static SingleValueOperator isNull(final PropertyName<?> propertyName) {
         return new SingleValueOperator(ConditionType.IS_NULL, propertyName,
                 true);
     }
@@ -192,7 +192,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static SingleValueOperator isNotNull(PropertyName<?> propertyName) {
+    public static SingleValueOperator isNotNull(
+            final PropertyName<?> propertyName) {
         return new SingleValueOperator(ConditionType.IS_NOT_NULL, propertyName,
                 true);
     }
@@ -208,8 +209,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static LikeOperator like(PropertyName<String> propertyName,
-            String param) {
+    public static LikeOperator like(final PropertyName<String> propertyName,
+            final String param) {
         return new LikeOperator(ConditionType.LIKE, propertyName, param);
     }
 
@@ -226,8 +227,8 @@ public class S2JdbcOperations {
      *            エスケープ文字
      * @return
      */
-    public static LikeOperator like(PropertyName<String> propertyName,
-            String param, String escapeChar) {
+    public static LikeOperator like(final PropertyName<String> propertyName,
+            final String param, final String escapeChar) {
         return new LikeOperator(ConditionType.LIKE_ESCAPE, propertyName, param,
                 escapeChar);
     }
@@ -243,8 +244,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static LikeOperator starts(PropertyName<String> propertyName,
-            String param) {
+    public static LikeOperator starts(final PropertyName<String> propertyName,
+            final String param) {
         return new LikeOperator(ConditionType.STARTS, propertyName, param);
     }
 
@@ -259,8 +260,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static LikeOperator ends(PropertyName<String> propertyName,
-            String param) {
+    public static LikeOperator ends(final PropertyName<String> propertyName,
+            final String param) {
         return new LikeOperator(ConditionType.ENDS, propertyName, param);
     }
 
@@ -275,8 +276,8 @@ public class S2JdbcOperations {
      *            引数
      * @return
      */
-    public static LikeOperator contains(PropertyName<String> propertyName,
-            String param) {
+    public static LikeOperator contains(
+            final PropertyName<String> propertyName, final String param) {
         return new LikeOperator(ConditionType.CONTAINS, propertyName, param);
     }
 
@@ -287,7 +288,7 @@ public class S2JdbcOperations {
      *            子供の{@link Where 検索条件}
      * @return 子供の{@link Where 検索条件}をANDで結合した検索条件
      */
-    public static CompositeWhere and(Where... children) {
+    public static CompositeWhere and(final Where... children) {
         return new CompositeWhere("and", children);
     }
 
@@ -298,7 +299,7 @@ public class S2JdbcOperations {
      *            子供の{@link Where 検索条件}
      * @return 子供の{@link Where 検索条件}をORで結合した検索条件
      */
-    public static CompositeWhere or(Where... children) {
+    public static CompositeWhere or(final Where... children) {
         return new CompositeWhere("or", children);
     }
 
@@ -309,7 +310,7 @@ public class S2JdbcOperations {
      *            プロパティ名
      * @return 昇順の{@link OrderByItem}
      */
-    public static OrderByItem asc(PropertyName<?> propertyName) {
+    public static OrderByItem asc(final CharSequence propertyName) {
         return new OrderByItem(propertyName);
     }
 
@@ -320,7 +321,7 @@ public class S2JdbcOperations {
      *            プロパティ名
      * @return 降順の{@link OrderByItem}
      */
-    public static OrderByItem desc(PropertyName<?> propertyName) {
+    public static OrderByItem desc(final CharSequence propertyName) {
         return new OrderByItem(propertyName, OrderingSpec.DESC);
     }
 
