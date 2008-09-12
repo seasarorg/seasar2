@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import org.apache.poi.hssf.record.RowRecord;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -233,7 +234,7 @@ public class XlsReader implements DataReader, DataSetConstants {
     protected void setupColumns(DataTable table, HSSFSheet sheet) {
         HSSFRow nameRow = sheet.getRow(0);
         HSSFRow valueRow = sheet.getRow(1);
-        for (int i = 0;; ++i) {
+        for (int i = 0; i <= Short.MAX_VALUE; ++i) {
             HSSFCell nameCell = nameRow.getCell((short) i);
             if (nameCell == null) {
                 break;
@@ -268,7 +269,7 @@ public class XlsReader implements DataReader, DataSetConstants {
      *            シート
      */
     protected void setupRows(DataTable table, HSSFSheet sheet) {
-        for (int i = 1;; ++i) {
+        for (int i = 1; i <= RowRecord.MAX_ROW_NUMBER; ++i) {
             HSSFRow row = sheet.getRow(i);
             if (row == null) {
                 break;

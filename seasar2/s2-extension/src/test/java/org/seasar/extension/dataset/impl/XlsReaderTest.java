@@ -33,6 +33,8 @@ public class XlsReaderTest extends S2TestCase {
 
     private static final String PATH = "org/seasar/extension/dataset/impl/XlsReaderImplTest.xls";
 
+    private static final String MAX_PATH = "org/seasar/extension/dataset/impl/XlsReaderImplMaxTest.xls";
+
     private DataSet dataSet_;
 
     /**
@@ -146,6 +148,15 @@ public class XlsReaderTest extends S2TestCase {
         beans[10] = new FloatingPointBean(0.00000000001, 0.0000000000123);
 
         assertEquals(dataSet, beans);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testMaxRow() throws Exception {
+        DataSet dataSet = new XlsReader(MAX_PATH).read();
+        DataTable table = dataSet.getTable("MAX");
+        assertEquals(65535, table.getRowSize());
     }
 
     protected void setUp() throws Exception {
