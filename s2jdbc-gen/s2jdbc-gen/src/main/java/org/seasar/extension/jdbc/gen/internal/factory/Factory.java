@@ -37,12 +37,13 @@ import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
-import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
+import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
+import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.model.TestModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -220,42 +221,64 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param ddlVersionDirectory
      *            DDLのバージョンを管理するディレクトリ
-     * @param createFileNameList
-     *            createファイル名のリスト
-     * @param dropFileNameList
-     *            dropファイル名のリスト
+     * @param createDirNameList
+     *            コピー非対象のcreateディレクトリ名のリスト
+     * @param dropDirNameList
+     *            コピー非対象のdropディレクトリ名のリスト
      * @return {@link DdlVersionIncrementer}の実装
      */
     DdlVersionIncrementer createDdlVersionIncrementer(Command command,
             DdlVersionDirectory ddlVersionDirectory,
-            List<String> createFileNameList, List<String> dropFileNameList);
+            List<String> createDirNameList, List<String> dropDirNameList);
 
     /**
-     * {@link DdlModelFactory}の実装を作成します。
+     * {@link TableModelFactory}の実装を作成します。
      * 
      * @param command
      *            呼び出し元のコマンド
      * @param dialect
      *            方言
-     * @param sqlKeywordCaseType
-     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      * @param sqlIdentifierCaseType
      *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
+     * @param sqlKeywordCaseType
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      * @param statementDelimiter
      *            SQLステートメントの区切り文字
-     * @param schemaInfoFullTableName
-     *            スキーマ情報を格納するテーブル名
-     * @param schemaInfoColumnName
-     *            スキーマのバージョン番号を格納するカラム名
      * @param tableOption
      *            テーブルオプション、存在しない場合は{@code null}
-     * @return {@link DdlModelFactory}の実装
+     * @return {@link TableModelFactory}の実装
      */
-    DdlModelFactory createDdlModelFactory(Command command, GenDialect dialect,
-            SqlKeywordCaseType sqlKeywordCaseType,
-            SqlIdentifierCaseType sqlIdentifierCaseType,
-            char statementDelimiter, String schemaInfoFullTableName,
-            String schemaInfoColumnName, String tableOption);
+    TableModelFactory createTableModelFactory(Command command,
+            GenDialect dialect, SqlIdentifierCaseType sqlIdentifierCaseType,
+            SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
+            String tableOption);
+
+    /**
+     * {@link SchemaInfoTableModelFactory}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param dialect
+     *            方言
+     * @param tableName
+     *            スキーマ情報テーブルの名前
+     * @param columnName
+     *            スキーマ情報テーブルのカラム名
+     * @param sqlIdentifierCaseType
+     *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
+     * @param sqlKeywordCaseType
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
+     * @param statementDelimiter
+     *            SQLステートメントの区切り文字
+     * @param tableOption
+     *            テーブルオプション、存在しない場合は{@code null}
+     * @return {@link SchemaInfoTableModelFactory}の実装
+     */
+    SchemaInfoTableModelFactory createSchemaInfoTableModelFactory(
+            Command command, GenDialect dialect, String tableName,
+            String columnName, SqlIdentifierCaseType sqlIdentifierCaseType,
+            SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
+            String tableOption);
 
     /**
      * {@link EntitySetDescFactory}の実装を作成します。

@@ -15,12 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
-import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 
 /**
@@ -28,10 +22,22 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialect;
  * 
  * @author taedium
  */
-public class DdlModel {
+public abstract class DdlModel {
+
+    /** テーブル標準名 */
+    protected String tableCanonicalName;
+
+    /** 名前 */
+    protected String name;
 
     /** 方言 */
     protected GenDialect dialect;
+
+    /** SQLステートメントの区切り文字 */
+    protected char delimiter;
+
+    /** テーブルオプション */
+    protected String tableOption;
 
     /** SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型 */
     protected SqlKeywordCaseType sqlKeywordCaseType;
@@ -39,29 +45,43 @@ public class DdlModel {
     /** SQLの識別子の大文字小文字を変換するかどうかを示す列挙型 */
     protected SqlIdentifierCaseType sqlIdentifierCaseType;
 
-    /** 区切り文字 */
-    protected char delimiter;
+    /**
+     * テーブル標準名を返します。
+     * 
+     * @return テーブル標準名
+     */
+    public String getTableCanonicalName() {
+        return tableCanonicalName;
+    }
 
-    /** テーブルオプション */
-    protected String tableOption;
+    /**
+     * テーブル標準名を設定します。
+     * 
+     * @param tableCanonicalName
+     *            テーブル標準名
+     */
+    public void setTableCanonicalName(String tableCanonicalName) {
+        this.tableCanonicalName = tableCanonicalName;
+    }
 
-    /** スキーマ情報を格納するテーブル名 */
-    protected String schemaInfoFullTableName;
+    /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
+    public String getName() {
+        return name;
+    }
 
-    /** スキーマのバージョン番号を格納するカラム名 */
-    protected String schemaInfoColumnName;
-
-    /** スキーマのバージョン番号を格納するカラムの定義 */
-    protected String schemaInfoColumnDefinition;
-
-    /** スキーマのバージョン番号 */
-    protected int versionNo;
-
-    /** テーブル記述のリスト */
-    protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
-
-    /** シーケンス記述のリスト */
-    protected List<SequenceDesc> sequenceDescList = new ArrayList<SequenceDesc>();
+    /**
+     * 名前を設定します。
+     * 
+     * @param name
+     *            名前
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * 方言を返します。
@@ -83,50 +103,19 @@ public class DdlModel {
     }
 
     /**
-     * @return Returns the sqlKeywordCaseType.
-     */
-    public SqlKeywordCaseType getSqlKeywordCaseType() {
-        return sqlKeywordCaseType;
-    }
-
-    /**
-     * @param sqlKeywordCaseType
-     *            The sqlKeywordCaseType to set.
-     */
-    public void setSqlKeywordCaseType(SqlKeywordCaseType sqlKeywordCaseType) {
-        this.sqlKeywordCaseType = sqlKeywordCaseType;
-    }
-
-    /**
-     * @return Returns the sqlIdentifierCaseType.
-     */
-    public SqlIdentifierCaseType getSqlIdentifierCaseType() {
-        return sqlIdentifierCaseType;
-    }
-
-    /**
-     * @param sqlIdentifierCaseType
-     *            The sqlIdentifierCaseType to set.
-     */
-    public void setSqlIdentifierCaseType(
-            SqlIdentifierCaseType sqlIdentifierCaseType) {
-        this.sqlIdentifierCaseType = sqlIdentifierCaseType;
-    }
-
-    /**
-     * 区切り文字を返します。
+     * SQLステートメントの区切り文字を返します。
      * 
-     * @return 区切り文字
+     * @return SQLステートメントの区切り文字
      */
     public char getDelimiter() {
         return delimiter;
     }
 
     /**
-     * 区切り文字を設定します。
+     * SQLステートメントの区切り文字
      * 
      * @param delimiter
-     *            区切り文字
+     *            SQLステートメントの区切り文字を設定します。
      */
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
@@ -135,10 +124,10 @@ public class DdlModel {
     /**
      * テーブルオプションを返します。
      * 
-     * @return 存在する場合テーブルオプション、存在しない場合{@code null}
+     * @return テーブルオプション
      */
     public String getTableOption() {
-        return convertKeywordInternal(tableOption);
+        return tableOption;
     }
 
     /**
@@ -152,252 +141,64 @@ public class DdlModel {
     }
 
     /**
-     * スキーマ情報を格納するテーブル名を返します。
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を返します。
      * 
-     * @return スキーマ情報を格納するテーブル名
+     * @return SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      */
-    public String getSchemaInfoFullTableName() {
-        return schemaInfoFullTableName;
+    public SqlKeywordCaseType getSqlKeywordCaseType() {
+        return sqlKeywordCaseType;
     }
 
     /**
-     * スキーマ情報を格納するテーブル名を設定します。
+     * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を設定します。
      * 
-     * @param schemaInfoFullTableName
-     *            スキーマ情報を格納するテーブル名
+     * @param sqlKeywordCaseType
+     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
      */
-    public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
-        this.schemaInfoFullTableName = schemaInfoFullTableName;
+    public void setSqlKeywordCaseType(SqlKeywordCaseType sqlKeywordCaseType) {
+        this.sqlKeywordCaseType = sqlKeywordCaseType;
     }
 
     /**
-     * スキーマのバージョン番号を格納するカラム名を返します。
+     * SQLの識別子の大文字小文字を変換するかどうかを示す列挙型を返します。
      * 
-     * @return スキーマのバージョン番号を格納するカラム名
+     * @return SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      */
-    public String getSchemaInfoColumnName() {
-        return schemaInfoColumnName;
+    public SqlIdentifierCaseType getSqlIdentifierCaseType() {
+        return sqlIdentifierCaseType;
     }
 
     /**
-     * スキーマのバージョン番号を格納するカラム名を設定します。
+     * SQLの識別子の大文字小文字を変換するかどうかを示す列挙型を設定します
      * 
-     * @param schemaInfoColumnName
-     *            スキーマのバージョン番号を格納するカラム名
+     * @param sqlIdentifierCaseType
+     *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      */
-    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
-        this.schemaInfoColumnName = schemaInfoColumnName;
+    public void setSqlIdentifierCaseType(
+            SqlIdentifierCaseType sqlIdentifierCaseType) {
+        this.sqlIdentifierCaseType = sqlIdentifierCaseType;
     }
 
     /**
-     * バージョン番号を返します。
-     * 
-     * @return バージョン番号
-     */
-    public int getVersionNo() {
-        return versionNo;
-    }
-
-    /**
-     * バージョン番号を設定します。
-     * 
-     * @param versionNo
-     *            バージョン番号
-     */
-    public void setVersionNo(int versionNo) {
-        this.versionNo = versionNo;
-    }
-
-    /**
-     * スキーマのバージョン番号を格納するカラムの定義を返します。
-     * 
-     * @return スキーマのバージョン番号を格納するカラムの定義
-     */
-    public String getSchemaInfoColumnDefinition() {
-        return schemaInfoColumnDefinition;
-    }
-
-    /**
-     * スキーマのバージョン番号を格納するカラムの定義を設定します。
-     * 
-     * @param schemaInfoColumnDefinition
-     *            スキーマのバージョン番号を格納するカラムの定義
-     */
-    public void setSchemaInfoColumnDefinition(String schemaInfoColumnDefinition) {
-        this.schemaInfoColumnDefinition = schemaInfoColumnDefinition;
-    }
-
-    /**
-     * テーブル記述を追加します。
-     * 
-     * @param tableDesc
-     *            テーブル記述
-     */
-    public void addTableDesc(TableDesc tableDesc) {
-        if (tableDescList.contains(tableDesc)) {
-            return;
-        }
-        tableDescList.add(tableDesc);
-    }
-
-    /**
-     * テーブル記述のリストを返します。
-     * 
-     * @return テーブル記述のリスト
-     */
-    public List<TableDesc> getTableDescList() {
-        return Collections.unmodifiableList(tableDescList);
-    }
-
-    /**
-     * シーケンス記述を追加します。
-     * 
-     * @param sequenceDesc
-     *            シーケンス記述
-     */
-    public void addSequenceDesc(SequenceDesc sequenceDesc) {
-        if (sequenceDescList.contains(sequenceDesc)) {
-            return;
-        }
-        sequenceDescList.add(sequenceDesc);
-    }
-
-    /**
-     * シーケンス記述のリストを返します。
-     * 
-     * @return シーケンス記述のリスト
-     */
-    public List<SequenceDesc> getSequenceDescList() {
-        return Collections.unmodifiableList(sequenceDescList);
-    }
-
-    /**
-     * シーケンス定義の断片を返します。
-     * 
-     * @param sequenceDesc
-     *            シーケンス記述
-     * @return シーケンス定義の断片
-     */
-    public String getSequenceDefinitionFragment(SequenceDesc sequenceDesc) {
-        String value = dialect.getSequenceDefinitionFragment(sequenceDesc
-                .getDataType(), sequenceDesc.getInitialValue(), sequenceDesc
-                .getAllocationSize());
-        return convertKeywordInternal(value);
-    }
-
-    /**
-     * IDENTITYカラムの定義を返します。
-     * 
-     * @return IDENTITYカラムの定義
-     */
-    public String getIdentityColumnDefinition() {
-        String value = dialect.getIdentityColumnDefinition();
-        return convertKeywordInternal(value);
-    }
-
-    /**
-     * 外部キーを削除する構文を返します。
-     * 
-     * @return 外部キーを削除する構文
-     */
-    public String getDropForeignKeySyntax() {
-        String value = dialect.getDropForeignKeySyntax();
-        return convertKeywordInternal(value);
-    }
-
-    /**
-     * 一意キーを削除する構文を返します。
-     * 
-     * @return 外部キーを削除する構文
-     */
-    public String getDropUniqueKeySyntax() {
-        String value = dialect.getDropUniqueKeySyntax();
-        return convertKeywordInternal(value);
-    }
-
-    /**
-     * クォートで囲みます。
-     * 
-     * @param value
-     *            値
-     * @return クォートで囲まれた値
-     */
-    public String quote(String value) {
-        return dialect.quote(value);
-    }
-
-    /**
-     * クォートを取り除きます。
-     * 
-     * @param value
-     *            値
-     * @return クォートが取り除かれた値
-     */
-    public String unquote(String value) {
-        return dialect.unquote(value);
-    }
-
-    /**
-     * SQLのキーワードの大文字小文字を変換します。
+     * キーワードの大文字小文字を変換します。
      * 
      * @param keyword
-     *            SQLのキーワード
+     *            キーワード
      * @return 変換された文字列
      */
-    public String convertKeyword(String keyword) {
-        return convertKeywordInternal(keyword);
+    public String keyword(String keyword) {
+        return sqlKeywordCaseType.convert(keyword);
     }
 
     /**
-     * 内部的にSQLのキーワードの大文字小文字を変換します。
-     * 
-     * @param keyword
-     *            SQLのキーワード
-     * @return 変換された文字列
-     */
-    protected String convertKeywordInternal(String keyword) {
-        if (keyword == null) {
-            return null;
-        }
-        switch (sqlKeywordCaseType) {
-        case UPPERCASE:
-            return keyword.toUpperCase();
-        case LOWERCASE:
-            return keyword.toLowerCase();
-        default:
-            return keyword;
-        }
-    }
-
-    /**
-     * SQLのキーワードの識別子を変換します。
+     * 識別子の大文字小文字を変換します。
      * 
      * @param identifier
-     *            SQLの識別子
+     *            識別子
      * @return 変換された文字列
      */
-    public String convertIdentifier(String identifier) {
-        return convertIdentifierInternal(identifier);
+    public String identifier(String identifier) {
+        return sqlIdentifierCaseType.convert(identifier);
     }
 
-    /**
-     * 内部的にSQLの識別子の大文字小文字を変換します。
-     * 
-     * @param identifier
-     *            SQLの識別子
-     * @return 変換された文字列
-     */
-    protected String convertIdentifierInternal(String identifier) {
-        if (identifier == null) {
-            return null;
-        }
-        switch (sqlIdentifierCaseType) {
-        case UPPERCASE:
-            return identifier.toUpperCase();
-        case LOWERCASE:
-            return identifier.toLowerCase();
-        default:
-            return identifier;
-        }
-    }
 }

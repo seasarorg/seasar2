@@ -23,11 +23,38 @@ package org.seasar.extension.jdbc.gen.model;
 public enum SqlIdentifierCaseType {
 
     /** 大文字 */
-    UPPERCASE,
+    UPPERCASE {
+
+        @Override
+        public String convert(String identifier) {
+            return identifier != null ? identifier.toUpperCase() : null;
+        }
+    },
 
     /** 小文字 */
-    LOWERCASE,
+    LOWERCASE {
+
+        @Override
+        public String convert(String identifier) {
+            return identifier != null ? identifier.toLowerCase() : null;
+        }
+    },
 
     /** 元のまま */
-    ORIGINALCASE
+    ORIGINALCASE {
+
+        @Override
+        public String convert(String identifier) {
+            return identifier;
+        }
+    };
+
+    /**
+     * 識別子の大文字小文字を変換します。
+     * 
+     * @param identifier
+     *            識別子
+     * @return 変換された文字列
+     */
+    public abstract String convert(String identifier);
 }

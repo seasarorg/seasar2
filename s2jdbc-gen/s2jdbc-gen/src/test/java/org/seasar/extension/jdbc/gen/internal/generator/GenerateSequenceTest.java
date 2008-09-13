@@ -19,15 +19,14 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.HsqlGenDialect;
-import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
+import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -40,7 +39,7 @@ public class GenerateSequenceTest {
 
     private GeneratorImplStub generator;
 
-    private DdlModel model;
+    private TableModel model;
 
     /**
      * 
@@ -56,29 +55,14 @@ public class GenerateSequenceTest {
         sequenceDesc.setAllocationSize(50);
         sequenceDesc.setDataType("integer");
 
-        SequenceDesc sequenceDesc2 = new SequenceDesc();
-        sequenceDesc2.setSequenceName("FOO");
-        sequenceDesc2.setInitialValue(10);
-        sequenceDesc2.setAllocationSize(20);
-        sequenceDesc2.setDataType("integer");
-
         TableDesc tableDesc = new TableDesc();
         tableDesc.setCanonicalName("aaa");
         tableDesc.addSequenceDesc(sequenceDesc);
 
-        TableDesc tableDesc2 = new TableDesc();
-        tableDesc2.setCanonicalName("bbb");
-        tableDesc2.addSequenceDesc(sequenceDesc2);
-
-        DatabaseDesc databaseDesc = new DatabaseDesc();
-        databaseDesc.addTableDesc(tableDesc);
-        databaseDesc.addTableDesc(tableDesc2);
-
-        DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new HsqlGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
-                "VERSION", null);
-        model = factory.getDdlModel(databaseDesc, 0);
+        TableModelFactoryImpl factory = new TableModelFactoryImpl(
+                new HsqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+        model = factory.getTableModel(tableDesc);
     }
 
     /**

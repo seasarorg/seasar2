@@ -19,15 +19,14 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.DdlModel;
+import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
+import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -40,7 +39,7 @@ public class GenerateForeignKeyTest {
 
     private GeneratorImplStub generator;
 
-    private DdlModel model;
+    private TableModel model;
 
     /**
      * 
@@ -78,14 +77,10 @@ public class GenerateForeignKeyTest {
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 
-        DatabaseDesc databaseDesc = new DatabaseDesc();
-        databaseDesc.addTableDesc(tableDesc);
-
-        DdlModelFactoryImpl factory = new DdlModelFactoryImpl(
-                new StandardGenDialect(), SqlKeywordCaseType.ORIGINALCASE,
-                SqlIdentifierCaseType.ORIGINALCASE, ';', "SCHEMA_INFO",
-                "VERSION", null);
-        model = factory.getDdlModel(databaseDesc, 0);
+        TableModelFactoryImpl factory = new TableModelFactoryImpl(
+                new StandardGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+        model = factory.getTableModel(tableDesc);
     }
 
     /**

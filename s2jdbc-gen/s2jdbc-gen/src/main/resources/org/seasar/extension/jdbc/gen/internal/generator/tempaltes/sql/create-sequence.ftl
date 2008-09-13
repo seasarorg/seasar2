@@ -1,3 +1,3 @@
-<#list sequenceDescList as sequence>
-${convertKeyword("create sequence")} ${convertIdentifier(sequence.sequenceName)} ${getSequenceDefinitionFragment(sequence)}${delimiter}
+<#list sequenceModelList as sequence>
+${keyword("create sequence")} ${sequence.name} ${sequence.definition}${delimiter}
 </#list>

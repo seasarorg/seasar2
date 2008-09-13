@@ -15,23 +15,19 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
-import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
-
 /**
- * {@link DdlModel DDLのモデル}のファクトリです。
+ * {@link SchemaInfoTableModel スキーマ情報テーブルモデル}のファクトリです。
  * 
  * @author taedium
  */
-public interface DdlModelFactory {
+public interface SchemaInfoTableModelFactory {
 
     /**
-     * DDLのモデルを返します。
+     * スキーマ情報テーブルモデルを返します。
      * 
-     * @param databaseDesc
-     *            データベース記述
      * @param versionNo
-     *            バージョン番号
-     * @return DDLのモデル
+     *            スキーマのバージョン番号
+     * @return スキーマ情報テーブルモデル
      */
-    DdlModel getDdlModel(DatabaseDesc databaseDesc, int versionNo);
+    SchemaInfoTableModel getSchemaInfoTableModel(int versionNo);
 }

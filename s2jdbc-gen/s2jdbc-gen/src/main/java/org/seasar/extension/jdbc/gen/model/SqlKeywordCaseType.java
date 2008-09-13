@@ -23,11 +23,38 @@ package org.seasar.extension.jdbc.gen.model;
 public enum SqlKeywordCaseType {
 
     /** 大文字 */
-    UPPERCASE,
+    UPPERCASE {
+
+        @Override
+        public String convert(String keyword) {
+            return keyword != null ? keyword.toUpperCase() : null;
+        }
+    },
 
     /** 小文字 */
-    LOWERCASE,
+    LOWERCASE {
+
+        @Override
+        public String convert(String keyword) {
+            return keyword != null ? keyword.toLowerCase() : null;
+        }
+    },
 
     /** 元のまま */
-    ORIGINALCASE
+    ORIGINALCASE {
+
+        @Override
+        public String convert(String keyword) {
+            return keyword;
+        }
+    };
+
+    /**
+     * キーワードの大文字小文字を変換します。
+     * 
+     * @param keyword
+     *            キーワード
+     * @return 変換された文字列
+     */
+    public abstract String convert(String keyword);
 }

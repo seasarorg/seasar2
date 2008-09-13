@@ -1,5 +1,1 @@
 drop table AAA.BBB.HOGE;
-drop table AAA.BBB.FOO;
-drop table AAA.BBB.BAR;
-
-drop table SCHEMA_INFO;

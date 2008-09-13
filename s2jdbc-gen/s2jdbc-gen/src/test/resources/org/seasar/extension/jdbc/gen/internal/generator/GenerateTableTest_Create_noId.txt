@@ -1,0 +1,4 @@
+create table AAA.BBB.BAR (
+    no integer,
+    name varchar
+);

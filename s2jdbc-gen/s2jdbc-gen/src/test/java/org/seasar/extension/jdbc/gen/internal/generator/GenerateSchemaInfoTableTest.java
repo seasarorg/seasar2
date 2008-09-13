@@ -19,14 +19,12 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.TableDesc;
-import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
-import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
-import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.dialect.MssqlGenDialect;
+import org.seasar.extension.jdbc.gen.internal.model.SchemaInfoTableModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModel;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
-import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -35,40 +33,23 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateUniqueKeyTest {
+public class GenerateSchemaInfoTableTest {
 
     private GeneratorImplStub generator;
 
-    private TableModel model;
+    private SchemaInfoTableModel model;
 
     /**
      * 
-     * @throws Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         generator = new GeneratorImplStub();
-
-        UniqueKeyDesc uniqueKeyDesc = new UniqueKeyDesc();
-        uniqueKeyDesc.addColumnName("UK1-1");
-        uniqueKeyDesc.addColumnName("UK1-2");
-
-        UniqueKeyDesc uniqueKeyDesc2 = new UniqueKeyDesc();
-        uniqueKeyDesc2.addColumnName("UK2-1");
-        uniqueKeyDesc2.addColumnName("UK2-2");
-
-        TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
-        tableDesc.setName("HOGE");
-        tableDesc.setCanonicalName("aaa.bbb.hoge");
-        tableDesc.addUniqueKeyDesc(uniqueKeyDesc);
-        tableDesc.addUniqueKeyDesc(uniqueKeyDesc2);
-
-        TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new StandardGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+        SchemaInfoTableModelFactoryImpl factory = new SchemaInfoTableModelFactoryImpl(
+                new MssqlGenDialect(), "SCHEMA_INFO", "VERSION",
+                SqlIdentifierCaseType.ORIGINALCASE,
                 SqlKeywordCaseType.ORIGINALCASE, ';', null);
-        model = factory.getTableModel(tableDesc);
+        model = factory.getSchemaInfoTableModel(10);
     }
 
     /**
@@ -78,7 +59,7 @@ public class GenerateUniqueKeyTest {
     @Test
     public void testCreate() throws Exception {
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "sql/create-uniquekey.ftl", "UTF-8", false);
+                "file"), "sql/create-schemainfo-table.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Create.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
@@ -91,9 +72,10 @@ public class GenerateUniqueKeyTest {
     @Test
     public void testDrop() throws Exception {
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "sql/drop-uniquekey.ftl", "UTF-8", false);
+                "file"), "sql/drop-schemainfo-table.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_Drop.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
+
 }

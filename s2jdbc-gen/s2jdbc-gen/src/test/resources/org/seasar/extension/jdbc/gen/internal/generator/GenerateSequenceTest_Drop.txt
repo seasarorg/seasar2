@@ -1,2 +1,1 @@
 drop sequence HOGE;
-drop sequence FOO;

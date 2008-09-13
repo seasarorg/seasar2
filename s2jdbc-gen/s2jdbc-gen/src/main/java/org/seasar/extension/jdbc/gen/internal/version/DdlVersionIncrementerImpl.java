@@ -41,11 +41,11 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     /** DDLのバージョンを管理するディレクトリ */
     protected DdlVersionDirectory ddlVersionDirectory;
 
-    /** createファイル名のリスト */
-    protected List<String> createFileNameList = new ArrayList<String>();
+    /** createディレクトリ名のリスト */
+    protected List<String> createDirNameList = new ArrayList<String>();
 
-    /** dropファイル名のリスト */
-    protected List<String> dropFileNameList = new ArrayList<String>();
+    /** dropディレクトリ名のリスト */
+    protected List<String> dropDirNameList = new ArrayList<String>();
 
     /** リカバリ対象のディレクトリのリスト */
     protected List<File> recoveryDirList = new ArrayList<File>();
@@ -55,25 +55,25 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * 
      * @param ddlVersionDirectory
      *            DDLのバージョンを管理するディレクトリ
-     * @param createFileNameList
-     *            createファイル名のリスト
-     * @param dropFileNameList
-     *            dropファイル名のリスト
+     * @param createDirNameList
+     *            コピー非対象のcreateディレクトリ名のリスト
+     * @param dropDirNameList
+     *            コピー非対象のdropディレクトリ名のリスト
      */
     public DdlVersionIncrementerImpl(DdlVersionDirectory ddlVersionDirectory,
-            List<String> createFileNameList, List<String> dropFileNameList) {
+            List<String> createDirNameList, List<String> dropDirNameList) {
         if (ddlVersionDirectory == null) {
             throw new NullPointerException("versionDirectories");
         }
-        if (createFileNameList == null) {
+        if (createDirNameList == null) {
             throw new NullPointerException("createFileNameList");
         }
-        if (dropFileNameList == null) {
+        if (dropDirNameList == null) {
             throw new NullPointerException("dropFileNameList");
         }
         this.ddlVersionDirectory = ddlVersionDirectory;
-        this.createFileNameList.addAll(createFileNameList);
-        this.dropFileNameList.addAll(dropFileNameList);
+        this.createDirNameList.addAll(createDirNameList);
+        this.dropDirNameList.addAll(dropDirNameList);
     }
 
     public void increment(Callback callback) {
@@ -186,8 +186,8 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             File createDir = ddlVersionDirectory
                     .getCreateDir(currentVersionDir);
             File dropDir = ddlVersionDirectory.getDropDir(currentVersionDir);
-            setupFilterPathList(createDir, createFileNameList);
-            setupFilterPathList(dropDir, dropFileNameList);
+            setupFilterPathList(createDir, createDirNameList);
+            setupFilterPathList(dropDir, dropDirNameList);
         }
 
         /**
@@ -195,11 +195,11 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
          * 
          * @param dir
          *            ディレクトリ
-         * @param fileNameList
-         *            ファイル名のリスト
+         * @param dirNameList
+         *            ディレクトリ名のリスト
          */
-        protected void setupFilterPathList(File dir, List<String> fileNameList) {
-            for (String name : fileNameList) {
+        protected void setupFilterPathList(File dir, List<String> dirNameList) {
+            for (String name : dirNameList) {
                 File file = new File(dir, name);
                 filterPathList.add(FileUtil.getCanonicalPath(file));
             }

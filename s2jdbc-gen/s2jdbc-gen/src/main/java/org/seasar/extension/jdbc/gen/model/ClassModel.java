@@ -15,20 +15,33 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import java.util.Collections;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author taedium
  * 
  */
-public interface ClassModel {
+public abstract class ClassModel {
+
+    /** インポート名のソートされたセット */
+    protected SortedSet<String> importNameSet = new TreeSet<String>();
+
+    /** パッケージ名 */
+    protected String packageName;
+
+    /** クラスの単純名 */
+    protected String shortClassName;
 
     /**
      * パッケージ名を返します。
      * 
      * @return パッケージ名
      */
-    String getPackageName();
+    public String getPackageName() {
+        return packageName;
+    }
 
     /**
      * パッケージ名を設定します。
@@ -36,14 +49,18 @@ public interface ClassModel {
      * @param packageName
      *            パッケージ名
      */
-    void setPackageName(String packageName);
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
 
     /**
      * クラスの単純名を返します。
      * 
-     * @return
+     * @return クラスの単純名
      */
-    String getShortClassName();
+    public String getShortClassName() {
+        return shortClassName;
+    }
 
     /**
      * クラスの単純名を設定します。
@@ -51,20 +68,27 @@ public interface ClassModel {
      * @param shortClassName
      *            クラスの単純名
      */
-    void setShortClassName(String shortClassName);
+    public void setShortClassName(String shortClassName) {
+        this.shortClassName = shortClassName;
+    }
 
     /**
      * インポート名のソートされたセットを返します。
      * 
      * @return インポート名のソートされたセット
      */
-    SortedSet<String> getImportNameSet();
+    public SortedSet<String> getImportNameSet() {
+        return Collections.unmodifiableSortedSet(importNameSet);
+    }
 
     /**
-     * インポート名を追加します。
+     *インポート名を追加します。
      * 
      * @param name
      *            インポート名
      */
-    void addImportName(String name);
+    public void addImportName(String name) {
+        importNameSet.add(name);
+    }
+
 }

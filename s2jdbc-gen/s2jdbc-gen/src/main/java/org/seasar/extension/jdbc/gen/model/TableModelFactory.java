@@ -15,10 +15,21 @@
  */
 package org.seasar.extension.jdbc.gen.model;
 
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
+
 /**
- * 抽象サービスモデルです。
+ * {@link TableModel テーブルモデル}のファクトリです。
  * 
  * @author taedium
  */
-public class AbstServiceModel extends ClassModel {
+public interface TableModelFactory {
+
+    /**
+     * テーブルモデルを返します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return テーブルモデル
+     */
+    TableModel getTableModel(TableDesc tableDesc);
 }

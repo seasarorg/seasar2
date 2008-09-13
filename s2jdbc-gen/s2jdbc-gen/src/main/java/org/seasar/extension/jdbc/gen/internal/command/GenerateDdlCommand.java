@@ -23,15 +23,19 @@ import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
+import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
-import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
+import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModel;
+import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
+import org.seasar.extension.jdbc.gen.model.TableModel;
+import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
@@ -47,7 +51,7 @@ import org.seasar.framework.util.ClassUtil;
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは次の8つのDDLを生成します。
+ * このコマンドは次の8種類のDDLを生成します。
  * <ul>
  * <li>テーブルを作成するDDL</li>
  * <li>テーブルを削除するDDL</li>
@@ -85,29 +89,29 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 対象としないエンティティ名の正規表現 */
     protected String ignoreEntityNamePattern = "";
 
-    /** テーブルを作成するDDLファイル名 */
-    protected String createTableDdlFileName = "010-create-table.sql";
+    /** テーブルを作成するDDLを格納するディレクトリ名 */
+    protected String createTableDirName = "010-table";
 
-    /** 一意キーを作成するDDLファイル名 */
-    protected String createUniqueKeyDdlFileName = "020-create-uniquekey.sql";
+    /** 一意キーを作成するDDLを格納するディレクトリ名 */
+    protected String createUniqueKeyDirName = "020-uniquekey";
 
-    /** シーケンスを生成するDDLファイル */
-    protected String createSequenceDdlFileName = "030-create-sequence.sql";
+    /** シーケンスを作成するDDLを格納するディレクトリ名 */
+    protected String createSequenceDirName = "030-sequence";
 
-    /** 外部キーを作成するDDLファイル名 */
-    protected String createForeignKeyDdlFileName = "050-create-foreignkey.sql";
+    /** 外部キーを作成するDDLを格納するディレクトリ名 */
+    protected String createForeignKeyDirName = "050-foreignkey";
 
-    /** テーブルを削除するDDLファイル名 */
-    protected String dropTableDdlFileName = "040-drop-table.sql";
+    /** テーブルを削除するDDLを格納するディレクトリ名 */
+    protected String dropTableDirName = "040-table";
 
-    /** 一意キーを削除するDDLファイル名 */
-    protected String dropUniqueKeyDdlFileName = "030-drop-uniquekey.sql";
+    /** 一意キーを削除するDDLを格納するディレクトリ名 */
+    protected String dropUniqueKeyDirName = "030-uniquekey";
 
-    /** シーケンスを削除するDDLファイル名 */
-    protected String dropSequenceDdlFileName = "020-drop-sequence.sql";
+    /** シーケンスを作成するDDLを削除するディレクトリ名 */
+    protected String dropSequenceDirName = "020-sequence";
 
-    /** 外部キーを削除するDDLファイル名 */
-    protected String dropForeignKeyDdlFileName = "010-drop-foreignkey.sql";
+    /** 外部キーを作成するDDLを削除するディレクトリ名 */
+    protected String dropForeignKeyDirName = "010-foreignkey";
 
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
@@ -130,6 +134,9 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** テーブルを作成するDDLのテンプレートファイル名 */
     protected String createTableTemplateFileName = "sql/create-table.ftl";
 
+    /** スキーマ情報テーブルを作成するDDLのテンプレートファイル名 */
+    protected String createSchemaInfoTableTemplateFileName = "sql/create-schemainfo-table.ftl";
+
     /** 一意キーを作成するDDLのテンプレートファイル名 */
     protected String createUniqueKeyTemplateFileName = "sql/create-uniquekey.ftl";
 
@@ -141,6 +148,9 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** テーブルを削除するDDLのテンプレートファイル名 */
     protected String dropTableTemplateFileName = "sql/drop-table.ftl";
+
+    /** スキーマ情報テーブルを削除するDDLのテンプレートファイル名 */
+    protected String dropSchemaInfoTableTemplateFileName = "sql/drop-schemainfo-table.ftl";
 
     /** 一意キーを削除するDDLのテンプレートファイル名 */
     protected String dropUniqueKeyTemplateFileName = "sql/drop-uniquekey.ftl";
@@ -187,8 +197,11 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
-    /** データベースのモデルのファクトリ */
-    protected DdlModelFactory ddlModelFactory;
+    /** テーブルモデルのファクトリ */
+    protected TableModelFactory tableModelFactory;
+
+    /** スキーマ情報テーブルモデルのファクトリ */
+    protected SchemaInfoTableModelFactory schemaInfoTableModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -234,25 +247,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * テーブルを作成するDDLファイル名を返します。
-     * 
-     * @return テーブルを作成するDDLファイル名
-     */
-    public String getCreateTableDdlFileName() {
-        return createTableDdlFileName;
-    }
-
-    /**
-     * テーブルを作成するDDLファイル名を設定します。
-     * 
-     * @param createTableDdlFileName
-     *            テーブルを作成するDDLファイル名
-     */
-    public void setCreateTableDdlFileName(String createTableDdlFileName) {
-        this.createTableDdlFileName = createTableDdlFileName;
-    }
-
-    /**
      * テーブルを作成するDDLのテンプレートファイル名を返します。
      * 
      * @return テーブルを作成するDDLのテンプレートファイル名
@@ -270,25 +264,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     public void setCreateTableTemplateFileName(
             String createTableTemplateFileName) {
         this.createTableTemplateFileName = createTableTemplateFileName;
-    }
-
-    /**
-     * シーケンスを作成するDDLファイル名を返します。
-     * 
-     * @return シーケンスを作成するDDLのSQLレートファイル名
-     */
-    public String getCreateSequenceDdlFileName() {
-        return createSequenceDdlFileName;
-    }
-
-    /**
-     * シーケンスを作成するDDLファイル名を設定します。
-     * 
-     * @param createSequenceDdlFileName
-     *            シーケンスを作成するDDLのSQLレートファイル名
-     */
-    public void setCreateSequenceDdlFileName(String createSequenceDdlFileName) {
-        this.createSequenceDdlFileName = createSequenceDdlFileName;
     }
 
     /**
@@ -312,25 +287,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * テーブルを削除するDDLファイル名を返します。
-     * 
-     * @return テーブルを削除するDDLファイル名
-     */
-    public String getDropTableDdlFileName() {
-        return dropTableDdlFileName;
-    }
-
-    /**
-     * テーブルを削除するDDLファイル名を設定します。
-     * 
-     * @param dropTableDdlFileName
-     *            テーブルを削除するDDLファイル名
-     */
-    public void setDropTableDdlFileName(String dropTableDdlFileName) {
-        this.dropTableDdlFileName = dropTableDdlFileName;
-    }
-
-    /**
      * テーブルを削除するDDLのテンプレートファイル名を返します。
      * 
      * @return テーブルを削除するDDLのテンプレートファイル名
@@ -347,25 +303,6 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     public void setDropTableTemplateFileName(String dropTableTemplateFileName) {
         this.dropTableTemplateFileName = dropTableTemplateFileName;
-    }
-
-    /**
-     * シーケンスを削除するDDLファイル名を返します。
-     * 
-     * @return シーケンスを削除するDDLファイル名
-     */
-    public String getDropSequenceDdlFileName() {
-        return dropSequenceDdlFileName;
-    }
-
-    /**
-     * シーケンスを削除するDDLファイル名を設定します。
-     * 
-     * @param dropSequenceDdlFileName
-     *            シーケンスを削除するDDLファイル名
-     */
-    public void setDropSequenceDdlFileName(String dropSequenceDdlFileName) {
-        this.dropSequenceDdlFileName = dropSequenceDdlFileName;
     }
 
     /**
@@ -386,83 +323,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     public void setDropSequenceTemplateFileName(
             String dropSequenceTemplateFileName) {
         this.dropSequenceTemplateFileName = dropSequenceTemplateFileName;
-    }
-
-    /**
-     * 一意キーを作成するDDLファイル名を返します。
-     * 
-     * @return 一意キーを作成するDDLファイル名
-     */
-    public String getCreateUniqueKeyDdlFileName() {
-        return createUniqueKeyDdlFileName;
-    }
-
-    /**
-     * 一意キーを作成するDDLファイル名を設定します。
-     * 
-     * @param createUniqueKeyDdlFileName
-     *            一意キーを作成するDDLファイル名
-     */
-    public void setCreateUniqueKeyDdlFileName(String createUniqueKeyDdlFileName) {
-        this.createUniqueKeyDdlFileName = createUniqueKeyDdlFileName;
-    }
-
-    /**
-     * 外部キーを作成するDDLファイル名を返します。
-     * 
-     * @return 外部キーを作成するDDLファイル名
-     */
-    public String getCreateForeignKeyDdlFileName() {
-        return createForeignKeyDdlFileName;
-    }
-
-    /**
-     * 外部キーを作成するDDLファイル名を設定します。
-     * 
-     * @param createForeignKeyDdlFileName
-     *            外部キーを作成するDDLファイル名
-     */
-    public void setCreateForeignKeyDdlFileName(
-            String createForeignKeyDdlFileName) {
-        this.createForeignKeyDdlFileName = createForeignKeyDdlFileName;
-    }
-
-    /**
-     * 一意キーを削除するDDLファイル名を返します。
-     * 
-     * @return 一意キーを削除するDDLファイル名
-     */
-    public String getDropUniqueKeyDdlFileName() {
-        return dropUniqueKeyDdlFileName;
-    }
-
-    /**
-     * 一意キーを削除するDDLファイル名を設定します。
-     * 
-     * @param dropUniqueKeyDdlFileName
-     *            一意キーを削除するDDLファイル名
-     */
-    public void setDropUniqueKeyDdlFileName(String dropUniqueKeyDdlFileName) {
-        this.dropUniqueKeyDdlFileName = dropUniqueKeyDdlFileName;
-    }
-
-    /**
-     * 外部キーを削除するDDLファイル名を返します。
-     * 
-     * @return 外部キーを削除するDDLファイル名
-     */
-    public String getDropForeignKeyDdlFileName() {
-        return dropForeignKeyDdlFileName;
-    }
-
-    /**
-     * 外部キーを削除するDDLファイル名を設定します。
-     * 
-     * @param dropForeignKeyDdlFileName
-     *            外部キーを削除するDDLファイル名
-     */
-    public void setDropForeignKeyDdlFileName(String dropForeignKeyDdlFileName) {
-        this.dropForeignKeyDdlFileName = dropForeignKeyDdlFileName;
     }
 
     /**
@@ -926,6 +786,198 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.genDialectClassName = genDialectClassName;
     }
 
+    /**
+     * テーブルを作成するDDLを格納するディレクトリ名を返します。
+     * 
+     * @return テーブルを作成するDDLを格納するディレクトリ名
+     */
+    public String getCreateTableDirName() {
+        return createTableDirName;
+    }
+
+    /**
+     * テーブルを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createTableDirName
+     *            テーブルを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateTableDirName(String createTableDirName) {
+        this.createTableDirName = createTableDirName;
+    }
+
+    /**
+     * 一意キーを作成するDDLを格納するディレクトリ名を返します。
+     * 
+     * @return 一意キーを作成するDDLを格納するディレクトリ名
+     */
+    public String getCreateUniqueKeyDirName() {
+        return createUniqueKeyDirName;
+    }
+
+    /**
+     * 一意キーを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createUniqueKeyDirName
+     *            一意キーを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateUniqueKeyDirName(String createUniqueKeyDirName) {
+        this.createUniqueKeyDirName = createUniqueKeyDirName;
+    }
+
+    /**
+     * シーケンスを作成するDDLを格納するディレクトリ名を返します。
+     * 
+     * @return シーケンスを作成するDDLを格納するディレクトリ名
+     */
+    public String getCreateSequenceDirName() {
+        return createSequenceDirName;
+    }
+
+    /**
+     * シーケンスを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createSequenceDirName
+     *            シーケンスを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateSequenceDirName(String createSequenceDirName) {
+        this.createSequenceDirName = createSequenceDirName;
+    }
+
+    /**
+     * 外部キーを作成するDDLを格納するディレクトリ名を返します。
+     * 
+     * @return 外部キーを作成するDDLを格納するディレクトリ名
+     */
+    public String getCreateForeignKeyDirName() {
+        return createForeignKeyDirName;
+    }
+
+    /**
+     * 外部キーを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createForeignKeyDirName
+     *            The createForeignKeyDirName to set.
+     */
+    public void setCreateForeignKeyDirName(String createForeignKeyDirName) {
+        this.createForeignKeyDirName = createForeignKeyDirName;
+    }
+
+    /**
+     * テーブルを削除するDDLを格納するディレクトリ名を返します。
+     * 
+     * @return テーブルを削除するDDLを格納するディレクトリ名
+     */
+    public String getDropTableDirName() {
+        return dropTableDirName;
+    }
+
+    /**
+     * テーブルを削除するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param dropTableDirName
+     *            テーブルを削除するDDLを格納するディレクトリ名
+     */
+    public void setDropTableDirName(String dropTableDirName) {
+        this.dropTableDirName = dropTableDirName;
+    }
+
+    /**
+     * 一意キーを削除するDDLを格納するディレクトリ名を返します。
+     * 
+     * @return 一意キーを削除するDDLを格納するディレクトリ名
+     */
+    public String getDropUniqueKeyDirName() {
+        return dropUniqueKeyDirName;
+    }
+
+    /**
+     * 一意キーを削除するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param dropUniqueKeyDirName
+     *            一意キーを削除するDDLを格納するディレクトリ名
+     */
+    public void setDropUniqueKeyDirName(String dropUniqueKeyDirName) {
+        this.dropUniqueKeyDirName = dropUniqueKeyDirName;
+    }
+
+    /**
+     * シーケンスを作成するDDLを削除するディレクトリ名を返します。
+     * 
+     * @return シーケンスを作成するDDLを削除するディレクトリ名
+     */
+    public String getDropSequenceDirName() {
+        return dropSequenceDirName;
+    }
+
+    /**
+     * シーケンスを作成するDDLを削除するディレクトリ名を設定します。
+     * 
+     * @param dropSequenceDirName
+     *            シーケンスを作成するDDLを削除するディレクトリ名
+     */
+    public void setDropSequenceDirName(String dropSequenceDirName) {
+        this.dropSequenceDirName = dropSequenceDirName;
+    }
+
+    /**
+     * 外部キーを作成するDDLを削除するディレクトリ名を返します。
+     * 
+     * @return 外部キーを作成するDDLを削除するディレクトリ名
+     */
+    public String getDropForeignKeyDirName() {
+        return dropForeignKeyDirName;
+    }
+
+    /**
+     * 外部キーを作成するDDLを削除するディレクトリ名を設定します。
+     * 
+     * @param dropForeignKeyDirName
+     *            外部キーを作成するDDLを削除するディレクトリ名
+     */
+    public void setDropForeignKeyDirName(String dropForeignKeyDirName) {
+        this.dropForeignKeyDirName = dropForeignKeyDirName;
+    }
+
+    /**
+     * スキーマ情報テーブルを作成するDDLのテンプレートファイル名を返します。
+     * 
+     * @return スキーマ情報テーブルを作成するDDLのテンプレートファイル名
+     */
+    public String getCreateSchemaInfoTableTemplateFileName() {
+        return createSchemaInfoTableTemplateFileName;
+    }
+
+    /**
+     * スキーマ情報テーブルを作成するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param createSchemaInfoTableTemplateFileName
+     *            スキーマ情報テーブルを作成するDDLのテンプレートファイル名
+     */
+    public void setCreateSchemaInfoTableTemplateFileName(
+            String createSchemaInfoTableTemplateFileName) {
+        this.createSchemaInfoTableTemplateFileName = createSchemaInfoTableTemplateFileName;
+    }
+
+    /**
+     * スキーマ情報テーブルを削除するDDLのテンプレートファイル名を返します。
+     * 
+     * @return スキーマ情報テーブルを削除するDDLのテンプレートファイル名
+     */
+    public String getDropSchemaInfoTableTemplateFileName() {
+        return dropSchemaInfoTableTemplateFileName;
+    }
+
+    /**
+     * スキーマ情報テーブルを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropSchemaInfoTableTemplateFileName
+     *            スキーマ情報テーブルを削除するDDLのテンプレートファイル名
+     */
+    public void setDropSchemaInfoTableTemplateFileName(
+            String dropSchemaInfoTableTemplateFileName) {
+        this.dropSchemaInfoTableTemplateFileName = dropSchemaInfoTableTemplateFileName;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -938,7 +990,8 @@ public class GenerateDdlCommand extends AbstractCommand {
         dialect = getGenDialect(genDialectClassName);
         ddlVersionDirectory = createDdlVersionDirectory();
         ddlVersionIncrementer = createDdlVersionIncrementer();
-        ddlModelFactory = createDdlModelFactory();
+        tableModelFactory = createTableModelFactory();
+        schemaInfoTableModelFactory = createSchemaInfoTableModelFactory();
         generator = createGenerator();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
@@ -957,21 +1010,27 @@ public class GenerateDdlCommand extends AbstractCommand {
 
                 final DatabaseDesc databaseDesc = databaseDescFactory
                         .getDatabaseDesc();
-                DdlModel model = ddlModelFactory.getDdlModel(databaseDesc,
-                        versionNo);
-                generateCreateDdl(model, createDir);
-                generateDropDdl(model, dropDir);
-
-                if (!dump) {
-                    return;
+                for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
+                    TableModel model = tableModelFactory
+                            .getTableModel(tableDesc);
+                    generateTableDdl(model, createDir, dropDir, versionNo);
+                    generateUniqueKeyDdl(model, createDir, dropDir, versionNo);
+                    generateForeignKeyDdl(model, createDir, dropDir, versionNo);
+                    generateSequenceDdl(model, createDir, dropDir, versionNo);
                 }
-                sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
+                SchemaInfoTableModel model = schemaInfoTableModelFactory
+                        .getSchemaInfoTableModel(versionNo);
+                generateSchemaInfoTableDdl(model, createDir, dropDir, versionNo);
 
-                    public void execute(SqlExecutionContext context) {
-                        dumper.dump(context, databaseDesc, new File(createDir,
-                                dumpDirName));
-                    }
-                });
+                if (dump) {
+                    sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
+
+                        public void execute(SqlExecutionContext context) {
+                            dumper.dump(context, databaseDesc, new File(
+                                    createDir, dumpDirName));
+                        }
+                    });
+                }
 
             }
         });
@@ -982,60 +1041,159 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 作成用のDDLファイルを生成します。
+     * テーブルのDDLのを生成します。
      * 
      * @param model
-     *            データモデル
+     *            テーブルモデル
      * @param createDir
-     *            ファイルを生成するディレクトリ
+     *            createディレクトリ
+     * @param dropDir
+     *            dropディレクトリ
+     * @param versionNo
+     *            バージョン番号
      */
-    protected void generateCreateDdl(DdlModel model, File createDir) {
-        GenerationContext tableContext = createGenerationContext(model,
-                createDir, createTableDdlFileName, createTableTemplateFileName);
-        generator.generate(tableContext);
+    protected void generateTableDdl(TableModel model, File createDir,
+            File dropDir, int versionNo) {
+        GenerationContext createContext = createGenerationContext(model,
+                new File(createDir, createTableDirName),
+                createTableTemplateFileName);
+        generator.generate(createContext);
 
-        GenerationContext uniqueKeyContext = createGenerationContext(model,
-                createDir, createUniqueKeyDdlFileName,
-                createUniqueKeyTemplateFileName);
-        generator.generate(uniqueKeyContext);
-
-        GenerationContext foreignKeyContext = createGenerationContext(model,
-                createDir, createForeignKeyDdlFileName,
-                createForeignKeyTemplateFileName);
-        generator.generate(foreignKeyContext);
-
-        GenerationContext sequenceContext = createGenerationContext(model,
-                createDir, createSequenceDdlFileName,
-                createSequenceTemplateFileName);
-        generator.generate(sequenceContext);
+        GenerationContext dropContext = createGenerationContext(model,
+                new File(dropDir, dropTableDirName), dropTableTemplateFileName);
+        generator.generate(dropContext);
     }
 
     /**
-     * 削除用のDDLファイルを生成します。
+     * 一意キーのDDLのを生成します。
      * 
      * @param model
-     *            データモデル
+     *            テーブルモデル
+     * @param createDir
+     *            createディレクトリ
      * @param dropDir
-     *            ファイルを生成するディレクトリ
+     *            dropディレクトリ
+     * @param versionNo
+     *            バージョン番号
      */
-    protected void generateDropDdl(DdlModel model, File dropDir) {
-        GenerationContext tableContext = createGenerationContext(model,
-                dropDir, dropTableDdlFileName, dropTableTemplateFileName);
-        generator.generate(tableContext);
+    protected void generateUniqueKeyDdl(TableModel model, File createDir,
+            File dropDir, int versionNo) {
+        if (model.getUniqueKeyModelList().isEmpty()) {
+            return;
+        }
 
-        GenerationContext uniqueKeyContext = createGenerationContext(model,
-                dropDir, dropUniqueKeyDdlFileName,
+        GenerationContext createContext = createGenerationContext(model,
+                new File(createDir, createUniqueKeyDirName),
+                createUniqueKeyTemplateFileName);
+        generator.generate(createContext);
+
+        GenerationContext dropContext = createGenerationContext(model,
+                new File(dropDir, dropUniqueKeyDirName),
                 dropUniqueKeyTemplateFileName);
-        generator.generate(uniqueKeyContext);
+        generator.generate(dropContext);
+    }
 
-        GenerationContext foreignKeyContext = createGenerationContext(model,
-                dropDir, dropForeignKeyDdlFileName,
+    /**
+     * 外部キーのDDLのを生成します。
+     * 
+     * @param model
+     *            テーブルモデル
+     * @param createDir
+     *            createディレクトリ
+     * @param dropDir
+     *            dropディレクトリ
+     * @param versionNo
+     *            バージョン番号
+     */
+    protected void generateForeignKeyDdl(TableModel model, File createDir,
+            File dropDir, int versionNo) {
+        if (model.getForeignKeyModelList().isEmpty()) {
+            return;
+        }
+
+        GenerationContext createContext = createGenerationContext(model,
+                new File(createDir, createForeignKeyDirName),
+                createForeignKeyTemplateFileName);
+        generator.generate(createContext);
+
+        GenerationContext dropContext = createGenerationContext(model,
+                new File(dropDir, dropForeignKeyDirName),
                 dropForeignKeyTemplateFileName);
-        generator.generate(foreignKeyContext);
+        generator.generate(dropContext);
+    }
 
-        GenerationContext sequenceContext = createGenerationContext(model,
-                dropDir, dropSequenceDdlFileName, dropSequenceTemplateFileName);
-        generator.generate(sequenceContext);
+    /**
+     * シーケンスのDDLのを生成します。
+     * 
+     * @param model
+     *            テーブルモデル
+     * @param createDir
+     *            createディレクトリ
+     * @param dropDir
+     *            dropディレクトリ
+     * @param versionNo
+     *            バージョン番号
+     */
+    protected void generateSequenceDdl(TableModel model, File createDir,
+            File dropDir, int versionNo) {
+        if (model.getSequenceModelList().isEmpty()) {
+            return;
+        }
+
+        GenerationContext createContext = createGenerationContext(model,
+                new File(createDir, createSequenceDirName),
+                createSequenceTemplateFileName);
+        generator.generate(createContext);
+
+        GenerationContext dropContext = createGenerationContext(model,
+                new File(dropDir, dropSequenceDirName),
+                dropSequenceTemplateFileName);
+        generator.generate(dropContext);
+    }
+
+    /**
+     * スキーマ情報テーブルのDDLのを生成します。
+     * 
+     * @param model
+     *            テーブルモデル
+     * @param createDir
+     *            createディレクトリ
+     * @param dropDir
+     *            dropディレクトリ
+     * @param versionNo
+     *            バージョン番号
+     */
+    protected void generateSchemaInfoTableDdl(SchemaInfoTableModel model,
+            File createDir, File dropDir, int versionNo) {
+        GenerationContext createContext = createGenerationContext(model,
+                new File(createDir, createTableDirName),
+                createSchemaInfoTableTemplateFileName);
+        generator.generate(createContext);
+
+        GenerationContext dropContext = createGenerationContext(model,
+                new File(dropDir, dropTableDirName),
+                dropSchemaInfoTableTemplateFileName);
+        generator.generate(dropContext);
+    }
+
+    /**
+     * {@link GenerationContext}の実装を作成します。
+     * 
+     * @param model
+     *            DDLのモデル
+     * @param dir
+     *            生成するファイルの出力先ディレクトリ
+     * @param fileName
+     *            ファイルの名前
+     * @param templateName
+     *            テンプレートファイルの名前
+     * @return
+     */
+    protected GenerationContext createGenerationContext(DdlModel model,
+            File dir, String templateName) {
+        String fileName = model.getTableCanonicalName() + ".sql";
+        return factory.createGenerationContext(this, model, new File(dir,
+                fileName), templateName, ddlFileEncoding, true);
     }
 
     /**
@@ -1076,25 +1234,37 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DdlVersionIncrementer}の実装
      */
     protected DdlVersionIncrementer createDdlVersionIncrementer() {
-        List<String> createFileNameList = Arrays.asList(createTableDdlFileName,
-                createUniqueKeyDdlFileName, createSequenceDdlFileName,
-                createForeignKeyDdlFileName, dumpDirName);
-        List<String> dropFileNameList = Arrays.asList(dropTableDdlFileName,
-                dropUniqueKeyDdlFileName, dropSequenceDdlFileName,
-                dropForeignKeyDdlFileName);
+        List<String> createDirNameList = Arrays.asList(createTableDirName,
+                createUniqueKeyDirName, createSequenceDirName,
+                createForeignKeyDirName, dumpDirName);
+        List<String> dropDirNameList = Arrays.asList(dropTableDirName,
+                dropUniqueKeyDirName, dropSequenceDirName,
+                dropForeignKeyDirName);
         return factory.createDdlVersionIncrementer(this, ddlVersionDirectory,
-                createFileNameList, dropFileNameList);
+                createDirNameList, dropDirNameList);
     }
 
     /**
-     * {@link DdlModelFactory}の実装を作成します。
+     * {@link TableModelFactory}の実装を作成します。
      * 
-     * @return {@link DdlModelFactory}の実装
+     * @return {@link TableModelFactory}の実装
      */
-    protected DdlModelFactory createDdlModelFactory() {
-        return factory.createDdlModelFactory(this, dialect, sqlKeywordCaseType,
-                sqlIdentifierCaseType, statementDelimiter,
-                schemaInfoFullTableName, schemaInfoColumnName, tableOption);
+    protected TableModelFactory createTableModelFactory() {
+        return factory.createTableModelFactory(this, dialect,
+                sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
+                tableOption);
+    }
+
+    /**
+     * {@link SchemaInfoTableModelFactory}の実装を作成します。
+     * 
+     * @return {@link SchemaInfoTableModelFactory}の実装
+     */
+    protected SchemaInfoTableModelFactory createSchemaInfoTableModelFactory() {
+        return factory.createSchemaInfoTableModelFactory(this, dialect,
+                schemaInfoFullTableName, schemaInfoColumnName,
+                sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
+                tableOption);
     }
 
     /**
@@ -1124,25 +1294,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected Generator createGenerator() {
         return factory.createGenerator(this, templateFileEncoding,
                 templateFilePrimaryDir);
-    }
-
-    /**
-     * {@link GenerationContext}の実装を作成します。
-     * 
-     * @param model
-     *            データベースのモデル
-     * @param dir
-     *            生成するファイルの出力先ディレクトリ
-     * @param fileName
-     *            ファイルの名前
-     * @param templateName
-     *            テンプレートファイルの名前
-     * @return
-     */
-    protected GenerationContext createGenerationContext(Object model, File dir,
-            String fileName, String templateName) {
-        return factory.createGenerationContext(this, model, new File(dir,
-                fileName), templateName, ddlFileEncoding, true);
     }
 
     @Override

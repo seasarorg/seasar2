@@ -113,17 +113,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 外部キーを作成するDDLファイル名を設定します。
-     * 
-     * @param createForeignKeyDdlFileName
-     *            外部キーを作成するDDLファイル名
-     */
-    public void setCreateForeignKeyDdlFileName(
-            String createForeignKeyDdlFileName) {
-        command.setCreateForeignKeyDdlFileName(createForeignKeyDdlFileName);
-    }
-
-    /**
      * 外部キーを作成するDDLのテンプレートファイル名を設定します。
      * 
      * @param createForeignKeyTemplateFileName
@@ -133,16 +122,6 @@ public class GenerateDdlTask extends AbstractTask {
             String createForeignKeyTemplateFileName) {
         command
                 .setCreateForeignKeyTemplateFileName(createForeignKeyTemplateFileName);
-    }
-
-    /**
-     * 一意キーを作成するDDLファイル名を設定します。
-     * 
-     * @param createUniqueKeyDdlFileName
-     *            一意キーを作成するDDLファイル名
-     */
-    public void setCreateUniqueKeyDdlFileName(String createUniqueKeyDdlFileName) {
-        command.setCreateUniqueKeyDdlFileName(createUniqueKeyDdlFileName);
     }
 
     /**
@@ -158,16 +137,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 外部キーを削除するDDLファイル名を設定します。
-     * 
-     * @param dropForeignKeyDdlFileName
-     *            外部キーを削除するDDLファイル名
-     */
-    public void setDropForeignKeyDdlFileName(String dropForeignKeyDdlFileName) {
-        command.setDropForeignKeyDdlFileName(dropForeignKeyDdlFileName);
-    }
-
-    /**
      * 外部キーを削除するDDLのテンプレートファイル名を設定します。
      * 
      * @param dropForeignKeyTemplateFileName
@@ -180,16 +149,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 一意キーを削除するDDLファイル名を設定します。
-     * 
-     * @param dropUniqueKeyDdlFileName
-     *            一意キーを削除するDDLファイル名
-     */
-    public void setDropUniqueKeyDdlFileName(String dropUniqueKeyDdlFileName) {
-        command.setDropUniqueKeyDdlFileName(dropUniqueKeyDdlFileName);
-    }
-
-    /**
      * 一意キーを削除するDDLのテンプレートファイル名を設定します。
      * 
      * @param dropUniqueKeyTemplateFileName
@@ -198,16 +157,6 @@ public class GenerateDdlTask extends AbstractTask {
     public void setDropUniqueKeyTemplateFileName(
             String dropUniqueKeyTemplateFileName) {
         command.setDropUniqueKeyTemplateFileName(dropUniqueKeyTemplateFileName);
-    }
-
-    /**
-     * シーケンスを作成するDDLファイル名を設定します。
-     * 
-     * @param createSequenceDdlFileName
-     *            シーケンスを作成するDDLのSQLレートファイル名
-     */
-    public void setCreateSequenceDdlFileName(String createSequenceDdlFileName) {
-        command.setCreateSequenceDdlFileName(createSequenceDdlFileName);
     }
 
     /**
@@ -223,16 +172,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * テーブルを作成するDDLファイル名を設定します。
-     * 
-     * @param createTableDdlFileName
-     *            テーブルを作成するDDLファイル名
-     */
-    public void setCreateTableDdlFileName(String createTableDdlFileName) {
-        command.setCreateTableDdlFileName(createTableDdlFileName);
-    }
-
-    /**
      * テーブルを作成するDDLのテンプレートファイル名を設定します。
      * 
      * @param createTableTemplateFileName
@@ -244,16 +183,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * シーケンスを削除するDDLファイル名を設定します。
-     * 
-     * @param dropSequenceDdlFileName
-     *            シーケンスを削除するDDLファイル名
-     */
-    public void setDropSequenceDdlFileName(String dropSequenceDdlFileName) {
-        command.setDropSequenceDdlFileName(dropSequenceDdlFileName);
-    }
-
-    /**
      * シーケンスを削除するDDLのテンプレートファイル名を設定します。
      * 
      * @param dropSequenceTemplateFileName
@@ -262,16 +191,6 @@ public class GenerateDdlTask extends AbstractTask {
     public void setDropSequenceTemplateFileName(
             String dropSequenceTemplateFileName) {
         command.setDropSequenceTemplateFileName(dropSequenceTemplateFileName);
-    }
-
-    /**
-     * テーブルを削除するDDLファイル名を設定します。
-     * 
-     * @param dropTableDdlFileName
-     *            テーブルを削除するDDLファイル名
-     */
-    public void setDropTableDdlFileName(String dropTableDdlFileName) {
-        command.setDropTableDdlFileName(dropTableDdlFileName);
     }
 
     /**
@@ -472,6 +391,110 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setGenDialectClassName(String genDialectClassName) {
         command.setGenDialectClassName(genDialectClassName);
+    }
+
+    /**
+     * 外部キーを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createForeignKeyDirName
+     *            The createForeignKeyDirName to set.
+     */
+    public void setCreateForeignKeyDirName(String createForeignKeyDirName) {
+        command.setCreateForeignKeyDirName(createForeignKeyDirName);
+    }
+
+    /**
+     * スキーマ情報テーブルを作成するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param createSchemaInfoTableTemplateFileName
+     *            スキーマ情報テーブルを作成するDDLのテンプレートファイル名
+     */
+    public void setCreateSchemaInfoTableTemplateFileName(
+            String createSchemaInfoTableTemplateFileName) {
+        command
+                .setCreateSchemaInfoTableTemplateFileName(createSchemaInfoTableTemplateFileName);
+    }
+
+    /**
+     * シーケンスを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createSequenceDirName
+     *            シーケンスを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateSequenceDirName(String createSequenceDirName) {
+        command.setCreateSequenceDirName(createSequenceDirName);
+    }
+
+    /**
+     * テーブルを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createTableDirName
+     *            テーブルを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateTableDirName(String createTableDirName) {
+        command.setCreateTableDirName(createTableDirName);
+    }
+
+    /**
+     * 一意キーを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createUniqueKeyDirName
+     *            一意キーを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateUniqueKeyDirName(String createUniqueKeyDirName) {
+        command.setCreateUniqueKeyDirName(createUniqueKeyDirName);
+    }
+
+    /**
+     * 外部キーを作成するDDLを削除するディレクトリ名を設定します。
+     * 
+     * @param dropForeignKeyDirName
+     *            外部キーを作成するDDLを削除するディレクトリ名
+     */
+    public void setDropForeignKeyDirName(String dropForeignKeyDirName) {
+        command.setDropForeignKeyDirName(dropForeignKeyDirName);
+    }
+
+    /**
+     * スキーマ情報テーブルを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropSchemaInfoTableTemplateFileName
+     *            スキーマ情報テーブルを削除するDDLのテンプレートファイル名
+     */
+    public void setDropSchemaInfoTableTemplateFileName(
+            String dropSchemaInfoTableTemplateFileName) {
+        command
+                .setDropSchemaInfoTableTemplateFileName(dropSchemaInfoTableTemplateFileName);
+    }
+
+    /**
+     * シーケンスを作成するDDLを削除するディレクトリ名を設定します。
+     * 
+     * @param dropSequenceDirName
+     *            シーケンスを作成するDDLを削除するディレクトリ名
+     */
+    public void setDropSequenceDirName(String dropSequenceDirName) {
+        command.setDropSequenceDirName(dropSequenceDirName);
+    }
+
+    /**
+     * テーブルを削除するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param dropTableDirName
+     *            テーブルを削除するDDLを格納するディレクトリ名
+     */
+    public void setDropTableDirName(String dropTableDirName) {
+        command.setDropTableDirName(dropTableDirName);
+    }
+
+    /**
+     * 一意キーを削除するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param dropUniqueKeyDirName
+     *            一意キーを削除するDDLを格納するディレクトリ名
+     */
+    public void setDropUniqueKeyDirName(String dropUniqueKeyDirName) {
+        command.setDropUniqueKeyDirName(dropUniqueKeyDirName);
     }
 
 }

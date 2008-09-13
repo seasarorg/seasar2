@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateDdlCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -69,7 +68,8 @@ public class GenerateDdlCommandTest {
         assertNotNull(command.dialect);
         assertNotNull(command.ddlVersionDirectory);
         assertNotNull(command.ddlVersionIncrementer);
-        assertNotNull(command.ddlModelFactory);
+        assertNotNull(command.tableModelFactory);
+        assertNotNull(command.schemaInfoTableModelFactory);
         assertNotNull(command.generator);
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.databaseDescFactory);

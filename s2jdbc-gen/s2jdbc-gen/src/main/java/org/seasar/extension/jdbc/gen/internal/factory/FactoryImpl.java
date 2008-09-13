@@ -46,10 +46,11 @@ import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintMod
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.DdlModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.SchemaInfoTableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
@@ -61,12 +62,13 @@ import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
-import org.seasar.extension.jdbc.gen.model.DdlModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
+import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
+import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.model.TestModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -154,21 +156,30 @@ public class FactoryImpl implements Factory {
 
     public DdlVersionIncrementer createDdlVersionIncrementer(Command command,
             DdlVersionDirectory ddlVersionDirectory,
-            List<String> createFileNameList, List<String> dropFileNameList) {
+            List<String> createDirNameList, List<String> dropFileNameList) {
 
         return new DdlVersionIncrementerImpl(ddlVersionDirectory,
-                createFileNameList, dropFileNameList);
+                createDirNameList, dropFileNameList);
     }
 
-    public DdlModelFactory createDdlModelFactory(Command command,
-            GenDialect dialect, SqlKeywordCaseType sqlKeywordCaseType,
-            SqlIdentifierCaseType sqlIdentifierCaseType,
-            char statementDelimiter, String schemaInfoFullTableName,
-            String schemaInfoColumnName, String tableOption) {
+    public TableModelFactory createTableModelFactory(Command command,
+            GenDialect dialect, SqlIdentifierCaseType sqlIdentifierCaseType,
+            SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
+            String tableOption) {
 
-        return new DdlModelFactoryImpl(dialect, sqlKeywordCaseType,
-                sqlIdentifierCaseType, statementDelimiter,
-                schemaInfoFullTableName, schemaInfoColumnName, tableOption);
+        return new TableModelFactoryImpl(dialect, sqlIdentifierCaseType,
+                sqlKeywordCaseType, statementDelimiter, tableOption);
+    }
+
+    public SchemaInfoTableModelFactory createSchemaInfoTableModelFactory(
+            Command command, GenDialect dialect, String tableName,
+            String columnName, SqlIdentifierCaseType sqlIdentifierCaseType,
+            SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
+            String tableOption) {
+
+        return new SchemaInfoTableModelFactoryImpl(dialect, tableName,
+                columnName, sqlIdentifierCaseType, sqlKeywordCaseType,
+                statementDelimiter, tableOption);
     }
 
     public EntitySetDescFactory createEntitySetDescFactory(Command command,

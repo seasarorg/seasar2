@@ -18,68 +18,19 @@ package org.seasar.extension.jdbc.gen.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * 名前モデルです。
  * 
  * @author taedium
  */
-public class NamesModel implements ClassModel {
-
-    /** パッケージ名 */
-    protected String packageName;
-
-    /** クラスの単純名 */
-    protected String shortClassName;
+public class NamesModel extends ClassModel {
 
     /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
 
-    /** インポート名のソートされたセット */
-    protected SortedSet<String> importNameSet = new TreeSet<String>();
-
     /** 名前のリスト */
     protected List<String> nameList = new ArrayList<String>();
-
-    /**
-     * パッケージ名を返します。
-     * 
-     * @return パッケージ名
-     */
-    public String getPackageName() {
-        return packageName;
-    }
-
-    /**
-     * パッケージ名を設定します。
-     * 
-     * @param packageName
-     *            パッケージ名
-     */
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    /**
-     * クラスの単純名を返します。
-     * 
-     * @return
-     */
-    public String getShortClassName() {
-        return shortClassName;
-    }
-
-    /**
-     * クラスの単純名を設定します。
-     * 
-     * @param shortClassName
-     *            クラスの単純名
-     */
-    public void setShortClassName(String shortClassName) {
-        this.shortClassName = shortClassName;
-    }
 
     /**
      * エンティティクラスの単純名を返します。
@@ -98,25 +49,6 @@ public class NamesModel implements ClassModel {
      */
     public void setShortEntityClassName(String shortEntityClassName) {
         this.shortEntityClassName = shortEntityClassName;
-    }
-
-    /**
-     * インポート名のソートされたセットを返します。
-     * 
-     * @return インポート名のソートされたセット
-     */
-    public SortedSet<String> getImportNameSet() {
-        return Collections.unmodifiableSortedSet(importNameSet);
-    }
-
-    /**
-     * インポート名を追加します。
-     * 
-     * @param name
-     *            インポート名
-     */
-    public void addImportName(String name) {
-        importNameSet.add(name);
     }
 
     /**

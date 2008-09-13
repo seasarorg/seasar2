@@ -1,2 +1,1 @@
 create sequence HOGE integer start with 50 increment By 1;
-create sequence FOO integer start with 20 increment By 10;
