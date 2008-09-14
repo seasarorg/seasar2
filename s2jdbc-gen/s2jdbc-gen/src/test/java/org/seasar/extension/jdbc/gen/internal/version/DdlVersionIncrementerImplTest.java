@@ -20,9 +20,9 @@ import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
-import org.seasar.extension.jdbc.gen.internal.version.DdlVersionIncrementerImpl;
+import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
+import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
@@ -48,11 +48,16 @@ public class DdlVersionIncrementerImplTest {
         File versionFile = new File(baseDir, "ddl-version.txt");
         DdlVersionDirectoryImpl directory = new DdlVersionDirectoryImpl(
                 baseDir, versionFile, "v000");
-        incrementer = new DdlVersionIncrementerImpl(directory, Collections
-                .<String> emptyList(), Collections.<String> emptyList()) {
+        incrementer = new DdlVersionIncrementerImpl(directory,
+                new StandardGenDialect(), new MockDataSource(), Collections
+                        .<String> emptyList(), Collections.<String> emptyList()) {
 
             @Override
-            protected void copyDirectory(File srcDir, File destDir) {
+            protected void copyVersionDirectory(File srcDir, File destDir) {
+            }
+
+            @Override
+            protected void makeFirstVersionDropDir(File srcDir, File destDir) {
             }
 
             @Override

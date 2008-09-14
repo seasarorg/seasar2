@@ -39,6 +39,7 @@ import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
+import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
 
 /**
  * {@link TableDescFactory}の実装クラスです。
@@ -185,17 +186,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
      * @return 標準名
      */
     protected String buildCanonicalName(TableMeta tableMeta) {
-        StringBuilder buf = new StringBuilder();
-        if (tableMeta.getCatalog() != null) {
-            String s = dialect.unquote(tableMeta.getCatalog());
-            buf.append(s.toLowerCase()).append(".");
-        }
-        if (tableMeta.getSchema() != null) {
-            String s = dialect.unquote(tableMeta.getSchema());
-            buf.append(s.toLowerCase()).append(".");
-        }
-        String s = dialect.unquote(tableMeta.getName());
-        return buf.append(s.toLowerCase()).toString();
+        return TableUtil.buildCanonicalTableName(tableMeta.getCatalog(),
+                tableMeta.getSchema(), tableMeta.getName());
     }
 
     /**

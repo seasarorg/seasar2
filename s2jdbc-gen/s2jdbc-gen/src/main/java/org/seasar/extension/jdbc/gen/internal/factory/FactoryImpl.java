@@ -155,11 +155,12 @@ public class FactoryImpl implements Factory {
     }
 
     public DdlVersionIncrementer createDdlVersionIncrementer(Command command,
-            DdlVersionDirectory ddlVersionDirectory,
-            List<String> createDirNameList, List<String> dropFileNameList) {
+            DdlVersionDirectory ddlVersionDirectory, GenDialect dialect,
+            DataSource dataSource, List<String> createDirNameList,
+            List<String> dropFileNameList) {
 
-        return new DdlVersionIncrementerImpl(ddlVersionDirectory,
-                createDirNameList, dropFileNameList);
+        return new DdlVersionIncrementerImpl(ddlVersionDirectory, dialect,
+                dataSource, createDirNameList, dropFileNameList);
     }
 
     public TableModelFactory createTableModelFactory(Command command,

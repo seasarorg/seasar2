@@ -88,7 +88,7 @@ public class TableModelFactoryImpl implements TableModelFactory {
 
     public TableModel getTableModel(TableDesc tableDesc) {
         TableModel tableModel = new TableModel();
-        tableModel.setTableCanonicalName(tableDesc.getCanonicalName());
+        tableModel.setCanonicalTableName(tableDesc.getCanonicalName());
         tableModel.setName(identifier(tableDesc.getFullName()));
         tableModel.setDialect(dialect);
         tableModel.setDelimiter(delimiter);

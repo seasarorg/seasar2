@@ -21,11 +21,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.DefaultExcludesFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
+import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
+import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link DdlVersionIncrementer}の実装クラスです。
@@ -41,6 +47,12 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     /** DDLのバージョンを管理するディレクトリ */
     protected DdlVersionDirectory ddlVersionDirectory;
 
+    /** 方言 */
+    protected GenDialect dialect;
+
+    /** データソース */
+    protected DataSource dataSource;
+
     /** createディレクトリ名のリスト */
     protected List<String> createDirNameList = new ArrayList<String>();
 
@@ -51,19 +63,30 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     protected List<File> recoveryDirList = new ArrayList<File>();
 
     /**
-     * インスタンスを構築しいます。
+     * インスタンスを構築します。
      * 
      * @param ddlVersionDirectory
      *            DDLのバージョンを管理するディレクトリ
+     * @param dialect
+     *            方言
+     * @param dataSource
+     *            データソース
      * @param createDirNameList
      *            コピー非対象のcreateディレクトリ名のリスト
      * @param dropDirNameList
      *            コピー非対象のdropディレクトリ名のリスト
      */
     public DdlVersionIncrementerImpl(DdlVersionDirectory ddlVersionDirectory,
+            GenDialect dialect, DataSource dataSource,
             List<String> createDirNameList, List<String> dropDirNameList) {
         if (ddlVersionDirectory == null) {
             throw new NullPointerException("versionDirectories");
+        }
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource");
         }
         if (createDirNameList == null) {
             throw new NullPointerException("createFileNameList");
@@ -72,6 +95,8 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             throw new NullPointerException("dropFileNameList");
         }
         this.ddlVersionDirectory = ddlVersionDirectory;
+        this.dialect = dialect;
+        this.dataSource = dataSource;
         this.createDirNameList.addAll(createDirNameList);
         this.dropDirNameList.addAll(dropDirNameList);
     }
@@ -81,10 +106,13 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             makeCurrentVersionDirs();
             File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
             File nextVersionDir = ddlVersionDirectory.getNextVersionDir();
-            copyDirectory(currentVersionDir, nextVersionDir);
-            File createDir = ddlVersionDirectory.getCreateDir(nextVersionDir);
-            File dropDir = ddlVersionDirectory.getDropDir(nextVersionDir);
-            incrementInternal(callback, createDir, dropDir);
+            copyVersionDirectory(currentVersionDir, nextVersionDir);
+            File nextCreateDir = ddlVersionDirectory
+                    .getCreateDir(nextVersionDir);
+            File nextDropDir = ddlVersionDirectory.getDropDir(nextVersionDir);
+            incrementInternal(callback, nextCreateDir, nextDropDir);
+            makeFirstVersionDropDir(nextDropDir, ddlVersionDirectory
+                    .getDropDir(currentVersionDir));
             incrementVersionNo();
         } catch (RuntimeException e) {
             recover();
@@ -118,9 +146,28 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * @param destDir
      *            コピー先のディレクトリ
      */
-    protected void copyDirectory(File srcDir, File destDir) {
+    protected void copyVersionDirectory(File srcDir, File destDir) {
         recoveryDirList.add(destDir);
-        FileUtil.copyDirectory(srcDir, destDir, new CopyFilenameFilter());
+        FileUtil.copyDirectory(srcDir, destDir, new PathFilenameFilter());
+    }
+
+    /**
+     * 最初のバージョンのdropディレクトリを作成します。
+     * 
+     * @param srcDir
+     *            コピー元のディレクトリ
+     * @param destDir
+     *            コピー先のディレクトリ
+     */
+    protected void makeFirstVersionDropDir(File srcDir, File destDir) {
+        DdlInfoFile ddlInfoFile = ddlVersionDirectory.getDdlInfoFile();
+        if (ddlInfoFile.getCurrentVersionNo() == 0) {
+            if (destDir.exists()) {
+                FileUtil.deleteDirectory(destDir);
+            }
+            FileUtil.copyDirectory(srcDir, destDir,
+                    new TableExistenceFilenameFilter());
+        }
     }
 
     /**
@@ -165,11 +212,11 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     }
 
     /**
-     * コピーするファイルのフィルタです。
+     * コピー対象外のパスで始まるファイル名をフィルタします。
      * 
      * @author taedium
      */
-    protected class CopyFilenameFilter implements FilenameFilter {
+    protected class PathFilenameFilter implements FilenameFilter {
 
         /** コピー対象外のパスのリスト */
         protected List<String> filterPathList = new ArrayList<String>();
@@ -180,7 +227,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         /**
          * インスタンスを構築します。
          */
-        protected CopyFilenameFilter() {
+        protected PathFilenameFilter() {
             filenameFilter = new DefaultExcludesFilenameFilter();
             File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
             File createDir = ddlVersionDirectory
@@ -219,4 +266,48 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         }
     }
 
+    /**
+     * ファイルに対応するテーブルがデータベース存在しない場合にフィルタします。
+     * 
+     * @author taedium
+     * 
+     */
+    protected class TableExistenceFilenameFilter implements FilenameFilter {
+
+        /** ファイル名のフィルタ */
+        protected FilenameFilter filenameFilter;
+
+        /** テーブルの集合 */
+        protected TableUtil.TableSet tableSet;
+
+        /**
+         * インスタンスを構築します。
+         */
+        protected TableExistenceFilenameFilter() {
+            filenameFilter = new DefaultExcludesFilenameFilter();
+            tableSet = TableUtil.getTableSet(dialect, dataSource);
+        }
+
+        public boolean accept(File dir, String name) {
+            if (!filenameFilter.accept(dir, name)) {
+                return false;
+            }
+            File file = new File(dir, name);
+            if (file.isDirectory()) {
+                return file.list(this).length > 0;
+            }
+            String suffix = null;
+            if (name.endsWith(".sql")) {
+                suffix = ".sql";
+            } else if (name.endsWith(".ddl")) {
+                suffix = ".ddl";
+            } else {
+                return false;
+            }
+            String canonicalTableName = StringUtil.trimSuffix(name, suffix);
+            String[] elements = TableUtil
+                    .splitCanonicalTableName(canonicalTableName);
+            return tableSet.exists(elements[0], elements[1], elements[2]);
+        }
+    }
 }

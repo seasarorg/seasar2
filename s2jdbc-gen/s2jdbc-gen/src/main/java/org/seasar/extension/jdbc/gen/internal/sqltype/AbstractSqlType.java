@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.sqltype;
 
-import org.seasar.extension.jdbc.gen.internal.util.ColumnDataTypeUtil;
+import org.seasar.extension.jdbc.gen.internal.util.ColumnUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
@@ -46,7 +46,7 @@ public abstract class AbstractSqlType implements SqlType {
 
     public String getDataType(int length, int precision, int scale,
             boolean identity) {
-        return ColumnDataTypeUtil.format(dataType, length, precision, scale);
+        return ColumnUtil.formatDataType(dataType, length, precision, scale);
     }
 
 }

@@ -16,16 +16,16 @@
 package org.seasar.extension.jdbc.gen.internal.util;
 
 /**
- * カラムのデータ型に関するユーティリティクラスです。
+ * カラムに関するユーティリティクラスです。
  * 
  * @author taedium
  */
-public class ColumnDataTypeUtil {
+public class ColumnUtil {
 
     /**
      * 
      */
-    protected ColumnDataTypeUtil() {
+    protected ColumnUtil() {
     }
 
     /**
@@ -49,8 +49,8 @@ public class ColumnDataTypeUtil {
      *            スケール
      * @return フォーマットされたカラムのデータ型
      */
-    public static String format(String dataType, int length, int precision,
-            int scale) {
+    public static String formatDataType(String dataType, int length,
+            int precision, int scale) {
         StringBuilder buf = new StringBuilder();
         for (int i = 0; i < dataType.length(); i++) {
             char c = dataType.charAt(i);

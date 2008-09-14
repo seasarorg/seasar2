@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
+import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
 import org.seasar.framework.util.StringUtil;
 
@@ -128,17 +129,7 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
      */
     protected String buildCanonicalName(String catalog, String schema,
             String name) {
-        StringBuilder buf = new StringBuilder();
-        if (catalog != null) {
-            String s = dialect.unquote(catalog);
-            buf.append(s.toLowerCase()).append(".");
-        }
-        if (schema != null) {
-            String s = dialect.unquote(schema);
-            buf.append(s.toLowerCase()).append(".");
-        }
-        String s = dialect.unquote(name);
-        return buf.append(s.toLowerCase()).toString();
+        return TableUtil.buildCanonicalTableName(catalog, schema, name);
     }
 
     /**

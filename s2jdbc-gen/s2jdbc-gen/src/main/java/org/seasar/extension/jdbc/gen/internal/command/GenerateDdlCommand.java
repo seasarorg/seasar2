@@ -1191,7 +1191,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected GenerationContext createGenerationContext(DdlModel model,
             File dir, String templateName) {
-        String fileName = model.getTableCanonicalName() + ".sql";
+        String fileName = model.getCanonicalTableName() + ".sql";
         return factory.createGenerationContext(this, model, new File(dir,
                 fileName), templateName, ddlFileEncoding, true);
     }
@@ -1241,7 +1241,8 @@ public class GenerateDdlCommand extends AbstractCommand {
                 dropUniqueKeyDirName, dropSequenceDirName,
                 dropForeignKeyDirName);
         return factory.createDdlVersionIncrementer(this, ddlVersionDirectory,
-                createDirNameList, dropDirNameList);
+                dialect, jdbcManager.getDataSource(), createDirNameList,
+                dropDirNameList);
     }
 
     /**

@@ -100,7 +100,7 @@ public class SchemaInfoTableModelFactoryImpl implements
     public SchemaInfoTableModel getSchemaInfoTableModel(int versionNo) {
         SchemaInfoTableModel model = new SchemaInfoTableModel();
         String canonicalName = tableName.replace("\"", "").toLowerCase();
-        model.setTableCanonicalName(canonicalName);
+        model.setCanonicalTableName(canonicalName);
         model.setName(identifier(tableName));
         model.setDialect(dialect);
         model.setColumnName(identifier(columnName));

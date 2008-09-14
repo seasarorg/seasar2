@@ -25,7 +25,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 public abstract class DdlModel {
 
     /** テーブル標準名 */
-    protected String tableCanonicalName;
+    protected String canonicalTableName;
 
     /** 名前 */
     protected String name;
@@ -46,22 +46,22 @@ public abstract class DdlModel {
     protected SqlIdentifierCaseType sqlIdentifierCaseType;
 
     /**
-     * テーブル標準名を返します。
+     * 標準のテーブル名を返します。
      * 
      * @return テーブル標準名
      */
-    public String getTableCanonicalName() {
-        return tableCanonicalName;
+    public String getCanonicalTableName() {
+        return canonicalTableName;
     }
 
     /**
-     * テーブル標準名を設定します。
+     * 標準のテーブル名を設定します。
      * 
      * @param tableCanonicalName
      *            テーブル標準名
      */
-    public void setTableCanonicalName(String tableCanonicalName) {
-        this.tableCanonicalName = tableCanonicalName;
+    public void setCanonicalTableName(String tableCanonicalName) {
+        this.canonicalTableName = tableCanonicalName;
     }
 
     /**

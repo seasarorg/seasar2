@@ -221,6 +221,10 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param ddlVersionDirectory
      *            DDLのバージョンを管理するディレクトリ
+     * @param dialect
+     *            方言
+     * @param dataSource
+     *            データソース
      * @param createDirNameList
      *            コピー非対象のcreateディレクトリ名のリスト
      * @param dropDirNameList
@@ -228,8 +232,9 @@ public interface Factory {
      * @return {@link DdlVersionIncrementer}の実装
      */
     DdlVersionIncrementer createDdlVersionIncrementer(Command command,
-            DdlVersionDirectory ddlVersionDirectory,
-            List<String> createDirNameList, List<String> dropDirNameList);
+            DdlVersionDirectory ddlVersionDirectory, GenDialect dialect,
+            DataSource dataSource, List<String> createDirNameList,
+            List<String> dropDirNameList);
 
     /**
      * {@link TableModelFactory}の実装を作成します。

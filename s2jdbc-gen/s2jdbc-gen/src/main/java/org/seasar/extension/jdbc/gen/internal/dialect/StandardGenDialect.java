@@ -44,7 +44,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.SmallIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
-import org.seasar.extension.jdbc.gen.internal.util.ColumnDataTypeUtil;
+import org.seasar.extension.jdbc.gen.internal.util.ColumnUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
@@ -417,7 +417,7 @@ public class StandardGenDialect implements GenDialect {
 
         public String getColumnDefinition(int length, int precision, int scale,
                 String defaultValue) {
-            String completeDataType = ColumnDataTypeUtil.format(dataType,
+            String completeDataType = ColumnUtil.formatDataType(dataType,
                     length, precision, scale);
             return getColumnDefinitionInternal(completeDataType, defaultValue);
         }
