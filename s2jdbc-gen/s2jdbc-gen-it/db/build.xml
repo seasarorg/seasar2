@@ -190,6 +190,12 @@
 			<include name="example/entity/Employee.java"/>
 			<include name="example/entity/Foo.java"/>
 		</javac>
+		<exec-sql 
+			classpathref="classpath">
+			<sqlFileList dir="${sql}/testMigrate">
+				<file name="create.sql"/>
+			</sqlFileList>
+		</exec-sql>
 		<!-- test -->
 		<gen-ddl 
 			classpathDir="${build}"
