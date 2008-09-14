@@ -38,8 +38,8 @@ public class EntityClassNotFoundRuntimeExceptionTest {
                 new File("dir"), "aaa", "bbb", "ccc");
         assertNotNull(e.getClasspathDir());
         assertEquals("aaa", e.getPackageName());
-        assertEquals("bbb", e.getEntityNamePattern());
-        assertEquals("ccc", e.getIgnoreEntityNamePattern());
+        assertEquals("bbb", e.getShortClassNamePattern());
+        assertEquals("ccc", e.getIgnoreShortClassNamePattern());
         System.out.println(e.getMessage());
     }
 }

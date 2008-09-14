@@ -58,11 +58,11 @@ public class GenerateConditionCommand extends AbstractCommand {
     /** エンティティクラスのパッケージ名 */
     protected String entityPackageName = "entity";
 
-    /** 対象とするエンティティ名の正規表現 */
-    protected String entityNamePattern = ".*";
+    /** 対象とするエンティティクラス名の正規表現 */
+    protected String entityClassNamePattern = ".*";
 
-    /** 対象としないエンティティ名の正規表現 */
-    protected String ignoreEntityNamePattern = "";
+    /** 対象としないエンティティクラス名の正規表現 */
+    protected String ignoreEntityClassNamePattern = "";
 
     /** 条件クラスのパッケージ名 */
     protected String conditionPackageName = "condition";
@@ -199,41 +199,42 @@ public class GenerateConditionCommand extends AbstractCommand {
     }
 
     /**
-     * 対象とするエンティティ名の正規表現を返します。
+     * 対象とするエンティティクラス名の正規表現を返します。
      * 
-     * @return 対象とするエンティティ名の正規表現
+     * @return 対象とするエンティティクラス名の正規表現
      */
-    public String getEntityNamePattern() {
-        return entityNamePattern;
+    public String getEntityClassNamePattern() {
+        return entityClassNamePattern;
     }
 
     /**
-     * 対象とするエンティティ名の正規表現を設定します。
+     * 対象とするエンティティクラス名の正規表現を設定します。
      * 
-     * @param entityNamePattern
-     *            対象とするエンティティ名の正規表現
+     * @param entityClassNamePattern
+     *            対象とするエンティティクラス名の正規表現
      */
-    public void setEntityNamePattern(String entityNamePattern) {
-        this.entityNamePattern = entityNamePattern;
+    public void setEntityClassNamePattern(String entityClassNamePattern) {
+        this.entityClassNamePattern = entityClassNamePattern;
     }
 
     /**
-     * 対象としないエンティティ名の正規表現を返します。
+     * 対象としないエンティティクラス名の正規表現を返します。
      * 
-     * @return 対象としないエンティティ名の正規表現
+     * @return 対象としないエンティティクラス名の正規表現
      */
-    public String getIgnoreEntityNamePattern() {
-        return ignoreEntityNamePattern;
+    public String getIgnoreEntityClassNamePattern() {
+        return ignoreEntityClassNamePattern;
     }
 
     /**
-     * 対象としないエンティティ名の正規表現を設定します。
+     * 対象としないエンティティクラス名の正規表現を設定します。
      * 
-     * @param ignoreEntityNamePattern
-     *            対象としないエンティティ名の正規表現
+     * @param ignoreEntityClassNamePattern
+     *            対象としないエンティティクラス名の正規表現
      */
-    public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
-        this.ignoreEntityNamePattern = ignoreEntityNamePattern;
+    public void setIgnoreEntityClassNamePattern(
+            String ignoreEntityClassNamePattern) {
+        this.ignoreEntityClassNamePattern = ignoreEntityClassNamePattern;
     }
 
     /**
@@ -397,8 +398,8 @@ public class GenerateConditionCommand extends AbstractCommand {
     protected EntityMetaReader createEntityMetaReader() {
         return factory.createEntityMetaReader(this, classpathDir, ClassUtil
                 .concatName(rootPackageName, entityPackageName), jdbcManager
-                .getEntityMetaFactory(), entityNamePattern,
-                ignoreEntityNamePattern);
+                .getEntityMetaFactory(), entityClassNamePattern,
+                ignoreEntityClassNamePattern);
     }
 
     /**

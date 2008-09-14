@@ -34,11 +34,11 @@ public class EntityClassNotFoundRuntimeException extends SRuntimeException {
     /** パッケージ名 */
     protected String packageName;
 
-    /** 対象とするエンティティ名の正規表現 */
-    protected String entityNamePattern;
+    /** 対象とするエンティティクラス名の正規表現 */
+    protected String shortClassNamePattern;
 
-    /** 対象としないエンティティ名の正規表現 */
-    protected String ignoreEntityNamePattern;
+    /** 対象としないエンティティクラス名の正規表現 */
+    protected String ignoreShortClassNamePattern;
 
     /**
      * インスタンスを構築します。
@@ -47,20 +47,21 @@ public class EntityClassNotFoundRuntimeException extends SRuntimeException {
      *            クラスパスのディレクトリ
      * @param packageName
      *            パッケージ名
-     * @param entityNamePattern
-     *            対象とするエンティティ名の正規表現
-     * @param ignoreEntityNamePattern
-     *            対象としないエンティティ名の正規表現
+     * @param shortClassNamePattern
+     *            対象とするエンティティクラス名の正規表現
+     * @param ignoreShortClassNamePattern
+     *            対象としないエンティティクラス名の正規表現
      */
     public EntityClassNotFoundRuntimeException(File classpathDir,
-            String packageName, String entityNamePattern,
-            String ignoreEntityNamePattern) {
-        super("ES2JDBCGen0014", new Object[] { classpathDir.getPath(),
-                packageName, entityNamePattern, ignoreEntityNamePattern });
+            String packageName, String shortClassNamePattern,
+            String ignoreShortClassNamePattern) {
+        super("ES2JDBCGen0014",
+                new Object[] { classpathDir.getPath(), packageName,
+                        shortClassNamePattern, ignoreShortClassNamePattern });
         this.classpathDir = classpathDir;
         this.packageName = packageName;
-        this.entityNamePattern = entityNamePattern;
-        this.ignoreEntityNamePattern = ignoreEntityNamePattern;
+        this.shortClassNamePattern = shortClassNamePattern;
+        this.ignoreShortClassNamePattern = ignoreShortClassNamePattern;
     }
 
     /**
@@ -82,21 +83,21 @@ public class EntityClassNotFoundRuntimeException extends SRuntimeException {
     }
 
     /**
-     * 対象とするエンティティ名の正規表現を返します。
+     * 対象とするエンティティクラス名の正規表現を返します。
      * 
-     * @return 対象とするエンティティ名の正規表現
+     * @return 対象とするエンティティクラス名の正規表現
      */
-    public String getEntityNamePattern() {
-        return entityNamePattern;
+    public String getShortClassNamePattern() {
+        return shortClassNamePattern;
     }
 
     /**
-     * 対象としないエンティティ名の正規表現を返します。
+     * 対象としないエンティティクラス名の正規表現を返します。
      * 
-     * @return 対象としないエンティティ名の正規表現
+     * @return 対象としないエンティティクラス名の正規表現
      */
-    public String getIgnoreEntityNamePattern() {
-        return ignoreEntityNamePattern;
+    public String getIgnoreShortClassNamePattern() {
+        return ignoreShortClassNamePattern;
     }
 
 }

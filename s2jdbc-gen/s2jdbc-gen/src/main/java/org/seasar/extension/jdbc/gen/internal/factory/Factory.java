@@ -71,15 +71,15 @@ public interface Factory {
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @param entityMetaFactory
      *            エンティティメタデータのファクトリ
-     * @param entityNamePattern
-     *            対象とするエンティティ名の正規表現
-     * @param ignoreEntityNamePattern
-     *            対象としないエンティティ名の正規表現
+     * @param shortClassNamePattern
+     *            対象とするエンティティクラス名の正規表現
+     * @param ignoreShortClassNamePattern
+     *            対象としないエンティティクラス名の正規表現
      * @return {@link EntityMetaReader}の実装
      */
     EntityMetaReader createEntityMetaReader(Command command, File classpathDir,
             String packageName, EntityMetaFactory entityMetaFactory,
-            String entityNamePattern, String ignoreEntityNamePattern);
+            String shortClassNamePattern, String ignoreShortClassNamePattern);
 
     /**
      * {@link DatabaseDescFactory}の実装を返します。

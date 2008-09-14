@@ -110,13 +110,13 @@ public class DumpDataTask extends AbstractTask {
     }
 
     /**
-     * 対象とするエンティティ名の正規表現を設定します。
+     * 対象とするエンティティクラス名の正規表現を設定します。
      * 
-     * @param entityNamePattern
-     *            対象とするエンティティ名の正規表現
+     * @param entityClassNamePattern
+     *            対象とするエンティティクラス名の正規表現
      */
-    public void setEntityNamePattern(String entityNamePattern) {
-        command.setEntityNamePattern(entityNamePattern);
+    public void setEntityClassNamePattern(String entityClassNamePattern) {
+        command.setEntityClassNamePattern(entityClassNamePattern);
     }
 
     /**
@@ -130,13 +130,14 @@ public class DumpDataTask extends AbstractTask {
     }
 
     /**
-     * 対象としないエンティティ名の正規表現を設定します。
+     * 対象としないエンティティクラス名の正規表現を設定します。
      * 
-     * @param ignoreEntityNamePattern
-     *            対象としないエンティティ名の正規表現
+     * @param ignoreEntityClassNamePattern
+     *            対象としないエンティティクラス名の正規表現
      */
-    public void setIgnoreEntityNamePattern(String ignoreEntityNamePattern) {
-        command.setIgnoreEntityNamePattern(ignoreEntityNamePattern);
+    public void setIgnoreEntityClassNamePattern(
+            String ignoreEntityClassNamePattern) {
+        command.setIgnoreEntityClassNamePattern(ignoreEntityClassNamePattern);
     }
 
     /**

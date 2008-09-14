@@ -87,11 +87,12 @@ public class FactoryImpl implements Factory {
 
     public EntityMetaReader createEntityMetaReader(Command command,
             File classpathDir, String packageName,
-            EntityMetaFactory entityMetaFactory, String entityNamePattern,
-            String ignoreEntityNamePattern) {
+            EntityMetaFactory entityMetaFactory, String shortClassNamePattern,
+            String ignoreShortClassNamePattern) {
 
         return new EntityMetaReaderImpl(classpathDir, packageName,
-                entityMetaFactory, entityNamePattern, ignoreEntityNamePattern);
+                entityMetaFactory, shortClassNamePattern,
+                ignoreShortClassNamePattern);
     }
 
     public DatabaseDescFactory createDatabaseDescFactory(Command command,

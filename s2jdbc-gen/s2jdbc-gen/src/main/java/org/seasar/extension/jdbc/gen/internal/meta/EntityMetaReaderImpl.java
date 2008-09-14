@@ -51,11 +51,11 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
-    /** 読み取り対象とするエンティティ名のパターン */
-    protected Pattern entityNamePattern;
+    /** 読み取り対象とするエンティティクラス名のパターン */
+    protected Pattern shortClassNamePattern;
 
-    /** 読み取り非対象とするエンティティ名のパターン */
-    protected Pattern ignoreEntityNamePattern;
+    /** 読み取り非対象とするエンティティクラス名のパターン */
+    protected Pattern ignoreShortClassNamePattern;
 
     /**
      * インタスタンスを構築します。
@@ -66,31 +66,32 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @param entityMetaFactory
      *            エンティティメタデータのファクトリ
-     * @param entityNamePattern
-     *            対象とするエンティティ名の正規表現
-     * @param ignoreEntityNamePattern
-     *            対象としないエンティティ名の正規表現
+     * @param shortClassNamePattern
+     *            対象とするエンティティクラス名の正規表現
+     * @param ignoreShortClassNamePattern
+     *            対象としないエンティティクラス名の正規表現
      */
     public EntityMetaReaderImpl(File classpathDir, String packageName,
-            EntityMetaFactory entityMetaFactory, String entityNamePattern,
-            String ignoreEntityNamePattern) {
+            EntityMetaFactory entityMetaFactory, String shortClassNamePattern,
+            String ignoreShortClassNamePattern) {
         if (classpathDir == null) {
             throw new NullPointerException("classpathDir");
         }
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
-        if (entityNamePattern == null) {
-            throw new NullPointerException("entityNamePattern");
+        if (shortClassNamePattern == null) {
+            throw new NullPointerException("shortClassNamePattern");
         }
-        if (ignoreEntityNamePattern == null) {
-            throw new NullPointerException("ignoreEntityNamePattern");
+        if (ignoreShortClassNamePattern == null) {
+            throw new NullPointerException("setEntityClassNamePattern");
         }
         this.classpathDir = classpathDir;
         this.packageName = packageName;
         this.entityMetaFactory = entityMetaFactory;
-        this.entityNamePattern = Pattern.compile(entityNamePattern);
-        this.ignoreEntityNamePattern = Pattern.compile(ignoreEntityNamePattern);
+        this.shortClassNamePattern = Pattern.compile(shortClassNamePattern);
+        this.ignoreShortClassNamePattern = Pattern
+                .compile(ignoreShortClassNamePattern);
     }
 
     public List<EntityMeta> read() {
@@ -99,16 +100,15 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         ClassTraversal.forEach(classpathDir, new ClassHandler() {
 
             public void processClass(String packageName, String shortClassName) {
-                if (isTargetClass(packageName, shortClassName)) {
+                if (isTargetPackage(packageName)
+                        && isTargetClass(shortClassName)) {
                     String className = ClassUtil.concatName(packageName,
                             shortClassName);
                     Class<?> clazz = ClassUtil.forName(className);
                     if (clazz.isAnnotationPresent(Entity.class)) {
                         EntityMeta entityMeta = entityMetaFactory
                                 .getEntityMeta(clazz);
-                        if (isTargetEntity(entityMeta)) {
-                            entityMetaList.add(entityMeta);
-                        }
+                        entityMetaList.add(entityMeta);
                     }
                 }
             }
@@ -116,22 +116,20 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
 
         if (entityMetaList.isEmpty()) {
             throw new EntityClassNotFoundRuntimeException(classpathDir,
-                    packageName, entityNamePattern.pattern(),
-                    ignoreEntityNamePattern.pattern());
+                    packageName, shortClassNamePattern.pattern(),
+                    ignoreShortClassNamePattern.pattern());
         }
         return entityMetaList;
     }
 
     /**
-     * 読み取りの対象クラスの場合{@code true}を返します。
+     * 読み取りの対象パッケージの場合{@code true}を返します。
      * 
      * @param packageName
      *            パッケージ名
-     * @param shortClassName
-     *            クラスの単純名
-     * @return 読み取りの対象クラスの場合{@code true}
+     * @return 読み取りの対象パッケージの場合{@code true}
      */
-    protected boolean isTargetClass(String packageName, String shortClassName) {
+    protected boolean isTargetPackage(String packageName) {
         if (packageName == null) {
             return true;
         }
@@ -145,20 +143,20 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     }
 
     /**
-     * 読み取り対象エンティティの場合{@code true}を返します。
+     * 読み取りの対象クラスの場合{@code true}を返します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
-     * @return 読み取り対象エンティティの場合{@code true}
+     * @param shortClassName
+     *            クラスの単純名
+     * @return 読み取りの対象クラスの場合{@code true}
      */
-    protected boolean isTargetEntity(EntityMeta entityMeta) {
-        String name = entityMeta.getName();
-        if (!entityNamePattern.matcher(name).matches()) {
+    protected boolean isTargetClass(String shortClassName) {
+        if (!shortClassNamePattern.matcher(shortClassName).matches()) {
             return false;
         }
-        if (ignoreEntityNamePattern.matcher(name).matches()) {
+        if (ignoreShortClassNamePattern.matcher(shortClassName).matches()) {
             return false;
         }
         return true;
     }
+
 }
