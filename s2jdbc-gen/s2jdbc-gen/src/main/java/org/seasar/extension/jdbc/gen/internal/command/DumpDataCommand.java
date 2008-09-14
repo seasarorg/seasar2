@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRunt
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -55,10 +56,22 @@ public class DumpDataCommand extends AbstractCommand {
     protected String ignoreEntityNamePattern = "";
 
     /** ダンプディレクトリ */
-    protected File dumpDir = new File("db", "dump");
+    protected File dumpDir = null;
+
+    /** ダンプディレクトリ名 */
+    protected String dumpDirName = "040-dump";
 
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding = "UTF-8";
+
+    /** マイグレーションのディレクトリ */
+    protected File migrateDir = new File("db", "migrate");
+
+    /** DDLのバージョンファイル */
+    protected File ddlInfoFile = new File("db", "ddl-info.txt");
+
+    /** バージョン番号のパターン */
+    protected String versionNoPattern = "0000";
 
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
@@ -77,6 +90,9 @@ public class DumpDataCommand extends AbstractCommand {
 
     /** ダンパ */
     protected Dumper dumper;
+
+    /** DDLのバージョンを管理するディレクトリ */
+    protected DdlVersionDirectory ddlVersionDirectory;
 
     /**
      * インスタンスを構築します。
@@ -236,6 +252,82 @@ public class DumpDataCommand extends AbstractCommand {
         this.genDialectClassName = genDialectClassName;
     }
 
+    /**
+     * DDL情報ファイル名を返します。
+     * 
+     * @return DDL情報ファイル
+     */
+    public File getDdlInfoFile() {
+        return ddlInfoFile;
+    }
+
+    /**
+     * DDL情報ファイルを設定します。
+     * 
+     * @param ddlInfoFile
+     *            DDL情報ファイル
+     */
+    public void setDdlInfoFile(File ddlInfoFile) {
+        this.ddlInfoFile = ddlInfoFile;
+    }
+
+    /**
+     * バージョン番号のパターンを返します。
+     * 
+     * @return バージョン番号のパターン
+     */
+    public String getVersionNoPattern() {
+        return versionNoPattern;
+    }
+
+    /**
+     * バージョン番号のパターンを設定します。
+     * 
+     * @param versionNoPattern
+     *            バージョン番号のパターン
+     */
+    public void setVersionNoPattern(String versionNoPattern) {
+        this.versionNoPattern = versionNoPattern;
+    }
+
+    /**
+     * ダンプディレクトリ名を返します。
+     * 
+     * @return ダンプディレクトリ名
+     */
+    public String getDumpDirName() {
+        return dumpDirName;
+    }
+
+    /**
+     * ダンプディレクトリ名を設定します。
+     * 
+     * @param dumpDirName
+     *            ダンプディレクトリ名
+     */
+    public void setDumpDirName(String dumpDirName) {
+        this.dumpDirName = dumpDirName;
+    }
+
+    /**
+     * マイグレーションのディレクトリを返します。
+     * 
+     * @return マイグレーションのディレクトリ
+     */
+    public File getMigrateDir() {
+        return migrateDir;
+    }
+
+    /**
+     * マイグレーションのディレクトリを設定します。
+     * 
+     * @param migrateDir
+     *            マイグレーションのディレクトリ
+     */
+    public void setMigrateDir(File migrateDir) {
+        this.migrateDir = migrateDir;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -250,6 +342,7 @@ public class DumpDataCommand extends AbstractCommand {
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         dumper = createDumper();
+        ddlVersionDirectory = createDdlVersionDirectory();
 
         logRdbmsAndGenDialect(dialect);
     }
@@ -257,10 +350,15 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
+        File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
+        File createDir = ddlVersionDirectory.getCreateDir(currentVersionDir);
+        final File dir = dumpDir != null ? dumpDir : new File(createDir,
+                dumpDirName);
+
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
             public void execute(SqlExecutionContext context) {
-                dumper.dump(context, databaseDesc, dumpDir);
+                dumper.dump(context, databaseDesc, dir);
             }
         });
     }
@@ -298,6 +396,16 @@ public class DumpDataCommand extends AbstractCommand {
      */
     protected Dumper createDumper() {
         return factory.createDumper(this, dialect, dumpFileEncoding);
+    }
+
+    /**
+     * {@link DdlVersionDirectory}の実装を作成します。
+     * 
+     * @return {@link DdlVersionDirectory}の実装
+     */
+    protected DdlVersionDirectory createDdlVersionDirectory() {
+        return factory.createDdlVersionDirectory(this, migrateDir, ddlInfoFile,
+                versionNoPattern);
     }
 
     /**

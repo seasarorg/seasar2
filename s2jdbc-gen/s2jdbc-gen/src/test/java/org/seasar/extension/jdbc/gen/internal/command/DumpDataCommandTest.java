@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.command.DumpDataCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -69,5 +68,7 @@ public class DumpDataCommandTest {
         assertNotNull(command.sqlUnitExecutor);
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.databaseDescFactory);
+        assertNotNull(command.dumper);
+        assertNotNull(command.ddlVersionDirectory);
     }
 }

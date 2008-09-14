@@ -23,7 +23,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.command.LoadDataCommand;
 
 /**
- * ダンプファイルをロードする{@link Command}の実装クラスです。
+ * ダンプファイルをロードする{@link Task}の実装クラスです。
  * 
  * @author taedium
  * @see LoadDataCommand
@@ -177,4 +177,45 @@ public class LoadDataTask extends AbstractTask {
     public void setGenDialectClassName(String genDialectClassName) {
         command.setGenDialectClassName(genDialectClassName);
     }
+
+    /**
+     * DDL情報ファイルを設定します。
+     * 
+     * @param ddlInfoFile
+     *            DDL情報ファイル
+     */
+    public void setDdlInfoFile(File ddlInfoFile) {
+        command.setDdlInfoFile(ddlInfoFile);
+    }
+
+    /**
+     * ダンプディレクトリ名を設定します。
+     * 
+     * @param dumpDirName
+     *            ダンプディレクトリ名
+     */
+    public void setDumpDirName(String dumpDirName) {
+        command.setDumpDirName(dumpDirName);
+    }
+
+    /**
+     * マイグレーションのディレクトリを設定します。
+     * 
+     * @param migrateDir
+     *            マイグレーションのディレクトリ
+     */
+    public void setMigrateDir(File migrateDir) {
+        command.setMigrateDir(migrateDir);
+    }
+
+    /**
+     * バージョン番号のパターンを設定します。
+     * 
+     * @param versionNoPattern
+     *            バージョン番号のパターン
+     */
+    public void setVersionNoPattern(String versionNoPattern) {
+        command.setVersionNoPattern(versionNoPattern);
+    }
+
 }
