@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
@@ -66,9 +70,19 @@ public class PrimaryKeyDescFactoryImpl implements PrimaryKeyDescFactory {
      */
     protected void doColumnName(EntityMeta entityMeta,
             PrimaryKeyDesc primaryKeyDesc) {
-        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            ColumnMeta columnMeta = propertyMeta.getColumnMeta();
-            primaryKeyDesc.addColumnName(columnMeta.getName());
+        List<Class<?>> classList = new ArrayList<Class<?>>();
+        for (Class<?> clazz = entityMeta.getEntityClass(); clazz != Object.class; clazz = clazz
+                .getSuperclass()) {
+            classList.add(clazz);
+        }
+        Collections.reverse(classList);
+        for (Class<?> clazz : classList) {
+            for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
+                if (clazz == propertyMeta.getField().getDeclaringClass()) {
+                    ColumnMeta columnMeta = propertyMeta.getColumnMeta();
+                    primaryKeyDesc.addColumnName(columnMeta.getName());
+                }
+            }
         }
     }
 }

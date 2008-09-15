@@ -44,9 +44,19 @@
 				<file name="create.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<javac 
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath">
+			<src path="../src/main/java"/>
+			<include name="example/entity/AbstractEntity.java"/>
+		</javac>
 		<!-- test -->
 		<gen-entity
 			rootpackagename="${rootpackagename}"
+			enititysuperclassname="example.entity.AbstractEntity"
 			javafiledestdir="${src}"
 			pluralformfile="plural.properties"
 			classpathref="classpath"

@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -150,8 +154,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
         Table table = getTable(entityMeta);
         TableDesc tableDesc = new TableDesc();
         doName(entityMeta, tableDesc, table);
-        doColumnDesc(entityMeta, tableDesc, table);
         doPrimaryKeyDesc(entityMeta, tableDesc, table);
+        doColumnDesc(entityMeta, tableDesc, table);
         doForeignKeyDesc(entityMeta, tableDesc, table);
         doUniqueKeyDesc(entityMeta, tableDesc, table);
         doSequenceDesc(entityMeta, tableDesc, table);
@@ -200,15 +204,20 @@ public class TableDescFactoryImpl implements TableDescFactory {
      * @param table
      *            テーブル
      */
-    protected void doColumnDesc(EntityMeta entityMeta, TableDesc tableDesc,
-            Table table) {
+    protected void doColumnDesc(EntityMeta entityMeta,
+            final TableDesc tableDesc, Table table) {
+        List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
         for (int i = 0; i < entityMeta.getColumnPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getColumnPropertyMeta(i);
             ColumnDesc columnDesc = columnDescFactory.getColumnDesc(entityMeta,
                     propertyMeta);
             if (columnDesc != null) {
-                tableDesc.addColumnDesc(columnDesc);
+                columnDescList.add(columnDesc);
             }
+        }
+        Collections.sort(columnDescList, createColumnDescComparator(tableDesc));
+        for (ColumnDesc columnDesc : columnDescList) {
+            tableDesc.addColumnDesc(columnDesc);
         }
     }
 
@@ -364,4 +373,41 @@ public class TableDescFactoryImpl implements TableDescFactory {
         return table != null ? table : AnnotationUtil.getDefaultTable();
     }
 
+    /**
+     * カラム記述の{@link Comparator}を作成します。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return カラム記述の{@link Comparator}
+     */
+    protected Comparator<ColumnDesc> createColumnDescComparator(
+            TableDesc tableDesc) {
+        final List<String> pkColumnNameList = new ArrayList<String>();
+        if (tableDesc.getPrimaryKeyDesc() != null) {
+            PrimaryKeyDesc primaryKeyDesc = tableDesc.getPrimaryKeyDesc();
+            pkColumnNameList.addAll(primaryKeyDesc.getColumnNameList());
+        }
+        return new Comparator<ColumnDesc>() {
+
+            public int compare(ColumnDesc o1, ColumnDesc o2) {
+                int index1 = pkColumnNameList.indexOf(o1.getName());
+                int index2 = pkColumnNameList.indexOf(o2.getName());
+                int ret = 0;
+                if (index1 < 0) {
+                    if (index2 < 0) {
+                        ret = -1;
+                    } else {
+                        ret = 1;
+                    }
+                } else {
+                    if (index2 < 0) {
+                        ret = -1;
+                    } else {
+                        ret = index1 - index2;
+                    }
+                }
+                return ret;
+            }
+        };
+    }
 }

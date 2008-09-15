@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -98,6 +99,22 @@ public class PrimaryKeyDescFactoryImplTest {
      * @throws Exception
      */
     @Test
+    public void testCompositeId_multiClass() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Jjj.class);
+        PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
+                .getPrimaryKeyDesc(entityMeta);
+        assertNotNull(primaryKeyDesc);
+        assertEquals(3, primaryKeyDesc.getColumnNameList().size());
+        assertEquals("ID1", primaryKeyDesc.getColumnNameList().get(0));
+        assertEquals("ID2", primaryKeyDesc.getColumnNameList().get(1));
+        assertEquals("ID3", primaryKeyDesc.getColumnNameList().get(2));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testNoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ggg.class);
         PrimaryKeyDesc primaryKeyDesc = primaryKeyDescFactory
@@ -135,4 +152,32 @@ public class PrimaryKeyDescFactoryImplTest {
         /** */
         public String value;
     }
+
+    /** */
+    @MappedSuperclass
+    public static class Hhh {
+
+        /** */
+        @Id
+        public Integer id1;
+    }
+
+    /** */
+    @MappedSuperclass
+    public static class Iii extends Hhh {
+
+        /** */
+        @Id
+        public Integer id2;
+    }
+
+    /** */
+    @Entity
+    public static class Jjj extends Iii {
+
+        /** */
+        @Id
+        public Integer id3;
+    }
+
 }

@@ -15,18 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
@@ -120,6 +124,24 @@ public class TableDescFactoryImplTest {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
         assertEquals(2, tableDesc.getColumnDescList().size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testColumnDescList_multiClass() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ggg.class);
+        TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
+        List<ColumnDesc> list = tableDesc.getColumnDescList();
+        assertEquals(6, list.size());
+        assertEquals("ID1", list.get(0).getName());
+        assertEquals("ID2", list.get(1).getName());
+        assertEquals("ID3", list.get(2).getName());
+        assertEquals("NAME3", list.get(3).getName());
+        assertEquals("NAME2", list.get(4).getName());
+        assertEquals("NAME1", list.get(5).getName());
     }
 
     /**
@@ -240,6 +262,42 @@ public class TableDescFactoryImplTest {
         /** */
         @Column(unique = true)
         public Integer hoge;
+    }
+
+    /** */
+    @MappedSuperclass
+    public static class Eee {
+
+        /** */
+        @Id
+        public int id1;
+
+        /** */
+        public String name1;
+    }
+
+    /** */
+    @MappedSuperclass
+    public static class Fff extends Eee {
+
+        /** */
+        @Id
+        public int id2;
+
+        /** */
+        public String name2;
+    }
+
+    /** */
+    @Entity
+    public static class Ggg extends Fff {
+
+        /** */
+        @Id
+        public int id3;
+
+        /** */
+        public String name3;
     }
 
 }
