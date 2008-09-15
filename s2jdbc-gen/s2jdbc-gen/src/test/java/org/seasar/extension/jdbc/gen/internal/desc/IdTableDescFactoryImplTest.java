@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
+import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
@@ -93,13 +94,19 @@ public class IdTableDescFactoryImplTest {
                 field, entityMeta);
         TableDesc tableDesc = idTableDescFactory.getTableDesc(entityMeta,
                 propertyMeta);
+
         assertEquals("AAA", tableDesc.getCatalogName());
         assertEquals("BBB", tableDesc.getSchemaName());
         assertEquals("CCC", tableDesc.getName());
         assertNotNull(tableDesc.getPrimaryKeyDesc());
+
         assertEquals(2, tableDesc.getColumnDescList().size());
-        assertEquals("DDD", tableDesc.getColumnDescList().get(0).getName());
-        assertEquals("EEE", tableDesc.getColumnDescList().get(1).getName());
+        ColumnDesc columnDesc = tableDesc.getColumnDescList().get(0);
+        assertEquals("DDD", columnDesc.getName());
+        assertNotNull(columnDesc.getDefinition());
+        columnDesc = tableDesc.getColumnDescList().get(1);
+        assertEquals("EEE", columnDesc.getName());
+        assertNotNull(columnDesc.getDefinition());
     }
 
     /**

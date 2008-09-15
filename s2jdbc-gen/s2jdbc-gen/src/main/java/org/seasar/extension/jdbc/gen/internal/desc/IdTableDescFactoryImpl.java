@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 import java.lang.reflect.Field;
 import java.sql.Types;
 
+import javax.persistence.Column;
 import javax.persistence.GenerationType;
 import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
@@ -33,6 +34,7 @@ import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.extension.jdbc.id.TableIdGenerator;
 import org.seasar.framework.util.StringUtil;
 
@@ -156,7 +158,11 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
 
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName(pkColumnName);
-        columnDesc.setSqlType(dialect.getSqlType(Types.BIGINT));
+        SqlType sqlType = dialect.getSqlType(Types.BIGINT);
+        columnDesc.setSqlType(sqlType);
+        Column column = AnnotationUtil.getDefaultColumn();
+        columnDesc.setDefinition(sqlType.getDataType(0, column.precision(), 0,
+                false));
         tableDesc.addColumnDesc(columnDesc);
     }
 
@@ -180,7 +186,11 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         }
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName(valueColumnName);
-        columnDesc.setSqlType(dialect.getSqlType(Types.VARCHAR));
+        SqlType sqlType = dialect.getSqlType(Types.VARCHAR);
+        columnDesc.setSqlType(sqlType);
+        Column column = AnnotationUtil.getDefaultColumn();
+        columnDesc.setDefinition(sqlType.getDataType(column.length(), 0, 0,
+                false));
         columnDesc.setNullable(false);
         tableDesc.addColumnDesc(columnDesc);
     }

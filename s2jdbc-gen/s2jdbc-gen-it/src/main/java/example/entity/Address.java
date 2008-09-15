@@ -17,8 +17,10 @@ package example.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.TableGenerator;
 
 /**
  * @author taedium
@@ -29,7 +31,8 @@ public class Address {
 
     /** */
     @Id
-    @GeneratedValue
+    @TableGenerator(name = "generator")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "generator")
     public Integer id;
 
     /** */
