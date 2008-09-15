@@ -92,11 +92,14 @@ public interface Factory {
      *            エンティティメタデータのリーダ
      * @param dialect
      *            方言
+     * @param dataSource
+     *            データソース
      * @return {@link DatabaseDescFactory}の実装
      */
     DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect);
+            EntityMetaReader entityMetaReader, GenDialect dialect,
+            DataSource dataSource);
 
     /**
      * {@link Dumper}の実装を返します。

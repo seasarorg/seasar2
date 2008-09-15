@@ -35,4 +35,11 @@ public class FirebirdGenDialect extends StandardGenDialect {
         return GenerationType.SEQUENCE;
     }
 
+    @Override
+    public String getSequenceNextValString(String sequenceName,
+            int allocationSize) {
+        return "select gen_id( " + sequenceName + ", " + allocationSize
+                + " ) from RDB$DATABASE";
+    }
+
 }

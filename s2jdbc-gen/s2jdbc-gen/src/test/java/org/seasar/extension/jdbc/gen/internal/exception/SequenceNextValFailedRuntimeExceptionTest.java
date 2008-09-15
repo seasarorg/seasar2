@@ -13,32 +13,27 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.dialect;
+package org.seasar.extension.jdbc.gen.internal.exception;
 
-import javax.persistence.GenerationType;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
- * Interbaseの方言を扱うクラスです。
- * 
  * @author taedium
+ * 
  */
-public class InterbaseGenDialect extends StandardGenDialect {
+public class SequenceNextValFailedRuntimeExceptionTest {
 
     /**
-     * インスタンスを構築します。
+     * 
      */
-    public InterbaseGenDialect() {
-    }
-
-    @Override
-    public GenerationType getDefaultGenerationType() {
-        return GenerationType.SEQUENCE;
-    }
-
-    @Override
-    public String getSequenceNextValString(String sequenceName,
-            int allocationSize) {
-        return "select RDB$GENERATOR_NAME from RDB$GENERATORS";
+    @Test
+    public void test() {
+        SequenceNextValFailedRuntimeException e = new SequenceNextValFailedRuntimeException(
+                "aaa");
+        assertEquals("aaa", e.getSequenceName());
+        System.out.println(e.getMessage());
     }
 
 }

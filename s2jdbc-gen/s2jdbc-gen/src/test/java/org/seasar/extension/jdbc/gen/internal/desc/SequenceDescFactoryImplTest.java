@@ -28,12 +28,12 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
-import org.seasar.extension.jdbc.gen.internal.desc.SequenceDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
+import org.seasar.framework.mock.sql.MockDataSource;
 
 import static org.junit.Assert.*;
 
@@ -78,7 +78,14 @@ public class SequenceDescFactoryImplTest {
         propertyMetaFactory.setPersistenceConvention(pc);
         propertyMetaFactory.setColumnMetaFactory(cmf);
         sequenceDescFactoryImpl = new SequenceDescFactoryImpl(
-                new OracleGenDialect());
+                new OracleGenDialect(), new MockDataSource()) {
+
+            @Override
+            protected Long getNextValue(String sequenceName, int allocationSize) {
+                return null;
+            }
+
+        };
     }
 
     /**

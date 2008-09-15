@@ -151,8 +151,8 @@ public class StandardGenDialect implements GenDialect {
         return false;
     }
 
-    public String getSequenceDefinitionFragment(String dataType, int initValue,
-            int allocationSize) {
+    public String getSequenceDefinitionFragment(String dataType,
+            long initialValue, int allocationSize) {
         throw new UnsupportedOperationException("getSequenceDefinitionFragment");
     }
 
@@ -173,6 +173,10 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public boolean isTableNotFound(Throwable throwable) {
+        return false;
+    }
+
+    public boolean isSequenceNotFound(Throwable throwable) {
         return false;
     }
 
@@ -202,6 +206,11 @@ public class StandardGenDialect implements GenDialect {
 
     public boolean supportsIdentity() {
         return false;
+    }
+
+    public String getSequenceNextValString(final String sequenceName,
+            final int allocationSize) {
+        throw new UnsupportedOperationException("getSequenceNextValString");
     }
 
     /**

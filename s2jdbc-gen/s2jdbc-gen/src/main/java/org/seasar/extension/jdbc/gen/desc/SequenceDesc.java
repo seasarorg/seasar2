@@ -29,7 +29,7 @@ public class SequenceDesc {
     protected String sequenceName;
 
     /** 初期値 */
-    protected int initialValue;
+    protected long initialValue;
 
     /** 割り当てサイズ */
     protected int allocationSize;
@@ -62,7 +62,7 @@ public class SequenceDesc {
      * 
      * @return 初期値を設定します。
      */
-    public int getInitialValue() {
+    public long getInitialValue() {
         return initialValue;
     }
 
@@ -72,7 +72,7 @@ public class SequenceDesc {
      * @param initialValue
      *            初期値
      */
-    public void setInitialValue(int initialValue) {
+    public void setInitialValue(long initialValue) {
         this.initialValue = initialValue;
     }
 

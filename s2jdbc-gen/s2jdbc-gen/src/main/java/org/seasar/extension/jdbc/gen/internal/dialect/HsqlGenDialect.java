@@ -33,6 +33,9 @@ public class HsqlGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = -22;
 
+    /** シーケンスが見つからないことを示すエラーコード */
+    protected static int SEQUENCE_NOT_FOUND_ERROR_CODE = -191;
+
     /**
      * インスタンスを構築します。
      */
@@ -62,10 +65,10 @@ public class HsqlGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getSequenceDefinitionFragment(String dataType, int initValue,
-            int allocationSize) {
-        return dataType + " start with " + allocationSize + " increment By "
-                + initValue;
+    public String getSequenceDefinitionFragment(String dataType,
+            long initialValue, int allocationSize) {
+        return "as " + dataType + " start with " + allocationSize
+                + " increment By " + initialValue;
     }
 
     @Override
@@ -81,8 +84,23 @@ public class HsqlGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public boolean isSequenceNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == SEQUENCE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
     public boolean supportsIdentity() {
         return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(String sequenceName,
+            int allocationSize) {
+        return "SELECT NEXT VALUE FOR "
+                + sequenceName
+                + " FROM INFORMATION_SCHEMA.SYSTEM_TABLES WHERE table_name = 'SYSTEM_TABLES'";
     }
 
     /**

@@ -16,17 +16,28 @@
 package org.seasar.extension.jdbc.gen.internal.desc;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
+import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.exception.SequenceNextValFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.util.ResultSetUtil;
+import org.seasar.framework.util.StatementUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -36,17 +47,33 @@ import org.seasar.framework.util.StringUtil;
  */
 public class SequenceDescFactoryImpl implements SequenceDescFactory {
 
+    /** ロガー */
+    protected static Logger logger = Logger
+            .getLogger(SequenceDescFactoryImpl.class);
+
     /** 方言 */
     protected GenDialect dialect;
 
+    /** データソース */
+    protected DataSource dataSource;
+
     /**
+     * インスタンスを構築します。
+     * 
      * @param dialect
+     *            方言
+     * @param dataSource
+     *            データソース
      */
-    public SequenceDescFactoryImpl(GenDialect dialect) {
+    public SequenceDescFactoryImpl(GenDialect dialect, DataSource dataSource) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource");
+        }
         this.dialect = dialect;
+        this.dataSource = dataSource;
     }
 
     public SequenceDesc getSequenceDesc(EntityMeta entityMeta,
@@ -66,7 +93,11 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
             String sequenceName = getSequenceName(entityMeta, propertyMeta,
                     generator);
             sequenceDesc.setSequenceName(sequenceName);
-            sequenceDesc.setInitialValue(generator.initialValue());
+            Long nextValue = getNextValue(sequenceName, generator
+                    .allocationSize());
+            long initialValue = nextValue != null ? Math.max(nextValue,
+                    generator.initialValue()) : generator.initialValue();
+            sequenceDesc.setInitialValue(initialValue);
             sequenceDesc.setAllocationSize(generator.allocationSize());
             sequenceDesc.setDataType(getDataType(propertyMeta));
             return sequenceDesc;
@@ -120,5 +151,49 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
     protected String getDataType(PropertyMeta propertyMeta) {
         int sqlType = propertyMeta.getValueType().getSqlType();
         return dialect.getSqlType(sqlType).getDataType(0, 20, 0, false);
+    }
+
+    /**
+     * シーケンスの次の値を返します。
+     * 
+     * @param sequenceName
+     *            シーケンス名
+     * @param allocationSize
+     *            割り当てサイズ
+     * @return シーケンスの次の値、シーケンスが存在しない場合は{@code null}
+     */
+    protected Long getNextValue(String sequenceName, int allocationSize) {
+        String sql = dialect.getSequenceNextValString(sequenceName,
+                allocationSize);
+        logger.debug(sql);
+        Connection connection = DataSourceUtil.getConnection(dataSource);
+        try {
+            PreparedStatement ps = ConnectionUtil.prepareStatement(connection,
+                    sql);
+            try {
+                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+                try {
+                    if (rs.next()) {
+                        return rs.getLong(1);
+                    }
+                    throw new SequenceNextValFailedRuntimeException(
+                            sequenceName);
+                } finally {
+                    ResultSetUtil.close(rs);
+                }
+            } finally {
+                StatementUtil.close(ps);
+            }
+        } catch (SequenceNextValFailedRuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            if (dialect.isSequenceNotFound(e)) {
+                logger.log("DS2JDBCGen0017", new Object[] { sequenceName });
+                return null;
+            }
+            throw new SequenceNextValFailedRuntimeException(sequenceName, e);
+        } finally {
+            ConnectionUtil.close(connection);
+        }
     }
 }

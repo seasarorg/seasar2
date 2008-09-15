@@ -419,7 +419,8 @@ public class MigrateCommand extends AbstractCommand {
      * @param ignoreEntityClassNamePattern
      *            対象としないエンティティクラス名の正規表現
      */
-    public void setIgnoreEntityClassNamePattern(String ignoreEntityClassNamePattern) {
+    public void setIgnoreEntityClassNamePattern(
+            String ignoreEntityClassNamePattern) {
         this.ignoreEntityClassNamePattern = ignoreEntityClassNamePattern;
     }
 
@@ -572,7 +573,8 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return factory.createDatabaseDescFactory(this, jdbcManager
-                .getEntityMetaFactory(), entityMetaReader, dialect);
+                .getEntityMetaFactory(), entityMetaReader, dialect, jdbcManager
+                .getDataSource());
     }
 
     /**

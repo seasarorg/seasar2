@@ -111,13 +111,13 @@ public interface GenDialect {
      * 
      * @param dataType
      *            データタイプ
-     * @param initValue
+     * @param initialValue
      *            初期値
      * @param allocationSize
      *            割り当てサイズ
      * @return
      */
-    String getSequenceDefinitionFragment(String dataType, int initValue,
+    String getSequenceDefinitionFragment(String dataType, long initialValue,
             int allocationSize);
 
     /**
@@ -156,6 +156,15 @@ public interface GenDialect {
      * @return テーブルが存在しない例外を表す場合{@code true}
      */
     boolean isTableNotFound(Throwable throwable);
+
+    /**
+     * シーケンスが存在しない例外を表す場合{@code true}を返します。
+     * 
+     * @param throwable
+     *            何らかの例外
+     * @return シーケンスが存在しない例外を表す場合{@code true}
+     */
+    boolean isSequenceNotFound(Throwable throwable);
 
     /**
      * SQLブロックのコンテキストを作成します。
@@ -209,6 +218,17 @@ public interface GenDialect {
      * @return IDENTITYカラムをサポートしている場合{@code true}
      */
     boolean supportsIdentity();
+
+    /**
+     * シーケンスの値を取得するSQLを返します。
+     * 
+     * @param sequenceName
+     *            シーケンス名
+     * @param allocationSize
+     *            割り当てサイズ
+     * @return シーケンスの値を取得するSQL
+     */
+    String getSequenceNextValString(String sequenceName, int allocationSize);
 
     /**
      * カラム型です。

@@ -46,6 +46,9 @@ public class OracleGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 942;
 
+    /** シーケンスが見つからないことを示すエラーコード */
+    protected static int SEQUENCE_NOT_FOUND_ERROR_CODE = 2289;
+
     /**
      * インスタンスを構築します。
      */
@@ -87,9 +90,9 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getSequenceDefinitionFragment(String dataType, int initValue,
-            int allocationSize) {
-        return "increment by " + allocationSize + " start with " + initValue;
+    public String getSequenceDefinitionFragment(String dataType,
+            long initialValue, int allocationSize) {
+        return "increment by " + allocationSize + " start with " + initialValue;
     }
 
     @Override
@@ -105,6 +108,13 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public boolean isSequenceNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == SEQUENCE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
     public ColumnType getColumnType(String typeName) {
         if (org.seasar.framework.util.StringUtil.startsWithIgnoreCase(typeName,
                 "timestamp")) {
@@ -116,6 +126,12 @@ public class OracleGenDialect extends StandardGenDialect {
     @Override
     public SqlBlockContext createSqlBlockContext() {
         return new OracleSqlBlockContext();
+    }
+
+    @Override
+    public String getSequenceNextValString(String sequenceName,
+            int allocationSize) {
+        return "select " + sequenceName + ".nextval from dual";
     }
 
     /**

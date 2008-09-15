@@ -34,6 +34,9 @@ public class H2GenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 42102;
 
+    /** シーケンスが見つからないことを示すエラーコード */
+    protected static int SEQUENCE_NOT_FOUND_ERROR_CODE = 90036;
+
     /**
      * インスタンスを構築します。
      */
@@ -64,9 +67,9 @@ public class H2GenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getSequenceDefinitionFragment(String dataType, int initValue,
-            int allocationSize) {
-        return "start with " + allocationSize + " increment by " + initValue;
+    public String getSequenceDefinitionFragment(String dataType,
+            long initialValue, int allocationSize) {
+        return "start with " + allocationSize + " increment by " + initialValue;
     }
 
     @Override
@@ -82,6 +85,13 @@ public class H2GenDialect extends StandardGenDialect {
     }
 
     @Override
+    public boolean isSequenceNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == SEQUENCE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
     public boolean supportsIdentityInsert() {
         return true;
     }
@@ -89,6 +99,12 @@ public class H2GenDialect extends StandardGenDialect {
     @Override
     public boolean supportsIdentity() {
         return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(String sequenceName,
+            int allocationSize) {
+        return "call next value for " + sequenceName;
     }
 
     /**

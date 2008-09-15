@@ -42,6 +42,9 @@ public class Db2GenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すSQLステート */
     protected static String TABLE_NOT_FOUND_SQL_STATE = "42704";
 
+    /** シーケンスが見つからないことを示すSQLステート */
+    protected static String SEQUENCE_NOT_FOUND_SQL_STATE = "42704";
+
     /**
      * インスタンスを構築します。
      */
@@ -80,10 +83,10 @@ public class Db2GenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getSequenceDefinitionFragment(String dataType, int initValue,
-            int allocationSize) {
+    public String getSequenceDefinitionFragment(String dataType,
+            long initialValue, int allocationSize) {
         return "as " + dataType + " start with " + allocationSize
-                + " increment by " + initValue;
+                + " increment by " + initialValue;
     }
 
     @Override
@@ -100,6 +103,16 @@ public class Db2GenDialect extends StandardGenDialect {
     public boolean isTableNotFound(Throwable t) {
         for (SQLException e : getAllSQLExceptions(t)) {
             if (TABLE_NOT_FOUND_SQL_STATE.equals(e.getSQLState())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isSequenceNotFound(Throwable t) {
+        for (SQLException e : getAllSQLExceptions(t)) {
+            if (SEQUENCE_NOT_FOUND_SQL_STATE.equals(e.getSQLState())) {
                 return true;
             }
         }
@@ -149,6 +162,12 @@ public class Db2GenDialect extends StandardGenDialect {
     @Override
     public boolean supportsNullableUnique() {
         return false;
+    }
+
+    @Override
+    public String getSequenceNextValString(String sequenceName,
+            int allocationSize) {
+        return "values nextval for " + sequenceName;
     }
 
     /**

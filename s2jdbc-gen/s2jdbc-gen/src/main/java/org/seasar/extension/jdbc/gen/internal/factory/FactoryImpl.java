@@ -97,10 +97,11 @@ public class FactoryImpl implements Factory {
 
     public DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect) {
+            EntityMetaReader entityMetaReader, GenDialect dialect,
+            DataSource dataSource) {
 
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect);
+                dialect, dataSource);
     }
 
     public Dumper createDumper(Command command, GenDialect dialect,

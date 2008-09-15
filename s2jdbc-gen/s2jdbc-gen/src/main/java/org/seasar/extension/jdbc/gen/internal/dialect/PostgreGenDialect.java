@@ -42,6 +42,9 @@ public class PostgreGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すSQLステート */
     protected static String TABLE_NOT_FOUND_SQL_STATE = "42P01";
 
+    /** シーケンスが見つからないことを示すSQLステート */
+    protected static String SEQUENCE_NOT_FOUND_SQL_STATE = "42704";
+
     /**
      * インスタンスを構築します。
      */
@@ -108,10 +111,10 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getSequenceDefinitionFragment(String dataType, int initValue,
-            int allocationSize) {
+    public String getSequenceDefinitionFragment(String dataType,
+            long initialValue, int allocationSize) {
         return dataType + " start with " + allocationSize + " increment by "
-                + initValue;
+                + initialValue;
     }
 
     @Override
@@ -123,6 +126,12 @@ public class PostgreGenDialect extends StandardGenDialect {
     public boolean isTableNotFound(Throwable throwable) {
         String sqlState = getSQLState(throwable);
         return TABLE_NOT_FOUND_SQL_STATE.equals(sqlState);
+    }
+
+    @Override
+    public boolean isSequenceNotFound(Throwable throwable) {
+        String sqlState = getSQLState(throwable);
+        return SEQUENCE_NOT_FOUND_SQL_STATE.equals(sqlState);
     }
 
     @Override
@@ -138,6 +147,12 @@ public class PostgreGenDialect extends StandardGenDialect {
     @Override
     public boolean supportsIdentity() {
         return true;
+    }
+
+    @Override
+    public String getSequenceNextValString(String sequenceName,
+            int allocationSize) {
+        return "select nextval('" + sequenceName + "')";
     }
 
     /**
