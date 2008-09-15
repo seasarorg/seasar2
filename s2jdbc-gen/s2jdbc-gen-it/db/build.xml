@@ -297,7 +297,8 @@
 		<dump-data
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
-			dumpdir="${dump}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
@@ -328,7 +329,8 @@
 		<dump-data
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
-			dumpdir="${dump}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
 			classpathref="classpath"
 		/>
 		<exec-sql 
@@ -342,7 +344,8 @@
 		<load-data
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
-			dumpdir="${dump}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->

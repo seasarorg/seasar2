@@ -29,8 +29,14 @@ public class NamesModel extends ClassModel {
     /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
 
-    /** 名前のリスト */
-    protected List<String> nameList = new ArrayList<String>();
+    /** 内部クラスの単純名 */
+    protected String shortInnerClassName;
+
+    /** 名前の属性モデルのリスト */
+    protected List<NamesAttributeModel> namesAttributeModelList = new ArrayList<NamesAttributeModel>();
+
+    /** 名前の関連モデルのリスト */
+    protected List<NamesAssociationModel> namesAssociationModelList = new ArrayList<NamesAssociationModel>();
 
     /**
      * エンティティクラスの単純名を返します。
@@ -52,22 +58,60 @@ public class NamesModel extends ClassModel {
     }
 
     /**
-     * 名前のリストを返します。
+     * 内部クラスの単純名を返します。
      * 
-     * @return 名前のリスト
+     * @return 内部クラスの単純名
      */
-    public List<String> getNameList() {
-        return Collections.unmodifiableList(nameList);
+    public String getShortInnerClassName() {
+        return shortInnerClassName;
     }
 
     /**
-     * 名前を追加します。
+     * 内部クラスの単純名を設定します。
      * 
-     * @param name
-     *            名前
+     * @param shortInnerClassName
+     *            内部クラスの単純名
      */
-    public void addName(String name) {
-        nameList.add(name);
+    public void setShortInnerClassName(String shortInnerClassName) {
+        this.shortInnerClassName = shortInnerClassName;
     }
 
+    /**
+     * 名前の属性モデルのリストを返します。
+     * 
+     * @return 名前の属性モデルのリスト
+     */
+    public List<NamesAttributeModel> getNamesAttributeModelList() {
+        return Collections.unmodifiableList(namesAttributeModelList);
+    }
+
+    /**
+     * 名前の属性モデルを追加します。
+     * 
+     * @param namesAttributeModel
+     *            名前の属性モデル
+     */
+    public void addNamesAttributeModel(NamesAttributeModel namesAttributeModel) {
+        namesAttributeModelList.add(namesAttributeModel);
+    }
+
+    /**
+     * 名前の関連モデルのリストを返します。
+     * 
+     * @return 名前の関連モデルのリスト
+     */
+    public List<NamesAssociationModel> getNamesAssociationModelList() {
+        return Collections.unmodifiableList(namesAssociationModelList);
+    }
+
+    /**
+     * 名前の関連モデルを追加します。
+     * 
+     * @param namesAssociationModel
+     *            名前の関連モデル
+     */
+    public void adddNamesAssociationModel(
+            NamesAssociationModel namesAssociationModel) {
+        namesAssociationModelList.add(namesAssociationModel);
+    }
 }

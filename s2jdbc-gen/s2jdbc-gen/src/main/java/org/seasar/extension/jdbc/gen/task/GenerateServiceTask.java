@@ -125,20 +125,20 @@ public class GenerateServiceTask extends AbstractTask {
     }
 
     /**
-     * 名前インタフェース名のサフィックスを設定します。
+     * 名前クラス名のサフィックスを設定します。
      * 
-     * @param namesInterfaceNameSuffix
-     *            名前インタフェース名のサフィックス
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
      */
-    public void setNamesClassNameSuffix(String namesInterfaceNameSuffix) {
-        command.setNamesInterfaceNameSuffix(namesInterfaceNameSuffix);
+    public void setNamesClassNameSuffix(String namesClassNameSuffix) {
+        command.setNamesClassNameSuffix(namesClassNameSuffix);
     }
 
     /**
-     * 名前インタフェースのパッケージ名を設定します。
+     * 名前クラスのパッケージ名を設定します。
      * 
      * @param namesPackageName
-     *            名前インタフェースのパッケージ名
+     *            名前クラスのパッケージ名
      */
     public void setNamesPackageName(String namesPackageName) {
         command.setNamesPackageName(namesPackageName);
@@ -237,13 +237,13 @@ public class GenerateServiceTask extends AbstractTask {
     }
 
     /**
-     * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を設定します。
+     * 名前クラスを使用する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param implementNames
-     *            名前インタフェースを実装する場合{@code true}、しない場合{@code false}
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}、しない場合{@code false}
      */
-    public void setImplementNames(boolean implementNames) {
-        command.setImplementNames(implementNames);
+    public void setUseNamesClass(boolean useNamesClass) {
+        command.setUseNamesClass(useNamesClass);
     }
 
     @Override

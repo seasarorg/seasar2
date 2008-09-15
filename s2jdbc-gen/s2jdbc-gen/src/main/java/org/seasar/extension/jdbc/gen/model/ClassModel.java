@@ -20,13 +20,17 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * @author taedium
+ * クラスのモデルです。
  * 
+ * @author taedium
  */
 public abstract class ClassModel {
 
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();
+
+    /** staticインポート名のソートされたセット */
+    protected SortedSet<String> staticImportNameSet = new TreeSet<String>();
 
     /** パッケージ名 */
     protected String packageName;
@@ -82,13 +86,32 @@ public abstract class ClassModel {
     }
 
     /**
-     *インポート名を追加します。
+     * インポート名を追加します。
      * 
      * @param name
      *            インポート名
      */
     public void addImportName(String name) {
         importNameSet.add(name);
+    }
+
+    /**
+     * staticインポート名のソートされたセットを返します。
+     * 
+     * @return staticインポート名のソートされたセット
+     */
+    public SortedSet<String> getStaticImportNameSet() {
+        return Collections.unmodifiableSortedSet(staticImportNameSet);
+    }
+
+    /**
+     * staticインポート名を追加します。
+     * 
+     * @param name
+     *            staticインポート名
+     */
+    public void addStaticImportName(String name) {
+        staticImportNameSet.add(name);
     }
 
 }

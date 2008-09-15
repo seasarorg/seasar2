@@ -83,13 +83,13 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** サービスクラスのテンプレート名 */
     protected String serviceTemplateFileName = "java/service.ftl";
 
-    /** 名前インタフェースを実装する場合{@code true} */
-    protected boolean implementNames = true;
+    /** 名前クラスを使用する場合{@code true} */
+    protected boolean useNamesClass = true;
 
-    /** 名前インタフェース名のサフィックス */
-    protected String namesInterfaceNameSuffix = "Names";
+    /** 名前クラス名のサフィックス */
+    protected String namesClassNameSuffix = "Names";
 
-    /** 名前インタフェースのパッケージ名 */
+    /** 名前クラスのパッケージ名 */
     protected String namesPackageName = "entity";
 
     /** 生成するJavaファイルの出力先ディレクトリ */
@@ -225,38 +225,38 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
-     * 名前インタフェース名のサフィックスを返します。
+     * 名前クラス名のサフィックスを返します。
      * 
-     * @return 名前インタフェース名のサフィックス
+     * @return 名前クラス名のサフィックス
      */
-    public String getNamesInterfaceNameSuffix() {
-        return namesInterfaceNameSuffix;
+    public String getNamesClassNameSuffix() {
+        return namesClassNameSuffix;
     }
 
     /**
-     * 名前インタフェース名のサフィックスを設定します。
+     * 名前クラス名のサフィックスを設定します。
      * 
-     * @param namesInterfaceNameSuffix
-     *            名前インタフェース名のサフィックス
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
      */
-    public void setNamesInterfaceNameSuffix(String namesInterfaceNameSuffix) {
-        this.namesInterfaceNameSuffix = namesInterfaceNameSuffix;
+    public void setNamesClassNameSuffix(String namesClassNameSuffix) {
+        this.namesClassNameSuffix = namesClassNameSuffix;
     }
 
     /**
-     * 名前インタフェースのパッケージ名を返します。
+     * 名前クラスのパッケージ名を返します。
      * 
-     * @return 名前インタフェースのパッケージ名
+     * @return 名前クラスのパッケージ名
      */
     public String getNamesPackageName() {
         return namesPackageName;
     }
 
     /**
-     * 名前インタフェースのパッケージ名を設定します。
+     * 名前クラスのパッケージ名を設定します。
      * 
      * @param namesPackageName
-     *            名前インタフェースのパッケージ名
+     *            名前クラスのパッケージ名
      */
     public void setNamesPackageName(String namesPackageName) {
         this.namesPackageName = namesPackageName;
@@ -435,22 +435,22 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
-     * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を返します。
+     * 名前クラスを使用する場合{@code true}、しない場合{@code false}を返します。
      * 
-     * @return 名前インタフェースを実装する場合{@code true}、しない場合{@code false}
+     * @return 名前クラスを使用する場合{@code true}、しない場合{@code false}
      */
-    public boolean isImplementNames() {
-        return implementNames;
+    public boolean isUseNamesClass() {
+        return useNamesClass;
     }
 
     /**
-     * 名前インタフェースを実装する場合{@code true}、しない場合{@code false}を設定します。
+     * 名前クラスを使用する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param implementNames
-     *            名前インタフェースを実装する場合{@code true}、しない場合{@code false}
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}、しない場合{@code false}
      */
-    public void setImplementNames(boolean implementNames) {
-        this.implementNames = implementNames;
+    public void setUseNamesClass(boolean useNamesClass) {
+        this.useNamesClass = useNamesClass;
     }
 
     @Override
@@ -543,7 +543,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected ServiceModelFactory createServiceModelFactory() {
         return factory.createServiceModelFactory(this, ClassUtil.concatName(
                 rootPackageName, servicePackageName), serviceClassNameSuffix,
-                namesModelFactory, implementNames);
+                namesModelFactory, useNamesClass);
     }
 
     /**
@@ -564,7 +564,7 @@ public class GenerateServiceCommand extends AbstractCommand {
      */
     protected NamesModelFactory createNamesModelFactory() {
         return factory.createNamesModelFactory(this, ClassUtil.concatName(
-                rootPackageName, namesPackageName), namesInterfaceNameSuffix);
+                rootPackageName, namesPackageName), namesClassNameSuffix);
     }
 
     /**

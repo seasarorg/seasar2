@@ -1,14 +1,16 @@
 package hoge.service;
 
-import hoge.entity.AaaNames;
+import java.util.List;
 import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
+
+import static hoge.entity.AaaNames.*;
 
 /**
  * {@link Aaa}のサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */
-public class AaaService extends AbstractService<Aaa> implements AaaNames {
+public class AaaService extends AbstractService<Aaa> {
 
     /**
      * 識別子でエンティティを検索します。
@@ -32,5 +34,14 @@ public class AaaService extends AbstractService<Aaa> implements AaaNames {
      */
     public Aaa findByIdVersion(Integer id, Integer version) {
         return select().id(id).version(version).getSingleResult();
+    }
+
+    /**
+     * 識別子の昇順ですべてのエンティティを検索します。
+     * 
+     * @return エンティティのリスト
+     */
+    public List<Aaa> findAllOrderById() {
+        return select().orderBy(asc(id())).getResultList();
     }
 }

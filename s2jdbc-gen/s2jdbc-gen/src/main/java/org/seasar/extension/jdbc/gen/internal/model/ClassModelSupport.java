@@ -57,6 +57,38 @@ public class ClassModelSupport {
     }
 
     /**
+     * クラスモデルにstaticインポート名を追加します。
+     * 
+     * @param classModel
+     *            クラスモデル
+     * @param importClass
+     *            インポート対象のクラス
+     */
+    public void addStaticImportName(ClassModel classModel, Class<?> importClass) {
+        String importedPackageName = ClassUtil.getPackageName(importClass);
+        if (isImportTargetPackage(classModel, importedPackageName)) {
+            classModel.addStaticImportName(importClass.getName() + ".*");
+        }
+    }
+
+    /**
+     * クラスモデルにstaticインポート名を追加します。
+     * 
+     * @param classModel
+     *            クラスモデル
+     * @param importClassName
+     *            インポート対象のクラス名
+     */
+    public void addStaticImportName(ClassModel classModel,
+            String importClassName) {
+        String importedPackageName = ClassUtil
+                .splitPackageAndShortClassName(importClassName)[0];
+        if (isImportTargetPackage(classModel, importedPackageName)) {
+            classModel.addStaticImportName(importClassName + ".*");
+        }
+    }
+
+    /**
      * インポートが必要なパッケージの場合{@code true}を返します。
      * 
      * @param classModel

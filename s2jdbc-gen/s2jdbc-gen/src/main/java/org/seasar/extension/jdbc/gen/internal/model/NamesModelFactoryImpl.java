@@ -17,8 +17,13 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.gen.model.NamesAssociationModel;
+import org.seasar.extension.jdbc.gen.model.NamesAttributeModel;
 import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
+import org.seasar.extension.jdbc.name.PropertyName;
+import org.seasar.extension.jdbc.operation.Operations;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link NamesModelFactory}の実装クラスです。
@@ -27,11 +32,14 @@ import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
  */
 public class NamesModelFactoryImpl implements NamesModelFactory {
 
+    /** 内部クラスのプレフィックス */
+    protected static String INNER_CLASS_NAME_PREFIX = "_";
+
     /** パッケージ名 */
     protected String packageName;
 
-    /** 名前インタフェース名のサフィックス */
-    protected String namesInterfaceNameSuffix;
+    /** 名前クラス名のサフィックス */
+    protected String namesClassNameSuffix;
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
@@ -39,32 +47,110 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
     /**
      * インスタンスを構築します。
      * 
-     * @param namesInterfaceNameSuffix
-     *            名前インタフェース名のサフィックス
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
      * @param packageName
      *            パッケージ名
      */
-    public NamesModelFactoryImpl(String packageName,
-            String namesInterfaceNameSuffix) {
-        if (namesInterfaceNameSuffix == null) {
-            throw new NullPointerException("namesInterfaceNameSuffix");
+    public NamesModelFactoryImpl(String packageName, String namesClassNameSuffix) {
+        if (namesClassNameSuffix == null) {
+            throw new NullPointerException("namesClassNameSuffix");
         }
         this.packageName = packageName;
-        this.namesInterfaceNameSuffix = namesInterfaceNameSuffix;
+        this.namesClassNameSuffix = namesClassNameSuffix;
     }
 
     public NamesModel getNamesModel(EntityMeta entityMeta) {
         NamesModel namesModel = new NamesModel();
         namesModel.setPackageName(packageName);
+        String shortClassName = entityMeta.getName() + namesClassNameSuffix;
         namesModel.setShortClassName(entityMeta.getName()
-                + namesInterfaceNameSuffix);
+                + namesClassNameSuffix);
+        namesModel.setShortInnerClassName(INNER_CLASS_NAME_PREFIX
+                + shortClassName);
         namesModel.setShortEntityClassName(entityMeta.getEntityClass()
                 .getSimpleName());
         for (PropertyMeta propertyMeta : entityMeta.getAllPropertyMeta()) {
-            namesModel.addName(propertyMeta.getName());
+            if (propertyMeta.isTransient()) {
+                continue;
+            }
+            if (propertyMeta.isRelationship()) {
+                doNamesAssociationModel(namesModel, propertyMeta);
+            } else {
+                doNamesAttributeModel(namesModel, propertyMeta);
+            }
         }
+        doImportName(namesModel, entityMeta);
+        return namesModel;
+    }
+
+    /**
+     * 名前の属性モデルを処理します。
+     * 
+     * @param namesModel
+     *            名前モデル
+     * @param propertyMeta
+     *            プロパティメタデータ
+     */
+    protected void doNamesAttributeModel(NamesModel namesModel,
+            PropertyMeta propertyMeta) {
+        NamesAttributeModel namesAttributeModel = new NamesAttributeModel();
+        namesAttributeModel.setName(propertyMeta.getName());
+        Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(propertyMeta
+                .getPropertyClass());
+        namesAttributeModel.setAttributeClass(clazz);
+        namesModel.addNamesAttributeModel(namesAttributeModel);
+    }
+
+    /**
+     * 名前の関連モデルを処理します。
+     * 
+     * @param namesModel
+     *            名前モデル
+     * @param propertyMeta
+     *            プロパティメタデータ
+     */
+    protected void doNamesAssociationModel(NamesModel namesModel,
+            PropertyMeta propertyMeta) {
+        NamesAssociationModel namesAssociationModel = new NamesAssociationModel();
+        namesAssociationModel.setName(propertyMeta.getName());
+        String shortClassName = INNER_CLASS_NAME_PREFIX
+                + propertyMeta.getRelationshipClass().getSimpleName()
+                + namesClassNameSuffix;
+        namesAssociationModel.setShortClassName(shortClassName);
+        StringBuilder buf = new StringBuilder();
+        buf.append(packageName);
+        buf.append(".");
+        buf.append(propertyMeta.getRelationshipClass().getSimpleName());
+        buf.append(namesClassNameSuffix);
+        buf.append(".");
+        buf.append(shortClassName);
+        namesAssociationModel.setClassName(buf.toString());
+        namesModel.adddNamesAssociationModel(namesAssociationModel);
+    }
+
+    /**
+     * インポート名を処理します。
+     * 
+     * @param namesModel
+     *            名前モデル
+     * @param entityMeta
+     *            エンティティメターデータ
+     */
+    protected void doImportName(NamesModel namesModel, EntityMeta entityMeta) {
         classModelSupport
                 .addImportName(namesModel, entityMeta.getEntityClass());
-        return namesModel;
+        classModelSupport.addImportName(namesModel, PropertyName.class);
+        classModelSupport.addImportName(namesModel, Operations.class);
+        for (NamesAttributeModel attributeModel : namesModel
+                .getNamesAttributeModelList()) {
+            classModelSupport.addImportName(namesModel, attributeModel
+                    .getAttributeClass());
+        }
+        for (NamesAssociationModel associationModel : namesModel
+                .getNamesAssociationModelList()) {
+            classModelSupport.addImportName(namesModel, associationModel
+                    .getClassName());
+        }
     }
 }

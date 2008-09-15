@@ -1,15 +1,17 @@
 package hoge.service;
 
-import hoge.entity.CccNames;
 import java.math.BigDecimal;
+import java.util.List;
 import org.seasar.extension.jdbc.gen.internal.generator.Ccc;
+
+import static hoge.entity.CccNames.*;
 
 /**
  * {@link Ccc}のサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */
-public class CccService extends AbstractService<Ccc> implements CccNames {
+public class CccService extends AbstractService<Ccc> {
 
     /**
      * 識別子でエンティティを検索します。
@@ -37,5 +39,14 @@ public class CccService extends AbstractService<Ccc> implements CccNames {
      */
     public Ccc findByIdVersion(String id1, BigDecimal id2, Integer version) {
         return select().id(id1, id2).version(version).getSingleResult();
+    }
+
+    /**
+     * 識別子の昇順ですべてのエンティティを検索します。
+     * 
+     * @return エンティティのリスト
+     */
+    public List<Ccc> findAllOrderById() {
+        return select().orderBy(asc(id1()), asc(id2())).getResultList();
     }
 }

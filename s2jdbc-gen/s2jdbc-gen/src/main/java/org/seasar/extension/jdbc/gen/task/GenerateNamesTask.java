@@ -23,7 +23,7 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateNamesCommand;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceCommand;
 
 /**
- * エンティティに対する名前インタフェースのJavaファイルを生成する{@link Task}です。
+ * エンティティに対する名前クラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
  * @see GenerateServiceCommand
@@ -176,30 +176,30 @@ public class GenerateNamesTask extends AbstractTask {
     }
 
     /**
-     * 名前インタフェース名のサフィックスを設定します。
+     * 名前クラス名のサフィックスを設定します。
      * 
-     * @param namesInterfaceNameSuffix
-     *            名前インタフェース名のサフィックス
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
      */
-    public void setNamesInterfaceNameSuffix(String namesInterfaceNameSuffix) {
-        command.setNamesInterfaceNameSuffix(namesInterfaceNameSuffix);
+    public void setNamesClassNameSuffix(String namesClassNameSuffix) {
+        command.setNamesClassNameSuffix(namesClassNameSuffix);
     }
 
     /**
-     * 名前インタフェースのパッケージ名を設定します。
+     * 名前クラスのパッケージ名を設定します。
      * 
      * @param namesPackageName
-     *            名前インタフェースのパッケージ名
+     *            名前クラスのパッケージ名
      */
     public void setNamesPackageName(String namesPackageName) {
         command.setNamesPackageName(namesPackageName);
     }
 
     /**
-     * 名前インタフェースのテンプレート名を設定します。
+     * 名前クラスのテンプレート名を設定します。
      * 
      * @param namesTemplateFileName
-     *            名前インタフェースのテンプレート名
+     *            名前クラスのテンプレート名
      */
     public void setNamesTemplateFileName(String namesTemplateFileName) {
         command.setNamesTemplateFileName(namesTemplateFileName);

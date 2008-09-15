@@ -31,14 +31,14 @@ import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * 名前インタフェースのJavaファイルを生成する{@link Command}の実装です。
+ * 名前クラスのJavaファイルを生成する{@link Command}の実装です。
  * <p>
- * このコマンドは、エンティティクラスのメタデータから名前インタフェースのJavaファイルを生成します。 そのため、
+ * このコマンドは、エンティティクラスのメタデータから名前クラスのJavaファイルを生成します。 そのため、
  * コマンドを実行するにはエンティティクラスを参照できるようにエンティティクラスが格納されたディレクトリをあらかじめクラスパスに設定しておく必要があります 。
  * また、そのディレクトリは、プロパティ{@link #classpathDir}に設定しておく必要があります。
  * </p>
  * <p>
- * このコマンドは、エンティティクラス１つにつき１つの名前インタフェースのJavaファイルを生成します。
+ * このコマンドは、エンティティクラス１つにつき１つの名前クラスのJavaファイルを生成します。
  * </p>
  * 
  * @author taedium
@@ -64,13 +64,13 @@ public class GenerateNamesCommand extends AbstractCommand {
     /** 対象としないエンティティクラス名の正規表現 */
     protected String ignoreEntityClassNamePattern = "";
 
-    /** 名前インタフェースのパッケージ名 */
+    /** 名前クラスのパッケージ名 */
     protected String namesPackageName = "entity";
 
-    /** 名前インタフェース名のサフィックス */
-    protected String namesInterfaceNameSuffix = "Names";
+    /** 名前クラス名のサフィックス */
+    protected String namesClassNameSuffix = "Names";
 
-    /** 名前インタフェースのテンプレート名 */
+    /** 名前クラスのテンプレート名 */
     protected String namesTemplateFileName = "java/names.ftl";
 
     /** テンプレートファイルのエンコーディング */
@@ -123,57 +123,57 @@ public class GenerateNamesCommand extends AbstractCommand {
     }
 
     /**
-     * 名前インタフェース名のサフィックスを返します。
+     * 名前クラス名のサフィックスを返します。
      * 
-     * @return 名前インタフェース名のサフィックス
+     * @return 名前クラス名のサフィックス
      */
-    public String getNamesInterfaceNameSuffix() {
-        return namesInterfaceNameSuffix;
+    public String getNamesClassNameSuffix() {
+        return namesClassNameSuffix;
     }
 
     /**
-     * 名前インタフェース名のサフィックスを設定します。
+     * 名前クラス名のサフィックスを設定します。
      * 
-     * @param namesInterfaceNameSuffix
-     *            名前インタフェース名のサフィックス
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
      */
-    public void setNamesInterfaceNameSuffix(String namesInterfaceNameSuffix) {
-        this.namesInterfaceNameSuffix = namesInterfaceNameSuffix;
+    public void setNamesClassNameSuffix(String namesClassNameSuffix) {
+        this.namesClassNameSuffix = namesClassNameSuffix;
     }
 
     /**
-     * 名前インタフェースのパッケージ名を返します。
+     * 名前クラスのパッケージ名を返します。
      * 
-     * @return 名前インタフェースのパッケージ名
+     * @return 名前クラスのパッケージ名
      */
     public String getNamesPackageName() {
         return namesPackageName;
     }
 
     /**
-     * 名前インタフェースのパッケージ名を設定します。
+     * 名前クラスのパッケージ名を設定します。
      * 
      * @param namesPackageName
-     *            名前インタフェースのパッケージ名
+     *            名前クラスのパッケージ名
      */
     public void setNamesPackageName(String namesPackageName) {
         this.namesPackageName = namesPackageName;
     }
 
     /**
-     * 名前インタフェースのテンプレート名を返します。
+     * 名前クラスのテンプレート名を返します。
      * 
-     * @return 名前インタフェースのテンプレート名
+     * @return 名前クラスのテンプレート名
      */
     public String getNamesTemplateFileName() {
         return namesTemplateFileName;
     }
 
     /**
-     * 名前インタフェースのテンプレート名を設定します。
+     * 名前クラスのテンプレート名を設定します。
      * 
      * @param namesTemplateFileName
-     *            名前インタフェースのテンプレート名
+     *            名前クラスのテンプレート名
      */
     public void setNamesTemplateFileName(String namesTemplateFileName) {
         this.namesTemplateFileName = namesTemplateFileName;
@@ -377,7 +377,7 @@ public class GenerateNamesCommand extends AbstractCommand {
     }
 
     /**
-     * 名前インタフェースのJavaファイルを生成します。
+     * 名前クラスのJavaファイルを生成します。
      * 
      * @param entityMeta
      *            エンティティメタデータ
@@ -425,7 +425,7 @@ public class GenerateNamesCommand extends AbstractCommand {
      */
     protected NamesModelFactory createNamesModelFactory() {
         return factory.createNamesModelFactory(this, ClassUtil.concatName(
-                rootPackageName, namesPackageName), namesInterfaceNameSuffix);
+                rootPackageName, namesPackageName), namesClassNameSuffix);
     }
 
     /**

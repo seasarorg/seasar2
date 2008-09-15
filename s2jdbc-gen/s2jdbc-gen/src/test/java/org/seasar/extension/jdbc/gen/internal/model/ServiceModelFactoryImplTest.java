@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -86,11 +87,16 @@ public class ServiceModelFactoryImplTest {
                 .getShortClassName());
         assertEquals("Aaa", serviceModel.getShortEntityClassName());
         assertEquals(1, serviceModel.getIdPropertyMetaList().size());
+
         assertEquals(2, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
-        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$AaaNames", iterator
-                .next());
+        assertEquals(List.class.getName(), iterator.next());
         assertEquals(Aaa.class.getName(), iterator.next());
+
+        assertEquals(1, serviceModel.getStaticImportNameSet().size());
+        iterator = serviceModel.getStaticImportNameSet().iterator();
+        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$AaaNames.*", iterator
+                .next());
     }
 
     /**
@@ -107,12 +113,17 @@ public class ServiceModelFactoryImplTest {
         assertEquals("ServiceModelFactoryImplTest$BbbService", serviceModel
                 .getShortClassName());
         assertEquals(2, serviceModel.getIdPropertyMetaList().size());
+
         assertEquals(3, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
-        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames", iterator
-                .next());
         assertEquals(Date.class.getName(), iterator.next());
+        assertEquals(List.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
+
+        assertEquals(1, serviceModel.getStaticImportNameSet().size());
+        iterator = serviceModel.getStaticImportNameSet().iterator();
+        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames.*", iterator
+                .next());
     }
 
     /** */

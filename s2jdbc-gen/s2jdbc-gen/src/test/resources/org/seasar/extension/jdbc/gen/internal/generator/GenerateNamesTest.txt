@@ -1,20 +1,102 @@
 package hoge.entity;
 
+import hoge.entity.AaaNames._AaaNames;
 import org.seasar.extension.jdbc.gen.internal.generator.Bbb;
+import org.seasar.extension.jdbc.name.PropertyName;
+import org.seasar.extension.jdbc.operation.Operations;
 
 /**
  * {@link Bbb}のプロパティ名の集合です。
  * 
  * @author S2JDBC-Gen
  */
-public interface BbbNames {
+public class BbbNames extends Operations {
 
-    /** {@link Bbb#id}の名前 */
-    String id = "id";
+    /**
+     * idのプロパティ名を返します。
+     * 
+     * @return idのプロパティ名
+     */
+    public static PropertyName<Integer> id() {
+        return new PropertyName<Integer>("id");
+    }
 
-    /** {@link Bbb#name}の名前 */
-    String name = "name";
+    /**
+     * nameのプロパティ名を返します。
+     * 
+     * @return nameのプロパティ名
+     */
+    public static PropertyName<String> name() {
+        return new PropertyName<String>("name");
+    }
 
-    /** {@link Bbb#aaas}の名前 */
-    String aaas = "aaas";
+    /**
+     * aaasのプロパティ名を返します。
+     * 
+     * @return aaasのプロパティ名
+     */
+    public static _AaaNames aaas() {
+        return new _AaaNames("aaas");
+    }
+
+    /**
+     * @author S2JDBC-Gen
+     */
+    public static class _BbbNames extends PropertyName<Bbb> {
+
+        /**
+         * インスタンスを構築します。
+         */
+        public _BbbNames() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param name
+         *            名前
+         */
+        public _BbbNames(final String name) {
+            super(name);
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param parent
+         *            親
+         * @param name
+         *            名前
+         */
+        public _BbbNames(final PropertyName<?> parent, final String name) {
+            super(parent, name);
+        }
+
+        /**
+         * idのプロパティ名を返します。
+         *
+         * @return idのプロパティ名
+         */
+        public PropertyName<Integer> id() {
+            return new PropertyName<Integer>(this, "id");
+        }
+
+        /**
+         * nameのプロパティ名を返します。
+         *
+         * @return nameのプロパティ名
+         */
+        public PropertyName<String> name() {
+            return new PropertyName<String>(this, "name");
+        }
+
+        /**
+         * aaasのプロパティ名を返します。
+         * 
+         * @return aaasのプロパティ名
+         */
+        public _AaaNames aaas() {
+            return new _AaaNames(this, "aaas");
+        }
+    }
 }

@@ -6,13 +6,19 @@ package ${packageName};
 <#list importNameSet as importName>
 import ${importName};
 </#list>
+<#if staticImportNameSet?size gt 0>
+
+  <#list staticImportNameSet as importName>
+import static ${importName};
+  </#list>
+</#if>
 
 /**
  * {@link ${shortEntityClassName}}のサービスクラスです。
  * 
  * @author S2JDBC-Gen
  */
-public class ${shortClassName} extends AbstractService<${shortEntityClassName}><#if namesModel??> implements ${namesModel.shortClassName}</#if> {
+public class ${shortClassName} extends AbstractService<${shortEntityClassName}> {
 <#if idPropertyMetaList?size gt 0>
 
     /**
@@ -43,6 +49,17 @@ public class ${shortClassName} extends AbstractService<${shortEntityClassName}><
      */
     public ${shortEntityClassName} findByIdVersion(<#list idPropertyMetaList as prop>${prop.propertyClass.simpleName} ${prop.name}, </#list>${versionPropertyMeta.propertyClass.simpleName} ${versionPropertyMeta.name}) {
         return select().id(<#list idPropertyMetaList as prop>${prop.name}<#if prop_has_next>, </#if></#list>).version(${versionPropertyMeta.name}).getSingleResult();
+    }
+</#if>
+<#if namesModel?? && idPropertyMetaList?size gt 0>
+
+    /**
+     * 識別子の昇順ですべてのエンティティを検索します。
+     * 
+     * @return エンティティのリスト
+     */
+    public List<${shortEntityClassName}> findAllOrderById() {
+        return select().orderBy(<#list idPropertyMetaList as prop>asc(${prop.name}())<#if prop_has_next>, </#if></#list>).getResultList();
     }
 </#if>
 }

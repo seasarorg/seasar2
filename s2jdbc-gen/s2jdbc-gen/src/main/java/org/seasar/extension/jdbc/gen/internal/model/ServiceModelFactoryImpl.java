@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import java.util.List;
+
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.NamesModel;
@@ -39,8 +41,8 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
     /** 名前モデルのファクトリ */
     protected NamesModelFactory namesModelFactory;
 
-    /** 名前インタフェースを実装する場合{@code true} */
-    protected boolean implementNames;
+    /** 名前クラスを使用する場合{@code true} */
+    protected boolean useNamesClass;
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
@@ -54,12 +56,12 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      *            名前モデルのファクトリ
      * @param serviceClassNameSuffix
      *            サービスクラス名のサフィックス
-     * @param implementNames
-     *            名前インタフェースを実装する場合{@code true}
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}
      */
     public ServiceModelFactoryImpl(String packageName,
             String serviceClassNameSuffix, NamesModelFactory namesModelFactory,
-            boolean implementNames) {
+            boolean useNamesClass) {
         if (serviceClassNameSuffix == null) {
             throw new NullPointerException("serviceClassNameSuffix");
         }
@@ -69,7 +71,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         this.packageName = packageName;
         this.serviceClassNameSuffix = serviceClassNameSuffix;
         this.namesModelFactory = namesModelFactory;
-        this.implementNames = implementNames;
+        this.useNamesClass = useNamesClass;
     }
 
     public ServiceModel getServiceModel(EntityMeta entityMeta) {
@@ -100,12 +102,9 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      *            エンティティメタデータ
      */
     protected void doNamesModel(ServiceModel serviceModel, EntityMeta entityMeta) {
-        if (implementNames) {
+        if (entityMeta.getIdPropertyMetaList().size() > 0 && useNamesClass) {
             NamesModel namesModel = namesModelFactory.getNamesModel(entityMeta);
             serviceModel.setNamesModel(namesModel);
-            String namesClassName = ClassUtil.concatName(namesModel
-                    .getPackageName(), namesModel.getShortClassName());
-            classModelSupport.addImportName(serviceModel, namesClassName);
         }
     }
 
@@ -128,6 +127,13 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         if (propertyMeta != null) {
             classModelSupport.addImportName(serviceModel, propertyMeta
                     .getPropertyClass());
+        }
+        NamesModel namesModel = serviceModel.getNamesModel();
+        if (namesModel != null) {
+            String namesClassName = ClassUtil.concatName(namesModel
+                    .getPackageName(), namesModel.getShortClassName());
+            classModelSupport.addStaticImportName(serviceModel, namesClassName);
+            classModelSupport.addImportName(serviceModel, List.class);
         }
     }
 }

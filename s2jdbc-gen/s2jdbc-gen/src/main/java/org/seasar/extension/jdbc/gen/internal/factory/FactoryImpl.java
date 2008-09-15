@@ -212,10 +212,10 @@ public class FactoryImpl implements Factory {
 
     public ServiceModelFactory createServiceModelFactory(Command command,
             String packageName, String serviceClassNameSuffix,
-            NamesModelFactory namesModelFactory, boolean implementNames) {
+            NamesModelFactory namesModelFactory, boolean useNamesClass) {
 
         return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix,
-                namesModelFactory, implementNames);
+                namesModelFactory, useNamesClass);
     }
 
     public AbstServiceModelFactory createAbstServiceModelFactory(
@@ -234,9 +234,9 @@ public class FactoryImpl implements Factory {
     }
 
     public NamesModelFactory createNamesModelFactory(Command command,
-            String packageName, String namesInterfaceNameSuffix) {
+            String packageName, String namesClassNameSuffix) {
 
-        return new NamesModelFactoryImpl(packageName, namesInterfaceNameSuffix);
+        return new NamesModelFactoryImpl(packageName, namesClassNameSuffix);
     }
 
     public SchemaInfoTable createSchemaInfoTable(Command command,

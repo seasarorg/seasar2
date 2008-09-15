@@ -19,10 +19,13 @@ import java.util.Iterator;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.gen.model.NamesAssociationModel;
+import org.seasar.extension.jdbc.gen.model.NamesAttributeModel;
 import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -76,14 +79,38 @@ public class NamesModelFactoryImplTest {
         assertEquals("aaa.bbb", namesModel.getPackageName());
         assertEquals("NamesModelFactoryImplTest$AaaNames", namesModel
                 .getShortClassName());
-        assertEquals(2, namesModel.getNameList().size());
-        assertEquals("id", namesModel.getNameList().get(0));
-        assertEquals("name", namesModel.getNameList().get(1));
-        assertEquals(1, namesModel.getImportNameSet().size());
+
+        assertEquals(3, namesModel.getNamesAttributeModelList().size());
+        NamesAttributeModel attributeModel = namesModel
+                .getNamesAttributeModelList().get(0);
+        assertEquals("id", attributeModel.getName());
+        assertEquals(Integer.class, attributeModel.getAttributeClass());
+        attributeModel = namesModel.getNamesAttributeModelList().get(1);
+        assertEquals("name", attributeModel.getName());
+        assertEquals(String.class, attributeModel.getAttributeClass());
+        attributeModel = namesModel.getNamesAttributeModelList().get(2);
+        assertEquals("bbbId", attributeModel.getName());
+        assertEquals(Integer.class, attributeModel.getAttributeClass());
+
+        assertEquals(1, namesModel.getNamesAssociationModelList().size());
+        NamesAssociationModel associationModel = namesModel
+                .getNamesAssociationModelList().get(0);
+        assertEquals("bbb", associationModel.getName());
+        assertEquals("_BbbNames", associationModel
+                .getShortClassName());
+        assertEquals("aaa.bbb.BbbNames._BbbNames", associationModel
+                .getClassName());
+
+        assertEquals(4, namesModel.getImportNameSet().size());
         Iterator<String> iterator = namesModel.getImportNameSet().iterator();
+        assertEquals("aaa.bbb.BbbNames._BbbNames", iterator.next());
         assertEquals(
                 "org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImplTest$Aaa",
                 iterator.next());
+        assertEquals("org.seasar.extension.jdbc.name.PropertyName", iterator
+                .next());
+        assertEquals("org.seasar.extension.jdbc.operation.Operations", iterator
+                .next());
     }
 
     /** */
@@ -92,9 +119,25 @@ public class NamesModelFactoryImplTest {
 
         /** */
         @Id
-        protected Integer id;
+        public int id;
 
         /** */
-        protected String name;
+        public String name;
+
+        /** */
+        public int bbbId;
+
+        /** */
+        @ManyToOne
+        public Bbb bbb;
+    }
+
+    /** */
+    @Entity
+    public static class Bbb {
+
+        /** */
+        @Id
+        public int id;
     }
 }
