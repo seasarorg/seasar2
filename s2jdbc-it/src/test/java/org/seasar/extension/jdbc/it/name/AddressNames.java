@@ -15,10 +15,10 @@
  */
 package org.seasar.extension.jdbc.it.name;
 
+import org.seasar.extension.jdbc.it.entity.Address;
+import org.seasar.extension.jdbc.it.name.EmployeeNames._EmployeeNames;
 import org.seasar.extension.jdbc.name.PropertyName;
 import org.seasar.extension.jdbc.operation.Operations;
-import org.seasar.extension.jdbc.where.Department;
-import org.seasar.extension.jdbc.where.EmployeeNames._EmployeeNames;
 
 /**
  * @author koichik
@@ -56,7 +56,7 @@ public class AddressNames extends Operations {
     /**
      * @author koichik
      */
-    public static class _AddressNames extends PropertyName<Department> {
+    public static class _AddressNames extends PropertyName<Address> {
 
         /**
          * 
