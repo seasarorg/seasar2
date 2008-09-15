@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.data;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 
 import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
@@ -100,6 +101,7 @@ public class DumperImpl implements Dumper {
     protected void dumpTable(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, DumpFileWriter writer) {
         String sql = buildSql(tableDesc);
+        logger.debug(sql);
         Statement statement = sqlExecutionContext.getStatement();
         try {
             ResultSet rs = statement.executeQuery(sql);
@@ -129,7 +131,22 @@ public class DumperImpl implements Dumper {
      * @return SQL
      */
     protected String buildSql(TableDesc tableDesc) {
-        return "select * from " + tableDesc.getFullName();
+        StringBuilder buf = new StringBuilder();
+        buf.append("select * from ");
+        buf.append(tableDesc.getFullName());
+        if (tableDesc.getPrimaryKeyDesc() != null) {
+            List<String> pkColumnNameList = tableDesc.getPrimaryKeyDesc()
+                    .getColumnNameList();
+            if (pkColumnNameList.size() > 0) {
+                buf.append(" order by ");
+                for (String columnName : pkColumnNameList) {
+                    buf.append(columnName);
+                    buf.append(", ");
+                }
+                buf.setLength(buf.length() - 2);
+            }
+        }
+        return buf.toString();
     }
 
     /**
