@@ -314,4 +314,14 @@ public class GenerateEntityTask extends AbstractTask {
         command.setAllocationSize(allocationSize);
     }
 
+    /**
+     * エンティティのスーパークラスの名前を設定します。
+     * 
+     * @param enititySuperclassName
+     *            エンティティのスーパークラスの名前
+     */
+    public void setEnititySuperclassName(String enititySuperclassName) {
+        command.setEnititySuperclassName(enititySuperclassName);
+    }
+
 }

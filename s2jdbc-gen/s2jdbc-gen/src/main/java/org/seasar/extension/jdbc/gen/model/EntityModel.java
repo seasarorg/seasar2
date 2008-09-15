@@ -35,6 +35,9 @@ public class EntityModel extends ClassModel {
     /** テーブル名 */
     protected String tableName;
 
+    /** スーパークラスの単純名 */
+    protected String shortSuperclassName;
+
     /** 複合識別子を持つ場合{@code true} */
     protected boolean compositeId;
 
@@ -102,6 +105,25 @@ public class EntityModel extends ClassModel {
      */
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    /**
+     * スーパークラスの単純名を返します。
+     * 
+     * @return スーパークラスの単純名
+     */
+    public String getShortSuperclassName() {
+        return shortSuperclassName;
+    }
+
+    /**
+     * スーパークラスの単純名を設定します。
+     * 
+     * @param shortSuperclassName
+     *            スーパークラスの単純名
+     */
+    public void setShortSuperclassName(String shortSuperclassName) {
+        this.shortSuperclassName = shortSuperclassName;
     }
 
     /**

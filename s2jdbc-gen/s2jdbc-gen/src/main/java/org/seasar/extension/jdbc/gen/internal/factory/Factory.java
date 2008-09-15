@@ -322,6 +322,8 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     * @param superclass
+     *            エンティティのスーパークラス、スーパークラスを持たない場合は{@code null}
      * @param showCatalogName
      *            カタログ名を表示する場合{@code true}
      * @param showSchemaName
@@ -338,7 +340,7 @@ public interface Factory {
      * @return {@link EntityModelFactory}の実装
      */
     EntityModelFactory createEntityModelFactory(Command command,
-            String packageName, boolean showCatalogName,
+            String packageName, Class<?> superclass, boolean showCatalogName,
             boolean showSchemaName, boolean showTableName,
             boolean showColumnName, boolean showColumnDefinition,
             boolean showJoinColumn);

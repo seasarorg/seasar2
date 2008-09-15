@@ -1,0 +1,32 @@
+package hoge.entity;
+
+import java.math.BigDecimal;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import org.seasar.extension.jdbc.gen.internal.generator.Eee;
+
+/**
+ * Fooエンティティクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo extends Eee {
+
+    /** idプロパティ */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @SequenceGenerator(name = "generator", initialValue = 100, allocationSize = 50)
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    public int id;
+
+    /** salプロパティ */
+    @Column(columnDefinition = "decimal(15,5)", nullable = false, unique = false)
+    public BigDecimal sal;
+}

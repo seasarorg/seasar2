@@ -25,6 +25,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.Lob;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -47,6 +48,8 @@ import org.seasar.extension.jdbc.gen.model.CompositeUniqueConstraintModel;
 import org.seasar.extension.jdbc.gen.model.CompositeUniqueConstraintModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
+import org.seasar.framework.beans.BeanDesc;
+import org.seasar.framework.beans.factory.BeanDescFactory;
 
 /**
  * {@link EntityModelFactory}の実装クラスです。
@@ -76,6 +79,15 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** テーブル名を表示する場合{@code true} */
     protected boolean showTableName;
 
+    /** エンティティのスーパークラス、スーパークラスを持たない場合は{@code null} */
+    protected Class<?> superclass;
+
+    /**
+     * {@link #superclass}が{@link MappedSuperclass}である場合そのクラスのBean記述、そうでない場合
+     * {@code null}
+     */
+    protected BeanDesc mappedSuperclassBeanDesc;
+
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
 
@@ -84,8 +96,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      * 
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
-     * @param tableNameQualified
-     *            テーブル名をカタログ名とスキーマ名で修飾する場合{@code true}、修飾しない場合{@code false}
+     * @param superclass
+     *            エンティティのスーパークラス、スーパークラスを持たない場合は{@code null}
      * @param attributeModelFactory
      *            属性モデルのファクトリ
      * @param associationModelFactory
@@ -101,6 +113,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      */
     public EntityModelFactoryImpl(
             String packageName,
+            Class<?> superclass,
             AttributeModelFactory attributeModelFactory,
             AssociationModelFactory associationModelFactory,
             CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory,
@@ -117,12 +130,19 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
                     "compositeUniqueConstraintModelFactory");
         }
         this.packageName = packageName;
+        this.superclass = superclass;
         this.attributeModelFactory = attributeModelFactory;
         this.associationModelFactory = associationModelFactory;
         this.compositeUniqueConstraintModelFactory = compositeUniqueConstraintModelFactory;
         this.showCatalogName = showCatalogName;
         this.showSchemaName = showSchemaName;
         this.showTableName = showTableName;
+        if (superclass != null) {
+            if (superclass.isAnnotationPresent(MappedSuperclass.class)) {
+                mappedSuperclassBeanDesc = BeanDescFactory
+                        .getBeanDesc(superclass);
+            }
+        }
     }
 
     public EntityModel getEntityModel(EntityDesc entityDesc) {
@@ -138,6 +158,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         }
         entityModel.setPackageName(packageName);
         entityModel.setShortClassName(entityDesc.getName());
+        if (superclass != null) {
+            entityModel.setShortSuperclassName(superclass.getSimpleName());
+        }
         entityModel.setCompositeId(entityDesc.hasCompositeId());
         doAttributeModel(entityModel, entityDesc);
         doAssociationModel(entityModel, entityDesc);
@@ -157,6 +180,11 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     protected void doAttributeModel(EntityModel entityModel,
             EntityDesc entityDesc) {
         for (AttributeDesc attributeDesc : entityDesc.getAttributeDescList()) {
+            if (mappedSuperclassBeanDesc != null
+                    && mappedSuperclassBeanDesc.hasField(attributeDesc
+                            .getName())) {
+                continue;
+            }
             AttributeModel attributeModel = attributeModelFactory
                     .getAttributeModel(attributeDesc);
             entityModel.addAttributeModel(attributeModel);
@@ -175,6 +203,11 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             EntityDesc entityDesc) {
         for (AssociationDesc associationDesc : entityDesc
                 .getAssociationDescList()) {
+            if (mappedSuperclassBeanDesc != null
+                    && mappedSuperclassBeanDesc.hasField(associationDesc
+                            .getName())) {
+                continue;
+            }
             AssociationModel associationModel = associationModelFactory
                     .getAssociationModel(associationDesc);
             entityModel.addAssociationModel(associationModel);
@@ -213,6 +246,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         if (model.getCatalogName() != null || model.getSchemaName() != null
                 || model.getTableName() != null) {
             classModelSupport.addImportName(model, Table.class);
+        }
+        if (superclass != null) {
+            classModelSupport.addImportName(model, superclass);
         }
         for (AttributeModel attr : model.getAttributeModelList()) {
             if (attr.isId()) {

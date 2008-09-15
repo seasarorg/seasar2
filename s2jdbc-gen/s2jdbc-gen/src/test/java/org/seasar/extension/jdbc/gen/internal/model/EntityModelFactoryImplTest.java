@@ -44,8 +44,8 @@ import static org.junit.Assert.*;
 public class EntityModelFactoryImplTest {
 
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
-            "aaa.bbb", new AttributeModelFactoryImpl(true, true),
-            new AssociationModelFactoryImpl(true),
+            "aaa.bbb", Superclass.class, new AttributeModelFactoryImpl(true,
+                    true), new AssociationModelFactoryImpl(true),
             new CompositeUniqueConstraintModelFactoryImpl(), true, true, true);
 
     /**
@@ -103,7 +103,7 @@ public class EntityModelFactoryImplTest {
         assertEquals("FOO", model.getTableName());
 
         Set<String> set = model.getImportNameSet();
-        assertEquals(11, set.size());
+        assertEquals(12, set.size());
         Iterator<String> iterator = set.iterator();
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(Column.class.getName(), iterator.next());
@@ -116,6 +116,11 @@ public class EntityModelFactoryImplTest {
         assertEquals(TemporalType.class.getName(), iterator.next());
         assertEquals(Transient.class.getName(), iterator.next());
         assertEquals(Version.class.getName(), iterator.next());
+        assertEquals(Superclass.class.getName(), iterator.next());
+    }
+
+    /** */
+    public static class Superclass {
     }
 
 }

@@ -59,7 +59,7 @@ public class GenerateEntityTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new EntityModelFactoryImpl("hoge.entity",
+        factory = new EntityModelFactoryImpl("hoge.entity", null,
                 new AttributeModelFactoryImpl(false, true),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), true, true,
@@ -477,6 +477,63 @@ public class GenerateEntityTest {
         generator.generate(context);
         String path = getClass().getName().replace(".", "/")
                 + "_UniqueConstraint.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testSuperclass() throws Exception {
+        factory = new EntityModelFactoryImpl("hoge.entity", Eee.class,
+                new AttributeModelFactoryImpl(false, true),
+                new AssociationModelFactoryImpl(false),
+                new CompositeUniqueConstraintModelFactoryImpl(), true, true,
+                false);
+
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setGenerationType(GenerationType.SEQUENCE);
+        id.setInitialValue(100);
+        id.setAllocationSize(50);
+        id.setAttributeClass(int.class);
+        id.setColumnName("ID");
+        id.setColumnDefinition("integer");
+        id.setNullable(false);
+
+        AttributeDesc name = new AttributeDesc();
+        name.setName("name");
+        name.setAttributeClass(String.class);
+        name.setColumnName("NAME");
+        name.setColumnDefinition("varchar(10)");
+        name.setNullable(false);
+        name.setUnique(true);
+
+        AttributeDesc sal = new AttributeDesc();
+        sal.setName("sal");
+        sal.setAttributeClass(BigDecimal.class);
+        sal.setColumnName("SAL");
+        sal.setColumnDefinition("decimal(15,5)");
+        sal.setNullable(false);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+        entityDesc.addAttributeDesc(id);
+        entityDesc.addAttributeDesc(name);
+        entityDesc.addAttributeDesc(sal);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_Superclass.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 }
