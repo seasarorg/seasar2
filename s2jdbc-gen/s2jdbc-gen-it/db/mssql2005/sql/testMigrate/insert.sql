@@ -1,8 +1,6 @@
-SET IDENTITY_INSERT ADDRESS ON;
 insert into ADDRESS (ID, CITY) values (1, 'aaa');
 insert into ADDRESS (ID, CITY) values (2, 'bbb');
 insert into ADDRESS (ID, CITY) values (3, 'ccc');
-SET IDENTITY_INSERT ADDRESS OFF;
 SET IDENTITY_INSERT DEPARTMENT ON;
 insert into DEPARTMENT (ID, NAME) values (1, 'aaa');
 SET IDENTITY_INSERT DEPARTMENT OFF;

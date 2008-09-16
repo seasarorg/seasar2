@@ -176,6 +176,10 @@ public class StandardGenDialect implements GenDialect {
         return false;
     }
 
+    public boolean isColumnNotFound(Throwable throwable) {
+        return false;
+    }
+
     public boolean isSequenceNotFound(Throwable throwable) {
         return false;
     }

@@ -100,7 +100,33 @@ public class DumperImpl implements Dumper {
      */
     protected void dumpTable(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, DumpFileWriter writer) {
-        String sql = buildSql(tableDesc);
+        String sql = buildSqlWithOrderby(tableDesc);
+        try {
+            tryDumpTable(sqlExecutionContext, tableDesc, writer, sql, false);
+        } catch (RetryRuntimeException e) {
+            sql = buildSql(tableDesc);
+            tryDumpTable(sqlExecutionContext, tableDesc, writer, sql, true);
+        }
+
+    }
+
+    /**
+     * テーブルのダンプを試みます。
+     * 
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     * @param tableDesc
+     *            テーブル記述
+     * @param writer
+     *            ライタ
+     * @param sql
+     *            SQL
+     * @param retry
+     *            差実行の場合{@code true}
+     */
+    protected void tryDumpTable(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc, DumpFileWriter writer, String sql,
+            boolean retry) {
         logger.debug(sql);
         Statement statement = sqlExecutionContext.getStatement();
         try {
@@ -116,6 +142,10 @@ public class DumperImpl implements Dumper {
                         .getFullName() });
                 sqlExecutionContext.notifyException();
                 writer.writeHeaderOnly();
+            } else if (!retry && dialect.isColumnNotFound(e)) {
+                logger.log("DS2JDBCGen0018", new Object[] { sql });
+                sqlExecutionContext.notifyException();
+                throw new RetryRuntimeException();
             } else {
                 sqlExecutionContext.addException(new SRuntimeException(
                         "ES2JDBCGen0021", new Object[] { e }, e));
@@ -124,13 +154,13 @@ public class DumperImpl implements Dumper {
     }
 
     /**
-     * SQLを組み立てます。
+     * ORDER BY句をもつSQLを組み立てます。
      * 
      * @param tableDesc
      *            テーブル記述
      * @return SQL
      */
-    protected String buildSql(TableDesc tableDesc) {
+    protected String buildSqlWithOrderby(TableDesc tableDesc) {
         StringBuilder buf = new StringBuilder();
         buf.append("select * from ");
         buf.append(tableDesc.getFullName());
@@ -150,6 +180,17 @@ public class DumperImpl implements Dumper {
     }
 
     /**
+     * SQLを組み立てます。
+     * 
+     * @param tableDesc
+     *            テーブル記述
+     * @return SQL
+     */
+    protected String buildSql(TableDesc tableDesc) {
+        return "select * from " + tableDesc.getFullName();
+    }
+
+    /**
      * ダンプファイルのライタを返します。
      * 
      * @param dumpFile
@@ -162,6 +203,16 @@ public class DumperImpl implements Dumper {
             TableDesc tableDesc) {
         return new DumpFileWriter(dumpFile, tableDesc, dialect,
                 dumpFileEncoding, delimiter);
+    }
+
+    /**
+     * 再実行が必要であることを示す場合にスローされます。
+     * 
+     * @author taedium
+     */
+    protected class RetryRuntimeException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
     }
 
 }

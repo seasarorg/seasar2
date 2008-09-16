@@ -34,6 +34,9 @@ public class H2GenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 42102;
 
+    /** カラムが見つからないことを示すエラーコード */
+    protected static int COLUMN_NOT_FOUND_ERROR_CODE = 42122;
+
     /** シーケンスが見つからないことを示すエラーコード */
     protected static int SEQUENCE_NOT_FOUND_ERROR_CODE = 90036;
 
@@ -82,6 +85,13 @@ public class H2GenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
+    public boolean isColumnNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == COLUMN_NOT_FOUND_ERROR_CODE;
     }
 
     @Override

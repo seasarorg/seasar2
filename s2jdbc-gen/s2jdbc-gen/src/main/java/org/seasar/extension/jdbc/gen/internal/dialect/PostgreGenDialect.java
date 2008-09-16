@@ -42,6 +42,9 @@ public class PostgreGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すSQLステート */
     protected static String TABLE_NOT_FOUND_SQL_STATE = "42P01";
 
+    /** カラムが見つからないことを示すSQLステート */
+    protected static String COLUMN_NOT_FOUND_SQL_STATE = "42703";
+
     /** シーケンスが見つからないことを示すSQLステート */
     protected static String SEQUENCE_NOT_FOUND_SQL_STATE = "42P01";
 
@@ -125,6 +128,12 @@ public class PostgreGenDialect extends StandardGenDialect {
     public boolean isTableNotFound(Throwable throwable) {
         String sqlState = getSQLState(throwable);
         return TABLE_NOT_FOUND_SQL_STATE.equals(sqlState);
+    }
+
+    @Override
+    public boolean isColumnNotFound(Throwable throwable) {
+        String sqlState = getSQLState(throwable);
+        return COLUMN_NOT_FOUND_SQL_STATE.equals(sqlState);
     }
 
     @Override

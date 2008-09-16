@@ -15,11 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.internal.data;
 
-import java.sql.Types;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
+import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
@@ -49,22 +47,18 @@ public class DumperImplTest {
      * 
      */
     @Test
-    public void testBuildSql() {
-        ColumnDesc columnDesc1 = new ColumnDesc();
-        columnDesc1.setName("column1");
-        columnDesc1.setSqlType(dialect.getSqlType(Types.VARCHAR));
-
-        ColumnDesc columnDesc2 = new ColumnDesc();
-        columnDesc2.setName("column2");
-        columnDesc2.setSqlType(dialect.getSqlType(Types.INTEGER));
+    public void testBuildSqlWithOrderbyId() {
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        primaryKeyDesc.addColumnName("ID1");
+        primaryKeyDesc.addColumnName("ID2");
 
         TableDesc tableDesc = new TableDesc();
         tableDesc.setCatalogName("AAA");
         tableDesc.setSchemaName("BBB");
         tableDesc.setName("HOGE");
-        tableDesc.addColumnDesc(columnDesc1);
-        tableDesc.addColumnDesc(columnDesc2);
+        tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
 
-        assertEquals("select * from AAA.BBB.HOGE", dumper.buildSql(tableDesc));
+        assertEquals("select * from AAA.BBB.HOGE order by ID1, ID2", dumper
+                .buildSqlWithOrderby(tableDesc));
     }
 }

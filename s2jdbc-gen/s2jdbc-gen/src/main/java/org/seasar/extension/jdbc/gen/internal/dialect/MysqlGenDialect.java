@@ -42,6 +42,9 @@ public class MysqlGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 1146;
 
+    /** カラムが見つからないことを示すエラーコード */
+    protected static int COLUMN_NOT_FOUND_ERROR_CODE = 1054;
+
     /**
      * インスタンスを構築します。
      */
@@ -138,6 +141,13 @@ public class MysqlGenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
+    public boolean isColumnNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == COLUMN_NOT_FOUND_ERROR_CODE;
     }
 
     @Override

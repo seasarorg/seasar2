@@ -238,6 +238,7 @@
 			<include name="example/entity/Address.java"/>
 			<include name="example/entity/Department.java"/>
 			<include name="example/entity/Employee.java"/>
+			<include name="example/entity/Foo.java"/>
 			<include name="example/entity/Hoge.java"/>
 		</javac>
 		<gen-ddl 

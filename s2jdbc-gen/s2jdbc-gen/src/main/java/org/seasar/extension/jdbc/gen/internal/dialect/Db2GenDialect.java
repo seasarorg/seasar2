@@ -42,6 +42,9 @@ public class Db2GenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すSQLステート */
     protected static String TABLE_NOT_FOUND_SQL_STATE = "42704";
 
+    /** カラムが見つからないことを示すSQLステート */
+    protected static String COLUMN_NOT_FOUND_SQL_STATE = "42703";
+
     /** シーケンスが見つからないことを示すSQLステート */
     protected static String SEQUENCE_NOT_FOUND_SQL_STATE = "42704";
 
@@ -103,6 +106,16 @@ public class Db2GenDialect extends StandardGenDialect {
     public boolean isTableNotFound(Throwable t) {
         for (SQLException e : getAllSQLExceptions(t)) {
             if (TABLE_NOT_FOUND_SQL_STATE.equals(e.getSQLState())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isColumnNotFound(Throwable t) {
+        for (SQLException e : getAllSQLExceptions(t)) {
+            if (COLUMN_NOT_FOUND_SQL_STATE.equals(e.getSQLState())) {
                 return true;
             }
         }

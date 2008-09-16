@@ -46,6 +46,9 @@ public class OracleGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 942;
 
+    /** カラムが見つからないことを示すエラーコード */
+    protected static int COLUMN_NOT_FOUND_ERROR_CODE = 904;
+
     /** シーケンスが見つからないことを示すエラーコード */
     protected static int SEQUENCE_NOT_FOUND_ERROR_CODE = 2289;
 
@@ -105,6 +108,13 @@ public class OracleGenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
+    public boolean isColumnNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == COLUMN_NOT_FOUND_ERROR_CODE;
     }
 
     @Override

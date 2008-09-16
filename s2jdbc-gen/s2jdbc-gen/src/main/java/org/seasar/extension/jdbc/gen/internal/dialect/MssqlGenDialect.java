@@ -44,6 +44,9 @@ public class MssqlGenDialect extends StandardGenDialect {
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 208;
 
+    /** カラムが見つからないことを示すエラーコード */
+    protected static int COLUMN_NOT_FOUND_ERROR_CODE = 207;
+
     /**
      * インスタンスを構築します。
      */
@@ -111,6 +114,13 @@ public class MssqlGenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
+    public boolean isColumnNotFound(Throwable throwable) {
+        Integer errorCode = getErrorCode(throwable);
+        return errorCode != null
+                && errorCode.intValue() == COLUMN_NOT_FOUND_ERROR_CODE;
     }
 
     @Override

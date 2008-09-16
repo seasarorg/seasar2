@@ -158,6 +158,15 @@ public interface GenDialect {
     boolean isTableNotFound(Throwable throwable);
 
     /**
+     * カラムが存在しない例外を表す場合{@code true}を返します。
+     * 
+     * @param throwable
+     *            何らかの例外
+     * @return カラムが存在しない例外を表す場合{@code true}
+     */
+    boolean isColumnNotFound(Throwable throwable);
+
+    /**
      * シーケンスが存在しない例外を表す場合{@code true}を返します。
      * 
      * @param throwable
