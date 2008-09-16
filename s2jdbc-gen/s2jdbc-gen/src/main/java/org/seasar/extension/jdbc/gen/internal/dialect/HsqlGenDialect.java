@@ -67,8 +67,8 @@ public class HsqlGenDialect extends StandardGenDialect {
     @Override
     public String getSequenceDefinitionFragment(String dataType,
             long initialValue, int allocationSize) {
-        return "as " + dataType + " start with " + allocationSize
-                + " increment By " + initialValue;
+        return "as " + dataType + " start with " + initialValue
+                + " increment By " + allocationSize;
     }
 
     @Override

@@ -69,7 +69,7 @@ public class H2GenDialect extends StandardGenDialect {
     @Override
     public String getSequenceDefinitionFragment(String dataType,
             long initialValue, int allocationSize) {
-        return "start with " + allocationSize + " increment by " + initialValue;
+        return "start with " + initialValue + " increment by " + allocationSize;
     }
 
     @Override

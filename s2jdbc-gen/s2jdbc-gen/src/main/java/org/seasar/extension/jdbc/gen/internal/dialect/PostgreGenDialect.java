@@ -43,7 +43,7 @@ public class PostgreGenDialect extends StandardGenDialect {
     protected static String TABLE_NOT_FOUND_SQL_STATE = "42P01";
 
     /** シーケンスが見つからないことを示すSQLステート */
-    protected static String SEQUENCE_NOT_FOUND_SQL_STATE = "42704";
+    protected static String SEQUENCE_NOT_FOUND_SQL_STATE = "42P01";
 
     /**
      * インスタンスを構築します。
@@ -113,8 +113,7 @@ public class PostgreGenDialect extends StandardGenDialect {
     @Override
     public String getSequenceDefinitionFragment(String dataType,
             long initialValue, int allocationSize) {
-        return dataType + " start with " + allocationSize + " increment by "
-                + initialValue;
+        return "increment by " + allocationSize + " start with " + initialValue;
     }
 
     @Override
