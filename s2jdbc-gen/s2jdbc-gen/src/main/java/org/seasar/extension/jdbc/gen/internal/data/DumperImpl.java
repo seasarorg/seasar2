@@ -101,13 +101,12 @@ public class DumperImpl implements Dumper {
     protected void dumpTable(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, DumpFileWriter writer) {
         String sql = buildSqlWithOrderby(tableDesc);
-        try {
-            tryDumpTable(sqlExecutionContext, tableDesc, writer, sql, false);
-        } catch (RetryRuntimeException e) {
+        boolean retry = tryDumpTable(sqlExecutionContext, tableDesc, writer,
+                sql);
+        if (retry) {
             sql = buildSql(tableDesc);
-            tryDumpTable(sqlExecutionContext, tableDesc, writer, sql, true);
+            tryDumpTable(sqlExecutionContext, tableDesc, writer, sql);
         }
-
     }
 
     /**
@@ -121,12 +120,10 @@ public class DumperImpl implements Dumper {
      *            ライタ
      * @param sql
      *            SQL
-     * @param retry
-     *            差実行の場合{@code true}
+     * @return 際実行が必要な場合{@code true}
      */
-    protected void tryDumpTable(SqlExecutionContext sqlExecutionContext,
-            TableDesc tableDesc, DumpFileWriter writer, String sql,
-            boolean retry) {
+    protected boolean tryDumpTable(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc, DumpFileWriter writer, String sql) {
         logger.debug(sql);
         Statement statement = sqlExecutionContext.getStatement();
         try {
@@ -142,15 +139,16 @@ public class DumperImpl implements Dumper {
                         .getFullName() });
                 sqlExecutionContext.notifyException();
                 writer.writeHeaderOnly();
-            } else if (!retry && dialect.isColumnNotFound(e)) {
+            } else if (dialect.isColumnNotFound(e)) {
                 logger.log("DS2JDBCGen0018", new Object[] { sql });
                 sqlExecutionContext.notifyException();
-                throw new RetryRuntimeException();
+                return true;
             } else {
                 sqlExecutionContext.addException(new SRuntimeException(
                         "ES2JDBCGen0021", new Object[] { e }, e));
             }
         }
+        return false;
     }
 
     /**
@@ -203,16 +201,6 @@ public class DumperImpl implements Dumper {
             TableDesc tableDesc) {
         return new DumpFileWriter(dumpFile, tableDesc, dialect,
                 dumpFileEncoding, delimiter);
-    }
-
-    /**
-     * 再実行が必要であることを示す場合にスローされます。
-     * 
-     * @author taedium
-     */
-    protected class RetryRuntimeException extends RuntimeException {
-
-        private static final long serialVersionUID = 1L;
     }
 
 }
