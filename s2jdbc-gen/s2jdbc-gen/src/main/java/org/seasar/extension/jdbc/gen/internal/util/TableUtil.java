@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.util.CaseInsensitiveSet;
 import org.seasar.framework.util.ResultSetUtil;
@@ -145,6 +146,9 @@ public class TableUtil {
         /** データソース */
         protected DataSource dataSource;
 
+        /** デフォルトのスキーマ名 */
+        protected String defaultSchemaName;
+
         /** 修飾子をキー、テーブル名の配列を値とするマップ */
         protected Map<Qualifier, CaseInsensitiveSet> tableNamesMap = new HashMap<Qualifier, CaseInsensitiveSet>();
 
@@ -165,6 +169,24 @@ public class TableUtil {
             }
             this.dialect = dialect;
             this.dataSource = dataSource;
+            this.defaultSchemaName = getDefaultSchemaName();
+        }
+
+        /**
+         * デフォルトのスキーマ名を返します。
+         * 
+         * @return デフォルトのスキーマ名
+         */
+        protected String getDefaultSchemaName() {
+            Connection connection = DataSourceUtil.getConnection(dataSource);
+            try {
+                DatabaseMetaData metaData = ConnectionUtil
+                        .getMetaData(connection);
+                String userName = DatabaseMetaDataUtil.getUserName(metaData);
+                return dialect.getDefaultSchemaName(userName);
+            } finally {
+                ConnectionUtil.close(connection);
+            }
         }
 
         /**
@@ -180,6 +202,7 @@ public class TableUtil {
          */
         public boolean exists(String catalogName, String schemaName,
                 String tableName) {
+            schemaName = schemaName != null ? schemaName : defaultSchemaName;
             CaseInsensitiveSet tableNames = getTableNames(catalogName,
                     schemaName);
             return tableNames.contains(tableName);

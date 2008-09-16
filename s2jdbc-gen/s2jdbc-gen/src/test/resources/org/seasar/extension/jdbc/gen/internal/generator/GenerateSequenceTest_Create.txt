@@ -1,1 +1,1 @@
-create sequence HOGE as integer start with 50 increment By 1;
+create sequence HOGE as integer start with 1 increment By 50;
