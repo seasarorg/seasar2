@@ -1,8 +1,6 @@
-SET IDENTITY_INSERT ADDRESS ON;
 insert into ADDRESS (ID, CITY) values (1, 'aaa');
 insert into ADDRESS (ID, CITY) values (2, 'bbb');
 insert into ADDRESS (ID, CITY) values (3, 'ccc');
-SET IDENTITY_INSERT ADDRESS OFF;
 insert into BIG_DECIMAL_ENTITY (BIG_DECIMAL_PROPERTY) values (10.123456789);
 insert into BIG_INTEGER_ENTITY (BIG_INTEGER_PROPERTY) values (123456789123456789);
 insert into BOOLEAN_ENTITY (BOOLEAN_PROPERTY) values ('true');

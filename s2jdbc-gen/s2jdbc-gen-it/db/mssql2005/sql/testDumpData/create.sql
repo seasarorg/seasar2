@@ -1,4 +1,4 @@
-create table ADDRESS (ID int identity not null, CITY varchar(255), constraint ADDRESS_PK primary key(ID));
+create table ADDRESS (ID int not null, CITY varchar(255), constraint ADDRESS_PK primary key(ID));
 create table BIG_DECIMAL_ENTITY (BIG_DECIMAL_PROPERTY decimal(19,2));
 create table BIG_INTEGER_ENTITY (BIG_INTEGER_PROPERTY bigint);
 create table BOOLEAN_ENTITY (BOOLEAN_PROPERTY bit);

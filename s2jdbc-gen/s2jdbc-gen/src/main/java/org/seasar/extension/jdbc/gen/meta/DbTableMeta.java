@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.seasar.framework.util.StringUtil;
+
 /**
  * データベースのテーブルメタデータです。
  * 
@@ -180,10 +182,10 @@ public class DbTableMeta {
      */
     public String getFullTableName() {
         StringBuilder buf = new StringBuilder();
-        if (catalogName != null) {
+        if (!StringUtil.isEmpty(catalogName)) {
             buf.append(catalogName).append(".");
         }
-        if (schemaName != null) {
+        if (!StringUtil.isEmpty(schemaName)) {
             buf.append(schemaName).append(".");
         }
         return buf.append(name).toString();

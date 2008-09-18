@@ -30,5 +30,5 @@ public class Document extends File {
     public Integer documentId;
 
     /** */
-    public Integer size;
+    public Integer documentSize;
 }

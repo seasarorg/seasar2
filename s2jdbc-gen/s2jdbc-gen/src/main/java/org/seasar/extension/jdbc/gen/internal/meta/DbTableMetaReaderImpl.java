@@ -41,6 +41,7 @@ import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
 import org.seasar.extension.jdbc.util.DatabaseMetaDataUtil;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.ResultSetUtil;
 import org.seasar.framework.util.StatementUtil;
@@ -51,6 +52,9 @@ import org.seasar.framework.util.StatementUtil;
  * @author taedium
  */
 public class DbTableMetaReaderImpl implements DbTableMetaReader {
+
+    /** ロガー */
+    protected Logger logger = Logger.getLogger(DbTableMetaReaderImpl.class);
 
     /** データソース */
     protected DataSource dataSource;
@@ -431,7 +435,8 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     protected boolean isAutoIncrement(DatabaseMetaData metaData,
             DbTableMeta tableMeta, String columnName) {
         String sql = "select " + columnName + " from "
-                + tableMeta.getFullTableName() + " where 1 = null";
+                + tableMeta.getFullTableName() + " where 1 = 0";
+        logger.debug(sql);
         Connection conn;
         try {
             conn = metaData.getConnection();
