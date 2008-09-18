@@ -16,7 +16,13 @@
 package org.seasar.extension.jdbc.gen.internal.generator;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
+import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
@@ -27,6 +33,11 @@ import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModel;
+import org.seasar.framework.mock.sql.MockConnection;
+import org.seasar.framework.mock.sql.MockDataSource;
+import org.seasar.framework.mock.sql.MockPreparedStatement;
+import org.seasar.framework.mock.sql.MockResultSet;
+import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -37,7 +48,40 @@ import static org.junit.Assert.*;
  */
 public class GenerateTableTest {
 
-    private GeneratorImplStub generator = new GeneratorImplStub();
+    private GeneratorImplStub generator;
+
+    private DataSource dataSource;
+
+    /**
+     * 
+     */
+    @Before
+    public void setUp() {
+        generator = new GeneratorImplStub();
+        dataSource = new MockDataSource() {
+
+            @Override
+            public Connection getConnection() throws SQLException {
+                return new MockConnection() {
+
+                    @Override
+                    public MockPreparedStatement prepareMockStatement(String sql) {
+                        return new MockPreparedStatement(this, sql) {
+
+                            @Override
+                            public ResultSet executeQuery() throws SQLException {
+                                MockResultSet resultSet = new MockResultSet();
+                                ArrayMap map = new ArrayMap();
+                                map.put(null, 200);
+                                resultSet.addRowData(map);
+                                return resultSet;
+                            }
+                        };
+                    }
+                };
+            }
+        };
+    }
 
     /**
      * 
@@ -71,8 +115,15 @@ public class GenerateTableTest {
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
 
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new MssqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+                new MssqlGenDialect(), new MockDataSource(),
+                SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null) {
+
+            @Override
+            protected Long getNextValue(String sequenceName, int allocationSize) {
+                return null;
+            }
+        };
         TableModel model = factory.getTableModel(tableDesc);
 
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -116,7 +167,8 @@ public class GenerateTableTest {
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
 
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new MssqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+                new MssqlGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
                 SqlKeywordCaseType.ORIGINALCASE, ';', null);
         TableModel model = factory.getTableModel(tableDesc);
 
@@ -156,7 +208,8 @@ public class GenerateTableTest {
         tableDesc.addColumnDesc(name);
 
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new MssqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+                new MssqlGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
                 SqlKeywordCaseType.ORIGINALCASE, ';', null);
         TableModel model = factory.getTableModel(tableDesc);
 
@@ -201,7 +254,8 @@ public class GenerateTableTest {
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
 
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new MssqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+                new MssqlGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
                 SqlKeywordCaseType.ORIGINALCASE, ';', "ENGINE = INNODB");
         TableModel model = factory.getTableModel(tableDesc);
 
@@ -246,7 +300,8 @@ public class GenerateTableTest {
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
 
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new MssqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
+                new MssqlGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
                 SqlKeywordCaseType.ORIGINALCASE, ';', null);
         TableModel model = factory.getTableModel(tableDesc);
 

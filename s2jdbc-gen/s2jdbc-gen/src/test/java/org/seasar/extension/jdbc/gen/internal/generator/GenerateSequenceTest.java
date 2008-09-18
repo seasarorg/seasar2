@@ -16,6 +16,11 @@
 package org.seasar.extension.jdbc.gen.internal.generator;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +32,11 @@ import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModel;
+import org.seasar.framework.mock.sql.MockConnection;
+import org.seasar.framework.mock.sql.MockDataSource;
+import org.seasar.framework.mock.sql.MockPreparedStatement;
+import org.seasar.framework.mock.sql.MockResultSet;
+import org.seasar.framework.util.ArrayMap;
 import org.seasar.framework.util.TextUtil;
 
 import static org.junit.Assert.*;
@@ -39,6 +49,8 @@ public class GenerateSequenceTest {
 
     private GeneratorImplStub generator;
 
+    private DataSource dataSource;
+
     private TableModel model;
 
     /**
@@ -48,6 +60,29 @@ public class GenerateSequenceTest {
     @Before
     public void setUp() throws Exception {
         generator = new GeneratorImplStub();
+        dataSource = new MockDataSource() {
+
+            @Override
+            public Connection getConnection() throws SQLException {
+                return new MockConnection() {
+
+                    @Override
+                    public MockPreparedStatement prepareMockStatement(String sql) {
+                        return new MockPreparedStatement(this, sql) {
+
+                            @Override
+                            public ResultSet executeQuery() throws SQLException {
+                                MockResultSet resultSet = new MockResultSet();
+                                ArrayMap map = new ArrayMap();
+                                map.put(null, 200);
+                                resultSet.addRowData(map);
+                                return resultSet;
+                            }
+                        };
+                    }
+                };
+            }
+        };
 
         SequenceDesc sequenceDesc = new SequenceDesc();
         sequenceDesc.setSequenceName("HOGE");
@@ -60,8 +95,16 @@ public class GenerateSequenceTest {
         tableDesc.addSequenceDesc(sequenceDesc);
 
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new HsqlGenDialect(), SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+                new HsqlGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null) {
+
+            @Override
+            protected Long getNextValue(String sequenceName, int allocationSize) {
+                return 200L;
+            }
+
+        };
         model = factory.getTableModel(tableDesc);
     }
 

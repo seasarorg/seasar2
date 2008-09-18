@@ -92,14 +92,11 @@ public interface Factory {
      *            エンティティメタデータのリーダ
      * @param dialect
      *            方言
-     * @param dataSource
-     *            データソース
      * @return {@link DatabaseDescFactory}の実装
      */
     DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect,
-            DataSource dataSource);
+            EntityMetaReader entityMetaReader, GenDialect dialect);
 
     /**
      * {@link Dumper}の実装を返します。
@@ -246,6 +243,8 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param dialect
      *            方言
+     * @param dataSource
+     *            データソース
      * @param sqlIdentifierCaseType
      *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      * @param sqlKeywordCaseType
@@ -257,7 +256,8 @@ public interface Factory {
      * @return {@link TableModelFactory}の実装
      */
     TableModelFactory createTableModelFactory(Command command,
-            GenDialect dialect, SqlIdentifierCaseType sqlIdentifierCaseType,
+            GenDialect dialect, DataSource dataSource,
+            SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
             String tableOption);
 

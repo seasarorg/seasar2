@@ -34,6 +34,7 @@
 		<antcall target="testDumpDbMeta"/>
 		<antcall target="testDumpData"/>
 		<antcall target="testLoadData"/>
+		<antcall target="testSequenceGenerator"/>
 	</target>
 
 	<target name="testFromDbToEntity" depends="showRdbmsName, clean">
@@ -175,17 +176,74 @@
 			<src path="../src/main/java"/>
 		</javac>
 		<!-- test -->
+		<migrate 
+			classpathDir="${build}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
+		/>
+	</target>
+
+	<target name="testSequenceGenerator" if="supportssequence" depends="showRdbmsName, clean, condition">
+		<!-- setUp -->
+		<javac 
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath">
+			<src path="../src/main/java3"/>
+			<src path="../src/test/java3"/>
+		</javac>
+		<!-- test -->
 		<gen-ddl 
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			classpathref="classpath"
-			sqlkeywordcase="lowercase"
-			sqlidentifiercase="uppercase"
+		/>
+		<migrate 
+			classpathDir="${build}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
+		/>
+		<junit 
+			haltonfailure="no" 
+			printsummary="true">
+			<formatter type="xml"/>
+			<batchtest todir="${testresult}" fork="true">
+				<fileset dir="../src/test/java3">
+					<include name="**/SequenceGeneratorTest.java"/>
+				</fileset>
+			</batchtest>
+			<classpath>
+				<path refid="classpath"/>
+				<pathelement location="../src/main/java3"/>
+				<pathelement location="../src/test/java3"/>
+			</classpath>
+		</junit>
+		<gen-ddl 
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
+		/>
+		<!-- tearDown -->
+		<migrate 
+			classpathDir="${build}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			version="0"
+			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
 		/>
 	</target>
-	
+
 	<target name="testMigrate" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
@@ -366,6 +424,18 @@
 				<file name="drop.sql"/>
 			</sqlFileList>
 		</exec-sql>
+	</target>
+
+	<target name="condition">
+		<condition property="supportssequence">
+			<or>
+				<equals arg1="${rdbms}" arg2="db2"/>
+				<equals arg1="${rdbms}" arg2="h2"/>
+				<equals arg1="${rdbms}" arg2="hsql"/>
+				<equals arg1="${rdbms}" arg2="oracle"/>
+				<equals arg1="${rdbms}" arg2="postgre"/>
+			</or>
+		</condition>
 	</target>
 
 	<target name="clean">

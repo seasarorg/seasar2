@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactory;
@@ -50,9 +48,6 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
-    /** データソース */
-    protected DataSource dataSource;
-
     /** テーブル記述のファクトリ */
     protected TableDescFactory tableDescFactory;
 
@@ -65,12 +60,9 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
      *            エンティティメタデータのリーダ
      * @param dialect
      *            方言
-     * @param dataSource
-     *            データソース
      */
     public DatabaseDescFactoryImpl(EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect,
-            DataSource dataSource) {
+            EntityMetaReader entityMetaReader, GenDialect dialect) {
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
@@ -80,13 +72,9 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
-        if (dataSource == null) {
-            throw new NullPointerException("dataSource");
-        }
         this.entityMetaFactory = entityMetaFactory;
         this.entityMetaReader = entityMetaReader;
         this.dialect = dialect;
-        this.dataSource = dataSource;
         this.tableDescFactory = createTableDescFactory();
     }
 
@@ -114,8 +102,7 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
         UniqueKeyDescFactory ukFactory = new UniqueKeyDescFactoryImpl(dialect);
         ForeignKeyDescFactory fkFactory = new ForeignKeyDescFactoryImpl(
                 dialect, entityMetaFactory);
-        SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect,
-                dataSource);
+        SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
         IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
                 ukFactory);
         return new TableDescFactoryImpl(dialect, colFactory, pkFactory,

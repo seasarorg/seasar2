@@ -15,6 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import javax.sql.DataSource;
+
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
@@ -22,6 +28,8 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.desc.SequenceDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.exception.SequenceNextValFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.model.ColumnModel;
 import org.seasar.extension.jdbc.gen.model.ForeignKeyModel;
 import org.seasar.extension.jdbc.gen.model.PrimaryKeyModel;
@@ -31,6 +39,12 @@ import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.model.UniqueKeyModel;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.util.ResultSetUtil;
+import org.seasar.framework.util.StatementUtil;
 
 /**
  * {@link TableModelFactory}の実装クラスです。
@@ -39,8 +53,15 @@ import org.seasar.extension.jdbc.gen.model.UniqueKeyModel;
  */
 public class TableModelFactoryImpl implements TableModelFactory {
 
+    /** ロガー */
+    protected static Logger logger = Logger
+            .getLogger(SequenceDescFactoryImpl.class);
+
     /** 方言 */
     protected GenDialect dialect;
+
+    /** データソース */
+    protected DataSource dataSource;
 
     /** SQLステートメントの区切り文字 */
     protected char delimiter;
@@ -57,6 +78,8 @@ public class TableModelFactoryImpl implements TableModelFactory {
     /**
      * @param dialect
      *            方言
+     * @param dataSource
+     *            データソース
      * @param sqlIdentifierCaseType
      *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
      * @param sqlKeywordCaseType
@@ -66,12 +89,15 @@ public class TableModelFactoryImpl implements TableModelFactory {
      * @param tableOption
      *            テーブルオプション、存在しない場合は{@code null}
      */
-    public TableModelFactoryImpl(GenDialect dialect,
+    public TableModelFactoryImpl(GenDialect dialect, DataSource dataSource,
             SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char delimiter,
             String tableOption) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
+        }
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource");
         }
         if (sqlIdentifierCaseType == null) {
             throw new NullPointerException("sqlIdentifierCaseType");
@@ -80,6 +106,7 @@ public class TableModelFactoryImpl implements TableModelFactory {
             throw new NullPointerException("sqlKeywordCaseType");
         }
         this.dialect = dialect;
+        this.dataSource = dataSource;
         this.sqlIdentifierCaseType = sqlIdentifierCaseType;
         this.sqlKeywordCaseType = sqlKeywordCaseType;
         this.delimiter = delimiter;
@@ -187,9 +214,14 @@ public class TableModelFactoryImpl implements TableModelFactory {
         for (SequenceDesc sequenceDesc : tableDesc.getSequenceDescList()) {
             SequenceModel sequenceModel = new SequenceModel();
             sequenceModel.setName(identifier(sequenceDesc.getSequenceName()));
-            String definition = dialect.getSequenceDefinitionFragment(
-                    sequenceDesc.getDataType(), sequenceDesc.getInitialValue(),
+            Long nextValue = getNextValue(sequenceDesc.getSequenceName(),
                     sequenceDesc.getAllocationSize());
+            long initialValue = nextValue != null ? Math.max(nextValue,
+                    sequenceDesc.getInitialValue()) : sequenceDesc
+                    .getInitialValue();
+            String definition = dialect.getSequenceDefinitionFragment(
+                    sequenceDesc.getDataType(), initialValue, sequenceDesc
+                            .getAllocationSize());
             sequenceModel.setDefinition(keyword(definition));
             tableModel.addSequenceModel(sequenceModel);
         }
@@ -217,6 +249,50 @@ public class TableModelFactoryImpl implements TableModelFactory {
             }
             columnModel.setDefinition(keyword(definition));
             tableModel.addColumnModel(columnModel);
+        }
+    }
+
+    /**
+     * シーケンスの次の値を返します。
+     * 
+     * @param sequenceName
+     *            シーケンス名
+     * @param allocationSize
+     *            割り当てサイズ
+     * @return シーケンスの次の値、シーケンスが存在しない場合は{@code null}
+     */
+    protected Long getNextValue(String sequenceName, int allocationSize) {
+        String sql = dialect.getSequenceNextValString(sequenceName,
+                allocationSize);
+        logger.debug(sql);
+        Connection connection = DataSourceUtil.getConnection(dataSource);
+        try {
+            PreparedStatement ps = ConnectionUtil.prepareStatement(connection,
+                    sql);
+            try {
+                ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+                try {
+                    if (rs.next()) {
+                        return rs.getLong(1);
+                    }
+                    throw new SequenceNextValFailedRuntimeException(
+                            sequenceName);
+                } finally {
+                    ResultSetUtil.close(rs);
+                }
+            } finally {
+                StatementUtil.close(ps);
+            }
+        } catch (SequenceNextValFailedRuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            if (dialect.isSequenceNotFound(e)) {
+                logger.log("DS2JDBCGen0017", new Object[] { sequenceName });
+                return null;
+            }
+            throw new SequenceNextValFailedRuntimeException(sequenceName, e);
+        } finally {
+            ConnectionUtil.close(connection);
         }
     }
 

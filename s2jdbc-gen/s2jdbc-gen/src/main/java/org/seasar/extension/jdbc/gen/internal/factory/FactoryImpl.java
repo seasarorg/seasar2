@@ -97,11 +97,10 @@ public class FactoryImpl implements Factory {
 
     public DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect,
-            DataSource dataSource) {
+            EntityMetaReader entityMetaReader, GenDialect dialect) {
 
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect, dataSource);
+                dialect);
     }
 
     public Dumper createDumper(Command command, GenDialect dialect,
@@ -166,12 +165,14 @@ public class FactoryImpl implements Factory {
     }
 
     public TableModelFactory createTableModelFactory(Command command,
-            GenDialect dialect, SqlIdentifierCaseType sqlIdentifierCaseType,
+            GenDialect dialect, DataSource dataSource,
+            SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
             String tableOption) {
 
-        return new TableModelFactoryImpl(dialect, sqlIdentifierCaseType,
-                sqlKeywordCaseType, statementDelimiter, tableOption);
+        return new TableModelFactoryImpl(dialect, dataSource,
+                sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
+                tableOption);
     }
 
     public SchemaInfoTableModelFactory createSchemaInfoTableModelFactory(

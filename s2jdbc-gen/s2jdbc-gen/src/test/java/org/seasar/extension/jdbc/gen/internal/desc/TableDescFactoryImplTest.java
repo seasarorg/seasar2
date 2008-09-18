@@ -41,7 +41,6 @@ import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
-import org.seasar.framework.mock.sql.MockDataSource;
 
 import static org.junit.Assert.*;
 
@@ -83,14 +82,7 @@ public class TableDescFactoryImplTest {
         ForeignKeyDescFactoryImpl fkFactory = new ForeignKeyDescFactoryImpl(
                 dialect, entityMetaFactory);
         SequenceDescFactoryImpl seqFactory = new SequenceDescFactoryImpl(
-                dialect, new MockDataSource()) {
-
-            @Override
-            protected Long getNextValue(String sequenceName, int allocationSize) {
-                return null;
-            }
-
-        };
+                dialect);
         IdTableDescFactoryImpl idTabFactory = new IdTableDescFactoryImpl(
                 dialect, ukFactory);
 

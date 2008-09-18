@@ -1216,8 +1216,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return factory.createDatabaseDescFactory(this, jdbcManager
-                .getEntityMetaFactory(), entityMetaReader, dialect, jdbcManager
-                .getDataSource());
+                .getEntityMetaFactory(), entityMetaReader, dialect);
     }
 
     /**
@@ -1253,9 +1252,9 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link TableModelFactory}の実装
      */
     protected TableModelFactory createTableModelFactory() {
-        return factory.createTableModelFactory(this, dialect,
-                sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
-                tableOption);
+        return factory.createTableModelFactory(this, dialect, jdbcManager
+                .getDataSource(), sqlIdentifierCaseType, sqlKeywordCaseType,
+                statementDelimiter, tableOption);
     }
 
     /**
