@@ -59,6 +59,6 @@ public class DumperImplTest {
         tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
 
         assertEquals("select * from AAA.BBB.HOGE order by ID1, ID2", dumper
-                .buildSqlWithOrderby(tableDesc));
+                .buildSqlWithSort(tableDesc));
     }
 }

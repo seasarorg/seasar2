@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.data;
 
 import java.io.File;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -79,7 +80,11 @@ public class DumperImpl implements Dumper {
                     tableDesc.getFullName(), dumpFile.getPath() });
             DumpFileWriter writer = createDumpFileWriter(dumpFile, tableDesc);
             try {
-                dumpTable(sqlExecutionContext, tableDesc, writer);
+                boolean fail = dumpTableWithSort(sqlExecutionContext,
+                        tableDesc, writer);
+                if (fail) {
+                    dumpTable(sqlExecutionContext, tableDesc, writer);
+                }
             } finally {
                 writer.close();
             }
@@ -89,7 +94,7 @@ public class DumperImpl implements Dumper {
     }
 
     /**
-     * テーブルをダンプします。
+     * テーブルのデータをソートしてダンプします。
      * 
      * @param sqlExecutionContext
      *            SQL実行コンテキスト
@@ -97,42 +102,14 @@ public class DumperImpl implements Dumper {
      *            テーブル記述
      * @param writer
      *            ライタ
+     * @return ソート用のカラムが存在しない場合{@code true}
      */
-    protected void dumpTable(SqlExecutionContext sqlExecutionContext,
-            TableDesc tableDesc, DumpFileWriter writer) {
-        String sql = buildSqlWithOrderby(tableDesc);
-        boolean retry = tryDumpTable(sqlExecutionContext, tableDesc, writer,
-                sql);
-        if (retry) {
-            sql = buildSql(tableDesc);
-            tryDumpTable(sqlExecutionContext, tableDesc, writer, sql);
-        }
-    }
-
-    /**
-     * テーブルのダンプを試みます。
-     * 
-     * @param sqlExecutionContext
-     *            SQL実行コンテキスト
-     * @param tableDesc
-     *            テーブル記述
-     * @param writer
-     *            ライタ
-     * @param sql
-     *            SQL
-     * @return 際実行が必要な場合{@code true}
-     */
-    protected boolean tryDumpTable(SqlExecutionContext sqlExecutionContext,
-            TableDesc tableDesc, DumpFileWriter writer, String sql) {
-        logger.debug(sql);
-        Statement statement = sqlExecutionContext.getStatement();
+    protected boolean dumpTableWithSort(
+            SqlExecutionContext sqlExecutionContext, TableDesc tableDesc,
+            DumpFileWriter writer) {
+        String sql = buildSqlWithSort(tableDesc);
         try {
-            ResultSet rs = statement.executeQuery(sql);
-            try {
-                writer.writeRows(rs);
-            } finally {
-                ResultSetUtil.close(rs);
-            }
+            dumpRows(sqlExecutionContext, writer, sql);
         } catch (Exception e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("DS2JDBCGen0012", new Object[] { tableDesc
@@ -152,13 +129,65 @@ public class DumperImpl implements Dumper {
     }
 
     /**
+     * テーブルのデータをダンプします。
+     * 
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     * @param tableDesc
+     *            テーブル記述
+     * @param writer
+     *            ライタ
+     */
+    protected void dumpTable(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc, DumpFileWriter writer) {
+        String sql = buildSql(tableDesc);
+        try {
+            dumpRows(sqlExecutionContext, writer, sql);
+        } catch (Exception e) {
+            if (dialect.isTableNotFound(e)) {
+                logger.log("DS2JDBCGen0012", new Object[] { tableDesc
+                        .getFullName() });
+                sqlExecutionContext.notifyException();
+                writer.writeHeaderOnly();
+            } else {
+                sqlExecutionContext.addException(new SRuntimeException(
+                        "ES2JDBCGen0021", new Object[] { e }, e));
+            }
+        }
+    }
+
+    /**
+     * データをダンプします。
+     * 
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     * @param writer
+     *            ライタ
+     * @param sql
+     *            SQL
+     * @throws SQLException
+     *             SQLに関する例外が発生した場合
+     */
+    protected void dumpRows(SqlExecutionContext sqlExecutionContext,
+            DumpFileWriter writer, String sql) throws SQLException {
+        logger.debug(sql);
+        Statement statement = sqlExecutionContext.getStatement();
+        ResultSet rs = statement.executeQuery(sql);
+        try {
+            writer.writeRows(rs);
+        } finally {
+            ResultSetUtil.close(rs);
+        }
+    }
+
+    /**
      * ORDER BY句をもつSQLを組み立てます。
      * 
      * @param tableDesc
      *            テーブル記述
      * @return SQL
      */
-    protected String buildSqlWithOrderby(TableDesc tableDesc) {
+    protected String buildSqlWithSort(TableDesc tableDesc) {
         StringBuilder buf = new StringBuilder();
         buf.append("select * from ");
         buf.append(tableDesc.getFullName());
