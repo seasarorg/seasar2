@@ -94,7 +94,7 @@ public class ConverterFactoryImpl implements ConverterFactory, Disposable {
      * キャッシュ情報等を破棄し、インスタンスを未初期化状態に戻します。
      * 
      */
-    public synchronized void dispose() {
+    public void dispose() {
         converters = null;
         converterCache.clear();
         initialized = false;
