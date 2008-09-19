@@ -1,0 +1,60 @@
+package hoge.service;
+
+import java.util.List;
+import javax.annotation.Resource;
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
+
+import static hoge.entity.AaaNames.*;
+
+/**
+ * {@link Aaa}のサービスクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+public class AaaService extends AbstractService<Aaa> {
+
+    /**
+     * JDBCマネージャを設定します。
+     * 
+     * @param jdbcManager
+     *            JDBCマネージャ
+     */
+    @Resource(name = "myJdbcManager")
+    public void setJdbcManager(JdbcManager jdbcManager) {
+        this.jdbcManager = jdbcManager;
+    }
+
+    /**
+     * 識別子でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @return エンティティ
+     */
+    public Aaa findById(Integer id) {
+        return select().id(id).getSingleResult();
+    }
+
+    /**
+     * 識別子とバージョン番号でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @param version
+     *            バージョン番号
+     * @return エンティティ
+     */
+    public Aaa findByIdVersion(Integer id, Integer version) {
+        return select().id(id).version(version).getSingleResult();
+    }
+
+    /**
+     * 識別子の昇順ですべてのエンティティを検索します。
+     * 
+     * @return エンティティのリスト
+     */
+    public List<Aaa> findAllOrderById() {
+        return select().orderBy(asc(id())).getResultList();
+    }
+}

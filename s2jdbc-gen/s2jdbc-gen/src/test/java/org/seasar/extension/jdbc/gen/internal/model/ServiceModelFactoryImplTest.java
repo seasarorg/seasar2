@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -28,6 +29,7 @@ import javax.persistence.TemporalType;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -46,7 +48,7 @@ public class ServiceModelFactoryImplTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
-    private ServiceModelFactoryImpl serviceModelFactory;
+    private NamesModelFactoryImpl namesModelFactory;
 
     /**
      * 
@@ -66,10 +68,7 @@ public class ServiceModelFactoryImplTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        NamesModelFactoryImpl namesModelFactory = new NamesModelFactoryImpl(
-                "aaa.ccc", "Names");
-        serviceModelFactory = new ServiceModelFactoryImpl("aaa.bbb", "Service",
-                namesModelFactory, true);
+        namesModelFactory = new NamesModelFactoryImpl("aaa.ccc", "Names");
     }
 
     /**
@@ -79,6 +78,8 @@ public class ServiceModelFactoryImplTest {
     @Test
     public void testSingleId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "aaa.bbb", "Service", namesModelFactory, true, "jdbcManager");
         ServiceModel serviceModel = serviceModelFactory
                 .getServiceModel(entityMeta);
         assertNotNull(serviceModel);
@@ -87,6 +88,8 @@ public class ServiceModelFactoryImplTest {
                 .getShortClassName());
         assertEquals("Aaa", serviceModel.getShortEntityClassName());
         assertEquals(1, serviceModel.getIdPropertyMetaList().size());
+        assertEquals("jdbcManager", serviceModel.getJdbcManagerName());
+        assertFalse(serviceModel.isJdbcManagerSetterNecessary());
 
         assertEquals(2, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
@@ -106,6 +109,8 @@ public class ServiceModelFactoryImplTest {
     @Test
     public void testCompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "aaa.bbb", "Service", namesModelFactory, true, "jdbcManager");
         ServiceModel serviceModel = serviceModelFactory
                 .getServiceModel(entityMeta);
         assertNotNull(serviceModel);
@@ -113,11 +118,46 @@ public class ServiceModelFactoryImplTest {
         assertEquals("ServiceModelFactoryImplTest$BbbService", serviceModel
                 .getShortClassName());
         assertEquals(2, serviceModel.getIdPropertyMetaList().size());
+        assertEquals("jdbcManager", serviceModel.getJdbcManagerName());
+        assertFalse(serviceModel.isJdbcManagerSetterNecessary());
 
         assertEquals(3, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(List.class.getName(), iterator.next());
+        assertEquals(Bbb.class.getName(), iterator.next());
+
+        assertEquals(1, serviceModel.getStaticImportNameSet().size());
+        iterator = serviceModel.getStaticImportNameSet().iterator();
+        assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames.*", iterator
+                .next());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testJdbcManagerName() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Bbb.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "aaa.bbb", "Service", namesModelFactory, true, "myJdbcManager");
+        ServiceModel serviceModel = serviceModelFactory
+                .getServiceModel(entityMeta);
+        assertNotNull(serviceModel);
+        assertEquals("aaa.bbb", serviceModel.getPackageName());
+        assertEquals("ServiceModelFactoryImplTest$BbbService", serviceModel
+                .getShortClassName());
+        assertEquals(2, serviceModel.getIdPropertyMetaList().size());
+        assertEquals("myJdbcManager", serviceModel.getJdbcManagerName());
+        assertTrue(serviceModel.isJdbcManagerSetterNecessary());
+
+        assertEquals(5, serviceModel.getImportNameSet().size());
+        Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
+        assertEquals(Date.class.getName(), iterator.next());
+        assertEquals(List.class.getName(), iterator.next());
+        assertEquals(Resource.class.getName(), iterator.next());
+        assertEquals(JdbcManager.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
 
         assertEquals(1, serviceModel.getStaticImportNameSet().size());

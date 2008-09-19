@@ -543,7 +543,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected ServiceModelFactory createServiceModelFactory() {
         return factory.createServiceModelFactory(this, ClassUtil.concatName(
                 rootPackageName, servicePackageName), serviceClassNameSuffix,
-                namesModelFactory, useNamesClass);
+                namesModelFactory, useNamesClass, jdbcManagerName);
     }
 
     /**

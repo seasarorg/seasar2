@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 
 /**
@@ -27,6 +28,12 @@ import org.seasar.extension.jdbc.PropertyMeta;
  * @author taedium
  */
 public class ServiceModel extends ClassModel {
+
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName;
+
+    /** {@link JdbcManager}のコンポーネントをsetterメソッドでDIする場合{@code true} */
+    protected boolean jdbcManagerSetterNecessary;
 
     /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
@@ -39,6 +46,44 @@ public class ServiceModel extends ClassModel {
 
     /** バージョンを表すプロパティメタデータ */
     protected PropertyMeta versionPropertyMeta;
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネント名
+     */
+    public String getJdbcManagerName() {
+        return jdbcManagerName;
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネント名を設定します。
+     * 
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     */
+    public void setJdbcManagerName(String jdbcManagerName) {
+        this.jdbcManagerName = jdbcManagerName;
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネントをsetterメソッドでDIする場合{@code true}を返します。
+     * 
+     * @return {@link JdbcManager}のコンポーネントをsetterメソッドでDIする場合{@code true}
+     */
+    public boolean isJdbcManagerSetterNecessary() {
+        return jdbcManagerSetterNecessary;
+    }
+
+    /**
+     * {@link JdbcManager}のコンポーネントをsetterメソッドでDIする場合{@code true}を設定します。
+     * 
+     * @param jdbcManagerSetterNecessary
+     *            {@link JdbcManager}のコンポーネントをsetterメソッドでDIする場合{@code true}
+     */
+    public void setJdbcManagerSetterNecessary(boolean jdbcManagerSetterNecessary) {
+        this.jdbcManagerSetterNecessary = jdbcManagerSetterNecessary;
+    }
 
     /**
      * エンティティクラスの単純名を返します。

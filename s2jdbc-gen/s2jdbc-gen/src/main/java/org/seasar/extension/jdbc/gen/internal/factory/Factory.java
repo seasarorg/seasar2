@@ -361,11 +361,14 @@ public interface Factory {
      *            名前モデルのファクトリ
      * @param useNamesClass
      *            名前クラスを使用する場合{@code true}
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
      * @return {@link ServiceModelFactory}の実装
      */
     ServiceModelFactory createServiceModelFactory(Command command,
             String packageName, String serviceClassNameSuffix,
-            NamesModelFactory namesModelFactory, boolean useNamesClass);
+            NamesModelFactory namesModelFactory, boolean useNamesClass,
+            String jdbcManagerName);
 
     /**
      * {@link AbstServiceModelFactory}の実装を作成します。

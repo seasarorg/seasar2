@@ -17,7 +17,10 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
@@ -32,8 +35,14 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class ServiceModelFactoryImpl implements ServiceModelFactory {
 
+    /** デフォルトの{@link JdbcManager}のコンポーネント名 */
+    protected static String DEFAULT_JDBC_MANAGER_NAME = "jdbcManager";
+
     /** パッケージ名 */
     protected String packageName;
+
+    /** {@link JdbcManager}のコンポーネント名 */
+    protected String jdbcManagerName;
 
     /** サービスクラス名のサフィックス */
     protected String serviceClassNameSuffix;
@@ -58,10 +67,15 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      *            サービスクラス名のサフィックス
      * @param useNamesClass
      *            名前クラスを使用する場合{@code true}
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
      */
     public ServiceModelFactoryImpl(String packageName,
             String serviceClassNameSuffix, NamesModelFactory namesModelFactory,
-            boolean useNamesClass) {
+            boolean useNamesClass, String jdbcManagerName) {
+        if (jdbcManagerName == null) {
+            throw new NullPointerException("jdbcManagerName");
+        }
         if (serviceClassNameSuffix == null) {
             throw new NullPointerException("serviceClassNameSuffix");
         }
@@ -72,6 +86,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         this.serviceClassNameSuffix = serviceClassNameSuffix;
         this.namesModelFactory = namesModelFactory;
         this.useNamesClass = useNamesClass;
+        this.jdbcManagerName = jdbcManagerName;
     }
 
     public ServiceModel getServiceModel(EntityMeta entityMeta) {
@@ -81,6 +96,9 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
                 + serviceClassNameSuffix);
         serviceModel.setShortEntityClassName(entityMeta.getEntityClass()
                 .getSimpleName());
+        serviceModel.setJdbcManagerName(jdbcManagerName);
+        serviceModel.setJdbcManagerSetterNecessary(!DEFAULT_JDBC_MANAGER_NAME
+                .equals(jdbcManagerName));
         for (PropertyMeta idPropertyMeta : entityMeta.getIdPropertyMetaList()) {
             serviceModel.addIdPropertyMeta(idPropertyMeta);
         }
@@ -134,6 +152,10 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
                     .getPackageName(), namesModel.getShortClassName());
             classModelSupport.addStaticImportName(serviceModel, namesClassName);
             classModelSupport.addImportName(serviceModel, List.class);
+        }
+        if (serviceModel.isJdbcManagerSetterNecessary()) {
+            classModelSupport.addImportName(serviceModel, Resource.class);
+            classModelSupport.addImportName(serviceModel, JdbcManager.class);
         }
     }
 }

@@ -41,8 +41,6 @@ public class GenerateServiceTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
-    private ServiceModelFactoryImpl serviceModelFactory;
-
     private GeneratorImplStub generator;
 
     /**
@@ -63,9 +61,6 @@ public class GenerateServiceTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        serviceModelFactory = new ServiceModelFactoryImpl("hoge.service",
-                "Service", new NamesModelFactoryImpl("hoge.entity", "Names"),
-                true);
         generator = new GeneratorImplStub();
     }
 
@@ -76,6 +71,9 @@ public class GenerateServiceTest {
     @Test
     public void testSingleId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "hoge.service", "Service", new NamesModelFactoryImpl(
+                        "hoge.entity", "Names"), true, "jdbcManager");
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "file"), "java/service.ftl", "UTF-8", false);
@@ -91,6 +89,9 @@ public class GenerateServiceTest {
     @Test
     public void testCompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "hoge.service", "Service", new NamesModelFactoryImpl(
+                        "hoge.entity", "Names"), true, "jdbcManager");
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "file"), "java/service.ftl", "UTF-8", false);
@@ -107,11 +108,33 @@ public class GenerateServiceTest {
     @Test
     public void testNoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "hoge.service", "Service", new NamesModelFactoryImpl(
+                        "hoge.entity", "Names"), true, "jdbcManager");
         ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "file"), "java/service.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + "_NoId.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testJdbcManagerName() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "hoge.service", "Service", new NamesModelFactoryImpl(
+                        "hoge.entity", "Names"), true, "myJdbcManager");
+        ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/service.ftl", "UTF-8", false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/")
+                + "_JdbcManagerName.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 }

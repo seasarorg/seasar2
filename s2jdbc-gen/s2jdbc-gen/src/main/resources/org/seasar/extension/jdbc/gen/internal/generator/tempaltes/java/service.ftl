@@ -19,6 +19,19 @@ import static ${importName};
  * @author S2JDBC-Gen
  */
 public class ${shortClassName} extends AbstractService<${shortEntityClassName}> {
+<#if jdbcManagerSetterNecessary>
+
+    /**
+     * JDBCマネージャを設定します。
+     * 
+     * @param jdbcManager
+     *            JDBCマネージャ
+     */
+    @Resource(name = "${jdbcManagerName}")
+    public void setJdbcManager(JdbcManager jdbcManager) {
+        this.jdbcManager = jdbcManager;
+    }
+</#if>
 <#if idPropertyMetaList?size gt 0>
 
     /**
