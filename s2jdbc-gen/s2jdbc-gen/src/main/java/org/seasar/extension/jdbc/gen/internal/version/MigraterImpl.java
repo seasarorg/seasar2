@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.framework.log.Logger;
@@ -46,7 +46,7 @@ public class MigraterImpl implements Migrater {
     protected SchemaInfoTable schemaInfoTable;
 
     /** DDLのバージョンを管理するディレクトリ */
-    protected DdlVersionDirectory ddlVersionDirectory;
+    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
 
     /** 環境名 */
     protected String env;
@@ -61,7 +61,7 @@ public class MigraterImpl implements Migrater {
      *            SQLのひとまとまりの実行者
      * @param schemaInfoTable
      *            スキーマのバージョン
-     * @param ddlVersionDirectory
+     * @param ddlVersionBaseDirectory
      *            DDLをバージョン管理するディレクトリ
      * @param version
      *            バージョン
@@ -70,14 +70,14 @@ public class MigraterImpl implements Migrater {
      */
     public MigraterImpl(SqlUnitExecutor sqlUnitExecutor,
             SchemaInfoTable schemaInfoTable,
-            DdlVersionDirectory ddlVersionDirectory, String version, String env) {
+            DdlVersionBaseDirectory ddlVersionBaseDirectory, String version, String env) {
         if (sqlUnitExecutor == null) {
             throw new NullPointerException("sqlUnitExecutor");
         }
         if (schemaInfoTable == null) {
             throw new NullPointerException("schemaVersion");
         }
-        if (ddlVersionDirectory == null) {
+        if (ddlVersionBaseDirectory == null) {
             throw new NullPointerException("versionDirectories");
         }
         if (version == null) {
@@ -88,14 +88,14 @@ public class MigraterImpl implements Migrater {
         }
         this.sqlUnitExecutor = sqlUnitExecutor;
         this.schemaInfoTable = schemaInfoTable;
-        this.ddlVersionDirectory = ddlVersionDirectory;
+        this.ddlVersionBaseDirectory = ddlVersionBaseDirectory;
         this.version = version;
         this.env = env;
     }
 
     public void migrate(Callback callback) {
         int from = schemaInfoTable.getVersionNo();
-        int to = ddlVersionDirectory.getDdlInfoFile().getVersionNo(version);
+        int to = ddlVersionBaseDirectory.getDdlInfoFile().getVersionNo(version);
 
         logger.log("IS2JDBCGen0005", new Object[] { from, to });
         migrateInternal(callback, from, to);
@@ -113,12 +113,12 @@ public class MigraterImpl implements Migrater {
      *            マイグレーション先のバージョン番号
      */
     protected void migrateInternal(final Callback callback, int from, int to) {
-        File dropVersionDir = ddlVersionDirectory.getVersionDir(from);
-        File dropDir = ddlVersionDirectory.getDropDir(dropVersionDir);
+        File dropVersionDir = ddlVersionBaseDirectory.getVersionDir(from);
+        File dropDir = ddlVersionBaseDirectory.getDropDir(dropVersionDir);
         final List<File> dropFileList = getFileList(dropDir);
 
-        File createVersionDir = ddlVersionDirectory.getVersionDir(to);
-        File createDir = ddlVersionDirectory.getCreateDir(createVersionDir);
+        File createVersionDir = ddlVersionBaseDirectory.getVersionDir(to);
+        File createDir = ddlVersionBaseDirectory.getCreateDir(createVersionDir);
         final List<File> createFileList = getFileList(createDir);
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {

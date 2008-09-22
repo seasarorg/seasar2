@@ -34,7 +34,7 @@ import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
@@ -117,8 +117,8 @@ public class LoadDataCommand extends AbstractCommand {
     /** ローダ */
     protected Loader loader;
 
-    /** DDLのバージョンを管理するディレクトリ */
-    protected DdlVersionDirectory ddlVersionDirectory;
+    /** DDLのバージョンを管理するベースディレクトリ */
+    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
 
     /**
      * インスタンスを構築します。
@@ -411,7 +411,7 @@ public class LoadDataCommand extends AbstractCommand {
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         loader = createLoader();
-        ddlVersionDirectory = createDdlVersionDirectory();
+        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
 
         logRdbmsAndGenDialect(dialect);
     }
@@ -420,8 +420,9 @@ public class LoadDataCommand extends AbstractCommand {
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
         final List<File> fileList = new ArrayList<File>();
-        File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
-        File createDir = ddlVersionDirectory.getCreateDir(currentVersionDir);
+        File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
+        File createDir = ddlVersionBaseDirectory
+                .getCreateDir(currentVersionDir);
         File dir = dumpDir != null ? dumpDir : new File(createDir, dumpDirName);
 
         FileUtil.traverseDirectory(dir, new EnvAwareFilenameFilter(env),
@@ -491,13 +492,13 @@ public class LoadDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionDirectory}の実装を作成します。
+     * {@link DdlVersionBaseDirectory}の実装を作成します。
      * 
-     * @return {@link DdlVersionDirectory}の実装
+     * @return {@link DdlVersionBaseDirectory}の実装
      */
-    protected DdlVersionDirectory createDdlVersionDirectory() {
-        return factory.createDdlVersionDirectory(this, migrateDir, ddlInfoFile,
-                versionNoPattern);
+    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
+        return factory.createDdlVersionBaseDirectory(this, migrateDir,
+                ddlInfoFile, versionNoPattern);
     }
 
     @Override

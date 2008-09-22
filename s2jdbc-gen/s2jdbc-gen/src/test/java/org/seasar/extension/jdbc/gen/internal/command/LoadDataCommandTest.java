@@ -69,6 +69,6 @@ public class LoadDataCommandTest {
         assertNotNull(command.loader);
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.dialect);
-        assertNotNull(command.ddlVersionDirectory);
+        assertNotNull(command.ddlVersionBaseDirectory);
     }
 }

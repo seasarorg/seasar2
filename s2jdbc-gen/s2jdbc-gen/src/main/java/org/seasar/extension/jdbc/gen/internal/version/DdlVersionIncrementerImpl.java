@@ -28,7 +28,7 @@ import org.seasar.extension.jdbc.gen.internal.util.DefaultExcludesFilenameFilter
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
 import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringUtil;
@@ -45,7 +45,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             .getLogger(DdlVersionIncrementerImpl.class);
 
     /** DDLのバージョンを管理するディレクトリ */
-    protected DdlVersionDirectory ddlVersionDirectory;
+    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -65,7 +65,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     /**
      * インスタンスを構築します。
      * 
-     * @param ddlVersionDirectory
+     * @param ddlVersionBaseDirectory
      *            DDLのバージョンを管理するディレクトリ
      * @param dialect
      *            方言
@@ -76,10 +76,10 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * @param dropDirNameList
      *            コピー非対象のdropディレクトリ名のリスト
      */
-    public DdlVersionIncrementerImpl(DdlVersionDirectory ddlVersionDirectory,
+    public DdlVersionIncrementerImpl(DdlVersionBaseDirectory ddlVersionBaseDirectory,
             GenDialect dialect, DataSource dataSource,
             List<String> createDirNameList, List<String> dropDirNameList) {
-        if (ddlVersionDirectory == null) {
+        if (ddlVersionBaseDirectory == null) {
             throw new NullPointerException("versionDirectories");
         }
         if (dialect == null) {
@@ -94,7 +94,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         if (dropDirNameList == null) {
             throw new NullPointerException("dropFileNameList");
         }
-        this.ddlVersionDirectory = ddlVersionDirectory;
+        this.ddlVersionBaseDirectory = ddlVersionBaseDirectory;
         this.dialect = dialect;
         this.dataSource = dataSource;
         this.createDirNameList.addAll(createDirNameList);
@@ -104,14 +104,14 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     public void increment(Callback callback) {
         try {
             makeCurrentVersionDirs();
-            File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
-            File nextVersionDir = ddlVersionDirectory.getNextVersionDir();
+            File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
+            File nextVersionDir = ddlVersionBaseDirectory.getNextVersionDir();
             copyVersionDirectory(currentVersionDir, nextVersionDir);
-            File nextCreateDir = ddlVersionDirectory
+            File nextCreateDir = ddlVersionBaseDirectory
                     .getCreateDir(nextVersionDir);
-            File nextDropDir = ddlVersionDirectory.getDropDir(nextVersionDir);
+            File nextDropDir = ddlVersionBaseDirectory.getDropDir(nextVersionDir);
             incrementInternal(callback, nextCreateDir, nextDropDir);
-            makeFirstVersionDropDir(nextDropDir, ddlVersionDirectory
+            makeFirstVersionDropDir(nextDropDir, ddlVersionBaseDirectory
                     .getDropDir(currentVersionDir));
             incrementVersionNo();
         } catch (RuntimeException e) {
@@ -124,15 +124,15 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * 現在のバージョンディレクトリを作成します。
      */
     protected void makeCurrentVersionDirs() {
-        File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
+        File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
         if (currentVersionDir.mkdirs()) {
             recoveryDirList.add(currentVersionDir);
         }
-        File createDir = ddlVersionDirectory.getCreateDir(currentVersionDir);
+        File createDir = ddlVersionBaseDirectory.getCreateDir(currentVersionDir);
         if (createDir.mkdirs()) {
             recoveryDirList.add(createDir);
         }
-        File dropDir = ddlVersionDirectory.getDropDir(currentVersionDir);
+        File dropDir = ddlVersionBaseDirectory.getDropDir(currentVersionDir);
         if (dropDir.mkdirs()) {
             recoveryDirList.add(dropDir);
         }
@@ -160,7 +160,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      *            コピー先のディレクトリ
      */
     protected void makeFirstVersionDropDir(File srcDir, File destDir) {
-        DdlInfoFile ddlInfoFile = ddlVersionDirectory.getDdlInfoFile();
+        DdlInfoFile ddlInfoFile = ddlVersionBaseDirectory.getDdlInfoFile();
         if (ddlInfoFile.getCurrentVersionNo() == 0) {
             if (destDir.exists()) {
                 FileUtil.deleteDirectory(destDir);
@@ -184,7 +184,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             File dropDir) {
         recoveryDirList.add(createDir);
         recoveryDirList.add(dropDir);
-        callback.execute(createDir, dropDir, ddlVersionDirectory
+        callback.execute(createDir, dropDir, ddlVersionBaseDirectory
                 .getDdlInfoFile().getNextVersionNo());
     }
 
@@ -208,7 +208,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * バージョン番号を増分します。
      */
     protected void incrementVersionNo() {
-        ddlVersionDirectory.getDdlInfoFile().applyNextVersionNo();
+        ddlVersionBaseDirectory.getDdlInfoFile().applyNextVersionNo();
     }
 
     /**
@@ -229,10 +229,10 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
          */
         protected PathFilenameFilter() {
             filenameFilter = new DefaultExcludesFilenameFilter();
-            File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
-            File createDir = ddlVersionDirectory
+            File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
+            File createDir = ddlVersionBaseDirectory
                     .getCreateDir(currentVersionDir);
-            File dropDir = ddlVersionDirectory.getDropDir(currentVersionDir);
+            File dropDir = ddlVersionBaseDirectory.getDropDir(currentVersionDir);
             setupFilterPathList(createDir, createDirNameList);
             setupFilterPathList(dropDir, dropDirNameList);
         }

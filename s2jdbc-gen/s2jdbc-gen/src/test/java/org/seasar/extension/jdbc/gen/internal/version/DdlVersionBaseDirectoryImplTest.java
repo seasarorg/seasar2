@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
+import org.seasar.extension.jdbc.gen.internal.version.DdlVersionBaseDirectoryImpl;
 
 import static org.junit.Assert.*;
 
@@ -27,16 +27,16 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DdlVersionDirectoryImplTest {
+public class DdlVersionBaseDirectoryImplTest {
 
-    private DdlVersionDirectoryImpl directory;
+    private DdlVersionBaseDirectoryImpl directory;
 
     /**
      * 
      */
     @Before
     public void setUp() {
-        directory = new DdlVersionDirectoryImpl(new File("aaa"), new File(
+        directory = new DdlVersionBaseDirectoryImpl(new File("aaa"), new File(
                 "bbb"), "0000");
     }
 

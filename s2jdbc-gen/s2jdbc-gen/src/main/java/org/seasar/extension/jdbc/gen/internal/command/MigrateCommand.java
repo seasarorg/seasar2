@@ -29,7 +29,7 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.framework.container.SingletonS2Container;
@@ -123,8 +123,8 @@ public class MigrateCommand extends AbstractCommand {
     /** スキーマのバージョン */
     protected SchemaInfoTable schemaInfoTable;
 
-    /** バージョン管理のディレクトリ */
-    protected DdlVersionDirectory ddlVersionDirectory;
+    /** バージョン管理のベースディレクトリ */
+    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
 
     /** マイグレータ */
     protected Migrater migrater;
@@ -516,7 +516,7 @@ public class MigrateCommand extends AbstractCommand {
         }
         sqlFileExecutor = createSqlFileExecutor();
         schemaInfoTable = createSchemaInfoTable();
-        ddlVersionDirectory = createDdlVersionDirectory();
+        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
@@ -587,13 +587,13 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionDirectory}の実装を作成します。
+     * {@link DdlVersionBaseDirectory}の実装を作成します。
      * 
-     * @return {@link DdlVersionDirectory}の実装
+     * @return {@link DdlVersionBaseDirectory}の実装
      */
-    protected DdlVersionDirectory createDdlVersionDirectory() {
-        return factory.createDdlVersionDirectory(this, migrateDir, ddlInfoFile,
-                versionNoPattern);
+    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
+        return factory.createDdlVersionBaseDirectory(this, migrateDir,
+                ddlInfoFile, versionNoPattern);
     }
 
     /**
@@ -603,7 +603,7 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected Migrater createMigrater() {
         return factory.createMigrater(this, sqlUnitExecutor, schemaInfoTable,
-                ddlVersionDirectory, version, env);
+                ddlVersionBaseDirectory, version, env);
     }
 
     /**

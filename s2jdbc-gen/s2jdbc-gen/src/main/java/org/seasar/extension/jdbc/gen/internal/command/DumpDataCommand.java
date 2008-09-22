@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRunt
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -91,8 +91,8 @@ public class DumpDataCommand extends AbstractCommand {
     /** ダンパ */
     protected Dumper dumper;
 
-    /** DDLのバージョンを管理するディレクトリ */
-    protected DdlVersionDirectory ddlVersionDirectory;
+    /** DDLのバージョンを管理するベースディレクトリ */
+    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
 
     /**
      * インスタンスを構築します。
@@ -343,7 +343,7 @@ public class DumpDataCommand extends AbstractCommand {
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         dumper = createDumper();
-        ddlVersionDirectory = createDdlVersionDirectory();
+        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
 
         logRdbmsAndGenDialect(dialect);
     }
@@ -351,8 +351,9 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        File currentVersionDir = ddlVersionDirectory.getCurrentVersionDir();
-        File createDir = ddlVersionDirectory.getCreateDir(currentVersionDir);
+        File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
+        File createDir = ddlVersionBaseDirectory
+                .getCreateDir(currentVersionDir);
         final File dir = dumpDir != null ? dumpDir : new File(createDir,
                 dumpDirName);
 
@@ -400,13 +401,13 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionDirectory}の実装を作成します。
+     * {@link DdlVersionBaseDirectory}の実装を作成します。
      * 
-     * @return {@link DdlVersionDirectory}の実装
+     * @return {@link DdlVersionBaseDirectory}の実装
      */
-    protected DdlVersionDirectory createDdlVersionDirectory() {
-        return factory.createDdlVersionDirectory(this, migrateDir, ddlInfoFile,
-                versionNoPattern);
+    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
+        return factory.createDdlVersionBaseDirectory(this, migrateDir,
+                ddlInfoFile, versionNoPattern);
     }
 
     /**

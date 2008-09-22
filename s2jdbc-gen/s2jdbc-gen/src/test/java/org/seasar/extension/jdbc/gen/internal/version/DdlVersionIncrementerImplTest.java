@@ -46,7 +46,7 @@ public class DdlVersionIncrementerImplTest {
                 + "/migrate";
         baseDir = ResourceUtil.getResourceAsFile(path);
         File versionFile = new File(baseDir, "ddl-version.txt");
-        DdlVersionDirectoryImpl directory = new DdlVersionDirectoryImpl(
+        DdlVersionBaseDirectoryImpl directory = new DdlVersionBaseDirectoryImpl(
                 baseDir, versionFile, "v000");
         incrementer = new DdlVersionIncrementerImpl(directory,
                 new StandardGenDialect(), new MockDataSource(), Collections

@@ -47,7 +47,7 @@ import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.model.TestModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
@@ -199,7 +199,7 @@ public interface Factory {
             File templateFilePrimaryDir);
 
     /**
-     * {@link DdlVersionDirectory}の実装を作成します。
+     * {@link DdlVersionBaseDirectory}の実装を作成します。
      * 
      * @param command
      *            呼び出し元のコマンド
@@ -209,9 +209,9 @@ public interface Factory {
      *            バージョンファイル
      * @param versionNoPattern
      *            バージョン番号のパターン
-     * @return {@link DdlVersionDirectory}の実装
+     * @return {@link DdlVersionBaseDirectory}の実装
      */
-    DdlVersionDirectory createDdlVersionDirectory(Command command,
+    DdlVersionBaseDirectory createDdlVersionBaseDirectory(Command command,
             File baseDir, File versionFile, String versionNoPattern);
 
     /**
@@ -219,7 +219,7 @@ public interface Factory {
      * 
      * @param command
      *            呼び出し元のコマンド
-     * @param ddlVersionDirectory
+     * @param ddlVersionBaseDirectory
      *            DDLのバージョンを管理するディレクトリ
      * @param dialect
      *            方言
@@ -232,7 +232,7 @@ public interface Factory {
      * @return {@link DdlVersionIncrementer}の実装
      */
     DdlVersionIncrementer createDdlVersionIncrementer(Command command,
-            DdlVersionDirectory ddlVersionDirectory, GenDialect dialect,
+            DdlVersionBaseDirectory ddlVersionBaseDirectory, GenDialect dialect,
             DataSource dataSource, List<String> createDirNameList,
             List<String> dropDirNameList);
 
@@ -442,7 +442,7 @@ public interface Factory {
      *            SQLのひとまとまりの実行者
      * @param schemaInfoTable
      *            スキーマのバージョン
-     * @param ddlVersionDirectory
+     * @param ddlVersionBaseDirectory
      *            DDLをバージョン管理するディレクトリ
      * @param version
      *            バージョン
@@ -452,7 +452,7 @@ public interface Factory {
      */
     Migrater createMigrater(Command command, SqlUnitExecutor sqlUnitExecutor,
             SchemaInfoTable schemaInfoTable,
-            DdlVersionDirectory ddlVersionDirectory, String version, String env);
+            DdlVersionBaseDirectory ddlVersionBaseDirectory, String version, String env);
 
     /**
      * {@link Loader}の実装を作成します。

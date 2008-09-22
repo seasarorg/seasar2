@@ -19,15 +19,16 @@ import java.io.File;
 
 import org.seasar.extension.jdbc.gen.internal.exception.NextVersionDirectoryExistsRuntimeException;
 import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link DdlVersionBaseDirectory}の実装クラスです。
  * 
+ * @author taedium
  */
-public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
+public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
 
     /** createディレクトリの名前 */
     protected static String CREATE_DIR_NAME = "create";
@@ -37,7 +38,7 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
 
     /** ロガー */
     protected static Logger logger = Logger
-            .getLogger(DdlVersionDirectoryImpl.class);
+            .getLogger(DdlVersionBaseDirectoryImpl.class);
 
     /** バージョン管理のベースディレクトリ */
     protected File baseDir;
@@ -64,7 +65,7 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
      * @param versionNoPattern
      *            バージョン番号のパターン
      */
-    public DdlVersionDirectoryImpl(File baseDir, File versionFile,
+    public DdlVersionBaseDirectoryImpl(File baseDir, File versionFile,
             String versionNoPattern) {
         if (baseDir == null) {
             throw new NullPointerException("baseDir");

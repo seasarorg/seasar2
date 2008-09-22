@@ -18,11 +18,11 @@ package org.seasar.extension.jdbc.gen.version;
 import java.io.File;
 
 /**
- * DDLのバージョンを管理するディレクトリを扱うインタフェースです。
+ * DDLのバージョンを管理するベースディレクトリを扱うインタフェースです。
  * 
  * @author taedium
  */
-public interface DdlVersionDirectory {
+public interface DdlVersionBaseDirectory {
 
     /**
      * 現バージョンに対応するディレクトリを返します。

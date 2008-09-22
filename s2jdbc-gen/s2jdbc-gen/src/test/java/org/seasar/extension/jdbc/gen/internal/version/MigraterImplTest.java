@@ -58,7 +58,7 @@ public class MigraterImplTest {
         baseDir = ResourceUtil.getResourceAsFile(path);
         File versionFile = new File(baseDir, "ddl-version.txt");
 
-        DdlVersionDirectoryImpl directory = new DdlVersionDirectoryImpl(
+        DdlVersionBaseDirectoryImpl directory = new DdlVersionBaseDirectoryImpl(
                 baseDir, versionFile, "v000");
         migrater = new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
                 directory, "latest", "ut");

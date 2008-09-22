@@ -69,7 +69,7 @@ public class MigrateCommandTest {
         assertNotNull(command.dialect);
         assertNotNull(command.sqlFileExecutor);
         assertNotNull(command.schemaInfoTable);
-        assertNotNull(command.ddlVersionDirectory);
+        assertNotNull(command.ddlVersionBaseDirectory);
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.databaseDescFactory);
         assertNotNull(command.sqlUnitExecutor);

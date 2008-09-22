@@ -66,7 +66,7 @@ public class GenerateDdlCommandTest {
         command.validate();
         command.init();
         assertNotNull(command.dialect);
-        assertNotNull(command.ddlVersionDirectory);
+        assertNotNull(command.ddlVersionBaseDirectory);
         assertNotNull(command.ddlVersionIncrementer);
         assertNotNull(command.tableModelFactory);
         assertNotNull(command.schemaInfoTableModelFactory);

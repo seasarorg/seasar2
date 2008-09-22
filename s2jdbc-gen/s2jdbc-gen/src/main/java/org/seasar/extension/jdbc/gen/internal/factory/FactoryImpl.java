@@ -54,7 +54,7 @@ import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
-import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
+import org.seasar.extension.jdbc.gen.internal.version.DdlVersionBaseDirectoryImpl;
 import org.seasar.extension.jdbc.gen.internal.version.DdlVersionIncrementerImpl;
 import org.seasar.extension.jdbc.gen.internal.version.MigraterImpl;
 import org.seasar.extension.jdbc.gen.internal.version.SchemaInfoTableImpl;
@@ -72,7 +72,7 @@ import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.model.TestModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
@@ -148,19 +148,19 @@ public class FactoryImpl implements Factory {
         return new GeneratorImpl(templateFileEncoding, templateFilePrimaryDir);
     }
 
-    public DdlVersionDirectory createDdlVersionDirectory(Command command,
+    public DdlVersionBaseDirectory createDdlVersionBaseDirectory(Command command,
             File baseDir, File versionFile, String versionNoPattern) {
 
-        return new DdlVersionDirectoryImpl(baseDir, versionFile,
+        return new DdlVersionBaseDirectoryImpl(baseDir, versionFile,
                 versionNoPattern);
     }
 
     public DdlVersionIncrementer createDdlVersionIncrementer(Command command,
-            DdlVersionDirectory ddlVersionDirectory, GenDialect dialect,
+            DdlVersionBaseDirectory ddlVersionBaseDirectory, GenDialect dialect,
             DataSource dataSource, List<String> createDirNameList,
             List<String> dropFileNameList) {
 
-        return new DdlVersionIncrementerImpl(ddlVersionDirectory, dialect,
+        return new DdlVersionIncrementerImpl(ddlVersionBaseDirectory, dialect,
                 dataSource, createDirNameList, dropFileNameList);
     }
 
@@ -252,10 +252,10 @@ public class FactoryImpl implements Factory {
 
     public Migrater createMigrater(Command command,
             SqlUnitExecutor sqlUnitExecutor, SchemaInfoTable schemaInfoTable,
-            DdlVersionDirectory ddlVersionDirectory, String version, String env) {
+            DdlVersionBaseDirectory ddlVersionBaseDirectory, String version, String env) {
 
         return new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
-                ddlVersionDirectory, version, env);
+                ddlVersionBaseDirectory, version, env);
     }
 
     public Loader createLoader(Command command, GenDialect dialect,
