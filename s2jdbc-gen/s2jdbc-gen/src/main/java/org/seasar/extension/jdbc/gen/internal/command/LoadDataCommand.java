@@ -34,7 +34,8 @@ import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
+import org.seasar.extension.jdbc.gen.version.DdlVersionOpDirectory;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
@@ -87,6 +88,8 @@ public class LoadDataCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
+    protected boolean envVersion;
+
     /** データをロードする際のバッチサイズ */
     protected int loadBatchSize = 10;
 
@@ -117,8 +120,8 @@ public class LoadDataCommand extends AbstractCommand {
     /** ローダ */
     protected Loader loader;
 
-    /** DDLのバージョンを管理するベースディレクトリ */
-    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
+    /** DDLのバージョンを管理するディレクトリツリー */
+    protected DdlVersionDirectoryTree ddlVersionDirectoryTree;
 
     /**
      * インスタンスを構築します。
@@ -411,19 +414,19 @@ public class LoadDataCommand extends AbstractCommand {
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         loader = createLoader();
-        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
+        ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
 
         logRdbmsAndGenDialect(dialect);
     }
 
-    @Override
+    // TODO
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
         final List<File> fileList = new ArrayList<File>();
-        File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
-        File createDir = ddlVersionBaseDirectory
-                .getCreateDir(currentVersionDir);
-        File dir = dumpDir != null ? dumpDir : new File(createDir, dumpDirName);
+        DdlVersionOpDirectory createDir = ddlVersionDirectoryTree
+                .getCurrentVersionDirectory().getCreateDirectory();
+        File dir = dumpDir != null ? dumpDir : createDir
+                .getChildFile(dumpDirName);
 
         FileUtil.traverseDirectory(dir, new EnvAwareFilenameFilter(env),
                 new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
@@ -492,13 +495,13 @@ public class LoadDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionBaseDirectory}の実装を作成します。
+     * {@link DdlVersionDirectoryTree}の実装を作成します。
      * 
-     * @return {@link DdlVersionBaseDirectory}の実装
+     * @return {@link DdlVersionDirectoryTree}の実装
      */
-    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
-        return factory.createDdlVersionBaseDirectory(this, migrateDir,
-                ddlInfoFile, versionNoPattern);
+    protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
+        return factory.createDdlVersionDirectoryTree(this, migrateDir,
+                ddlInfoFile, versionNoPattern, env, envVersion);
     }
 
     @Override

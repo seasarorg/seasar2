@@ -17,18 +17,17 @@ package org.seasar.extension.jdbc.gen.internal.version;
 
 import java.io.File;
 
-import org.seasar.extension.jdbc.gen.internal.exception.NextVersionDirectoryExistsRuntimeException;
 import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
-import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * {@link DdlVersionBaseDirectory}の実装クラスです。
+ * {@link DdlVersionDirectoryTree}の実装クラスです。
  * 
  * @author taedium
  */
-public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
+public class DdlVersionDirectoryTreeImpl implements DdlVersionDirectoryTree {
 
     /** createディレクトリの名前 */
     protected static String CREATE_DIR_NAME = "create";
@@ -38,7 +37,7 @@ public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
 
     /** ロガー */
     protected static Logger logger = Logger
-            .getLogger(DdlVersionBaseDirectoryImpl.class);
+            .getLogger(DdlVersionDirectoryTreeImpl.class);
 
     /** バージョン管理のベースディレクトリ */
     protected File baseDir;
@@ -46,14 +45,10 @@ public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
     /** バージョン番号のパターン */
     protected String versionNoPattern;
 
+    protected String env;
+
     /** DDLのバージョン */
     protected DdlInfoFile ddlInfoFile;
-
-    /** 現在のバージョンディレクトリ */
-    protected File currentVersionDir;
-
-    /** 次のバージョンディレクトリ */
-    protected File nextVersionDir;
 
     /**
      * インスタンスを構築します。
@@ -65,8 +60,8 @@ public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
      * @param versionNoPattern
      *            バージョン番号のパターン
      */
-    public DdlVersionBaseDirectoryImpl(File baseDir, File versionFile,
-            String versionNoPattern) {
+    public DdlVersionDirectoryTreeImpl(File baseDir, File versionFile,
+            String versionNoPattern, String env) {
         if (baseDir == null) {
             throw new NullPointerException("baseDir");
         }
@@ -78,39 +73,20 @@ public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
         }
         this.baseDir = baseDir;
         this.versionNoPattern = versionNoPattern;
+        this.env = env;
         ddlInfoFile = createDdlInfoFile(versionFile);
-
-        String currentVersionDirName = getVersionDirName(ddlInfoFile
-                .getCurrentVersionNo(), versionNoPattern);
-        currentVersionDir = new File(baseDir, currentVersionDirName);
-
-        String nextVersionDirName = getVersionDirName(ddlInfoFile
-                .getNextVersionNo(), versionNoPattern);
-        nextVersionDir = new File(baseDir, nextVersionDirName);
-        if (nextVersionDir.exists()) {
-            throw new NextVersionDirectoryExistsRuntimeException(nextVersionDir
-                    .getPath(), versionFile.getPath());
-        }
     }
 
-    public File getCurrentVersionDir() {
-        return currentVersionDir;
+    public DdlVersionDirectory getCurrentVersionDirectory() {
+        return createDdlVersionDirectory(ddlInfoFile.getCurrentVersionNo());
     }
 
-    public File getNextVersionDir() {
-        return nextVersionDir;
+    public DdlVersionDirectory getNextVersionDirectory() {
+        return createDdlVersionDirectory(ddlInfoFile.getNextVersionNo());
     }
 
-    public File getVersionDir(int versionNo) {
-        return new File(baseDir, getVersionDirName(versionNo, versionNoPattern));
-    }
-
-    public File getCreateDir(File versionDir) {
-        return new File(versionDir, CREATE_DIR_NAME);
-    }
-
-    public File getDropDir(File versionDir) {
-        return new File(versionDir, DROP_DIR_NAME);
+    public DdlVersionDirectory getVersionDirectory(int versionNo) {
+        return createDdlVersionDirectory(versionNo);
     }
 
     public DdlInfoFile getDdlInfoFile() {
@@ -128,16 +104,9 @@ public class DdlVersionBaseDirectoryImpl implements DdlVersionBaseDirectory {
         return new DdlInfoFileImpl(file);
     }
 
-    /**
-     * バージョンディレクトリの名前を返します。
-     * 
-     * @param versionNo
-     *            バージョン番号
-     * @param pattern
-     *            バージョン番号のパターン
-     * @return バージョンディレクトリの名前
-     */
-    protected String getVersionDirName(int versionNo, String pattern) {
-        return StringConversionUtil.toString(versionNo, pattern);
+    protected DdlVersionDirectory createDdlVersionDirectory(int versionNo) {
+        return new DdlVersionDirectoryImpl(baseDir, versionNo,
+                versionNoPattern, env);
     }
+
 }

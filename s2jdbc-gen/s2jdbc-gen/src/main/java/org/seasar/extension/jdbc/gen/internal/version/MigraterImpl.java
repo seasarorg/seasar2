@@ -16,15 +16,12 @@
 package org.seasar.extension.jdbc.gen.internal.version;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
-import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFilenameFilter;
-import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.framework.log.Logger;
@@ -46,7 +43,7 @@ public class MigraterImpl implements Migrater {
     protected SchemaInfoTable schemaInfoTable;
 
     /** DDLのバージョンを管理するディレクトリ */
-    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
+    protected DdlVersionDirectoryTree ddlVersionDirectoryTree;
 
     /** 環境名 */
     protected String env;
@@ -61,7 +58,7 @@ public class MigraterImpl implements Migrater {
      *            SQLのひとまとまりの実行者
      * @param schemaInfoTable
      *            スキーマのバージョン
-     * @param ddlVersionBaseDirectory
+     * @param ddlVersionDirectoryTree
      *            DDLをバージョン管理するディレクトリ
      * @param version
      *            バージョン
@@ -70,14 +67,15 @@ public class MigraterImpl implements Migrater {
      */
     public MigraterImpl(SqlUnitExecutor sqlUnitExecutor,
             SchemaInfoTable schemaInfoTable,
-            DdlVersionBaseDirectory ddlVersionBaseDirectory, String version, String env) {
+            DdlVersionDirectoryTree ddlVersionDirectoryTree, String version,
+            String env) {
         if (sqlUnitExecutor == null) {
             throw new NullPointerException("sqlUnitExecutor");
         }
         if (schemaInfoTable == null) {
             throw new NullPointerException("schemaVersion");
         }
-        if (ddlVersionBaseDirectory == null) {
+        if (ddlVersionDirectoryTree == null) {
             throw new NullPointerException("versionDirectories");
         }
         if (version == null) {
@@ -88,14 +86,14 @@ public class MigraterImpl implements Migrater {
         }
         this.sqlUnitExecutor = sqlUnitExecutor;
         this.schemaInfoTable = schemaInfoTable;
-        this.ddlVersionBaseDirectory = ddlVersionBaseDirectory;
+        this.ddlVersionDirectoryTree = ddlVersionDirectoryTree;
         this.version = version;
         this.env = env;
     }
 
     public void migrate(Callback callback) {
         int from = schemaInfoTable.getVersionNo();
-        int to = ddlVersionBaseDirectory.getDdlInfoFile().getVersionNo(version);
+        int to = ddlVersionDirectoryTree.getDdlInfoFile().getVersionNo(version);
 
         logger.log("IS2JDBCGen0005", new Object[] { from, to });
         migrateInternal(callback, from, to);
@@ -113,13 +111,15 @@ public class MigraterImpl implements Migrater {
      *            マイグレーション先のバージョン番号
      */
     protected void migrateInternal(final Callback callback, int from, int to) {
-        File dropVersionDir = ddlVersionBaseDirectory.getVersionDir(from);
-        File dropDir = ddlVersionBaseDirectory.getDropDir(dropVersionDir);
-        final List<File> dropFileList = getFileList(dropDir);
+        DdlVersionDirectory fromVersionDir = ddlVersionDirectoryTree
+                .getVersionDirectory(from);
+        final List<File> dropFileList = fromVersionDir.getDropDirectory()
+                .list();
 
-        File createVersionDir = ddlVersionBaseDirectory.getVersionDir(to);
-        File createDir = ddlVersionBaseDirectory.getCreateDir(createVersionDir);
-        final List<File> createFileList = getFileList(createDir);
+        DdlVersionDirectory toVersionDir = ddlVersionDirectoryTree
+                .getVersionDirectory(to);
+        final List<File> createFileList = toVersionDir.getCreateDirectory()
+                .list();
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
@@ -132,25 +132,6 @@ public class MigraterImpl implements Migrater {
                 }
             }
         });
-    }
-
-    /**
-     * ディレクトリに含まれるファイルを返します。
-     * 
-     * @param dir
-     *            ディレクトリ
-     * @return ファイルのリスト
-     */
-    protected List<File> getFileList(File dir) {
-        final List<File> fileList = new ArrayList<File>();
-        FileUtil.traverseDirectory(dir, new EnvAwareFilenameFilter(env),
-                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
-
-                    public void handle(File file) {
-                        fileList.add(file);
-                    }
-                });
-        return fileList;
     }
 
 }

@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.version.DdlVersionBaseDirectoryImpl;
 
 import static org.junit.Assert.*;
 
@@ -27,17 +26,17 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DdlVersionBaseDirectoryImplTest {
+public class DdlVersionDirectoryTreeImplTest {
 
-    private DdlVersionBaseDirectoryImpl directory;
+    private DdlVersionDirectoryTreeImpl tree;
 
     /**
      * 
      */
     @Before
     public void setUp() {
-        directory = new DdlVersionBaseDirectoryImpl(new File("aaa"), new File(
-                "bbb"), "0000");
+        tree = new DdlVersionDirectoryTreeImpl(new File("aaa"),
+                new File("bbb"), "0000", null);
     }
 
     /**
@@ -45,7 +44,7 @@ public class DdlVersionBaseDirectoryImplTest {
      */
     @Test
     public void testGetCurrentVersionDir() {
-        File dir = directory.getCurrentVersionDir();
+        File dir = tree.getCurrentVersionDirectory().asFile();
         assertEquals("aaa", dir.getParent());
         assertEquals("0000", dir.getName());
     }
@@ -55,7 +54,7 @@ public class DdlVersionBaseDirectoryImplTest {
      */
     @Test
     public void testGetNextVersionDir() {
-        File dir = directory.getNextVersionDir();
+        File dir = tree.getNextVersionDirectory().asFile();
         assertEquals("aaa", dir.getParent());
         assertEquals("0001", dir.getName());
     }
@@ -65,7 +64,7 @@ public class DdlVersionBaseDirectoryImplTest {
      */
     @Test
     public void testGetVersionDir() {
-        File dir = directory.getVersionDir(10);
+        File dir = tree.getVersionDirectory(10).asFile();
         assertEquals("aaa", dir.getParent());
         assertEquals("0010", dir.getName());
     }
@@ -74,28 +73,8 @@ public class DdlVersionBaseDirectoryImplTest {
      * 
      */
     @Test
-    public void testGetCreateDir() {
-        File versionDir = new File("0123");
-        File dir = directory.getCreateDir(versionDir);
-        assertEquals("create", dir.getName());
-    }
-
-    /**
-     * 
-     */
-    @Test
-    public void testGetDropDir() {
-        File versionDir = new File("0123");
-        File dir = directory.getDropDir(versionDir);
-        assertEquals("drop", dir.getName());
-    }
-
-    /**
-     * 
-     */
-    @Test
     public void testGetDdlVersion() {
-        assertNotNull(directory.getDdlInfoFile());
+        assertNotNull(tree.getDdlInfoFile());
     }
 
 }

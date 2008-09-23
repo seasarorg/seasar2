@@ -13,28 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.exception;
+package org.seasar.extension.jdbc.gen.internal.util;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import java.io.File;
+import java.util.Comparator;
 
 /**
  * @author taedium
  * 
  */
-public class NextVersionDirectoryExistsRuntimeExceptionTest {
+public class FileComparetor implements Comparator<File> {
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void test() throws Exception {
-        NextVersionDirectoryExistsRuntimeException e = new NextVersionDirectoryExistsRuntimeException(
-                "aaa");
-        assertEquals("aaa", e.getVersionDirPath());
-        System.out.println(e.getMessage());
+    public int compare(File file1, File file2) {
+        return file1.compareTo(file2);
     }
-
 }

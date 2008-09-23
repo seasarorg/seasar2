@@ -57,9 +57,6 @@ public class FileUtil {
         if (!srcDir.isDirectory()) {
             throw new IllegalArgumentException("srcDir");
         }
-        if (destDir.exists()) {
-            throw new IllegalArgumentException("destDir");
-        }
         if (!getCanonicalPath(srcDir).equals(getCanonicalPath(srcDir))
                 && getCanonicalPath(srcDir)
                         .startsWith(getCanonicalPath(srcDir))) {
@@ -183,6 +180,9 @@ public class FileUtil {
             return;
         }
         File[] files = dir.listFiles(filter);
+        if (files == null) {
+            return;
+        }
         Arrays.sort(files, comparator);
         for (File file : files) {
             if (file.isDirectory()) {
@@ -190,7 +190,6 @@ public class FileUtil {
             }
             handler.handle(file);
         }
-
     }
 
     /**

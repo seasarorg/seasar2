@@ -69,6 +69,6 @@ public class DumpDataCommandTest {
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.databaseDescFactory);
         assertNotNull(command.dumper);
-        assertNotNull(command.ddlVersionBaseDirectory);
+        assertNotNull(command.ddlVersionDirectoryTree);
     }
 }

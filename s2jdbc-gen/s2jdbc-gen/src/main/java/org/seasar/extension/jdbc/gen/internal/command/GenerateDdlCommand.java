@@ -38,7 +38,7 @@ import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
@@ -206,8 +206,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** ジェネレータ */
     protected Generator generator;
 
-    /** DDLのバージョンを管理するベースディレクトリ */
-    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
+    /** DDLのバージョンを管理するディレクトリツリー */
+    protected DdlVersionDirectoryTree ddlVersionDirectoryTree;
 
     /** DDLのバージョンのインクリメンタ */
     protected DdlVersionIncrementer ddlVersionIncrementer;
@@ -989,7 +989,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         dialect = getGenDialect(genDialectClassName);
-        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
+        ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
         ddlVersionIncrementer = createDdlVersionIncrementer();
         tableModelFactory = createTableModelFactory();
         schemaInfoTableModelFactory = createSchemaInfoTableModelFactory();
@@ -1220,13 +1220,13 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionBaseDirectory}の実装を作成します。
+     * {@link DdlVersionDirectoryTree}の実装を作成します。
      * 
-     * @return {@link DdlVersionBaseDirectory}の実装
+     * @return {@link DdlVersionDirectoryTree}の実装
      */
-    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
-        return factory.createDdlVersionBaseDirectory(this, migrateDir,
-                ddlInfoFile, versionNoPattern);
+    protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
+        return factory.createDdlVersionDirectoryTree(this, migrateDir,
+                ddlInfoFile, versionNoPattern, env, false);
     }
 
     /**
@@ -1242,7 +1242,7 @@ public class GenerateDdlCommand extends AbstractCommand {
                 dropUniqueKeyDirName, dropSequenceDirName,
                 dropForeignKeyDirName);
         return factory.createDdlVersionIncrementer(this,
-                ddlVersionBaseDirectory, dialect, jdbcManager.getDataSource(),
+                ddlVersionDirectoryTree, dialect, jdbcManager.getDataSource(),
                 createDirNameList, dropDirNameList);
     }
 

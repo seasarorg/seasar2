@@ -29,7 +29,7 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.extension.jdbc.gen.version.Migrater;
 import org.seasar.extension.jdbc.gen.version.SchemaInfoTable;
 import org.seasar.framework.container.SingletonS2Container;
@@ -84,6 +84,8 @@ public class MigrateCommand extends AbstractCommand {
     /** マイグレーション先のバージョン */
     protected String version = "latest";
 
+    protected boolean envVersion;
+
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
 
@@ -123,8 +125,8 @@ public class MigrateCommand extends AbstractCommand {
     /** スキーマのバージョン */
     protected SchemaInfoTable schemaInfoTable;
 
-    /** バージョン管理のベースディレクトリ */
-    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
+    /** バージョン管理のディレクトリツリー */
+    protected DdlVersionDirectoryTree ddlVersionDirectoryTree;
 
     /** マイグレータ */
     protected Migrater migrater;
@@ -516,7 +518,7 @@ public class MigrateCommand extends AbstractCommand {
         }
         sqlFileExecutor = createSqlFileExecutor();
         schemaInfoTable = createSchemaInfoTable();
-        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
+        ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
@@ -587,13 +589,13 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionBaseDirectory}の実装を作成します。
+     * {@link DdlVersionDirectoryTree}の実装を作成します。
      * 
-     * @return {@link DdlVersionBaseDirectory}の実装
+     * @return {@link DdlVersionDirectoryTree}の実装
      */
-    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
-        return factory.createDdlVersionBaseDirectory(this, migrateDir,
-                ddlInfoFile, versionNoPattern);
+    protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
+        return factory.createDdlVersionDirectoryTree(this, migrateDir,
+                ddlInfoFile, versionNoPattern, env, envVersion);
     }
 
     /**
@@ -603,7 +605,7 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected Migrater createMigrater() {
         return factory.createMigrater(this, sqlUnitExecutor, schemaInfoTable,
-                ddlVersionBaseDirectory, version, env);
+                ddlVersionDirectoryTree, version, env);
     }
 
     /**

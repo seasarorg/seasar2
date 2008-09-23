@@ -26,7 +26,8 @@ import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRunt
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
-import org.seasar.extension.jdbc.gen.version.DdlVersionBaseDirectory;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
+import org.seasar.extension.jdbc.gen.version.DdlVersionOpDirectory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -73,6 +74,8 @@ public class DumpDataCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
+    protected boolean envVersion;
+
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
 
@@ -91,8 +94,8 @@ public class DumpDataCommand extends AbstractCommand {
     /** ダンパ */
     protected Dumper dumper;
 
-    /** DDLのバージョンを管理するベースディレクトリ */
-    protected DdlVersionBaseDirectory ddlVersionBaseDirectory;
+    /** DDLのバージョンを管理するディレクトリツリー */
+    protected DdlVersionDirectoryTree ddlVersionDirectoryTree;
 
     /**
      * インスタンスを構築します。
@@ -343,7 +346,7 @@ public class DumpDataCommand extends AbstractCommand {
         databaseDescFactory = createDatabaseDescFactory();
         sqlUnitExecutor = createSqlUnitExecutor();
         dumper = createDumper();
-        ddlVersionBaseDirectory = createDdlVersionBaseDirectory();
+        ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
 
         logRdbmsAndGenDialect(dialect);
     }
@@ -351,11 +354,10 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        File currentVersionDir = ddlVersionBaseDirectory.getCurrentVersionDir();
-        File createDir = ddlVersionBaseDirectory
-                .getCreateDir(currentVersionDir);
-        final File dir = dumpDir != null ? dumpDir : new File(createDir,
-                dumpDirName);
+        DdlVersionOpDirectory createDir = ddlVersionDirectoryTree
+                .getCurrentVersionDirectory().getCreateDirectory();
+        final File dir = dumpDir != null ? dumpDir : createDir
+                .getChildFile(dumpDirName);
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
@@ -401,13 +403,13 @@ public class DumpDataCommand extends AbstractCommand {
     }
 
     /**
-     * {@link DdlVersionBaseDirectory}の実装を作成します。
+     * {@link DdlVersionDirectoryTree}の実装を作成します。
      * 
-     * @return {@link DdlVersionBaseDirectory}の実装
+     * @return {@link DdlVersionDirectoryTree}の実装
      */
-    protected DdlVersionBaseDirectory createDdlVersionBaseDirectory() {
-        return factory.createDdlVersionBaseDirectory(this, migrateDir,
-                ddlInfoFile, versionNoPattern);
+    protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
+        return factory.createDdlVersionDirectoryTree(this, migrateDir,
+                ddlInfoFile, versionNoPattern, env, envVersion);
     }
 
     /**

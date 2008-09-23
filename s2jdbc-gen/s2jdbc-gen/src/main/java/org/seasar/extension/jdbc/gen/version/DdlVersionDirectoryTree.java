@@ -15,28 +15,26 @@
  */
 package org.seasar.extension.jdbc.gen.version;
 
-import java.io.File;
-
 /**
  * DDLのバージョンを管理するベースディレクトリを扱うインタフェースです。
  * 
  * @author taedium
  */
-public interface DdlVersionBaseDirectory {
+public interface DdlVersionDirectoryTree {
 
     /**
      * 現バージョンに対応するディレクトリを返します。
      * 
      * @return 現バージョンに対応するディレクトリ
      */
-    File getCurrentVersionDir();
+    DdlVersionDirectory getCurrentVersionDirectory();
 
     /**
      * 次バージョンに対応するディレクトリを返します。
      * 
      * @return 次バージョンに対応するディレクトリ
      */
-    File getNextVersionDir();
+    DdlVersionDirectory getNextVersionDirectory();
 
     /**
      * 指定されたバージョン番号に対応するディレクトリを返します。
@@ -45,25 +43,7 @@ public interface DdlVersionBaseDirectory {
      *            バージョン番号
      * @return バージョン番号に対応するディレクトリ
      */
-    File getVersionDir(int versionNo);
-
-    /**
-     * 指定されたバージョンに対応するディレクトリのcreateディレクトリを返します。
-     * 
-     * @param versionDir
-     *            バージョンに対応するディレクトリ
-     * @return createディレクトリ
-     */
-    File getCreateDir(File versionDir);
-
-    /**
-     * 指定されたバージョンに対応するディレクトリのdropディレクトリを返します。
-     * 
-     * @param versionDir
-     *            バージョンに対応するディレクトリ
-     * @return dropディレクトリ
-     */
-    File getDropDir(File versionDir);
+    DdlVersionDirectory getVersionDirectory(int versionNo);
 
     /**
      * DDL情報ファイルを返します。

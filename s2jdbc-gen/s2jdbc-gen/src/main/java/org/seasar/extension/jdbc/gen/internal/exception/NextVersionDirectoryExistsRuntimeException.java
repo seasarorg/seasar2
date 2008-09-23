@@ -22,30 +22,23 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author taedium
  */
-public class NextVersionDirectoryExistsRuntimeException extends SRuntimeException {
+public class NextVersionDirectoryExistsRuntimeException extends
+        SRuntimeException {
 
     private static final long serialVersionUID = 1L;
 
     /** バージョンディレクトリのパス */
     protected String versionDirPath;
 
-    /** バージョンファイルのパス */
-    protected String versionFilePath;
-
     /**
      * インスタンスを構築します。
      * 
      * @param versionDirPath
      *            バージョンディレクトリのパス
-     * @param versionFilePath
-     *            バージョンファイルのパス
      */
-    public NextVersionDirectoryExistsRuntimeException(String versionDirPath,
-            String versionFilePath) {
-        super("ES2JDBCGen0008",
-                new Object[] { versionDirPath, versionFilePath });
+    public NextVersionDirectoryExistsRuntimeException(String versionDirPath) {
+        super("ES2JDBCGen0008", new Object[] { versionDirPath });
         this.versionDirPath = versionDirPath;
-        this.versionFilePath = versionFilePath;
     }
 
     /**
@@ -55,15 +48,6 @@ public class NextVersionDirectoryExistsRuntimeException extends SRuntimeExceptio
      */
     public String getVersionDirPath() {
         return versionDirPath;
-    }
-
-    /**
-     * バージョンファイルのパスを返します。
-     * 
-     * @return バージョンファイルのパス
-     */
-    public String getVersionFilePath() {
-        return versionFilePath;
     }
 
 }

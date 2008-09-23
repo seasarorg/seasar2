@@ -13,28 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.exception;
+package org.seasar.extension.jdbc.gen.version;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import java.io.File;
+import java.util.List;
 
 /**
  * @author taedium
  * 
  */
-public class NextVersionDirectoryExistsRuntimeExceptionTest {
+public interface DdlVersionOpDirectory {
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void test() throws Exception {
-        NextVersionDirectoryExistsRuntimeException e = new NextVersionDirectoryExistsRuntimeException(
-                "aaa");
-        assertEquals("aaa", e.getVersionDirPath());
-        System.out.println(e.getMessage());
-    }
+    File asFile();
 
+    File getChildFile(String name);
+
+    List<File> list();
 }

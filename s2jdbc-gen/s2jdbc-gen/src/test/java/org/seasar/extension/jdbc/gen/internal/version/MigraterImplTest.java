@@ -58,8 +58,8 @@ public class MigraterImplTest {
         baseDir = ResourceUtil.getResourceAsFile(path);
         File versionFile = new File(baseDir, "ddl-version.txt");
 
-        DdlVersionBaseDirectoryImpl directory = new DdlVersionBaseDirectoryImpl(
-                baseDir, versionFile, "v000");
+        DdlVersionDirectoryTreeImpl directory = new DdlVersionDirectoryTreeImpl(
+                baseDir, versionFile, "v000", null);
         migrater = new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
                 directory, "latest", "ut");
     }
@@ -84,15 +84,16 @@ public class MigraterImplTest {
             }
         });
 
-        assertEquals(2, dropFileList.size());
+        assertEquals(3, dropFileList.size());
         File v010 = new File(baseDir, "v010");
         File drop = new File(v010, "drop");
-        assertEquals(new File(drop, "drop.sql"), dropFileList.get(0));
-        assertEquals(new File(drop, "drop#ut.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
 
         assertEquals(1, createFileList.size());
         File v011 = new File(baseDir, "v011");
         File create = new File(v011, "create");
-        assertEquals(new File(create, "create.sql"), createFileList.get(0));
+        assertEquals(new File(create, "aaa.sql"), createFileList.get(0));
     }
 }

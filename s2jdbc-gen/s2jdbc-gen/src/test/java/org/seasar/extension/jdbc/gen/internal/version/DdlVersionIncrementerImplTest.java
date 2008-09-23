@@ -21,6 +21,7 @@ import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.util.ResourceUtil;
@@ -46,18 +47,24 @@ public class DdlVersionIncrementerImplTest {
                 + "/migrate";
         baseDir = ResourceUtil.getResourceAsFile(path);
         File versionFile = new File(baseDir, "ddl-version.txt");
-        DdlVersionBaseDirectoryImpl directory = new DdlVersionBaseDirectoryImpl(
-                baseDir, versionFile, "v000");
+        DdlVersionDirectoryTreeImpl directory = new DdlVersionDirectoryTreeImpl(
+                baseDir, versionFile, "v000", null);
         incrementer = new DdlVersionIncrementerImpl(directory,
                 new StandardGenDialect(), new MockDataSource(), Collections
                         .<String> emptyList(), Collections.<String> emptyList()) {
 
             @Override
-            protected void copyVersionDirectory(File srcDir, File destDir) {
+            protected void makeVersionDirs(DdlVersionDirectory versionDir) {
             }
 
             @Override
-            protected void makeFirstVersionDropDir(File srcDir, File destDir) {
+            protected void copyVersionDirectory(DdlVersionDirectory current,
+                    DdlVersionDirectory next) {
+            }
+
+            @Override
+            protected void makeFirstVersionDir(DdlVersionDirectory current,
+                    DdlVersionDirectory next) {
             }
 
             @Override
