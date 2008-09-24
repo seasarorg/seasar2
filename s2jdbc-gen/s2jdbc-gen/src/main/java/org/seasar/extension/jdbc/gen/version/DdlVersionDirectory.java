@@ -25,9 +25,9 @@ public interface DdlVersionDirectory {
 
     File asFile();
 
-    DdlVersionOpDirectory getCreateDirectory();
+    ManagedFile getCreateDirectory();
 
-    DdlVersionOpDirectory getDropDirectory();
+    ManagedFile getDropDirectory();
 
     int getVersionNo();
 

@@ -28,14 +28,14 @@ import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFileComparator;
-import org.seasar.extension.jdbc.gen.internal.util.EnvAwareFilenameFilter;
+import org.seasar.extension.jdbc.gen.internal.util.DefaultExcludesFilenameFilter;
+import org.seasar.extension.jdbc.gen.internal.util.FileComparetor;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
-import org.seasar.extension.jdbc.gen.version.DdlVersionOpDirectory;
+import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
@@ -419,22 +419,24 @@ public class LoadDataCommand extends AbstractCommand {
         logRdbmsAndGenDialect(dialect);
     }
 
-    // TODO
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
         final List<File> fileList = new ArrayList<File>();
-        DdlVersionOpDirectory createDir = ddlVersionDirectoryTree
-                .getCurrentVersionDirectory().getCreateDirectory();
-        File dir = dumpDir != null ? dumpDir : createDir
-                .getChildFile(dumpDirName);
+        if (dumpDir != null) {
+            FileUtil.traverseDirectory(dumpDir,
+                    new DefaultExcludesFilenameFilter(), new FileComparetor(),
+                    new FileUtil.FileHandler() {
 
-        FileUtil.traverseDirectory(dir, new EnvAwareFilenameFilter(env),
-                new EnvAwareFileComparator(env), new FileUtil.FileHandler() {
-
-                    public void handle(File file) {
-                        fileList.add(file);
-                    }
-                });
+                        public void handle(File file) {
+                            fileList.add(file);
+                        }
+                    });
+        } else {
+            ManagedFile createDir = ddlVersionDirectoryTree
+                    .getCurrentVersionDirectory().getCreateDirectory();
+            ManagedFile managedDumpDir = createDir.createChild(dumpDirName);
+            fileList.addAll(managedDumpDir.listFiles());
+        }
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 

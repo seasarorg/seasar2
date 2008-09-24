@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 
@@ -29,44 +30,37 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class DdlVersionOpDirectoryImplTest {
+public class ManagedFileImplTest {
 
-    private File parent;
-
-    private DdlVersionOpDirectoryImpl opDirectory;
+    private ManagedFileImpl managedFile;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         String packageName = ClassUtil.splitPackageAndShortClassName(getClass()
                 .getName())[0];
         String path = packageName.replace(".", "/") + "/migrate/v020";
-        parent = ResourceUtil.getResourceAsFile(path);
-        opDirectory = new DdlVersionOpDirectoryImpl(parent, "create", "ut");
+        File file = ResourceUtil.getResourceAsFile(path);
+        managedFile = new ManagedFileImpl(file.getCanonicalPath(), "create",
+                "ut");
     }
 
     @Test
     public void testAsFile() throws Exception {
-        assertEquals(new File(parent, "create"), opDirectory.asFile());
+        assertEquals("v020#ut", managedFile.asFile().getParentFile().getName());
     }
 
     @Test
-    public void testGetChildFile() throws Exception {
-        opDirectory = new DdlVersionOpDirectoryImpl(new File("aaa"), "create",
-                null);
-        File child = opDirectory.getChildFile("bbb");
+    public void testCreateChild() throws Exception {
+        ManagedFile child = managedFile.createChild("aaa");
         assertNotNull(child);
-        assertEquals("aaa", child.getParentFile().getParentFile().getName());
-
-        opDirectory = new DdlVersionOpDirectoryImpl(new File("aaa"), "create",
-                "ut");
-        child = opDirectory.getChildFile("bbb");
-        assertNotNull(child);
-        assertEquals("aaa#ut", child.getParentFile().getParentFile().getName());
+        assertEquals("v020#ut", child.asFile().getParentFile().getParentFile()
+                .getName());
     }
 
     @Test
-    public void testList() throws Exception {
-        List<File> list = opDirectory.list();
+    public void testListFiles() throws Exception {
+        List<File> list = managedFile.listFiles();
         assertEquals(2, list.size());
     }
+
 }

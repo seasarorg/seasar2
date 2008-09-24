@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  */
 public class DefaultExcludesFilenameFilter implements FilenameFilter {
 
-    /** デフォルトの除外名の配列 */
+    /** デフォルトの除外名のパターン */
     protected static Pattern filterPattern = Pattern
             .compile("^(.*~|#.*#|\\.#.*|%.*%|\\._.*|CVS|\\.cvsignore|SCCS|vssver\\.scc|\\.svn|\\.DS_Store)$");
 

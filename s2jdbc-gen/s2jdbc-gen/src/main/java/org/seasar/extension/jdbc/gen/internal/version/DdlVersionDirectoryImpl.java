@@ -17,8 +17,9 @@ package org.seasar.extension.jdbc.gen.internal.version;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
-import org.seasar.extension.jdbc.gen.version.DdlVersionOpDirectory;
+import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringConversionUtil;
 
@@ -33,16 +34,16 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
             .getLogger(DdlVersionDirectoryImpl.class);
 
     /** createディレクトリの名前 */
-    protected static String CREATE_OP_NAME = "create";
+    protected static String CREATE_DIR_NAME = "create";
 
     /** dropディレクトリの名前 */
-    protected static String DROP_OP_NAME = "drop";
+    protected static String DROP_DIR_NAME = "drop";
 
     protected File versionDir;
 
-    protected DdlVersionOpDirectory createDir;
+    protected ManagedFile createDir;
 
-    protected DdlVersionOpDirectory dropDir;
+    protected ManagedFile dropDir;
 
     protected int versionNo;
 
@@ -61,19 +62,19 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         String versionDirName = StringConversionUtil.toString(versionNo,
                 versionNoPattern);
         versionDir = new File(baseDir, versionDirName);
-        createDir = createDdlVersionOpDirectory(CREATE_OP_NAME);
-        dropDir = createDdlVersionOpDirectory(DROP_OP_NAME);
+        createDir = createManagedFile(CREATE_DIR_NAME);
+        dropDir = createManagedFile(DROP_DIR_NAME);
     }
 
     public File asFile() {
         return versionDir;
     }
 
-    public DdlVersionOpDirectory getCreateDirectory() {
+    public ManagedFile getCreateDirectory() {
         return createDir;
     }
 
-    public DdlVersionOpDirectory getDropDirectory() {
+    public ManagedFile getDropDirectory() {
         return dropDir;
     }
 
@@ -85,9 +86,9 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
         return versionNo == 0;
     }
 
-    protected DdlVersionOpDirectory createDdlVersionOpDirectory(
-            String operationName) {
-        return new DdlVersionOpDirectoryImpl(versionDir, operationName, env);
+    protected ManagedFile createManagedFile(String path) {
+        return new ManagedFileImpl(FileUtil.getCanonicalPath(versionDir), path,
+                env);
     }
 
 }

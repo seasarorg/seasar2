@@ -27,7 +27,7 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
-import org.seasar.extension.jdbc.gen.version.DdlVersionOpDirectory;
+import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -354,10 +354,10 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doExecute() {
         final DatabaseDesc databaseDesc = databaseDescFactory.getDatabaseDesc();
-        DdlVersionOpDirectory createDir = ddlVersionDirectoryTree
+        ManagedFile createDir = ddlVersionDirectoryTree
                 .getCurrentVersionDirectory().getCreateDirectory();
-        final File dir = dumpDir != null ? dumpDir : createDir
-                .getChildFile(dumpDirName);
+        final File dir = dumpDir != null ? dumpDir : createDir.createChild(
+                dumpDirName).asFile();
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 
