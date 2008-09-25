@@ -17,12 +17,19 @@ package org.seasar.framework.env;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URL;
 
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.InputStreamReaderUtil;
+import org.seasar.framework.util.InputStreamUtil;
+import org.seasar.framework.util.ReaderUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.TextUtil;
+import org.seasar.framework.util.URLUtil;
 
 /**
  * 環境名を保持するクラスです。
@@ -61,6 +68,9 @@ import org.seasar.framework.util.TextUtil;
  * <td>運用環境</td>
  * </tr>
  * </table>
+ * <p>
+ * 環境名設定ファイルのエンコードはUTF-8固定です。
+ * </p>
  * 
  * @author higa
  */
@@ -191,11 +201,17 @@ public class Env {
             throw new EmptyRuntimeException("filePath");
         }
         Env.filePath = filePath;
-        file = ResourceUtil.getResourceAsFileNoException(filePath);
+        final URL url = ResourceUtil.getResourceNoException(filePath);
+        if (url == null) {
+            file = null;
+            clearValue();
+            return;
+        }
+        file = ResourceUtil.getFile(url);
         if (file != null) {
             calcValue();
         } else {
-            clearValue();
+            calcValue(url);
         }
     }
 
@@ -232,6 +248,28 @@ public class Env {
         lastModified = file.lastModified();
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0114", new Object[] { value, filePath });
+        }
+    }
+
+    /**
+     * 値を計算します。
+     * 
+     * @param url
+     *            URL
+     */
+    protected static void calcValue(final URL url) {
+        final InputStream is = URLUtil.openStream(url);
+        try {
+            Reader reader = InputStreamReaderUtil.create(is, "UTF-8");
+            value = ReaderUtil.readText(reader);
+            if (value != null) {
+                value = value.trim();
+            }
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0114", new Object[] { value, filePath });
+            }
+        } finally {
+            InputStreamUtil.close(is);
         }
     }
 

@@ -26,7 +26,7 @@ import org.seasar.framework.util.StringUtil;
  */
 public class EnvTest extends TestCase {
 
-    private static final String UT_PATH = StringUtil.replace(ClassUtil
+    public static final String UT_PATH = StringUtil.replace(ClassUtil
             .getPackageName(EnvTest.class), ".", "/")
             + "/env.txt";
 
