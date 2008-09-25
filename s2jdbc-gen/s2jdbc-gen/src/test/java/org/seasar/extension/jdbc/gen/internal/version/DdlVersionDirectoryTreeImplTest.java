@@ -45,7 +45,7 @@ public class DdlVersionDirectoryTreeImplTest {
     @Test
     public void testGetCurrentVersionDir() {
         File dir = tree.getCurrentVersionDirectory().asFile();
-        assertEquals("aaa", dir.getParent());
+        assertEquals("aaa", dir.getParentFile().getName());
         assertEquals("0000", dir.getName());
     }
 
@@ -55,7 +55,7 @@ public class DdlVersionDirectoryTreeImplTest {
     @Test
     public void testGetNextVersionDir() {
         File dir = tree.getNextVersionDirectory().asFile();
-        assertEquals("aaa", dir.getParent());
+        assertEquals("aaa", dir.getParentFile().getName());
         assertEquals("0001", dir.getName());
     }
 
@@ -65,7 +65,7 @@ public class DdlVersionDirectoryTreeImplTest {
     @Test
     public void testGetVersionDir() {
         File dir = tree.getVersionDirectory(10).asFile();
-        assertEquals("aaa", dir.getParent());
+        assertEquals("aaa", dir.getParentFile().getName());
         assertEquals("0010", dir.getName());
     }
 

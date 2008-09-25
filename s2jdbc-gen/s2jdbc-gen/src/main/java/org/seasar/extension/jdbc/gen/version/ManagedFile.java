@@ -16,197 +16,38 @@
 package org.seasar.extension.jdbc.gen.version;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.util.List;
 
 /**
- * @author taedium
+ * バージョン管理されたファイルです。
  * 
+ * @author taedium
  */
 public interface ManagedFile {
 
+    /**
+     * {@link File}として返します。
+     * 
+     * @return {@link File}
+     */
     File asFile();
 
-    List<File> listFiles();
-
-    ManagedFile createChild(String path);
-
     /**
-     * @return
-     * @see java.io.File#canRead()
-     */
-    boolean canRead();
-
-    /**
-     * @return
-     * @see java.io.File#canWrite()
-     */
-    boolean canWrite();
-
-    /**
-     * @param pathname
-     * @return
-     * @see java.io.File#compareTo(java.io.File)
-     */
-    int compareTo(File pathname);
-
-    /**
-     * @return
-     * @throws IOException
-     * @see java.io.File#createNewFile()
-     */
-    boolean createNewFile() throws IOException;
-
-    /**
-     * @return
-     * @see java.io.File#delete()
-     */
-    boolean delete();
-
-    /**
+     * このインスタンスがディレクトリを表す場合、ディレクトリ階層下に含まれる全ファイルを返します。
+     * <p>
+     * 返されるリストにはファイルのみが含まれ、ディレクトリは含まれません。
+     * </p>
      * 
-     * @see java.io.File#deleteOnExit()
+     * @return ファイルのリスト
      */
-    void deleteOnExit();
+    List<File> listAllFiles();
 
     /**
-     * @return
-     * @see java.io.File#exists()
+     * このインスタンスの子となるバージョン管理されたファイルを作成します。
+     * 
+     * @param relativePath
+     *            このインスタンスが表すファイルからの相対パス
+     * @return バージョン管理されたファイル
      */
-    boolean exists();
-
-    /**
-     * @return
-     * @see java.io.File#getAbsoluteFile()
-     */
-    File getAbsoluteFile();
-
-    /**
-     * @return
-     * @see java.io.File#getAbsolutePath()
-     */
-    String getAbsolutePath();
-
-    /**
-     * @return
-     * @throws IOException
-     * @see java.io.File#getCanonicalFile()
-     */
-    File getCanonicalFile() throws IOException;
-
-    /**
-     * @return
-     * @throws IOException
-     * @see java.io.File#getCanonicalPath()
-     */
-    String getCanonicalPath() throws IOException;
-
-    /**
-     * @return
-     * @see java.io.File#getName()
-     */
-    String getName();
-
-    /**
-     * @return
-     * @see java.io.File#getParent()
-     */
-    String getParent();
-
-    /**
-     * @return
-     * @see java.io.File#getParentFile()
-     */
-    File getParentFile();
-
-    /**
-     * @return
-     * @see java.io.File#getPath()
-     */
-    String getPath();
-
-    /**
-     * @return
-     * @see java.io.File#isAbsolute()
-     */
-    boolean isAbsolute();
-
-    /**
-     * @return
-     * @see java.io.File#isDirectory()
-     */
-    boolean isDirectory();
-
-    /**
-     * @return
-     * @see java.io.File#isFile()
-     */
-    boolean isFile();
-
-    /**
-     * @return
-     * @see java.io.File#isHidden()
-     */
-    boolean isHidden();
-
-    /**
-     * @return
-     * @see java.io.File#lastModified()
-     */
-    long lastModified();
-
-    /**
-     * @return
-     * @see java.io.File#length()
-     */
-    long length();
-
-    /**
-     * @return
-     * @see java.io.File#mkdir()
-     */
-    boolean mkdir();
-
-    /**
-     * @return
-     * @see java.io.File#mkdirs()
-     */
-    boolean mkdirs();
-
-    /**
-     * @param dest
-     * @return
-     * @see java.io.File#renameTo(java.io.File)
-     */
-    boolean renameTo(File dest);
-
-    /**
-     * @param time
-     * @return
-     * @see java.io.File#setLastModified(long)
-     */
-    boolean setLastModified(long time);
-
-    /**
-     * @return
-     * @see java.io.File#setReadOnly()
-     */
-    boolean setReadOnly();
-
-    /**
-     * @return
-     * @see java.io.File#toURI()
-     */
-    URI toURI();
-
-    /**
-     * @return
-     * @throws MalformedURLException
-     * @see java.io.File#toURL()
-     */
-    URL toURL() throws MalformedURLException;
-
+    ManagedFile createChild(String relativePath);
 }

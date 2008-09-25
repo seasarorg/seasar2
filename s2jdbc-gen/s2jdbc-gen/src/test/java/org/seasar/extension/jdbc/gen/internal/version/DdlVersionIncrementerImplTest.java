@@ -54,16 +54,16 @@ public class DdlVersionIncrementerImplTest {
                         .<String> emptyList(), Collections.<String> emptyList()) {
 
             @Override
-            protected void makeVersionDirs(DdlVersionDirectory versionDir) {
+            protected void makeDirectories(DdlVersionDirectory versionDir) {
             }
 
             @Override
-            protected void copyVersionDirectory(DdlVersionDirectory current,
+            protected void copyDirectory(DdlVersionDirectory current,
                     DdlVersionDirectory next) {
             }
 
             @Override
-            protected void makeFirstVersionDir(DdlVersionDirectory current,
+            protected void copyDropDirectory(DdlVersionDirectory current,
                     DdlVersionDirectory next) {
             }
 

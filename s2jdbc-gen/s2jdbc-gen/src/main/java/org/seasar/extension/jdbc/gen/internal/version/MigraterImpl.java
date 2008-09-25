@@ -114,12 +114,12 @@ public class MigraterImpl implements Migrater {
         DdlVersionDirectory fromVersionDir = ddlVersionDirectoryTree
                 .getVersionDirectory(from);
         final List<File> dropFileList = fromVersionDir.getDropDirectory()
-                .listFiles();
+                .listAllFiles();
 
         DdlVersionDirectory toVersionDir = ddlVersionDirectoryTree
                 .getVersionDirectory(to);
         final List<File> createFileList = toVersionDir.getCreateDirectory()
-                .listFiles();
+                .listAllFiles();
 
         sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
 

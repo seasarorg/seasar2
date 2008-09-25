@@ -200,4 +200,14 @@ public class DumpDataTask extends AbstractTask {
         command.setVersionNoPattern(versionNoPattern);
     }
 
+    /**
+     * 環境名をファイルに適用する場合{@code true}を設定します。
+     * 
+     * @param applyEnvToFile
+     *            環境名をファイルに適用する場合{@code true}
+     */
+    public void setApplyEnvToFile(boolean applyEnvToFile) {
+        command.setApplyEnvToFile(applyEnvToFile);
+    }
+
 }

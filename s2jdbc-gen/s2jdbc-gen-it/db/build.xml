@@ -370,6 +370,14 @@
 			ddlInfofile="${ddl-info}"
 			classpathref="classpath"
 		/>
+		<dump-data
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			applyenvtofile="true"
+			classpathref="classpath"
+		/>
 		<!-- tearDown -->
 		<exec-sql classpathref="classpath">
 			<sqlFileList dir="${sql}/testDumpData">
@@ -400,6 +408,7 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			applyenvtofile="true"
 			classpathref="classpath"
 		/>
 		<exec-sql 
@@ -415,6 +424,7 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			applyenvtofile="true"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->

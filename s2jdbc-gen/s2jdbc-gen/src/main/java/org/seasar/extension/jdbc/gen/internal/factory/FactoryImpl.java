@@ -150,10 +150,10 @@ public class FactoryImpl implements Factory {
 
     public DdlVersionDirectoryTree createDdlVersionDirectoryTree(
             Command command, File baseDir, File versionFile,
-            String versionNoPattern, String env, boolean envVersion) {
+            String versionNoPattern, String env, boolean applyEnvToFile) {
 
         return new DdlVersionDirectoryTreeImpl(baseDir, versionFile,
-                versionNoPattern, envVersion ? env : null);
+                versionNoPattern, applyEnvToFile ? env : null);
     }
 
     public DdlVersionIncrementer createDdlVersionIncrementer(Command command,

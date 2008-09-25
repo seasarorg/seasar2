@@ -39,9 +39,14 @@ public class DdlVersionDirectoryImplTest {
                 null);
     }
 
+    /**
+     * 
+     */
     @Test
-    public void testAsFile() throws Exception {
-        assertEquals(new File("aaa", "0010"), directory.asFile());
+    public void testAsFile() {
+        File file = directory.asFile();
+        assertEquals("aaa", file.getParentFile().getName());
+        assertEquals("0010", file.getName());
     }
 
     /**
@@ -60,14 +65,6 @@ public class DdlVersionDirectoryImplTest {
     public void testGetDropDirectory() {
         File dir = directory.getDropDirectory().asFile();
         assertEquals("drop", dir.getName());
-    }
-
-    /**
-     * 
-     */
-    @Test
-    public void testGetVersionNo() {
-        assertEquals(10, directory.getVersionNo());
     }
 
 }

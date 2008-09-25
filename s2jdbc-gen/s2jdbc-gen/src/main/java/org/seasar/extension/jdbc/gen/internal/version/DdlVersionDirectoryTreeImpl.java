@@ -45,6 +45,7 @@ public class DdlVersionDirectoryTreeImpl implements DdlVersionDirectoryTree {
     /** バージョン番号のパターン */
     protected String versionNoPattern;
 
+    /** 環境名 */
     protected String env;
 
     /** DDLのバージョン */
@@ -59,6 +60,8 @@ public class DdlVersionDirectoryTreeImpl implements DdlVersionDirectoryTree {
      *            バージョンファイル
      * @param versionNoPattern
      *            バージョン番号のパターン
+     * @param env
+     *            環境名、指定されない場合{@code null}
      */
     public DdlVersionDirectoryTreeImpl(File baseDir, File versionFile,
             String versionNoPattern, String env) {
@@ -104,6 +107,13 @@ public class DdlVersionDirectoryTreeImpl implements DdlVersionDirectoryTree {
         return new DdlInfoFileImpl(file);
     }
 
+    /**
+     * {@link DdlVersionDirectory}の実装を作成します。
+     * 
+     * @param versionNo
+     *            バージョン番号
+     * @return {@link DdlVersionDirectory}の実装
+     */
     protected DdlVersionDirectory createDdlVersionDirectory(int versionNo) {
         return new DdlVersionDirectoryImpl(baseDir, versionNo,
                 versionNoPattern, env);

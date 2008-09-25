@@ -16,10 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.version;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,17 +28,27 @@ import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.util.StringUtil;
 
 /**
- * @author taedium
+ * {@link ManagedFile}の実装クラスです。
  * 
+ * @author taedium
  */
 public class ManagedFileImpl implements ManagedFile {
 
-    protected FileHolder fileHolder;
+    /** ファイル情報 */
+    protected FileInfo fileInfo;
 
-    protected FileHolder envNamedFileHolder;
+    /** 環境名つきファイル情報 */
+    protected FileInfo envNamedFileInfo;
 
     /**
+     * インスタンスを構築します。
      * 
+     * @param basePath
+     *            ベースパス
+     * @param path
+     *            パス
+     * @param env
+     *            環境名
      */
     public ManagedFileImpl(String basePath, String path, String env) {
         if (basePath == null) {
@@ -51,52 +57,63 @@ public class ManagedFileImpl implements ManagedFile {
         if (path == null) {
             throw new NullPointerException("path");
         }
-        fileHolder = new FileHolder(basePath, basePath, path, env);
+        fileInfo = new FileInfo(basePath, basePath, path, env);
         if (env != null) {
-            envNamedFileHolder = new FileHolder(basePath + "#" + env, basePath,
+            envNamedFileInfo = new FileInfo(basePath + "#" + env, basePath,
                     path, env);
         }
-    }
-
-    protected FileHolder getFileHolder() {
-        return envNamedFileHolder != null ? envNamedFileHolder : fileHolder;
-    }
-
-    protected File getFile() {
-        return getFileHolder().file;
     }
 
     public File asFile() {
         return getFile();
     }
 
-    /*
-     * (non-Javadoc)
+    public ManagedFile createChild(String relativePath) {
+        return createChildInternal(relativePath);
+    }
+
+    /**
+     * このインスタンスの子となるバージョン管理されたファイルを作成します。
      * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getFileList()
+     * @param relativePath
+     *            このインスタンスが表すファイルからの相対パス
+     * @return バージョン管理されたファイル
      */
-    public List<File> listFiles() {
+    protected ManagedFile createChildInternal(String relativePath) {
+        FileInfo holder = getFileInfo();
+        return new ManagedFileImpl(holder.logicalBasePath, holder.path
+                + File.separator + relativePath, holder.env);
+    }
+
+    public List<File> listAllFiles() {
         final Map<String, File> fileMap = new LinkedHashMap<String, File>();
-        if (envNamedFileHolder != null) {
-            traverseDirectory(envNamedFileHolder, fileMap);
+        if (envNamedFileInfo != null) {
+            traverseDirectory(envNamedFileInfo, fileMap);
         }
-        traverseDirectory(fileHolder, fileMap);
+        traverseDirectory(fileInfo, fileMap);
         File[] files = fileMap.values().toArray(new File[fileMap.size()]);
         return Arrays.asList(files);
     }
 
-    protected void traverseDirectory(final FileHolder fileHolder,
+    /**
+     * ディレクトリを横断します。
+     * 
+     * @param fileInfo
+     *            ディレクトリの情報
+     * @param fileMap
+     *            ディレクトリからの相対パスをキー、ファイルを値とするマップ
+     */
+    protected void traverseDirectory(final FileInfo fileInfo,
             final Map<String, File> fileMap) {
 
-        FileUtil.traverseDirectory(fileHolder.file,
+        FileUtil.traverseDirectory(fileInfo.file,
                 new DefaultExcludesFilenameFilter(), new FileComparetor(),
                 new FileUtil.FileHandler() {
 
                     public void handle(File file) {
                         String canonicalPath = FileUtil.getCanonicalPath(file);
                         String path = StringUtil.trimPrefix(canonicalPath,
-                                fileHolder.actualBasePath + File.separator);
+                                fileInfo.actualBasePath + File.separator);
                         if (!fileMap.containsKey(path)) {
                             fileMap.put(path, file);
                         }
@@ -104,335 +121,59 @@ public class ManagedFileImpl implements ManagedFile {
                 });
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * ファイル情報を返します。
      * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getChild(java
-     * .lang.String)
+     * @return ファイル情報
      */
-    public ManagedFile createChild(String path) {
-        FileHolder holder = getFileHolder();
-        return new ManagedFileImpl(holder.logicalBasePath, holder.path
-                + File.separator + path, holder.env);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#canRead()
-     */
-    public boolean canRead() {
-        return getFile().canRead();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#canWrite()
-     */
-    public boolean canWrite() {
-        return getFile().canWrite();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#compareTo(
-     * java.io.File)
-     */
-    public int compareTo(File pathname) {
-        return getFile().compareTo(pathname);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#createNewFile
-     * ()
-     */
-    public boolean createNewFile() throws IOException {
-        return getFile().createNewFile();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#delete()
-     */
-    public boolean delete() {
-        return getFile().delete();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#deleteOnExit()
-     */
-    public void deleteOnExit() {
-        getFile().deleteOnExit();
+    protected FileInfo getFileInfo() {
+        return envNamedFileInfo != null ? envNamedFileInfo : fileInfo;
     }
 
     /**
-     * @param obj
-     * @return
-     * @see java.io.File#equals(java.lang.Object)
-     */
-    public boolean equals(Object obj) {
-        return getFile().equals(obj);
-    }
-
-    /*
-     * (non-Javadoc)
+     * ファイルを返します。
      * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#exists()
+     * @return ファイル
      */
-    public boolean exists() {
-        return getFile().exists();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getAbsoluteFile
-     * ()
-     */
-    public File getAbsoluteFile() {
-        return getFile().getAbsoluteFile();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getAbsolutePath
-     * ()
-     */
-    public String getAbsolutePath() {
-        return getFile().getAbsolutePath();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getCanonicalFile
-     * ()
-     */
-    public File getCanonicalFile() throws IOException {
-        return getFile().getCanonicalFile();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getCanonicalPath
-     * ()
-     */
-    public String getCanonicalPath() throws IOException {
-        return getFile().getCanonicalPath();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getName()
-     */
-    public String getName() {
-        return getFile().getName();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getParent()
-     */
-    public String getParent() {
-        return getFile().getParent();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getParentFile
-     * ()
-     */
-    public File getParentFile() {
-        return getFile().getParentFile();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#getPath()
-     */
-    public String getPath() {
-        return getFile().getPath();
+    protected File getFile() {
+        return getFileInfo().file;
     }
 
     /**
-     * @return
-     * @see java.io.File#hashCode()
-     */
-    public int hashCode() {
-        return getFile().hashCode();
-    }
-
-    /*
-     * (non-Javadoc)
+     * ファイル情報です。
      * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#isAbsolute()
+     * @author taedium
      */
-    public boolean isAbsolute() {
-        return getFile().isAbsolute();
-    }
+    protected static class FileInfo {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#isDirectory()
-     */
-    public boolean isDirectory() {
-        return getFile().isDirectory();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#isFile()
-     */
-    public boolean isFile() {
-        return getFile().isFile();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#isHidden()
-     */
-    public boolean isHidden() {
-        return getFile().isHidden();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#lastModified()
-     */
-    public long lastModified() {
-        return getFile().lastModified();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#length()
-     */
-    public long length() {
-        return getFile().length();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#mkdir()
-     */
-    public boolean mkdir() {
-        return getFile().mkdir();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#mkdirs()
-     */
-    public boolean mkdirs() {
-        return getFile().mkdirs();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#renameTo(java
-     * .io.File)
-     */
-    public boolean renameTo(File dest) {
-        return getFile().renameTo(dest);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#setLastModified
-     * (long)
-     */
-    public boolean setLastModified(long time) {
-        return getFile().setLastModified(time);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.seasar.extension.jdbc.gen.internal.version.ManagedFile#setReadOnly()
-     */
-    public boolean setReadOnly() {
-        return getFile().setReadOnly();
-    }
-
-    /**
-     * @return
-     * @see java.io.File#toString()
-     */
-    public String toString() {
-        return getFile().toString();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#toURI()
-     */
-    public URI toURI() {
-        return getFile().toURI();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.seasar.extension.jdbc.gen.internal.version.ManagedFile#toURL()
-     */
-    public URL toURL() throws MalformedURLException {
-        return getFile().toURL();
-    }
-
-    protected static class FileHolder {
-
+        /** 実際のベースパス */
         protected String actualBasePath;
 
+        /** 論理的なベースパス */
         protected String logicalBasePath;
 
+        /** パス */
         protected String path;
 
+        /** 環境名 */
         protected String env;
 
+        /** ファイル */
         protected File file;
 
-        public FileHolder(String actualBasePath, String logicalBasePath,
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param actualBasePath
+         *            実際のベースパス
+         * @param logicalBasePath
+         *            論理的なベースパス
+         * @param path
+         *            パス
+         * @param env
+         *            環境名
+         */
+        public FileInfo(String actualBasePath, String logicalBasePath,
                 String path, String env) {
             this.actualBasePath = actualBasePath;
             this.logicalBasePath = logicalBasePath;

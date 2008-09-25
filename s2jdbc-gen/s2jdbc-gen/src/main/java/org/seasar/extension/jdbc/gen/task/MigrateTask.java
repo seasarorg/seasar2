@@ -268,4 +268,14 @@ public class MigrateTask extends AbstractTask {
     public void setGenDialectClassName(String genDialectClassName) {
         command.setGenDialectClassName(genDialectClassName);
     }
+
+    /**
+     * 環境名をファイルに適用する場合{@code true}を設定します。
+     * 
+     * @param applyEnvToFile
+     *            環境名をファイルに適用する場合{@code true}
+     */
+    public void setApplyEnvToFile(boolean applyEnvToFile) {
+        command.setApplyEnvToFile(applyEnvToFile);
+    }
 }

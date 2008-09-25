@@ -15,22 +15,39 @@
  */
 package org.seasar.extension.jdbc.gen.version;
 
-import java.io.File;
-
 /**
- * @author taedium
+ * DDLのバージョンに対応するディレクトリです。
  * 
+ * @author taedium
  */
-public interface DdlVersionDirectory {
+public interface DdlVersionDirectory extends ManagedFile {
 
-    File asFile();
-
+    /**
+     * createディレクトリを返します。
+     * 
+     * @return createディレクトリ
+     */
     ManagedFile getCreateDirectory();
 
+    /**
+     * dropディレクトリを返します。
+     * 
+     * @return dropディレクトリ
+     */
     ManagedFile getDropDirectory();
 
+    /**
+     * バージョン番号を返します。
+     * 
+     * @return バージョン番号
+     */
     int getVersionNo();
 
+    /**
+     * DDLの最初のバージョンである場合{@code true}を返します。
+     * 
+     * @return DDLの最初のバージョンである場合{@code true}
+     */
     boolean isFirstVersion();
 
 }

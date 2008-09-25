@@ -60,6 +60,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     /** dropディレクトリ名のリスト */
     protected List<String> dropDirNameList = new ArrayList<String>();
 
+    /** リカバリ対象のディレクトリのリスト */
     protected List<File> recoveryDirList = new ArrayList<File>();
 
     /**
@@ -112,12 +113,12 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
                     .asFile().getPath());
         }
         try {
-            makeVersionDirs(currentVersionDir);
-            makeVersionDirs(nextVersionDir);
-            copyVersionDirectory(currentVersionDir, nextVersionDir);
+            makeDirectories(currentVersionDir);
+            makeDirectories(nextVersionDir);
+            copyDirectory(currentVersionDir, nextVersionDir);
             incrementInternal(callback, nextVersionDir);
             if (currentVersionDir.isFirstVersion()) {
-                makeFirstVersionDir(currentVersionDir, nextVersionDir);
+                copyDropDirectory(currentVersionDir, nextVersionDir);
             }
             incrementVersionNo();
         } catch (RuntimeException e) {
@@ -126,7 +127,13 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         }
     }
 
-    protected void makeVersionDirs(DdlVersionDirectory versionDir) {
+    /**
+     * バージョン管理に必要なディレクトリを作成します。
+     * 
+     * @param versionDir
+     *            バージョンディレクトリ
+     */
+    protected void makeDirectories(DdlVersionDirectory versionDir) {
         File verDir = versionDir.asFile();
         if (verDir.mkdirs()) {
             recoveryDirList.add(verDir);
@@ -144,12 +151,12 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     /**
      * ディレクトリをコピーします。
      * 
-     * @param srcDir
-     *            コピー元のディレクトリ
-     * @param destDir
-     *            コピー先のディレクトリ
+     * @param current
+     *            現在のバージョンディレクトリ
+     * @param next
+     *            次のバージョンディレクトリ
      */
-    protected void copyVersionDirectory(DdlVersionDirectory current,
+    protected void copyDirectory(DdlVersionDirectory current,
             DdlVersionDirectory next) {
         File srcCreateDir = current.getCreateDirectory().asFile();
         File destCreateDir = next.getCreateDirectory().asFile();
@@ -164,18 +171,18 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     }
 
     /**
-     * 最初のバージョンのdropディレクトリを作成します。
+     * dropディレクトリを作成します。
      * 
-     * @param srcDir
-     *            コピー元のディレクトリ
-     * @param destDir
-     *            コピー先のディレクトリ
+     * @param current
+     *            現在のバージョンディレクトリ
+     * @param next
+     *            次のバージョンディレクトリ
      */
-    protected void makeFirstVersionDir(DdlVersionDirectory current,
+    protected void copyDropDirectory(DdlVersionDirectory current,
             DdlVersionDirectory next) {
         File src = next.getDropDirectory().asFile();
         File dest = current.getDropDirectory().asFile();
-        FileUtil.copyDirectory(src, dest, new TableExistenceFilenameFilter());
+        FileUtil.copyDirectory(src, dest, new TableFilenameFilter());
     }
 
     /**
@@ -183,17 +190,14 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
      * 
      * @param callback
      *            コールバック
-     * @param createDir
-     *            createディレクトリ
-     * @param dropDir
-     *            dropディレクトリ
+     * @param directory
+     *            バージョンディレクトリ
      */
     protected void incrementInternal(Callback callback,
             DdlVersionDirectory directory) {
         File src = directory.getCreateDirectory().asFile();
         File dest = directory.getDropDirectory().asFile();
-        callback.execute(src, dest, ddlVersionDirectoryTree.getDdlInfoFile()
-                .getNextVersionNo());
+        callback.execute(src, dest, directory.getVersionNo());
     }
 
     /**
@@ -220,24 +224,30 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     }
 
     /**
-     * コピー対象外のパスで始まるファイル名をフィルタします。
+     * 除外対象のパスで始まるファイル名をフィルタします。
      * 
      * @author taedium
      */
     protected class PathFilenameFilter implements FilenameFilter {
 
-        /** コピー対象外のパスのリスト */
-        protected List<String> filterPathList = new ArrayList<String>();
+        /** 除外対象パスのリスト */
+        protected List<String> excludePathList = new ArrayList<String>();
 
         /** ファイル名のフィルタ */
         protected FilenameFilter filenameFilter;
 
         /**
          * インスタンスを構築します。
+         * 
+         * @param baseDir
+         *            ベースディレクトリ
+         * @param excludeDirNameList
+         *            除外ディレクトリ名のリスト
          */
-        protected PathFilenameFilter(File baseDir, List<String> dirNameList) {
+        protected PathFilenameFilter(File baseDir,
+                List<String> excludeDirNameList) {
             filenameFilter = new DefaultExcludesFilenameFilter();
-            setupFilterPathList(baseDir, dirNameList);
+            setupFilterPathList(baseDir, excludeDirNameList);
         }
 
         /**
@@ -251,7 +261,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         protected void setupFilterPathList(File dir, List<String> dirNameList) {
             for (String name : dirNameList) {
                 File file = new File(dir, name);
-                filterPathList.add(FileUtil.getCanonicalPath(file));
+                excludePathList.add(FileUtil.getCanonicalPath(file));
             }
         }
 
@@ -259,7 +269,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             if (!filenameFilter.accept(dir, name)) {
                 return false;
             }
-            for (String path : filterPathList) {
+            for (String path : excludePathList) {
                 File file = new File(dir, name);
                 if (FileUtil.getCanonicalPath(file).startsWith(path)) {
                     return false;
@@ -270,12 +280,11 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     }
 
     /**
-     * ファイルに対応するテーブルがデータベース存在しない場合にフィルタします。
+     * ファイルに対応するテーブルがデータベースに存在しない場合にフィルタします。
      * 
      * @author taedium
-     * 
      */
-    protected class TableExistenceFilenameFilter implements FilenameFilter {
+    protected class TableFilenameFilter implements FilenameFilter {
 
         /** ファイル名のフィルタ */
         protected FilenameFilter filenameFilter;
@@ -286,7 +295,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         /**
          * インスタンスを構築します。
          */
-        protected TableExistenceFilenameFilter() {
+        protected TableFilenameFilter() {
             filenameFilter = new DefaultExcludesFilenameFilter();
             tableSet = TableUtil.getTableSet(dialect, dataSource);
         }

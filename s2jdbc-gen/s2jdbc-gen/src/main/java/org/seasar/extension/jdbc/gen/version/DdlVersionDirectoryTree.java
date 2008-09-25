@@ -16,7 +16,7 @@
 package org.seasar.extension.jdbc.gen.version;
 
 /**
- * DDLのバージョンを管理するベースディレクトリを扱うインタフェースです。
+ * DDLのバージョンを管理するディレクトリツリーです。
  * 
  * @author taedium
  */
@@ -48,7 +48,7 @@ public interface DdlVersionDirectoryTree {
     /**
      * DDL情報ファイルを返します。
      * 
-     * @return DDLのバージョン
+     * @return DDL情報ファイル
      */
     DdlInfoFile getDdlInfoFile();
 }

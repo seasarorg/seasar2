@@ -34,6 +34,10 @@ public class ManagedFileImplTest {
 
     private ManagedFileImpl managedFile;
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Before
     public void setUp() throws Exception {
         String packageName = ClassUtil.splitPackageAndShortClassName(getClass()
@@ -44,11 +48,19 @@ public class ManagedFileImplTest {
                 "ut");
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testAsFile() throws Exception {
         assertEquals("v020#ut", managedFile.asFile().getParentFile().getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testCreateChild() throws Exception {
         ManagedFile child = managedFile.createChild("aaa");
@@ -57,9 +69,13 @@ public class ManagedFileImplTest {
                 .getName());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
     @Test
     public void testListFiles() throws Exception {
-        List<File> list = managedFile.listFiles();
+        List<File> list = managedFile.listAllFiles();
         assertEquals(2, list.size());
     }
 

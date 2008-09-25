@@ -74,7 +74,8 @@ public class DumpDataCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
-    protected boolean envVersion;
+    /** 環境名をファイルに適用する場合{@code true} */
+    protected boolean applyEnvToFile;
 
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
@@ -332,6 +333,25 @@ public class DumpDataCommand extends AbstractCommand {
         this.migrateDir = migrateDir;
     }
 
+    /**
+     * 環境名をファイルに適用する場合{@code true}を返します。
+     * 
+     * @return 環境名をファイルに適用する場合{@code true}
+     */
+    public boolean isApplyEnvToFile() {
+        return applyEnvToFile;
+    }
+
+    /**
+     * 環境名をファイルに適用する場合{@code true}を設定します。
+     * 
+     * @param applyEnvToFile
+     *            環境名をファイルに適用する場合{@code true}
+     */
+    public void setApplyEnvToFile(boolean applyEnvToFile) {
+        this.applyEnvToFile = applyEnvToFile;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -409,7 +429,7 @@ public class DumpDataCommand extends AbstractCommand {
      */
     protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
         return factory.createDdlVersionDirectoryTree(this, migrateDir,
-                ddlInfoFile, versionNoPattern, env, envVersion);
+                ddlInfoFile, versionNoPattern, env, applyEnvToFile);
     }
 
     /**

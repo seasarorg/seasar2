@@ -20,18 +20,15 @@ import java.io.File;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.ManagedFile;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.StringConversionUtil;
 
 /**
- * @author taedium
+ * {@link DdlVersionDirectory}の実装クラスです。
  * 
+ * @author taedium
  */
-public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
-
-    /** ロガー */
-    protected static Logger logger = Logger
-            .getLogger(DdlVersionDirectoryImpl.class);
+public class DdlVersionDirectoryImpl extends ManagedFileImpl implements
+        DdlVersionDirectory {
 
     /** createディレクトリの名前 */
     protected static String CREATE_DIR_NAME = "create";
@@ -39,43 +36,52 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
     /** dropディレクトリの名前 */
     protected static String DROP_DIR_NAME = "drop";
 
-    protected File versionDir;
-
-    protected ManagedFile createDir;
-
-    protected ManagedFile dropDir;
-
+    /** バージョン番号 */
     protected int versionNo;
 
-    protected String env;
-
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param baseDir
+     *            ベースディレクトリ
+     * @param versionNo
+     *            バージョン番号
+     * @param versionNoPattern
+     *            バージョン番号パターン
+     * @param env
+     *            環境名
+     */
     public DdlVersionDirectoryImpl(File baseDir, int versionNo,
             String versionNoPattern, String env) {
-        if (baseDir == null) {
-            throw new NullPointerException("baseDir");
-        }
-        if (versionNoPattern == null) {
-            throw new NullPointerException("versionNoPattern");
-        }
+        super(getVersionDirPath(baseDir, versionNo, versionNoPattern), ".", env);
         this.versionNo = versionNo;
-        this.env = env;
-        String versionDirName = StringConversionUtil.toString(versionNo,
-                versionNoPattern);
-        versionDir = new File(baseDir, versionDirName);
-        createDir = createManagedFile(CREATE_DIR_NAME);
-        dropDir = createManagedFile(DROP_DIR_NAME);
     }
 
-    public File asFile() {
-        return versionDir;
+    /**
+     * バージョンディレクトリのパスを返します。
+     * 
+     * @param baseDir
+     *            ベースディレクトリ
+     * @param versionNo
+     *            バージョン番号
+     * @param versionNoPattern
+     *            バージョン番号パターン
+     * @return バージョンディレクトリのパス
+     */
+    protected static String getVersionDirPath(File baseDir, int versionNo,
+            String versionNoPattern) {
+        String versionName = StringConversionUtil.toString(versionNo,
+                versionNoPattern);
+        File versionDir = new File(baseDir, versionName);
+        return FileUtil.getCanonicalPath(versionDir);
     }
 
     public ManagedFile getCreateDirectory() {
-        return createDir;
+        return createChildInternal(CREATE_DIR_NAME);
     }
 
     public ManagedFile getDropDirectory() {
-        return dropDir;
+        return createChildInternal(DROP_DIR_NAME);
     }
 
     public int getVersionNo() {
@@ -84,11 +90,6 @@ public class DdlVersionDirectoryImpl implements DdlVersionDirectory {
 
     public boolean isFirstVersion() {
         return versionNo == 0;
-    }
-
-    protected ManagedFile createManagedFile(String path) {
-        return new ManagedFileImpl(FileUtil.getCanonicalPath(versionDir), path,
-                env);
     }
 
 }
