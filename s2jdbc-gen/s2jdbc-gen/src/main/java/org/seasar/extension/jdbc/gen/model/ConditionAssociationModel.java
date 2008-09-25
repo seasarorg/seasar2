@@ -16,17 +16,17 @@
 package org.seasar.extension.jdbc.gen.model;
 
 /**
- * 条件クラスのメソッドモデルです。
+ * 条件クラスの関連モデルです。
  * 
  * @author taedium
  */
-public class ConditionMethodModel {
+public class ConditionAssociationModel {
 
     /** 名前 */
     protected String name;
 
-    /** 戻り値のクラスの単純名 */
-    protected String shortReturnClassName;
+    /** 関連先の条件クラスの単純名 */
+    protected String shortConditionClassName;
 
     /**
      * 名前を返します
@@ -52,18 +52,18 @@ public class ConditionMethodModel {
      * 
      * @return 戻り値のクラスの単純名
      */
-    public String getShortReturnClassName() {
-        return shortReturnClassName;
+    public String getShortConditionClassName() {
+        return shortConditionClassName;
     }
 
     /**
-     * 戻り値のクラスの単純名を設定します。
+     * 関連先の条件クラスの単純名を設定します。
      * 
-     * @param shortReturnClassName
-     *            戻り値のクラスの単純名
+     * @param shortConditionClassName
+     *            関連先の条件クラスの単純名
      */
-    public void setShortReturnClassName(String shortReturnClassName) {
-        this.shortReturnClassName = shortReturnClassName;
+    public void setShortConditionClassName(String shortConditionClassName) {
+        this.shortConditionClassName = shortConditionClassName;
     }
 
 }

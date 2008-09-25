@@ -32,8 +32,8 @@ public class ConditionModel extends ClassModel {
     /** 条件クラスの属性モデルのリスト */
     protected List<ConditionAttributeModel> conditionAttributeModelList = new ArrayList<ConditionAttributeModel>();
 
-    /** 条件クラスの属性メソッドのリスト */
-    protected List<ConditionMethodModel> conditionMethodModelList = new ArrayList<ConditionMethodModel>();
+    /** 条件クラスの関連モデルのリスト */
+    protected List<ConditionAssociationModel> conditionAssociationModelList = new ArrayList<ConditionAssociationModel>();
 
     /**
      * エンティティクラスの単純名を返します。
@@ -75,23 +75,23 @@ public class ConditionModel extends ClassModel {
     }
 
     /**
-     * 条件クラスのメソッドモデルのリストを返します。
+     * 条件クラスの関連モデルのリストを返します。
      * 
-     * @return 条件クラスのメソッドモデルのリスト
+     * @return 条件クラスの関連モデルのリスト
      */
-    public List<ConditionMethodModel> getConditionMethodModelList() {
-        return Collections.unmodifiableList(conditionMethodModelList);
+    public List<ConditionAssociationModel> getConditionAssociationModelList() {
+        return Collections.unmodifiableList(conditionAssociationModelList);
     }
 
     /**
      * 条件クラスのメソッドモデルを追加します。
      * 
-     * @param conditionMethodModel
-     *            条件クラスのメソッドモデル
+     * @param conditionAssociationModel
+     *            条件クラスの関連モデル
      */
-    public void addConditionMethodModel(
-            ConditionMethodModel conditionMethodModel) {
-        conditionMethodModelList.add(conditionMethodModel);
+    public void addConditionAssociationModel(
+            ConditionAssociationModel conditionAssociationModel) {
+        conditionAssociationModelList.add(conditionAssociationModel);
     }
 
 }

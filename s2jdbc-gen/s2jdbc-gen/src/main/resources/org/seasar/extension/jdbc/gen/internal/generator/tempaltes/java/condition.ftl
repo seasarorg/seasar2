@@ -36,15 +36,15 @@ public class ${shortClassName} extends
     public ${attr.conditionClass.simpleName}<${shortClassName}<#if attr.parameterized>, ${attr.attributeClass.simpleName}</#if>> ${attr.name} =
         new ${attr.conditionClass.simpleName}<${shortClassName}<#if attr.parameterized>, ${attr.attributeClass.simpleName}</#if>>("${attr.name}", this);
 </#list>
-<#list conditionMethodModelList as method>
+<#list conditionAssociationModelList as asso>
 
     /**
-     * ${method.name}の条件
+     * ${asso.name}の条件
      * 
-     * @return ${method.name}の条件
+     * @return ${asso.name}の条件
      */
-    public ${method.shortReturnClassName} ${method.name}() {
-        return new ${method.shortReturnClassName}(prefix + "${method.name}.", where);
+    public ${asso.shortConditionClassName} ${asso.name}() {
+        return new ${asso.shortConditionClassName}(prefix + "${asso.name}.", where);
     } 
 </#list>
 }

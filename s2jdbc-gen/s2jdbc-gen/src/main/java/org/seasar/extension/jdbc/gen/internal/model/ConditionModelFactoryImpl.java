@@ -19,8 +19,8 @@ import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.ConditionAttributeModel;
 import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactory;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModel;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactory;
+import org.seasar.extension.jdbc.gen.model.ConditionAssociationModel;
+import org.seasar.extension.jdbc.gen.model.ConditionAssociationModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModel;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.where.ComplexWhere;
@@ -37,7 +37,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
     protected ConditionAttributeModelFactory conditionAttributeModelFactory;
 
     /** 条件クラスのメソッドモデルのファクトリ */
-    protected ConditionMethodModelFactory conditionMethodModelFactory;
+    protected ConditionAssociationModelFactory conditionAssociationModelFactory;
 
     /** パッケージ名 */
     protected String packageName;
@@ -53,7 +53,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      * 
      * @param conditionAttributeModelFactory
      *            条件クラスの属性モデルのファクトリ
-     * @param conditionMethodModelFactory
+     * @param conditionAssociationModelFactory
      *            条件クラスのメソッドモデルのファクトリ
      * @param packageName
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
@@ -62,19 +62,19 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      */
     public ConditionModelFactoryImpl(
             ConditionAttributeModelFactory conditionAttributeModelFactory,
-            ConditionMethodModelFactory conditionMethodModelFactory,
+            ConditionAssociationModelFactory conditionAssociationModelFactory,
             String packageName, String conditionClassNameSuffix) {
         if (conditionAttributeModelFactory == null) {
             throw new NullPointerException("conditionAttributeModelFactory");
         }
-        if (conditionMethodModelFactory == null) {
-            throw new NullPointerException("conditionMethodModelFactory");
+        if (conditionAssociationModelFactory == null) {
+            throw new NullPointerException("conditionAssociationModelFactory");
         }
         if (conditionClassNameSuffix == null) {
             throw new NullPointerException("conditionClassNameSuffix");
         }
         this.conditionAttributeModelFactory = conditionAttributeModelFactory;
-        this.conditionMethodModelFactory = conditionMethodModelFactory;
+        this.conditionAssociationModelFactory = conditionAssociationModelFactory;
         this.packageName = packageName;
         this.conditionClassNameSuffix = conditionClassNameSuffix;
     }
@@ -126,9 +126,9 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      */
     protected void doConditionMethodModel(ConditionModel conditionModel,
             PropertyMeta propertyMeta) {
-        ConditionMethodModel methodModel = conditionMethodModelFactory
-                .getConditionMethodModel(propertyMeta);
-        conditionModel.addConditionMethodModel(methodModel);
+        ConditionAssociationModel methodModel = conditionAssociationModelFactory
+                .getConditionAssociationModel(propertyMeta);
+        conditionModel.addConditionAssociationModel(methodModel);
     }
 
     /**

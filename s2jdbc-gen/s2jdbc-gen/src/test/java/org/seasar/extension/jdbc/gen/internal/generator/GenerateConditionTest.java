@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
+import org.seasar.extension.jdbc.gen.internal.model.ConditionAssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -64,11 +64,11 @@ public class GenerateConditionTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
-        ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
+        ConditionAttributeModelFactoryImpl attrFactory = new ConditionAttributeModelFactoryImpl();
+        ConditionAssociationModelFactoryImpl assoFactory = new ConditionAssociationModelFactoryImpl(
                 "Condition");
-        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf,
-                "hoge.condition", "Condition");
+        conditionModelfactory = new ConditionModelFactoryImpl(attrFactory,
+                assoFactory, "hoge.condition", "Condition");
         generator = new GeneratorImplStub();
     }
 

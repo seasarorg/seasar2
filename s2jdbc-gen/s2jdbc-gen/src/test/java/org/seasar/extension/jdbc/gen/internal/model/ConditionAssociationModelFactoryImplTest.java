@@ -17,8 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModel;
+import org.seasar.extension.jdbc.gen.internal.model.ConditionAssociationModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.ConditionAssociationModel;
 
 import static org.junit.Assert.*;
 
@@ -26,9 +26,9 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ConditionMethodModelFactoryImplTest {
+public class ConditionAssociationModelFactoryImplTest {
 
-    private ConditionMethodModelFactoryImpl factory = new ConditionMethodModelFactoryImpl(
+    private ConditionAssociationModelFactoryImpl factory = new ConditionAssociationModelFactoryImpl(
             "Condition");
 
     @SuppressWarnings("unused")
@@ -44,10 +44,10 @@ public class ConditionMethodModelFactoryImplTest {
         propertyMeta.setName("property");
         propertyMeta.setField(getClass().getDeclaredField("property"));
         propertyMeta.setRelationshipClass(String.class);
-        ConditionMethodModel model = factory
-                .getConditionMethodModel(propertyMeta);
+        ConditionAssociationModel model = factory
+                .getConditionAssociationModel(propertyMeta);
         assertEquals("property", model.getName());
-        assertEquals("StringCondition", model.getShortReturnClassName());
+        assertEquals("StringCondition", model.getShortConditionClassName());
     }
 
 }

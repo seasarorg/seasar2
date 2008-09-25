@@ -44,7 +44,7 @@ import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.ConditionAssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
@@ -136,10 +136,10 @@ public class FactoryImpl implements Factory {
             String packageName, String conditionClassNameSuffix) {
 
         ConditionAttributeModelFactoryImpl attributeModelFactory = new ConditionAttributeModelFactoryImpl();
-        ConditionMethodModelFactoryImpl methodModelFactory = new ConditionMethodModelFactoryImpl(
+        ConditionAssociationModelFactoryImpl associationModelFactory = new ConditionAssociationModelFactoryImpl(
                 conditionClassNameSuffix);
         return new ConditionModelFactoryImpl(attributeModelFactory,
-                methodModelFactory, packageName, conditionClassNameSuffix);
+                associationModelFactory, packageName, conditionClassNameSuffix);
     }
 
     public Generator createGenerator(Command command,

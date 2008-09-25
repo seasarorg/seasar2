@@ -16,16 +16,16 @@
 package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModel;
-import org.seasar.extension.jdbc.gen.model.ConditionMethodModelFactory;
+import org.seasar.extension.jdbc.gen.model.ConditionAssociationModel;
+import org.seasar.extension.jdbc.gen.model.ConditionAssociationModelFactory;
 
 /**
- * {@link ConditionMethodModelFactory}の実装クラスです。
+ * {@link ConditionAssociationModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
-public class ConditionMethodModelFactoryImpl implements
-        ConditionMethodModelFactory {
+public class ConditionAssociationModelFactoryImpl implements
+        ConditionAssociationModelFactory {
 
     /** 条件クラス名のサフィックス */
     protected String conditionClassNameSuffix;
@@ -36,21 +36,21 @@ public class ConditionMethodModelFactoryImpl implements
      * @param conditionClassNameSuffix
      *            条件クラス名のサフィックス
      */
-    public ConditionMethodModelFactoryImpl(String conditionClassNameSuffix) {
+    public ConditionAssociationModelFactoryImpl(String conditionClassNameSuffix) {
         if (conditionClassNameSuffix == null) {
             throw new NullPointerException("conditionClassNameSuffix");
         }
         this.conditionClassNameSuffix = conditionClassNameSuffix;
     }
 
-    public ConditionMethodModel getConditionMethodModel(
+    public ConditionAssociationModel getConditionAssociationModel(
             PropertyMeta propertyMeta) {
-        ConditionMethodModel model = new ConditionMethodModel();
+        ConditionAssociationModel model = new ConditionAssociationModel();
         model.setName(propertyMeta.getName());
         Class<?> relationshipClass = propertyMeta.getRelationshipClass();
         String shortReturnClassName = relationshipClass.getSimpleName()
                 + conditionClassNameSuffix;
-        model.setShortReturnClassName(shortReturnClassName);
+        model.setShortConditionClassName(shortReturnClassName);
         return model;
     }
 }

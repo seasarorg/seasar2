@@ -29,9 +29,6 @@ import javax.persistence.TemporalType;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionMethodModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.ConditionModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -76,11 +73,11 @@ public class ConditionModelFactoryImplTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        ConditionAttributeModelFactoryImpl camf = new ConditionAttributeModelFactoryImpl();
-        ConditionMethodModelFactoryImpl cmmf = new ConditionMethodModelFactoryImpl(
+        ConditionAttributeModelFactoryImpl attrFactory = new ConditionAttributeModelFactoryImpl();
+        ConditionAssociationModelFactoryImpl assoFactory = new ConditionAssociationModelFactoryImpl(
                 "Condition");
-        conditionModelfactory = new ConditionModelFactoryImpl(camf, cmmf,
-                "aaa.bbb", "Condition");
+        conditionModelfactory = new ConditionModelFactoryImpl(attrFactory,
+                assoFactory, "aaa.bbb", "Condition");
     }
 
     /**
@@ -96,7 +93,7 @@ public class ConditionModelFactoryImplTest {
         assertEquals("ConditionModelFactoryImplTest$AaaCondition", model
                 .getShortClassName());
         assertEquals(6, model.getConditionAttributeModelList().size());
-        assertEquals(1, model.getConditionMethodModelList().size());
+        assertEquals(1, model.getConditionAssociationModelList().size());
 
         Set<String> set = model.getImportNameSet();
         assertEquals(7, set.size());
