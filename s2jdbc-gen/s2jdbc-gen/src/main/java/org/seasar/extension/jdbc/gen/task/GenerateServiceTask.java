@@ -176,13 +176,23 @@ public class GenerateServiceTask extends AbstractTask {
     }
 
     /**
-     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * サービスクラスを上書きをする場合{@code true}、しない場合{@code false}を設定します。
      * 
      * @param overwrite
      *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         command.setOverwrite(overwrite);
+    }
+
+    /**
+     * 抽象サービスクラスを上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param overwriteAbstractService
+     *            上書きをする場合{@code true}、しない場合{@code false}
+     */
+    public void setOverwriteAbstractService(boolean overwriteAbstractService) {
+        command.setOverwriteAbstractService(overwriteAbstractService);
     }
 
     /**

@@ -101,6 +101,9 @@ public class GenerateServiceCommand extends AbstractCommand {
     /** サービスクラスを上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
 
+    /** 抽象サービスクラスを上書きをする場合{@code true}、しない場合{@code false} */
+    protected boolean overwriteAbstractService = false;
+
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
 
@@ -359,7 +362,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
-     * 上書きをする場合{@code true}、しない場合{@code false}を返します。
+     * サービスクラスを上書きをする場合{@code true}、しない場合{@code false}を返します。
      * 
      * @return 上書きをする場合{@code true}、しない場合{@code false}
      */
@@ -368,13 +371,32 @@ public class GenerateServiceCommand extends AbstractCommand {
     }
 
     /**
-     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * サービスクラスを上書きをする場合{@code true}、しない場合{@code false}を設定します。
      * 
      * @param overwrite
      *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         this.overwrite = overwrite;
+    }
+
+    /**
+     * 抽象サービスクラスを上書きをする場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return 上書きをする場合{@code true}、しない場合{@code false}
+     */
+    public boolean isOverwriteAbstractService() {
+        return overwriteAbstractService;
+    }
+
+    /**
+     * 抽象サービスクラスを上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param overwriteAbstractService
+     *            上書きをする場合{@code true}、しない場合{@code false}
+     */
+    public void setOverwriteAbstractService(boolean overwriteAbstractService) {
+        this.overwriteAbstractService = overwriteAbstractService;
     }
 
     /**
@@ -487,7 +509,7 @@ public class GenerateServiceCommand extends AbstractCommand {
     protected void generateAbstractService() {
         AbstServiceModel model = abstServiceModelFactory.getAbstServiceModel();
         GenerationContext context = createGenerationContext(model,
-                abstractServiceTemplateFileName, overwrite);
+                abstractServiceTemplateFileName, overwriteAbstractService);
         generator.generate(context);
     }
 
