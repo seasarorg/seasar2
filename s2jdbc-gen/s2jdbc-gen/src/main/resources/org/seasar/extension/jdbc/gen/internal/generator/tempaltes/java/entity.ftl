@@ -52,7 +52,7 @@ public class ${shortClassName}<#if shortSuperclassName??> extends ${shortSupercl
   <#if !attr.transient>
     @Column(<#if attr.columnName??>name = "${attr.columnName}", </#if><#if attr.columnDefinition??>columnDefinition = "${attr.columnDefinition}", <#else><#if attr.length??>length = ${attr.length}, </#if><#if attr.precision??>precision = ${attr.precision}, </#if><#if attr.scale??>scale = ${attr.scale}, </#if></#if>nullable = ${attr.nullable?string}, unique = ${attr.unique?string})
   </#if>
-    public ${attr.attributeClass.simpleName} ${attr.name};
+    <#if useAccessor>private<#else>public</#if> ${attr.attributeClass.simpleName} ${attr.name};
 </#list>
 <#list associationModelList as asso>
 
@@ -66,6 +66,48 @@ public class ${shortClassName}<#if shortSuperclassName??> extends ${shortSupercl
         @JoinColumn(name = "${joinColumnModel.name}", referencedColumnName = "${joinColumnModel.referencedColumnName}")<#if joinColumnModel_has_next>,<#else> })</#if>
     </#list>
   </#if>
-    public ${asso.shortClassName} ${asso.name};
+    <#if useAccessor>private<#else>public</#if> ${asso.shortClassName} ${asso.name};
 </#list>
+<#if useAccessor>
+  <#list attributeModelList as attr>
+
+    /**
+     * ${attr.name}を返します。
+     * 
+     * @param ${attr.name}
+     */
+    public ${attr.attributeClass.simpleName} <#if attr.attributeClass.getSimpleName()?matches("[bB]oolean")>is<#else>get</#if>${attr.name?cap_first}() {
+        return ${attr.name};
+    }
+
+    /**
+     * ${attr.name}を設定します。
+     * 
+     * @param ${attr.name}
+     */
+    public void set${attr.name?cap_first}(${attr.attributeClass.simpleName} ${attr.name}) {
+        this.${attr.name} = ${attr.name};
+    }
+  </#list>
+  <#list associationModelList as asso>
+
+    /**
+     * ${asso.name}を返します。
+     * 
+     * @param ${asso.name}
+     */
+    public ${asso.shortClassName} get${asso.name?cap_first}() {
+        return ${asso.name};
+    }
+
+    /**
+     * ${asso.name}を設定します。
+     * 
+     * @param ${asso.name}
+     */
+    public void set${asso.name?cap_first}(${asso.shortClassName} ${asso.name}) {
+        this.${asso.name} = ${asso.name};
+    }
+  </#list>
+</#if>
 }

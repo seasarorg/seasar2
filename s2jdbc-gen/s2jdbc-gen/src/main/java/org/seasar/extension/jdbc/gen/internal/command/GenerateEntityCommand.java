@@ -70,6 +70,9 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
 
+    /** エンティティクラスでアクセサを使用する場合{@code true} */
+    protected boolean useAccessor = false;
+
     /** エンティティの識別子の生成方法を示す列挙型、生成しない場合は{@code null}。 */
     protected GenerationType generationType = null;
 
@@ -604,6 +607,25 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.enititySuperclassName = enititySuperclassName;
     }
 
+    /**
+     * エンティティクラスでアクセサを使用する場合{@code true}を返します。
+     * 
+     * @return エンティティクラスでアクセサを使用する場合{@code true}
+     */
+    public boolean isUseAccessor() {
+        return useAccessor;
+    }
+
+    /**
+     * エンティティクラスでアクセサを使用する場合{@code true}を設定します。
+     * 
+     * @param useAccessor
+     *            エンティティクラスでアクセサを使用する場合{@code true}
+     */
+    public void setUseAccessor(boolean useAccessor) {
+        this.useAccessor = useAccessor;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -679,7 +701,7 @@ public class GenerateEntityCommand extends AbstractCommand {
         Class<?> superClass = enititySuperclassName != null ? ClassUtil
                 .forName(enititySuperclassName) : null;
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
-                rootPackageName, entityPackageName), superClass,
+                rootPackageName, entityPackageName), superClass, useAccessor,
                 showCatalogName, showSchemaName, showTableName, showColumnName,
                 showColumnDefinition, showJoinColumn);
     }

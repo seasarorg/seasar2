@@ -62,8 +62,8 @@ public class GenerateEntityTest {
         factory = new EntityModelFactoryImpl("hoge.entity", null,
                 new AttributeModelFactoryImpl(false, true),
                 new AssociationModelFactoryImpl(false),
-                new CompositeUniqueConstraintModelFactoryImpl(), true, true,
-                false);
+                new CompositeUniqueConstraintModelFactoryImpl(), false, true,
+                true, false);
         generator = new GeneratorImplStub();
     }
 
@@ -489,8 +489,8 @@ public class GenerateEntityTest {
         factory = new EntityModelFactoryImpl("hoge.entity", Eee.class,
                 new AttributeModelFactoryImpl(false, true),
                 new AssociationModelFactoryImpl(false),
-                new CompositeUniqueConstraintModelFactoryImpl(), true, true,
-                false);
+                new CompositeUniqueConstraintModelFactoryImpl(), false, true,
+                true, false);
 
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
@@ -534,6 +534,54 @@ public class GenerateEntityTest {
 
         String path = getClass().getName().replace(".", "/")
                 + "_Superclass.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testAccessor() throws Exception {
+        factory = new EntityModelFactoryImpl("hoge.entity", null,
+                new AttributeModelFactoryImpl(false, true),
+                new AssociationModelFactoryImpl(false),
+                new CompositeUniqueConstraintModelFactoryImpl(), true, true,
+                true, false);
+
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setGenerationType(GenerationType.SEQUENCE);
+        id.setInitialValue(100);
+        id.setAllocationSize(50);
+        id.setAttributeClass(int.class);
+        id.setColumnName("ID");
+        id.setColumnDefinition("integer");
+        id.setNullable(false);
+
+        AttributeDesc man = new AttributeDesc();
+        man.setName("man");
+        man.setAttributeClass(Boolean.class);
+        man.setColumnName("man");
+        man.setColumnDefinition("bool");
+        man.setNullable(false);
+        man.setUnique(true);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+        entityDesc.addAttributeDesc(id);
+        entityDesc.addAttributeDesc(man);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/") + "_Accessor.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 }

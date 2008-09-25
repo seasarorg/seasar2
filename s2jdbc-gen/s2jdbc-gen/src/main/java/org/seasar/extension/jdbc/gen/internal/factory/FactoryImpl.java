@@ -200,16 +200,16 @@ public class FactoryImpl implements Factory {
     }
 
     public EntityModelFactory createEntityModelFactory(Command command,
-            String packageName, Class<?> superclass, boolean showCatalogName,
-            boolean showSchemaName, boolean showTableName,
-            boolean showColumnName, boolean showColumnDefinition,
-            boolean showJoinColumn) {
+            String packageName, Class<?> superclass, boolean useAccessor,
+            boolean showCatalogName, boolean showSchemaName,
+            boolean showTableName, boolean showColumnName,
+            boolean showColumnDefinition, boolean showJoinColumn) {
 
         return new EntityModelFactoryImpl(packageName, superclass,
                 new AttributeModelFactoryImpl(showColumnName,
                         showColumnDefinition), new AssociationModelFactoryImpl(
                         showJoinColumn),
-                new CompositeUniqueConstraintModelFactoryImpl(),
+                new CompositeUniqueConstraintModelFactoryImpl(), useAccessor,
                 showCatalogName, showSchemaName, showTableName);
     }
 

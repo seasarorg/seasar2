@@ -324,4 +324,14 @@ public class GenerateEntityTask extends AbstractTask {
         command.setEnititySuperclassName(enititySuperclassName);
     }
 
+    /**
+     * エンティティクラスでアクセサを使用する場合{@code true}を設定します。
+     * 
+     * @param useAccessor
+     *            エンティティクラスでアクセサを使用する場合{@code true}
+     */
+    public void setUseAccessor(boolean useAccessor) {
+        command.setUseAccessor(useAccessor);
+    }
+
 }

@@ -1,0 +1,66 @@
+package hoge.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+/**
+ * Fooエンティティクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo {
+
+    /** idプロパティ */
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
+    @SequenceGenerator(name = "generator", initialValue = 100, allocationSize = 50)
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    private int id;
+
+    /** manプロパティ */
+    @Column(columnDefinition = "bool", nullable = false, unique = true)
+    private Boolean man;
+
+    /**
+     * idを返します。
+     * 
+     * @param id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * idを設定します。
+     * 
+     * @param id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
+     * manを返します。
+     * 
+     * @param man
+     */
+    public Boolean isMan() {
+        return man;
+    }
+
+    /**
+     * manを設定します。
+     * 
+     * @param man
+     */
+    public void setMan(Boolean man) {
+        this.man = man;
+    }
+}

@@ -332,6 +332,8 @@ public interface Factory {
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @param superclass
      *            エンティティのスーパークラス、スーパークラスを持たない場合は{@code null}
+     * @param useAccessor
+     *            エンティティクラスでアクセサを使用する場合 {@code true}
      * @param showCatalogName
      *            カタログ名を表示する場合{@code true}
      * @param showSchemaName
@@ -348,10 +350,10 @@ public interface Factory {
      * @return {@link EntityModelFactory}の実装
      */
     EntityModelFactory createEntityModelFactory(Command command,
-            String packageName, Class<?> superclass, boolean showCatalogName,
-            boolean showSchemaName, boolean showTableName,
-            boolean showColumnName, boolean showColumnDefinition,
-            boolean showJoinColumn);
+            String packageName, Class<?> superclass, boolean useAccessor,
+            boolean showCatalogName, boolean showSchemaName,
+            boolean showTableName, boolean showColumnName,
+            boolean showColumnDefinition, boolean showJoinColumn);
 
     /**
      * {@link ServiceModelFactory}の実装を作成します。

@@ -70,6 +70,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** 複合一意制約モデルのファクトリ */
     protected CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory;
 
+    /** エンティティクラスでアクセサを使用する場合 {@code true} */
+    protected boolean useAccessor;
+
     /** カタログ名を表示する場合{@code true} */
     protected boolean showCatalogName;
 
@@ -104,6 +107,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      *            関連モデルのファクトリ
      * @param compositeUniqueConstraintModelFactory
      *            複合一意制約モデルのファクトリ
+     * @param useAccessor
+     *            エンティティクラスでアクセサを使用する場合 {@code true}
      * @param showCatalogName
      *            カタログ名を表示する場合{@code true}
      * @param showSchemaName
@@ -117,8 +122,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             AttributeModelFactory attributeModelFactory,
             AssociationModelFactory associationModelFactory,
             CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory,
-            boolean showCatalogName, boolean showSchemaName,
-            boolean showTableName) {
+            boolean useAccessor, boolean showCatalogName,
+            boolean showSchemaName, boolean showTableName) {
         if (attributeModelFactory == null) {
             throw new NullPointerException("attributeModelFactory");
         }
@@ -134,6 +139,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         this.attributeModelFactory = attributeModelFactory;
         this.associationModelFactory = associationModelFactory;
         this.compositeUniqueConstraintModelFactory = compositeUniqueConstraintModelFactory;
+        this.useAccessor = useAccessor;
         this.showCatalogName = showCatalogName;
         this.showSchemaName = showSchemaName;
         this.showTableName = showTableName;
@@ -162,6 +168,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             entityModel.setShortSuperclassName(superclass.getSimpleName());
         }
         entityModel.setCompositeId(entityDesc.hasCompositeId());
+        entityModel.setUseAccessor(useAccessor);
         doAttributeModel(entityModel, entityDesc);
         doAssociationModel(entityModel, entityDesc);
         doCompositeUniqueConstraintModel(entityModel, entityDesc);

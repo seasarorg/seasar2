@@ -41,6 +41,9 @@ public class EntityModel extends ClassModel {
     /** 複合識別子を持つ場合{@code true} */
     protected boolean compositeId;
 
+    /** エンティティクラスでアクセサを使用する場合 {@code true} */
+    protected boolean useAccessor;
+
     /** 属性モデルのリスト */
     protected List<AttributeModel> attributeModelList = new ArrayList<AttributeModel>();
 
@@ -201,6 +204,21 @@ public class EntityModel extends ClassModel {
      */
     public void setCompositeId(boolean compositeId) {
         this.compositeId = compositeId;
+    }
+
+    /**
+     * @return Returns the useAccessor.
+     */
+    public boolean isUseAccessor() {
+        return useAccessor;
+    }
+
+    /**
+     * @param useAccessor
+     *            The useAccessor to set.
+     */
+    public void setUseAccessor(boolean useAccessor) {
+        this.useAccessor = useAccessor;
     }
 
 }

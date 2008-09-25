@@ -46,7 +46,8 @@ public class EntityModelFactoryImplTest {
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
             "aaa.bbb", Superclass.class, new AttributeModelFactoryImpl(true,
                     true), new AssociationModelFactoryImpl(true),
-            new CompositeUniqueConstraintModelFactoryImpl(), true, true, true);
+            new CompositeUniqueConstraintModelFactoryImpl(), false, true, true,
+            true);
 
     /**
      * 
