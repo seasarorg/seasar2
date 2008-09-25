@@ -31,6 +31,9 @@ public class TestModel extends ClassModel {
     /** 識別子の式のリスト */
     protected List<String> idExpressionList = new ArrayList<String>();
 
+    /** 関連名のリスト */
+    protected List<String> associationNameList = new ArrayList<String>();
+
     /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
 
@@ -114,6 +117,25 @@ public class TestModel extends ClassModel {
      */
     public void addIdExpression(String idExpression) {
         idExpressionList.add(idExpression);
+    }
+
+    /**
+     * 関連名のリストを返します。
+     * 
+     * @return 関連名のリスト
+     */
+    public List<String> getAssociationNameList() {
+        return Collections.unmodifiableList(associationNameList);
+    }
+
+    /**
+     * 関連名を追加します。
+     * 
+     * @param associationName
+     *            関連名
+     */
+    public void addAssociationName(String associationName) {
+        associationNameList.add(associationName);
     }
 
 }

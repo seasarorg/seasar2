@@ -45,5 +45,16 @@ public class ${shortClassName} extends S2TestCase {
     public void testFindById() throws Exception {
         ${jdbcManagerName}.from(${shortEntityClassName}.class).id(<#list idExpressionList as idExpression>${idExpression}<#if idExpression_has_next>, </#if></#list>).getSingleResult();
     }
+<#list associationNameList as associationName>
+
+    /**
+     * ${associationName}との外部結合をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testLeftOuterJoin_${associationName}() throws Exception {
+        ${jdbcManagerName}.from(${shortEntityClassName}.class).leftOuterJoin("${associationName}").id(<#list idExpressionList as idExpression>${idExpression}<#if idExpression_has_next>, </#if></#list>).getSingleResult();
+    }
+</#list>
 </#if>
 }

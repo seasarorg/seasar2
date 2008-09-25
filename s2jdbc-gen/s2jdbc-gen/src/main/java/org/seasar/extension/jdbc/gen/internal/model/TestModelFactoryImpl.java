@@ -84,26 +84,10 @@ public class TestModelFactoryImpl implements TestModelFactory {
         testModel.setPackageName(packageName);
         testModel.setShortClassName(entityMeta.getName() + testClassNameSuffix);
         testModel.setShortEntityClassName(entityMeta.getName());
-        doImportName(testModel, entityMeta);
         doIdValue(testModel, entityMeta);
+        doAssociationName(testModel, entityMeta);
+        doImportName(testModel, entityMeta);
         return testModel;
-    }
-
-    /**
-     * インポート名を処理します。
-     * 
-     * @param testModel
-     *            テストモデル
-     * @param entityMeta
-     *            エンティティメタデータ
-     */
-    protected void doImportName(TestModel testModel, EntityMeta entityMeta) {
-        classModelSupport.addImportName(testModel, JdbcManager.class);
-        classModelSupport.addImportName(testModel, S2TestCase.class);
-        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            classModelSupport.addImportName(testModel, propertyMeta
-                    .getPropertyClass());
-        }
     }
 
     /**
@@ -181,5 +165,38 @@ public class TestModelFactoryImpl implements TestModelFactory {
             return "Time.valueOf(\"12:00:00\")";
         }
         throw new IllegalArgumentException("propertyClass");
+    }
+
+    /**
+     * 関連名を処理します。
+     * 
+     * @param testModel
+     *            テストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doAssociationName(TestModel testModel, EntityMeta entityMeta) {
+        for (PropertyMeta propertyMeta : entityMeta.getAllPropertyMeta()) {
+            if (propertyMeta.isRelationship()) {
+                testModel.addAssociationName(propertyMeta.getName());
+            }
+        }
+    }
+
+    /**
+     * インポート名を処理します。
+     * 
+     * @param testModel
+     *            テストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doImportName(TestModel testModel, EntityMeta entityMeta) {
+        classModelSupport.addImportName(testModel, JdbcManager.class);
+        classModelSupport.addImportName(testModel, S2TestCase.class);
+        for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
+            classModelSupport.addImportName(testModel, propertyMeta
+                    .getPropertyClass());
+        }
     }
 }

@@ -99,4 +99,21 @@ public class GenerateTestTest {
         String path = getClass().getName().replace(".", "/") + "_NoId.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testLeftOuterJoin() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/test.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_LeftOuterJoin.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
 }
