@@ -179,7 +179,8 @@ public class ManagedFileImpl implements ManagedFile {
             this.logicalBasePath = logicalBasePath;
             this.path = path;
             this.env = env;
-            file = new File(actualBasePath, path);
+            File f = new File(actualBasePath, path);
+            this.file = FileUtil.getCanonicalFile(f);
         }
     }
 }

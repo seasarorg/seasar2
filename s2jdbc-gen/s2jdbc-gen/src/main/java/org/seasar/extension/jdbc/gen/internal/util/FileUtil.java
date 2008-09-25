@@ -152,7 +152,7 @@ public class FileUtil {
     }
 
     /**
-     * この抽象パス名の正規の形式を返します。
+     * この抽象パス名の正規のパス名文字列を返します。
      * 
      * @param file
      *            ファイル
@@ -161,6 +161,21 @@ public class FileUtil {
     public static String getCanonicalPath(File file) {
         try {
             return file.getCanonicalPath();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * この抽象パス名の正規の形式を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return この抽象パス名と同じファイルまたはディレクトリを示す正規の形式
+     */
+    public static File getCanonicalFile(File file) {
+        try {
+            return file.getCanonicalFile();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
