@@ -117,15 +117,21 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
-					<tr><td>dumpDir</td><td>ダンプファイルを出力するディレクトリです。</td><td>"db/dump"</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
+					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
+					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
+					<tr><td>dumpDirName</td><td>ダンプファイルを出力するディレクトリ名です。</td><td>"040-dump"</td><td>NO</td></tr>
+					<tr><td>dumpDir</td><td>ダンプファイルを出力するディレクトリです。指定しない場合、migrateDir、ddlInfoFile、versionNoPattern、dumpDirNameにより出力先ディレクトリが決まります。</td><td>-</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>applyEnvToVersion</td><td>バージョンディレクトリに環境名を適用する場合"true"を指定します。trueを指定すると、通常のバージョンディレクトリとは別の環境名つきのバージョンディレクトリにダンプファイルが出力されます。dumpDirを指定しない場合にのみ有効です。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -170,6 +176,7 @@
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -217,6 +224,7 @@
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -272,8 +280,8 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>conditionPackageName</td><td>条件クラ条件クラスのパッケージ名です。条件クラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されます。</td><td>"condition"</td><td>NO</td></tr>
 					<tr><td>conditionClassNameSuffix</td><td>条件クラス名のサフィックスです。</td><td>"Condition"</td><td>NO</td></tr>
 					<tr><td>conditionTemplateFileName</td><td>条件クラスのテンプレートファイル名です。</td><td>"java/condition.ftl"</td><td>NO</td></tr>
@@ -286,6 +294,7 @@
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -327,27 +336,31 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
-					<tr><td>createTableDdlFileName</td><td>テーブルを作成するDDLファイル名です。</td><td>"010-create-table.sql"</td><td>NO</td></tr>
-					<tr><td>createUniqueKeyDdlFileName</td><td>一意キーを作成するDDLファイル名です。</td><td>"020-create-uniquekey.sql"</td><td>NO</td></tr>
-					<tr><td>createSequenceDdlFileName</td><td>シーケンスを作成するDDLファイル名です。</td><td>"030-create-sequence.sql"</td><td>NO</td></tr>
-					<tr><td>createForeignKeyDdlFileName</td><td>外部キーを作成するDDLファイル名です。</td><td>"050-create-foreignkey.sql"</td><td>NO</td></tr>
-					<tr><td>dropTableDdlFileName</td><td>テーブルを削除するDDLファイル名です。</td><td>"040-drop-table.sql"</td><td>NO</td></tr>
-					<tr><td>dropUniqueKeyDdlFileName</td><td>一意キーを削除するDDLファイル名です。</td><td>"030-drop-uniquekey.sql"</td><td>NO</td></tr>
-					<tr><td>dropSequenceDdlFileName</td><td>シーケンスを削除するDDLファイル名です。</td><td>"020-drop-sequence.sql"</td><td>NO</td></tr>
-					<tr><td>dropForeignKeyDdlFileName</td><td>外部キーを削除するDDLファイル名です。</td><td>"010-drop-foreignkey.sql"</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>summaryFileName</td><td>DDLのサマリーファイル名です。サマリーファイルにはdrop文とcreate文がまとめて出力されます。</td><td>"summary.txt"</td><td>NO</td></tr>
+					<tr><td>createTableDirName</td><td>テーブルを作成するDDLを格納するディレクトリ名です。</td><td>"010-table"</td><td>NO</td></tr>
+					<tr><td>createUniqueKeyDirName</td><td>一意キーを作成するDDLを格納するディレクトリ名です。</td><td>"020-uniquekey"</td><td>NO</td></tr>
+					<tr><td>createSequenceDirName</td><td>シーケンスを作成するDDLを格納するディレクトリ名です。</td><td>"030-sequence"</td><td>NO</td></tr>
+					<tr><td>createForeignKeyDirName</td><td>外部キーを作成するDDLを格納するディレクトリ名です。</td><td>"050-foreignkey"</td><td>NO</td></tr>
+					<tr><td>dropTableDirName</td><td>テーブルを削除するDDLファイル名です。</td><td>"040-table"</td><td>NO</td></tr>
+					<tr><td>dropUniqueKeyDirName</td><td>一意キーを削除するDDLファイル名です。</td><td>"030-uniquekey"</td><td>NO</td></tr>
+					<tr><td>dropSequenceDirName</td><td>シーケンスを削除するDDLファイル名です。</td><td>"020-sequence"</td><td>NO</td></tr>
+					<tr><td>dropForeignKeyDirName</td><td>外部キーを削除するDDLファイル名です。</td><td>"010-foreignkey"</td><td>NO</td></tr>
 					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>sqlKeywordCase</td><td>SQLのキーワードを大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。テンプレートに記述された文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
 					<tr><td>sqlIdentifierCase</td><td>SQLの識別子を大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。エンティティに記述した文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
 					<tr><td>dump</td><td>"true"の場合、データベースのデータのダンプ出力を行います。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>summaryTemplateFileName</td><td>DDLのサマリーファイルのテンプレートファイル名です。</td><td>"sql/summary.ftl"</td><td>NO</td></tr>
 					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
+					<tr><td>createSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-schemainfo-table.ftl"</td><td>NO</td></tr>
 					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>createSequenceTemplateFileName</td><td>シーケンスを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-sequence.ftl"</td><td>NO</td></tr>
 					<tr><td>createForeignKeyTemplateFileName</td><td>外部キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-foreignkey.ftl"</td><td>NO</td></tr>
 					<tr><td>dropTableTemplateFileName</td><td>テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-table.ftl"</td><td>NO</td></tr>
+					<tr><td>dropSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-schemainfo-table.ftl"</td><td>NO</td></tr>
 					<tr><td>dropUniqueKeyTemplateFileName</td><td>一意キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>dropSequenceTemplateFileName</td><td>シーケンスを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-sequence.ftl"</td><td>NO</td></tr>
 					<tr><td>dropForeignKeyTemplateFileName</td><td>外部キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-foreignkey.ftl"</td><td>NO</td></tr>
@@ -366,6 +379,7 @@
 					<tr><td>jdbcManagerName</td><td>
 					                        JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -408,7 +422,12 @@
 					<tr><td>tableNamePattern</td><td>このタスクが対象とするテーブル名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないテーブル名の正規表現です。</td><td>"(SCHEMA_INFO|.*\$.*)"</td><td>NO</td></tr>
 					<tr><td>versionColumnNamePattern</td><td>エンティティのプロパティに@Versionを付与するカラム名の正規表現です。大文字小文字の違いは考慮されません。</td><td>"VERSION([_]?NO)?"</td><td>NO</td></tr>
+					<tr><td>entitySuperclassName</td><td>エンティティクラスのスーパークラス名です。スーパークラスに定義されたプロパティと同じ名前のプロパティはサブクラスに出力されません。スーパークラスはクラスパス上に存在する必要があります。</td><td>-</td><td>NO</td></tr>
+					<tr><td>idGeneration</td><td>識別子を生成する方法です。"auto", "identity", "sequence", "table", "assigned" のいずれかの値を指定できます。</td><td>"assigned"</td><td>NO</td></tr>
+					<tr><td>initialValue</td><td>識別子の初期値です。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>allocationSize</td><td>識別子の割り当てサイズです。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>pluralFormFile</td><td>@OneToManyの関連プロパティ名を複数形で作成する際に使用される辞書ファイルです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>useAccessor</td><td>"true"の場合、生成するエンティティにアクセサメソッドを付与します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>showCatalogName</td><td>"true"の場合、@Tableのcatalog属性にカタログ名を明記します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>showSchemaName</td><td>"true"の場合、@Tableのschema属性にスキーマ名を明記します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>showTableName</td><td>"true"の場合、@Tableのname属性にテーブル名を明記します。</td><td>"false"</td><td>NO</td></tr>
@@ -428,6 +447,7 @@
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -466,11 +486,11 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
-					<tr><td>namesPackageName</td><td>名前インタフェースのパッケージ名です。名前インタフェースは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>namesInterfaceNameSuffix</td><td>名前インタフェース名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
-					<tr><td>namesTemplateFileName</td><td>名前インタフェースのテンプレートファイル名です。</td><td>"java/names.ftl"</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>namesPackageName</td><td>名前クラスのパッケージ名です。名前クラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されます。</td><td>"entity"</td><td>NO</td></tr>
+					<tr><td>namesClassNameSuffix</td><td>名前クラス名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
+					<tr><td>namesTemplateFileName</td><td>名前クラスのテンプレートファイル名です。</td><td>"java/names.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
@@ -480,6 +500,7 @@
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -518,24 +539,26 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>servicePackageName</td><td>サービスクラスのパッケージ名です。サービスクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されます。</td><td>"service"</td><td>NO</td></tr>
 					<tr><td>serviceClassNameSuffix</td><td>サービスクラス名のサフィックスです。</td><td>"Service"</td><td>NO</td></tr>
 					<tr><td>abstractServiceTemplateFileName</td><td>抽象サービスクラスのテンプレートファイル名です。</td><td>"java/abstract-service.ftl"</td><td>NO</td></tr>
 					<tr><td>serviceTemplateFileName</td><td>サービスクラスのテンプレートファイル名です。</td><td>"java/service.ftl"</td><td>NO</td></tr>
-					<tr><td>implementNames</td><td>"true"の場合、名前インタフェースを実装します。</td><td>"true"</td><td>NO</td></tr>
-					<tr><td>namesInterfaceNameSuffix</td><td>名前インタフェース名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
-					<tr><td>namesPackageName</td><td>名前インタフェースのパッケージ名です。名前インタフェースは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
+					<tr><td>useNames</td><td>"true"の場合、名前クラスを使用します。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>namesClassNameSuffix</td><td>名前クラス名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
+					<tr><td>namesPackageName</td><td>名前クラスのパッケージ名です。名前インタフェースは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
 					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>overwrite</td><td>"true"の場合、サービスクラスのJavaファイルを上書きします。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>overwriteAbstractService</td><td>"true"の場合、抽象サービスクラスのJavaファイルを上書きします。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -574,8 +597,8 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>testClassNameSuffix</td><td>テストクラス名のサフィックスです。</td><td>"Test"</td><td>NO</td></tr>
 					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/test.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
@@ -587,6 +610,7 @@
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -625,17 +649,23 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
-					<tr><td>dumpDir</td><td>ダンプファイルが格納されているディレクトリです。</td><td>"db/dump"</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
+					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
+					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
+					<tr><td>dumpDirName</td><td>ダンプファイルを出力するディレクトリ名です。</td><td>"040-dump"</td><td>NO</td></tr>
+					<tr><td>dumpDir</td><td>ダンプファイルが格納されているディレクトリです。指定しない場合、migrateDir、ddlInfoFile、versionNoPattern、dumpDirNameにより出力先ディレクトリが決まります。</td><td>-</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>loadBatchSize</td><td>ダンプファイルのデータをロードする際のバッチサイズです。</td><td>"10"</td><td>NO</td></tr>
 					<tr><td>transactional</td><td>"true"の場合、単一のトランザクションとして実行します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>applyEnvToVersion</td><td>バージョンディレクトリに環境名を適用する場合"true"を指定しますを指定します。trueを指定すると、通常のバージョンディレクトリよりも環境名つきバージョンディレクトリに存在するダンプファイルを優先してロードします。dumpDirを指定しない場合にのみ有効です。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
@@ -676,13 +706,13 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
 					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
 					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
 					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
-					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名にしようされます。</td><td>"0000"</td><td>NO</td></tr>
+					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
 					<tr><td>version</td><td>マイグレーション先のバージョンです。</td><td>"latest"</td><td>NO</td></tr>
 					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
 					<tr><td>blockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
@@ -694,8 +724,10 @@
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>applyEnvToVersion</td><td>バージョンディレクトリに環境名を適用する場合"true"を指定します。trueを指定すると、通常のバージョンディレクトリよりも環境名つきバージョンディレクトリに存在するダンプファイルを優先してロードします。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
 					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
 				</table>
