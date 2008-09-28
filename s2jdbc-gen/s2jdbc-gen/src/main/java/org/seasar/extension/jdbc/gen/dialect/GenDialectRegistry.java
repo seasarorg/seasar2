@@ -144,7 +144,34 @@ public class GenDialectRegistry {
         if (dbmsDialect == null) {
             throw new NullPointerException("dbmsDialect");
         }
-        GenDialect dialect = dialectMap.get(dbmsDialect.getClass().getName());
+        return getGenDialectInternal(dbmsDialect.getClass());
+    }
+
+    /**
+     * S2JDBC-Genのデータベースごとの方言を返します。
+     * 
+     * @param dbmsDialectClass
+     *            {@link DbmsDialect}のクラス
+     * @return S2JDBC-Genのデータベースごとの方言
+     */
+    public static GenDialect getGenDialect(
+            Class<? extends DbmsDialect> dbmsDialectClass) {
+        if (dbmsDialectClass == null) {
+            throw new NullPointerException("dbmsDialectClass");
+        }
+        return getGenDialectInternal(dbmsDialectClass);
+    }
+
+    /**
+     * 内部的にS2JDBC-Genのデータベースごとの方言を返します。
+     * 
+     * @param dbmsDialectClass
+     *            {@link DbmsDialect}のクラス
+     * @return S2JDBC-Genのデータベースごとの方言
+     */
+    protected static GenDialect getGenDialectInternal(
+            Class<? extends DbmsDialect> dbmsDialectClass) {
+        GenDialect dialect = dialectMap.get(dbmsDialectClass.getName());
         if (dialect != null) {
             return dialect;
         }
@@ -154,31 +181,32 @@ public class GenDialectRegistry {
     /**
      * S2JDBC-Genのデータベースごとの方言を登録します。
      * 
-     * @param dbmsDialect
-     *            データベースごとの方言
+     * @param dbmsDialectClass
+     *            {@link DbmsDialect}のクラス
      * @param genDialect
      *            S2JDBC-Genのデータベースごとの方言
      */
-    public static void register(DbmsDialect dbmsDialect, GenDialect genDialect) {
-        if (dbmsDialect == null) {
-            throw new NullPointerException("dbmsDialect");
+    public static void register(Class<? extends DbmsDialect> dbmsDialectClass,
+            GenDialect genDialect) {
+        if (dbmsDialectClass == null) {
+            throw new NullPointerException("dbmsDialectClass");
         }
-        if (dbmsDialect == null) {
+        if (genDialect == null) {
             throw new NullPointerException("genDialect");
         }
-        dialectMap.put(dbmsDialect.getClass().getName(), genDialect);
+        dialectMap.put(dbmsDialectClass.getName(), genDialect);
     }
 
     /**
      * S2JDBC-Genのデータベースごとの方言を削除します。
      * 
-     * @param dbmsDialect
-     *            データベースごとの方言
+     * @param dbmsDialectClass
+     *            {@link DbmsDialect}のクラス
      */
-    public static void deregister(DbmsDialect dbmsDialect) {
-        if (dbmsDialect == null) {
-            throw new NullPointerException("dbmsDialect");
+    public static void deregister(Class<? extends DbmsDialect> dbmsDialectClass) {
+        if (dbmsDialectClass == null) {
+            throw new NullPointerException("dbmsDialectClass");
         }
-        dialectMap.remove(dbmsDialect.getClass().getName());
+        dialectMap.remove(dbmsDialectClass.getName());
     }
 }

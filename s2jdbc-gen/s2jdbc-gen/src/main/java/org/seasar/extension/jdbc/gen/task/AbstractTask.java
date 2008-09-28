@@ -25,8 +25,9 @@ import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.command.CommandAdapter;
 import org.seasar.extension.jdbc.gen.internal.arg.ArgumentsBuilder;
-import org.seasar.extension.jdbc.gen.internal.command.CommandAdapter;
+import org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl;
 
 /**
  * {@link Task}の抽象クラスです。
@@ -47,6 +48,10 @@ public abstract class AbstractTask extends Task {
     /** JVMのコマンドライン */
     protected Commandline jvmCommandline = new Commandline();
 
+    /** コマンドを呼び出すクラスの名前 */
+    protected String commandInvokerClassName = CommandInvokerImpl.class
+            .getName();
+
     /** クラスパス */
     protected Path classpath;
 
@@ -57,6 +62,25 @@ public abstract class AbstractTask extends Task {
      */
     public Commandline.Argument createJvmarg() {
         return jvmCommandline.createArgument();
+    }
+
+    /**
+     * コマンドを呼び出すクラスの名前を返します。
+     * 
+     * @return コマンドを呼び出すクラスの名前
+     */
+    public String getCommandInvokerClassName() {
+        return commandInvokerClassName;
+    }
+
+    /**
+     * コマンドを呼び出すクラスの名前を設定します。
+     * 
+     * @param commandInvokerClassName
+     *            コマンドを呼び出すクラスの名前
+     */
+    public void setCommandInvokerClassName(String commandInvokerClassName) {
+        this.commandInvokerClassName = commandInvokerClassName;
     }
 
     /**
@@ -114,9 +138,13 @@ public abstract class AbstractTask extends Task {
         ArgumentsBuilder builder = new ArgumentsBuilder(command);
         List<String> args = builder.build();
 
-        Environment.Variable sysproperty = new Environment.Variable();
-        sysproperty.setKey(CommandAdapter.COMMAND_KEY);
-        sysproperty.setValue(commandName);
+        Environment.Variable commandProperty = new Environment.Variable();
+        commandProperty.setKey(CommandAdapter.COMMAND_KEY);
+        commandProperty.setValue(commandName);
+
+        Environment.Variable commandInvokerProperty = new Environment.Variable();
+        commandInvokerProperty.setKey(CommandAdapter.COMMAND_INVOKER_KEY);
+        commandInvokerProperty.setValue(commandInvokerClassName);
 
         long time = System.currentTimeMillis();
         String resultPropertyName = commandName + time
@@ -125,7 +153,8 @@ public abstract class AbstractTask extends Task {
                 + ERROR_PROPERTY_NAME_SUFFIX;
 
         java.bindToOwner(this);
-        java.addSysproperty(sysproperty);
+        java.addSysproperty(commandProperty);
+        java.addSysproperty(commandInvokerProperty);
         for (String arg : args) {
             java.createArg().setValue(arg);
         }

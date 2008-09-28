@@ -53,10 +53,10 @@ public class GenDialectRegistryTest {
      */
     @Test
     public void testRegister() {
-        MyDialect myDialect = new MyDialect();
         MyGenDialect myGenDialect = new MyGenDialect();
-        GenDialectRegistry.register(myDialect, myGenDialect);
-        assertSame(myGenDialect, GenDialectRegistry.getGenDialect(myDialect));
+        GenDialectRegistry.register(MyDialect.class, myGenDialect);
+        assertSame(myGenDialect, GenDialectRegistry
+                .getGenDialect(MyDialect.class));
     }
 
     /** */

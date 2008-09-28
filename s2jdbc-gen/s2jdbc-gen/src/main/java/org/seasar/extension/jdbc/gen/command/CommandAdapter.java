@@ -13,36 +13,51 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.command;
+package org.seasar.extension.jdbc.gen.command;
 
-import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.internal.arg.ArgumentsParser;
 import org.seasar.extension.jdbc.gen.internal.exception.SystemPropertyNotFoundRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 
 /**
  * {@link Command}のアダプタとなるクラスです。
+ * <p>
+ * コマンドラインの情報を元に{@link Command}を組み立て実行します。
+ * </p>
  * 
  * @author taedium
  */
 public class CommandAdapter {
 
     /** コマンドクラスのキー */
-    public static String COMMAND_KEY = Command.class.getPackage().getName();
+    public static String COMMAND_KEY = Command.class.getName();
+
+    /** コマンド呼び出しクラスのキー */
+    public static String COMMAND_INVOKER_KEY = CommandInvoker.class.getName();
 
     /**
-     * システムプロパティに登録された{@link Command}を実行します
+     * システムプロパティに登録された{@link Command}をシステムプロパティに登録された{@link CommandInvoker}
+     * で実行します。
      * 
      * @param args
+     *            引数の配列
      */
     public static void main(String[] args) {
-        String className = System.getProperty(COMMAND_KEY);
-        if (className == null) {
+        String commandName = System.getProperty(COMMAND_KEY);
+        if (commandName == null) {
             throw new SystemPropertyNotFoundRuntimeException(COMMAND_KEY);
         }
-        Command command = ReflectUtil.newInstance(Command.class, className);
+        String invokerName = System.getProperty(COMMAND_INVOKER_KEY);
+        if (invokerName == null) {
+            throw new SystemPropertyNotFoundRuntimeException(
+                    COMMAND_INVOKER_KEY);
+        }
+        Command command = ReflectUtil.newInstance(Command.class, commandName);
         ArgumentsParser parser = new ArgumentsParser(command);
         parser.parse(args);
-        command.execute();
+
+        CommandInvoker invoker = ReflectUtil.newInstance(CommandInvoker.class,
+                invokerName);
+        invoker.invoke(command);
     }
 }
