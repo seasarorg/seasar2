@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - Dump-Db-Meta</title>
+	</properties>
+	<body>
+		<section name="Dump-Db-Meta">
+			<subsection name="説明">
+				<p>
+					データベースのテーブルとカラムのメタデータを出力します。</p>
+				<p>
+					接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。
+				</p>
+			</subsection>
+			<subsection name="パラメータ">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
+					<tr><td>schemaName</td><td>このタスクが対象とするスキーマ名です。</td><td>-</td><td>NO</td></tr>
+					<tr><td>tableNamePattern</td><td>このタスクが対象とするテーブル名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないこのタスクが対象としないテーブル名の正規表現です。</td><td>".*\$.*"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
+					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
+					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
+				</table>
+			</subsection>
+			<subsection name="ネストした要素として指定されるパラメータ">
+				<h4>
+					jvmArg
+				</h4>
+				<p>
+					このタスクの大部分の処理は別VMで行われます。VMに引数を渡す場合は&lt;jvmarg&gt;要素を使用します。
+					これはAntのJavaタスクで使用できる&lt;jvmarg&gt;と同じです。
+					使用可能な属性やネストした要素についてはAntのドキュメントを参照してください。
+				</p>
+			</subsection>
+		</section>
+		<section name="例">
+			<subsection name="例">
+<source><![CDATA[   <dump-db-meta
+      classpathDir="build/classes"
+      schema="PUBLIC"
+      classpathref="classpath"
+   />]]></source>
+				<p>
+					"PUBLIC"というスキーマを指定してタスクを実行します。
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>

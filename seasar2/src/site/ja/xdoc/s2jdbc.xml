@@ -326,27 +326,6 @@
 						</li>
 					</ul>
 				</li>
-				<li>
-					<p>
-						<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a>
-					</p>
-					<ul>
-						<li>
-							<p>
-								<a href="s2jdbc_gen/setup.html">
-									セットアップ
-								</a>
-							</p>
-						</li>
-						<li>
-							<p>
-								<a href="s2jdbc_gen/task.html">
-									タスク
-								</a>
-							</p>
-						</li>
-					</ul>
-				</li>
 			</ul>
 		</section>
 	</body>

@@ -1,0 +1,261 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - Gen-Entity</title>
+	</properties>
+	<body>
+		<section name="概要">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#Gen-Entiy">Gen-Entiy</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#説明">説明</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#パラメータ">パラメータ</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#ネストした要素として指定されるパラメータ">ネストした要素として指定されるパラメータ</a>
+								</p>
+							</li>
+						</ul>
+
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#エンティティクラスに共通のスーパークラスを指定する">エンティティクラスに共通のスーパークラスを指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#OneToManayの関連プロパティ名を英単語の複数形にする">OneToManayの関連プロパティ名を英単語の複数形にする</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#識別子の生成方法を指定する">識別子の生成方法を指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#独自のテンプレートファイルを使用する">独自のテンプレートファイルを使用する</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+			</ul>
+		</section>
+		<section name="Gen-Entiy">
+			<subsection name="説明">
+				<p>
+					エンティティクラスを生成します。
+				</p>
+			</subsection>
+			<subsection name="パラメータ">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
+					<tr><td>schemaName</td><td>このタスクが対象とするスキーマ名です。</td><td>-</td><td>NO</td></tr>
+					<tr><td>tableNamePattern</td><td>このタスクが対象とするテーブル名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないテーブル名の正規表現です。</td><td>"(SCHEMA_INFO|.*\$.*)"</td><td>NO</td></tr>
+					<tr><td>versionColumnNamePattern</td><td>エンティティのプロパティに@Versionを付与するカラム名の正規表現です。大文字小文字の違いは考慮されません。</td><td>"VERSION([_]?NO)?"</td><td>NO</td></tr>
+					<tr><td>entitySuperclassName</td><td>エンティティクラスのスーパークラスの完全修飾名です。スーパークラスに@MappedSuperclassが指定されている場合スーパークラスに定義されたプロパティと同じ名前のプロパティはエンティティクラスに出力されません。スーパークラスはクラスパス上に存在する必要があります。</td><td>-</td><td>NO</td></tr>
+					<tr><td>idGeneration</td><td>識別子を生成する方法です。"auto", "identity", "sequence", "table", "assigned" のいずれかの値を指定できます。使用するRDBMSがサポートしていない場合、"identity"や"sequence"を指定するとエラーが発生します。</td><td>"assigned"</td><td>NO</td></tr>
+					<tr><td>initialValue</td><td>識別子の初期値です。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>allocationSize</td><td>識別子の割り当てサイズです。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>pluralFormFile</td><td>@OneToManyの関連プロパティ名を複数形で作成する際に使用される辞書ファイルです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>useAccessor</td><td>"true"の場合、生成するエンティティにアクセサメソッドを付与します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showCatalogName</td><td>"true"の場合、@Tableのcatalog属性にカタログ名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showSchemaName</td><td>"true"の場合、@Tableのschema属性にスキーマ名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showTableName</td><td>"true"の場合、@Tableのname属性にテーブル名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showColumnName</td><td>"true"の場合、@Columnのname属性にカラム名を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showColumnDefinition</td><td>"true"の場合、@ColumnのcolumnDefinition属性にカラム定義を明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>showJoinColumn</td><td>"true"の場合、@JoinColumnを明記します。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>entityTemplateFileName</td><td>エンティティクラスのテンプレートファイル名です。</td><td>"java/entity.ftl"</td><td>NO</td></tr>
+					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されます。</td><td>"entity"</td><td>NO</td></tr>
+					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
+					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>overwrite</td><td>"true"の場合、エンティティクラスのJavaファイルを上書きします。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
+					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
+					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
+				</table>
+			</subsection>
+			<subsection name="ネストした要素として指定されるパラメータ">
+				<h4>
+					jvmArg
+				</h4>
+				<p>
+					このタスクの大部分の処理は別VMで行われます。VMに引数を渡す場合は&lt;jvmarg&gt;要素を使用します。
+					これはAntのJavaタスクで使用できる&lt;jvmarg&gt;と同じです。
+					使用可能な属性やネストした要素についてはAntのドキュメントを参照してください。
+				</p>
+			</subsection>
+		</section>
+		<section name="例">
+			<subsection name="エンティティクラスに共通のスーパークラスを指定する">
+				<p>
+					entitySuperclassName属性に、エンティティクラスに共通のスーパークラスの名前を指定できます。
+					たとえば、エンティティに対応するすべてのテーブルにCREATE_TIMESTAMPとUPDATE_TIMESTAMPというカラムが定義されている場合、
+					次のようなクラスを作成し、すべてのエンティティのスーパークラスに指定できます。
+				</p>
+<source><![CDATA[@MappedSuperclass
+public abstract class AbstractEntity {
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date createTimestamp;
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date updateTimestamp;
+}]]></source>
+				<p>
+					スーパークラス名をGen-EntityタスクのentitySuperclassName属性に指定します。
+				</p>
+<source><![CDATA[<gen-entity
+    rootPackageName="examples"
+    entitySuperclassName="examples.AbstractEntity"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					タスクを実行するとexamples.AbstractEntityを継承した次のようなクラスが生成されます。
+				</p>
+<source><![CDATA[@Entity
+public class Employee extends AbstractEntity {
+    @Id
+    public Integer id;
+    public String name;
+}]]></source>
+<source><![CDATA[@Entity
+public class Department extends AbstractEntity {
+    @Id
+    public Integer id;
+    public String name;
+}]]></source>
+			</subsection>
+			<subsection name="OneToManayの関連プロパティ名を英単語の複数形にする">
+				<p>
+					OneToManayの関連プロパティ名は、デフォルトでは、関連先のエンティティ名を小文字にした文字列とListというサフィックスの結合文字列として表されます。
+				</p>
+<source><![CDATA[@Entity
+public class Department {
+    @Id
+    public Identity id;
+    @OneToManay(mappedBy = "department")
+    public List<Employee> employeeList;
+}]]></source>
+				<p>
+					辞書ファイルを用意することで、英単語の複数形変換のルールに則ることができます。
+					たとえば、ごく基本的な変換ルールを記述した辞書ファイルは次のようになります。
+				</p>
+<source><![CDATA[(.*)(f|fe)$=$1ves
+(.*[^aiueo])y$=$1ies
+(.*(s|x|sh|ch|o))$=$1es
+(.*)$=$1s]]></source>
+				<p>
+					辞書ファイルはプロパティファイルの形式で記述します。
+					行の先頭が「#」や「!」で始まる場合は、コメント行とみなされます。
+					「=」の左側には関連先エンティティ名の先頭を小文字にした文字列にマッチさせる正規表現を記述します。
+					「=」の右側には、マッチした場合の置換文字列を記述します。置換文字列には\1や\2などのようにグループの参照を含められます。
+					辞書ファイルを使った評価は正規表現にマッチするまで上から1行ずつ順に行われます。
+					どの行にもマッチしない場合、関連プロパティ名は、デフォルトと同様、関連先のエンティティ名を小文字にした文字列とListというサフィックスの結合文字列になります。
+				</p>
+				<p>
+					辞書ファイルはpluralFormFile属性に指定できます。（ここでは辞書ファイルの名前をplural.propertiesとします。）
+				</p>
+<source><![CDATA[<gen-entity
+    rootPackageName="examples"
+    pluralFormFile="plural.properties"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					上記の置換ルールを持つ辞書ファイルを利用した場合、OneToManayの関連プロパティ名はemployeeListではなくemployeesになります。
+				</p>
+<source><![CDATA[@Entity
+public class Department {
+    @Id
+    public Identity id;
+    @OneToManay(mappedBy = "department")
+    public List<Employee> employees;
+}]]></source>
+			</subsection>
+			<subsection name="識別子の生成方法を指定する">
+				<p>
+					識別子の生成方法を指定するには、idGeneration属性に値を指定します。
+					idGeneration属性に"sequence"や"table"を指定してシーケンスやテーブルでの生成を選択する場合や、
+					"auto"を指定してシーケンスやテーブルでの生成が自動で選択される場合は、
+					initialValueやallocationSizeの指定も可能です。
+					使用するRDBMSがサポートしていない場合、"identity"や"sequence"を指定するとエラーが発生します。
+				</p>
+				<p>
+					たとえば、テーブルを利用した生成を行う場合、次のように指定できます。
+				</p>
+<source><![CDATA[<gen-entity
+    rootPackageName="examples"
+    idGeneration="table"
+    initialValue="1000"
+    allocationSize="10"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					生成されるクラスは次のようになります。
+				</p>
+<source><![CDATA[@Entity
+public class Department {
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "generator")
+    @TableGenerator(name = "generator", initialValue = 1000, allocationSize = 10)
+    public Identity id;
+    public String name;
+}]]></source>
+			</subsection>
+			<subsection name="独自のテンプレートファイルを使用する">
+				<p>
+					任意のディレクトリに独自のテンプレートファイルを置き、templateFilePrimaryDir属性にそのディレクトリを指定することで、
+					独自のテンプレートファイルを使用できるようになります。
+				</p>
+				<p>
+					S2JDBC-Genのテンプレートは、配布ファイルのsrc/main/resources/org/seasar/extension/jdbc/gen/internal/generator/tempaltesディレクトリ以下にあります。
+					エンティティクラスのテンプレートはjava/entity.ftlになります。これをコピーして、修正を加えるのが良いでしょう。
+				</p>
+				<p>
+					テンプレートファイルを格納するディレクトリをmytempletesとする場合、
+					修正した独自テンプレートを使用するにはテンプレートをmytempletes/java/entity.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
+				</p>
+<source><![CDATA[<gen-entity
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					mytempletes/my-entity.ftlのように、テンプレートファイルを任意の名前で配置したい場合は、
+					templateFilePrimaryDir属性に加え、entityTemplateFileName属性も指定します。
+				</p>
+<source><![CDATA[<gen-entity
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    entityTemplateFileName="my-entity.ftl"
+    classpathRef="classpath"
+/>]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>

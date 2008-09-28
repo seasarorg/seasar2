@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - Gen-Ddl</title>
+	</properties>
+	<body>
+		<section name="Gen-Ddl">
+			<subsection name="説明">
+				<p>
+					DDLを生成します。
+				</p>
+				<p>
+					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+				</p>
+			</subsection>
+			<subsection name="パラメータ">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
+					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
+					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>summaryFileName</td><td>DDLのサマリーファイル名です。サマリーファイルにはdrop文とcreate文がまとめて出力されます。</td><td>"summary.txt"</td><td>NO</td></tr>
+					<tr><td>createTableDirName</td><td>テーブルを作成するDDLを格納するディレクトリ名です。</td><td>"010-table"</td><td>NO</td></tr>
+					<tr><td>createUniqueKeyDirName</td><td>一意キーを作成するDDLを格納するディレクトリ名です。</td><td>"020-uniquekey"</td><td>NO</td></tr>
+					<tr><td>createSequenceDirName</td><td>シーケンスを作成するDDLを格納するディレクトリ名です。</td><td>"030-sequence"</td><td>NO</td></tr>
+					<tr><td>createForeignKeyDirName</td><td>外部キーを作成するDDLを格納するディレクトリ名です。</td><td>"050-foreignkey"</td><td>NO</td></tr>
+					<tr><td>dropTableDirName</td><td>テーブルを削除するDDLファイル名です。</td><td>"040-table"</td><td>NO</td></tr>
+					<tr><td>dropUniqueKeyDirName</td><td>一意キーを削除するDDLファイル名です。</td><td>"030-uniquekey"</td><td>NO</td></tr>
+					<tr><td>dropSequenceDirName</td><td>シーケンスを削除するDDLファイル名です。</td><td>"020-sequence"</td><td>NO</td></tr>
+					<tr><td>dropForeignKeyDirName</td><td>外部キーを削除するDDLファイル名です。</td><td>"010-foreignkey"</td><td>NO</td></tr>
+					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>sqlKeywordCase</td><td>SQLのキーワードを大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。テンプレートに記述された文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
+					<tr><td>sqlIdentifierCase</td><td>SQLの識別子を大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。エンティティに記述した文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
+					<tr><td>dump</td><td>"true"の場合、データベースのデータのダンプ出力を行います。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
+					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>summaryTemplateFileName</td><td>DDLのサマリーファイルのテンプレートファイル名です。</td><td>"sql/summary.ftl"</td><td>NO</td></tr>
+					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
+					<tr><td>createSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-schemainfo-table.ftl"</td><td>NO</td></tr>
+					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
+					<tr><td>createSequenceTemplateFileName</td><td>シーケンスを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-sequence.ftl"</td><td>NO</td></tr>
+					<tr><td>createForeignKeyTemplateFileName</td><td>外部キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-foreignkey.ftl"</td><td>NO</td></tr>
+					<tr><td>dropTableTemplateFileName</td><td>テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-table.ftl"</td><td>NO</td></tr>
+					<tr><td>dropSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-schemainfo-table.ftl"</td><td>NO</td></tr>
+					<tr><td>dropUniqueKeyTemplateFileName</td><td>一意キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-uniquekey.ftl"</td><td>NO</td></tr>
+					<tr><td>dropSequenceTemplateFileName</td><td>シーケンスを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-sequence.ftl"</td><td>NO</td></tr>
+					<tr><td>dropForeignKeyTemplateFileName</td><td>外部キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-foreignkey.ftl"</td><td>NO</td></tr>
+					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db\migrate"</td><td>NO</td></tr>
+					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db\ddl-info.txt"</td><td>NO</td></tr>
+					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
+					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
+					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
+					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
+					<tr><td>tableOption</td><td>CREATE TABLE文の最後に付与されるオプションです。MySQLで、データベースのエンジンを指定する場合、たとえば、"ENGINE = INNODB"というように指定できます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>jdbcManagerName</td><td>
+					                        JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
+					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
+					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
+				</table>
+			</subsection>
+			<subsection name="ネストした要素として指定されるパラメータ">
+				<h4>
+					jvmArg
+				</h4>
+				<p>
+					このタスクの大部分の処理は別VMで行われます。VMに引数を渡す場合は&lt;jvmarg&gt;要素を使用します。
+					これはAntのJavaタスクで使用できる&lt;jvmarg&gt;と同じです。
+					使用可能な属性やネストした要素についてはAntのドキュメントを参照してください。
+				</p>
+			</subsection>
+		</section>
+		<section name="例">
+			<subsection name="例">
+<source><![CDATA[    <gen-ddl
+      classpathDir="build/classes"
+      rootPackageName="examples"
+      sqlKeywordCaseType="lowercase"
+      sqlIdentifierCaseType="uppercase"
+      classpathref="classpath"
+   />]]></source>
+				<p>
+					sqlKeywordCaseTypeとsqlIdentifierCaseTypeを指定してタスクを実行します。
+					このタスクによって生成されるSQLは次のように、キーワードが小文字、識別子が大文字になります。
+				</p>
+<source><![CDATA[    create table HOGE (AAA varchar(255));]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>
