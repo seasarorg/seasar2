@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.util;
 import java.io.Closeable;
 import java.io.IOException;
 
-import org.seasar.framework.exception.IORuntimeException;
+import org.seasar.framework.log.Logger;
 
 /**
  * {@link Closeable}のユーティリティクラスです。
@@ -26,6 +26,9 @@ import org.seasar.framework.exception.IORuntimeException;
  * @author taedium
  */
 public class CloseableUtil {
+
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(Closeable.class);
 
     /**
      * 
@@ -44,8 +47,8 @@ public class CloseableUtil {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
+        } catch (IOException ignore) {
+            logger.log(ignore);
         }
     }
 }
