@@ -1,0 +1,1 @@
+${name} <@include name="GeneratorImplTest_Include2.ftl" rootModel=foo/> ${name}

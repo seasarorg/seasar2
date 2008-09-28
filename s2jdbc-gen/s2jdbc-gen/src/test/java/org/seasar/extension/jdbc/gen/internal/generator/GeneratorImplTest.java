@@ -60,6 +60,21 @@ public class GeneratorImplTest {
 
     /**
      * 
+     * @throws Exception
+     */
+    @Test
+    public void testInclude() throws Exception {
+        Foo foo = new Foo("foo");
+        Hoge hoge = new Hoge("hoge", foo);
+        GenerationContext context = new GenerationContextImpl(hoge, new File(
+                "file"), getClass().getSimpleName() + "_Include.ftl", "UTF-8",
+                false);
+        generator.generate(context);
+        assertEquals("hoge foo hoge", generator.getResult());
+    }
+
+    /**
+     * 
      * @author taedium
      */
     public static class MyModel {
@@ -71,6 +86,68 @@ public class GeneratorImplTest {
          * @param name
          */
         public MyModel(String name) {
+            this.name = name;
+        }
+
+        /**
+         * 
+         * @return
+         */
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
+     * 
+     * @author taedium
+     */
+    public static class Hoge {
+
+        private String name;
+
+        private Foo foo;
+
+        /**
+         * 
+         * @param name
+         * @param foo
+         */
+        public Hoge(String name, Foo foo) {
+            this.name = name;
+            this.foo = foo;
+        }
+
+        /**
+         * 
+         * @return
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * @return Returns the foo.
+         */
+        public Foo getFoo() {
+            return foo;
+        }
+
+    }
+
+    /**
+     * 
+     * @author taedium
+     */
+    public static class Foo {
+
+        private String name;
+
+        /**
+         * 
+         * @param name
+         */
+        public Foo(String name) {
             this.name = name;
         }
 

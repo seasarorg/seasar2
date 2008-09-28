@@ -116,7 +116,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             makeDirectories(currentVersionDir);
             makeDirectories(nextVersionDir);
             copyDirectory(currentVersionDir, nextVersionDir);
-            incrementInternal(callback, nextVersionDir);
+            callback.execute(nextVersionDir);
             if (currentVersionDir.isFirstVersion()) {
                 copyDropDirectory(currentVersionDir, nextVersionDir);
             }
@@ -183,21 +183,6 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         File src = next.getDropDirectory().asFile();
         File dest = current.getDropDirectory().asFile();
         FileUtil.copyDirectory(src, dest, new TableFilenameFilter());
-    }
-
-    /**
-     * バージョンのインクリメント処理を実行します。
-     * 
-     * @param callback
-     *            コールバック
-     * @param directory
-     *            バージョンディレクトリ
-     */
-    protected void incrementInternal(Callback callback,
-            DdlVersionDirectory directory) {
-        File src = directory.getCreateDirectory().asFile();
-        File dest = directory.getDropDirectory().asFile();
-        callback.execute(src, dest, directory.getVersionNo());
     }
 
     /**

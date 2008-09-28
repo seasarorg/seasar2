@@ -87,6 +87,7 @@ public class GeneratorImpl implements Generator {
         }
         this.configuration = new Configuration();
         configuration.setObjectWrapper(new DefaultObjectWrapper());
+        configuration.setSharedVariable("include", new IncludeDirective());
         configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
         configuration.setNumberFormat("0.#####");
         configuration

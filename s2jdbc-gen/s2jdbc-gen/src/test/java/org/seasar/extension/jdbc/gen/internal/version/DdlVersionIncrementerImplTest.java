@@ -83,10 +83,10 @@ public class DdlVersionIncrementerImplTest {
 
         incrementer.increment(new DdlVersionIncrementer.Callback() {
 
-            public void execute(File createDir, File dropDir, int versionNo) {
-                values[0] = createDir;
-                values[1] = dropDir;
-                values[2] = versionNo;
+            public void execute(DdlVersionDirectory versionDirectory) {
+                values[0] = versionDirectory.getCreateDirectory().asFile();
+                values[1] = versionDirectory.getDropDirectory().asFile();
+                values[2] = versionDirectory.getVersionNo();
             }
         });
 

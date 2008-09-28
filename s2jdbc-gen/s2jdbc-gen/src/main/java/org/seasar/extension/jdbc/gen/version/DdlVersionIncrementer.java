@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.version;
 
-import java.io.File;
-
 /**
  * DDLのバージョンを増分するインタフェースです。
  * 
@@ -39,7 +37,13 @@ public interface DdlVersionIncrementer {
      */
     interface Callback {
 
-        void execute(File createDir, File dropDir, int versionNo);
+        /**
+         * 実行します。
+         * 
+         * @param ddlVersionDirectory
+         *            DDLのバージョンディレクトリ
+         */
+        void execute(DdlVersionDirectory ddlVersionDirectory);
     }
 
 }
