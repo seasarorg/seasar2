@@ -43,8 +43,8 @@ import org.seasar.extension.jdbc.gen.internal.model.AbstServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AssociationModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.AttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.CompositeUniqueConstraintModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAssociationModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
@@ -150,10 +150,10 @@ public class FactoryImpl implements Factory {
 
     public DdlVersionDirectoryTree createDdlVersionDirectoryTree(
             Command command, File baseDir, File versionFile,
-            String versionNoPattern, String env, boolean applyEnvToFile) {
+            String versionNoPattern, String env, boolean applyEnvToVersion) {
 
         return new DdlVersionDirectoryTreeImpl(baseDir, versionFile,
-                versionNoPattern, applyEnvToFile ? env : null);
+                versionNoPattern, applyEnvToVersion ? env : null);
     }
 
     public DdlVersionIncrementer createDdlVersionIncrementer(Command command,

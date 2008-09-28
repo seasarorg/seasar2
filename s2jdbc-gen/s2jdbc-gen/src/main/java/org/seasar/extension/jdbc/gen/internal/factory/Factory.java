@@ -211,13 +211,13 @@ public interface Factory {
      *            バージョン番号のパターン
      * @param env
      *            環境名
-     * @param applyEnvToFile
-     *            環境名をファイルに適用する場合 {@code true}
+     * @param applyEnvToVersion
+     *            環境名をバージョンに適用する場合 {@code true}
      * @return {@link DdlVersionDirectoryTree}の実装
      */
     DdlVersionDirectoryTree createDdlVersionDirectoryTree(Command command,
             File baseDir, File versionFile, String versionNoPattern,
-            String env, boolean applyEnvToFile);
+            String env, boolean applyEnvToVersion);
 
     /**
      * {@link DdlVersionIncrementer}の実装を作成します。

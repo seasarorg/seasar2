@@ -84,8 +84,8 @@ public class MigrateCommand extends AbstractCommand {
     /** マイグレーション先のバージョン */
     protected String version = "latest";
 
-    /** 環境名をファイルに適用する場合{@code true} */
-    protected boolean applyEnvToFile;
+    /** 環境名をバージョンに適用する場合{@code true} */
+    protected boolean applyEnvToVersion;
 
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
@@ -504,22 +504,22 @@ public class MigrateCommand extends AbstractCommand {
     }
 
     /**
-     * 環境名をファイルに適用する場合{@code true}を返します。
+     * 環境名をバージョンに適用する場合{@code true}を返します。
      * 
-     * @return 環境名をファイルに適用する場合{@code true}
+     * @return 環境名をバージョンに適用する場合{@code true}
      */
-    public boolean isApplyEnvToFile() {
-        return applyEnvToFile;
+    public boolean isApplyEnvToVersion() {
+        return applyEnvToVersion;
     }
 
     /**
-     * 環境名をファイルに適用する場合{@code true}を設定します。
+     * 環境名をバージョンに適用する場合{@code true}を設定します。
      * 
-     * @param applyEnvToFile
-     *            環境名をファイルに適用する場合{@code true}
+     * @param applyEnvToVersion
+     *            環境名をバージョンに適用する場合{@code true}
      */
-    public void setApplyEnvToFile(boolean applyEnvToFile) {
-        this.applyEnvToFile = applyEnvToFile;
+    public void setApplyEnvToVersion(boolean applyEnvToVersion) {
+        this.applyEnvToVersion = applyEnvToVersion;
     }
 
     @Override
@@ -615,7 +615,7 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
         return factory.createDdlVersionDirectoryTree(this, migrateDir,
-                ddlInfoFile, versionNoPattern, env, applyEnvToFile);
+                ddlInfoFile, versionNoPattern, env, applyEnvToVersion);
     }
 
     /**

@@ -88,8 +88,8 @@ public class LoadDataCommand extends AbstractCommand {
     /** バージョン番号のパターン */
     protected String versionNoPattern = "0000";
 
-    /** 環境名をファイルに適用する場合{@code true} */
-    protected boolean applyEnvToFile = false;
+    /** 環境名をバージョンに適用する場合{@code true} */
+    protected boolean applyEnvToVersion = false;
 
     /** データをロードする際のバッチサイズ */
     protected int loadBatchSize = 10;
@@ -398,22 +398,22 @@ public class LoadDataCommand extends AbstractCommand {
     }
 
     /**
-     * 環境名をファイルに適用する場合{@code true}を返します。
+     * 環境名をバージョンに適用する場合{@code true}を返します。
      * 
-     * @return 環境名をファイルに適用する場合{@code true}
+     * @return 環境名をバージョンに適用する場合{@code true}
      */
-    public boolean isApplyEnvToFile() {
-        return applyEnvToFile;
+    public boolean isApplyEnvToVersion() {
+        return applyEnvToVersion;
     }
 
     /**
-     * 環境名をファイルに適用する場合{@code true}を設定します。
+     * 環境名をバージョンに適用する場合{@code true}を設定します。
      * 
-     * @param applyEnvToFile
-     *            環境名をファイルに適用する場合{@code true}
+     * @param applyEnvToVersion
+     *            環境名をバージョンに適用する場合{@code true}
      */
-    public void setApplyEnvToFile(boolean applyEnvToFile) {
-        this.applyEnvToFile = applyEnvToFile;
+    public void setApplyEnvToVersion(boolean applyEnvToVersion) {
+        this.applyEnvToVersion = applyEnvToVersion;
     }
 
     @Override
@@ -524,7 +524,7 @@ public class LoadDataCommand extends AbstractCommand {
      */
     protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
         return factory.createDdlVersionDirectoryTree(this, migrateDir,
-                ddlInfoFile, versionNoPattern, env, applyEnvToFile);
+                ddlInfoFile, versionNoPattern, env, applyEnvToVersion);
     }
 
     @Override

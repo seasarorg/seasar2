@@ -201,13 +201,13 @@ public class DumpDataTask extends AbstractTask {
     }
 
     /**
-     * 環境名をファイルに適用する場合{@code true}を設定します。
+     * 環境名をバージョンに適用する場合{@code true}を設定します。
      * 
-     * @param applyEnvToFile
-     *            環境名をファイルに適用する場合{@code true}
+     * @param applyEnvToVersion
+     *            環境名をバージョンに適用する場合{@code true}
      */
-    public void setApplyEnvToFile(boolean applyEnvToFile) {
-        command.setApplyEnvToFile(applyEnvToFile);
+    public void setApplyEnvToVersion(boolean applyEnvToVersion) {
+        command.setApplyEnvToVersion(applyEnvToVersion);
     }
 
 }
