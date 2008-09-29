@@ -4,21 +4,27 @@
 		<title>S2JDBC-Gen - Gen-Entity</title>
 	</properties>
 	<body>
-		<section name="概要">
-			<p></p>
+		<section name="Gen-Entiy">
 			<ul>
 				<li>
 					<p>
-						<a href="#Gen-Entiy">Gen-Entiy</a>
+						<a href="#説明">説明</a>
 						<ul>
 							<li>
 								<p>
-									<a href="#説明">説明</a>
+									<a href="#概要">概要</a>
 								</p>
 							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#パラメータ">パラメータ</a>
+						<ul>
 							<li>
 								<p>
-									<a href="#パラメータ">パラメータ</a>
+									<a href="#トップレベルのパラメータ">トップレベルのパラメータ</a>
 								</p>
 							</li>
 							<li>
@@ -27,7 +33,6 @@
 								</p>
 							</li>
 						</ul>
-
 					</p>
 				</li>
 				<li>
@@ -59,13 +64,15 @@
 				</li>
 			</ul>
 		</section>
-		<section name="Gen-Entiy">
-			<subsection name="説明">
+		<section name="説明">
+			<subsection name="概要">
 				<p>
 					データベースのメタデータを読み取りエンティティクラスを生成します。
 				</p>
 			</subsection>
-			<subsection name="パラメータ">
+		</section>
+		<section name="パラメータ">
+			<subsection name="トップレベルのパラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
 					<tr><td>schemaName</td><td>このタスクが対象とするスキーマ名です。</td><td>-</td><td>NO</td></tr>

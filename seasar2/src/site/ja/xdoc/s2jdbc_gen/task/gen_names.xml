@@ -5,14 +5,54 @@
 	</properties>
 	<body>
 		<section name="Gen-Names">
-			<subsection name="説明">
+			<ul>
+				<li>
+					<p>
+						<a href="#説明">説明</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#概要">概要</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#パラメータ">パラメータ</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#トップレベルのパラメータ">トップレベルのパラメータ</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#ネストした要素として指定されるパラメータ">ネストした要素として指定されるパラメータ</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#例">例</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+		<section name="説明">
+			<subsection name="概要">
 				<p>
 					名前インタフェースを作成します。</p>
 				<p>
 					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
 				</p>
 			</subsection>
-			<subsection name="パラメータ">
+		</section>
+		<section name="パラメータ">
+			<subsection name="トップレベルのパラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
