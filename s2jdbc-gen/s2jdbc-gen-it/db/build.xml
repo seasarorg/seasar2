@@ -375,7 +375,7 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
-			applyenvtofile="true"
+			applyenvtoversion="true"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
@@ -408,7 +408,7 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
-			applyenvtofile="true"
+			applyenvtoversion="true"
 			classpathref="classpath"
 		/>
 		<exec-sql 
@@ -424,7 +424,7 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
-			applyenvtofile="true"
+			applyenvtoversion="true"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
