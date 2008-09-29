@@ -75,6 +75,14 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         openConnection();
     }
 
+    public boolean isHaltOnError() {
+        return haltOnError;
+    }
+
+    public void setHaltOnError(boolean haltOnError) {
+        this.haltOnError = haltOnError;
+    }
+
     public Statement getStatement() {
         if (statement != null) {
             return statement;
@@ -101,6 +109,7 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         if (haltOnError) {
             throw exception;
         }
+        logger.debug(exception);
         exceptionList.add(exception);
         openConnection();
     }

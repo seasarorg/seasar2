@@ -27,6 +27,21 @@ import java.util.List;
 public interface SqlExecutionContext {
 
     /**
+     * エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}を返します。
+     * 
+     * @return エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}
+     */
+    boolean isHaltOnError();
+
+    /**
+     * エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}を設定します。
+     * 
+     * @param haltOnError
+     *            エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}
+     */
+    void setHaltOnError(boolean haltOnError);
+
+    /**
      * ステートメントを返します。
      * 
      * @return ステートメント

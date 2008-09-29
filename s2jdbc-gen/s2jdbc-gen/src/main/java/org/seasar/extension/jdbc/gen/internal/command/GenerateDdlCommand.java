@@ -34,7 +34,6 @@ import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModel;
 import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
-import org.seasar.extension.jdbc.gen.model.SummaryDdlModel;
 import org.seasar.extension.jdbc.gen.model.TableModel;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
@@ -115,9 +114,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** 外部キーを作成するDDLを削除するディレクトリ名 */
     protected String dropForeignKeyDirName = "010-foreignkey";
 
-    /** DDLのサマリーファイル名 */
-    protected String summaryFileName = "summary.txt";
-
     /** DDLファイルのエンコーディング */
     protected String ddlFileEncoding = "UTF-8";
 
@@ -165,9 +161,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** 外部キーを削除するDDLのテンプレートファイル名 */
     protected String dropForeignKeyTemplateFileName = "sql/drop-foreignkey.ftl";
-
-    /** DDLのサマリーのテンプレートファイル名 */
-    protected String summaryTemplateFileName = "sql/summary.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -987,44 +980,6 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.dropSchemaInfoTableTemplateFileName = dropSchemaInfoTableTemplateFileName;
     }
 
-    /**
-     * DDLのサマリーファイル名を返します。
-     * 
-     * @return DDLのサマリーファイル名
-     */
-    public String getSummaryFileName() {
-        return summaryFileName;
-    }
-
-    /**
-     * DDLのサマリーファイル名を設定します。
-     * 
-     * @param summaryFileName
-     *            DDLのサマリーファイル名
-     */
-    public void setSummaryFileName(String summaryFileName) {
-        this.summaryFileName = summaryFileName;
-    }
-
-    /**
-     * DDLのサマリーのテンプレートファイル名を返します。
-     * 
-     * @return DDLのサマリーのテンプレートファイル名
-     */
-    public String getSummaryTemplateFileName() {
-        return summaryTemplateFileName;
-    }
-
-    /**
-     * DDLのサマリーのテンプレートファイル名を設定します。
-     * 
-     * @param summaryTemplateFileName
-     *            DDLのサマリーのテンプレートファイル名
-     */
-    public void setSummaryTemplateFileName(String summaryTemplateFileName) {
-        this.summaryTemplateFileName = summaryTemplateFileName;
-    }
-
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -1060,7 +1015,6 @@ public class GenerateDdlCommand extends AbstractCommand {
                         .asFile();
                 final DatabaseDesc databaseDesc = databaseDescFactory
                         .getDatabaseDesc();
-                SummaryDdlModel summaryDdlModel = createSummaryDdlModel();
 
                 for (TableDesc tableDesc : databaseDesc.getTableDescList()) {
                     TableModel model = tableModelFactory
@@ -1069,16 +1023,12 @@ public class GenerateDdlCommand extends AbstractCommand {
                     generateUniqueKeyDdl(model, createDir, dropDir);
                     generateForeignKeyDdl(model, createDir, dropDir);
                     generateSequenceDdl(model, createDir, dropDir);
-                    summaryDdlModel.addTableModel(model);
                 }
 
                 SchemaInfoTableModel model = schemaInfoTableModelFactory
                         .getSchemaInfoTableModel(versionDirectory
                                 .getVersionNo());
                 generateSchemaInfoTableDdl(model, createDir, dropDir);
-                summaryDdlModel.setSchemaInfoTableModel(model);
-
-                generateSummaryDdl(summaryDdlModel, versionDirectory);
 
                 if (dump) {
                     sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
@@ -1096,32 +1046,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doDestroy() {
-    }
-
-    /**
-     * {@link SummaryDdlModel}を作成します。
-     * 
-     * @return DDLをまとめたモデル
-     */
-    protected SummaryDdlModel createSummaryDdlModel() {
-        SummaryDdlModel model = new SummaryDdlModel();
-        model
-                .setCreateForeignKeyTemplateFileName(createForeignKeyTemplateFileName);
-        model
-                .setCreateSchemaInfoTableTemplateFileName(createSchemaInfoTableTemplateFileName);
-        model.setCreateSequenceTemplateFileName(createSequenceTemplateFileName);
-        model.setCreateTableTemplateFileName(createTableTemplateFileName);
-        model
-                .setCreateUniqueKeyTemplateFileName(createUniqueKeyTemplateFileName);
-        model.setDropForeignKeyTemplateFileName(dropForeignKeyTemplateFileName);
-        model
-                .setDropSchemaInfoTableTemplateFileName(dropSchemaInfoTableTemplateFileName);
-        model.setDropSequenceTemplateFileName(dropSequenceTemplateFileName);
-        model.setDropTableTemplateFileName(dropTableTemplateFileName);
-        model.setDropUniqueKeyTemplateFileName(dropUniqueKeyTemplateFileName);
-        model
-                .setCreateForeignKeyTemplateFileName(createForeignKeyTemplateFileName);
-        return model;
     }
 
     /**
@@ -1248,20 +1172,6 @@ public class GenerateDdlCommand extends AbstractCommand {
                 new File(dropDir, dropTableDirName),
                 dropSchemaInfoTableTemplateFileName);
         generator.generate(dropContext);
-    }
-
-    /**
-     * すべてのDDLをまとめたものを生成します。
-     * 
-     * @param model
-     * @param versionDirectory
-     */
-    protected void generateSummaryDdl(SummaryDdlModel model,
-            DdlVersionDirectory versionDirectory) {
-        File file = new File(versionDirectory.asFile(), summaryFileName);
-        GenerationContext context = factory.createGenerationContext(this,
-                model, file, summaryTemplateFileName, ddlFileEncoding, true);
-        generator.generate(context);
     }
 
     /**

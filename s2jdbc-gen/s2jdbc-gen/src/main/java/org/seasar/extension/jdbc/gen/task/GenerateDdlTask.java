@@ -498,24 +498,4 @@ public class GenerateDdlTask extends AbstractTask {
         command.setDropUniqueKeyDirName(dropUniqueKeyDirName);
     }
 
-    /**
-     * DDLのサマリーファイル名を設定します。
-     * 
-     * @param summaryFileName
-     *            DDLのサマリーファイル名
-     */
-    public void setSummaryFileName(String summaryFileName) {
-        command.setSummaryFileName(summaryFileName);
-    }
-
-    /**
-     * DDLのサマリーのテンプレートファイル名を設定します。
-     * 
-     * @param summaryTemplateFileName
-     *            DDLのサマリーのテンプレートファイル名
-     */
-    public void setSummaryTemplateFileName(String summaryTemplateFileName) {
-        command.setSummaryTemplateFileName(summaryTemplateFileName);
-    }
-
 }

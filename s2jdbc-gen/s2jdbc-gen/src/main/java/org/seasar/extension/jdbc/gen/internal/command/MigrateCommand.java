@@ -556,7 +556,13 @@ public class MigrateCommand extends AbstractCommand {
 
             public void drop(SqlExecutionContext sqlExecutionContext, File file) {
                 if (sqlFileExecutor.isTarget(file)) {
-                    sqlFileExecutor.execute(sqlExecutionContext, file);
+                    boolean haltOnError = sqlExecutionContext.isHaltOnError();
+                    try {
+                        sqlExecutionContext.setHaltOnError(false);
+                        sqlFileExecutor.execute(sqlExecutionContext, file);
+                    } finally {
+                        sqlExecutionContext.setHaltOnError(haltOnError);
+                    }
                 }
             }
 

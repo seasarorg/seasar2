@@ -89,16 +89,7 @@ public class SqlUnitExecutorImpl implements SqlUnitExecutor {
         SqlExecutionContext context = new SqlExecutionContextImpl(dataSource,
                 haltOnError);
         try {
-            try {
-                callback.execute(context);
-            } finally {
-                for (Exception e : context.getExceptionList()) {
-                    logger.error(e.getMessage());
-                }
-            }
-            if (!context.getExceptionList().isEmpty()) {
-                throw context.getExceptionList().get(0);
-            }
+            callback.execute(context);
         } finally {
             context.destroy();
         }
