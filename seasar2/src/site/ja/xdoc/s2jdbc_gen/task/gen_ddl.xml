@@ -4,14 +4,172 @@
 		<title>S2JDBC-Gen - Gen-Ddl</title>
 	</properties>
 	<body>
+		<section name="概要">
+			<p></p>
+			<ul>
+				<li>
+					<p>
+						<a href="#Gen-Ddl">Gen-Ddl</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#説明">説明</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#パラメータ">パラメータ</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#ネストした要素として指定されるパラメータ">ネストした要素として指定されるパラメータ</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#SQLのキーワードと識別子の大文字小文字を指定する">SQLのキーワードと識別子の大文字小文字を指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#独自のテンプレートファイルを使用する">独自のテンプレートファイルを使用する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#MySQLでストレージエンジンを指定する">MySQLでストレージエンジンを指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#バージョンディレクトリのパターンを指定する">バージョンディレクトリのパターンを指定する</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+			</ul>
+		</section>
 		<section name="Gen-Ddl">
 			<subsection name="説明">
 				<p>
-					DDLを生成します。
+					エンティティクラスのメタデータを読み取りDDLを生成します。
+					このタスクでは、次のオブジェクトのcreate文とdrop文を生成します。
+					<ul>
+						<li>
+							テーブル
+						</li>
+						<li>
+							シーケンス
+						</li>
+						<li>
+							一意キー
+						</li>
+						<li>
+							外部キー
+						</li>
+					</ul>
 				</p>
 				<p>
-					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+					また、dump属性が"true"の場合、DDLファイルの生成と同時にデータベースのデータをCSV形式でダンプ出力します。
+					DDLファイルとダンプファイルは、migrateDir属性に指定されたディレクトリ以下に出力されます。
 				</p>
+				<h4>ディレクトリの構成</h4>
+				<p>
+					デフォルトの属性値を利用する場合、Gen-Ddlタスクにより作成されるディレクトリは次のようになります。
+				</p>
+<source><![CDATA[db
+└─migrate
+    ├─0000
+    │  ├─create
+    │  └─drop
+    │      ├─010-foreignkey
+    │      ├─020-sequence
+    │      ├─030-uniquekey
+    │      └─040-table
+    ├─0001
+    │  ├─create
+    │  │  ├─010-table
+    │  │  ├─020-uniquekey
+    │  │  ├─030-sequence
+    │  │  ├─040-dump
+    │  │  └─050-foreignkey
+    │  └─drop
+    │      ├─010-foreignkey
+    │      ├─020-sequence
+    │      ├─030-uniquekey
+    │      └─040-table
+    └─0002
+        ├─create
+        │  ├─010-table
+        │  ├─020-uniquekey
+        │  ├─030-sequence
+        │  ├─040-dump
+        │  └─050-foreignkey
+        └─drop
+            ├─010-foreignkey
+            ├─020-sequence
+            ├─030-uniquekey
+            └─040-table]]></source>
+				<p>
+					db/migrateディレクトリ以下の、0000、0001、0002はDDLのバージョンを表すディレクトリです。
+					バージョンを表すディレクトリは、Gen-Ddlタスクを実行するごとに新しく作成されます。
+					バージョン番号は0から始まり、上限の2147483647まで1ずつ増分します。
+					バージョン番号は、ddlInfoFile属性に指定したテキストファイルで管理されます。
+					バージョン番号を管理するテキストファイルは、デフォルトでは、db/migrateの下にddl-info.txtという名前で作成されます。
+					ddl-info.txtは、番号を振り直すなどの特別な理由がない限り編集しないでください。
+				</p>
+				<p>
+					バージョンを表すディレクトリの下にはcreateディレクトリとdropディレクトリがあります。
+					createディレクトリでは、データベースオブジェクト作成用のDDLとダンプデータを管理します。
+					一方、dropディレクトリでは、データベースオブジェクト削除用のDDLを管理します。
+				</p>
+				<p>
+					createディレクトリとdropディレクトリは、DDLやダンプファイルを管理するディレクトリです。
+					これらのディレクトリは、Migrateタスクによって名前の小さい順にソートされ、実行されます（ディレクトリ内に含まれるDDLスクリプトが実行され、ダンプファイルがロードされます）。
+					そのため、Migrateタスクによる実行順序を変更するには、Gen-Ddlタスクでディレクトリを生成する際に名前を調整してください。
+					名前の変更は、createTableDirNameやdropTableDirNameといった属性の値を変更することで行います。
+					
+				</p>
+				<h4>タスク実行時の挙動</h4>
+				<p>
+					Gen-Ddlタスクは、エンティティクラスのメタデータからDDLを生成します。そのため、タスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+				</p>
+				<p>
+					Gen-Ddlタスクは、ddlInfoFile属性に指定したテキストファイルから次のバージョン番号を決定し、
+					その番号に対応するディレクトリ以下にDDLとダンプファイルを生成します。
+					その後、Gen-Ddlが生成する以外のファイルを前バージョンのディレクトリから新たに作成したディレクトリにコピーします。
+					この仕組みにより、Gen-Ddlで生成される以外のDDLを同じディレクトリで管理できます。
+					たとえば、バージョン0002のcreateディレクトリの下に061-procedureや062-view、dropディレクトリの下に001-viewや002-procedureといったディレクトリを作成し、そこにストアドプロシージャーやビューの作成用DDLと削除用DDLファイルを置くとします。
+					Gen-Ddlタスクを実行すると、これらはバージョン0003のcreateディレクトリやdropディレクトリ以下にそのままコピーされます。
+					また、Migrateタスクを実行すると、061-procedure、062-view、001-view、002-procedureといったディレクトリ内に格納されたDDLファイルが自動的に実行されます。
+				</p>
+<source><![CDATA[db
+└─migrate
+    └─0002
+        ├─create
+        │  ├─010-table
+        │  ├─020-uniquekey
+        │  ├─030-sequence
+        │  ├─040-dump
+        │  ├─050-foreignkey
+        │  ├─061-procedure
+        │  └─062-view
+        └─drop
+            ├─001-view
+            ├─002-procedure
+            ├─010-foreignkey
+            ├─020-sequence
+            ├─030-uniquekey
+            └─040-table]]></source>
 			</subsection>
 			<subsection name="パラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
@@ -21,7 +179,6 @@
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティクラス名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティクラス名の正規表現です。</td><td>""</td><td>NO</td></tr>
-					<tr><td>summaryFileName</td><td>DDLのサマリーファイル名です。サマリーファイルにはdrop文とcreate文がまとめて出力されます。</td><td>"summary.txt"</td><td>NO</td></tr>
 					<tr><td>createTableDirName</td><td>テーブルを作成するDDLを格納するディレクトリ名です。</td><td>"010-table"</td><td>NO</td></tr>
 					<tr><td>createUniqueKeyDirName</td><td>一意キーを作成するDDLを格納するディレクトリ名です。</td><td>"020-uniquekey"</td><td>NO</td></tr>
 					<tr><td>createSequenceDirName</td><td>シーケンスを作成するDDLを格納するディレクトリ名です。</td><td>"030-sequence"</td><td>NO</td></tr>
@@ -36,7 +193,6 @@
 					<tr><td>dump</td><td>"true"の場合、データベースのデータのダンプ出力を行います。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
-					<tr><td>summaryTemplateFileName</td><td>DDLのサマリーファイルのテンプレートファイル名です。</td><td>"sql/summary.ftl"</td><td>NO</td></tr>
 					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
 					<tr><td>createSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-schemainfo-table.ftl"</td><td>NO</td></tr>
 					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
@@ -49,9 +205,9 @@
 					<tr><td>dropForeignKeyTemplateFileName</td><td>外部キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-foreignkey.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
-					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db\migrate"</td><td>NO</td></tr>
-					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db\ddl-info.txt"</td><td>NO</td></tr>
-					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
+					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
+					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
+					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。java.text.DecimalFormatで使用可能なパターンを指定できます。</td><td>"0000"</td><td>NO</td></tr>
 					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
 					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
 					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
@@ -79,19 +235,86 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[    <gen-ddl
-      classpathDir="build/classes"
-      rootPackageName="examples"
-      sqlKeywordCaseType="lowercase"
-      sqlIdentifierCaseType="uppercase"
-      classpathref="classpath"
-   />]]></source>
+			<subsection name="SQLのキーワードと識別子の大文字小文字を指定する">
 				<p>
-					sqlKeywordCaseTypeとsqlIdentifierCaseTypeを指定してタスクを実行します。
-					このタスクによって生成されるSQLは次のように、キーワードが小文字、識別子が大文字になります。
+					sqlKeywordCaseType属性とsqlIdentifierCaseType属性に"uppercase"や"lowercase"といった値を指定することで、SQLのキーワード（CREATEやALTERなど）やSQLの識別子（テーブル名やカラム名）の大文字小文字を指定できます。
+					たとえば、次のように指定できます。
 				</p>
-<source><![CDATA[    create table HOGE (AAA varchar(255));]]></source>
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    sqlKeywordCaseType="lowercase"
+    sqlIdentifierCaseType="uppercase"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					sqlKeywordCaseType属性に"lowercase"とsqlIdentifierCaseType属性に"uppercase"を指定した場合、生成されるSQLは次のようになります。
+				</p>
+<source><![CDATA[create table HOGE (AAA varchar(255));]]></source>
+			</subsection>
+			<subsection name="独自のテンプレートファイルを使用する">
+				<p>
+					任意のディレクトリに独自のテンプレートファイルを置き、templateFilePrimaryDir属性にそのディレクトリを指定することで、
+					独自のテンプレートファイルを使用できます。
+				</p>
+				<p>
+					S2JDBC-Genのテンプレートは、配布ファイルのsrc/main/resources/org/seasar/extension/jdbc/gen/internal/generator/tempaltesディレクトリ以下にあります。
+					ここでは、テーブルのcreate文のテンプレートを置き換える例を示します。
+					テーブルのcreate文のテンプレートトはsql/create-table.ftlです。
+					修正は、これをコピーして行うと良いでしょう。
+				</p>
+				<p>
+					テンプレートファイルを格納するディレクトリをmytempletesとする場合、
+					修正した独自テンプレートを使用するにはテンプレートをmytempletes/sql/create-table.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
+				</p>
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					mytempletes/my-create-table.ftlのように、テンプレートファイルを任意の名前で配置したい場合は、
+					templateFilePrimaryDir属性に加え、createTableTemplateFileName属性も指定します。
+				</p>
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    createTableTemplateFileName="mytempletes/my-create-table.ftl"
+    classpathRef="classpath"
+/>]]></source>
+			</subsection>
+			<subsection name="MySQLでストレージエンジンを指定する">
+				<p>
+					MySQLでストレージエンジンを指定するには、tableOption属性を使用します。
+					たとえば、ストレージエンジンにINNODBを使用するにはtableOption属性に次のように指定します。
+				</p>
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    tableOption="ENGINE = INNODB"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					上記の定義でGen-Ddlタスクを実行すると次のようなDDLが生成されます。
+				</p>
+<source><![CDATA[create table HOGE (AAA varchar(255)) ENGINE = INNODB;]]></source>
+			</subsection>
+			<subsection name="バージョンディレクトリのパターンを指定する">
+				<p>
+					デフォルトでは、バージョン番号に対応するディレクトリの名前はバージョン番号が大きくなるにつれ、0000、0001、0002となります。
+					バージョン番号の前に0をいくつ付与するかは、versionNoPattern属性で調整できます。
+				</p>
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    versionNoPattern="00000000"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					上記の定義でGen-Ddlタスクを実行すると、バージョン番号に対応するディレクトリの名前はバージョン番号が大きくなるにつれ、00000000、00000001、00000002となります。
+				</p>
 			</subsection>
 		</section>
 	</body>

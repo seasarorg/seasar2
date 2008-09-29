@@ -62,7 +62,7 @@
 		<section name="Gen-Entiy">
 			<subsection name="説明">
 				<p>
-					エンティティクラスを生成します。
+					データベースのメタデータを読み取りエンティティクラスを生成します。
 				</p>
 			</subsection>
 			<subsection name="パラメータ">
@@ -230,7 +230,7 @@ public class Department {
 			<subsection name="独自のテンプレートファイルを使用する">
 				<p>
 					任意のディレクトリに独自のテンプレートファイルを置き、templateFilePrimaryDir属性にそのディレクトリを指定することで、
-					独自のテンプレートファイルを使用できるようになります。
+					独自のテンプレートファイルを使用できます。
 				</p>
 				<p>
 					S2JDBC-Genのテンプレートは、配布ファイルのsrc/main/resources/org/seasar/extension/jdbc/gen/internal/generator/tempaltesディレクトリ以下にあります。
