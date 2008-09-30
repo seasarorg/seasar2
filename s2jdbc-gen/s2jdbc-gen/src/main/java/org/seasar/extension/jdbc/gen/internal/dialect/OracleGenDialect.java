@@ -192,13 +192,13 @@ public class OracleGenDialect extends StandardGenDialect {
                 if (scale != 0) {
                     return BigDecimal.class;
                 }
-                if (precision <= 5) {
+                if (precision < 5) {
                     return Short.class;
                 }
-                if (precision <= 10) {
+                if (precision < 10) {
                     return Integer.class;
                 }
-                if (precision <= 19) {
+                if (precision < 19) {
                     return Long.class;
                 }
                 return BigInteger.class;
