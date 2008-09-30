@@ -225,26 +225,64 @@
 					</p>
 			</subsection>
 			<subsection name="ダンプファイル">
-					<p>
-						ダンプファイルはCSV形式で出力されます。
-						CSVは次の規則を持ちます。
-					</p>
-					<table border="1" cellpadding="2" cellspacing="0">
-						<tr><th>項目</th><th>説明</th></tr>
-						<tr><td>ファイル名</td><td>ファイル名はテーブル名として利用されます（カタログ名やスキーマ名を含むこともあります）。したがって、フィル名は修正しないでください。</td></tr>
-						<tr><td>ヘッダー行</td><td>最初の一行目はテーブルのカラムを表すヘッダー行になります。</td></tr>
-						<tr><td>ヘッダー行と明細行</td><td>ヘッダー行と明細行の列数は同じでなければいけません。</td></tr>
-						<tr><td>ダブルクォテーション</td><td>すべてのデータはダブルクォテーションで囲むことができます。</td></tr>
-						<tr><td>文字列型</td><td>ダブルクォテーションを含む場合は、ダブルクォテーションを2重にすることでエスケープし、文字列全体をダブルクォテーションで囲む必要があります。カンマ、改行を含む場合はダブルクォテーションで囲む必要があります。空文字を表現する場合は、ダブルクォテーションで囲む必要があります。たとえば、「"","",""」からなる行は空文字が3つ並んでいるとみなされます。</td></tr>
-						<tr><td>日付型</td><td>yyyy/MM/ddの形式でなければいけません。</td></tr>
-						<tr><td>時刻型</td><td>hh:mm:ssの形式でなければいけません。</td></tr>
-						<tr><td>タイムスタンプ型</td><td>yyyy/MM/dd hh:mm:ss.fffffffffの形式でなければいけません。ただし、.fffffffffについてはなくてもかまいません。</td></tr>
-						<tr><td>バイト配列型</td><td>Base64でエンコードされた形式で表現されます。</td></tr>
-						<tr><td>nullの表現</td><td>長さ0の値がnullとみなされます。たとえば、「,,」からなる行はnullが3つあるとみなされます。</td></tr>
-					</table>
-					<p>
-						データを修正する際は、上記の規則にしたがってください。
-					</p>
+				<h4>CSVの出力</h4>
+				<p>
+					ダンプファイルはCSV形式で出力されます。
+					CSVは次の規則を持ちます。
+				</p>
+				<p>
+					<ul>
+						<li>
+							ファイル名は、ロード時にテーブル名として利用されます（カタログ名やスキーマ名を含むこともあります）。したがって、修正しないでください。
+						</li>
+						<li>
+							最初の一行目はテーブルのカラムを表すヘッダー行になります。ヘッダー行は必須です。
+						</li>
+						<li>
+							ヘッダー行とデータ行の列数は同じでなければいけません。
+						</li>
+						<li>
+							null以外のすべてのデータはダブルクォテーションで囲むことができます（Gen-Ddlは必ずダブルクォテーションで囲んで出力します）。
+						</li>
+						<li>
+							nullは長さ0のデータで表されます。ダブルクォテーションで囲んではいけません。ダブルクォテーションで囲まれた長さ0のデータは空文字列とみなされます。
+						</li>
+					</ul>
+				</p>
+				<p>
+					CSV上のデータの形式は、エンティティのプロパティの型により決まります。
+				</p>
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>プロパティの型</th><th>データの形式</th></tr>
+					<tr><td>String、char/Character</td><td>文字列表現です。ただし、ダブルクォテーション、カンマ、改行コードのいずれかを含む場合は、文字列全体がダブルクォテーションで囲まれる必要があります。そのとき、データとしてのダブルクォテーションはダブルクォテーションを2重にすることでエスケープされなければいけません。空文字は、ダブルクォテーションで囲まれる必要があります。</td></tr>
+					<tr><td>@Temporal(TemporalType.DATE)が指定されたjava.util.Date、@Temporal(TemporalType.DATE)が指定されたjava.util.Calendar、java.sql.Date</td><td>yyyy/MM/ddの形式でなければいけません。</td></tr>
+					<tr><td>@Temporal(TemporalType.TIME)が指定されたjava.util.Date、@Temporal(TemporalType.TIME)が指定されたjava.util.Calendar、java.sql.Time</td><td>hh:mm:ssの形式でなければいけません。</td></tr>
+					<tr><td>@Temporal(TemporalType.TIMESTAMP)が指定されたjava.util.Date、@Temporal(TemporalType.TIMESTAMP)が指定されたjava.util.Calendar、java.sql.Timestamp</td><td>yyyy/MM/dd hh:mm:ss.fffffffffの形式でなければいけません。ただし、.fffffffffについてはなくてもかまいません。</td></tr>
+					<tr><td>byte[]、Serializable</td><td>Base64でエンコードされた形式で表現されます。</td></tr>
+					<tr><td>Enumのサブクラス</td><td>S2JDBCで永続化される際に使用される値の文字列表現です。</td></tr>
+					<tr><td>その他の型</td><td>文字列表現です。</td></tr>
+				</table>
+				<h4>CSVの編集</h4>
+				<p>
+					CSV形式のデータを修正するには、<a href="http://www.asukaze.net/soft/cassava/">Cassava Editor</a>が便利です。
+					以下に、Cassava Editorのお奨めの設定方法を示します。
+				</p>
+				<p>
+					<ul>
+						<li>
+							メニューから「表示」-「一行目を固定」を選びます。これによりヘッダー行が固定されます。
+						</li>
+						<li>
+							メニューから「オプション」-「オプション」を選びます。ダイアログが表示されたら「データ形式」を選択し、「必要なセルのみ""で囲む」にチェックします。これにより、nullのデータをnullのデータとして維持できます。
+						</li>
+						<li>
+							メニューから「オプション」-「セーブ時文字コード」でdumpFileEncoding属性と同じエンコーディングを指定します。これにより、エンコーディングの誤変換を防ぎます。
+						</li>
+					</ul>
+				</p>
+				<p>
+					データを修正する際は、上述の規則にしたがってください。
+				</p>
 			</subsection>
 			<subsection name="タスク実行時のファイルのコピー">
 				<p>

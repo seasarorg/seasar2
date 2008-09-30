@@ -4,7 +4,7 @@
 		<title>S2JDBC-Gen - Migrate</title>
 	</properties>
 	<body>
-		<section name="Load-Data">
+		<section name="Migrate">
 			<ul>
 				<li>
 					<p>
@@ -13,6 +13,16 @@
 							<li>
 								<p>
 									<a href="#概要">概要</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#処理の流れ">処理の流れ</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#ディレクトリとファイルの処理順序">ディレクトリとファイルの処理順序</a>
 								</p>
 							</li>
 						</ul>
@@ -38,6 +48,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#マイグレーション先のバージョン番号を指定する">マイグレーション先のバージョン番号を指定する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -45,10 +62,55 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					マイグレーションを実行します。
+					データベーススキーマに定義されたオブジェクトをdrop &amp; createし、データをロードすることでデータベーススキーマのマイグレーションを行います。
 				</p>
 				<p>
-					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+					このタスクを実行する前に、Gen-DdlタスクによってDDLファイルやダンプファイルが生成されていなければいけません。
+				</p>
+			</subsection>
+			<subsection name="処理の流れ">
+				<p>
+					デフォルトの処理の流れを説明します。
+				</p>
+				<p>
+					Migrateタスクは、まず、現在のスキーマのバージョン番号をschemaInfoFullTableName属性に指定したテーブルから取得します（テーブルが存在しない場合は0になります）。
+					次に、移行先のバージョン番号をddlInfoFile属性に指定したテキストファイルから取得します（ファイルが存在しない場合は0になりますが、Gen-Ddlタスクを実行していれば存在するはずです）。
+					それから、現在のスキーマのバージョン番号に対応するディレクトリを選択し、その直下のdropディレクトリ以下にあるDDLファイルを実行します。
+					この処理により、古いオブジェクトが削除されます。
+					その後、移行先のバージョン番号に対応するディレクトリを選択し、その直下のcreateディレクトリ以下にあるDDLファイルの実行とダンプファイルのロードを行います。
+					この処理により、新しくオブジェクトが作成され、schemaInfoFullTableName属性に指定したテーブルに移行先のバージョン番号が格納されます。
+					また、ダンプファイルが存在する場合はデータがテーブルにロードされます。
+					以上で、マイグレーションが完了します。
+				</p>
+				<p>
+					マイグレーション後にダンプファイルを修正してデータをロードしなおしたい場合は、再度Migrateタスクを実行してください。
+					この場合、現在のスキーマのバージョン番号と移行先のバージョン番号が同じになりますが、実行される処理の流れはバージョン番号が異なる場合と同様です。
+					つまり、同じバージョンディレクトリ以下のdropディレクトとcreateディレクトリが処理されます。
+				</p>
+			</subsection>
+			<subsection name="ディレクトリとファイルの処理順序">
+				<p>
+					dropディレクトリとcreateディレクトリどちらを対象にするにせよ、同じ階層に存在するファイルやディレクトリは名前で昇順にソートされ処理されます。
+					たとえば、dropディレクトリの直下に010-foreignkey、030-uniquekeyと2つのディレクトリがある場合、この順番で処理されます。
+					もし、それら2つに加え020-sequenceというディレクトリがあれば、順番は、010-foreignkey、020-sequence、030-uniquekeyとなります。
+					Migrateタスクは、ディレクトリについてはその階層を下へ辿ります。ファイルについては拡張子に従って処理します。
+					<ul>
+						<li>
+							<p>
+								拡張子がsqlもしくはddlの場合、データはSQLとみされデータベースに対し発行されます。
+							</p>
+						</li>
+						<li>
+							<p>
+								拡張子がcsvの場合、データはCSV形式のダンプファイルとみなされデータベースにロードされます。
+							</p>
+						</li>
+						<li>
+							<p>
+								その他の拡張子を持つファイルについては、何の処理も行われません。
+							</p>
+						</li>
+					</ul>
 				</p>
 			</subsection>
 		</section>
@@ -71,7 +133,7 @@
 					<tr><td>blockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
-					<tr><td>haltOnError</td><td>"true"の場合、SQLの実行が失敗すると即座にエラーを返します。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>haltOnError</td><td>"true"の場合、スキーマを作成するSQLやデータのロードが失敗すると即座にエラーを返します。スキーマを削除する処理については、エラーが起きても処理を続行します。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>loadBatchSize</td><td>ダンプファイルのデータをロードする際のバッチサイズです。</td><td>"10"</td><td>NO</td></tr>
 					<tr><td>transactional</td><td>"true"の場合、単一のトランザクションとして実行します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
@@ -97,15 +159,22 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[    <migrate
-      rootpackagename="examples"
-      version="15"
-      classpathref="classpath"
-    />]]></source>
+			<subsection name="マイグレーション先のバージョン番号を指定する">
 				<p>
-					マイグレーション先のバージョン番号を指定してタスクを実行します。
+					デフォルトでは、マイグレーション先のバージョン番号は最新の番号、つまりddlInfoFile属性に指定されたテキストファイルで管理する番号になります。
+					最新のバージョン番号ではなく、任意のバージョン番号を指定するには、version属性を使用します。
+					次の例では、マイグレーション先のバージョン番号に15を指定しています。
 				</p>
-			</subsection>		</section>
+<source><![CDATA[<migrate
+    rootpackagename="examples"
+    version="15"
+    classpathref="classpath"
+/>]]></source>
+				<p>
+					バージョン番号に対応するバージョンディレクトリはあらかじめ存在していなければいけません。
+					version属性には、バージョンディレクトリ名ではなくバージョン番号を指定することに注意してください。
+				</p>
+			</subsection>
+		</section>
 	</body>
 </document>
