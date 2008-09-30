@@ -23,9 +23,10 @@ import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.entity.Employee;
+import org.seasar.extension.jdbc.it.entity.NoId;
 import org.seasar.framework.unit.Seasar2;
 
-import static org.junit.Assert.*;
+import static junit.framework.Assert.*;
 
 /**
  * @author taedium
@@ -129,6 +130,24 @@ public class AutoSelectIterationCallbackTest {
             jdbcManager.from(Employee.class).offset(0).limit(0).orderBy(
                 "employeeId").iterate(salarySumCallback);
         assertTrue(new BigDecimal(29025).compareTo(sum) == 0);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testNoId() throws Exception {
+        int count =
+            jdbcManager.from(NoId.class).iterate(
+                new IterationCallback<NoId, Integer>() {
+
+                    private int count;
+
+                    public Integer iterate(NoId entity, IterationContext context) {
+                        return ++count;
+                    }
+                });
+        assertEquals(2, count);
     }
 
     /**

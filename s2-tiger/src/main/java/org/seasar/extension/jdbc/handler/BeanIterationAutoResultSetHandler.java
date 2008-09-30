@@ -71,7 +71,7 @@ public class BeanIterationAutoResultSetHandler extends
         for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
             final Object[] values = getValues(rs);
             final Object key = entityMapper.getKey(values);
-            if (key.equals(previousKey)) {
+            if (key != null && key.equals(previousKey)) {
                 entityMapper.map(values, mappingContext);
             } else {
                 if (entity != null) {
