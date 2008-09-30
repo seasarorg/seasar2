@@ -288,8 +288,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     }
 
     public AutoSelect<T> join(CharSequence name, JoinType joinType,
-            String condition,
-            Object... params) {
+            String condition, Object... params) {
         return join(name, joinType, true, condition, params);
     }
 
@@ -305,21 +304,17 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     }
 
     public AutoSelect<T> join(CharSequence name, JoinType joinType,
-            boolean fetch,
-            String condition, Object... params) {
-        joinMetaList
-                .add(new JoinMeta(name.toString(), joinType, fetch,
+            boolean fetch, String condition, Object... params) {
+        joinMetaList.add(new JoinMeta(name.toString(), joinType, fetch,
                 condition, params));
         return this;
     }
 
     public AutoSelect<T> join(CharSequence name, JoinType joinType,
-            boolean fetch,
-            Where condition) {
+            boolean fetch, Where condition) {
         joinMetaList.add(new JoinMeta(name.toString(), joinType, fetch,
-                condition
-                .getCriteria(), condition.getParams(), condition
-                .getPropertyNames()));
+                condition.getCriteria(), condition.getParams(), condition
+                        .getPropertyNames()));
         return this;
     }
 
@@ -933,14 +928,21 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         if (conditions == null || conditions.size() == 0) {
             return;
         }
+        final WhereClause whereTerm = new WhereClause();
         for (Map.Entry<String, ? extends Object> e : conditions.entrySet()) {
-            prepareCondition(e.getKey(), e.getValue());
+            prepareCondition(whereTerm, e.getKey(), e.getValue());
         }
+        whereClause.addAndSql("(");
+        whereClause.addSql(whereTerm.toSql().substring(
+                WhereClause.WHERE_KEYWORD.length()));
+        whereClause.addSql(")");
     }
 
     /**
      * 条件を準備します。
      * 
+     * @param whereTerm
+     *            WHERE句の項
      * @param name
      *            プロパティ名
      * @param value
@@ -950,7 +952,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * @param valueClassList
      *            値のクラスのリスト
      */
-    protected void prepareCondition(String name, Object value) {
+    protected void prepareCondition(WhereClause whereTerm, String name,
+            Object value) {
         ConditionType conditionType = ConditionType.getConditionType(name);
         String pname = conditionType.removeSuffix(name);
         String[] names = splitBaseAndProperty(pname);
@@ -976,7 +979,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         String columnName = columnMeta.getName();
         List<Object> valueList = CollectionsUtil.newArrayList();
         int size = conditionType.addCondition(tableAlias, columnName, value,
-                whereClause, valueList);
+                whereTerm, valueList);
         for (int i = 0; i < size; i++) {
             addParam(valueList.get(i), propertyMeta.getPropertyClass(),
                     jdbcManager.getDialect().getValueType(propertyMeta));

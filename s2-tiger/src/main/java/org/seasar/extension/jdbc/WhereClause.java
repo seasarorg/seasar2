@@ -24,6 +24,16 @@ package org.seasar.extension.jdbc;
 public class WhereClause {
 
     /**
+     * WHEREのキーワードです。
+     */
+    public static final String WHERE_KEYWORD = " where ";
+
+    /**
+     * ANDのキーワードです。
+     */
+    public static final String AND_KEYWORD = " and ";
+
+    /**
      * SQLです。
      */
     protected StringBuilder sql;
@@ -82,9 +92,9 @@ public class WhereClause {
     public int addAndSql(String condition) {
         int length = sql.length();
         if (length == 0) {
-            sql.append(" where ").append(condition);
+            sql.append(WHERE_KEYWORD).append(condition);
         } else {
-            sql.append(" and ").append(condition);
+            sql.append(AND_KEYWORD).append(condition);
         }
         return sql.length() - length;
     }
@@ -104,7 +114,7 @@ public class WhereClause {
     public int addSql(String condition) {
         int length = sql.length();
         if (length == 0) {
-            sql.append(" where ").append(condition);
+            sql.append(WHERE_KEYWORD).append(condition);
         } else {
             sql.append(condition);
         }

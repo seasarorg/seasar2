@@ -1314,7 +1314,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id", "1");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID = ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("1", variables[0]);
@@ -1332,7 +1332,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_EQ", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID = ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID = ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1350,7 +1350,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id", 1);
         query.leftOuterJoin("bbb").where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID = ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID = ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1368,7 +1368,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_NE", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID <> ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID <> ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1387,7 +1387,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_NE", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID <> ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID <> ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1405,7 +1405,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_LT", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID < ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID < ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1424,7 +1424,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_LT", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID < ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID < ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1442,7 +1442,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_LE", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID <= ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID <= ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1461,7 +1461,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_LE", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID <= ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID <= ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1479,7 +1479,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_GT", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID > ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID > ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1498,7 +1498,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_GT", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID > ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID > ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1516,7 +1516,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_GE", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID >= ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID >= ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1535,7 +1535,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_GE", 1);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID >= ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID >= ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals(1, variables[0]);
@@ -1553,7 +1553,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_IN", new Object[] { 1, 2 });
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID in (?, ?))", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1574,7 +1574,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_IN", new Object[] { 1, 2 });
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID in (?, ?))", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1594,7 +1594,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("id_NOT_IN", new Object[] { 1, 2 });
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.ID not in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where (T1_.ID not in (?, ?))", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1615,7 +1615,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.id_NOT_IN", new Object[] { 1, 2 });
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.ID not in (?, ?)", query.whereClause.toSql());
+        assertEquals(" where (T2_.ID not in (?, ?))", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(2, variables.length);
         assertEquals(1, variables[0]);
@@ -1635,7 +1635,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("name_LIKE", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa", variables[0]);
@@ -1654,7 +1654,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.name_LIKE", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa", variables[0]);
@@ -1672,7 +1672,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("name_STARTS", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa%", variables[0]);
@@ -1691,7 +1691,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.name_STARTS", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("aaa%", variables[0]);
@@ -1709,7 +1709,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("name_ENDS", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa", variables[0]);
@@ -1728,7 +1728,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.name_ENDS", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa", variables[0]);
@@ -1746,7 +1746,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("name_CONTAINS", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T1_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa%", variables[0]);
@@ -1765,7 +1765,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.name_CONTAINS", "aaa");
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.NAME like ?", query.whereClause.toSql());
+        assertEquals(" where (T2_.NAME like ?)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(1, variables.length);
         assertEquals("%aaa%", variables[0]);
@@ -1783,7 +1783,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("name_IS_NULL", true);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.NAME is null", query.whereClause.toSql());
+        assertEquals(" where (T1_.NAME is null)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
@@ -1800,7 +1800,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.name_IS_NULL", true);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.NAME is null", query.whereClause.toSql());
+        assertEquals(" where (T2_.NAME is null)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
@@ -1816,7 +1816,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("name_IS_NOT_NULL", true);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T1_.NAME is not null", query.whereClause.toSql());
+        assertEquals(" where (T1_.NAME is not null)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
@@ -1833,7 +1833,7 @@ public class AutoSelectImplTest extends TestCase {
         w.put("bbb.name_IS_NOT_NULL", true);
         query.where(w);
         query.prepare("getResultList");
-        assertEquals(" where T2_.NAME is not null", query.whereClause.toSql());
+        assertEquals(" where (T2_.NAME is not null)", query.whereClause.toSql());
         Object[] variables = query.getParamValues();
         assertEquals(0, variables.length);
         Class<?>[] variableClasses = query.getParamClasses();
