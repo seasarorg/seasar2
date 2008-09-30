@@ -12,6 +12,11 @@
 						<a href="#タスクの一覧">タスクの一覧</a>
 					</p>
 				</li>
+				<li>
+					<p>
+						<a href="#タスクの使用例">タスクの使用例</a>
+					</p>
+				</li>
 			</ul>
 		</section>
 		<section name="タスクの一覧">
@@ -44,6 +49,163 @@
 					<tr><td><a href="task/exe_sql.html">Exe-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
 				</table>
 			</subsection>
+		</section>
+		<section name="タスクの使用例">
+			<p>
+				タスクは組み合わせて使用します。
+				以下の例では、タスクを組み合わせ3つのターゲットを定義しています。
+			</p>
+			<source><![CDATA[<project name="example-s2jdbc-gen" default="gen-ddl" basedir=".">
+
+  <property name="classpathdir" value="src/main/webapp/WEB-INF/classes"/>
+  <property name="rootpackagename" value="example"/>
+  <property name="entitypackagename" value="entity"/>
+  <property name="javafiledestdir" value="src/main/java"/>
+  <property name="testjavafiledestdir" value="src/test/java"/>
+  <property name="javafileencoding" value="UTF-8"/>
+  <property name="env" value="ut"/>
+  <property name="applyenvtoversion" value="false"/>
+  <property name="jdbcmanagername" value="jdbcManager"/>
+  <property name="version" value="latest"/>
+
+  <path id="classpath">
+    <pathelement location="${classpathdir}"/>
+    <fileset dir="src/main/webapp/WEB-INF/lib"/>
+    <fileset dir="lib"/>
+  </path>
+
+  <taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+
+  <target name="gen-entity">
+    <gen-entity
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <javac
+      srcdir="${javafiledestdir}"
+      destdir="${classpathdir}"
+      encoding="${javafileencoding}"
+      fork="true"
+      debug="on"
+      classpathref="classpath">
+      <include name="${rootpackagename}/${entitypackagename}/**"/>
+    </javac>
+    <gen-test
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-names
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-service
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+  </target>
+
+  <target name="gen-ddl">
+    <gen-ddl
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-test
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-names
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-service
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+  </target>
+
+  <target name="migrate">
+    <migrate
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      version="${version}"
+      env="${env}"
+      applyenvtoversion="${applyenvtoversion}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+  </target>
+
+</project>]]></source>
+			<p>
+				各ターゲットの役割は次のとおりです。
+				<ul>
+					<li>
+						<p>
+							gen-entityは、データベースからエンティティクラスを生成し、エンティティクラスに関連する便利クラスも生成します。
+						</p>
+					</li>
+					<li>
+						<p>
+							gen-ddlはDDLを生成します。DDLの生成前にはエンティティクラスを修正しているはずなので、エンティティクラスに依存する便利クラスも同時に生成しなおします。
+						</p>
+					</li>
+					<li>
+						<p>
+							migrateはデータベーススキーマのマイグレーションを行います。
+						</p>
+					</li>
+				</ul>
+			</p>
+			<p>
+				このビルドファイルは、実践で使われることを想定したターゲット定義を記述しています。
+				カスタマイズして使用すると良いでしょう。
+			</p>
 		</section>
 	</body>
 </document>

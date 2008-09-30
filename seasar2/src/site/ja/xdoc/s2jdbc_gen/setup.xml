@@ -22,11 +22,6 @@
 						<a href="#Antタスクの実行">Antタスクの実行</a>
 					</p>
 				</li>
-				<li>
-					<p>
-						<a href="#実践的なビルドファイル">実践的なビルドファイル</a>
-					</p>
-				</li>
 			</ul>
 		</section>
 		<section name="概要">
@@ -35,7 +30,7 @@
 			</p>
 			<p>
 				S2JDBC-Genの動作にはSeasar2、FreeMarkerが必要です。
-				S2JDBC-Gen-x.x.x.zipを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-core-x.x.x.jar）とFreeMarkerのjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
+				S2JDBC-Gen-x.x.x.zipを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-x.x.x.jar）とFreeMarkerのjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
 				S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
 			</p>
 		</section>
@@ -145,155 +140,6 @@ ant -f s2jdbc-gen-build.xml ターゲット名
 					</ol>
 				</p>
 			</subsection>
-		</section>
-		<section name="実践的なビルドファイル">
-			<p>
-				より実践的なビルドファイルは次のようなものになります。自由にカスタマイズしてご使用ください。
-				S2JDBC-Genが提供するAntタスクについては<a href="task.html#タスク一覧">タスク一覧</a>を参照ください。
-			</p>
-			<source><![CDATA[<project name="example-s2jdbc-gen" default="gen-ddl" basedir=".">
-
-  <property name="classpathdir" value="src/main/webapp/WEB-INF/classes"/>
-  <property name="rootpackagename" value="example"/>
-  <property name="entitypackagename" value="entity"/>
-  <property name="javafiledestdir" value="src/main/java"/>
-  <property name="testjavafiledestdir" value="src/test/java"/>
-  <property name="javafileencoding" value="UTF-8"/>
-  <property name="env" value="ut"/>
-  <property name="jdbcmanagername" value="jdbcManager"/>
-
-  <path id="classpath">
-    <pathelement location="${classpathdir}"/>
-    <fileset dir="src/main/webapp/WEB-INF/lib"/>
-    <fileset dir="lib"/>
-  </path>
-
-  <taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
-
-  <target name="gen-entity">
-    <gen-entity
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <javac
-      srcdir="${javafiledestdir}"
-      destdir="${classpathdir}"
-      encoding="${javafileencoding}"
-      fork="true"
-      debug="on"
-      classpathref="classpath">
-      <include name="${rootpackagename}/${entitypackagename}/**"/>
-    </javac>
-    <gen-test
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${testjavafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-condition
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-names
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-service
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-  </target>
-
-  <target name="gen-ddl">
-    <gen-ddl
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-test
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${testjavafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-condition
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-names
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-    <gen-service
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      javafiledestdir="${javafiledestdir}"
-      javafileencoding="${javafileencoding}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-  </target>
-
-  <target name="migrate">
-    <migrate
-      classpathdir="${classpathdir}"
-      rootpackagename="${rootpackagename}"
-      entitypackagename="${entitypackagename}"
-      env="${env}"
-      jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
-  </target>
-
-</project>]]></source>
 		</section>
 	</body>
 </document>
