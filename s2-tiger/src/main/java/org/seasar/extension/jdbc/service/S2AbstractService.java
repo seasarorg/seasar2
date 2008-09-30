@@ -241,7 +241,7 @@ public abstract class S2AbstractService<T> {
      */
     protected void setEntityClass(Class<T> entityClass) {
         this.entityClass = entityClass;
-        sqlFilePathPrefix = StringUtil.replace(entityClass.getName(), ".", "/")
-                + "/";
+        sqlFilePathPrefix = "META-INF/sql/"
+                + StringUtil.replace(entityClass.getName(), ".", "/") + "/";
     }
 }

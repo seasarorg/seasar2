@@ -42,7 +42,7 @@ public class S2AbstractServiceTest extends S2TestCase {
      * @throws Exception
      */
     public void testSqlFilePathPrefix() throws Exception {
-        assertEquals("org/seasar/extension/jdbc/entity/Emp/",
+        assertEquals("META-INF/sql/org/seasar/extension/jdbc/entity/Emp/",
                 empDao.sqlFilePathPrefix);
     }
 }
