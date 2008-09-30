@@ -92,7 +92,7 @@ public abstract class S2AbstractService<T> {
      * 
      * @return 自動検索
      */
-    public AutoSelect<T> select() {
+    protected AutoSelect<T> select() {
         return jdbcManager.from(entityClass);
     }
 
@@ -171,7 +171,7 @@ public abstract class S2AbstractService<T> {
      *            エンティティのディレクトリ部分を含まないSQLファイルのパス
      * @return SQLファイル検索
      */
-    public <T2> SqlFileSelect<T2> selectBySqlFile(Class<T2> baseClass,
+    protected <T2> SqlFileSelect<T2> selectBySqlFile(Class<T2> baseClass,
             String path) {
         return jdbcManager.selectBySqlFile(baseClass, sqlFilePathPrefix + path);
     }
@@ -202,7 +202,7 @@ public abstract class S2AbstractService<T> {
      *            </p>
      * @return SQLファイル検索
      */
-    public <T2> SqlFileSelect<T2> selectBySqlFile(Class<T2> baseClass,
+    protected <T2> SqlFileSelect<T2> selectBySqlFile(Class<T2> baseClass,
             String path, Object parameter) {
         return jdbcManager.selectBySqlFile(baseClass, sqlFilePathPrefix + path,
                 parameter);
@@ -215,7 +215,7 @@ public abstract class S2AbstractService<T> {
      *            エンティティのディレクトリ部分を含まないSQLファイルのパス
      * @return SQLファイル更新
      */
-    public SqlFileUpdate updateBySqlFile(String path) {
+    protected SqlFileUpdate updateBySqlFile(String path) {
         return jdbcManager.updateBySqlFile(sqlFilePathPrefix + path);
     }
 
@@ -229,7 +229,7 @@ public abstract class S2AbstractService<T> {
      * 
      * @return SQLファイル更新
      */
-    public SqlFileUpdate updateBySqlFile(String path, Object parameter) {
+    protected SqlFileUpdate updateBySqlFile(String path, Object parameter) {
         return jdbcManager.updateBySqlFile(sqlFilePathPrefix + path, parameter);
     }
 
