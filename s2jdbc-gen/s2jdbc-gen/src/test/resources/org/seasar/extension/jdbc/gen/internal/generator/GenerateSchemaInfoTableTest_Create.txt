@@ -1,4 +1,0 @@
-create table SCHEMA_INFO (
-    VERSION int not null
-);
-insert into SCHEMA_INFO (VERSION) values (10);

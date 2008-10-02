@@ -13,6 +13,7 @@
 	<property name="ddl-info" value="${db}/ddl-info.txt"/>
 	<property name="sql" value="${rdbms}/sql"/>	
 	<property name="rootpackagename" value="example"/>
+	<property name="transactional" value="false"/>
 	
 	<path id="classpath">
 		<pathelement location="${build}"/>
@@ -277,6 +278,7 @@
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
+			transactional="${transactional}"
 			classpathref="classpath"
 		/>
 		<exec-sql 
@@ -311,6 +313,7 @@
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			rootpackagename="${rootpackagename}"
+			transactional="${transactional}"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
@@ -320,6 +323,7 @@
 			ddlInfofile="${ddl-info}"
 			version="0"
 			rootpackagename="${rootpackagename}"
+			transactional="${transactional}"
 			classpathref="classpath"
 		/>
 	</target>
