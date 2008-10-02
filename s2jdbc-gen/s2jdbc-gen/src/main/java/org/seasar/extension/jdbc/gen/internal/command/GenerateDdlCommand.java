@@ -30,8 +30,6 @@ import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
-import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModel;
-import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModel;
@@ -200,9 +198,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** テーブルモデルのファクトリ */
     protected TableModelFactory tableModelFactory;
-
-    /** スキーマ情報テーブルモデルのファクトリ */
-    protected SchemaInfoTableModelFactory schemaInfoTableModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -993,7 +988,6 @@ public class GenerateDdlCommand extends AbstractCommand {
         ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
         ddlVersionIncrementer = createDdlVersionIncrementer();
         tableModelFactory = createTableModelFactory();
-        schemaInfoTableModelFactory = createSchemaInfoTableModelFactory();
         generator = createGenerator();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
@@ -1024,11 +1018,6 @@ public class GenerateDdlCommand extends AbstractCommand {
                     generateForeignKeyDdl(model, createDir, dropDir);
                     generateSequenceDdl(model, createDir, dropDir);
                 }
-
-                SchemaInfoTableModel model = schemaInfoTableModelFactory
-                        .getSchemaInfoTableModel(versionDirectory
-                                .getVersionNo());
-                generateSchemaInfoTableDdl(model, createDir, dropDir);
 
                 if (dump) {
                     sqlUnitExecutor.execute(new SqlUnitExecutor.Callback() {
@@ -1152,29 +1141,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * スキーマ情報テーブルのDDLのを生成します。
-     * 
-     * @param model
-     *            テーブルモデル
-     * @param createDir
-     *            createディレクトリ
-     * @param dropDir
-     *            dropディレクトリ
-     */
-    protected void generateSchemaInfoTableDdl(SchemaInfoTableModel model,
-            File createDir, File dropDir) {
-        GenerationContext createContext = createGenerationContext(model,
-                new File(createDir, createTableDirName),
-                createSchemaInfoTableTemplateFileName);
-        generator.generate(createContext);
-
-        GenerationContext dropContext = createGenerationContext(model,
-                new File(dropDir, dropTableDirName),
-                dropSchemaInfoTableTemplateFileName);
-        generator.generate(dropContext);
-    }
-
-    /**
      * {@link GenerationContext}の実装を作成します。
      * 
      * @param model
@@ -1252,18 +1218,6 @@ public class GenerateDdlCommand extends AbstractCommand {
         return factory.createTableModelFactory(this, dialect, jdbcManager
                 .getDataSource(), sqlIdentifierCaseType, sqlKeywordCaseType,
                 statementDelimiter, tableOption);
-    }
-
-    /**
-     * {@link SchemaInfoTableModelFactory}の実装を作成します。
-     * 
-     * @return {@link SchemaInfoTableModelFactory}の実装
-     */
-    protected SchemaInfoTableModelFactory createSchemaInfoTableModelFactory() {
-        return factory.createSchemaInfoTableModelFactory(this, dialect,
-                schemaInfoFullTableName, schemaInfoColumnName,
-                sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
-                tableOption);
     }
 
     /**

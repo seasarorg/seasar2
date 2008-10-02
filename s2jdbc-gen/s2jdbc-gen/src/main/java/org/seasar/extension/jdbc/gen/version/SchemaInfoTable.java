@@ -28,4 +28,12 @@ public interface SchemaInfoTable {
      * @return バージョン番号
      */
     public int getVersionNo();
+
+    /**
+     * バージョン番号を設定します。
+     * 
+     * @param versionNo
+     *            バージョン番号
+     */
+    public void setVersionNo(int versionNo);
 }

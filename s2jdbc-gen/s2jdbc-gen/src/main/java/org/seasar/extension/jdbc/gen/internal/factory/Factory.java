@@ -39,7 +39,6 @@ import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
-import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -263,33 +262,6 @@ public interface Factory {
     TableModelFactory createTableModelFactory(Command command,
             GenDialect dialect, DataSource dataSource,
             SqlIdentifierCaseType sqlIdentifierCaseType,
-            SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
-            String tableOption);
-
-    /**
-     * {@link SchemaInfoTableModelFactory}の実装を作成します。
-     * 
-     * @param command
-     *            呼び出し元のコマンド
-     * @param dialect
-     *            方言
-     * @param tableName
-     *            スキーマ情報テーブルの名前
-     * @param columnName
-     *            スキーマ情報テーブルのカラム名
-     * @param sqlIdentifierCaseType
-     *            SQLの識別子の大文字小文字を変換するかどうかを示す列挙型
-     * @param sqlKeywordCaseType
-     *            SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
-     * @param statementDelimiter
-     *            SQLステートメントの区切り文字
-     * @param tableOption
-     *            テーブルオプション、存在しない場合は{@code null}
-     * @return {@link SchemaInfoTableModelFactory}の実装
-     */
-    SchemaInfoTableModelFactory createSchemaInfoTableModelFactory(
-            Command command, GenDialect dialect, String tableName,
-            String columnName, SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
             String tableOption);
 

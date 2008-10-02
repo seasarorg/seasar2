@@ -69,7 +69,6 @@ public class GenerateDdlCommandTest {
         assertNotNull(command.ddlVersionDirectoryTree);
         assertNotNull(command.ddlVersionIncrementer);
         assertNotNull(command.tableModelFactory);
-        assertNotNull(command.schemaInfoTableModelFactory);
         assertNotNull(command.generator);
         assertNotNull(command.entityMetaReader);
         assertNotNull(command.databaseDescFactory);

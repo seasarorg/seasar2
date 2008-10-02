@@ -110,7 +110,8 @@ public class MigraterImpl implements Migrater {
      * @param to
      *            マイグレーション先のバージョン番号
      */
-    protected void migrateInternal(final Callback callback, int from, int to) {
+    protected void migrateInternal(final Callback callback, final int from,
+            final int to) {
         DdlVersionDirectory fromVersionDir = ddlVersionDirectoryTree
                 .getVersionDirectory(from);
         final List<File> dropFileList = fromVersionDir.getDropDirectory()
@@ -127,6 +128,7 @@ public class MigraterImpl implements Migrater {
                 for (File file : dropFileList) {
                     callback.drop(context, file);
                 }
+                schemaInfoTable.setVersionNo(to);
                 for (File file : createFileList) {
                     callback.create(context, file);
                 }

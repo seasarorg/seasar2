@@ -52,6 +52,9 @@ public class MigraterImplTest {
             public int getVersionNo() {
                 return 10;
             }
+
+            public void setVersionNo(int versionNo) {
+            }
         };
         String path = getClass().getPackage().getName().replace('.', '/')
                 + "/migrate";

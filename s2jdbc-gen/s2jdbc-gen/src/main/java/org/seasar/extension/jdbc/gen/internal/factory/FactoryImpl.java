@@ -48,7 +48,6 @@ import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFacto
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.SchemaInfoTableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
@@ -64,7 +63,6 @@ import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
-import org.seasar.extension.jdbc.gen.model.SchemaInfoTableModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -174,17 +172,6 @@ public class FactoryImpl implements Factory {
         return new TableModelFactoryImpl(dialect, dataSource,
                 sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
                 tableOption);
-    }
-
-    public SchemaInfoTableModelFactory createSchemaInfoTableModelFactory(
-            Command command, GenDialect dialect, String tableName,
-            String columnName, SqlIdentifierCaseType sqlIdentifierCaseType,
-            SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
-            String tableOption) {
-
-        return new SchemaInfoTableModelFactoryImpl(dialect, tableName,
-                columnName, sqlIdentifierCaseType, sqlKeywordCaseType,
-                statementDelimiter, tableOption);
     }
 
     public EntitySetDescFactory createEntitySetDescFactory(Command command,
