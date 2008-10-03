@@ -21,6 +21,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtField;
+
 import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.IllegalAccessRuntimeException;
 import org.seasar.framework.exception.InstantiationRuntimeException;
@@ -342,6 +346,26 @@ public class ClassUtil {
         } catch (NoSuchFieldException ex) {
             throw new NoSuchFieldRuntimeException(clazz, fieldName, ex);
         }
+    }
+
+    /**
+     * このクラスに定義された{@link Field フィールド}をクラスファイルに定義された順番で返します。
+     * 
+     * @param clazz
+     *            対象のクラス
+     * @return このクラスに定義されたフィールドの配列
+     */
+    public static Field[] getDeclaredFields(final Class clazz) {
+        final ClassPool pool = ClassPoolUtil.getClassPool(clazz);
+        final CtClass ctClass = ClassPoolUtil.toCtClass(pool, clazz);
+        final CtField[] ctFields = ctClass.getDeclaredFields();
+        final int size = ctFields.length;
+        final Field[] fields = new Field[size];
+        for (int i = 0; i < size; ++i) {
+            fields[i] = ClassUtil
+                    .getDeclaredField(clazz, ctFields[i].getName());
+        }
+        return fields;
     }
 
     /**

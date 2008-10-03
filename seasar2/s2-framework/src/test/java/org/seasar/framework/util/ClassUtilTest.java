@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.util;
 
+import java.lang.reflect.Field;
+
 import junit.framework.TestCase;
 
 import org.seasar.framework.exception.NoSuchConstructorRuntimeException;
@@ -179,5 +181,38 @@ public class ClassUtilTest extends TestCase {
     public void testConvertClass() {
         assertEquals(int.class, ClassUtil.convertClass("int"));
         assertEquals(String.class, ClassUtil.convertClass("java.lang.String"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetDeclaredFields() throws Exception {
+        Field[] fields = ClassUtil.getDeclaredFields(TestClass.class);
+        assertEquals(5, fields.length);
+        assertEquals("aaa", fields[0].getName());
+        assertEquals("bbb", fields[1].getName());
+        assertEquals("ccc", fields[2].getName());
+        assertEquals("ddd", fields[3].getName());
+        assertEquals("eee", fields[4].getName());
+    }
+
+    /**
+     * @author koichik
+     */
+    public static class TestClass {
+        /** */
+        int aaa;
+
+        /** */
+        int bbb;
+
+        /** */
+        int ccc;
+
+        /** */
+        int ddd;
+
+        /** */
+        int eee;
     }
 }
