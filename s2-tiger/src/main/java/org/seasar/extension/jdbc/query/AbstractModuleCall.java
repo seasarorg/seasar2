@@ -45,6 +45,7 @@ import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.query.AbstractModuleCall.ParamDesc.ParameterType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
 import org.seasar.framework.util.FieldUtil;
@@ -481,7 +482,7 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
      * @return パラメータとして渡されたDTOのフィールドを表す{@link ParamDesc}の配列
      */
     protected ParamDesc[] createParamDesc(final Class<?> dtoClass) {
-        final Field[] fields = dtoClass.getDeclaredFields();
+        final Field[] fields = ClassUtil.getDeclaredFields(dtoClass);
         final List<ParamDesc> list = CollectionsUtil
                 .newArrayList(fields.length);
         for (int i = 0; i < fields.length; ++i) {
