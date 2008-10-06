@@ -430,9 +430,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
     private void checkInFreePool(ConnectionWrapper con) {
         if (getMaxPoolSize() > 0) {
             try {
-                ConnectionWrapper newCon = new ConnectionWrapperImpl(con
-                        .getXAConnection(), con.getPhysicalConnection(), this,
-                        null);
+                final Connection pc = con.getPhysicalConnection();
+                pc.setAutoCommit(true);
+                final ConnectionWrapper newCon = new ConnectionWrapperImpl(con
+                        .getXAConnection(), pc, this, null);
                 con.cleanup();
                 freePool.addLast(new FreeItem(newCon));
                 notify();

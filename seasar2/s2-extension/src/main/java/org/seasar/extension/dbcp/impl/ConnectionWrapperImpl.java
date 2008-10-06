@@ -105,6 +105,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
         closed_ = true;
         xaConnection_ = null;
         physicalConnection_ = null;
+        tx_ = null;
     }
 
     public void closeReally() {

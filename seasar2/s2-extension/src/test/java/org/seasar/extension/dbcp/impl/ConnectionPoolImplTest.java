@@ -117,8 +117,8 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals(0, pool_.getFreePoolSize());
         tm_.commit();
         assertTrue(con.isClosed());
-        assertNull(((ConnectionWrapperImpl)con).getXAConnection());
-        assertNull(((ConnectionWrapperImpl)con).getPhysicalConnection());
+        assertNull(((ConnectionWrapperImpl) con).getXAConnection());
+        assertNull(((ConnectionWrapperImpl) con).getPhysicalConnection());
         assertEquals(0, pool_.getTxActivePoolSize());
         assertEquals(1, pool_.getFreePoolSize());
     }
@@ -347,13 +347,27 @@ public class ConnectionPoolImplTest extends S2TestCase {
      * @throws Exception
      */
     public void testConnectionStatus() throws Exception {
+        ((ConnectionPoolImpl) pool_).setMaxPoolSize(1);
         ((ConnectionPoolImpl) pool_).setReadOnly(true);
         ((ConnectionPoolImpl) pool_)
                 .setTransactionIsolationLevel(Connection.TRANSACTION_READ_UNCOMMITTED);
+
         ConnectionWrapper con = pool_.checkOut();
+        assertTrue(con.getAutoCommit());
         assertTrue(con.isReadOnly());
         assertEquals(Connection.TRANSACTION_READ_UNCOMMITTED, con
                 .getTransactionIsolation());
+        con.setAutoCommit(false);
+        con.setReadOnly(false);
+        con.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+        con.close();
+
+        ConnectionWrapper con2 = pool_.checkOut();
+        assertTrue(con2.getAutoCommit());
+        assertTrue(con2.isReadOnly());
+        assertEquals(Connection.TRANSACTION_READ_UNCOMMITTED, con2
+                .getTransactionIsolation());
+        con2.close();
     }
 
     /**
