@@ -56,7 +56,41 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
     protected static boolean initialized;
 
     /** EJB3が有効なら<code>true</code> */
-    protected static final boolean enableEJB3 = enableEJB3();
+    protected static final boolean enableEJB3;
+    static {
+        boolean enable = false;
+        try {
+            Class.forName("javax.ejb.Stateless"); // geronimo-ejb_3.0_spec-1.0.jar
+            Class.forName("javax.interceptor.Interceptors"); // geronimo-interceptor_3.0_spec-1.0.jar
+            enable = true;
+        } catch (final Throwable ignore) {
+        }
+        enableEJB3 = enable;
+    }
+
+    /** JPAが有効なら<code>true</code> */
+    protected static final boolean enableJPA;
+    static {
+        boolean enable = false;
+        try {
+            Class.forName("javax.persistence.PersistenceContext"); // geronimo-jpa_3.0_spec-1.0.jar
+            enable = true;
+        } catch (final Throwable ignore) {
+        }
+        enableJPA = enable;
+    }
+
+    /** Common Annotationsが有効なら<code>true</code> */
+    protected static final boolean enableCommonAnnotations;
+    static {
+        boolean enable = false;
+        try {
+            Class.forName("javax.annotation.Resource"); // geronimo-annotation_1.0_spec-1.0.jar
+            enable = true;
+        } catch (final Throwable ignore) {
+        }
+        enableCommonAnnotations = enable;
+    }
 
     /** {@link ComponentDefBuilder}の配列 */
     protected static final List<ComponentDefBuilder> componentDefBuilders = Collections
@@ -84,23 +118,6 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
 
     static {
         initialize();
-    }
-
-    /**
-     * EJB3 (JPAを含む) が利用可能であれば<code>true</code>を返します。
-     * 
-     * @return EJB3 (JPAを含む) が利用可能であれば<code>true</code>
-     */
-    protected static boolean enableEJB3() {
-        try {
-            Class.forName("javax.annotation.Resource"); // geronimo-annotation_1.0_spec-1.0.jar
-            Class.forName("javax.ejb.Stateless"); // geronimo-ejb_3.0_spec-1.0.jar
-            Class.forName("javax.interceptor.Interceptors"); // geronimo-interceptor_3.0_spec-1.0.jar
-            Class.forName("javax.persistence.PersistenceContext"); // geronimo-jpa_3.0_spec-1.0.jar
-            return true;
-        } catch (final Throwable ignore) {
-            return false;
-        }
     }
 
     /**
@@ -184,8 +201,12 @@ public class TigerAnnotationHandler extends ConstantAnnotationHandler {
         propertyDefBuilders.add(new BindingPropertyDefBuilder());
         if (enableEJB3) {
             propertyDefBuilders.add(new EJBPropertyDefBuilder());
+        }
+        if (enableJPA) {
             propertyDefBuilders.add(new PersistenceContextPropertyDefBuilder());
             propertyDefBuilders.add(new PersistenceUnitPropertyDefBuilder());
+        }
+        if (enableCommonAnnotations) {
             propertyDefBuilders.add(new ResourcePropertyDefBuilder());
         }
     }

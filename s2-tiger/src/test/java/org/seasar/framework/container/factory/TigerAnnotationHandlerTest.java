@@ -625,6 +625,18 @@ public class TigerAnnotationHandlerTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    public void testResourceForPojo() throws Exception {
+        ComponentDef cd = handler.createComponentDef(Hoge22.class, null);
+        handler.appendDI(cd);
+
+        PropertyDef pd1 = cd.getPropertyDef("ds1");
+        assertNull(pd1.getExpression());
+        assertEquals("field", pd1.getAccessTypeDef().getName());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testInterType() throws Exception {
         ComponentDef cd = handler.createComponentDef(Hoge.class, null);
         handler.appendInterType(cd);

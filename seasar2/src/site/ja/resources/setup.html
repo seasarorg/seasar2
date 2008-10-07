@@ -227,72 +227,101 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
             <p>Java5対応機能を使いたい場合は､S2Tiger-2.4.x.zipを解凍してできたs2-tigerディレクトリの以下のファイルをCLASSPATHに含める必要があります。</p>
 <ul>
 <li>lib/s2-tiger-2.4.x.jar</li>
+              <li>lib/geronimo-annotation_1.0_spec-1.0.jar (オプション，「<a href="#resource">@Resourceを使う場合</a>」参照)</li>
               <li>lib/geronimo-jpa_3.0_spec-1.0.jar (オプション，「<a href="#s2jdbc">S2JDBCまたはJPAを使う場合</a>」参照)
-              <li>lib/geronimo-annotation_1.0_spec-1.0.jar (オプション，「<a href="#ejb3">EJB3を使う場合</a>」参照)</li>
               <li>lib/geronimo-ejb_3.0_spec-1.0.jar (オプション，「<a href="#ejb3">EJB3を使う場合</a>」参照)</li>
               <li>lib/geronimo-interceptor_3.0_spec-1.0.jar (オプション，「<a href="#ejb3">EJB3を使う場合</a>」参照)</li>
               <li></li>
             </ul>
             <p>オプションのJarファイルは、S2JDBCやEJB3、JPAのサポート機能をJavaEE5対応でない環境で使う場合に必要となります。詳細は以下の表を参照してください。</p>
+<h3><a name="resource">@Resourceを使う場合</a></h3>
+            <p>アプリケーションの実行環境により、geronimo-annotation_1.0_spec-1.0.jarが必要になります。</p>
+            <table border="1">
+              <col span="4" align="center">
+              <tbody>
+                <tr>
+                  <th>環境</th>
+                  <th>geronimo-annotation_<br>
+                  1.0_spec-1.0.jar</th>
+                </tr>
+                <tr>
+                  <td>Servlet2.4対応のWebコンテナ<br>
+                  (Tomcat5.x等)</td>
+                  <td><strong>要</strong> (JavaSE6以降は不要)</td>
+                </tr>
+                <tr>
+                  <td>Servlet2.5対応のWebコンテナ<br>
+                  (Tomcat6等)</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>J2EE1.4対応のAPサーバ</td>
+                  <td><strong>要</strong> (JavaSE6以降は不要)</td>
+                </tr>
+                <tr>
+                  <td>JavaEE5対応のAPサーバ</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>スタンドアロン</td>
+                  <td><strong>要</strong> (JavaSE6以降は不要)</td>
+                </tr>
+              </tbody>
+            </table>
 <h3><a name="s2jdbc">S2JDBC拡張機能またはJPAを使う場合</a></h3>
             <p>アプリケーションの実行環境により、gegeronimo-jpa _3.0_spec-1.0.jarが必要になります。</p>
             <table border="1">
               <col span="2" align="center">
               <tbody>
                 <tr>
-<th>環境</th>
+                  <th>環境</th>
                   <th>geronimo-jpa _3.0_spec-1.0.jar</th>
-</tr>
+                </tr>
                 <tr>
-<td>Servlet対応のWebコンテナ<br />
-(Tomcat等)</td>
+                  <td>Servlet対応のWebコンテナ<br />
+                  (Tomcat等)</td>
                   <td><strong>要</strong></td>
-</tr>
+                </tr>
                 <tr>
-<td>J2EE1.4対応のAPサーバ</td>
+                  <td>J2EE1.4対応のAPサーバ</td>
                   <td><strong>要</strong></td>
-</tr>
+                </tr>
                 <tr>
                   <td>JavaEE5対応のAPサーバ</td>
                   <td>-</td>
                 </tr>
                 <tr>
-<td>スタンドアロン</td>
+                  <td>スタンドアロン</td>
                   <td><strong>要</strong></td>
-</tr>
+                </tr>
               </tbody>
             </table>
 <h3><a name="ejb3">EJB3を使う場合</a></h3>
-            <p>アプリケーションの実行環境により、geronimo-annotation_1.0_spec-1.0.jar、geronimo-ejb_3.0_spec-1.0.jar、geronimo-interceptor_3.0_spec-1.0.jarが必要になります。</p>
+            <p>アプリケーションの実行環境により、geronimo-ejb_3.0_spec-1.0.jar、geronimo-interceptor_3.0_spec-1.0.jarが必要になります。</p>
             <table border="1">
               <col span="4" align="center">
               <tbody>
                 <tr>
-<th>環境</th>
-<th>geronimo-annotation_<br>
-                  1.0_spec-1.0.jar</th>
+                  <th>環境</th>
                   <th>geronimo-ejb_<br>
                   3.0_spec-1.0.jar</th>
                   <th>geronimo-interceptor_<br>
                   3.0_spec-1.0.jar</th>
                 </tr>
                 <tr>
-<td>Servlet2.4対応のWebコンテナ<br>
+                  <td>Servlet2.4対応のWebコンテナ<br>
                   (Tomcat5.x等)</td>
-<td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                 </tr>
                 <tr>
                   <td>Servlet2.5対応のWebコンテナ<br>
                   (Tomcat6等)</td>
-                  <td>-</td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                 </tr>
                 <tr>
-<td>J2EE1.4対応のAPサーバ</td>
-<td><strong>要</strong></td>
+                  <td>J2EE1.4対応のAPサーバ</td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                 </tr>
@@ -300,11 +329,9 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
                   <td>JavaEE5対応のAPサーバ</td>
                   <td>-</td>
                   <td>-</td>
-                  <td>-</td>
                 </tr>
                 <tr>
-<td>スタンドアロン</td>
-<td><strong>要</strong></td>
+                  <td>スタンドアロン</td>
                   <td><strong>要</strong></td>
                   <td><strong>要</strong></td>
                 </tr>
