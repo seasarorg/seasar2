@@ -53,6 +53,10 @@ public EmployeeService extends AbstractService<Employee> {
     ...
 }
 ]]></source>
+        <p>
+			Java5で、S2AbstractServiceを使うためには、geronimo-annotation_1.0_spec-1.0.jarが必要です。
+			Java6からは、標準に含まれているので、geronimo-annotation_1.0_spec-1.0.jarは必要ありません。
+        </p>
 		</section>
 		
 		<section name="複数のデータソース">
