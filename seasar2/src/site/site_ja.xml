@@ -61,17 +61,17 @@
       <item name="S2JDBC-Gen" href="s2jdbc_gen/index.html" collapse="true">
         <item name="セットアップ" href="s2jdbc_gen/setup.html"/>
         <item name="タスク" href="s2jdbc_gen/task.html" collapse="true">
-          <item name="Gen-Entity" href="s2jdbc_gen/task/gen_entity.html"/>
-          <item name="Gen-Ddl" href="s2jdbc_gen/task/gen_ddl.html"/>
-          <item name="Migrate" href="s2jdbc_gen/task/migrate.html"/>
-          <item name="Gen-Test" href="s2jdbc_gen/task/gen_test.html"/>
-          <item name="Gen-Condition" href="s2jdbc_gen/task/gen_condition.html"/>
-          <item name="Gen-Names" href="s2jdbc_gen/task/gen_names.html"/>
-          <item name="Gen-Service" href="s2jdbc_gen/task/gen_service.html"/>
-          <item name="Dump-Db-Meta" href="s2jdbc_gen/task/dump_db_meta.html"/>
-          <item name="Dump-Data" href="s2jdbc_gen/task/dump_data.html"/>
-          <item name="Load-Data" href="s2jdbc_gen/task/load_data.html"/>
-          <item name="Exe-Sql" href="s2jdbc_gen/task/exe_sql.html"/>
+          <item name="Gen-Entity" href="s2jdbc_gen/tasks/gen_entity.html"/>
+          <item name="Gen-Ddl" href="s2jdbc_gen/tasks/gen_ddl.html"/>
+          <item name="Migrate" href="s2jdbc_gen/tasks/migrate.html"/>
+          <item name="Gen-Test" href="s2jdbc_gen/tasks/gen_test.html"/>
+          <item name="Gen-Condition" href="s2jdbc_gen/tasks/gen_condition.html"/>
+          <item name="Gen-Names" href="s2jdbc_gen/tasks/gen_names.html"/>
+          <item name="Gen-Service" href="s2jdbc_gen/tasks/gen_service.html"/>
+          <item name="Dump-Db-Meta" href="s2jdbc_gen/tasks/dump_db_meta.html"/>
+          <item name="Dump-Data" href="s2jdbc_gen/tasks/dump_data.html"/>
+          <item name="Load-Data" href="s2jdbc_gen/tasks/load_data.html"/>
+          <item name="Exe-Sql" href="s2jdbc_gen/tasks/exe_sql.html"/>
         </item>
       </item>
 

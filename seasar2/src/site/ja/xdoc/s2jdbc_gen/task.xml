@@ -26,27 +26,27 @@
 			<subsection name="コアタスク">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>タスク名</th><th>説明</th></tr>
-					<tr><td><a href="task/gen_entity.html">Gen-Entity</a></td><td>データベースのテーブルからエンティティクラスのJavaコードを生成するタスクです。</td></tr>
-					<tr><td><a href="task/gen_ddl.html">Gen-Ddl</a></td><td>エンティティクラスからバージョン管理されたDDLを生成するタスクです。</td></tr>
-					<tr><td><a href="task/migrate.html">Migrate</a></td><td>バージョン管理されたDDLを使いデータベーススキーマのマイグレーションを実行するタスクです。</td></tr>
+					<tr><td><a href="tasks/gen_entity.html">Gen-Entity</a></td><td>データベースのテーブルからエンティティクラスのJavaコードを生成するタスクです。</td></tr>
+					<tr><td><a href="tasks/gen_ddl.html">Gen-Ddl</a></td><td>エンティティクラスからバージョン管理されたDDLを生成するタスクです。</td></tr>
+					<tr><td><a href="tasks/migrate.html">Migrate</a></td><td>バージョン管理されたDDLを使いデータベーススキーマのマイグレーションを実行するタスクです。</td></tr>
 				</table>
 			</subsection>
 			<subsection name="オプションタスク">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>タスク名</th><th>説明</th></tr>
-					<tr><td><a href="task/gen_test.html">Gen-Test</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
-					<tr><td><a href="task/gen_condition.html">Gen-Condition</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
-					<tr><td><a href="task/gen_names.html">Gen-Names</a></td><td>エンティティクラスから名前インタフェースのJavaコードを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
-					<tr><td><a href="task/gen_service.html">Gen-Service</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
+					<tr><td><a href="tasks/gen_test.html">Gen-Test</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
+					<tr><td><a href="tasks/gen_condition.html">Gen-Condition</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
+					<tr><td><a href="tasks/gen_names.html">Gen-Names</a></td><td>エンティティクラスから名前インタフェースのJavaコードを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
+					<tr><td><a href="tasks/gen_service.html">Gen-Service</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
 				</table>
 			</subsection>
 			<subsection name="ユーティリティタスク">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>タスク名</th><th>説明</th></tr>
-					<tr><td><a href="task/dump_db_meta.html">Dump-Db-Meta</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
-					<tr><td><a href="task/dump_data.html">Dump-Data</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGen-Ddlタスクに含まれていますが、Gen-Ddlタスクとは別にダンプを行いたい場合に使用できます。</td></tr>
-					<tr><td><a href="task/load_data.html">Load-Data</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateタスクに含まれていますが、Migrateタスクとは別にロードを行いたい場合に使用できます。</td></tr>
-					<tr><td><a href="task/exe_sql.html">Exe-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
+					<tr><td><a href="tasks/dump_db_meta.html">Dump-Db-Meta</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
+					<tr><td><a href="tasks/dump_data.html">Dump-Data</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGen-Ddlタスクに含まれていますが、Gen-Ddlタスクとは別にダンプを行いたい場合に使用できます。</td></tr>
+					<tr><td><a href="tasks/load_data.html">Load-Data</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateタスクに含まれていますが、Migrateタスクとは別にロードを行いたい場合に使用できます。</td></tr>
+					<tr><td><a href="tasks/exe_sql.html">Exe-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
 				</table>
 			</subsection>
 		</section>
