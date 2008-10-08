@@ -45,6 +45,20 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2008/10/08</dt>
+				<dd>
+					<div>
+						Seasar2 2.4.30 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="">Change Log</a>)
+						(<a href="">移行ガイド</a>)
+					</div>
+					<div>
+						<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a> 0.9.2 をリリースしました．
+						(<a href="downloads.html">ダウンロード</a>)
+						(<a href="">Change Log</a>)
+					</div>
+				</dd>
 				<dt>2008/09/05</dt>
 				<dd>
 					<div>
