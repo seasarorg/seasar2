@@ -31,6 +31,7 @@ import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.extension.jdbc.name.PropertyName;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
@@ -96,21 +97,15 @@ public class NamesModelFactoryImplTest {
         NamesAssociationModel associationModel = namesModel
                 .getNamesAssociationModelList().get(0);
         assertEquals("bbb", associationModel.getName());
-        assertEquals("_BbbNames", associationModel
-                .getShortClassName());
+        assertEquals("_BbbNames", associationModel.getShortClassName());
         assertEquals("aaa.bbb.BbbNames._BbbNames", associationModel
                 .getClassName());
 
-        assertEquals(4, namesModel.getImportNameSet().size());
+        assertEquals(3, namesModel.getImportNameSet().size());
         Iterator<String> iterator = namesModel.getImportNameSet().iterator();
         assertEquals("aaa.bbb.BbbNames._BbbNames", iterator.next());
-        assertEquals(
-                "org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImplTest$Aaa",
-                iterator.next());
-        assertEquals("org.seasar.extension.jdbc.name.PropertyName", iterator
-                .next());
-        assertEquals("org.seasar.extension.jdbc.operation.Operations", iterator
-                .next());
+        assertEquals(Aaa.class.getName(), iterator.next());
+        assertEquals(PropertyName.class.getName(), iterator.next());
     }
 
     /** */

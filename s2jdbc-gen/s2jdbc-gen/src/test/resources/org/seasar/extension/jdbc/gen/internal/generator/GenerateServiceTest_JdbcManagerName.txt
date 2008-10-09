@@ -6,6 +6,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
 
 import static hoge.entity.AaaNames.*;
+import static org.seasar.extension.jdbc.operation.Operations.*;
 
 /**
  * {@link Aaa}のサービスクラスです。

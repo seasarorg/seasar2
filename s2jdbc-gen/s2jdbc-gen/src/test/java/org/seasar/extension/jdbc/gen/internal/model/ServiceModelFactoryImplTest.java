@@ -35,6 +35,7 @@ import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.TableMetaFactoryImpl;
+import org.seasar.extension.jdbc.operation.Operations;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
@@ -96,10 +97,11 @@ public class ServiceModelFactoryImplTest {
         assertEquals(List.class.getName(), iterator.next());
         assertEquals(Aaa.class.getName(), iterator.next());
 
-        assertEquals(1, serviceModel.getStaticImportNameSet().size());
+        assertEquals(2, serviceModel.getStaticImportNameSet().size());
         iterator = serviceModel.getStaticImportNameSet().iterator();
         assertEquals("aaa.ccc.ServiceModelFactoryImplTest$AaaNames.*", iterator
                 .next());
+        assertEquals(Operations.class.getName() + ".*", iterator.next());
     }
 
     /**
@@ -127,10 +129,11 @@ public class ServiceModelFactoryImplTest {
         assertEquals(List.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
 
-        assertEquals(1, serviceModel.getStaticImportNameSet().size());
+        assertEquals(2, serviceModel.getStaticImportNameSet().size());
         iterator = serviceModel.getStaticImportNameSet().iterator();
         assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames.*", iterator
                 .next());
+        assertEquals(Operations.class.getName() + ".*", iterator.next());
     }
 
     /**
@@ -160,10 +163,11 @@ public class ServiceModelFactoryImplTest {
         assertEquals(JdbcManager.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
 
-        assertEquals(1, serviceModel.getStaticImportNameSet().size());
+        assertEquals(2, serviceModel.getStaticImportNameSet().size());
         iterator = serviceModel.getStaticImportNameSet().iterator();
         assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames.*", iterator
                 .next());
+        assertEquals(Operations.class.getName() + ".*", iterator.next());
     }
 
     /** */

@@ -22,7 +22,6 @@ import org.seasar.extension.jdbc.gen.model.NamesAttributeModel;
 import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.name.PropertyName;
-import org.seasar.extension.jdbc.operation.Operations;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -35,7 +34,7 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
     /** 内部クラスのプレフィックス */
     protected static String INNER_CLASS_NAME_PREFIX = "_";
 
-    /** パッケージ名 */
+    /** パッケージ名、デフォルトパッケージの場合は{@code null} */
     protected String packageName;
 
     /** 名前クラス名のサフィックス */
@@ -50,7 +49,7 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
      * @param namesClassNameSuffix
      *            名前クラス名のサフィックス
      * @param packageName
-     *            パッケージ名
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      */
     public NamesModelFactoryImpl(String packageName, String namesClassNameSuffix) {
         if (namesClassNameSuffix == null) {
@@ -141,7 +140,6 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
         classModelSupport
                 .addImportName(namesModel, entityMeta.getEntityClass());
         classModelSupport.addImportName(namesModel, PropertyName.class);
-        classModelSupport.addImportName(namesModel, Operations.class);
         for (NamesAttributeModel attributeModel : namesModel
                 .getNamesAttributeModelList()) {
             classModelSupport.addImportName(namesModel, attributeModel

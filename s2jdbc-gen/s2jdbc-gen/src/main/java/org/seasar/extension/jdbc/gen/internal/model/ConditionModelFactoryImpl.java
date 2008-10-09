@@ -17,10 +17,10 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.model.ConditionAttributeModel;
-import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionAssociationModel;
 import org.seasar.extension.jdbc.gen.model.ConditionAssociationModelFactory;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModel;
+import org.seasar.extension.jdbc.gen.model.ConditionAttributeModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModel;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.where.ComplexWhere;
@@ -39,7 +39,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
     /** 条件クラスのメソッドモデルのファクトリ */
     protected ConditionAssociationModelFactory conditionAssociationModelFactory;
 
-    /** パッケージ名 */
+    /** パッケージ名、デフォルトパッケージの場合は{@code null} */
     protected String packageName;
 
     /** 条件クラス名のサフィックス */
@@ -56,7 +56,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      * @param conditionAssociationModelFactory
      *            条件クラスのメソッドモデルのファクトリ
      * @param packageName
-     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param conditionClassNameSuffix
      *            条件クラス名のサフィックス
      */

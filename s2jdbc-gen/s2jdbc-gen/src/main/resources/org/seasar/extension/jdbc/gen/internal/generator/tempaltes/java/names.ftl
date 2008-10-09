@@ -12,7 +12,7 @@ import ${importName};
  * 
  * @author S2JDBC-Gen
  */
-public class ${shortClassName} extends Operations {
+public class ${shortClassName} {
 <#list namesAttributeModelList as attr>
 
     /**

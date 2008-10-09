@@ -3,14 +3,13 @@ package hoge.entity;
 import hoge.entity.AaaNames._AaaNames;
 import org.seasar.extension.jdbc.gen.internal.generator.Bbb;
 import org.seasar.extension.jdbc.name.PropertyName;
-import org.seasar.extension.jdbc.operation.Operations;
 
 /**
  * {@link Bbb}のプロパティ名の集合です。
  * 
  * @author S2JDBC-Gen
  */
-public class BbbNames extends Operations {
+public class BbbNames {
 
     /**
      * idのプロパティ名を返します。

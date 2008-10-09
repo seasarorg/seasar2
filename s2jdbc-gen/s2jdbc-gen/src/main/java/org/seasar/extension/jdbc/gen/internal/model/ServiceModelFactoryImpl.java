@@ -26,6 +26,7 @@ import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModel;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
+import org.seasar.extension.jdbc.operation.Operations;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -38,7 +39,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
     /** デフォルトの{@link JdbcManager}のコンポーネント名 */
     protected static String DEFAULT_JDBC_MANAGER_NAME = "jdbcManager";
 
-    /** パッケージ名 */
+    /** パッケージ名、デフォルトパッケージの場合は{@code null} */
     protected String packageName;
 
     /** {@link JdbcManager}のコンポーネント名 */
@@ -60,7 +61,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
      * インスタンスを構築します。
      * 
      * @param packageName
-     *            パッケージ名
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param namesModelFactory
      *            名前モデルのファクトリ
      * @param serviceClassNameSuffix
@@ -151,6 +152,8 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
             String namesClassName = ClassUtil.concatName(namesModel
                     .getPackageName(), namesModel.getShortClassName());
             classModelSupport.addStaticImportName(serviceModel, namesClassName);
+            classModelSupport.addStaticImportName(serviceModel,
+                    Operations.class);
             classModelSupport.addImportName(serviceModel, List.class);
         }
         if (serviceModel.isJdbcManagerSetterNecessary()) {

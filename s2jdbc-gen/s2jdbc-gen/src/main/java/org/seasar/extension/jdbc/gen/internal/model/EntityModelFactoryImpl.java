@@ -58,7 +58,7 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  */
 public class EntityModelFactoryImpl implements EntityModelFactory {
 
-    /** パッケージ名 */
+    /** パッケージ名、デフォルトパッケージの場合は{@code null} */
     protected String packageName;
 
     /** 属性モデルのファクトリ */
@@ -98,7 +98,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      * インスタンスを構築しますｌ
      * 
      * @param packageName
-     *            パッケージ名、パッケージ名を指定しない場合は{@code null}
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param superclass
      *            エンティティのスーパークラス、スーパークラスを持たない場合は{@code null}
      * @param attributeModelFactory
