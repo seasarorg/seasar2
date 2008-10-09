@@ -78,7 +78,7 @@ public class NotNullableStringCondition<CONDITION extends AbstractEntityConditio
      * @see SimpleWhere#ends(String, String)
      */
     public CONDITION ends(final String value) {
-        condition.where.ends(propertyName, value);
+        condition.where.ends(condition.prefix + propertyName, value);
         return condition;
     }
 
@@ -92,7 +92,7 @@ public class NotNullableStringCondition<CONDITION extends AbstractEntityConditio
      * @see SimpleWhere#contains(String, String)
      */
     public CONDITION contains(final String value) {
-        condition.where.contains(propertyName, value);
+        condition.where.contains(condition.prefix + propertyName, value);
         return condition;
     }
 
