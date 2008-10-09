@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
-<!ENTITY __overview__f2eczdky SYSTEM "intro/overview.xml">
-<!ENTITY __setup__f2daq7l8 SYSTEM "intro/setup.xml">
-<!ENTITY __quickstart__f2dardfb SYSTEM "intro/quickstart.xml">
-<!ENTITY __architecture__f2das3ll SYSTEM "intro/architecture.xml">
-<!ENTITY __overview__f2day179 SYSTEM "container/overview.xml">
-<!ENTITY __di__f38j46yj SYSTEM "container/di.xml">
-<!ENTITY __aop__f38j4jq6 SYSTEM "container/aop.xml">
-<!ENTITY __creating__f2dayfy2 SYSTEM "container/creating.xml">
-<!ENTITY __using__f2daymxd SYSTEM "container/using.xml">
-<!ENTITY __singleton__f2daywif SYSTEM "container/singleton.xml">
-<!ENTITY __external__f2daz588 SYSTEM "container/external.xml">
-<!ENTITY __overview__f2datad3 SYSTEM "config/overview.xml">
-<!ENTITY __dicon__f2datutm SYSTEM "config/dicon.xml">
-<!ENTITY __component__f2dau6yp SYSTEM "config/component.xml">
-<!ENTITY __di__f2daukzw SYSTEM "config/di.xml">
-<!ENTITY __aop__f2dav11l SYSTEM "config/aop.xml">
-<!ENTITY __ognl__f2daw8d2 SYSTEM "config/ognl.xml">
-<!ENTITY __annotation__f2davb5q SYSTEM "config/annotation.xml">
-<!ENTITY __organize__f2daw0zf SYSTEM "config/organize.xml">
-<!ENTITY __smartdeploy__f2dawhbj SYSTEM "config/smartdeploy.xml">
-<!ENTITY __autoregister__f2dawp9k SYSTEM "config/autoregister.xml">
-<!ENTITY __customize__f38iw4xz SYSTEM "container/customize.xml">
-]>
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book lang="ja">
   <bookinfo>
     <title>Seasar2 Reference Documentation</title>
@@ -42,57 +19,79 @@
   <part id="intro">
     <title>Seasar2の紹介</title>
 
-    &__overview__f2eczdky;
+  <xi:include href="intro/overview.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__setup__f2daq7l8;
+  <xi:include href="intro/setup.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__quickstart__f2dardfb;
+  <xi:include href="intro/quickstart.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__architecture__f2das3ll;
+  <xi:include href="intro/architecture.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
   </part>
 
   <part id="container">
     <title>S2コンテナ</title>
 
-    &__overview__f2day179;
+  <xi:include href="container/overview.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__di__f38j46yj;
+  <xi:include href="container/di.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__aop__f38j4jq6;
+  <xi:include href="container/aop.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__creating__f2dayfy2;
+  <xi:include href="container/creating.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__using__f2daymxd;
+  <xi:include href="container/using.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__singleton__f2daywif;
+  <xi:include href="container/singleton.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__external__f2daz588;
+  <xi:include href="container/external.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
   </part>
 
   <part id="config">
     <title>設定</title>
 
-    &__overview__f2datad3;
+  <xi:include href="config/overview.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__dicon__f2datutm;
+  <xi:include href="config/dicon.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__component__f2dau6yp;
+  <xi:include href="config/component.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__di__f2daukzw;
+  <xi:include href="config/di.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__aop__f2dav11l;
+  <xi:include href="config/aop.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__ognl__f2daw8d2;
+  <xi:include href="config/ognl.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__annotation__f2davb5q;
+  <xi:include href="config/annotation.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__organize__f2daw0zf;
+  <xi:include href="config/organize.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__smartdeploy__f2dawhbj;
+  <xi:include href="config/smartdeploy.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__autoregister__f2dawp9k;
+  <xi:include href="config/autoregister.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
 
-    &__customize__f38iw4xz;
+  <xi:include href="container/customize.xml" xpointer="element(/1)"
+              xmlns:xi="http://www.w3.org/2001/XInclude" />
   </part>
 
   <part id="web">

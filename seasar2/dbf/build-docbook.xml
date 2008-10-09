@@ -90,6 +90,9 @@
     <sequential>
       <java classname="com.icl.saxon.StyleSheet" fork="true"
             dir="${basedir}" classpathref="dbf.classpath">
+        <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl" />
+        <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl" />
+        <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration" />
         <arg line="-x org.apache.xml.resolver.tools.ResolvingXMLReader"/>
         <arg line="-y org.apache.xml.resolver.tools.ResolvingXMLReader"/>
         <arg line="-r org.apache.xml.resolver.tools.CatalogResolver"/>
