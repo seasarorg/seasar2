@@ -36,7 +36,7 @@
 					<tr><th>タスク名</th><th>説明</th></tr>
 					<tr><td><a href="tasks/gen_test.html">Gen-Test</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
 					<tr><td><a href="tasks/gen_condition.html">Gen-Condition</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
-					<tr><td><a href="tasks/gen_names.html">Gen-Names</a></td><td>エンティティクラスから名前インタフェースのJavaコードを生成するクラスです。名前インタフェースはエンティティのプロパティ名を定数としてもつインタフェースです。この定数を使用することで、結合先のプロパティや検索条件のプロパティをタイプセーフで指定できます。</td></tr>
+					<tr><td><a href="tasks/gen_names.html">Gen-Names</a></td><td>エンティティクラスから名前クラスのJavaコードを生成するクラスです。名前クラスはエンティティのプロパティ名に対応するメソッドをもつクラスです。JdbcManagerを使った問い合わせで名前クラスを使用することで、結合条件や検索条件をタイプセーフで指定できます。</td></tr>
 					<tr><td><a href="tasks/gen_service.html">Gen-Service</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
 				</table>
 			</subsection>

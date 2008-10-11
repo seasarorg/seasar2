@@ -38,6 +38,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#名前クラスのパッケージを指定する">名前クラスのパッケージを指定する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -45,9 +52,118 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					名前インタフェースを作成します。</p>
+					名前クラスを生成します。
+					名前クラスとは、エンティティのプロパティ名に対応するメソッドをもつクラスで、エンティティクラスにつき1つ生成されます。
+					生成される名前クラスは次のようなコードになります。
+					これはエンティティクラスAddressに対する名前クラスです。
+				</p>
+<source><![CDATA[/**
+ * {@link Address}のプロパティ名の集合です。
+ * 
+ * @author S2JDBC-Gen
+ */
+public class AddressNames {
+
+    /**
+     * idのプロパティ名を返します。
+     * 
+     * @return idのプロパティ名
+     */
+    public static PropertyName<Integer> id() {
+        return new PropertyName<Integer>("id");
+    }
+
+    /**
+     * cityのプロパティ名を返します。
+     * 
+     * @return cityのプロパティ名
+     */
+    public static PropertyName<String> city() {
+        return new PropertyName<String>("city");
+    }
+
+    /**
+     * employeeのプロパティ名を返します。
+     * 
+     * @return employeeのプロパティ名
+     */
+    public static _EmployeeNames employee() {
+        return new _EmployeeNames("employee");
+    }
+
+    /**
+     * @author S2JDBC-Gen
+     */
+    public static class _AddressNames extends PropertyName<Address> {
+
+        /**
+         * インスタンスを構築します。
+         */
+        public _AddressNames() {
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param name
+         *            名前
+         */
+        public _AddressNames(final String name) {
+            super(name);
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param parent
+         *            親
+         * @param name
+         *            名前
+         */
+        public _AddressNames(final PropertyName<?> parent, final String name) {
+            super(parent, name);
+        }
+
+        /**
+         * idのプロパティ名を返します。
+         *
+         * @return idのプロパティ名
+         */
+        public PropertyName<Integer> id() {
+            return new PropertyName<Integer>(this, "id");
+        }
+
+        /**
+         * cityのプロパティ名を返します。
+         *
+         * @return cityのプロパティ名
+         */
+        public PropertyName<String> city() {
+            return new PropertyName<String>(this, "city");
+        }
+
+        /**
+         * employeeのプロパティ名を返します。
+         * 
+         * @return employeeのプロパティ名
+         */
+        public _EmployeeNames employee() {
+            return new _EmployeeNames(this, "employee");
+        }
+    }
+}]]></source>
 				<p>
-					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+					名前クラスのメソッドは、static importの機能を使って呼び出されることを想定しています。
+					名前クラスの使用例は次のようになります。
+				</p>
+<source><![CDATA[List<Address> list = jdbcManager
+    .from(Address.class)
+    .innerJoin(employee())
+    .where(eq(city(), "TOKYO"))
+    .getResultList();
+]]></source>
+				<p>
+					employee()とcity()が名前クラスのメソッドです。
 				</p>
 			</subsection>
 		</section>
@@ -89,14 +205,16 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[    <gen-names
-      rootpackagename="examples"
-      classpathref="classpath"
-    />]]></source>
+			<subsection name="名前クラスのパッケージを指定する">
 				<p>
-					ルートパッケージに"examples"を設定してタスクを実行します。
+					名前クラスのデフォルトのパッケージ名は"entity"ですが、namesPackageName属性に任意のパッケージ名を指定できます。
+					次の例では"names"を指定しています。
 				</p>
+<source><![CDATA[<gen-names
+    rootPackageName="examples"
+    namesPackageName="names"
+    classpathref="classpath"
+/>]]></source>
 			</subsection>
 		</section>
 	</body>

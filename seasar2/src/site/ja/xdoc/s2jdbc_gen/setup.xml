@@ -75,7 +75,7 @@
 			<subsection name="解説:クラスパスの設定">
 				<p>
 					S2JDBC-GenのAntタスクの多くは、実行時にエンティティクラスを参照します。
-					また、S2JDBCの動作に必要なjarファイルに加え、s2jdbc-gen-core-x.x.x.jarとfreemarker-2.3.x.jarが必要です。
+					また、S2JDBCの動作に必要なjarファイルに加え、s2jdbc-gen-x.x.x.jarとfreemarker-2.3.x.jarが必要です。
 					すべてのAntタスクからエンティティクラスやjarファイルを参照できるように、あらかじめクラスパスを設定しておきます。
 				</p>
 <source><![CDATA[<path id="classpath">

@@ -45,10 +45,42 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					サービスクラスを生成します。</p>
-				<p>
-					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+					サービスクラスを生成します。
+					サービスクラスとは、エンティティを利用するビジネスロジックを持つクラスで、エンティティクラスにつき1つ生成されます。
+					生成されるサービスクラスは次のようなコードになります。
+					これはエンティティクラスAddressに対するサービスクラスです。
 				</p>
+<source><![CDATA[/**
+ * {@link Address}のサービスクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+public class AddressService extends AbstractService<Address> {
+
+    /**
+     * 識別子でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @return エンティティ
+     */
+    public Address findById(Integer id) {
+        return select().id(id).getSingleResult();
+    }
+
+    /**
+     * 識別子の昇順ですべてのエンティティを検索します。
+     * 
+     * @return エンティティのリスト
+     */
+    public List<Address> findAllOrderById() {
+        return select().orderBy(asc(id())).getResultList();
+    }
+    
+    public List<Address> hoge() {
+        return select().orderBy(asc(id())).getResultList();
+    }
+}}]]></source>
 			</subsection>
 		</section>
 		<section name="パラメータ">
