@@ -22,6 +22,7 @@ import java.util.Date;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.model.AttributeModel;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
+import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -37,6 +38,9 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
     /** カラム定義を表示する場合{@code true} */
     protected boolean showColumnDefinition;
 
+    /** 永続化層の命名規約 */
+    protected PersistenceConvention persistenceConvention;
+
     /**
      * インスタンスを構築します。
      * 
@@ -44,11 +48,18 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
      *            カラム名を表示する場合{@code true}
      * @param showColumnDefinition
      *            カラム定義を表示する場合{@code true}
+     * @param persistenceConvention
+     *            永続化層の命名規約
      */
     public AttributeModelFactoryImpl(boolean showColumnName,
-            boolean showColumnDefinition) {
+            boolean showColumnDefinition,
+            PersistenceConvention persistenceConvention) {
+        if (persistenceConvention == null) {
+            throw new NullPointerException("persistenceConvention");
+        }
         this.showColumnName = showColumnName;
         this.showColumnDefinition = showColumnDefinition;
+        this.persistenceConvention = persistenceConvention;
     }
 
     public AttributeModel getAttributeModel(AttributeDesc attributeDesc) {
@@ -66,9 +77,7 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
         attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
-        if (showColumnName) {
-            attributeModel.setColumnName(attributeDesc.getColumnName());
-        }
+        doColumnName(attributeModel, attributeDesc);
         if (showColumnDefinition) {
             doColumnDefinition(attributeModel, attributeDesc);
         } else {
@@ -77,6 +86,25 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
             doScale(attributeModel, attributeDesc);
         }
         return attributeModel;
+    }
+
+    /**
+     * カラム名を処理します。
+     * 
+     * @param attributeModel
+     *            属性モデル
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doColumnName(AttributeModel attributeModel,
+            AttributeDesc attributeDesc) {
+        String realColumnName = attributeDesc.getColumnName();
+        String convertedColumnName = persistenceConvention
+                .fromPropertyNameToColumnName(attributeModel.getName());
+        if (showColumnName
+                || !realColumnName.equalsIgnoreCase(convertedColumnName)) {
+            attributeModel.setColumnName(realColumnName);
+        }
     }
 
     /**

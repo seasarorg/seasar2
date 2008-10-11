@@ -164,7 +164,8 @@ public class EntitySetDescFactoryImpl implements EntitySetDescFactory {
      */
     protected AssociationResolver createAssociationResolver(
             EntitySetDesc entitySetDesc, PluralFormDictinary pluralFormDictinary) {
-        return new AssociationResolver(entitySetDesc, pluralFormDictinary);
+        return new AssociationResolver(entitySetDesc, pluralFormDictinary,
+                persistenceConvention);
     }
 
     /**

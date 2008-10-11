@@ -196,4 +196,12 @@ public class DbForeignKeyMeta {
         return buf.append(primaryKeyTableName).toString();
     }
 
+    /**
+     * 複合外部キーの場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return 複合外部キーの場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isComposite() {
+        return foreignKeyColumnNameList.size() > 1;
+    }
 }

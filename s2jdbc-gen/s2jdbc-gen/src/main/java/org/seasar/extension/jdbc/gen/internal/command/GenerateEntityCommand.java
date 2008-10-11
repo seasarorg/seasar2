@@ -703,7 +703,8 @@ public class GenerateEntityCommand extends AbstractCommand {
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
                 rootPackageName, entityPackageName), superClass, useAccessor,
                 showCatalogName, showSchemaName, showTableName, showColumnName,
-                showColumnDefinition, showJoinColumn);
+                showColumnDefinition, showJoinColumn, jdbcManager
+                        .getPersistenceConvention());
     }
 
     /**

@@ -37,6 +37,7 @@ import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TextUtil;
@@ -60,7 +61,8 @@ public class GenerateEntityTest {
     @Before
     public void setUp() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", null,
-                new AttributeModelFactoryImpl(false, true),
+                new AttributeModelFactoryImpl(false, true,
+                        new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), false, true,
                 true, false);
@@ -201,7 +203,7 @@ public class GenerateEntityTest {
         id2.setName("id2");
         id2.setId(true);
         id2.setAttributeClass(int.class);
-        id2.setColumnName("ID");
+        id2.setColumnName("ID2");
         id2.setColumnDefinition("integer");
         id2.setNullable(false);
 
@@ -314,7 +316,7 @@ public class GenerateEntityTest {
         fkMeta.addForeignKeyColumnName("HOGE_ID");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc,
-                new PluralFormDictinary());
+                new PluralFormDictinary(), new PersistenceConventionImpl());
         resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
@@ -370,7 +372,7 @@ public class GenerateEntityTest {
         fkMeta.addForeignKeyColumnName("HOGE_ID");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc,
-                new PluralFormDictinary());
+                new PluralFormDictinary(), new PersistenceConventionImpl());
         resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
@@ -428,7 +430,7 @@ public class GenerateEntityTest {
         fkMeta.addForeignKeyColumnName("HOGE_ID2");
 
         AssociationResolver resolver = new AssociationResolver(entitySetDesc,
-                new PluralFormDictinary());
+                new PluralFormDictinary(), new PersistenceConventionImpl());
         resolver.resolve(tableMeta, fkMeta);
 
         EntityModel model = factory.getEntityModel(entityDesc);
@@ -487,7 +489,8 @@ public class GenerateEntityTest {
     @Test
     public void testSuperclass() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", Eee.class,
-                new AttributeModelFactoryImpl(false, true),
+                new AttributeModelFactoryImpl(false, true,
+                        new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), false, true,
                 true, false);
@@ -544,7 +547,8 @@ public class GenerateEntityTest {
     @Test
     public void testAccessor() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", null,
-                new AttributeModelFactoryImpl(false, true),
+                new AttributeModelFactoryImpl(false, true,
+                        new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), true, true,
                 true, false);

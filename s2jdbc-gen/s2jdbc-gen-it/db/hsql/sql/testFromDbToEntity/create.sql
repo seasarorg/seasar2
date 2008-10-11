@@ -8,6 +8,9 @@ alter table department add constraint department_uk1 unique(department_no);
 alter table comp_key_department add constraint comp_key_department_uk1 unique(department_no);
 alter table employee add constraint employee_uk1 unique(address_id);
 alter table comp_key_employee add constraint comp_key_employee_uk1 unique(address_id1, address_id2);
+create table category(id integer not null primary key, name varchar(20));
+create table product(id integer not null primary key, primary_category_id integer not null, secondary_category_id integer not null, constraint product_fk1 foreign key(primary_category_id) references category(id), constraint product_fk2 foreign key(secondary_category_id) references category(id));
+create table product2(id integer not null primary key, category integer not null, constraint product2_fk1 foreign key(category) references category(id));
 
 -- supported
 create table integer_table (integer_column integer);

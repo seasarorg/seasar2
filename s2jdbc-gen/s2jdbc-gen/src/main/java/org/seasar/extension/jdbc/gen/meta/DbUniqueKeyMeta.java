@@ -93,9 +93,9 @@ public class DbUniqueKeyMeta {
     }
 
     /**
-     * 複合一意制約の場合{@code true}、そうでない場合{@code false}を返します。
+     * 複合一意キーの場合{@code true}、そうでない場合{@code false}を返します。
      * 
-     * @return 複合一意制約の場合{@code true}、そうでない場合{@code false}
+     * @return 複合一意キーの場合{@code true}、そうでない場合{@code false}
      */
     public boolean isComposite() {
         return columnNameList.size() > 1;

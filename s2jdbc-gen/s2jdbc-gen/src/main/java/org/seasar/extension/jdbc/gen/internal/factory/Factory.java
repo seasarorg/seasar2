@@ -318,6 +318,8 @@ public interface Factory {
      *            カラム定義を表示する場合{@code true}
      * @param showJoinColumn
      *            {@link JoinColumn}を表示する場合{@code true}
+     * @param persistenceConvention
+     *            永続化層の命名規約
      * 
      * @return {@link EntityModelFactory}の実装
      */
@@ -325,7 +327,8 @@ public interface Factory {
             String packageName, Class<?> superclass, boolean useAccessor,
             boolean showCatalogName, boolean showSchemaName,
             boolean showTableName, boolean showColumnName,
-            boolean showColumnDefinition, boolean showJoinColumn);
+            boolean showColumnDefinition, boolean showJoinColumn,
+            PersistenceConvention persistenceConvention);
 
     /**
      * {@link ServiceModelFactory}の実装を作成します。

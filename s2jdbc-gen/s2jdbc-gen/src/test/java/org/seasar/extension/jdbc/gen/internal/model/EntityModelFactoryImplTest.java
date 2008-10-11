@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.model.EntityModel;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
 import static org.junit.Assert.*;
 
@@ -45,7 +46,8 @@ public class EntityModelFactoryImplTest {
 
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
             "aaa.bbb", Superclass.class, new AttributeModelFactoryImpl(true,
-                    true), new AssociationModelFactoryImpl(true),
+                    true, new PersistenceConventionImpl()),
+            new AssociationModelFactoryImpl(true),
             new CompositeUniqueConstraintModelFactoryImpl(), false, true, true,
             true);
 

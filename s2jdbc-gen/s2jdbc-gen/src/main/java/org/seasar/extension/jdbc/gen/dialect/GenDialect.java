@@ -217,7 +217,7 @@ public interface GenDialect {
     /**
      * NULLが可能な一意制約をサポートしている場合{@code true}を返します。
      * 
-     * @return NOT NULL制約のない一意制約をサポートしている場合{@code true}
+     * @return NULLが可能な一意制約をサポートしている場合{@code true}
      */
     boolean supportsNullableUnique();
 

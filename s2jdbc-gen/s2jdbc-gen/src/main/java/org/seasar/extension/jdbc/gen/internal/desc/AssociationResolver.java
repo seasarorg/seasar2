@@ -17,10 +17,12 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import org.seasar.extension.jdbc.gen.desc.AssociationDesc;
 import org.seasar.extension.jdbc.gen.desc.AssociationType;
+import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDesc;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
+import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -39,6 +41,9 @@ public class AssociationResolver {
     /** 単語を複数形に変換するための辞書 */
     protected PluralFormDictinary pluralFormDictinary;
 
+    /** 永続化層の命名規約 */
+    protected PersistenceConvention persistenceConvention;
+
     /**
      * インスタンスを構築します。
      * 
@@ -46,17 +51,24 @@ public class AssociationResolver {
      *            エンティティ集合記述
      * @param pluralFormDictinary
      *            単語を複数形に変換するための辞書
+     * @param persistenceConvention
+     *            永続化層の命名規約
      */
     public AssociationResolver(EntitySetDesc entitySetDesc,
-            PluralFormDictinary pluralFormDictinary) {
+            PluralFormDictinary pluralFormDictinary,
+            PersistenceConvention persistenceConvention) {
         if (entitySetDesc == null) {
             throw new NullPointerException("entitySetDesc");
         }
         if (pluralFormDictinary == null) {
             throw new NullPointerException("pluralFormDictinary");
         }
+        if (persistenceConvention == null) {
+            throw new NullPointerException("persistenceConvention");
+        }
         this.entitySetDesc = entitySetDesc;
         this.pluralFormDictinary = pluralFormDictinary;
+        this.persistenceConvention = persistenceConvention;
     }
 
     /**
@@ -103,9 +115,10 @@ public class AssociationResolver {
         associationDesc.setReferencedSchemaName(fkMeta
                 .getPrimaryKeySchemaName());
         associationDesc.setReferencedTableName(fkMeta.getPrimaryKeyTableName());
-        String name = getAssociationName(ownerEntityDesc, inverseEntityDesc,
-                false);
+        String name = getOwnerAssociationName(fkMeta, ownerEntityDesc,
+                inverseEntityDesc);
         associationDesc.setName(name);
+        adjustAttributeNames(fkMeta, ownerEntityDesc, name);
         if (fkMeta.isUnique()) {
             associationDesc.setAssociationType(AssociationType.ONE_TO_ONE);
         } else {
@@ -120,6 +133,57 @@ public class AssociationResolver {
         associationDesc.setReferencedEntityDesc(inverseEntityDesc);
         ownerEntityDesc.addAssociationDesc(associationDesc);
         return associationDesc;
+    }
+
+    /**
+     * エンティティ記述のすべての属性について必要であれば名前を調整します。
+     * 
+     * @param fkMeta
+     *            外部キーメタデータ
+     * @param entityDesc
+     *            エンティティ記述
+     * @param associationName
+     *            関連名
+     */
+    protected void adjustAttributeNames(DbForeignKeyMeta fkMeta,
+            EntityDesc entityDesc, String associationName) {
+        if (fkMeta.isComposite()) {
+            return;
+        }
+        for (AttributeDesc attributeDesc : entityDesc.getAttributeDescList()) {
+            if (associationName.equalsIgnoreCase(attributeDesc.getName())) {
+                String pkColumnName = fkMeta.getPrimaryKeyColumnNameList().get(
+                        0);
+                String pkPropertyName = persistenceConvention
+                        .fromColumnNameToPropertyName(pkColumnName);
+                String candidateName = attributeDesc.getName()
+                        + StringUtil.capitalize(pkPropertyName);
+                String newName = toUniqueAttributeName(entityDesc,
+                        candidateName);
+                attributeDesc.setName(newName);
+            }
+        }
+    }
+
+    /**
+     * 一意な属性名に変換します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     * @param candidateName
+     *            候補の属性名
+     * @return 一意な属性名
+     */
+    protected String toUniqueAttributeName(EntityDesc entityDesc,
+            String candidateName) {
+        if (entityDesc.hasAttributeDesc(candidateName)) {
+            for (int i = 2;; i++) {
+                if (!entityDesc.hasAttributeDesc(candidateName + i)) {
+                    return candidateName + i;
+                }
+            }
+        }
+        return candidateName;
     }
 
     /**
@@ -139,13 +203,13 @@ public class AssociationResolver {
             String mappedBy) {
         AssociationDesc inverseAssociationDesc = new AssociationDesc();
         if (fkMeta.isUnique()) {
-            String name = getAssociationName(inverseEntityDesc,
+            String name = getInverseAssociationName(inverseEntityDesc,
                     ownerEntityDesc, false);
             inverseAssociationDesc.setName(name);
             inverseAssociationDesc
                     .setAssociationType(AssociationType.ONE_TO_ONE);
         } else {
-            String name = getAssociationName(inverseEntityDesc,
+            String name = getInverseAssociationName(inverseEntityDesc,
                     ownerEntityDesc, true);
             inverseAssociationDesc.setName(name);
             inverseAssociationDesc
@@ -157,32 +221,77 @@ public class AssociationResolver {
     }
 
     /**
+     * 関連の所有側の関連名を返します。
+     * 
+     * @param fkMeta
+     *            外部キーメタデータ
+     * @param ownerEntityDesc
+     *            関連の所有者側のエンティティ記述
+     * @param inverseEntityDesc
+     *            関連の被所有者側のエンティティ記述
+     * @return 関連の所有側の関連名
+     */
+    protected String getOwnerAssociationName(DbForeignKeyMeta fkMeta,
+            EntityDesc ownerEntityDesc, EntityDesc inverseEntityDesc) {
+        String associationName = StringUtil.decapitalize(inverseEntityDesc
+                .getName());
+        if (!fkMeta.isComposite()) {
+            String fkColumnName = fkMeta.getForeignKeyColumnNameList().get(0);
+            String pkColumnName = fkMeta.getPrimaryKeyColumnNameList().get(0);
+            if (StringUtil.endsWithIgnoreCase(fkColumnName, pkColumnName)) {
+                if (fkColumnName.length() > pkColumnName.length()) {
+                    String value = fkColumnName.substring(0, fkColumnName
+                            .length()
+                            - pkColumnName.length());
+                    value = StringUtil.trimSuffix(value, "_");
+                    value = StringUtil.camelize(value);
+                    associationName = StringUtil.decapitalize(value);
+                }
+            }
+        }
+        return toUniqueAssociationName(ownerEntityDesc, associationName);
+    }
+
+    /**
      * 関連名を返します。
      * 
-     * @param referencingEntityDesc
+     * @param inverseEntityDesc
      *            参照する側のエンティティ記述
-     * @param referencedEntityDesc
+     * @param ownerEntityDesc
      *            参照される側のエンティティ記述
      * @param oneToMany
      *            関連がOneToManyの場合{@code true}
      * @return 関連名
      */
-    protected String getAssociationName(EntityDesc referencingEntityDesc,
-            EntityDesc referencedEntityDesc, boolean oneToMany) {
-        String entityName = referencedEntityDesc.getName();
-        String associationName = StringUtil.decapitalize(entityName);
+    protected String getInverseAssociationName(EntityDesc inverseEntityDesc,
+            EntityDesc ownerEntityDesc, boolean oneToMany) {
+        String associationName = StringUtil.decapitalize(ownerEntityDesc
+                .getName());
         if (oneToMany) {
             associationName = pluralizeName(associationName);
         }
-        if (referencingEntityDesc.hasAssociationDesc(associationName)) {
+        return toUniqueAssociationName(inverseEntityDesc, associationName);
+    }
+
+    /**
+     * 一意の関連名に変換します。
+     * 
+     * @param entityDesc
+     *            エンティティ記述
+     * @param candidateName
+     *            候補の関連名
+     * @return 一意の関連名
+     */
+    protected String toUniqueAssociationName(EntityDesc entityDesc,
+            String candidateName) {
+        if (entityDesc.hasAssociationDesc(candidateName)) {
             for (int i = 2;; i++) {
-                if (!referencingEntityDesc.hasAssociationDesc(associationName
-                        + i)) {
-                    return associationName + i;
+                if (!entityDesc.hasAssociationDesc(candidateName + i)) {
+                    return candidateName + i;
                 }
             }
         }
-        return associationName;
+        return candidateName;
     }
 
     /**
@@ -199,4 +308,5 @@ public class AssociationResolver {
         }
         return name + TO_MANY_ASSOCIATION_NAME_SUFFIX;
     }
+
 }

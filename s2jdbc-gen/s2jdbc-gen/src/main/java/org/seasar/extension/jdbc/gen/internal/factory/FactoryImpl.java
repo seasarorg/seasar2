@@ -190,12 +190,13 @@ public class FactoryImpl implements Factory {
             String packageName, Class<?> superclass, boolean useAccessor,
             boolean showCatalogName, boolean showSchemaName,
             boolean showTableName, boolean showColumnName,
-            boolean showColumnDefinition, boolean showJoinColumn) {
+            boolean showColumnDefinition, boolean showJoinColumn,
+            PersistenceConvention persistenceConvention) {
 
         return new EntityModelFactoryImpl(packageName, superclass,
                 new AttributeModelFactoryImpl(showColumnName,
-                        showColumnDefinition), new AssociationModelFactoryImpl(
-                        showJoinColumn),
+                        showColumnDefinition, persistenceConvention),
+                new AssociationModelFactoryImpl(showJoinColumn),
                 new CompositeUniqueConstraintModelFactoryImpl(), useAccessor,
                 showCatalogName, showSchemaName, showTableName);
     }

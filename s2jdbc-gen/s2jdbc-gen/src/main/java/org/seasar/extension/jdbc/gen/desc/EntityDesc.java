@@ -17,9 +17,7 @@ package org.seasar.extension.jdbc.gen.desc;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * エンティティ記述です。
@@ -51,9 +49,6 @@ public class EntityDesc {
 
     /** 関連記述のリスト */
     protected List<AssociationDesc> associationDescList = new ArrayList<AssociationDesc>();
-
-    /** 関連名をキー、関連記述を値とするマップ */
-    protected Map<String, AssociationDesc> associationDescMap = new HashMap<String, AssociationDesc>();
 
     /** 一意制約記述のリスト */
     protected List<CompositeUniqueConstraintDesc> compositeUniqueConstraintDescList = new ArrayList<CompositeUniqueConstraintDesc>();
@@ -179,6 +174,22 @@ public class EntityDesc {
     }
 
     /**
+     * 指定された属性名の属性記述を持っている場合{@code true}を返します。
+     * 
+     * @param attributeName
+     *            属性名
+     * @return 指定された属性名の属性記述を持っている場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean hasAttributeDesc(String attributeName) {
+        for (AttributeDesc attributeDesc : attributeDescList) {
+            if (attributeDesc.getName().equals(attributeName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 識別子である属性記述のリストを返します。
      * 
      * @return 識別子である属性記述のリスト
@@ -204,7 +215,6 @@ public class EntityDesc {
      */
     public void addAssociationDesc(AssociationDesc associationDesc) {
         associationDescList.add(associationDesc);
-        associationDescMap.put(associationDesc.getName(), associationDesc);
     }
 
     /**
@@ -215,7 +225,12 @@ public class EntityDesc {
      * @return 指定された関連名の関連記述を持っている場合{@code true}、そうでない場合{@code false}
      */
     public boolean hasAssociationDesc(String associationName) {
-        return associationDescMap.containsKey(associationName);
+        for (AssociationDesc associationDesc : associationDescList) {
+            if (associationDesc.getName().equals(associationName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -246,5 +261,4 @@ public class EntityDesc {
     public boolean hasCompositeId() {
         return idAttributeDescList.size() > 1;
     }
-
 }
