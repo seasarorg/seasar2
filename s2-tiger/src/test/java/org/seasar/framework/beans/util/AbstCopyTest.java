@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.beans.util;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -769,6 +770,21 @@ public class AbstCopyTest extends TestCase {
         assertEquals("19700101 00", new MyCopy().timestampConverter(
                 "yyyyMMdd ss").convertValue(new java.sql.Timestamp(0), "aaa",
                 String.class));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testFindDefaultConverter() throws Exception {
+        assertEquals(AbstractCopy.DEFAULT_TIME_CONVERTER, new MyCopy()
+                .findDefaultConverter(Time.class));
+        assertEquals(AbstractCopy.DEFAULT_TIMESTAMP_CONVERTER, new MyCopy()
+                .findDefaultConverter(Timestamp.class));
+        assertEquals(AbstractCopy.DEFAULT_DATE_CONVERTER, new MyCopy()
+                .findDefaultConverter(java.util.Date.class));
+        assertEquals(AbstractCopy.DEFAULT_DATE_CONVERTER, new MyCopy()
+                .findDefaultConverter(java.sql.Date.class));
+        assertNull(new MyCopy().findDefaultConverter(Integer.class));
     }
 
     /**

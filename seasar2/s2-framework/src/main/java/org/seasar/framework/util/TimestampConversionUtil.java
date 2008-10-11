@@ -17,6 +17,7 @@ package org.seasar.framework.util;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * {@link Timestamp}用の変換ユーティリティです。
@@ -58,5 +59,16 @@ public class TimestampConversionUtil {
             return new Timestamp(date.getTime());
         }
         return null;
+    }
+
+    /**
+     * 日付パターンを返します。
+     * 
+     * @param locale
+     * @return 日付パターン
+     */
+    public static String getPattern(Locale locale) {
+        return DateConversionUtil.getY4Pattern(locale) + " "
+                + TimeConversionUtil.getPattern(locale);
     }
 }

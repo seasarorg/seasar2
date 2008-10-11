@@ -16,7 +16,6 @@
 package org.seasar.framework.util;
 
 import java.sql.Time;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -155,22 +154,7 @@ public class TimeConversionUtil {
      * @return 日付パターン
      */
     public static String getPattern(Locale locale) {
-        SimpleDateFormat df = (SimpleDateFormat) DateFormat.getTimeInstance(
-                DateFormat.MEDIUM, locale);
-        String pattern = df.toPattern();
-        if (pattern.indexOf("HH") < 0) {
-            pattern = StringUtil.replace(pattern, "H", "HH");
-        }
-        if (pattern.indexOf("hh") < 0) {
-            pattern = StringUtil.replace(pattern, "h", "hh");
-        }
-        if (pattern.indexOf("mm") < 0) {
-            pattern = StringUtil.replace(pattern, "m", "mm");
-        }
-        if (pattern.indexOf("ss") < 0) {
-            pattern = StringUtil.replace(pattern, "s", "ss");
-        }
-        return pattern;
+        return "HH:mm:ss";
     }
 
     /**

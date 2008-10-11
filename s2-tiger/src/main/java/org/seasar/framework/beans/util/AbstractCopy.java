@@ -15,10 +15,13 @@
  */
 package org.seasar.framework.beans.util;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.seasar.framework.beans.BeanDesc;
@@ -31,6 +34,9 @@ import org.seasar.framework.beans.converter.SqlDateConverter;
 import org.seasar.framework.beans.converter.TimeConverter;
 import org.seasar.framework.beans.converter.TimestampConverter;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.util.DateConversionUtil;
+import org.seasar.framework.util.TimeConversionUtil;
+import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
  * JavaBeansやMapに対して操作を行う抽象クラスです。
@@ -46,6 +52,24 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * 空の文字列の配列です。
      */
     protected static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /**
+     * 日付用のデフォルトコンバータです。
+     */
+    protected static final Converter DEFAULT_DATE_CONVERTER = new DateConverter(
+            DateConversionUtil.getY4Pattern(Locale.getDefault()));
+
+    /**
+     * 日時用のデフォルトコンバータです。
+     */
+    protected static final Converter DEFAULT_TIMESTAMP_CONVERTER = new DateConverter(
+            TimestampConversionUtil.getPattern(Locale.getDefault()));
+
+    /**
+     * 時間用のデフォルトコンバータです。
+     */
+    protected static final Converter DEFAULT_TIME_CONVERTER = new DateConverter(
+            TimeConversionUtil.getPattern(Locale.getDefault()));
 
     /**
      * 操作の対象に含めるプロパティ名の配列です。
@@ -489,6 +513,9 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
                 }
             }
             if (converter == null) {
+                converter = findDefaultConverter(targetClass);
+            }
+            if (converter == null) {
                 return value;
             }
         }
@@ -514,6 +541,26 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             if (c.isTarget(clazz)) {
                 return c;
             }
+        }
+        return null;
+    }
+
+    /**
+     * クラスに対応するデフォルトのコンバータを探します。
+     * 
+     * @param clazz
+     *            クラス
+     * @return コンバータ
+     */
+    protected Converter findDefaultConverter(Class<?> clazz) {
+        if (clazz == Time.class) {
+            return DEFAULT_TIME_CONVERTER;
+        }
+        if (clazz == Timestamp.class) {
+            return DEFAULT_TIMESTAMP_CONVERTER;
+        }
+        if (java.util.Date.class.isAssignableFrom(clazz)) {
+            return DEFAULT_DATE_CONVERTER;
         }
         return null;
     }

@@ -54,8 +54,7 @@ public class TimeConversionUtilTest extends TestCase {
      */
     public void testGetPattern() throws Exception {
         assertEquals("HH:mm:ss", TimeConversionUtil.getPattern(Locale.JAPANESE));
-        assertEquals("hh:mm:ss a", TimeConversionUtil
-                .getPattern(Locale.ENGLISH));
+        assertEquals("HH:mm:ss", TimeConversionUtil.getPattern(Locale.ENGLISH));
         assertEquals("HH:mm:ss", TimeConversionUtil.getPattern(Locale.CHINESE));
         assertEquals("HH:mm:ss", TimeConversionUtil.getPattern(Locale.FRENCH));
     }
