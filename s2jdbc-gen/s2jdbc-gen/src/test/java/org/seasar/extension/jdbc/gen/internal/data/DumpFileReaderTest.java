@@ -19,8 +19,6 @@ import java.io.File;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.data.DumpFileReader;
-import org.seasar.extension.jdbc.gen.internal.data.DumpFileTokenizer;
 import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpColumnSizeRuntimeException;
 import org.seasar.framework.util.ResourceUtil;
 
@@ -49,7 +47,28 @@ public class DumpFileReaderTest {
         assertEquals(2, reader.getLineNumber());
         assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
         assertEquals(3, reader.getLineNumber());
-        assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
+        assertEquals(Arrays.asList("3", "", "30"), reader.readLine());
+        assertEquals(4, reader.getLineNumber());
+        assertNull(reader.readLine());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testQuotedCRLF() throws Exception {
+        String path = getClass().getName().replace('.', '/')
+                + "_quotedCRLF.csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
+        assertEquals(1, reader.getLineNumber());
+        assertEquals(Arrays.asList("1", "aa\r\na", "10"), reader.readLine());
+        assertEquals(2, reader.getLineNumber());
+        assertEquals(Arrays.asList("2", null, "20"), reader.readLine());
+        assertEquals(3, reader.getLineNumber());
+        assertEquals(Arrays.asList("3", "\r\n", "30"), reader.readLine());
         assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
     }
@@ -148,4 +167,5 @@ public class DumpFileReaderTest {
         } catch (IllegalDumpColumnSizeRuntimeException expected) {
         }
     }
+
 }

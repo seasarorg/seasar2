@@ -31,7 +31,8 @@ public class DumpUtil {
     protected static String ESCAPED_QUOTE = "\"\"";
 
     /** デコード対象の文字列を判別するための正規表現 */
-    protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile("^\".+\"");
+    protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile("^\".*\"",
+            Pattern.DOTALL);
 
     /**
      * 

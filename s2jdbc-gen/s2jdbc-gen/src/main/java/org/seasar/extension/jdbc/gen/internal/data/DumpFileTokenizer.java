@@ -81,7 +81,7 @@ public class DumpFileTokenizer {
     }
 
     /**
-     * 文字をchar配列としてを追加します。
+     * 文字をchar配列として追加します。
      * 
      * @param chars
      *            char配列としての文字
