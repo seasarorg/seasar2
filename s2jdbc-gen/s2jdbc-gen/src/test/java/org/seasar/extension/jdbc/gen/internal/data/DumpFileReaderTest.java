@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpColumnSizeRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpValueRuntimeException;
 import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
@@ -165,6 +166,25 @@ public class DumpFileReaderTest {
             reader.readLine();
             fail();
         } catch (IllegalDumpColumnSizeRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIllegalValue() throws Exception {
+        String path = getClass().getName().replace('.', '/')
+                + "_illegalValue.csv";
+        File file = ResourceUtil.getResourceAsFile(path);
+        DumpFileReader reader = new DumpFileReader(file, "UTF-8", tokenizer);
+        assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
+        assertEquals(1, reader.getLineNumber());
+        try {
+            reader.readLine();
+            fail();
+        } catch (IllegalDumpValueRuntimeException expected) {
         }
     }
 

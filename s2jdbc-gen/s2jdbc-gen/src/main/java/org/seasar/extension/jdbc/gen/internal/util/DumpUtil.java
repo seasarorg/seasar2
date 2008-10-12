@@ -31,8 +31,8 @@ public class DumpUtil {
     protected static String ESCAPED_QUOTE = "\"\"";
 
     /** デコード対象の文字列を判別するための正規表現 */
-    protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile("^\".*\"",
-            Pattern.DOTALL);
+    protected static Pattern DECODE_TARGET_PATTERN = Pattern.compile(
+            "^\".*\"$", Pattern.DOTALL);
 
     /**
      * 
@@ -53,6 +53,32 @@ public class DumpUtil {
         }
         String s = value.replace(QUOTE, ESCAPED_QUOTE);
         return quote(s);
+    }
+
+    /**
+     * デコード可能の場合{@code true}を返します。
+     * 
+     * @param value
+     *            値
+     * @return デコード可能の場合{@code true}
+     */
+    public static boolean isDecodable(String value) {
+        if (value == null || value.equals("")) {
+            return true;
+        }
+        if (DECODE_TARGET_PATTERN.matcher(value).matches()) {
+            return true;
+        }
+        for (char c : value.toCharArray()) {
+            switch (c) {
+            case '"':
+            case ',':
+            case '\n':
+            case '\r':
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -83,4 +109,5 @@ public class DumpUtil {
     public static String quote(String value) {
         return QUOTE + value + QUOTE;
     }
+
 }

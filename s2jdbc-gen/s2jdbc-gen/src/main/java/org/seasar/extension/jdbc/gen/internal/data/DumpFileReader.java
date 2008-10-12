@@ -26,6 +26,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.gen.internal.data.DumpFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpColumnSizeRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpValueRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.internal.util.DumpUtil;
 import org.seasar.framework.exception.IORuntimeException;
@@ -104,11 +105,11 @@ public class DumpFileReader {
             return null;
         }
         try {
+            lineNumber++;
             List<String> valueList = readLineInternal();
             if (valueList == null) {
                 return null;
             }
-            lineNumber++;
             if (lineNumber == 1) {
                 headerColumnSize = valueList.size();
             } else {
@@ -135,7 +136,7 @@ public class DumpFileReader {
         if (reader == null) {
             reader = createBufferedReader();
         }
-        List<String> row = new ArrayList<String>(30);
+        Line line = new Line();
         readLoop: for (; read();) {
             nextTokenLoop: for (;;) {
                 tokenType = tokenizer.nextToken();
@@ -143,7 +144,7 @@ public class DumpFileReader {
                 case VALUE:
                 case NULL:
                     String token = tokenizer.getToken();
-                    row.add(DumpUtil.decode(token));
+                    line.add(token);
                     break;
                 case END_OF_BUFFER:
                     break nextTokenLoop;
@@ -154,18 +155,7 @@ public class DumpFileReader {
                 }
             }
         }
-        if (isEndOfFile()) {
-            if (tokenType == TokenType.END_OF_BUFFER) {
-                String value = tokenizer.getToken();
-                if (value.endsWith("\r")) {
-                    value = StringUtil.rtrim(value, "\r");
-                }
-                if (!StringUtil.isEmpty(value)) {
-                    row.add(DumpUtil.decode(value));
-                }
-            }
-        }
-        return !row.isEmpty() ? row : null;
+        return line.toList();
     }
 
     /**
@@ -224,4 +214,57 @@ public class DumpFileReader {
     public void close() {
         CloseableUtil.close(reader);
     }
+
+    /**
+     * 行を表すクラスです。
+     * 
+     * @author taedium
+     */
+    protected class Line {
+
+        /** 値のリスト */
+        protected List<String> valueList = new ArrayList<String>(30);
+
+        /**
+         * 値のリストを返します。
+         * 
+         * @return 値のリスト
+         */
+        public List<String> toList() {
+            if (isEndOfFile() && tokenType == TokenType.END_OF_BUFFER) {
+                String value = tokenizer.getToken();
+                if (value.endsWith("\r")) {
+                    value = StringUtil.rtrim(value, "\r");
+                }
+                if (!StringUtil.isEmpty(value)) {
+                    addInternal(value);
+                }
+            }
+            return !valueList.isEmpty() ? valueList : null;
+        }
+
+        /**
+         * 値を追加します。
+         * 
+         * @param value
+         *            値
+         */
+        public void add(String value) {
+            addInternal(value);
+        }
+
+        /**
+         * 内部的に値を追加します。
+         * 
+         * @param value
+         *            値
+         */
+        protected void addInternal(String value) {
+            if (!DumpUtil.isDecodable(value)) {
+                throw new IllegalDumpValueRuntimeException(value);
+            }
+            valueList.add(DumpUtil.decode(value));
+        }
+    }
+
 }

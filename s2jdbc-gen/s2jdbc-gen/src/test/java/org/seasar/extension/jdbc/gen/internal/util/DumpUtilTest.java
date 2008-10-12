@@ -49,4 +49,29 @@ public class DumpUtilTest {
         assertNull(DumpUtil.decode(null));
     }
 
+    /**
+     * @throws Exception
+     */
+    @Test
+    public void testIsDecodable_true() {
+        assertTrue(DumpUtil.isDecodable("\"aaa\""));
+        assertTrue(DumpUtil.isDecodable("\"aa\"a\""));
+        assertTrue(DumpUtil.isDecodable("\"aa,a\""));
+        assertTrue(DumpUtil.isDecodable("\"aa\na\""));
+        assertTrue(DumpUtil.isDecodable("\"aa\ra\""));
+    }
+
+    /**
+     * 
+     */
+
+    @Test
+    public void testIsDecodable_false() {
+        assertFalse(DumpUtil.isDecodable("\"aaa"));
+        assertFalse(DumpUtil.isDecodable("aaa\""));
+        assertFalse(DumpUtil.isDecodable("aa,a"));
+        assertFalse(DumpUtil.isDecodable("aa\na"));
+        assertFalse(DumpUtil.isDecodable("aa\ra"));
+    }
+
 }
