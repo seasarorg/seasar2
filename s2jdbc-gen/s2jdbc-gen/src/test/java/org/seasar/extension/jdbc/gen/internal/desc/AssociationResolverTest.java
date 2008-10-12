@@ -292,6 +292,60 @@ public class AssociationResolverTest {
      * @throws Exception
      */
     @Test
+    public void testAssociationName_fkColumnName_endsWith_pkColumnName_and_pkColumnName_startsWith_pkTableName()
+            throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("CCC");
+        entityDesc.setName("Ccc");
+
+        EntityDesc entityDesc2 = new EntityDesc();
+        entityDesc2.setCatalogName("DDD");
+        entityDesc2.setSchemaName("EEE");
+        entityDesc2.setTableName("FFF");
+        entityDesc2.setName("Fff");
+
+        AttributeDesc attributeDesc = new AttributeDesc();
+        attributeDesc.setName("gggCccId");
+        entityDesc2.addAttributeDesc(attributeDesc);
+
+        EntitySetDesc entitySetDesc = new EntitySetDesc();
+        entitySetDesc.addEntityDesc(entityDesc);
+        entitySetDesc.addEntityDesc(entityDesc2);
+
+        DbTableMeta tableMeta = new DbTableMeta();
+        tableMeta.setCatalogName("DDD");
+        tableMeta.setSchemaName("EEE");
+        tableMeta.setName("FFF");
+
+        DbForeignKeyMeta fkMeta = new DbForeignKeyMeta();
+        fkMeta.setPrimaryKeyCatalogName("AAA");
+        fkMeta.setPrimaryKeySchemaName("BBB");
+        fkMeta.setPrimaryKeyTableName("CCC");
+        fkMeta.addPrimaryKeyColumnName("CCC_ID");
+        fkMeta.addForeignKeyColumnName("GGG_CCC_ID");
+
+        AssociationResolver resolver = new AssociationResolver(entitySetDesc,
+                new PluralFormDictinary(), new PersistenceConventionImpl());
+        resolver.resolve(tableMeta, fkMeta);
+
+        assertEquals(1, entityDesc.getAssociationDescList().size());
+        AssociationDesc assoDesc = entityDesc.getAssociationDescList().get(0);
+        assertEquals(AssociationType.ONE_TO_MANY, assoDesc.getAssociationType());
+        assertEquals("fffList", assoDesc.getName());
+
+        assertEquals(1, entityDesc2.getAssociationDescList().size());
+        assoDesc = entityDesc2.getAssociationDescList().get(0);
+        assertEquals("gggCcc", assoDesc.getName());
+        assertEquals("gggCccId", attributeDesc.getName());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testAssociationName_fkColumnName_equals_pkColumnName()
             throws Exception {
         EntityDesc entityDesc = new EntityDesc();

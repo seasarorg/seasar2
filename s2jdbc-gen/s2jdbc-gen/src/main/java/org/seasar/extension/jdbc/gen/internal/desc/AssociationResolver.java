@@ -240,12 +240,18 @@ public class AssociationResolver {
             String pkColumnName = fkMeta.getPrimaryKeyColumnNameList().get(0);
             if (StringUtil.endsWithIgnoreCase(fkColumnName, pkColumnName)) {
                 if (fkColumnName.length() > pkColumnName.length()) {
-                    String value = fkColumnName.substring(0, fkColumnName
+                    String name = fkColumnName.substring(0, fkColumnName
                             .length()
                             - pkColumnName.length());
-                    value = StringUtil.trimSuffix(value, "_");
-                    value = StringUtil.camelize(value);
-                    associationName = StringUtil.decapitalize(value);
+                    name = StringUtil.trimSuffix(name, "_");
+                    name = StringUtil.camelize(name);
+                    if (StringUtil.startsWithIgnoreCase(pkColumnName,
+                            inverseEntityDesc.getTableName())) {
+                        associationName = StringUtil.decapitalize(name)
+                                + inverseEntityDesc.getName();
+                    } else {
+                        associationName = StringUtil.decapitalize(name);
+                    }
                 }
             }
         }
