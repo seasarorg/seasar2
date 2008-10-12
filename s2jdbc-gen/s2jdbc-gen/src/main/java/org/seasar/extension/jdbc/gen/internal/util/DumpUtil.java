@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.util;
 
 import java.util.regex.Pattern;
 
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpValueRuntimeException;
+
 /**
  * ダンプに関するユーティリティクラスです。
  * 
@@ -56,32 +58,6 @@ public class DumpUtil {
     }
 
     /**
-     * デコード可能の場合{@code true}を返します。
-     * 
-     * @param value
-     *            値
-     * @return デコード可能の場合{@code true}
-     */
-    public static boolean isDecodable(String value) {
-        if (value == null || value.equals("")) {
-            return true;
-        }
-        if (DECODE_TARGET_PATTERN.matcher(value).matches()) {
-            return true;
-        }
-        for (char c : value.toCharArray()) {
-            switch (c) {
-            case '"':
-            case ',':
-            case '\n':
-            case '\r':
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * デコードします。
      * 
      * @param value
@@ -95,6 +71,11 @@ public class DumpUtil {
         if (DECODE_TARGET_PATTERN.matcher(value).matches()) {
             String s = value.substring(1, value.length() - 1);
             return s.replace(ESCAPED_QUOTE, QUOTE);
+        }
+        for (char c : value.toCharArray()) {
+            if (c == '"' || c == ',' || c == '\n' || c == '\r') {
+                throw new IllegalDumpValueRuntimeException(value);
+            }
         }
         return value;
     }

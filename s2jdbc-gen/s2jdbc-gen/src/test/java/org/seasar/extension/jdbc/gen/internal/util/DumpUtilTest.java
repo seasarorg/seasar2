@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.util;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpValueRuntimeException;
 
 import static org.junit.Assert.*;
 
@@ -50,28 +51,26 @@ public class DumpUtilTest {
     }
 
     /**
-     * @throws Exception
-     */
-    @Test
-    public void testIsDecodable_true() {
-        assertTrue(DumpUtil.isDecodable("\"aaa\""));
-        assertTrue(DumpUtil.isDecodable("\"aa\"a\""));
-        assertTrue(DumpUtil.isDecodable("\"aa,a\""));
-        assertTrue(DumpUtil.isDecodable("\"aa\na\""));
-        assertTrue(DumpUtil.isDecodable("\"aa\ra\""));
-    }
-
-    /**
      * 
      */
-
     @Test
-    public void testIsDecodable_false() {
-        assertFalse(DumpUtil.isDecodable("\"aaa"));
-        assertFalse(DumpUtil.isDecodable("aaa\""));
-        assertFalse(DumpUtil.isDecodable("aa,a"));
-        assertFalse(DumpUtil.isDecodable("aa\na"));
-        assertFalse(DumpUtil.isDecodable("aa\ra"));
+    public void testDecode_illegalValue() {
+        try {
+            DumpUtil.decode("\"aaa");
+        } catch (IllegalDumpValueRuntimeException expected) {
+        }
+        try {
+            DumpUtil.decode("aa,a");
+        } catch (IllegalDumpValueRuntimeException expected) {
+        }
+        try {
+            DumpUtil.decode("aa\na");
+        } catch (IllegalDumpValueRuntimeException expected) {
+        }
+        try {
+            DumpUtil.decode("aa\ra");
+        } catch (IllegalDumpValueRuntimeException expected) {
+        }
     }
 
 }

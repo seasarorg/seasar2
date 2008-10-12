@@ -26,7 +26,6 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.gen.internal.data.DumpFileTokenizer.TokenType;
 import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpColumnSizeRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.exception.IllegalDumpValueRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.internal.util.DumpUtil;
 import org.seasar.framework.exception.IORuntimeException;
@@ -260,9 +259,6 @@ public class DumpFileReader {
          *            値
          */
         protected void addInternal(String value) {
-            if (!DumpUtil.isDecodable(value)) {
-                throw new IllegalDumpValueRuntimeException(value);
-            }
             valueList.add(DumpUtil.decode(value));
         }
     }
