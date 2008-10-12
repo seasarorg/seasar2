@@ -14,12 +14,22 @@
 				</li>
 				<li>
 					<p>
-						<a href="#ビルドファイル">ビルドファイル</a>
+						<a href="#ビルドファイルの準備">ビルドファイルの準備</a>
 					</p>
 				</li>
 				<li>
 					<p>
-						<a href="#Antタスクの実行">Antタスクの実行</a>
+						<a href="#Antタスクの実行方法">Antタスクの実行方法</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#Eclipseの設定">Eclipseの設定</a>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#CSVエディタの設定">CSVエディタの設定</a>
 					</p>
 				</li>
 			</ul>
@@ -37,7 +47,8 @@
 		<section name="ビルドファイルの準備">
 			<p>
 				S2JDBC-GenのAntタスクを実行するにはAntのビルドファイルが必要です。
-				典型的なビルドファイルは次のようになります。
+				簡易的なビルドファイルを用いて説明します。
+				実践的なビルドファイルの例は<a href="task.html#タスクの使用例">タスクの使用例</a>を参照ください。
 			</p>
 <source><![CDATA[<project name="sample" default="gen-ddl" basedir=".">
 
@@ -113,7 +124,7 @@
 				</p>
 			</subsection>
 		</section>
-		<section name="Antタスクの実行">
+		<section name="Antタスクの実行方法">
 			<p>
 				以下、ビルドファイルの名前をs2jdbc-gen-build.xmlだとします。
 			</p>
@@ -139,6 +150,69 @@ ant -f s2jdbc-gen-build.xml ターゲット名
 						<li>ダイアログの「Run」ボタンを押しAntを実行します。</li>
 					</ol>
 				</p>
+			</subsection>
+		</section>
+		<section name="Eclipseの設定">
+			<p>
+				Eclipseを利用する場合、利便性向上のために以下に説明する設定変更を推奨します。
+			</p>
+			<subsection name="Organize Importsの設定">
+				<p>
+					S2JDBC-Genのいくつかのタスクは、次のような、「.*」を使った一括のstatic importを利用したクラスを生成します。
+				</p>
+			<source><![CDATA[
+import static example.entity.EmployeeNames.*;
+
+public class EmployeeService {
+  ...
+}]]></source>
+				<p>
+					しかし、EclipseのOrganize Imports機能は、この定義を、実際に使用されている個別のstaticメンバのインポート文へ変換してしまいます。
+				</p>
+			<source><![CDATA[
+import static example.entity.EmployeeNames.employeeId;
+import static example.entity.EmployeeNames.employeeName;
+import static example.entity.EmployeeNames.salary;
+
+public class EmployeeService {
+  ...
+}]]></source>
+				<p>
+					この変換により、EmployeeNamesの他のstaticメンバがコンテンツアシストの候補にならなくなります（「.*」を使った一括のstatic importのままであれば、候補に挙がります）。
+					これは不便であるため、Eclipseを利用する場合、「.*」を使った一括のインポート文が個別のstaticメンバのインポート文に変換されないように「Organize Imports」の設定を行います。
+				</p>
+				<p>
+					「Organize Imports」の設定画面へは、メニューの「Window」-「Preferences」からダイアログを開き、ツリーメニューで「Java」-「Code Style」-「Organize Imports」と辿ってください。
+					「Organize Imports」の設定画面を開いたら、「Number of static imports for .*」の項目に1を設定します。
+				</p>
+				<img src="../images/s2jdbc_gen_organize_imports.png"
+					width="546" height="649" alt="Organize Importsの設定" />
+			</subsection>
+		</section>
+		<section name="CSVエディタの設定">
+			<p>
+				Windows環境では、CSVエディタとして<a href="http://www.asukaze.net/soft/cassava/">Cassava Editor</a>を利用することを推奨します。
+			</p>
+			<subsection name="Cassava Editor">
+				<p>
+					S2JDBC-GenのいくつかのタスクはデータベースのダンプデータをCSV形式で出力します。
+					データを編集する際は、CSVエディタであるCassava Editorを利用するのが便利です。
+					以下に、推奨のCassava Editorの設定方法を示します。
+				</p>
+				<p>
+					<ul>
+						<li>
+							メニューから「表示」-「一行目を固定」を選びます。これによりヘッダー行が固定されます。
+						</li>
+						<li>
+							メニューから「オプション」-「オプション」を選びます。ダイアログが表示されたら「データ形式」を選択し、「必要なセルのみ""で囲む」にチェックします。これにより、nullのデータをnullのデータとして維持できます。
+						</li>
+						<li>
+							メニューから「オプション」-「セーブ時文字コード」でタスクが利用するエンコーディング（デフォルトではUTF-8）と同じものを指定します。これにより、エンコーディングの誤変換を防ぎます。
+						</li>
+					</ul>
+				</p>
+				S2JDBC-Genで扱うCSV形式の詳細については<a href="tasks/gen_ddl.html#ダンプファイル">ダンプファイル</a>を参照してください。
 			</subsection>
 		</section>
 	</body>
