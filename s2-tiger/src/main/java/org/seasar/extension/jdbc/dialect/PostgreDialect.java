@@ -98,7 +98,9 @@ public class PostgreDialect extends StandardDialect {
     public ValueType getValueType(PropertyMeta propertyMeta) {
         final Class<?> clazz = propertyMeta.getPropertyClass();
         if (propertyMeta.isLob()) {
-            if (clazz == byte[].class) {
+            if (clazz == String.class) {
+                return ValueTypes.CLOB;
+            } else if (clazz == byte[].class) {
                 return BLOB_TYPE;
             } else if (Serializable.class.isAssignableFrom(clazz)) {
                 return SERIALIZABLE_BLOB_TYPE;
@@ -115,7 +117,9 @@ public class PostgreDialect extends StandardDialect {
     public ValueType getValueType(Class<?> clazz, boolean lob,
             TemporalType temporalType) {
         if (lob) {
-            if (clazz == byte[].class) {
+            if (clazz == String.class) {
+                return ValueTypes.CLOB;
+            } else if (clazz == byte[].class) {
                 return BLOB_TYPE;
             } else if (Serializable.class.isAssignableFrom(clazz)) {
                 return SERIALIZABLE_BLOB_TYPE;
