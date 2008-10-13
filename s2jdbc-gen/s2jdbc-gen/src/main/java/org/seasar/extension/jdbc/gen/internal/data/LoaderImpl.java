@@ -50,9 +50,6 @@ public class LoaderImpl implements Loader {
     /** ダンプファイルのエンコーディング */
     protected String dumpFileEncoding;
 
-    /** トークナイザ */
-    protected DumpFileTokenizer tokenizer;
-
     /** 区切り文字 */
     protected char delimiter = ',';
 
@@ -85,7 +82,6 @@ public class LoaderImpl implements Loader {
         this.dialect = dialect;
         this.dumpFileEncoding = dumpFileEncoding;
         this.batchSize = batchSize;
-        tokenizer = createDumpFileTokenizer();
     }
 
     public void load(SqlExecutionContext sqlExecutionContext,
@@ -295,6 +291,7 @@ public class LoaderImpl implements Loader {
      * @return ダンプファイルのリーダ
      */
     protected DumpFileReader createDumpFileReader(File dumpFile) {
-        return new DumpFileReader(dumpFile, dumpFileEncoding, tokenizer);
+        return new DumpFileReader(dumpFile, dumpFileEncoding,
+                createDumpFileTokenizer());
     }
 }
