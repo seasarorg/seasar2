@@ -332,6 +332,18 @@ public class PostgreDialect extends StandardDialect {
     public static class PostgreClobType extends StringClobType {
 
         @Override
+        public Object getValue(ResultSet resultSet, int index)
+                throws SQLException {
+            return convertToString(resultSet.getClob(index));
+        }
+
+        @Override
+        public Object getValue(ResultSet resultSet, String columnName)
+                throws SQLException {
+            return convertToString(resultSet.getClob(columnName));
+        }
+
+        @Override
         public void bindValue(PreparedStatement ps, int index, Object value)
                 throws SQLException {
             if (value == null) {

@@ -61,14 +61,14 @@ public class StringClobType extends AbstractValueType {
         return convertToString(cs.getClob(parameterName));
     }
 
-    private String convertToString(Reader reader) {
+    protected String convertToString(Reader reader) {
         if (reader == null) {
             return null;
         }
         return ReaderUtil.readText(reader);
     }
 
-    private String convertToString(Clob clob) throws SQLException {
+    protected String convertToString(Clob clob) throws SQLException {
         if (clob == null) {
             return null;
         }
