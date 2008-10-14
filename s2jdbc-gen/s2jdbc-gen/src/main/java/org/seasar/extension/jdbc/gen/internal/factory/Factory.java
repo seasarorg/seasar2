@@ -23,13 +23,16 @@ import javax.persistence.JoinColumn;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
@@ -91,11 +94,14 @@ public interface Factory {
      *            エンティティメタデータのリーダ
      * @param dialect
      *            方言
+     * @param valueTypeProvider
+     *            {@link ValueType}の提供者
      * @return {@link DatabaseDescFactory}の実装
      */
     DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect);
+            EntityMetaReader entityMetaReader, GenDialect dialect,
+            ValueTypeProvider valueTypeProvider);
 
     /**
      * {@link Dumper}の実装を返します。
@@ -474,4 +480,15 @@ public interface Factory {
     GenerationContext createGenerationContext(Command command, Object model,
             File file, String templateName, String encoding, boolean overwrite);
 
+    /**
+     * {@link ValueTypeProvider}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元もコマンド
+     * @param dbmsDialect
+     *            S2JDBCのDBMS方言
+     * @return {@link ValueTypeProvider}の実装
+     */
+    ValueTypeProvider createValueTypeProvider(Command command,
+            DbmsDialect dbmsDialect);
 }

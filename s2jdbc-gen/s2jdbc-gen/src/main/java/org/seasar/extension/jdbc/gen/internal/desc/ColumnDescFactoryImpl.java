@@ -23,11 +23,13 @@ import javax.persistence.GenerationType;
 import org.seasar.extension.jdbc.ColumnMeta;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.NullableUniqueNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.StringUtil;
@@ -42,17 +44,27 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** {@link ValueType}の提供者 */
+    protected ValueTypeProvider valueTypeProvider;
+
     /**
      * インスタンスを構築します。
      * 
      * @param dialect
      *            方言
+     * @param valueTypeProvider
+     *            {@link ValueType}の提供者
      */
-    public ColumnDescFactoryImpl(GenDialect dialect) {
+    public ColumnDescFactoryImpl(GenDialect dialect,
+            ValueTypeProvider valueTypeProvider) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
+        if (valueTypeProvider == null) {
+            throw new NullPointerException("valueTypeResolver");
+        }
         this.dialect = dialect;
+        this.valueTypeProvider = valueTypeProvider;
     }
 
     public ColumnDesc getColumnDesc(EntityMeta entityMeta,
@@ -131,7 +143,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doDefinition(EntityMeta entityMeta,
             PropertyMeta propertyMeta, ColumnDesc columnDesc, Column column) {
-        int sqlType = propertyMeta.getValueType().getSqlType();
+        ValueType valueType = valueTypeProvider.provide(propertyMeta);
+        int sqlType = valueType.getSqlType();
         SqlType type = dialect.getSqlType(sqlType);
         String dataType = type.getDataType(column.length(), column.precision(),
                 column.scale(), columnDesc.isIdentity());
@@ -214,7 +227,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doSqlType(EntityMeta entityMeta, PropertyMeta propertyMeta,
             ColumnDesc columnDesc, Column column) {
-        int sqlType = propertyMeta.getValueType().getSqlType();
+        ValueType valueType = valueTypeProvider.provide(propertyMeta);
+        int sqlType = valueType.getSqlType();
         columnDesc.setSqlType(dialect.getSqlType(sqlType));
     }
 

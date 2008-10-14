@@ -22,12 +22,14 @@ import javax.persistence.GenerationType;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
 import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
@@ -35,6 +37,7 @@ import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
 import org.seasar.extension.jdbc.gen.internal.data.LoaderImpl;
 import org.seasar.extension.jdbc.gen.internal.desc.DatabaseDescFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.desc.EntitySetDescFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.desc.ValueTypeProviderImpl;
 import org.seasar.extension.jdbc.gen.internal.generator.GenerationContextImpl;
 import org.seasar.extension.jdbc.gen.internal.generator.GeneratorImpl;
 import org.seasar.extension.jdbc.gen.internal.meta.DbTableMetaReaderImpl;
@@ -95,10 +98,11 @@ public class FactoryImpl implements Factory {
 
     public DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect) {
+            EntityMetaReader entityMetaReader, GenDialect dialect,
+            ValueTypeProvider valueTypeProvider) {
 
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect);
+                dialect, valueTypeProvider);
     }
 
     public Dumper createDumper(Command command, GenDialect dialect,
@@ -261,4 +265,17 @@ public class FactoryImpl implements Factory {
         return new GenerationContextImpl(model, file, templateName, encoding,
                 overwrite);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @seeorg.seasar.extension.jdbc.gen.internal.factory.Factory#
+     * createValueTypeResolver(org.seasar.extension.jdbc.gen.command.Command,
+     * org.seasar.extension.jdbc.DbmsDialect)
+     */
+    public ValueTypeProvider createValueTypeProvider(Command command,
+            DbmsDialect dbmsDialect) {
+        return new ValueTypeProviderImpl(dbmsDialect);
+    }
+
 }

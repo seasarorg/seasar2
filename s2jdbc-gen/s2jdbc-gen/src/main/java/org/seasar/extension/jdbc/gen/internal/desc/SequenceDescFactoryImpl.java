@@ -22,8 +22,10 @@ import javax.persistence.SequenceGenerator;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
@@ -44,17 +46,27 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** {@link ValueType}の提供者 */
+    protected ValueTypeProvider valueTypeProvider;
+
     /**
      * インスタンスを構築します。
      * 
      * @param dialect
      *            方言
+     * @param valueTypeProvider
+     *            {@link ValueType}の提供者
      */
-    public SequenceDescFactoryImpl(GenDialect dialect) {
+    public SequenceDescFactoryImpl(GenDialect dialect,
+            ValueTypeProvider valueTypeProvider) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
+        if (valueTypeProvider == null) {
+            throw new NullPointerException("valueTypeResolver");
+        }
         this.dialect = dialect;
+        this.valueTypeProvider = valueTypeProvider;
     }
 
     public SequenceDesc getSequenceDesc(EntityMeta entityMeta,
@@ -126,7 +138,8 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
      * @return シーケンスのデータ型
      */
     protected String getDataType(PropertyMeta propertyMeta) {
-        int sqlType = propertyMeta.getValueType().getSqlType();
+        ValueType valueType = valueTypeProvider.provide(propertyMeta);
+        int sqlType = valueType.getSqlType();
         return dialect.getSqlType(sqlType).getDataType(0, 20, 0, false);
     }
 

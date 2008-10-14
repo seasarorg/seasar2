@@ -16,21 +16,28 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Clob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.dialect.PostgreDialect.ClobImpl;
+import org.seasar.extension.jdbc.gen.internal.sqltype.AbstractSqlType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BooleanType;
-import org.seasar.extension.jdbc.gen.internal.sqltype.ClobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DecimalType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DoubleType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.FloatType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
+import org.seasar.framework.util.ReaderUtil;
 
 /**
  * PostgreSQLの方言を扱うクラスです。
@@ -63,7 +70,7 @@ public class PostgreGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BINARY, new BinaryType("bytea"));
         sqlTypeMap.put(Types.BOOLEAN, new BooleanType("bool"));
         sqlTypeMap.put(Types.BLOB, new BlobType("oid"));
-        sqlTypeMap.put(Types.CLOB, new ClobType("text"));
+        sqlTypeMap.put(Types.CLOB, new PostgreClobType());
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
         sqlTypeMap.put(Types.DOUBLE, new DoubleType("float8"));
         sqlTypeMap.put(Types.FLOAT, new FloatType("float4"));
@@ -308,5 +315,49 @@ public class PostgreGenDialect extends StandardGenDialect {
         public boolean isInSqlBlock() {
             return inSqlBlock;
         }
+    }
+
+    /**
+     * PostgreSQL用のCLOB{@link SqlType}です。
+     * 
+     * @author taedium
+     */
+    public static class PostgreClobType extends AbstractSqlType {
+
+        /**
+         * インスタンスを構築します。
+         */
+        public PostgreClobType() {
+            this("oid");
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param dataType
+         *            データ型
+         */
+        public PostgreClobType(String dataType) {
+            super(dataType);
+        }
+
+        public void bindValue(PreparedStatement ps, int index, String value)
+                throws SQLException {
+            if (value == null) {
+                ps.setNull(index, Types.CLOB);
+            } else {
+                ps.setClob(index, new ClobImpl(value));
+            }
+        }
+
+        public String getValue(ResultSet resultSet, int index)
+                throws SQLException {
+            Clob clob = resultSet.getClob(index);
+            if (clob == null) {
+                return null;
+            }
+            return ReaderUtil.readText(clob.getCharacterStream());
+        }
+
     }
 }

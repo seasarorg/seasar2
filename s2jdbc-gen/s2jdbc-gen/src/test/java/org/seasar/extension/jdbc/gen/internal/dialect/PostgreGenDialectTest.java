@@ -58,6 +58,16 @@ public class PostgreGenDialectTest {
      * @throws Exception
      */
     @Test
+    public void testGetSqlType_clob() throws Exception {
+        SqlType type = dialect.getSqlType(Types.CLOB);
+        assertEquals("oid", type.getDataType(10, 0, 0, false));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testCreateSqlBlockContext() throws Exception {
         SqlBlockContext context = dialect.createSqlBlockContext();
         assertFalse(context.isInSqlBlock());

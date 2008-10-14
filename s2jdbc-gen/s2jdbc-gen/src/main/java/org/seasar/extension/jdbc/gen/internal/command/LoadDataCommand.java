@@ -21,10 +21,12 @@ import java.util.List;
 
 import javax.transaction.UserTransaction;
 
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
@@ -102,6 +104,9 @@ public class LoadDataCommand extends AbstractCommand {
 
     /** 方言 */
     protected GenDialect dialect;
+
+    /** {@link ValueType}の提供者 */
+    protected ValueTypeProvider valueTypeProvider;
 
     /** ユーザトランザクション */
     protected UserTransaction userTransaction;
@@ -426,6 +431,7 @@ public class LoadDataCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         dialect = getGenDialect(genDialectClassName);
+        valueTypeProvider = createValueTypeProvider();
         if (transactional) {
             userTransaction = SingletonS2Container
                     .getComponent(UserTransaction.class);
@@ -494,7 +500,8 @@ public class LoadDataCommand extends AbstractCommand {
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return factory.createDatabaseDescFactory(this, jdbcManager
-                .getEntityMetaFactory(), entityMetaReader, dialect);
+                .getEntityMetaFactory(), entityMetaReader, dialect,
+                valueTypeProvider);
     }
 
     /**
@@ -525,6 +532,15 @@ public class LoadDataCommand extends AbstractCommand {
     protected DdlVersionDirectoryTree createDdlVersionDirectoryTree() {
         return factory.createDdlVersionDirectoryTree(this, migrateDir,
                 ddlInfoFile, versionNoPattern, env, applyEnvToVersion);
+    }
+
+    /**
+     * {@link ValueTypeProvider}の実装を作成します。
+     * 
+     * @return {@link ValueTypeProvider}の実装
+     */
+    protected ValueTypeProvider createValueTypeProvider() {
+        return factory.createValueTypeProvider(this, jdbcManager.getDialect());
     }
 
     @Override

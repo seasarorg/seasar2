@@ -27,6 +27,7 @@ import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -77,7 +78,8 @@ public class SequenceDescFactoryImplTest {
         propertyMetaFactory.setPersistenceConvention(pc);
         propertyMetaFactory.setColumnMetaFactory(cmf);
         sequenceDescFactoryImpl = new SequenceDescFactoryImpl(
-                new OracleGenDialect());
+                new OracleGenDialect(), new ValueTypeProviderImpl(
+                        new OracleDialect()));
     }
 
     /**

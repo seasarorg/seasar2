@@ -30,9 +30,11 @@ import javax.persistence.UniqueConstraint;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.dialect.H2Dialect;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.H2GenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -74,7 +76,10 @@ public class TableDescFactoryImplTest {
         entityMetaFactory.setTableMetaFactory(tmf);
 
         GenDialect dialect = new H2GenDialect();
-        ColumnDescFactoryImpl colFactory = new ColumnDescFactoryImpl(dialect);
+        ValueTypeProvider valueTypeProvider = new ValueTypeProviderImpl(
+                new H2Dialect());
+        ColumnDescFactoryImpl colFactory = new ColumnDescFactoryImpl(dialect,
+                valueTypeProvider);
         PrimaryKeyDescFactoryImpl pkFactory = new PrimaryKeyDescFactoryImpl(
                 dialect);
         UniqueKeyDescFactoryImpl ukFactory = new UniqueKeyDescFactoryImpl(
@@ -82,7 +87,7 @@ public class TableDescFactoryImplTest {
         ForeignKeyDescFactoryImpl fkFactory = new ForeignKeyDescFactoryImpl(
                 dialect, entityMetaFactory);
         SequenceDescFactoryImpl seqFactory = new SequenceDescFactoryImpl(
-                dialect);
+                dialect, valueTypeProvider);
         IdTableDescFactoryImpl idTabFactory = new IdTableDescFactoryImpl(
                 dialect, ukFactory);
 

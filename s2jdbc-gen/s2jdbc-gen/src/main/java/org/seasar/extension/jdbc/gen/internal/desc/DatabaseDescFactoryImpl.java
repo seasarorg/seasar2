@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.desc.ColumnDescFactory;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
@@ -29,6 +30,7 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactory;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 
@@ -48,6 +50,9 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
+    /** {@link ValueType}の提供者 */
+    protected ValueTypeProvider valueTypeProvider;
+
     /** テーブル記述のファクトリ */
     protected TableDescFactory tableDescFactory;
 
@@ -60,9 +65,12 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
      *            エンティティメタデータのリーダ
      * @param dialect
      *            方言
+     * @param valueTypeProvider
+     *            {@link ValueType}の提供者
      */
     public DatabaseDescFactoryImpl(EntityMetaFactory entityMetaFactory,
-            EntityMetaReader entityMetaReader, GenDialect dialect) {
+            EntityMetaReader entityMetaReader, GenDialect dialect,
+            ValueTypeProvider valueTypeProvider) {
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
@@ -72,9 +80,13 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
+        if (valueTypeProvider == null) {
+            throw new NullPointerException("valueTypeResolver");
+        }
         this.entityMetaFactory = entityMetaFactory;
         this.entityMetaReader = entityMetaReader;
         this.dialect = dialect;
+        this.valueTypeProvider = valueTypeProvider;
         this.tableDescFactory = createTableDescFactory();
     }
 
@@ -97,12 +109,14 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
      * @return テーブル記述のファクトリ
      */
     protected TableDescFactory createTableDescFactory() {
-        ColumnDescFactory colFactory = new ColumnDescFactoryImpl(dialect);
+        ColumnDescFactory colFactory = new ColumnDescFactoryImpl(dialect,
+                valueTypeProvider);
         PrimaryKeyDescFactory pkFactory = new PrimaryKeyDescFactoryImpl(dialect);
         UniqueKeyDescFactory ukFactory = new UniqueKeyDescFactoryImpl(dialect);
         ForeignKeyDescFactory fkFactory = new ForeignKeyDescFactoryImpl(
                 dialect, entityMetaFactory);
-        SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect);
+        SequenceDescFactory seqFactory = new SequenceDescFactoryImpl(dialect,
+                valueTypeProvider);
         IdTableDescFactory idTabFactory = new IdTableDescFactoryImpl(dialect,
                 ukFactory);
         return new TableDescFactoryImpl(dialect, colFactory, pkFactory,

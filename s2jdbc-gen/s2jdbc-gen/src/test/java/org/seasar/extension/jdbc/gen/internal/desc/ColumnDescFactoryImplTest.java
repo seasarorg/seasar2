@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.dialect.H2Dialect;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.H2GenDialect;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -110,7 +111,8 @@ public class ColumnDescFactoryImplTest {
         propertyMetaFactory = new PropertyMetaFactoryImpl();
         propertyMetaFactory.setPersistenceConvention(pc);
         propertyMetaFactory.setColumnMetaFactory(cmf);
-        columnDescFactory = new ColumnDescFactoryImpl(new H2GenDialect());
+        columnDescFactory = new ColumnDescFactoryImpl(new H2GenDialect(),
+                new ValueTypeProviderImpl(new H2Dialect()));
     }
 
     /**
