@@ -83,7 +83,8 @@ public class PostgreDialectTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType() throws Exception {
-        assertEquals(ValueTypes.CLOB, dialect.getValueType(String.class,
+        assertEquals(PostgreDialect.CLOB_TYPE, dialect.getValueType(
+                String.class,
                 true, null));
         assertEquals(PostgreDialect.BLOB_TYPE, dialect.getValueType(
                 byte[].class, true, null));
@@ -102,7 +103,7 @@ public class PostgreDialectTest extends TestCase {
         PropertyMeta pm = new PropertyMeta();
         pm.setField(getClass().getField("stringField"));
         pm.setLob(true);
-        assertEquals(ValueTypes.CLOB, dialect.getValueType(pm));
+        assertEquals(PostgreDialect.CLOB_TYPE, dialect.getValueType(pm));
 
         pm = new PropertyMeta();
         pm.setField(getClass().getField("bytesField"));

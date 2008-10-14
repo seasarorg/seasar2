@@ -18,9 +18,14 @@ package org.seasar.extension.jdbc.dialect;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Serializable;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.sql.Blob;
 import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,8 +40,10 @@ import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.types.BytesType;
 import org.seasar.extension.jdbc.types.SerializableType;
+import org.seasar.extension.jdbc.types.StringClobType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jdbc.types.BytesType.Trait;
+import org.seasar.framework.util.StringConversionUtil;
 import org.seasar.framework.util.tiger.Pair;
 
 /**
@@ -63,6 +70,11 @@ public class PostgreDialect extends StandardDialect {
      */
     public final static ValueType SERIALIZABLE_BLOB_TYPE = new SerializableType(
             new PostgreTrait());
+
+    /**
+     * CLOB用の値タイプです。
+     */
+    protected final static ValueType CLOB_TYPE = new PostgreClobType();
 
     @Override
     public String getName() {
@@ -99,7 +111,7 @@ public class PostgreDialect extends StandardDialect {
         final Class<?> clazz = propertyMeta.getPropertyClass();
         if (propertyMeta.isLob()) {
             if (clazz == String.class) {
-                return ValueTypes.CLOB;
+                return CLOB_TYPE;
             } else if (clazz == byte[].class) {
                 return BLOB_TYPE;
             } else if (Serializable.class.isAssignableFrom(clazz)) {
@@ -118,7 +130,7 @@ public class PostgreDialect extends StandardDialect {
             TemporalType temporalType) {
         if (lob) {
             if (clazz == String.class) {
-                return ValueTypes.CLOB;
+                return CLOB_TYPE;
             } else if (clazz == byte[].class) {
                 return BLOB_TYPE;
             } else if (Serializable.class.isAssignableFrom(clazz)) {
@@ -293,23 +305,113 @@ public class PostgreDialect extends StandardDialect {
         }
 
         public OutputStream setBinaryStream(final long pos) throws SQLException {
-            throw new UnsupportedOperationException("position");
+            throw new UnsupportedOperationException("setBinaryStream");
         }
 
         public int setBytes(final long pos, final byte[] bytes,
                 final int offset, final int len) throws SQLException {
-            throw new UnsupportedOperationException("position");
+            throw new UnsupportedOperationException("setBytes");
         }
 
         public int setBytes(final long pos, final byte[] bytes)
                 throws SQLException {
-            throw new UnsupportedOperationException("position");
+            throw new UnsupportedOperationException("setBytes");
         }
 
         public void truncate(final long len) throws SQLException {
-            throw new UnsupportedOperationException("position");
+            throw new UnsupportedOperationException("truncate");
         }
 
     }
 
+    /**
+     * Clobを扱うための {@link ValueType}です。
+     * 
+     * @author koichik
+     */
+    public static class PostgreClobType extends StringClobType {
+
+        @Override
+        public void bindValue(PreparedStatement ps, int index, Object value)
+                throws SQLException {
+            if (value == null) {
+                setNull(ps, index);
+            } else {
+                final String s = StringConversionUtil.toString(value);
+                ps.setClob(index, new ClobImpl(s));
+            }
+        }
+
+    }
+
+    /**
+     * {@link Clob}の簡易実装クラスです。
+     * 
+     * @author koichik
+     */
+    public static class ClobImpl implements Clob {
+
+        /** 文字列 */
+        protected String string;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param string
+         *            文字列
+         */
+        public ClobImpl(String string) {
+            this.string = string;
+        }
+
+        public InputStream getAsciiStream() throws SQLException {
+            try {
+                return new ByteArrayInputStream(string.getBytes("US-ASCII"));
+            } catch (final UnsupportedEncodingException e) {
+                throw (SQLException) new SQLException().initCause(e);
+            }
+        }
+
+        public Reader getCharacterStream() throws SQLException {
+            return new StringReader(string);
+        }
+
+        public String getSubString(long pos, int length) throws SQLException {
+            return string.substring((int) pos + 1, length);
+        }
+
+        public long length() throws SQLException {
+            return string.length();
+        }
+
+        public long position(Clob searchstr, long start) throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public long position(String searchstr, long start) throws SQLException {
+            throw new UnsupportedOperationException("position");
+        }
+
+        public OutputStream setAsciiStream(long pos) throws SQLException {
+            throw new UnsupportedOperationException("setAsciiStream");
+        }
+
+        public Writer setCharacterStream(long pos) throws SQLException {
+            throw new UnsupportedOperationException("setCharacterStream");
+        }
+
+        public int setString(long pos, String str, int offset, int len)
+                throws SQLException {
+            throw new UnsupportedOperationException("setString");
+        }
+
+        public int setString(long pos, String str) throws SQLException {
+            throw new UnsupportedOperationException("setString");
+        }
+
+        public void truncate(long len) throws SQLException {
+            throw new UnsupportedOperationException("truncate");
+        }
+
+    }
 }
