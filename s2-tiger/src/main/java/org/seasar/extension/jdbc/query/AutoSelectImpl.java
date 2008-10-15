@@ -1234,7 +1234,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return this;
     }
 
-    public AutoSelect<T> forUpdate(final String... propertyNames) {
+    public AutoSelect<T> forUpdate(final CharSequence... propertyNames) {
         if (propertyNames == null) {
             throw new NullPointerException("properties");
         }
@@ -1254,7 +1254,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         }
 
         forUpdateType = SelectForUpdateType.NORMAL;
-        setupForUpdateTargets(propertyNames);
+        setupForUpdateTargets(toStringArray(propertyNames));
         return this;
     }
 
@@ -1272,7 +1272,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return this;
     }
 
-    public AutoSelect<T> forUpdateNowait(final String... propertyNames) {
+    public AutoSelect<T> forUpdateNowait(final CharSequence... propertyNames) {
         if (propertyNames == null) {
             throw new NullPointerException("properties");
         }
@@ -1290,7 +1290,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         }
 
         forUpdateType = SelectForUpdateType.NOWAIT;
-        setupForUpdateTargets(propertyNames);
+        setupForUpdateTargets(toStringArray(propertyNames));
         return this;
     }
 
@@ -1310,7 +1310,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     }
 
     public AutoSelect<T> forUpdateWait(final int seconds,
-            final String... propertyNames) {
+            final CharSequence... propertyNames) {
         if (propertyNames == null) {
             throw new NullPointerException("properties");
         }
@@ -1329,7 +1329,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
 
         forUpdateType = SelectForUpdateType.WAIT;
         forUpdateWaitSeconds = seconds;
-        setupForUpdateTargets(propertyNames);
+        setupForUpdateTargets(toStringArray(propertyNames));
         return this;
     }
 

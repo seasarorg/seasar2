@@ -93,13 +93,13 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
         return this;
     }
 
-    public AutoUpdate<T> includes(final String... propertyNames) {
-        includesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoUpdate<T> includes(final CharSequence... propertyNames) {
+        includesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 
-    public AutoUpdate<T> excludes(final String... propertyNames) {
-        excludesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoUpdate<T> excludes(final CharSequence... propertyNames) {
+        excludesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 

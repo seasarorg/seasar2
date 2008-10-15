@@ -543,7 +543,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @throws UnsupportedOperationException
      *             DBMSがこの操作をサポートしていない場合
      */
-    AutoSelect<T> forUpdate(String... propertyNames);
+    AutoSelect<T> forUpdate(CharSequence... propertyNames);
 
     /**
      * FOR UPDATE NOWAITを追加します。
@@ -563,7 +563,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @throws UnsupportedOperationException
      *             DBMSがこの操作をサポートしていない場合
      */
-    AutoSelect<T> forUpdateNowait(String... propertyNames);
+    AutoSelect<T> forUpdateNowait(CharSequence... propertyNames);
 
     /**
      * FOR UPDATE WAITを追加します。
@@ -587,7 +587,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @throws UnsupportedOperationException
      *             DBMSがこの操作をサポートしていない場合
      */
-    AutoSelect<T> forUpdateWait(int seconds, String... propertyNames);
+    AutoSelect<T> forUpdateWait(int seconds, CharSequence... propertyNames);
 
     /**
      * ヒントを設定します。

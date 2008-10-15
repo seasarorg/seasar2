@@ -39,7 +39,7 @@ public interface AutoInsert<T> extends Update<AutoInsert<T>> {
      *            挿入対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoInsert<T> includes(String... propertyNames);
+    AutoInsert<T> includes(CharSequence... propertyNames);
 
     /**
      * 指定のプロパティを挿入対象から除外します。
@@ -48,6 +48,6 @@ public interface AutoInsert<T> extends Update<AutoInsert<T>> {
      *            挿入対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoInsert<T> excludes(String... propertyNames);
+    AutoInsert<T> excludes(CharSequence... propertyNames);
 
 }

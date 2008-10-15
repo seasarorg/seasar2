@@ -54,7 +54,7 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      *            更新対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoUpdate<T> includes(String... propertyNames);
+    AutoUpdate<T> includes(CharSequence... propertyNames);
 
     /**
      * 指定のプロパティを更新対象から除外します。
@@ -63,7 +63,7 @@ public interface AutoUpdate<T> extends Update<AutoUpdate<T>> {
      *            更新対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoUpdate<T> excludes(String... propertyNames);
+    AutoUpdate<T> excludes(CharSequence... propertyNames);
 
     /**
      * <code>before</code>から変更のあったプロパティだけを更新対象とします。

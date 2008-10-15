@@ -82,13 +82,13 @@ public class AutoBatchUpdateImpl<T> extends
         return this;
     }
 
-    public AutoBatchUpdate<T> includes(final String... propertyNames) {
-        includesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoBatchUpdate<T> includes(final CharSequence... propertyNames) {
+        includesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 
-    public AutoBatchUpdate<T> excludes(final String... propertyNames) {
-        excludesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoBatchUpdate<T> excludes(final CharSequence... propertyNames) {
+        excludesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 

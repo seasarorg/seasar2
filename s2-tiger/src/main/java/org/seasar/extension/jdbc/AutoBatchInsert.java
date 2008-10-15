@@ -31,7 +31,7 @@ public interface AutoBatchInsert<T> extends BatchUpdate<AutoBatchInsert<T>> {
      *            更新対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchInsert<T> includes(String... propertyNames);
+    AutoBatchInsert<T> includes(CharSequence... propertyNames);
 
     /**
      * 指定のプロパティを更新対象から除外します。
@@ -40,6 +40,6 @@ public interface AutoBatchInsert<T> extends BatchUpdate<AutoBatchInsert<T>> {
      *            更新対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchInsert<T> excludes(String... propertyNames);
+    AutoBatchInsert<T> excludes(CharSequence... propertyNames);
 
 }

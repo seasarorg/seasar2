@@ -91,13 +91,13 @@ public class AutoInsertImpl<T> extends AbstractAutoUpdate<T, AutoInsert<T>>
         return this;
     }
 
-    public AutoInsert<T> includes(final String... propertyNames) {
-        includesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoInsert<T> includes(final CharSequence... propertyNames) {
+        includesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 
-    public AutoInsert<T> excludes(final String... propertyNames) {
-        excludesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoInsert<T> excludes(final CharSequence... propertyNames) {
+        excludesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 

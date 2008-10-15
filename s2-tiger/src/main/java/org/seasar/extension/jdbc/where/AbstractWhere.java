@@ -50,8 +50,8 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     protected List<String> propertyNameList = new ArrayList<String>();
 
     /**
-     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、
-     * 条件に加えない場合は<code>true</code>
+     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら
+     * <code>null</code>として扱い、 条件に加えない場合は<code>true</code>
      */
     protected boolean excludesWhitespace;
 
@@ -59,6 +59,325 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      * インスタンスを構築します。
      */
     public AbstractWhere() {
+    }
+
+    /**
+     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら
+     * <code>null</code>として扱い、条件に加えないことを指定します。
+     * 
+     * @return このインスタンス自身
+     * @see #ignoreWhitespace()
+     */
+    @SuppressWarnings("unchecked")
+    public T excludesWhitespace() {
+        excludesWhitespace = true;
+        return (T) this;
+    }
+
+    /**
+     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら
+     * <code>null</code>として扱い、条件に加えないことを指定します。
+     * 
+     * @return このインスタンス自身
+     * 
+     */
+    @Deprecated
+    public T ignoreWhitespace() {
+        return excludesWhitespace();
+    }
+
+    /**
+     * <code>=</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T eq(final CharSequence propertyName, Object value) {
+        assertPropertyName(propertyName);
+        value = normalize(value);
+        if (ConditionType.EQ.isTarget(value)) {
+            addCondition(ConditionType.EQ, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>&lt;&gt;</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T ne(final CharSequence propertyName, Object value) {
+        assertPropertyName(propertyName);
+        value = normalize(value);
+        if (ConditionType.NE.isTarget(value)) {
+            addCondition(ConditionType.NE, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>&lt;</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T lt(final CharSequence propertyName, Object value) {
+        assertPropertyName(propertyName);
+        value = normalize(value);
+        if (ConditionType.LT.isTarget(value)) {
+            addCondition(ConditionType.LT, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>&lt;=</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T le(final CharSequence propertyName, Object value) {
+        assertPropertyName(propertyName);
+        value = normalize(value);
+        if (ConditionType.LE.isTarget(value)) {
+            addCondition(ConditionType.LE, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>&gt;</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T gt(final CharSequence propertyName, Object value) {
+        assertPropertyName(propertyName);
+        value = normalize(value);
+        if (ConditionType.GT.isTarget(value)) {
+            addCondition(ConditionType.GT, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>&gt;=</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T ge(final CharSequence propertyName, Object value) {
+        assertPropertyName(propertyName);
+        value = normalize(value);
+        if (ConditionType.GE.isTarget(value)) {
+            addCondition(ConditionType.GE, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>in</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param values
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T in(final CharSequence propertyName, Object... values) {
+        assertPropertyName(propertyName);
+        values = normalize(values);
+        if (ConditionType.IN.isTarget(values)) {
+            addCondition(ConditionType.IN, propertyName.toString(), values);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>not in</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param values
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notIn(final CharSequence propertyName, Object... values) {
+        assertPropertyName(propertyName);
+        values = normalize(values);
+        if (ConditionType.NOT_IN.isTarget(values)) {
+            addCondition(ConditionType.NOT_IN, propertyName.toString(), values);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>like</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T like(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final Object normalizedValue = normalize(value);
+        if (ConditionType.LIKE.isTarget(normalizedValue)) {
+            addCondition(ConditionType.LIKE, propertyName.toString(),
+                    normalizedValue);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>like</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @param escape
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T like(final CharSequence propertyName, final String value,
+            final char escape) {
+        assertPropertyName(propertyName);
+        final Object normalizedValue = normalize(value);
+        if (ConditionType.LIKE_ESCAPE.isTarget(normalizedValue)) {
+            addCondition(ConditionType.LIKE_ESCAPE, propertyName.toString(),
+                    new Object[] { normalizedValue, escape });
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>like '?%'</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T starts(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final String normalizedValue = String.class.cast(normalize(value));
+        if (ConditionType.STARTS.isTarget(normalizedValue)) {
+            if (normalizedValue.indexOf('%') == -1
+                    && normalizedValue.indexOf('_') == -1) {
+                addCondition(ConditionType.STARTS, propertyName.toString(),
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.STARTS_ESCAPE, propertyName
+                        .toString(), escapeWildcard(String.class
+                        .cast(normalizedValue)));
+            }
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>like '%?'</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T ends(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final String normalizedValue = String.class.cast(normalize(value));
+        if (ConditionType.ENDS.isTarget(normalizedValue)) {
+            if (normalizedValue.indexOf('%') == -1
+                    && normalizedValue.indexOf('_') == -1) {
+                addCondition(ConditionType.ENDS, propertyName.toString(),
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.ENDS_ESCAPE,
+                        propertyName.toString(), escapeWildcard(String.class
+                                .cast(normalizedValue)));
+            }
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>like '%?%'</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T contains(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final String normalizedValue = String.class.cast(normalize(value));
+        if (ConditionType.CONTAINS.isTarget(normalizedValue)) {
+            if (normalizedValue.indexOf('%') == -1
+                    && normalizedValue.indexOf('_') == -1) {
+                addCondition(ConditionType.CONTAINS, propertyName.toString(),
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.CONTAINS_ESCAPE, propertyName
+                        .toString(), escapeWildcard(String.class
+                        .cast(normalizedValue)));
+            }
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>is null</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T isNull(final CharSequence propertyName, final Boolean value) {
+        assertPropertyName(propertyName);
+        if (ConditionType.IS_NULL.isTarget(value)) {
+            addCondition(ConditionType.IS_NULL, propertyName.toString(), value);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>is not null</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T isNotNull(final CharSequence propertyName, final Boolean value) {
+        assertPropertyName(propertyName);
+        if (ConditionType.IS_NOT_NULL.isTarget(value)) {
+            addCondition(ConditionType.IS_NOT_NULL, propertyName.toString(),
+                    value);
+        }
+        return (T) this;
+    }
+
+    public String getCriteria() {
+        return new String(criteriaSb);
+    }
+
+    public Object[] getParams() {
+        return paramList.toArray();
+    }
+
+    public String[] getPropertyNames() {
+        return propertyNameList.toArray(new String[propertyNameList.size()]);
     }
 
     /**
@@ -84,13 +403,13 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     }
 
     /**
-     * {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>を、
-     * それ以外なら元の値をそのまま返します。
+     * {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら
+     * <code>null</code>を、 それ以外なら元の値をそのまま返します。
      * 
      * @param value
      *            パラメータ値
-     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら<code>null</code>、
-     *         それ以外なら元の値
+     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値が空文字列または空白のみの文字列なら
+     *         <code>null</code>、 それ以外なら元の値
      */
     protected Object normalize(final Object value) {
         if (excludesWhitespace && value instanceof String) {
@@ -102,13 +421,13 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     }
 
     /**
-     * {@link #ignoreWhitespace()}が呼び出された場合で パラメータ値の要素が空文字列または空白のみの文字列なら<code>null</code>、
-     * それ以外なら元の値からなる配列を返します。
+     * {@link #ignoreWhitespace()}が呼び出された場合で パラメータ値の要素が空文字列または空白のみの文字列なら
+     * <code>null</code>、 それ以外なら元の値からなる配列を返します。
      * 
      * @param values
      *            パラメータ値の配列
-     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値の要素が空文字列または空白のみの文字列なら<code>null</code>、
-     *         それ以外なら元の値からなる配列
+     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値の要素が空文字列または空白のみの文字列なら
+     *         <code>null</code>、 それ以外なら元の値からなる配列
      */
     protected Object[] normalize(final Object... values) {
         if (!excludesWhitespace || values == null) {
@@ -137,298 +456,15 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     }
 
     /**
-     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、条件に加えないことを指定します。
+     * プロパティ名が{@literal null}でないことを確認します。
      * 
-     * @return このインスタンス自身
-     * @see #ignoreWhitespace()
+     * @param s
+     *            文字の列
      */
-    @SuppressWarnings("unchecked")
-    public T excludesWhitespace() {
-        excludesWhitespace = true;
-        return (T) this;
-    }
-
-    /**
-     * {@link #eq(String, Object)}等で渡されたパラメータ値が空文字列または空白のみの文字列なら<code>null</code>として扱い、条件に加えないことを指定します。
-     * 
-     * @return このインスタンス自身
-     * 
-     */
-    @Deprecated
-    public T ignoreWhitespace() {
-        return excludesWhitespace();
-    }
-
-    /**
-     * <code>=</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T eq(final String propertyName, Object value) {
-        value = normalize(value);
-        if (ConditionType.EQ.isTarget(value)) {
-            addCondition(ConditionType.EQ, propertyName, value);
+    protected void assertPropertyName(final CharSequence s) {
+        if (s == null) {
+            throw new NullPointerException("propertyName");
         }
-        return (T) this;
     }
 
-    /**
-     * <code>&lt;&gt;</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T ne(final String propertyName, Object value) {
-        value = normalize(value);
-        if (ConditionType.NE.isTarget(value)) {
-            addCondition(ConditionType.NE, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>&lt;</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T lt(final String propertyName, Object value) {
-        value = normalize(value);
-        if (ConditionType.LT.isTarget(value)) {
-            addCondition(ConditionType.LT, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>&lt;=</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T le(final String propertyName, Object value) {
-        value = normalize(value);
-        if (ConditionType.LE.isTarget(value)) {
-            addCondition(ConditionType.LE, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>&gt;</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T gt(final String propertyName, Object value) {
-        value = normalize(value);
-        if (ConditionType.GT.isTarget(value)) {
-            addCondition(ConditionType.GT, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>&gt;=</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T ge(final String propertyName, Object value) {
-        value = normalize(value);
-        if (ConditionType.GE.isTarget(value)) {
-            addCondition(ConditionType.GE, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>in</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param values
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T in(final String propertyName, Object... values) {
-        values = normalize(values);
-        if (ConditionType.IN.isTarget(values)) {
-            addCondition(ConditionType.IN, propertyName, values);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>not in</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param values
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T notIn(final String propertyName, Object... values) {
-        values = normalize(values);
-        if (ConditionType.NOT_IN.isTarget(values)) {
-            addCondition(ConditionType.NOT_IN, propertyName, values);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>like</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T like(final String propertyName, final String value) {
-        final Object normalizedValue = normalize(value);
-        if (ConditionType.LIKE.isTarget(normalizedValue)) {
-            addCondition(ConditionType.LIKE, propertyName, normalizedValue);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>like</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @param escape
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T like(final String propertyName, final String value,
-            final char escape) {
-        final Object normalizedValue = normalize(value);
-        if (ConditionType.LIKE_ESCAPE.isTarget(normalizedValue)) {
-            addCondition(ConditionType.LIKE_ESCAPE, propertyName, new Object[] {
-                    normalizedValue, escape });
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>like '?%'</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T starts(final String propertyName, final String value) {
-        final String normalizedValue = String.class.cast(normalize(value));
-        if (ConditionType.STARTS.isTarget(normalizedValue)) {
-            if (normalizedValue.indexOf('%') == -1
-                    && normalizedValue.indexOf('_') == -1) {
-                addCondition(ConditionType.STARTS, propertyName,
-                        normalizedValue);
-            } else {
-                addCondition(ConditionType.STARTS_ESCAPE, propertyName,
-                        escapeWildcard(String.class.cast(normalizedValue)));
-            }
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>like '%?'</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T ends(final String propertyName, final String value) {
-        final String normalizedValue = String.class.cast(normalize(value));
-        if (ConditionType.ENDS.isTarget(normalizedValue)) {
-            if (normalizedValue.indexOf('%') == -1
-                    && normalizedValue.indexOf('_') == -1) {
-                addCondition(ConditionType.ENDS, propertyName, normalizedValue);
-            } else {
-                addCondition(ConditionType.ENDS_ESCAPE, propertyName,
-                        escapeWildcard(String.class.cast(normalizedValue)));
-            }
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>like '%?%'</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T contains(final String propertyName, final String value) {
-        final String normalizedValue = String.class.cast(normalize(value));
-        if (ConditionType.CONTAINS.isTarget(normalizedValue)) {
-            if (normalizedValue.indexOf('%') == -1
-                    && normalizedValue.indexOf('_') == -1) {
-                addCondition(ConditionType.CONTAINS, propertyName,
-                        normalizedValue);
-            } else {
-                addCondition(ConditionType.CONTAINS_ESCAPE, propertyName,
-                        escapeWildcard(String.class.cast(normalizedValue)));
-            }
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>is null</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T isNull(final String propertyName, final Boolean value) {
-        if (ConditionType.IS_NULL.isTarget(value)) {
-            addCondition(ConditionType.IS_NULL, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    /**
-     * <code>is not null</code>の条件を追加します。
-     * 
-     * @param propertyName
-     * @param value
-     * @return このインスタンス自身
-     */
-    @SuppressWarnings("unchecked")
-    public T isNotNull(final String propertyName, final Boolean value) {
-        if (ConditionType.IS_NOT_NULL.isTarget(value)) {
-            addCondition(ConditionType.IS_NOT_NULL, propertyName, value);
-        }
-        return (T) this;
-    }
-
-    public String getCriteria() {
-        return new String(criteriaSb);
-    }
-
-    public Object[] getParams() {
-        return paramList.toArray();
-    }
-
-    public String[] getPropertyNames() {
-        return propertyNameList.toArray(new String[propertyNameList.size()]);
-    }
 }

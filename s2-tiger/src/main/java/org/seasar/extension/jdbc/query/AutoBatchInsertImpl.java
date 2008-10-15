@@ -89,13 +89,13 @@ public class AutoBatchInsertImpl<T> extends
         super(jdbcManager, entities);
     }
 
-    public AutoBatchInsert<T> includes(final String... propertyNames) {
-        includesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoBatchInsert<T> includes(final CharSequence... propertyNames) {
+        includesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 
-    public AutoBatchInsert<T> excludes(final String... propertyNames) {
-        excludesProperties.addAll(Arrays.asList(propertyNames));
+    public AutoBatchInsert<T> excludes(final CharSequence... propertyNames) {
+        excludesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 

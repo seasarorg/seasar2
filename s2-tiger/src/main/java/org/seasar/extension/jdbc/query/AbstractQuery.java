@@ -446,4 +446,21 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
         }
         return ret;
     }
+
+    /**
+     * {@link CharSequence}の配列を{@link String}の配列に変換して返します。
+     * 
+     * @param names
+     *            {@link CharSequence}の配列
+     * @return {@link String}の配列
+     */
+    protected String[] toStringArray(final CharSequence... names) {
+        final String[] result = new String[names.length];
+        for (int i = 0; i < result.length; ++i) {
+            final CharSequence name = names[i];
+            result[i] = name == null ? null : name.toString();
+        }
+        return result;
+    }
+
 }

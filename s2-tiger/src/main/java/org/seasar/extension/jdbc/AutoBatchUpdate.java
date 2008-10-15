@@ -45,7 +45,7 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      *            更新対象とするプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchUpdate<T> includes(String... propertyNames);
+    AutoBatchUpdate<T> includes(CharSequence... propertyNames);
 
     /**
      * 指定のプロパティを更新対象から除外します。
@@ -54,7 +54,7 @@ public interface AutoBatchUpdate<T> extends BatchUpdate<AutoBatchUpdate<T>> {
      *            更新対象から除外するプロパティ名の並び
      * @return このインスタンス自身
      */
-    AutoBatchUpdate<T> excludes(String... propertyNames);
+    AutoBatchUpdate<T> excludes(CharSequence... propertyNames);
 
     /**
      * バージョンチェックを行った場合に、 更新行数が0行でも{@link OptimisticLockException}をスローしないようにします。
