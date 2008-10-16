@@ -145,6 +145,20 @@ public class AttributeDescFactoryImplTest {
      * @throws Exception
      */
     @Test
+    public void testIsVersion_illegalType() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("VERSION");
+        columnMeta.setTypeName("verchar");
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
+        assertFalse(attributeDesc.isVersion());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testIsVersion_VERSION() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("VERSION");

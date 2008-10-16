@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
@@ -30,6 +31,7 @@ import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
 import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.util.ClassUtil;
 
 /**
  * {@link AttributeDescFactory}の実装クラスです。
@@ -122,8 +124,8 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         doName(tableMeta, columnMeta, attributeDesc);
         doId(tableMeta, columnMeta, attributeDesc);
         doTransient(tableMeta, columnMeta, attributeDesc);
-        doVersion(tableMeta, columnMeta, attributeDesc);
         doColumn(tableMeta, columnMeta, attributeDesc);
+        doVersion(tableMeta, columnMeta, attributeDesc);
         return attributeDesc;
     }
 
@@ -195,8 +197,11 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
      */
     protected void doVersion(DbTableMeta tableMeta, DbColumnMeta columnMeta,
             AttributeDesc attributeDesc) {
-        if (versionColumnNamePattern.matcher(columnMeta.getName()).matches()) {
-            attributeDesc.setVersion(true);
+        if (isVersionAnnotatable(attributeDesc.getAttributeClass())) {
+            if (versionColumnNamePattern.matcher(columnMeta.getName())
+                    .matches()) {
+                attributeDesc.setVersion(true);
+            }
         }
     }
 
@@ -237,6 +242,18 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
             attributeDesc.setAttributeClass(String.class);
             attributeDesc.setLob(false);
         }
+    }
+
+    /**
+     * {@link Version}を注釈できるクラスの場合{@code true}
+     * 
+     * @param clazz
+     *            クラス
+     * @return {@link Version}を注釈できるクラスの場合{@code true}
+     */
+    protected boolean isVersionAnnotatable(Class<?> clazz) {
+        Class<?> wrapperClass = ClassUtil.getWrapperClassIfPrimitive(clazz);
+        return wrapperClass == Integer.class || wrapperClass == Long.class;
     }
 
 }
