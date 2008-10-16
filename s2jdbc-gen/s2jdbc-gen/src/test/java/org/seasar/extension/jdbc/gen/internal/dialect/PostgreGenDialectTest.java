@@ -17,9 +17,20 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.sql.Types;
 
+import javax.persistence.Lob;
+
+import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
+import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
+import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
+import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
+import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 
 import static org.junit.Assert.*;
 
@@ -30,6 +41,26 @@ import static org.junit.Assert.*;
 public class PostgreGenDialectTest {
 
     private PostgreGenDialect dialect = new PostgreGenDialect();
+
+    private PropertyMetaFactoryImpl propertyMetaFactory;
+
+    @Lob
+    @SuppressWarnings("unused")
+    private String lob;
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        PersistenceConvention pc = new PersistenceConventionImpl();
+        ColumnMetaFactoryImpl cmf = new ColumnMetaFactoryImpl();
+        cmf.setPersistenceConvention(pc);
+        propertyMetaFactory = new PropertyMetaFactoryImpl();
+        propertyMetaFactory.setPersistenceConvention(pc);
+        propertyMetaFactory.setColumnMetaFactory(cmf);
+    }
 
     /**
      * 
@@ -61,6 +92,20 @@ public class PostgreGenDialectTest {
     public void testGetSqlType_clob() throws Exception {
         SqlType type = dialect.getSqlType(Types.CLOB);
         assertEquals("text", type.getDataType(10, 0, 0, false));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetSqlTypeWithPropertyMeta() throws Exception {
+        ValueTypeProviderImpl valueTypeProvider = new ValueTypeProviderImpl(
+                new PostgreDialect());
+        PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
+                getClass().getDeclaredField("lob"), new EntityMeta());
+        SqlType sqlType = dialect.getSqlType(valueTypeProvider, propertyMeta);
+        assertEquals("text", sqlType.getDataType(10, 0, 0, false));
     }
 
     /**

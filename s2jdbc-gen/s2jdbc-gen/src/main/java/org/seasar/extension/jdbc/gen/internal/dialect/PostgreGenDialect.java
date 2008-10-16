@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Date;
@@ -25,16 +24,16 @@ import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
-import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BooleanType;
-import org.seasar.extension.jdbc.gen.internal.sqltype.ClobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DecimalType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DoubleType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.FloatType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
+import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
@@ -68,7 +67,7 @@ public class PostgreGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BINARY, new BinaryType("bytea"));
         sqlTypeMap.put(Types.BOOLEAN, new BooleanType("bool"));
         sqlTypeMap.put(Types.BLOB, new BlobType("oid"));
-        sqlTypeMap.put(Types.CLOB, new ClobType("text"));
+        sqlTypeMap.put(Types.CLOB, new VarcharType("text"));
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
         sqlTypeMap.put(Types.DOUBLE, new DoubleType("float8"));
         sqlTypeMap.put(Types.FLOAT, new FloatType("float4"));
@@ -107,13 +106,8 @@ public class PostgreGenDialect extends StandardGenDialect {
     public SqlType getSqlType(ValueTypeProvider valueTypeProvider,
             PropertyMeta propertyMeta) {
         if (propertyMeta.isLob()) {
-            Class<?> clazz = propertyMeta.getPropertyClass();
-            if (clazz == byte[].class) {
-                return getSqlTypeInternal(Types.BLOB);
-            } else if (clazz == String.class) {
+            if (propertyMeta.getPropertyClass() == String.class) {
                 return getSqlTypeInternal(Types.CLOB);
-            } else if (Serializable.class.isAssignableFrom(clazz)) {
-                return getSqlTypeInternal(Types.BLOB);
             }
         }
         ValueType valueType = valueTypeProvider.provide(propertyMeta);

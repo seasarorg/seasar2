@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.dialect.H2Dialect;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.H2GenDialect;
+import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.framework.convention.PersistenceConvention;

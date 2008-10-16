@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.TableMeta;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.gen.desc.SequenceDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
+import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.framework.convention.PersistenceConvention;

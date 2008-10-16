@@ -30,9 +30,9 @@ import org.seasar.extension.jdbc.gen.desc.SequenceDescFactory;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDescFactory;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
-import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 
 /**
  * {@link DatabaseDescFactory}の実装です。

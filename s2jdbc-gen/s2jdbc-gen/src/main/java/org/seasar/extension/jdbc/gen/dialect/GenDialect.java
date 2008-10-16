@@ -19,8 +19,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 
 /**
@@ -50,6 +51,17 @@ public interface GenDialect {
      */
     SqlType getSqlType(int sqlType) throws UnsupportedSqlTypeRuntimeException;
 
+    /**
+     * SQL型を返します。
+     * 
+     * @param valueTypeProvider
+     *            {@link ValueType}の提供者
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return SQL型
+     * @throws UnsupportedSqlTypeRuntimeException
+     *             サポートされていないJDBCのSQL型が渡された場合
+     */
     SqlType getSqlType(ValueTypeProvider valueTypeProvider,
             PropertyMeta propertyMeta);
 

@@ -29,7 +29,6 @@ import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
-import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
@@ -48,6 +47,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
 import org.seasar.extension.jdbc.gen.internal.util.ColumnUtil;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.StringUtil;
@@ -124,6 +124,13 @@ public class StandardGenDialect implements GenDialect {
         return getSqlTypeInternal(valueType.getSqlType());
     }
 
+    /**
+     * 内部的にSQL型を返します。
+     * 
+     * @param sqlType
+     *            JDBCのSQL型
+     * @return SQL型
+     */
     protected SqlType getSqlTypeInternal(int sqlType) {
         SqlType type = sqlTypeMap.get(sqlType);
         if (type != null) {

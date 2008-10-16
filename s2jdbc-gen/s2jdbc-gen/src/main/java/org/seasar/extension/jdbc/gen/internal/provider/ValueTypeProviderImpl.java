@@ -13,12 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.desc;
+package org.seasar.extension.jdbc.gen.internal.provider;
 
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
-import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 
 /**
  * {@link ValueTypeProvider}の実装クラスです。
