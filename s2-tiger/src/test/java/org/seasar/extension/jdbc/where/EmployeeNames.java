@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.where;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.seasar.extension.jdbc.impl.Employee;
 import org.seasar.extension.jdbc.name.PropertyName;
@@ -40,6 +41,13 @@ public class EmployeeNames extends Operations {
      */
     public static PropertyName<String> name() {
         return new PropertyName<String>("name");
+    }
+
+    /**
+     * @return
+     */
+    public static PropertyName<Date> hireDate() {
+        return new PropertyName<Date>("hireDate");
     }
 
     /**
@@ -87,6 +95,13 @@ public class EmployeeNames extends Operations {
          */
         public PropertyName<String> name() {
             return new PropertyName<String>(this, "name");
+        }
+
+        /**
+         * @return
+         */
+        public PropertyName<Date> hireDate() {
+            return new PropertyName<Date>(this, "hireDate");
         }
 
         /**

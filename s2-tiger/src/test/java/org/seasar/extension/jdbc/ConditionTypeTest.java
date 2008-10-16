@@ -88,9 +88,10 @@ public class ConditionTypeTest extends TestCase {
     /**
      * 
      */
-    public void testMakeName() {
-        assertEquals("T1_.ID", ConditionType.EQ.makeName("T1_", "ID"));
-        assertEquals("ID", ConditionType.EQ.makeName(null, "ID"));
+    public void testMakeCondition() {
+        assertEquals("T1_.ID = ?", ConditionType.EQ.makeCondition("T1_", "ID",
+                "="));
+        assertEquals("ID = ?", ConditionType.EQ.makeCondition(null, "ID", "="));
     }
 
     /**
@@ -262,8 +263,8 @@ public class ConditionTypeTest extends TestCase {
      * 
      */
     public void testGetInConditionInternal() {
-        assertEquals("T1_.ID in (?, ?)", ConditionType.IN
-                .getInConditionInternal("T1_.ID", "in", new Object[] { 1, 2 }));
+        assertEquals("T1_.ID in (?, ?)", ConditionType.IN.getCondition("T1_",
+                "ID", new Object[] { 1, 2 }));
     }
 
     /**

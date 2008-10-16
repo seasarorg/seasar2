@@ -39,128 +39,146 @@ public class Operations {
     /**
      * <code>=</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> SingleValueOperator eq(
-            final PropertyName<T> propertyName, final T param) {
+    public static <PropType, ParamType extends PropType> SingleValueOperator eq(
+            final PropertyName<PropType> propertyName, final ParamType param) {
         return new SingleValueOperator(ConditionType.EQ, propertyName, param);
     }
 
     /**
      * <code>&lt;&gt;</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> SingleValueOperator ne(
-            final PropertyName<T> propertyName, final T param) {
+    public static <PropType, ParamType extends PropType> SingleValueOperator ne(
+            final PropertyName<PropType> propertyName, final ParamType param) {
         return new SingleValueOperator(ConditionType.NE, propertyName, param);
     }
 
     /**
      * <code>&gt;</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> SingleValueOperator gt(
-            final PropertyName<T> propertyName, final T param) {
+    public static <PropType, ParamType extends PropType> SingleValueOperator gt(
+            final PropertyName<PropType> propertyName, final ParamType param) {
         return new SingleValueOperator(ConditionType.GT, propertyName, param);
     }
 
     /**
      * <code>&gt;=</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> SingleValueOperator ge(
-            final PropertyName<T> propertyName, final T param) {
+    public static <PropType, ParamType extends PropType> SingleValueOperator ge(
+            final PropertyName<PropType> propertyName, final ParamType param) {
         return new SingleValueOperator(ConditionType.GE, propertyName, param);
     }
 
     /**
      * <code>&lt;</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> SingleValueOperator lt(
-            final PropertyName<T> propertyName, final T param) {
+    public static <PropType, ParamType extends PropType> SingleValueOperator lt(
+            final PropertyName<PropType> propertyName, final ParamType param) {
         return new SingleValueOperator(ConditionType.LT, propertyName, param);
     }
 
     /**
      * <code>&lt;=</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> SingleValueOperator le(
-            final PropertyName<T> propertyName, final T param) {
+    public static <PropType, ParamType extends PropType> SingleValueOperator le(
+            final PropertyName<PropType> propertyName, final ParamType param) {
         return new SingleValueOperator(ConditionType.LE, propertyName, param);
     }
 
     /**
      * <code>IN</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param params
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> MultiValueOperator in(final PropertyName<T> propertyName,
-            final T... params) {
+    public static <PropType, ParamType extends PropType> MultiValueOperator in(
+            final PropertyName<PropType> propertyName,
+            final ParamType... params) {
         return new MultiValueOperator(ConditionType.IN, propertyName, params);
     }
 
     /**
      * <code>NOT IN</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
      *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param params
      *            引数
-     * @return
+     * @return 条件
      */
-    public static <T> MultiValueOperator notIn(
-            final PropertyName<T> propertyName, final T... params) {
+    public static <PropType, ParamType extends PropType> MultiValueOperator notIn(
+            final PropertyName<PropType> propertyName,
+            final ParamType... params) {
         return new MultiValueOperator(ConditionType.NOT_IN, propertyName,
                 params);
     }
@@ -168,13 +186,11 @@ public class Operations {
     /**
      * <code>IS NULL</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
-     * @param param
+     * @param params
      *            引数
-     * @return
+     * @return 条件
      */
     public static SingleValueOperator isNull(final PropertyName<?> propertyName) {
         return new SingleValueOperator(ConditionType.IS_NULL, propertyName,
@@ -184,13 +200,11 @@ public class Operations {
     /**
      * <code>IS NOT NULL</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
-     * @param param
+     * @param params
      *            引数
-     * @return
+     * @return 条件
      */
     public static SingleValueOperator isNotNull(
             final PropertyName<?> propertyName) {
@@ -201,13 +215,11 @@ public class Operations {
     /**
      * <code>LIKE</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
     public static LikeOperator like(final PropertyName<String> propertyName,
             final String param) {
@@ -217,15 +229,13 @@ public class Operations {
     /**
      * <code>LIKE ～ ESCAPE</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
      * @param escapeChar
      *            エスケープ文字
-     * @return
+     * @return 条件
      */
     public static LikeOperator like(final PropertyName<String> propertyName,
             final String param, final String escapeChar) {
@@ -236,13 +246,11 @@ public class Operations {
     /**
      * <code>LIKE ～%</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
     public static LikeOperator starts(final PropertyName<String> propertyName,
             final String param) {
@@ -252,13 +260,11 @@ public class Operations {
     /**
      * <code>LIKE %～</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
     public static LikeOperator ends(final PropertyName<String> propertyName,
             final String param) {
@@ -268,13 +274,11 @@ public class Operations {
     /**
      * <code>LIKE %～%</code>演算子による{@link Where 検索条件}を作成します。
      * 
-     * @param <T>
-     *            引数の型
      * @param propertyName
      *            プロパティ名
      * @param param
      *            引数
-     * @return
+     * @return 条件
      */
     public static LikeOperator contains(
             final PropertyName<String> propertyName, final String param) {

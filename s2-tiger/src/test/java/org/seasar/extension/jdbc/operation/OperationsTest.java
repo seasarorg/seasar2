@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.operation;
 
+import java.sql.Date;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.Where;
@@ -33,19 +35,23 @@ public class OperationsTest extends TestCase {
      */
     public void test() {
         Where w = and(eq(name(), "111"), ne(department().id(), 111),
-                isNull(id()));
-        assertEquals("(name = ?) and (department.id <> ?) and (id is null)", w
+                isNull(id()), ge(hireDate(), new Date(0)));
+        assertEquals(
+                "(name = ?) and (department.id <> ?) and (id is null) and (hireDate >= ?)",
+                w
                 .getCriteria());
 
         Object[] params = w.getParams();
-        assertEquals(2, params.length);
+        assertEquals(3, params.length);
         assertEquals("111", params[0]);
         assertEquals(Integer.valueOf(111), params[1]);
+        assertEquals(new Date(0), params[2]);
 
         String[] names = w.getPropertyNames();
-        assertEquals(2, names.length);
+        assertEquals(3, names.length);
         assertEquals("name", names[0]);
         assertEquals("department.id", names[1]);
+        assertEquals("hireDate", names[2]);
     }
 
 }

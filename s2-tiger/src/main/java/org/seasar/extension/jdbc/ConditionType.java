@@ -36,37 +36,13 @@ public enum ConditionType {
      */
     EQ {
 
-        /**
-         * 条件を返します。
-         * 
-         * @param name
-         *            名前
-         * @return 条件
-         */
-        @SuppressWarnings("unused")
-        public String getCondition(String name) {
-            return getCondition(null, name);
-        }
-
-        /**
-         * 条件を返します。
-         * 
-         * @param tableAlias
-         *            テーブルエイリアス
-         * @param columnName
-         *            カラム名
-         * @return 条件
-         */
-        public String getCondition(String tableAlias, String columnName) {
-            return getCondition(tableAlias, columnName, null);
-        }
-
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " = ?";
+            return makeCondition(tableAlias, columnName, "=");
         }
     },
+
     /**
      * &lt;&gt;です。
      */
@@ -75,9 +51,10 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " <> ?";
+            return makeCondition(tableAlias, columnName, "<>");
         }
     },
+
     /**
      * &lt;です。
      */
@@ -86,7 +63,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " < ?";
+            return makeCondition(tableAlias, columnName, "<");
         }
     },
     /**
@@ -97,9 +74,10 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " <= ?";
+            return makeCondition(tableAlias, columnName, "<=");
         }
     },
+
     /**
      * &gt;です。
      */
@@ -108,9 +86,10 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " > ?";
+            return makeCondition(tableAlias, columnName, ">");
         }
     },
+
     /**
      * &gt;=です。
      */
@@ -119,9 +98,10 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " >= ?";
+            return makeCondition(tableAlias, columnName, ">=");
         }
     },
+
     /**
      * inです。
      */
@@ -129,25 +109,13 @@ public enum ConditionType {
 
         @Override
         public boolean isTarget(Object value) {
-            assertArrayInCondition("in", value);
-            if (!super.isTarget(value) || !value.getClass().isArray()
-                    || Array.getLength(value) == 0) {
-                return false;
-            }
-            Object[] values = Object[].class.cast(value);
-            for (Object element : values) {
-                if (super.isTarget(element)) {
-                    return true;
-                }
-            }
-            return false;
+            return isTargetForIn("in", value);
         }
 
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return getInConditionInternal(makeName(tableAlias, columnName),
-                    "in", value);
+            return getConditionForIn(tableAlias, columnName, "in", value);
         }
 
         @Override
@@ -157,6 +125,7 @@ public enum ConditionType {
             return values.length;
         }
     },
+
     /**
      * not inです。
      */
@@ -164,25 +133,13 @@ public enum ConditionType {
 
         @Override
         public boolean isTarget(Object value) {
-            assertArrayInCondition("not in", value);
-            if (!super.isTarget(value) || !value.getClass().isArray()
-                    || Array.getLength(value) == 0) {
-                return false;
-            }
-            Object[] values = Object[].class.cast(value);
-            for (Object element : values) {
-                if (super.isTarget(element)) {
-                    return true;
-                }
-            }
-            return false;
+            return isTargetForIn("not in", value);
         }
 
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return getInConditionInternal(makeName(tableAlias, columnName),
-                    "not in", value);
+            return getConditionForIn(tableAlias, columnName, "not in", value);
         }
 
         @Override
@@ -192,6 +149,7 @@ public enum ConditionType {
             return values.length;
         }
     },
+
     /**
      * like ?です。
      */
@@ -200,9 +158,10 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ?";
+            return makeConditionForLike(tableAlias, columnName, "like", null);
         }
     },
+
     /**
      * like ? escape ?です。
      */
@@ -211,7 +170,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ? escape ?";
+            return makeConditionForLike(tableAlias, columnName, "like", "?");
         }
 
         @Override
@@ -222,6 +181,7 @@ public enum ConditionType {
             return 2;
         }
     },
+
     /**
      * like '?%'です。
      */
@@ -230,7 +190,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ?";
+            return makeConditionForLike(tableAlias, columnName, "like", null);
         }
 
         @Override
@@ -238,6 +198,7 @@ public enum ConditionType {
             return super.addValue(valueList, value + "%");
         }
     },
+
     /**
      * like '?%' escape '$'です。
      */
@@ -246,7 +207,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ? escape '$'";
+            return makeConditionForLike(tableAlias, columnName, "like", "'$'");
         }
 
         @Override
@@ -254,6 +215,7 @@ public enum ConditionType {
             return super.addValue(valueList, value + "%");
         }
     },
+
     /**
      * like '%?'です。
      */
@@ -262,7 +224,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ?";
+            return makeConditionForLike(tableAlias, columnName, "like", null);
         }
 
         @Override
@@ -270,6 +232,7 @@ public enum ConditionType {
             return super.addValue(valueList, "%" + value);
         }
     },
+
     /**
      * like '%?' escape '$'です。
      */
@@ -278,7 +241,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ? escape '$'";
+            return makeConditionForLike(tableAlias, columnName, "like", "'$'");
         }
 
         @Override
@@ -286,6 +249,7 @@ public enum ConditionType {
             return super.addValue(valueList, "%" + value);
         }
     },
+
     /**
      * like '%?%'です。
      */
@@ -294,7 +258,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ?";
+            return makeConditionForLike(tableAlias, columnName, "like", null);
         }
 
         @Override
@@ -302,6 +266,7 @@ public enum ConditionType {
             return super.addValue(valueList, "%" + value + "%");
         }
     },
+
     /**
      * like '%?%' escape '$'です。
      */
@@ -310,7 +275,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " like ? escape '$'";
+            return makeConditionForLike(tableAlias, columnName, "like", "'$'");
         }
 
         @Override
@@ -318,6 +283,7 @@ public enum ConditionType {
             return super.addValue(valueList, "%" + value + "%");
         }
     },
+
     /**
      * is nullです。
      */
@@ -325,14 +291,13 @@ public enum ConditionType {
 
         @Override
         public boolean isTarget(Object value) {
-            assertBooleanIsNullCondition("is null", value);
-            return super.isTarget(value) && Boolean.TRUE.equals(value);
+            return isTargetForIsNull("is null", value);
         }
 
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " is null";
+            return makeConditionForIsNull(tableAlias, columnName, "is null");
         }
 
         @Override
@@ -340,6 +305,7 @@ public enum ConditionType {
             return 0;
         }
     },
+
     /**
      * is not nullです。
      */
@@ -347,14 +313,13 @@ public enum ConditionType {
 
         @Override
         public boolean isTarget(Object value) {
-            assertBooleanIsNullCondition("is not null", value);
-            return super.isTarget(value) && Boolean.TRUE.equals(value);
+            return isTargetForIsNull("is not null", value);
         }
 
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return makeName(tableAlias, columnName) + " is not null";
+            return makeConditionForIsNull(tableAlias, columnName, "is not null");
         }
 
         @Override
@@ -531,39 +496,74 @@ public enum ConditionType {
     }
 
     /**
-     * 名前を組み立てます。
+     * 条件を組み立てます。
      * 
      * @param tableAlias
      *            テーブルエイリアス
      * @param columnName
      *            カラム名
-     * @return 名前
+     * @param operator
+     *            演算子
+     * @return 条件
      */
-    protected String makeName(String tableAlias, String columnName) {
-        if (StringUtil.isEmpty(tableAlias)) {
-            return columnName;
+    protected String makeCondition(String tableAlias, String columnName,
+            String operator) {
+        final StringBuilder buf = new StringBuilder(32);
+        if (!StringUtil.isEmpty(tableAlias)) {
+            buf.append(tableAlias).append('.');
         }
-        return tableAlias + "." + columnName;
+        buf.append(columnName).append(' ').append(operator).append(" ?");
+        return new String(buf);
     }
 
     /**
-     * <code>in, not in</code>用の内部的なメソッドです。
+     * <code>in, not in</code>の条件に追加する対象かどうかを返します。
      * 
-     * @param name
-     *            名前
      * @param conditionName
      *            条件名
      * @param value
      *            値
+     * @return 条件に追加する対象かどうか
+     */
+    protected boolean isTargetForIn(String conditionName, Object value) {
+        if (value != null && !value.getClass().isArray()) {
+            throw new NonArrayInConditionRuntimeException(conditionName, value
+                    .getClass());
+        }
+        if (value == null || !value.getClass().isArray()
+                || Array.getLength(value) == 0) {
+            return false;
+        }
+        Object[] values = Object[].class.cast(value);
+        for (Object element : values) {
+            if (element != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * <code>in, not in</code>用の条件を組み立てます。
      * 
+     * @param tableAlias
+     *            テーブルエイリアス
+     * @param columnName
+     *            カラム名
+     * @param conditionName
+     *            条件名
+     * @param value
+     *            値
      * @return 条件
      */
-    protected String getInConditionInternal(String name, String conditionName,
-            Object value) {
+    protected String getConditionForIn(String tableAlias, String columnName,
+            String conditionName, Object value) {
         int size = Array.getLength(value);
         StringBuilder buf = new StringBuilder(30);
-        buf.append(name);
-        buf.append(" ").append(conditionName).append(" (");
+        if (!StringUtil.isEmpty(tableAlias)) {
+            buf.append(tableAlias).append('.');
+        }
+        buf.append(columnName).append(' ').append(conditionName).append(" (");
         for (int i = 0; i < size; i++) {
             if (i != 0) {
                 buf.append(", ");
@@ -575,33 +575,69 @@ public enum ConditionType {
     }
 
     /**
-     * IN用の条件の値が配列であることを表明します。
+     * <code>like</code>の条件を組み立てます。
      * 
-     * @param conditionName
-     *            条件名
-     * @param value
-     *            値
+     * @param tableAlias
+     *            テーブルエイリアス
+     * @param columnName
+     *            カラム名
+     * @param operator
+     *            演算子
+     * @param escape
+     *            エスケープ
+     * @return 条件
      */
-    protected void assertArrayInCondition(String conditionName, Object value) {
-        if (value != null && !value.getClass().isArray()) {
-            throw new NonArrayInConditionRuntimeException(conditionName, value
-                    .getClass());
+    protected String makeConditionForLike(String tableAlias, String columnName,
+            String operator, String escape) {
+        final StringBuilder buf = new StringBuilder(32);
+        if (!StringUtil.isEmpty(tableAlias)) {
+            buf.append(tableAlias).append('.');
         }
+        buf.append(columnName).append(' ').append(operator).append(" ?");
+        if (escape != null) {
+            buf.append(" escape ").append(escape);
+        }
+        return new String(buf);
     }
 
     /**
-     * IS NULL用の条件の値がBooleanであることを表明します。
+     * <code>in, not in</code>の条件に追加する対象かどうかを返します。
      * 
      * @param conditionName
      *            条件名
      * @param value
      *            値
+     * @return 条件に追加する対象かどうか
      */
-    protected void assertBooleanIsNullCondition(String conditionName,
-            Object value) {
+    protected boolean isTargetForIsNull(String conditionName, Object value) {
         if (value != null && value.getClass() != Boolean.class) {
             throw new NonBooleanIsNullConditionRuntimeException(conditionName,
                     value.getClass());
         }
+        return value != null && Boolean.TRUE.equals(value);
     }
+
+    /**
+     * <code>is null, is not null</code>用の条件を組み立てます。
+     * 
+     * @param tableAlias
+     *            テーブルエイリアス
+     * @param columnName
+     *            カラム名
+     * @param operator
+     *            演算子
+     * @param escape
+     *            エスケープ
+     * @return 条件
+     */
+    protected String makeConditionForIsNull(String tableAlias,
+            String columnName, String operator) {
+        final StringBuilder buf = new StringBuilder(32);
+        if (!StringUtil.isEmpty(tableAlias)) {
+            buf.append(tableAlias).append('.');
+        }
+        buf.append(columnName).append(' ').append(operator);
+        return new String(buf);
+    }
+
 }
