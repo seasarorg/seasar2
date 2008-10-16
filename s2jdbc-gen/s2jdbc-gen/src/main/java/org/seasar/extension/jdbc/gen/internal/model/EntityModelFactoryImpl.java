@@ -260,20 +260,18 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         for (AttributeModel attr : model.getAttributeModelList()) {
             if (attr.isId()) {
                 classModelSupport.addImportName(model, Id.class);
-                if (!model.hasCompositeId()) {
+                if (attr.getGenerationType() != null) {
                     classModelSupport
                             .addImportName(model, GeneratedValue.class);
-                }
-            }
-            if (attr.getGenerationType() != null) {
-                classModelSupport.addImportName(model, GeneratedValue.class);
-                classModelSupport.addImportName(model, GenerationType.class);
-                if (attr.getGenerationType() == GenerationType.SEQUENCE) {
-                    classModelSupport.addImportName(model,
-                            SequenceGenerator.class);
-                } else if (attr.getGenerationType() == GenerationType.TABLE) {
                     classModelSupport
-                            .addImportName(model, TableGenerator.class);
+                            .addImportName(model, GenerationType.class);
+                    if (attr.getGenerationType() == GenerationType.SEQUENCE) {
+                        classModelSupport.addImportName(model,
+                                SequenceGenerator.class);
+                    } else if (attr.getGenerationType() == GenerationType.TABLE) {
+                        classModelSupport.addImportName(model,
+                                TableGenerator.class);
+                    }
                 }
             }
             if (attr.isLob()) {

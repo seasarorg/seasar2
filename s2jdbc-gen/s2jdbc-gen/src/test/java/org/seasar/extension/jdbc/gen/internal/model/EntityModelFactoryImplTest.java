@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -60,6 +61,7 @@ public class EntityModelFactoryImplTest {
         AttributeDesc id = new AttributeDesc();
         id.setName("id");
         id.setId(true);
+        id.setGenerationType(GenerationType.AUTO);
         id.setAttributeClass(int.class);
 
         AttributeDesc name = new AttributeDesc();
@@ -106,12 +108,13 @@ public class EntityModelFactoryImplTest {
         assertEquals("FOO", model.getTableName());
 
         Set<String> set = model.getImportNameSet();
-        assertEquals(12, set.size());
+        assertEquals(13, set.size());
         Iterator<String> iterator = set.iterator();
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(Column.class.getName(), iterator.next());
         assertEquals(Entity.class.getName(), iterator.next());
         assertEquals(GeneratedValue.class.getName(), iterator.next());
+        assertEquals(GenerationType.class.getName(), iterator.next());
         assertEquals(Id.class.getName(), iterator.next());
         assertEquals(Lob.class.getName(), iterator.next());
         assertEquals(Table.class.getName(), iterator.next());
