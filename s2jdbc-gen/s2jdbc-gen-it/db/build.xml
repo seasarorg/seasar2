@@ -91,6 +91,7 @@
 				<file name="drop.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 	
 	<target name="testFromEntityToDb" depends="showRdbmsName, clean">
@@ -170,6 +171,7 @@
 			rootpackagename="${rootpackagename}"
 			classpathref="classpath"
 		/>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="testGenerateTest" depends="showRdbmsName, clean">
@@ -198,6 +200,7 @@
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="testGenerateDdl" depends="showRdbmsName, clean">
@@ -218,6 +221,7 @@
 			rootpackagename="${rootpackagename}"
 			classpathref="classpath"
 		/>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="testSequenceGenerator" if="supportssequence" depends="showRdbmsName, clean, condition">
@@ -277,6 +281,7 @@
 			rootpackagename="${rootpackagename}"
 			classpathref="classpath"
 		/>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="testMigrate" depends="showRdbmsName, clean">
@@ -360,6 +365,7 @@
 			transactional="${transactional}"
 			classpathref="classpath"
 		/>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="testDumpDbMeta" depends="showRdbmsName, clean">
@@ -422,6 +428,7 @@
 				<file name="drop.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="testLoadData" depends="showRdbmsName, clean">
@@ -472,6 +479,7 @@
 				<file name="drop.sql"/>
 			</sqlFileList>
 		</exec-sql>
+		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
 	<target name="condition">
