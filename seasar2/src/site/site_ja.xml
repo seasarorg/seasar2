@@ -71,7 +71,8 @@
           <item name="Dump-Db-Meta" href="s2jdbc_gen/tasks/dump_db_meta.html"/>
           <item name="Dump-Data" href="s2jdbc_gen/tasks/dump_data.html"/>
           <item name="Load-Data" href="s2jdbc_gen/tasks/load_data.html"/>
-          <item name="Exe-Sql" href="s2jdbc_gen/tasks/exe_sql.html"/>
+          <item name="Exec-Sql" href="s2jdbc_gen/tasks/exec_sql.html"/>
+          <item name="Refresh" href="s2jdbc_gen/tasks/refresh.html"/>
         </item>
       </item>
 

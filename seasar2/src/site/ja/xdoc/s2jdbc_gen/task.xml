@@ -47,6 +47,7 @@
 					<tr><td><a href="tasks/dump_data.html">Dump-Data</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGen-Ddlタスクに含まれていますが、Gen-Ddlタスクとは別にダンプを行いたい場合に使用できます。</td></tr>
 					<tr><td><a href="tasks/load_data.html">Load-Data</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateタスクに含まれていますが、Migrateタスクとは別にロードを行いたい場合に使用できます。</td></tr>
 					<tr><td><a href="tasks/exec_sql.html">Exec-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
+					<tr><td><a href="tasks/refresh.html">Refresh</a></td><td><a href="http://resourcesynchronizer.sandbox.seasar.org/ja/">ResourceSynchronizer</a>にリクエストを投げるタスクです。</td></tr>
 				</table>
 			</subsection>
 		</section>

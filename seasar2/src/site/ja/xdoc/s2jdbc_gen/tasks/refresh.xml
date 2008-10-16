@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - Refresh</title>
+	</properties>
+	<body>
+		<section name="Refresh">
+			<ul>
+				<li>
+					<p>
+						<a href="#説明">説明</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#概要">概要</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#パラメータ">パラメータ</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#トップレベルのパラメータ">トップレベルのパラメータ</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#ネストした要素として指定されるパラメータ">ネストした要素として指定されるパラメータ</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#例">例</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+		<section name="説明">
+			<subsection name="概要">
+				<p>
+					<a href="http://resourcesynchronizer.sandbox.seasar.org/ja/">ResourceSynchronizer</a>にリクエストを投げるタスクです。
+					ResourceSynchronizerと連動することでEclipseのワークスペースをリフレッシュします。
+				</p>
+				<p>
+					このタスクを使うには、ResourceSynchronizerをインストールしておく必要があります。ResourceSynchronizerについては<a href="../setup.html#ResourceSynchronizerの利用">ResourceSynchronizerの利用</a>を参照してください。
+				</p>
+			</subsection>
+		</section>
+		<section name="パラメータ">
+			<subsection name="トップレベルのパラメータ">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
+					<tr><td>projectName</td><td>プロジェクト名です。</td><td>-</td><td>YES</td></tr>
+					<tr><td>port</td><td>ResourceSynchronizerのポート番号です。</td><td>"8386"</td><td>NO</td></tr>
+				</table>
+			</subsection>
+		</section>
+		<section name="例">
+			<subsection name="ポート番号の指定">
+<source><![CDATA[<refresh projectName="example-project" port="9999"/>
+]]></source>
+				<p>
+					ポート番号に"9999"を指定し実行します。
+				</p>
+			</subsection>
+		</section>
+	</body>
+</document>
