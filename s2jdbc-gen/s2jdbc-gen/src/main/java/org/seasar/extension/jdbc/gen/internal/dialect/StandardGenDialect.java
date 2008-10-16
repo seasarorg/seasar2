@@ -27,6 +27,9 @@ import java.util.Map;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.gen.desc.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
@@ -112,6 +115,16 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public SqlType getSqlType(int sqlType) {
+        return getSqlTypeInternal(sqlType);
+    }
+
+    public SqlType getSqlType(ValueTypeProvider valueTypeProvider,
+            PropertyMeta propertyMeta) {
+        ValueType valueType = valueTypeProvider.provide(propertyMeta);
+        return getSqlTypeInternal(valueType.getSqlType());
+    }
+
+    protected SqlType getSqlTypeInternal(int sqlType) {
         SqlType type = sqlTypeMap.get(sqlType);
         if (type != null) {
             return type;

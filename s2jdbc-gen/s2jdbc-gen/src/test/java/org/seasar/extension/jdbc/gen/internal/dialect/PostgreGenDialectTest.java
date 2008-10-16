@@ -60,7 +60,7 @@ public class PostgreGenDialectTest {
     @Test
     public void testGetSqlType_clob() throws Exception {
         SqlType type = dialect.getSqlType(Types.CLOB);
-        assertEquals("oid", type.getDataType(10, 0, 0, false));
+        assertEquals("text", type.getDataType(10, 0, 0, false));
     }
 
     /**

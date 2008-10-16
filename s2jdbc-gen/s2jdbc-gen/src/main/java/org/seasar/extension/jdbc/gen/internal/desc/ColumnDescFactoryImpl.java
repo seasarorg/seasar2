@@ -143,9 +143,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doDefinition(EntityMeta entityMeta,
             PropertyMeta propertyMeta, ColumnDesc columnDesc, Column column) {
-        ValueType valueType = valueTypeProvider.provide(propertyMeta);
-        int sqlType = valueType.getSqlType();
-        SqlType type = dialect.getSqlType(sqlType);
+        SqlType type = dialect.getSqlType(valueTypeProvider, propertyMeta);
         String dataType = type.getDataType(column.length(), column.precision(),
                 column.scale(), columnDesc.isIdentity());
 
@@ -227,9 +225,8 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
      */
     protected void doSqlType(EntityMeta entityMeta, PropertyMeta propertyMeta,
             ColumnDesc columnDesc, Column column) {
-        ValueType valueType = valueTypeProvider.provide(propertyMeta);
-        int sqlType = valueType.getSqlType();
-        columnDesc.setSqlType(dialect.getSqlType(sqlType));
+        SqlType sqlType = dialect.getSqlType(valueTypeProvider, propertyMeta);
+        columnDesc.setSqlType(sqlType);
     }
 
     /**
