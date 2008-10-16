@@ -30,6 +30,6 @@ public class CccTest extends S2TestCase {
      * @throws Exception
      */
     public void testFindById() throws Exception {
-        jdbcManager.from(Ccc.class).id("aaa", new BigDecimal(1)).getSingleResult();
+        jdbcManager.from(Ccc.class).id("aaa", BigDecimal.ONE).getSingleResult();
     }
 }

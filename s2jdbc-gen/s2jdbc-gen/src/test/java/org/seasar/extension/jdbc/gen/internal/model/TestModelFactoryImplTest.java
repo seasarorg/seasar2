@@ -135,8 +135,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_BigDecimal() {
-        assertEquals("new BigDecimal(1)", factory
-                .getExpression(BigDecimal.class));
+        assertEquals("BigDecimal.ONE", factory.getExpression(BigDecimal.class));
     }
 
     /**
@@ -144,8 +143,7 @@ public class TestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_BigInteger() {
-        assertEquals("new BigInteger(1)", factory
-                .getExpression(BigInteger.class));
+        assertEquals("BigInteger.ONE", factory.getExpression(BigInteger.class));
     }
 
     /**

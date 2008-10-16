@@ -144,10 +144,10 @@ public class TestModelFactoryImpl implements TestModelFactory {
             return "\"aaa\"";
         }
         if (clazz == BigDecimal.class) {
-            return "new BigDecimal(1)";
+            return "BigDecimal.ONE";
         }
-        if (clazz == BigDecimal.class || clazz == BigInteger.class) {
-            return "new BigInteger(1)";
+        if (clazz == BigInteger.class) {
+            return "BigInteger.ONE";
         }
         if (clazz == Date.class) {
             return "new Date()";

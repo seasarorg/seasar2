@@ -18,7 +18,12 @@
 	<path id="classpath">
 		<pathelement location="${build}"/>
 		<pathelement location="../../s2jdbc-gen/build/classes"/>
+		<pathelement location="../../seasar2/build/classes"/>
+		<pathelement location="../../s2-tiger/build/classes"/>
 		<fileset dir="../lib"/>
+		<fileset dir="../../s2jdbc-gen/lib"/>
+		<fileset dir="../../seasar2/lib" excludes="**/*-sources.jar"/>
+		<fileset dir="../../s2-tiger/lib" excludes="**/*-sources.jar"/>
 	</path>
 
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
@@ -31,6 +36,7 @@
 		<antcall target="testFromDbToEntity"/>
 		<antcall target="testFromEntityToDb"/>
 		<antcall target="testGenerateDdl"/>
+		<antcall target="testGenerateTest"/>
 		<antcall target="testMigrate"/>
 		<antcall target="testDumpDbMeta"/>
 		<antcall target="testDumpData"/>
@@ -164,6 +170,34 @@
 			rootpackagename="${rootpackagename}"
 			classpathref="classpath"
 		/>
+	</target>
+
+	<target name="testGenerateTest" depends="showRdbmsName, clean">
+		<!-- setUp -->
+		<javac 
+			srcdir="../src/main/java"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<!-- test -->
+		<gen-test
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			classpathref="classpath"
+		/>
+		<javac 
+			srcdir="${src}"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<!-- tearDown -->
 	</target>
 
 	<target name="testGenerateDdl" depends="showRdbmsName, clean">
