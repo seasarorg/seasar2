@@ -4,7 +4,7 @@
 		<title>S2JDBC-Gen - Exe-Sql</title>
 	</properties>
 	<body>
-		<section name="Exe-Sql">
+		<section name="Exec-Sql">
 			<ul>
 				<li>
 					<p>
@@ -95,7 +95,7 @@
 		</section>
 		<section name="例">
 			<subsection name="例">
-<source><![CDATA[    <exe-sql
+<source><![CDATA[    <exec-sql
       transactional="true"
       classpathref="classpath">
         <sqlFileList dir="sql">
@@ -103,7 +103,7 @@
           <file name="bbb.sql"/>
           <file name="ccc.sql"/>
         </sqlFileList>
-    </exe-sql>]]></source>
+    </exec-sql>]]></source>
 				<p>
 					3つのSQLファイルを同一トランザクション内で実行します。
 				</p>

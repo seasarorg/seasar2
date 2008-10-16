@@ -46,7 +46,7 @@
 					<tr><td><a href="tasks/dump_db_meta.html">Dump-Db-Meta</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
 					<tr><td><a href="tasks/dump_data.html">Dump-Data</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGen-Ddlタスクに含まれていますが、Gen-Ddlタスクとは別にダンプを行いたい場合に使用できます。</td></tr>
 					<tr><td><a href="tasks/load_data.html">Load-Data</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateタスクに含まれていますが、Migrateタスクとは別にロードを行いたい場合に使用できます。</td></tr>
-					<tr><td><a href="tasks/exe_sql.html">Exe-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
+					<tr><td><a href="tasks/exec_sql.html">Exec-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>
 				</table>
 			</subsection>
 		</section>
