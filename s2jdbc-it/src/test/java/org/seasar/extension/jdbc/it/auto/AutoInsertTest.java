@@ -446,14 +446,14 @@ public class AutoInsertTest {
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) 'b';
         }
-        char[] chars = new char[10000];
+        char[] chars = new char[100];
         for (int i = 0; i < chars.length; i++) {
-            chars[i] = 'c';
+            chars[i] = 'あ';
         }
         LargeObject.MyDto dto = new LargeObject.MyDto("bar");
         LargeObject lob = new LargeObject();
         lob.id = 1;
-        lob.name = "hoge";
+        lob.name = "あいうえお";
         lob.largeName = new String(chars);
         lob.bytes = new byte[] { 'f', 'o', 'o' };
         lob.largeBytes = bytes;
@@ -461,7 +461,7 @@ public class AutoInsertTest {
         lob.largeDto = dto;
         jdbcManager.insert(lob).execute();
         lob = jdbcManager.from(LargeObject.class).id(1).getSingleResult();
-        assertEquals("hoge", lob.name);
+        assertEquals("あいうえお", lob.name);
         assertEquals(new String(chars), lob.largeName);
         ArrayAssert.assertEquals(new byte[] { 'f', 'o', 'o' }, lob.bytes);
         ArrayAssert.assertEquals(bytes, lob.largeBytes);
