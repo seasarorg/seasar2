@@ -115,7 +115,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return getConditionForIn(tableAlias, columnName, "in", value);
+            return makeConditionForIn(tableAlias, columnName, "in", value);
         }
 
         @Override
@@ -139,7 +139,7 @@ public enum ConditionType {
         @Override
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
-            return getConditionForIn(tableAlias, columnName, "not in", value);
+            return makeConditionForIn(tableAlias, columnName, "not in", value);
         }
 
         @Override
@@ -556,7 +556,7 @@ public enum ConditionType {
      *            値
      * @return 条件
      */
-    protected String getConditionForIn(String tableAlias, String columnName,
+    protected String makeConditionForIn(String tableAlias, String columnName,
             String conditionName, Object value) {
         int size = Array.getLength(value);
         StringBuilder buf = new StringBuilder(30);
