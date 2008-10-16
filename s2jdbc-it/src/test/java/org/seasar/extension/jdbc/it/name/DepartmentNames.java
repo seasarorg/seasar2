@@ -18,12 +18,11 @@ package org.seasar.extension.jdbc.it.name;
 import org.seasar.extension.jdbc.it.entity.Department;
 import org.seasar.extension.jdbc.it.name.EmployeeNames._EmployeeNames;
 import org.seasar.extension.jdbc.name.PropertyName;
-import org.seasar.extension.jdbc.operation.Operations;
 
 /**
  * @author koichik
  */
-public class DepartmentNames extends Operations {
+public class DepartmentNames {
 
     /**
      * @return

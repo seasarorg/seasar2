@@ -35,6 +35,7 @@ import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
 import static org.seasar.extension.jdbc.it.name.EmployeeNames.*;
+import static org.seasar.extension.jdbc.operation.Operations.*;
 
 /**
  * @author taedium

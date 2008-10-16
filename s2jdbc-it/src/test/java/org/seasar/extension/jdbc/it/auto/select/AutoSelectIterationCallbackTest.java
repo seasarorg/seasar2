@@ -137,7 +137,7 @@ public class AutoSelectIterationCallbackTest {
      * @throws Exception
      */
     public void testNoId() throws Exception {
-        int count =
+        int result =
             jdbcManager.from(NoId.class).iterate(
                 new IterationCallback<NoId, Integer>() {
 
@@ -147,7 +147,7 @@ public class AutoSelectIterationCallbackTest {
                         return ++count;
                     }
                 });
-        assertEquals(2, count);
+        assertEquals(2, result);
     }
 
     /**

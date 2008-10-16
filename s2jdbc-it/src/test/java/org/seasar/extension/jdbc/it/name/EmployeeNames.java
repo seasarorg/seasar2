@@ -22,12 +22,11 @@ import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.extension.jdbc.it.name.AddressNames._AddressNames;
 import org.seasar.extension.jdbc.it.name.DepartmentNames._DepartmentNames;
 import org.seasar.extension.jdbc.name.PropertyName;
-import org.seasar.extension.jdbc.operation.Operations;
 
 /**
  * @author koichik
  */
-public class EmployeeNames extends Operations {
+public class EmployeeNames {
 
     /**
      * @return
