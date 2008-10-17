@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EnumType;
+import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
@@ -84,6 +85,11 @@ public class PropertyMeta {
      * {@link GenerationType#TABLE}で識別子を自動生成するIDジェネレータです。
      */
     protected IdGenerator tableIdGenerator;
+
+    /**
+     * フェッチタイプです。
+     */
+    protected FetchType fetchType;
 
     /**
      * 時制の種別です。
@@ -325,6 +331,43 @@ public class PropertyMeta {
      */
     public void setTableIdGenerator(IdGenerator idGenerator) {
         tableIdGenerator = idGenerator;
+    }
+
+    /**
+     * フェッチタイプを返します。
+     * 
+     * @return フェッチタイプ
+     */
+    public FetchType getFetchType() {
+        return fetchType;
+    }
+
+    /**
+     * フェッチタイプを設定します。
+     * 
+     * @param fetchType
+     *            フェッチタイプ
+     */
+    public void setFetchType(final FetchType fetchType) {
+        this.fetchType = fetchType;
+    }
+
+    /**
+     * フェッチタイプがEAGERなら{@literal true}を返します。
+     * 
+     * @return フェッチタイプがEAGERなら{@literal true}
+     */
+    public boolean isEager() {
+        return fetchType != FetchType.LAZY;
+    }
+
+    /**
+     * フェッチタイプがLAZYなら{@literal true}を返します。
+     * 
+     * @return フェッチタイプがLAZYなら{@literal true}
+     */
+    public boolean isLazy() {
+        return fetchType == FetchType.LAZY;
     }
 
     /**

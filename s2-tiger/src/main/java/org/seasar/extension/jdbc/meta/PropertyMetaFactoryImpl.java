@@ -25,8 +25,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,6 +55,7 @@ import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
 import org.seasar.extension.jdbc.exception.IdGeneratorNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
+import org.seasar.extension.jdbc.exception.LazyFetchSpecifiedRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
@@ -145,6 +148,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             if (relationshipAnnotation == null) {
                 doColumnMeta(propertyMeta, field, entityMeta);
                 doId(propertyMeta, field, entityMeta);
+                doFetchType(propertyMeta, field, entityMeta);
                 doTemporal(propertyMeta, field, entityMeta);
                 doEnum(propertyMeta, field, entityMeta);
                 doVersion(propertyMeta, field, entityMeta);
@@ -335,6 +339,30 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
         propertyMeta.setTableIdGenerator(new TableIdGenerator(entityMeta,
                 propertyMeta, tableGenerator));
         return true;
+    }
+
+    /**
+     * フェッチタイプを処理します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param field
+     *            フィールド
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doFetchType(final PropertyMeta propertyMeta,
+            final Field field, final EntityMeta entityMeta) {
+        final Basic basic = field.getAnnotation(Basic.class);
+        if (basic == null) {
+            propertyMeta.setFetchType(FetchType.EAGER);
+            return;
+        }
+        if (propertyMeta.isId() && basic.fetch() == FetchType.LAZY) {
+            throw new LazyFetchSpecifiedRuntimeException(entityMeta.getName(),
+                    propertyMeta.getName());
+        }
+        propertyMeta.setFetchType(basic.fetch());
     }
 
     /**

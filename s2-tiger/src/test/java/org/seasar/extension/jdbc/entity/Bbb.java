@@ -17,8 +17,11 @@ package org.seasar.extension.jdbc.entity;
 
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
@@ -62,4 +65,11 @@ public class Bbb {
 	 */
 	@OneToMany(mappedBy = "bbb")
 	public List<Ddd> ddds;
+
+    /**
+     * 
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    public String lazyName;
 }

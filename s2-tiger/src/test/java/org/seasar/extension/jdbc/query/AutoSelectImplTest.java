@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
@@ -495,7 +497,7 @@ public class AutoSelectImplTest extends TestCase {
         List<Integer> idIndexList = new ArrayList<Integer>();
         EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
         String tableAlias = query.prepareTableAlias(null);
-        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
         assertEquals(
                 "T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_",
@@ -513,7 +515,7 @@ public class AutoSelectImplTest extends TestCase {
         List<Integer> idIndexList = new ArrayList<Integer>();
         EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
         String tableAlias = query.prepareTableAlias(null);
-        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
         ValueType[] valueTypes = query.getValueTypes();
         assertEquals(4, valueTypes.length);
@@ -535,7 +537,7 @@ public class AutoSelectImplTest extends TestCase {
         List<Integer> idIndexList = new ArrayList<Integer>();
         EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
         String tableAlias = query.prepareTableAlias(null);
-        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
         PropertyMapperImpl[] propertyMappers = query
                 .toPropertyMapperArray(propertyMapperList);
@@ -566,7 +568,7 @@ public class AutoSelectImplTest extends TestCase {
         List<Integer> idIndexList = new ArrayList<Integer>();
         EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
         String tableAlias = query.prepareTableAlias(null);
-        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
         int[] idIndices = query.toIdIndexArray(idIndexList);
         assertEquals(1, idIndices.length);
@@ -586,7 +588,7 @@ public class AutoSelectImplTest extends TestCase {
         List<Integer> idIndexList = new ArrayList<Integer>();
         EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
         String tableAlias = query.prepareTableAlias(null);
-        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
         ValueType[] valueTypes = query.getValueTypes();
         assertEquals(2, valueTypes.length);
@@ -606,12 +608,32 @@ public class AutoSelectImplTest extends TestCase {
         List<Integer> idIndexList = new ArrayList<Integer>();
         EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
         String tableAlias = query.prepareTableAlias(null);
-        query.prepareEntity(entityMeta, tableAlias, propertyMapperList,
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
         assertEquals("count(T1_.ID)", query.selectClause.toSql());
         ValueType[] valueTypes = query.getValueTypes();
         assertEquals(1, valueTypes.length);
         assertEquals(ValueTypes.LONG, valueTypes[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareEntity_selectClause_eager() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.eager("aaa.lazyName");
+        query.prepareCallerClassAndMethodName("getResultList");
+        List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
+                50);
+        List<Integer> idIndexList = new ArrayList<Integer>();
+        EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
+        JoinMeta joinMeta = new JoinMeta("aaa");
+        String tableAlias = query.prepareTableAlias(null);
+        query.prepareEntity(entityMeta, joinMeta, tableAlias,
+                propertyMapperList, idIndexList);
+        assertEquals(
+                "T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_, T1_.LAZY_NAME as C5_",
+                query.selectClause.toSql());
     }
 
     /**
@@ -2351,6 +2373,32 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testEagerSql() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.eager("lazyName");
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_, T1_.LAZY_NAME as C5_ "
+                        + "from AAA T1_", query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testEagerSql_withJoin() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb").eager("bbb.lazyName");
+        query.prepare("getResultList");
+        assertEquals(
+                "select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_, "
+                        + "T2_.ID as C5_, T2_.NAME as C6_, T2_.CCC_ID as C7_, T2_.LAZY_NAME as C8_ "
+                        + "from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
     public void testHint() {
         manager.setDialect(new OracleDialect());
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
@@ -2414,6 +2462,13 @@ public class AutoSelectImplTest extends TestCase {
          */
         @Lob
         public String largeName;
+
+        /**
+         * 
+         */
+        @Lob
+        @Basic(fetch = FetchType.LAZY)
+        public String lazyName;
     }
 
     @Entity(name = "BadAaa")

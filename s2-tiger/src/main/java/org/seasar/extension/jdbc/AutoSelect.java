@@ -235,8 +235,7 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @see #Join(CharSequence, JoinType, boolean)
      */
     AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch,
-            String condition,
-            Object... params);
+            String condition, Object... params);
 
     /**
      * 左外部結合するプロパティを指定します。
@@ -325,7 +324,8 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            ネストしている場合は、<code>aaa.bbb</code>のように.で区切ります。
      *            </p>
      *            <p>
-     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>)を指定する必要があります。
+     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>
+     *            )を指定する必要があります。
      *            </p>
      * @param joinType
      *            結合タイプ
@@ -346,7 +346,8 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            ネストしている場合は、<code>aaa.bbb</code>のように.で区切ります。
      *            </p>
      *            <p>
-     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>)を指定する必要があります。
+     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>
+     *            )を指定する必要があります。
      *            </p>
      * @param joinType
      *            結合タイプ
@@ -357,10 +358,13 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @param params
      *            付加的な結合条件のパラメータの配列
      *            <p>
-     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、
+     *            {@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、
+     *            {@link Serializable}のいずれかの場合、{@link Parameter}
+     *            に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return このインスタンス自身
      */
@@ -378,7 +382,8 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            ネストしている場合は、<code>aaa.bbb</code>のように.で区切ります。
      *            </p>
      *            <p>
-     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>)を指定する必要があります。
+     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>
+     *            )を指定する必要があります。
      *            </p>
      * @param joinType
      *            結合タイプ
@@ -420,8 +425,8 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            Mapのキーにはプロパティ名、値には条件値を指定します。
      *            </p>
      *            <p>
-     *            例えば、<code>map.put("id", 1)</code>と指定した場合、
-     *            <code>id = ?</code>という条件になり、バインド変数が1になります。
+     *            例えば、<code>map.put("id", 1)</code>と指定した場合、 <code>id = ?</code>
+     *            という条件になり、バインド変数が1になります。
      *            </p>
      *            <p>
      *            値がnullならwhere句には追加されません。
@@ -462,8 +467,9 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *            IN、NOT_INの場合、値には配列、リストを指定します。 値がnullもしくは要素の数がゼロの場合条件には追加されません。
      *            </p>
      *            <p>
-     *            IS_NULL、IS_NOT_NULLの場合、値にはBooleanを指定します。 例えば、<code>map.put("hoge_IS_NOT_NULL", true)</code>の場合、
-     *            条件は<code>hoge is not null</code>になります。
+     *            IS_NULL、IS_NOT_NULLの場合、値にはBooleanを指定します。 例えば、
+     *            <code>map.put("hoge_IS_NOT_NULL", true)</code>の場合、 条件は
+     *            <code>hoge is not null</code>になります。
      *            値がnullもしくはfalseだった場合、条件には追加されません。
      *            </p>
      * 
@@ -479,10 +485,13 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @param params
      *            パラメータの配列
      *            <p>
-     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
+     *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、
+     *            {@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、
+     *            {@link Serializable}のいずれかの場合、{@link Parameter}
+     *            に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return このインスタンス自身
      * @see Parameter
@@ -588,6 +597,15 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      *             DBMSがこの操作をサポートしていない場合
      */
     AutoSelect<T> forUpdateWait(int seconds, CharSequence... propertyNames);
+
+    /**
+     * EAGERフェッチするプロパティを追加します。
+     * 
+     * @param propertyNames
+     *            EAGERフェッチするプロパティ名の並び
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> eager(CharSequence... propertyNames);
 
     /**
      * ヒントを設定します。

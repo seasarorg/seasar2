@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.jdbc.entity;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToOne;
@@ -54,5 +56,12 @@ public class Aaa {
      */
     @Lob
     public MyDto dto;
+
+    /**
+     * 
+     */
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    public String lazyName;
 
 }

@@ -17,9 +17,12 @@ package org.seasar.extension.jdbc.query;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.seasar.extension.jdbc.AutoSelect;
@@ -151,6 +154,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * SELECT ～ FOR UPDATEでの待機時間 (秒単位) です。
      */
     protected int forUpdateWaitSeconds = 0;
+
+    /**
+     * EAGERフェッチするプロパティです。
+     */
+    protected Set<String> eagerProperties = new LinkedHashSet<String>();
 
     /**
      * ヒントです。
@@ -363,7 +371,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
                 50);
         List<Integer> idIndexList = new ArrayList<Integer>();
-        prepareEntity(entityMeta, tableAlias, propertyMapperList, idIndexList);
+        prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
+                idIndexList);
         PropertyMapper[] propertyMappers = toPropertyMapperArray(propertyMapperList);
         int[] idIndices = toIdIndexArray(idIndexList);
         entityMapperMap.put(null, new EntityMapperImpl(baseClass,
@@ -383,6 +392,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * 
      * @param em
      *            エンティティメタデータ
+     * @param joinMeta
+     *            結合メタデータ
      * @param tableAlias
      *            テーブル別名
      * @param propertyMapperList
@@ -390,8 +401,9 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      * @param idIndexList
      *            識別子のインデックスのリスト
      */
-    protected void prepareEntity(EntityMeta em, String tableAlias,
-            List<PropertyMapper> propertyMapperList, List<Integer> idIndexList) {
+    protected void prepareEntity(EntityMeta em, JoinMeta joinMeta,
+            String tableAlias, List<PropertyMapper> propertyMapperList,
+            List<Integer> idIndexList) {
         if (count) {
             List<PropertyMeta> propertyMetaList = em.getIdPropertyMetaList();
             String selectItem = propertyMetaList.isEmpty() ? "count(*)"
@@ -404,7 +416,8 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         } else {
             for (int i = 0; i < em.getPropertyMetaSize(); i++) {
                 PropertyMeta pm = em.getPropertyMeta(i);
-                if (pm.isTransient() || pm.isRelationship()) {
+                if (pm.isTransient() || pm.isRelationship()
+                        || isLazy(pm, joinMeta)) {
                     continue;
                 }
                 selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
@@ -417,6 +430,28 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 ++selectListIndex;
             }
         }
+    }
+
+    /**
+     * プロパティのフェッチタイプがLAZYなら{@literal true}を返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param joinMeta
+     *            結合メタデータ
+     * @return プロパティのフェッチタイプがLAZYなら{@literal true}
+     */
+    protected boolean isLazy(final PropertyMeta propertyMeta,
+            final JoinMeta joinMeta) {
+        if (!propertyMeta.isLazy()) {
+            return false;
+        }
+        final String propertyName = propertyMeta.getName();
+        if (joinMeta == null) {
+            return !eagerProperties.contains(propertyName);
+        }
+        final String qualifiedName = joinMeta.getName() + '.' + propertyName;
+        return !eagerProperties.contains(qualifiedName);
     }
 
     /**
@@ -580,7 +615,7 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                     50);
             List<Integer> idIndexList = new ArrayList<Integer>();
             if (!count) {
-                prepareEntity(inverseEntityMeta, tableAlias,
+                prepareEntity(inverseEntityMeta, joinMeta, tableAlias,
                         propertyMapperList, idIndexList);
             }
             PropertyMapper[] propertyMappers = toPropertyMapperArray(propertyMapperList);
@@ -1330,6 +1365,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         forUpdateType = SelectForUpdateType.WAIT;
         forUpdateWaitSeconds = seconds;
         setupForUpdateTargets(toStringArray(propertyNames));
+        return this;
+    }
+
+    public AutoSelect<T> eager(CharSequence... propertyNames) {
+        eagerProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
         return this;
     }
 

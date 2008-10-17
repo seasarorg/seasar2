@@ -21,8 +21,10 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,6 +54,7 @@ import org.seasar.extension.jdbc.entity.Bbb;
 import org.seasar.extension.jdbc.exception.BothMappedByAndJoinColumnRuntimeException;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.exception.JoinColumnNameAndReferencedColumnNameMandatoryRuntimeException;
+import org.seasar.extension.jdbc.exception.LazyFetchSpecifiedRuntimeException;
 import org.seasar.extension.jdbc.exception.MappedByMandatoryRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotGenericsRuntimeException;
 import org.seasar.extension.jdbc.exception.OneToManyNotListRuntimeException;
@@ -80,6 +83,19 @@ public class PropertyMetaFactoryImplTest extends TestCase {
 
     @SuppressWarnings("unused")
     private transient String hoge;
+
+    @SuppressWarnings("unused")
+    @Basic
+    private String eager;
+
+    @SuppressWarnings("unused")
+    @Basic(fetch = FetchType.LAZY)
+    private String lazy;
+
+    @SuppressWarnings("unused")
+    @Id
+    @Basic(fetch = FetchType.LAZY)
+    private String idLazy;
 
     @SuppressWarnings("unused")
     @Temporal(TemporalType.DATE)
@@ -306,6 +322,34 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 entityMeta);
         assertEquals(Integer.class, propertyMeta.getPropertyClass());
         assertSame(ValueTypes.INTEGER, propertyMeta.getValueType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testFetchType() throws Exception {
+        Field field = getClass().getDeclaredField("eager");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertEquals(FetchType.EAGER, propertyMeta.getFetchType());
+        assertTrue(propertyMeta.isEager());
+        assertFalse(propertyMeta.isLazy());
+
+        field = getClass().getDeclaredField("lazy");
+        propertyMeta = factory.createPropertyMeta(field, entityMeta);
+        assertEquals(FetchType.LAZY, propertyMeta.getFetchType());
+        assertFalse(propertyMeta.isEager());
+        assertTrue(propertyMeta.isLazy());
+
+        try {
+            field = getClass().getDeclaredField("idLazy");
+            propertyMeta = factory.createPropertyMeta(field, entityMeta);
+            fail();
+        } catch (LazyFetchSpecifiedRuntimeException expected) {
+            assertEquals("Aaa", expected.getEntityName());
+            assertEquals("idLazy", expected.getPropertyName());
+        }
     }
 
     /**
@@ -823,6 +867,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
          */
         @Id
         @JoinColumn
+        @Basic(fetch = FetchType.LAZY)
         public Integer id;
 
         /**
