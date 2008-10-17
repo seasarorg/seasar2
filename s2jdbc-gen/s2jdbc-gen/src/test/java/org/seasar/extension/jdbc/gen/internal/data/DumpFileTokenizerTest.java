@@ -39,11 +39,11 @@ public class DumpFileTokenizerTest {
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals(" bbb", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals(" ", tokenizer.getToken());
@@ -77,7 +77,7 @@ public class DumpFileTokenizerTest {
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("\"a\" ", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals(" \"b\" ", tokenizer.getToken());
@@ -100,7 +100,7 @@ public class DumpFileTokenizerTest {
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("bbb", tokenizer.getToken());
@@ -116,11 +116,11 @@ public class DumpFileTokenizerTest {
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(NULL, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("bbb", tokenizer.getToken());
@@ -140,7 +140,7 @@ public class DumpFileTokenizerTest {
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(NULL, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("bbb", tokenizer.getToken());
@@ -160,7 +160,7 @@ public class DumpFileTokenizerTest {
         tokenizer.addChars(s.toCharArray(), s.length());
         assertEquals(VALUE, tokenizer.nextToken());
         assertEquals("aaa", tokenizer.getToken());
-        assertEquals(DELIMETER, tokenizer.nextToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
         assertEquals(",", tokenizer.getToken());
         assertEquals(NULL, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());

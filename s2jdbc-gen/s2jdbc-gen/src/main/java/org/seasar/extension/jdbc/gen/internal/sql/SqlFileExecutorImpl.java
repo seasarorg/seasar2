@@ -47,9 +47,6 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
     /** SQLブロックの区切り文字 */
     protected String blockDelimiter;
 
-    /** SQLファイルのトークナイザ */
-    protected SqlFileTokenizer tokenizer;
-
     /**
      * インスタンスを構築します。
      * 
@@ -74,7 +71,6 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
         this.statementDelimiter = statementDelimiter;
         this.blockDelimiter = blockDelimiter;
         this.dialect = dialect;
-        tokenizer = createSqlFileTokenizer();
     }
 
     public void execute(SqlExecutionContext context, File sqlFile) {
@@ -126,7 +122,8 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
      * @return {@link SqlFileReader}の実装
      */
     protected SqlFileReader createSqlFileReader(File sqlFile) {
-        return new SqlFileReader(sqlFile, sqlFileEncoding, tokenizer, dialect);
+        return new SqlFileReader(sqlFile, sqlFileEncoding,
+                createSqlFileTokenizer(), dialect);
     }
 
 }

@@ -18,7 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.sql;
 import static org.seasar.extension.jdbc.gen.internal.sql.SqlFileTokenizer.TokenType.*;
 
 /**
- * {@link SqlFileTokenizer}の実装クラスです。
+ * SQLファイル内のトークンを認識するクラスです。
  * 
  * @author taedium
  */

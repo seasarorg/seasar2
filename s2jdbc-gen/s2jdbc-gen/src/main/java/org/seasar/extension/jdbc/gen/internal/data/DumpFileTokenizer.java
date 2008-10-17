@@ -37,7 +37,7 @@ public class DumpFileTokenizer {
         NULL,
 
         /** 区切り文字 */
-        DELIMETER,
+        DELIMITER,
 
         /** 行の終端 */
         END_OF_LINE,
@@ -126,15 +126,15 @@ public class DumpFileTokenizer {
                 }
                 type = END_OF_BUFFER;
             } else if (c == delimiter) {
-                if (type == END_OF_LINE || type == DELIMETER) {
+                if (type == END_OF_LINE || type == DELIMITER) {
                     type = NULL;
                     nextPos = index;
                 } else {
-                    type = DELIMETER;
+                    type = DELIMITER;
                     nextPos = index + 1;
                 }
             } else if (isEndOfLine(index)) {
-                if (type == END_OF_LINE || type == DELIMETER) {
+                if (type == END_OF_LINE || type == DELIMITER) {
                     type = NULL;
                     nextPos = index;
                 } else {
@@ -207,10 +207,10 @@ public class DumpFileTokenizer {
             token = buf.substring(pos, nextPos);
             peek(nextPos);
             return NULL;
-        case DELIMETER:
+        case DELIMITER:
             token = buf.substring(pos, nextPos);
             peek(nextPos);
-            return DELIMETER;
+            return DELIMITER;
         case END_OF_LINE:
             token = buf.substring(pos, nextPos);
             buf.delete(0, nextPos);

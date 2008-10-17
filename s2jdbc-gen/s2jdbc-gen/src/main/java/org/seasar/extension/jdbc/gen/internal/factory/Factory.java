@@ -484,7 +484,7 @@ public interface Factory {
      * {@link ValueTypeProvider}の実装を作成します。
      * 
      * @param command
-     *            呼び出し元もコマンド
+     *            呼び出し元のコマンド
      * @param dbmsDialect
      *            S2JDBCのDBMS方言
      * @return {@link ValueTypeProvider}の実装

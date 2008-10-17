@@ -32,7 +32,7 @@ import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 
 /**
- * {@link SqlFileReader}の実装クラスです。
+ * SQLファイルのリーダです。
  * 
  * @author taedium
  */
