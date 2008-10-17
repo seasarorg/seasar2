@@ -1571,14 +1571,13 @@ int count = jdbcManager.update(employee).execute();
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
-					<p>注意点</p>
+				<div class="catucion">
+					<div>注意点</div>
+					<p>
+						<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+						のないエンティティは、 SQL自動生成による更新は出来ません。
+					</p>
 				</div>
-				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
-					のないエンティティは、 SQL自動生成による更新は出来ません。
-				</p>
 			</subsection>
 
 			<subsection name="バッチ更新">
@@ -1598,14 +1597,13 @@ int[] countArray = jdbcManager.updateBatch(employees).execute();
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
-					<p>注意点</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+						のないエンティティは、 SQL自動生成によるバッチ更新は出来ません。
+					</p>
 				</div>
-				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
-					のないエンティティは、 SQL自動生成によるバッチ更新は出来ません。
-				</p>
 			</subsection>
 
 			<subsection name="バージョンプロパティを通常の更新対象にする">
@@ -1717,14 +1715,13 @@ int count = jdbcManager.delete(employee).execute();
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
-					<p>注意点</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+						のないエンティティは、 SQL自動生成による削除は出来ません。
+					</p>
 				</div>
-				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
-					のないエンティティは、 SQL自動生成による削除は出来ません。
-				</p>
 			</subsection>
 
 			<subsection name="バッチ削除">
@@ -1744,14 +1741,13 @@ int[] countArray = jdbcManager.deleteBatch(employees).execute();
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
-					<p>注意点</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
+						のないエンティティは、 SQL自動生成によるバッチ削除は出来ません。
+					</p>
 				</div>
-				<p>
-					<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>
-					のないエンティティは、 SQL自動生成によるバッチ削除は出来ません。
-				</p>
 			</subsection>
 
 			<subsection name="バージョンをチェックしないで削除する">

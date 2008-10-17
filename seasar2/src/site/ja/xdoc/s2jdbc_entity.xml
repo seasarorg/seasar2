@@ -108,12 +108,12 @@
 		<section name="概要">
 			<p> エンティティの定義の仕方を説明します。ここでいっているエンティティとは、 データベースに永続化されるものだと考えてください。
 			</p>
-			<div style="background-color: red; font-weight: bold; font-size: larger;">
-				<p>注意点</p>
+			<div class="caution">
+				<div>注意点</div>
+				<p> エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
+					すべてのアノテーションや属性をサポートしているわけではありません。 ここに取り上げられているもののみサポートされているとお考えください。
+				</p>
 			</div>
-			<p> エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
-				すべてのアノテーションや属性をサポートしているわけではありません。 ここに取り上げられているもののみサポートされているとお考えください。
-			</p>
 		</section>
 		<section name="エンティティ定義">
 			<p>
@@ -561,13 +561,12 @@ create table Employee {
 @Version
 public Long version = 0L;
 ]]></source>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
-					<p>注意点</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						@Versionアノテーションは数値型のフィールドにのみ指定することができます。JPA仕様ではTimestamp型のフィールドもバージョンチェックに使用できることになっていますが、S2JDBCではサポートしていません。更新時刻の保持と排他制御は目的が違うので別のフィールドにしてください。
+					</p>
 				</div>
-				<p>
-					@Versionアノテーションは数値型のフィールドにのみ指定することができます。JPA仕様ではTimestamp型のフィールドもバージョンチェックに使用できることになっていますが、S2JDBCではサポートしていません。更新時刻の保持と排他制御は目的が違うので別のフィールドにしてください。
-				</p>
 			</subsection>
 
 			<subsection name="列挙定義">
@@ -612,20 +611,19 @@ public JobType jobType; //序数で扱われます
 @Enumerated(EnumType.STRING)
 public JobType jobType; //名前で扱われます
 ]]></source>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
-					<p>注意点</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						Seasar2.4.26までは、
+						<code>@Enumerated</code>
+						はサポートされておらず、列挙は名前で扱われていました。
+						Seasra2.4.27以降で2.4.26以前と同じように
+						<code>@Enumerated</code>
+						の指定されていない列挙を名前で扱うには、
+						<code>s2jdbc.dicon</code>
+						に次のように記述をしてください。
+					</p>
 				</div>
-				<p>
-					Seasar2.4.26までは、
-					<code>@Enumerated</code>
-					はサポートされておらず、列挙は名前で扱われていました。
-					Seasra2.4.27以降で2.4.26以前と同じように
-					<code>@Enumerated</code>
-					の指定されていない列挙を名前で扱うには、
-					<code>s2jdbc.dicon</code>
-					に次のように記述をしてください。
-				</p>
 				<source><![CDATA[
 <component name="jdbcManager" class="org.seasar.extension.jdbc.manager.JdbcManagerImpl">
     ・・・

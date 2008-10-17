@@ -21,7 +21,7 @@
   <skin>
     <groupId>org.seasar.project</groupId>
     <artifactId>seasar-skin</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
   </skin>
   <bannerRight>
     <src>http://maven.apache.org/images/maven-small.gif</src>
