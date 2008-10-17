@@ -19,7 +19,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.seasar.framework.aop.InterType;
 import org.seasar.framework.log.Logger;
@@ -246,35 +248,35 @@ public class PropertyInterType extends AbstractInterType {
     }
 
     private List getTargetFields(Class targetClass) {
-        List targetFields = new ArrayList();
+        final Map nominationFields = new LinkedHashMap();
+        gatherFields(targetClass, nominationFields);
 
-        Field[] nominationFields = getFields(targetClass);
-        for (int i = 0; i < nominationFields.length; i++) {
-            Field field = nominationFields[i];
-            int modifier = field.getModifiers();
+        final List targetFields = new ArrayList(nominationFields.size());
+        for (final Iterator it = nominationFields.values().iterator(); it
+                .hasNext();) {
+            final Field field = (Field) it.next();
+            final int modifier = field.getModifiers();
             if (!Modifier.isPrivate(modifier)) {
                 targetFields.add(field);
             }
         }
-
         return targetFields;
     }
 
-    private Field[] getFields(Class targetClass) {
-        Class superClass = targetClass.getSuperclass();
-        Field[] superFields = new Field[0];
-        if (superClass != null) {
-            superFields = getFields(superClass);
+    private void gatherFields(final Class targetClass, final Map fields) {
+        final Field[] declaredFields = targetClass.getDeclaredFields();
+        for (int i = 0; i < declaredFields.length; ++i) {
+            final Field field = declaredFields[i];
+            final String name = field.getName();
+            if (!fields.containsKey(name)) {
+                fields.put(name, field);
+            }
         }
 
-        Field[] currentFields = targetClass.getDeclaredFields();
-
-        Field[] fields = new Field[superFields.length + currentFields.length];
-        System.arraycopy(superFields, 0, fields, 0, superFields.length);
-        System.arraycopy(currentFields, 0, fields, superFields.length,
-                currentFields.length);
-
-        return fields;
+        final Class superClass = targetClass.getSuperclass();
+        if (superClass != null && superClass != Object.class) {
+            gatherFields(superClass, fields);
+        }
     }
 
     private String createMethodName(String fieldName) {

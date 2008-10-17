@@ -41,16 +41,37 @@ public class PropertyInterTypeTest extends S2FrameworkTestCase {
         Method getter = target.getClass().getMethod("getName", new Class[0]);
         setter.invoke(target, new Object[] { "hoge" });
         assertEquals("hoge", getter.invoke(target, null));
+
+        setter = target.getClass().getMethod("setDuplicate",
+                new Class[] { long.class });
+        getter = target.getClass().getMethod("getDuplicate", new Class[0]);
+        setter.invoke(target, new Object[] { new Long(100) });
+        assertEquals(new Long(100), getter.invoke(target, null));
     }
 
     /**
      * 
      */
-    public static class Target {
+    public static abstract class AbstractTarget {
+        /**
+         * 
+         */
+        protected int duplicate;
+    }
+
+    /**
+     * 
+     */
+    public static class Target extends AbstractTarget {
         /**
          * 
          */
         protected String name;
+
+        /**
+         * 
+         */
+        protected long duplicate;
     }
 
 }
