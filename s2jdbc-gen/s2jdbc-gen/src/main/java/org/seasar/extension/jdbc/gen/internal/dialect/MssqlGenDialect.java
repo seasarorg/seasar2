@@ -262,10 +262,10 @@ public class MssqlGenDialect extends StandardGenDialect {
         protected MssqlSqlBlockContext() {
             sqlBlockStartKeywordsList.add(Arrays.asList("create", "procedure"));
             sqlBlockStartKeywordsList.add(Arrays.asList("create", "function"));
-            sqlBlockStartKeywordsList.add(Arrays.asList("create", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "trigger"));
             sqlBlockStartKeywordsList.add(Arrays.asList("alter", "procedure"));
             sqlBlockStartKeywordsList.add(Arrays.asList("alter", "function"));
-            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("alter", "trigger"));
             sqlBlockStartKeywordsList.add(Arrays.asList("declare"));
             sqlBlockStartKeywordsList.add(Arrays.asList("begin"));
         }

@@ -99,6 +99,28 @@ public class SqlFileReaderTest {
      * @throws Exception
      */
     @Test
+    public void testReadSql_sqlBlock_createTrigger() throws Exception {
+        SqlFileReader reader = new SqlFileReader(new File("dummy"), "UTF-8",
+                tokenizer, dialect) {
+
+            @Override
+            protected BufferedReader createBufferedReader() throws IOException {
+                StringBuilder buf = new StringBuilder();
+                buf.append("create trigger hoge begin aaa; end\n");
+                buf.append("go\n");
+                StringReader reader = new StringReader(buf.toString());
+                return new BufferedReader(reader);
+            }
+        };
+        assertEquals("create trigger hoge begin aaa; end", reader.readSql());
+        assertNull(reader.readSql());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testReadSql_notSqlBlock() throws Exception {
         SqlFileReader reader = new SqlFileReader(new File("dummy"), "UTF-8",
                 tokenizer, dialect) {

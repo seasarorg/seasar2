@@ -287,7 +287,7 @@ public class OracleGenDialect extends StandardGenDialect {
                     "replace", "triger"));
             sqlBlockStartKeywordsList.add(Arrays.asList("create", "procedure"));
             sqlBlockStartKeywordsList.add(Arrays.asList("create", "function"));
-            sqlBlockStartKeywordsList.add(Arrays.asList("create", "triger"));
+            sqlBlockStartKeywordsList.add(Arrays.asList("create", "trigger"));
             sqlBlockStartKeywordsList.add(Arrays.asList("declare"));
             sqlBlockStartKeywordsList.add(Arrays.asList("begin"));
         }
