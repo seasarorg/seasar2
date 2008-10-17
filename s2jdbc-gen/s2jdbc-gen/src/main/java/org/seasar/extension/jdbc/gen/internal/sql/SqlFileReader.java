@@ -56,14 +56,17 @@ public class SqlFileReader {
     /** リーダ */
     protected BufferedReader reader;
 
-    /** ファイルの最後まで達した場合に{@code true} */
-    protected boolean endOfFile;
-
     /** 行番号のカウント */
     protected int lineCount;
 
     /** 処理対象のSQLの先頭の行番号 */
     protected int lineNumber;
+
+    /** ファイルの終端に達した場合{@code true} */
+    protected boolean endOfFile;
+
+    /** 行の終端に達した場合{@code true} */
+    protected boolean endOfLine = true;
 
     /**
      * インスタンスを構築します。
@@ -112,9 +115,11 @@ public class SqlFileReader {
             }
             SqlBuilder builder = new SqlBuilder();
             readLineLoop: for (;;) {
-                lineCount++;
-                tokenizer.addLine(reader.readLine());
-                builder.notifyLineChanged();
+                if (endOfLine) {
+                    lineCount++;
+                    tokenizer.addLine(reader.readLine());
+                    builder.notifyLineChanged();
+                }
                 nextTokenLoop: for (;;) {
                     builder.build(tokenizer.nextToken(), tokenizer.getToken());
                     if (builder.isTokenRequired()) {
@@ -210,48 +215,53 @@ public class SqlFileReader {
          *            トークン
          */
         protected void build(TokenType tokenType, String token) {
+            reset();
             if (buf.length() == 0) {
                 lineNumber = lineCount;
             }
-            setTokenRequired(true);
             switch (tokenType) {
             case WORD:
                 appendWord(token);
             case QUOTE:
             case OTHER:
                 appendToken(token);
-                setTokenRequired(true);
+                requireToken();
                 break;
             case END_OF_LINE:
-                if (isDelimited()) {
-                    setCompleted(true);
-                } else {
-                    setLineRequired(true);
-                }
+                endOfLine = true;
+                requireLine();
                 break;
             case STATEMENT_DELIMITER:
                 if (isInSqlBlock()) {
                     appendToken(token);
+                    requireToken();
                 } else {
-                    setDelimited(true);
+                    complete();
                 }
-                setTokenRequired(true);
                 break;
             case BLOCK_DELIMITER:
                 if (isSqlEmpty()) {
-                    setLineRequired(true);
+                    requireToken();
                 } else {
-                    setCompleted(true);
+                    complete();
                 }
                 break;
             case END_OF_FILE:
                 endOfFile = true;
-                setCompleted(true);
+                complete();
                 break;
             default:
-                setTokenRequired(true);
+                requireToken();
                 break;
             }
+        }
+
+        /**
+         * リセットします。
+         */
+        protected void reset() {
+            endOfLine = false;
+            requireToken();
         }
 
         /**
@@ -264,13 +274,11 @@ public class SqlFileReader {
         }
 
         /**
-         * 次のトークンが必要な場合{@code true}を設定します。
+         * 次のトークンを要求します。
          * 
-         * @param tokenRequired
-         *            次のトークンが必要な場合{@code true}
          */
-        protected void setTokenRequired(boolean tokenRequired) {
-            this.tokenRequired = tokenRequired;
+        protected void requireToken() {
+            tokenRequired = true;
             lineRequired = false;
             completed = false;
         }
@@ -285,13 +293,11 @@ public class SqlFileReader {
         }
 
         /**
-         * 次の行が必要な場合{@code true}を設定します。
+         * 次の行を要求します。
          * 
-         * @param lineRequired
-         *            次の行が必要な場合{@code true}
          */
-        protected void setLineRequired(boolean lineRequired) {
-            this.lineRequired = lineRequired;
+        protected void requireLine() {
+            lineRequired = true;
             tokenRequired = false;
             completed = false;
         }
@@ -306,34 +312,13 @@ public class SqlFileReader {
         }
 
         /**
-         * SQLの組み立てが完了した場合{@code true}を設定します。
+         * SQLの組み立てを完了します。
          * 
-         * @param completed
-         *            SQLの組み立てが完了した場合{@code true}
          */
-        protected void setCompleted(boolean completed) {
-            this.completed = completed;
+        protected void complete() {
+            completed = true;
             tokenRequired = false;
             lineRequired = false;
-        }
-
-        /**
-         * SQLステートメントがSQLブロックの外側で区切られている場合{@code true}を返します。
-         * 
-         * @return SQLステートメントがSQLブロックの外側で区切られている場合{@code true}
-         */
-        protected boolean isDelimited() {
-            return delimited;
-        }
-
-        /**
-         * SQLステートメントがSQLブロックの外側で区切られている場合{@code true}を設定します。
-         * 
-         * @param delimited
-         *            SQLステートメントがSQLブロックの外側で区切られている場合{@code true}
-         */
-        protected void setDelimited(boolean delimited) {
-            this.delimited = delimited;
         }
 
         /**
@@ -353,10 +338,8 @@ public class SqlFileReader {
          *            トークン
          */
         protected void appendToken(String token) {
-            if (!delimited) {
-                appendWhitespaceIfNecessary();
-                buf.append(token);
-            }
+            appendWhitespaceIfNecessary();
+            buf.append(token);
         }
 
         /**

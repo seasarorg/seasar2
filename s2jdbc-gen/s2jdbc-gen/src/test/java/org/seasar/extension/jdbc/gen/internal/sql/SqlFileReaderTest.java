@@ -77,6 +77,29 @@ public class SqlFileReaderTest {
      * @throws Exception
      */
     @Test
+    public void testReadSql_delimiterInLine() throws Exception {
+        SqlFileReader reader = new SqlFileReader(new File("dummy"), "UTF-8",
+                tokenizer, dialect) {
+
+            @Override
+            protected BufferedReader createBufferedReader() throws IOException {
+                StringBuilder buf = new StringBuilder();
+                buf.append("aaa; bbb; ccc;\n");
+                StringReader reader = new StringReader(buf.toString());
+                return new BufferedReader(reader);
+            }
+        };
+        assertEquals("aaa", reader.readSql());
+        assertEquals("bbb", reader.readSql());
+        assertEquals("ccc", reader.readSql());
+        assertNull(reader.readSql());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testReadSql_sqlBlock() throws Exception {
         SqlFileReader reader = new SqlFileReader(new File("dummy"), "UTF-8",
                 tokenizer, dialect) {
@@ -135,7 +158,7 @@ public class SqlFileReaderTest {
             }
         };
         assertEquals("start aaa", reader.readSql());
-        assertNull(reader.readSql());
+        assertEquals("end", reader.readSql());
     }
 
     /**
