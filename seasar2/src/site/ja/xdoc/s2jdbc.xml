@@ -7,322 +7,238 @@
 		<section name="目次">
 			<ul>
 				<li>
-					<p>
-						<a href="s2jdbc_abstract.html">S2JDBCとは</a>
-					</p>
+					<a href="s2jdbc_abstract.html">S2JDBCとは</a>
 					<ul>
 						<li>
-							<p>
-								<a href="s2jdbc_abstract.html#概要">概要</a>
-							</p>
+							<a href="s2jdbc_abstract.html#概要">概要</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#流れるようなインターフェースと脱CoC">
-									流れるようなインターフェースと脱CoC
-								</a>
-							</p>
+							<a href="s2jdbc_abstract.html#流れるようなインターフェースと脱CoC">
+								流れるようなインターフェースと脱CoC
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#90%のSQLを自動生成する">
-									90%のSQLを自動生成する
-								</a>
-							</p>
+							<a href="s2jdbc_abstract.html#90%のSQLを自動生成する">
+								90%のSQLを自動生成する
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#Javaの良さを生かす">
-									Javaの良さを生かす
-								</a>
-							</p>
+							<a
+								href="s2jdbc_abstract.html#Javaの良さを生かす">
+								Javaの良さを生かす
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#SQLの扱いが簡単">
-									SQLの扱いが簡単
-								</a>
-							</p>
+							<a
+								href="s2jdbc_abstract.html#SQLの扱いが簡単">
+								SQLの扱いが簡単
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#シンプルなプロパティ">
-									シンプルなプロパティ
-								</a>
-							</p>
+							<a
+								href="s2jdbc_abstract.html#シンプルなプロパティ">
+								シンプルなプロパティ
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#学習コストが低い">
-									学習コストが低い
-								</a>
-							</p>
+							<a
+								href="s2jdbc_abstract.html#学習コストが低い">
+								学習コストが低い
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#トラブリにくい">
-									トラブリにくい
-								</a>
-							</p>
+							<a
+								href="s2jdbc_abstract.html#トラブリにくい">
+								トラブリにくい
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_abstract.html#より良いJPA">
-									より良いJPA
-								</a>
-							</p>
+							<a
+								href="s2jdbc_abstract.html#より良いJPA">
+								より良いJPA
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="s2jdbc_tutorial.html">チュートリアル</a>
-					</p>
+					<a href="s2jdbc_tutorial.html">チュートリアル</a>
 				</li>
 				<li>
-					<p>
-						<a href="s2jdbc_setup.html">セットアップ</a>
-					</p>
+					<a href="s2jdbc_setup.html">セットアップ</a>
 					<ul>
 						<li>
-							<p>
-								<a href="s2jdbc_setup.html#概要">概要</a>
-							</p>
+							<a href="s2jdbc_setup.html#概要">概要</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_setup.html#ダイアレクト">
-									ダイアレクト
-								</a>
-							</p>
+							<a href="s2jdbc_setup.html#ダイアレクト">
+								ダイアレクト
+							</a>
 						</li>
 						<li>
-							<p>
-								<a
-									href="s2jdbc_setup.html#Eclipseのフォーマッタ">
-									Eclipseのフォーマッタ
-								</a>
-							</p>
+							<a
+								href="s2jdbc_setup.html#Eclipseのフォーマッタ">
+								Eclipseのフォーマッタ
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="s2jdbc_entity.html">エンティティ</a>
-					</p>
+					<a href="s2jdbc_entity.html">エンティティ</a>
 					<ul>
 						<li>
-							<p>
-								<a href="s2jdbc_entity.html#概要">概要</a>
-							</p>
+							<a href="s2jdbc_entity.html#概要">概要</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_entity.html#エンティティ定義">
-									エンティティ定義
-								</a>
-							</p>
+							<a href="s2jdbc_entity.html#エンティティ定義">
+								エンティティ定義
+							</a>
 							<ul>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#テーブル定義">
-											テーブル定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#テーブル定義">
+										テーブル定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#継承">
-											継承
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#継承">
+										継承
+									</a>
 								</li>
 							</ul>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_entity.html#プロパティ定義">
-									プロパティ定義
-								</a>
-							</p>
+							<a href="s2jdbc_entity.html#プロパティ定義">
+								プロパティ定義
+							</a>
 							<ul>
 								<li>
-									<p>
-										<a href="s2jdbc_entity.html#永続プロパティの型">永続プロパティの型</a>
-									</p>
+									<a href="s2jdbc_entity.html#永続プロパティの型">永続プロパティの型</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#カラム定義">
-											カラム定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#カラム定義">
+										カラム定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#識別子定義">
-											識別子定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#識別子定義">
+										識別子定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#バージョン定義">
-											バージョン定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#バージョン定義">
+										バージョン定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a href="s2jdbc_entity.html#時制定義">時制定義</a>
-									</p>
+									<a href="s2jdbc_entity.html#時制定義">時制定義</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#ラージオブジェクト定義">
-											ラージオブジェクト定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#ラージオブジェクト定義">
+										ラージオブジェクト定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#永続化対象外定義">
-											永続化対象外定義
-										</a>
-									</p>
+									<a 
+										href="s2jdbc_entity.html#フェッチ対象外定義">
+										フェッチ対象外定義
+									</a>
+								</li>
+								<li>
+									<a
+										href="s2jdbc_entity.html#永続化対象外定義">
+										永続化対象外定義
+									</a>
 								</li>
 							</ul>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_entity.html#関連定義">
-									関連定義
-								</a>
-							</p>
+							<a href="s2jdbc_entity.html#関連定義">
+								関連定義
+							</a>
 							<ul>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#多対一関連定義">
-											多対一関連定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#多対一関連定義">
+										多対一関連定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#一対多関連定義">
-											一対多関連定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#一対多関連定義">
+										一対多関連定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#一対一関連定義">
-											一対一関連定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#一対一関連定義">
+										一対一関連定義
+									</a>
 								</li>
 								<li>
-									<p>
-										<a
-											href="s2jdbc_entity.html#結合カラム定義">
-											結合カラム定義
-										</a>
-									</p>
+									<a
+										href="s2jdbc_entity.html#結合カラム定義">
+										結合カラム定義
+									</a>
 								</li>
 							</ul>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="s2jdbc_manager.html">JdbcManager</a>
-					</p>
+					<a href="s2jdbc_manager.html">JdbcManager</a>
 					<ul>
 						<li>
-							<p>
-								<a href="s2jdbc_manager.html#概要">概要</a>
-							</p>
+							<a href="s2jdbc_manager.html#概要">概要</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_manager_auto.html">
-									SQL自動生成による操作
-								</a>
-							</p>
+							<a href="s2jdbc_manager_auto.html">
+								SQL自動生成による操作
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_manager_sql.html">
-									SQLによる操作
-								</a>
-							</p>
+							<a href="s2jdbc_manager_sql.html">
+								SQLによる操作
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_manager_sqlfile.html">
-									SQLファイルによる操作
-								</a>
-							</p>
+							<a href="s2jdbc_manager_sqlfile.html">
+								SQLファイルによる操作
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="s2jdbc_service.html">サービスの作り方</a>
-					</p>
+					<a href="s2jdbc_service.html">サービスの作り方</a>
 					<ul>
 						<li>
-							<p>
-								<a href="s2jdbc_service.html#S2AbstractService">
-									S2AbstractService
-								</a>
-							</p>
+							<a href="s2jdbc_service.html#S2AbstractService">
+								S2AbstractService
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_service.html#複数のデータソース">
-									複数のデータソース
-								</a>
-							</p>
+							<a href="s2jdbc_service.html#複数のデータソース">
+								複数のデータソース
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="s2jdbc_other.html">その他の機能</a>
-					</p>
+					<a href="s2jdbc_other.html">その他の機能</a>
 					<ul>
 						<li>
-							<p>
-								<a href="s2jdbc_other.html#SQLのログ">
-									SQLのログ
-								</a>
-							</p>
+							<a href="s2jdbc_other.html#SQLのログ">
+								SQLのログ
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="s2jdbc_other.html#複数のデータソース">
-									複数のデータソース
-								</a>
-							</p>
+							<a href="s2jdbc_other.html#複数のデータソース">
+								複数のデータソース
+							</a>
 						</li>
 					</ul>
 				</li>

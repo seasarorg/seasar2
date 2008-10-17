@@ -8,113 +8,84 @@
 			<p></p>
 			<ul>
 				<li>
-					<p>
-						<a href="#概要">概要</a>
-					</p>
+					<a href="#概要">概要</a>
 				</li>
 				<li>
-					<p>
-						<a href="#エンティティ定義">エンティティ定義</a>
-					</p>
+					<a href="#エンティティ定義">エンティティ定義</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#テーブル定義">テーブル定義</a>
-							</p>
+							<a href="#テーブル定義">テーブル定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#継承">継承</a>
-							</p>
+							<a href="#継承">継承</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="#プロパティ定義">プロパティ定義</a>
-					</p>
+					<a href="#プロパティ定義">プロパティ定義</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#永続プロパティの型">永続プロパティの型</a>
-							</p>
+							<a href="#永続プロパティの型">永続プロパティの型</a>
 						</li>
 						<li>
-							<p>
-								<a href="#カラム定義">カラム定義</a>
-							</p>
+							<a href="#カラム定義">カラム定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#識別子定義">識別子定義</a>
-							</p>
+							<a href="#識別子定義">識別子定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バージョン定義">バージョン定義</a>
-							</p>
+							<a href="#バージョン定義">バージョン定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#列挙定義">列挙定義</a>
-							</p>
+							<a href="#列挙定義">列挙定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#時制定義">時制定義</a>
-							</p>
+							<a href="#時制定義">時制定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#ラージオブジェクト定義">ラージオブジェクト定義</a>
-							</p>
+							<a href="#ラージオブジェクト定義">ラージオブジェクト定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#永続化対象外定義">永続化対象外定義</a>
-							</p>
+							<a href="#フェッチ対象外定義">フェッチ対象外定義</a>
+						</li>
+						<li>
+							<a href="#永続化対象外定義">永続化対象外定義</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="#関連定義">関連定義</a>
-					</p>
+					<a href="#関連定義">関連定義</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#多対一関連定義">多対一関連定義</a>
-							</p>
+							<a href="#多対一関連定義">多対一関連定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#一対多関連定義">一対多関連定義</a>
-							</p>
+							<a href="#一対多関連定義">一対多関連定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#一対一関連定義">一対一関連定義</a>
-							</p>
+							<a href="#一対一関連定義">一対一関連定義</a>
 						</li>
 						<li>
-							<p>
-								<a href="#結合カラム定義">結合カラム定義</a>
-							</p>
+							<a href="#結合カラム定義">結合カラム定義</a>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</section>
+
 		<section name="概要">
 			<p> エンティティの定義の仕方を説明します。ここでいっているエンティティとは、 データベースに永続化されるものだと考えてください。
 			</p>
 			<div class="caution">
 				<div>注意点</div>
-				<p> エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
-					すべてのアノテーションや属性をサポートしているわけではありません。 ここに取り上げられているもののみサポートされているとお考えください。
+				<p>
+					エンティティ用のアノテーションは、JPAのものをそのまま利用していますが、
+					すべてのアノテーションや要素をサポートしているわけではありません。
+					ここに取り上げられているもののみサポートされているとお考えください。
 				</p>
 			</div>
 		</section>
+
 		<section name="エンティティ定義">
 			<p>
 				エンティティにするためには、
@@ -126,19 +97,27 @@ public class Employee {
     ...
 }
 ]]></source>
-			<p> name属性でエンティティ名を指定することができます。 次の例では、Empというエンティティ名を指定しています。</p>
+			<p>
+				<code>name</code>
+				要素でエンティティ名を指定することができます。
+				次の例では、
+				<code>Emp</code>
+				というエンティティ名を指定しています。
+			</p>
 			<source><![CDATA[@Entity(name = "Emp")
 public class Employee {
     ...
 }]]></source>
 			<p>
-				name属性を指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分が、
+				<code>name</code>
+				要素を指定しなかった場合、エンティティのクラス名からパッケージ名を除いた部分が、
 				デフォルトのエンティティ名になります。例えば、クラス名が
 				<code>examples.entity.Employee</code>
 				の場合、デフォルトのエンティティ名は、
 				<code>Employee</code>
 				になります。
 			</p>
+
 			<subsection name="テーブル定義">
 				<p>
 					テーブル情報を指定するには、
@@ -146,32 +125,53 @@ public class Employee {
 					を使います。
 				</p>
 				<p>
-					name属性でテーブル名を指定することができます。 指定しなかった場合、テーブル名はエンティティ名と同じになります。エンティティ名が、
+					<code>name</code>
+					要素でテーブル名を指定することができます。
+					指定しなかった場合、テーブル名はエンティティ名と同じになります。エンティティ名が、
 					<code>AaaBbb</code>
 					のようなキャメル記法の場合、テーブル名は、
 					<code>AAA_BBB</code>
-					のように'_'区切りだとみなされます。
+					のように
+					<code>'_'</code>
+					区切りだとみなされます。
 				</p>
 				<p>
-					このルールは、convention.diconで指定されている
+					このルールは、
+					<code>convention.dicon</code>
+					で指定されている
 					<code>
 						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
 					</code>
-					のfromEntityNameToTableName()の実装を変えることで、カスタマイズすることができます。
+					の
+					<code>fromEntityNameToTableName()</code>
+					の実装を変えることで、カスタマイズすることができます。
 				</p>
-				<p>次の例では、EMPというテーブル名を指定しています。</p>
+				<p>
+					次の例では、
+					<code>EMP</code>
+					というテーブル名を指定しています。
+				</p>
 				<source><![CDATA[@Entity
 @Table(name = "EMP")
 public class Employee {
     ...
 }]]></source>
-				<p> schema属性でスキーマを指定することができます。
-					指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。</p>
-				<p> catalog属性でカタログを指定することができます。
+				<p>
+					<code>schema</code>
+					要素でスキーマを指定することができます。
+					指定した場合、自動生成されるSQLのテーブル名がスキーマ.テーブル名になります。
+				</p>
+				<p>
+					<code>catalog</code>
+					要素でカタログを指定することができます。
 					指定した場合、自動生成されるSQLのテーブル名がカタログ.テーブル名になります。
-					catalog属性とschema属性の両方を指定した場合、自動生成されるSQLのテーブル名はカタログ.スキーマ.テーブル名になります。
+					<code>catalog</code>
+					要素と
+					<code>schema</code>
+					要素の両方を指定した場合、自動生成されるSQLのテーブル名はカタログ.スキーマ.テーブル名になります。
 				</p>
 			</subsection>
+
 			<subsection name="継承">
 				<p>
 					エンティティは
@@ -188,17 +188,22 @@ public class Employee extends AbstractEmployee {
 }]]></source>
 				<p>
 					<code>@MappedSuperclass</code>
-					には、エンティティと同じように永続プロパティを定義できます。 定義された永続プロパティは、サブクラスの永続プロパティとみなされます。
+					には、エンティティと同じように永続プロパティを定義できます。
+					定義された永続プロパティは、サブクラスの永続プロパティとみなされます。
 					スーパークラスとサブクラスでインスタンスフィールドの名前が重複しないように定義してください。
 				</p>
 				<p>
 					エンティティは
 					<code>@MappedSuperclass</code>
-					が指定されていないクラスも継承できます。 しかし、この場合、スーパークラスのプロパティはサブクラスの永続プロパティとみなされません。
+					が指定されていないクラスも継承できます。
+					しかし、この場合、スーパークラスのプロパティはサブクラスの永続プロパティとみなされません。
 				</p>
-				<p> エンティティが他のエンティティを継承することはサポートされていません。</p>
+				<p>
+					エンティティが他のエンティティを継承することはサポートされていません。
+				</p>
 			</subsection>
 		</section>
+
 		<section name="プロパティ定義">
 			<subsection name="永続プロパティの型">
 				<p>
@@ -212,28 +217,28 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>boolean</p>
+								<code>boolean</code>
 							</li>
 							<li>
-								<p>char</p>
+								<code>char</code>
 							</li>
 							<li>
-								<p>byte</p>
+								<code>byte</code>
 							</li>
 							<li>
-								<p>short</p>
+								<code>short</code>
 							</li>
 							<li>
-								<p>int</p>
+								<code>int</code>
 							</li>
 							<li>
-								<p>long</p>
+								<code>long</code>
 							</li>
 							<li>
-								<p>float</p>
+								<code>float</code>
 							</li>
 							<li>
-								<p>double</p>
+								<code>double</code>
 							</li>
 						</ul>
 					</dd>
@@ -241,28 +246,28 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>Boolean</p>
+								<code>Boolean</code>
 							</li>
 							<li>
-								<p>Character</p>
+								<code>Character</code>
 							</li>
 							<li>
-								<p>Byte</p>
+								<code>Byte</code>
 							</li>
 							<li>
-								<p>Short</p>
+								<code>Short</code>
 							</li>
 							<li>
-								<p>Integer</p>
+								<code>Integer</code>
 							</li>
 							<li>
-								<p>Long</p>
+								<code>Long</code>
 							</li>
 							<li>
-								<p>Float</p>
+								<code>Float</code>
 							</li>
 							<li>
-								<p>Double</p>
+								<code>Double</code>
 							</li>
 						</ul>
 					</dd>
@@ -270,7 +275,7 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>java.lang.String</p>
+								<code>java.lang.String</code>
 							</li>
 						</ul>
 						<p>
@@ -283,10 +288,10 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>java.math.BigDecimal</p>
+								<code>java.math.BigDecimal</code>
 							</li>
 							<li>
-								<p>java.math.BigInteger</p>
+								<code>java.math.BigInteger</code>
 							</li>
 						</ul>
 					</dd>
@@ -294,7 +299,7 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>java.lang.Enumのサブクラス</p>
+								<code>java.lang.Enumのサブクラス</code>
 							</li>
 						</ul>
 					</dd>
@@ -302,19 +307,19 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>java.util.Date</p>
+								<code>java.util.Date</code>
 							</li>
 							<li>
-								<p>java.util.Calendar</p>
+								<code>java.util.Calendar</code>
 							</li>
 							<li>
-								<p>java.sql.Date</p>
+								<code>java.sql.Date</code>
 							</li>
 							<li>
-								<p>java.sql.Time</p>
+								<code>java.sql.Time</code>
 							</li>
 							<li>
-								<p>java.sql.Timestamp</p>
+								<code>java.sql.Timestamp</code>
 							</li>
 						</ul>
 						<p>
@@ -331,7 +336,7 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>byte[]</p>
+								<code>byte[]</code>
 							</li>
 						</ul>
 						<p>
@@ -344,7 +349,7 @@ public class Employee extends AbstractEmployee {
 					<dd>
 						<ul>
 							<li>
-								<p>java.io.Serializable</p>
+								<code>java.io.Serializable</code>
 							</li>
 						</ul>
 						<p>
@@ -355,6 +360,7 @@ public class Employee extends AbstractEmployee {
 					</dd>
 				</dl>
 			</subsection>
+
 			<subsection name="カラム定義">
 				<p>
 					カラム情報を指定するには、
@@ -362,38 +368,71 @@ public class Employee extends AbstractEmployee {
 					を使います。
 				</p>
 				<p>
-					name属性でカラム名を指定することができます。 指定しなかった場合、カラム名はフィールド名と同じになります。フィールド名が、
+					<code>name</code>
+					要素でカラム名を指定することができます。
+					指定しなかった場合、カラム名はフィールド名と同じになります。フィールド名が、
 					<code>aaaBbb</code>
 					のようなキャメル記法の場合、カラム名は、
 					<code>AAA_BBB</code>
-					のように'_'区切りだとみなされます。
+					のように
+					<code>'_'</code>
+					区切りだとみなされます。
 				</p>
 				<p>
-					このルールは、convention.diconで指定されている
+					このルールは、
+					<code>convention.dicon</code>
+					で指定されている
 					<code>
 						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
 					</code>
-					のfromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+					の
+					<code>fromPropertyNameToColumnName()</code>
+					の実装を変えることで、カスタマイズすることができます。
 				</p>
 				<p>
-					デフォルトでは、プロパティ名とフィールド名は同じになりますが、convention.diconで指定されている
+					デフォルトでは、プロパティ名とフィールド名は同じになりますが、
+					<code>convention.dicon</code>
+					で指定されている
 					<code>
 						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
 					</code>
-					のfromFieldNameToPropertyName()の実装を変えることで、カスタマイズすることができます。
+					の
+					<code>fromFieldNameToPropertyName()</code>
+					の実装を変えることで、カスタマイズすることができます。
 				</p>
-				<p>次の例では、AB1234というカラム名を指定しています。</p>
+				<p>
+					次の例では、
+					<code>AB1234</code>
+					というカラム名を指定しています。
+				</p>
 				<source><![CDATA[
 @Column(name = "AB1234")
 public String shortName;
 ]]></source>
-				<p> insertable属性で挿入可能かどうかを指定することができます。デフォルトはtrueです。
-					falseの場合、挿入用のSQLにこのカラムは含まれません。 カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+				<p>
+					<code>insertable</code>
+					要素で挿入可能かどうかを指定することができます。デフォルトは
+					<code>true</code>
+					です。
+					<code>false</code>
+					の場合、挿入用のSQLにこのカラムは含まれません。
+					カラムにデフォルト値を適用したい場合は、
+					<code>false</code>
+					にすると良いでしょう。
 				</p>
-				<p> updatable属性で更新可能かどうかを指定することができます。デフォルトはtrueです。
-					falseの場合、更新用のSQLにこのカラムは含まれません。 カラムにデフォルト値を適用したい場合は、falseにすると良いでしょう。
+				<p>
+					<code>updatable</code>
+					要素で更新可能かどうかを指定することができます。デフォルトは
+					<code>true</code>
+					です。
+					<code>false</code>
+					の場合、更新用のSQLにこのカラムは含まれません。
+					カラムにデフォルト値を適用したい場合は、
+					<code>false</code>
+					にすると良いでしょう。
 				</p>
 			</subsection>
+
 			<subsection name="識別子定義">
 				<p>
 					識別子(主キー)であることを指定するには、
@@ -417,7 +456,8 @@ public Integer id;
 public Integer id2;
 ]]></source>
 				<p>
-					識別子は、アプリケーション側で生成することもできますが、 Seasar2に自動生成させることもできます。自動生成させるには、
+					識別子は、アプリケーション側で生成することもできますが、 Seasar2に自動生成させることもできます。
+					自動生成させるには、
 					<code>@GeneratedValue</code>
 					を使います。
 				</p>
@@ -426,29 +466,61 @@ public Integer id2;
 					<code>@GeneratedValue</code>
 					の
 					<code>strategy</code>
-					属性で指定します。指定できるタイプのは次の4つです。
+					要素で指定します。指定できるタイプのは次の4つです。
 				</p>
 				<dl>
-					<dt>GenerationType.TABLE</dt>
+					<dt>
+						<code>GenerationType.TABLE</code>
+					</dt>
 					<dd>テーブルを使います。</dd>
-					<dt>GenerationType.SEQUENCE</dt>
+					<dt>
+						<code>GenerationType.SEQUENCE</code>
+					</dt>
 					<dd>シーケンスを使います。</dd>
-					<dt>GenerationType.IDENTITY</dt>
+					<dt>
+						<code>GenerationType.IDENTITY</code>
+					</dt>
 					<dd>データベース固有の識別子自動生成を使います。</dd>
-					<dt>GenerationType.AUTO(デフォルト)</dt>
-					<dd> データベースに応じてTABLE・SEQUENCE・IDENTITYのどちらかが選択されます。
-						IDENTITYが使える場合はIDENTITYに、 IDENTITYが使えなくてSEQUENCEが使える場合はSEQUENCEに、
-						IDENTITYもSEQUENCEも使えない場合はTABLEになります。</dd>
+					<dt>
+						<code>GenerationType.AUTO</code>
+						(デフォルト)
+					</dt>
+					<dd>
+						データベースに応じて
+						<code>TABLE・SEQUENCE・IDENTITY</code>
+						のいずれかが選択されます。
+						<code>IDENTITY</code>
+						が使える場合は
+						<code>IDENTITY</code>
+						に、
+						<code>IDENTITY</code>
+						が使えなくて
+						<code>SEQUENCE</code>
+						が使える場合は
+						<code>SEQUENCE</code>
+						に、
+						<code>IDENTITY</code>
+						も
+						<code>SEQUENCE</code>
+						も使えない場合は
+						<code>TABLE</code>
+						になります。
+					</dd>
 				</dl>
-				<h4>GenerationType.TABLE</h4>
-				<p>GenerationType.TABLEは次のようにして使います。
+				<h4>
+					<code>GenerationType.TABLE</code>
+				</h4>
+				<p>
+					<code>GenerationType.TABLE</code>
+					は次のようにして使います。
 				</p>
 				<source><![CDATA[
 @Id
 @GeneratedValue(strategy = GenerationType.TABLE)
 public Integer id;
 ]]></source>
-				<p>上記のように指定した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
+				<p>
+					上記のように指定した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
 				</p>
 				<source><![CDATA[
 create table ID_GENERATOR {
@@ -458,10 +530,16 @@ create table ID_GENERATOR {
 				<source><![CDATA[
 insert into ID_GENERATOR (PK, VALUE) values ('EMPLOYEE_ID', 1);
 ]]></source>
-				<p> ID_GENERATORテーブルのPKカラムには、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;を設定します。
+				<p>
+					<code>ID_GENERATOR</code>
+					テーブルのPKカラムには、
+					<code>&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;</code>
+					を設定します。
 				</p>
 				<p>
-					テーブル名やカラム名をカスタマイズするには、次のように@TableGeneratorアノテーションで指定します。
+					テーブル名やカラム名をカスタマイズするには、次のように
+					<code>@TableGenerator</code>
+					アノテーションで指定します。
 				</p>
 				<source><![CDATA[
 @Id
@@ -474,8 +552,9 @@ insert into ID_GENERATOR (PK, VALUE) values ('EMPLOYEE_ID', 1);
 public Integer id;
 ]]></source>
 				<p>
-					上記のようなTableGeneratorを定義した場合、
-					あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
+					上記のような
+					<code>TableGenerator</code>
+					を定義した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
 				</p>
 				<source><![CDATA[
 create table ID_GEN {
@@ -486,8 +565,13 @@ create table ID_GEN {
 insert into ID_GEN (GEN_NAME, GEN_VALUE) values ('EMPLOYEE_GEN', 1);
 ]]></source>
 
-				<h4>GenerationType.SEQUENCE</h4>
-				<p>GenerationType.SEQUENCEは次のようにして使います。</p>
+				<h4>
+					<code>GenerationType.SEQUENCE</code>
+				</h4>
+				<p>
+					<code>GenerationType.SEQUENCE</code>
+					は次のようにして使います。
+				</p>
 				<source><![CDATA[
 @Id
 @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -498,9 +582,15 @@ public Integer id;
 create sequence EMPLOYEE_ID
   incremet by 50;
 ]]></source>
-				<p>シーケンス名は、&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;となります。</p>
 				<p>
-					シーケンス名をカスタマイズするには、次のように@SequenceGeneratorアノテーションで指定します。
+					シーケンス名は、
+					<code>&lt;テーブル名&gt;_&lt;識別子のカラム名&gt;</code>
+					となります。
+				</p>
+				<p>
+					シーケンス名をカスタマイズするには、次のように
+					<code>@SequenceGenerator</code>
+					アノテーションで指定します。
 				</p>
 				<source><![CDATA[
 @Id
@@ -511,7 +601,9 @@ create sequence EMPLOYEE_ID
 public Integer id;
 ]]></source>
 				<p>
-					上記のようなSequenceGeneratorを定義した場合、
+					上記のような
+					<code>SequenceGenerator</code>
+					を定義した場合、
 					あらかじめ、次のようなシーケンスを用意しておく必要があります。
 				</p>
 				<source><![CDATA[
@@ -519,16 +611,21 @@ create sequence EMPLOYEE_SEQ
   incremet by 50;
 ]]></source>
 
-				<h4>GenerationType.IDENTITY</h4>
-				<p>GenerationType.IDENTITYは次のようにして使います。</p>
+				<h4>
+					<code>GenerationType.IDENTITY</code>
+				</h4>
+				<p>
+					<code>GenerationType.IDENTITY</code>
+					は次のようにして使います。
+				</p>
 				<source><![CDATA[
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
 public Integer id;
 ]]></source>
 				<p>
-					GenerationType.IDENTITYを使う場合、
-					識別子はデータベース固有の方法を使って自動生成されるようにしてください。
+					<code>GenerationType.IDENTITY
+					</code>を使う場合、識別子はデータベース固有の方法を使って自動生成されるようにしてください。
 				</p>
 				<source><![CDATA[
 create table Employee {
@@ -712,6 +809,48 @@ public LargeDto largeDto;
 ]]></source>
 			</subsection>
 
+			<subsection name="フェッチ対象外定義">
+				<p>
+					ラージオブジェクトのようにサイズが大きくなるプロパティや、
+					通常は必要としないプロパティは
+					<a href="s2jdbc_manager_auto.html">
+						SQL自動生成
+					</a>
+					による
+					<a href="s2jdbc_manager_auto.html#検索">検索</a>
+					でフェッチの対象から除外することができます
+					(
+					<a href="s2jdbc_manager_auto.html#指定したプロパティをフェッチ対象にする">指定したプロパティをフェッチ対象にする</a>
+					ことも可能です)。
+				</p>
+				<p>
+					フェッチ対象外であることを指定するには、
+					<code>@Basic</code>
+					の
+					<code>fetch</code>
+					要素を使います。
+				</p>
+				<source><![CDATA[
+@Basic(fetch = FetchType.LAZY)
+@Lob
+public LargeDto largeDto;
+]]></source>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						S2JDBCは遅延ロードを
+						<strong>サポートしません</strong>
+						。
+					</p>
+					<p>
+						<code>FetchType.LAZY</code>
+						が指定されたプロパティは遅延ロードの対象になるのではなく、単に
+						<strong>取得されない</strong>
+						だけで、プロパティの値は初期値のままとなります。
+					</p>
+				</div>
+			</subsection>
+
 			<subsection name="永続化対象外定義">
 				<p>
 					永続化対象外であることを指定するには、
@@ -737,14 +876,27 @@ public transient MyDto myDto2;
 				<p>
 					多対一関連であることを指定するには、
 					<code>@ManyToOne</code>
-					を使います。複数のEmployeeに1つのDepartementが関連付けられる場合、
-					EmployeeからみてDepartmentは多対一関連になります。
+					を使います。複数の
+					<code>Employee</code>
+					に1つの
+					<code>Departement</code>
+					が関連付けられる場合、
+					<code>Employee</code>
+					からみて
+					<code>Department</code>
+					は多対一関連になります。
 					関連には、所有者、被所有者という概念があり、外部キーを持っているほうが所有者になります。
 				</p>
 				<p>
-					上記のケースは、Employeeのテーブルに、
-					department_id(プロパティ名はdepartmentId)という外部キーがあるので、
-					Employeeは関連の所有者になります。
+					上記のケースは、
+					<code>Employee</code>
+					のテーブルに、
+					<code>department_id</code>
+					(プロパティ名は
+					<code>departmentId</code>
+					)という外部キーがあるので、
+					<code>Employee</code>
+					は関連の所有者になります。
 				</p>
 				<p>
 					<code>@ManyToOne</code>
@@ -765,23 +917,49 @@ public class Employee {
 				<p>
 					一対多関連であることを指定するには、
 					<code>@OneToMany</code>
-					を使います。1つのDepartmentに複数のEmployeeが関連付けられる場合、
-					DepartmentからみてEmployeeは一対多関連になります。
+					を使います。1つの
+					<code>Department</code>
+					に複数の
+					<code>Employee</code>
+					が関連付けられる場合、
+					<code>Department</code>
+					からみて
+					<code>Employee</code>
+					は一対多関連になります。
 					関連には、所有者、被所有者という概念があり、外部キーを持っているほうが所有者になります。
 				</p>
 				<p>
-					上記のケースは、Employeeのテーブルに、
-					department_id(プロパティ名はdepartmentId)という外部キーがあり、
-					Departmentの方は、外部キーを持っていないので、
-					Departmentは関連の被所有者になります。
+					上記のケースは、
+					<code>Employee</code>
+					のテーブルに、
+					<code>department_id</code>
+					(プロパティ名は
+					<code>departmentId</code>
+					)という外部キーがあり、
+					<code>Department</code>
+					の方は、外部キーを持っていないので、
+					<code>Department</code>
+					は関連の被所有者になります。
 				</p>
 				<p>
-					関連の被所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
-					Departmentからみて一対多でEmployeeが関連付けられていて、
-					そのEmployeeからみるとDepartmentがdepartmentプロパティとして、
-					多対一で関連付けられています。お互いが相互の関連であることを示すために
+					関連の被所有者の場合、必ず
 					<code>mappedBy</code>
-					でdepartmentを指定します。
+					要素で逆側の関連のプロパティ名を指定します。
+					<code>Department</code>
+					からみて一対多で
+					<code>Employee</code>
+					が関連付けられていて、その
+					<code>Employee</code>
+					からみると
+					<code>Department</code>
+					が
+					<code>department</code>
+					プロパティとして、多対一で関連付けられています。
+					お互いが相互の関連であることを示すために
+					<code>mappedBy</code>
+					で
+					<code>department</code>
+					を指定します。
 				</p>
 				<p>
 					一対多の関連の型は、
@@ -802,25 +980,58 @@ public class Department {
 				<p>
 					一対一関連であることを指定するには、
 					<code>@OneToOne</code>
-					を使います。1つのEmployeeに1つのAddressが関連付けられる場合、
-					EmployeeからみてAddressは一対一関連になります。
-					同じように、1つのAddressに1つのEmployeeが関連付けられているので、
-					AddressからみてEmployeeも一対一関連になります。
+					を使います。1つの
+					<code>Employee</code>
+					に1つの
+					<code>Address</code>
+					が関連付けられる場合、
+					<code>Employee</code>
+					からみて
+					<code>Address</code>
+					は一対一関連になります。同じように、1つの
+					<code>Address</code>
+					に1つの
+					<code>Employee</code>
+					が関連付けられているので、
+					<code>Address</code>
+					からみて
+					<code>Employee</code>
+					も一対一関連になります。
 					関連には、所有者、被所有者という概念があり、外部キーを持っているほうが所有者になります。
 				</p>
 				<p>
-					上記のケースは、Employeeのテーブルに、
-					address_id(プロパティ名はaddressId)という外部キーがあるので、
-					Employeeは関連の所有者になります。Addressの方は、外部キーを持っていないので、
-					Addressは関連の被所有者になります。
+					上記のケースは、
+					<code>Employee</code>
+					のテーブルに、
+					<code>address_id</code>
+					(プロパティ名は
+					<code>addressId</code>
+					)という外部キーがあるので、
+					<code>Employee</code>
+					は関連の所有者になります。
+					<code>Address</code>
+					の方は、外部キーを持っていないので、
+					<code>Address</code>
+					は関連の被所有者になります。
 				</p>
 				<p>
-					関連の被所有者の場合、必ずmappedBy属性で逆側の関連のプロパティ名を指定します。
-					Addressから見ると一対一でEmployeeが関連付けられていて、
-					そのEmployeeからみるとAddressがaddressプロパティとして、
-					一対一で関連付けられています。お互いが相互の関連であることを示すために
+					関連の被所有者の場合、必ず
 					<code>mappedBy</code>
-					でaddressを指定します。
+					要素で逆側の関連のプロパティ名を指定します。
+					<code>Address</code>
+					から見ると一対一で
+					<code>Employee</code>
+					が関連付けられていて、その
+					<code>Employee</code>
+					からみると
+					<code>Address</code>
+					が
+					<code>address</code>
+					プロパティとして、一対一で関連付けられています。
+					お互いが相互の関連であることを示すために
+					<code>mappedBy</code>
+					で
+					<code>address</code>を指定します。
 				</p>
 				<source><![CDATA[
 public class Employee {
@@ -847,8 +1058,12 @@ public class Address {
 					を使って、結合用のカラムを指定することができます。
 				</p>
 				<p>
-					name属性で、外部キーを指定します。
-					name属性を省略した場合、「関連のプロパティ名_関連テーブルの主キー」が 自動的に設定されます。
+					<code>name</code>
+					要素で、外部キーを指定します。
+					<code>name</code>
+					要素を省略した場合、「
+					<var>関連のプロパティ名</var>_<var>関連テーブルの主キー</var>
+					」が 自動的に設定されます。
 					主キーは、プロパティ名ではなく、カラム名なので注意してください。
 				</p>
 				<source><![CDATA[
@@ -864,25 +1079,39 @@ public class Employee {
 					上記の例では、
 					<code>@JoinColumn</code>
 					が省略されているので、
-					name属性は、「関連のプロパティ名(department)_関連テーブルの主キー(ID)」、
-					つまりDEPARTMENT_IDになります。
+					<code>name</code>
+					要素は、「
+					<var>関連のプロパティ名</var>(<code>department</code>)_<var>関連テーブルの主キー</var>(<code>ID</code>)
+					」、つまり
+					<code>DEPARTMENT_ID</code>
+					になります。
 				</p>
 				<p>
-					departmentがDEPARTMENTに変換されているのは、
-					プロパティ名をカラム名に変換するときに、
-					キャメル記法は、'_'区切りになり、'_'以外は大文字に変換されるというルールがあるからです。
+					<code>department</code>
+					が
+					<code>DEPARTMENT</code>
+					に変換されているのは、プロパティ名をカラム名に変換するときに、キャメル記法は、
+					<code>'_'</code>
+					区切りになり、
+					<code>'_'</code>
+					以外は大文字に変換されるというルールがあるからです。
 				</p>
 				<p>
-					このルールは、convention.diconで指定されている
+					このルールは、
+					<code>convention.dicon</code>
+					で指定されている
 					<code>
 						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
 					</code>
 					の
-					fromPropertyNameToColumnName()の実装を変えることで、カスタマイズすることができます。
+					<code>fromPropertyNameToColumnName()</code>
+					の実装を変えることで、カスタマイズすることができます。
 				</p>
 				<p>
-					referencedColumnName属性で、関連テーブルの主キーを指定します。
-					referencedColumnName属性を省略した場合、
+					<code>referencedColumnName</code>
+					要素で、関連テーブルの主キーを指定します。
+					<code>referencedColumnName</code>
+					要素を省略した場合、
 					「関連テーブルの主キー」が自動的に設定されます。
 					主キーは、プロパティ名ではなく、カラム名なので注意してください。
 				</p>
@@ -899,8 +1128,11 @@ public class Employee {
 					上記の例では、
 					<code>@JoinColumn</code>
 					が省略されているので、
-					referencedColumnName属性は、「関連テーブルの主キー(ID)」、
-					つまりIDになります。
+					<code>referencedColumnName</code>
+					要素は、「
+					<var>関連テーブルの主キー</var>(<code>ID</code>)
+					」、つまり
+					<code>ID</code>になります。
 				</p>
 			</subsection>
 		</section>

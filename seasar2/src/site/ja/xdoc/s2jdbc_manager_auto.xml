@@ -7,285 +7,195 @@
 		<section name="SQL自動生成による操作">
 			<ul>
 				<li>
-					<p>
-						<a href="#検索">検索</a>
-					</p>
+					<a href="#検索">検索</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#複数件検索">複数件検索</a>
-							</p>
+							<a href="#複数件検索">複数件検索</a>
 						</li>
 						<li>
-							<p>
-								<a href="#1件検索">1件検索</a>
-							</p>
+							<a href="#1件検索">1件検索</a>
 						</li>
 						<li>
-							<p>
-								<a href="#イテレーションによる検索">イテレーションによる検索</a>
-							</p>
+							<a href="#イテレーションによる検索">イテレーションによる検索</a>
 						</li>
 						<li>
-							<p>
-								<a href="#検索結果の行数取得">検索結果の行数取得</a>
-							</p>
+							<a href="#検索結果の行数取得">検索結果の行数取得</a>
 						</li>
 						<li>
-							<p>
-								<a href="#結合">結合</a>
-								<ul>
-									<li>
-										<p>
-											<a href="#結合条件の追加">
-												結合条件の追加
-											</a>
-										</p>
-									</li>
-									<li>
-										<p>
-											<a href="#結合のネスト">結合のネスト</a>
-										</p>
-									</li>
-								</ul>
-							</p>
+							<a href="#結合">結合</a>
+							<ul>
+								<li>
+									<a href="#結合条件の追加">
+										結合条件の追加
+									</a>
+								</li>
+								<li>
+									<a href="#結合のネスト">結合のネスト</a>
+								</li>
+							</ul>
 						</li>
 						<li>
-							<p>
-								<a href="#検索条件">検索条件</a>
-								<ul>
-									<li>
-										<p>
-											<a href="#IDとバージョンによる指定">
-												IDとバージョンによる指定
-											</a>
-										</p>
-									</li>
-									<li>
-										<p>
-											<a href="#SQL文字列による指定">
-												SQL文字列による指定
-											</a>
-										</p>
-									</li>
-									<li>
-										<p>
-											<a
-												href="#SimpleWhereによる指定">
-												SimpleWhereによる指定
-											</a>
-										</p>
-									</li>
-									<li>
-										<p>
-											<a href="#Mapによる指定">
-												Mapによる指定
-											</a>
-										</p>
-									</li>
-								</ul>
-							</p>
+							<a href="#検索条件">検索条件</a>
+							<ul>
+								<li>
+									<a href="#IDとバージョンによる指定">
+										IDとバージョンによる指定
+									</a>
+								</li>
+								<li>
+									<a href="#SQL文字列による指定">
+										SQL文字列による指定
+									</a>
+								</li>
+								<li>
+									<a href="#SimpleWhereによる指定">
+										SimpleWhereによる指定
+									</a>
+								</li>
+								<li>
+									<a href="#Mapによる指定">
+										Mapによる指定
+									</a>
+								</li>
+							</ul>
 						</li>
 						<li>
-							<p>
-								<a href="#ソート順">ソート順</a>
-							</p>
+							<a href="#ソート順">ソート順</a>
 						</li>
 						<li>
-							<p>
-								<a href="#排他制御">排他制御</a>
-							</p>
+							<a href="#排他制御">排他制御</a>
 						</li>
 						<li>
-							<p>
-								<a href="#ページング">ページング</a>
-							</p>
+							<a href="#指定したプロパティをフェッチ対象にする">指定したプロパティをフェッチ対象にする</a>
 						</li>
 						<li>
-							<p>
-								<a href="#最大行数">最大行数</a>
-							</p>
+							<a href="#ページング">ページング</a>
 						</li>
 						<li>
-							<p>
-								<a href="#フェッチサイズ">フェッチサイズ</a>
-							</p>
+							<a href="#最大行数">最大行数</a>
 						</li>
 						<li>
-							<p>
-								<a href="#クエリタイムアウト">クエリタイムアウト</a>
-							</p>
+							<a href="#フェッチサイズ">フェッチサイズ</a>
 						</li>
 						<li>
-							<p>
-								<a href="#ヒント">ヒント</a>
-							</p>
+							<a href="#クエリタイムアウト">クエリタイムアウト</a>
+						</li>
+						<li>
+							<a href="#ヒント">ヒント</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="#挿入">挿入</a>
-					</p>
+					<a href="#挿入">挿入</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#1件挿入">1件挿入</a>
-							</p>
+							<a href="#1件挿入">1件挿入</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バッチ挿入">バッチ挿入</a>
-							</p>
+							<a href="#バッチ挿入">バッチ挿入</a>
 						</li>
 						<li>
-							<p>
-								<a href="#nullの項目を挿入しない">
-									nullの項目を挿入しない
-								</a>
-							</p>
+							<a href="#nullの項目を挿入しない">
+								nullの項目を挿入しない
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#指定したプロパティのみを挿入対象にする">
-									指定したプロパティのみを挿入対象にする
-								</a>
-							</p>
+							<a href="#指定したプロパティのみを挿入対象にする">
+								指定したプロパティのみを挿入対象にする
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#指定したプロパティを挿入対象から除外する">
-									指定したプロパティを挿入対象から除外する
-								</a>
-							</p>
+							<a href="#指定したプロパティを挿入対象から除外する">
+								指定したプロパティを挿入対象から除外する
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バッチ挿入のサイズを指定する">
-									バッチ挿入のサイズを指定する
-								</a>
-							</p>
+							<a href="#バッチ挿入のサイズを指定する">
+								バッチ挿入のサイズを指定する
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="#更新">更新</a>
-					</p>
+					<a href="#更新">更新</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#1件更新">1件更新</a>
-							</p>
+							<a href="#1件更新">1件更新</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バッチ更新">バッチ更新</a>
-							</p>
+							<a href="#バッチ更新">バッチ更新</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バージョンプロパティを通常の更新対象にする">
-									バージョンプロパティを通常の更新対象にする
-								</a>
-							</p>
+							<a href="#バージョンプロパティを通常の更新対象にする">
+								バージョンプロパティを通常の更新対象にする
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#nullの項目を更新しない">
-									nullの項目を更新しない
-								</a>
-							</p>
+							<a href="#nullの項目を更新しない">
+								nullの項目を更新しない
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#指定したプロパティのみを更新対象にする">
-									指定したプロパティのみを更新対象にする
-								</a>
-							</p>
+							<a href="#指定したプロパティのみを更新対象にする">
+								指定したプロパティのみを更新対象にする
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#指定したプロパティを更新対象から除外する">
-									指定したプロパティを更新対象から除外する
-								</a>
-							</p>
+							<a href="#指定したプロパティを更新対象から除外する">
+								指定したプロパティを更新対象から除外する
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#変更のあったプロパティのみを更新対象にする">
-									変更のあったプロパティのみを更新対象にする
-								</a>
-							</p>
+							<a href="#変更のあったプロパティのみを更新対象にする">
+								変更のあったプロパティのみを更新対象にする
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#更新行数をチェックしない">更新行数をチェックしない</a>
-							</p>
+							<a href="#更新行数をチェックしない">更新行数をチェックしない</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バッチ更新のサイズを指定する">
-									バッチ更新のサイズを指定する
-								</a>
-							</p>
+							<a href="#バッチ更新のサイズを指定する">
+								バッチ更新のサイズを指定する
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="#削除">削除</a>
-					</p>
+					<a href="#削除">削除</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#1件削除">1件削除</a>
-							</p>
+							<a href="#1件削除">1件削除</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バッチ削除">バッチ削除</a>
-							</p>
+							<a href="#バッチ削除">バッチ削除</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バージョンをチェックしないで削除する">
-									バージョンをチェックしないで削除する
-								</a>
-							</p>
+							<a href="#バージョンをチェックしないで削除する">
+								バージョンをチェックしないで削除する
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#削除行数をチェックしない">削除行数をチェックしない</a>
-							</p>
+							<a href="#削除行数をチェックしない">削除行数をチェックしない</a>
 						</li>
 						<li>
-							<p>
-								<a href="#バッチ削除のサイズを指定する">
-									バッチ削除のサイズを指定する
-								</a>
-							</p>
+							<a href="#バッチ削除のサイズを指定する">
+								バッチ削除のサイズを指定する
+							</a>
 						</li>
 					</ul>
 				</li>
 				<li>
-					<p>
-						<a href="#ストアドの呼び出し">ストアドの呼び出し</a>
-					</p>
+					<a href="#ストアドの呼び出し">ストアドの呼び出し</a>
 					<ul>
 						<li>
-							<p>
-								<a href="#ストアドプロシージャの呼び出し">
-									ストアドプロシージャの呼び出し
-								</a>
-							</p>
+							<a href="#ストアドプロシージャの呼び出し">
+								ストアドプロシージャの呼び出し
+							</a>
 						</li>
 						<li>
-							<p>
-								<a href="#ストアドファンクションの呼び出し">
-									ストアドファンクションの呼び出し
-								</a>
-							</p>
+							<a href="#ストアドファンクションの呼び出し">
+								ストアドファンクションの呼び出し
+							</a>
 						</li>
 					</ul>
 				</li>
@@ -294,11 +204,19 @@
 
 		<section name="検索">
 			<subsection name="複数件検索">
-				<p>複数件を検索する場合は、gerResultList()を使います。</p>
+				<p>
+					複数件を検索する場合は、
+					<code>gerResultList()</code>
+					を使います。
+				</p>
 				<source><![CDATA[
 List<Employee> results = jdbcManager.from(Employee.class).getResultList();
 ]]></source>
-				<p>検索するエンティティは、from()で指定します。</p>
+				<p>
+					検索するエンティティは、
+					<code>from()</code>
+					で指定します。
+				</p>
 				<p>
 					デフォルトでは、結果がなかった場合は、 空の
 					<code>List</code>
@@ -316,7 +234,11 @@ List<Employee> results = jdbcManager.from(Employee.class)
 			</subsection>
 
 			<subsection name="1件検索">
-				<p>1件検索する場合は、getSingleResult()を使います。</p>
+				<p>
+					1件検索する場合は、
+					<code>getSingleResult()</code>
+					を使います。
+				</p>
 				<source><![CDATA[
 Employee result = jdbcManager.from(Employee.class).getSingleResult();
 ]]></source>
@@ -376,12 +298,10 @@ int count = results = jdbcManager
 				</p>
 				<ul>
 					<li>
-						<p>
-							<code>
-								org.seasar.extension.jdbc.IterationCallback&lt;ENTITY,
-								RESULT&gt;
-							</code>
-						</p>
+						<code>
+							org.seasar.extension.jdbc.IterationCallback&lt;ENTITY,
+							RESULT&gt;
+						</code>
 					</li>
 				</ul>
 				<p>
@@ -400,12 +320,10 @@ int count = results = jdbcManager
 				</p>
 				<ul>
 					<li>
-						<p>
-							<code>
-								RESULT iterate(ENTITY entity,
-								IterationContext context)
-							</code>
-						</p>
+						<code>
+							RESULT iterate(ENTITY entity,
+							IterationContext context)
+						</code>
 					</li>
 				</ul>
 				<p>
@@ -496,58 +414,56 @@ int count = results = jdbcManager
 
 			<subsection name="検索結果の行数取得">
 				<p>
-					SELECT COUNT(*) ～による検索結果の行数を取得する場合は、getCount()を使います。
+					<code>SELECT COUNT(*) ～</code>
+					による検索結果の行数を取得する場合は、
+					<code>getCount()</code>
+					を使います。
 				</p>
 				<source><![CDATA[
 long count = jdbcManager.from(Employee.class).getCount();
 ]]></source>
-				<p>
-					<code>getCount()</code>
-					が返す値は問い合わせ結果の行数であり、 同等の問い合わせを行った場合に
-					<a href="#複数件検索">
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<code>getCount()</code>
+						が返す値は問い合わせ結果の行数であり、 同等の問い合わせを行った場合に
+						<a href="#複数件検索">
+							<code>getResultList()</code>
+						</a>
+						が返すエンティティの数と一致するとは限りません。
+						<code>from()</code>
+						で指定したエンティティに
+						<a href="s2jdbc_entity.html#一対多関連定義">1対多関連</a>
+						を
+						<a href="#結合">結合</a>
+						した場合、
+						<code>getCount()</code>
+						が返す行数は
 						<code>getResultList()</code>
-					</a>
-					が返すエンティティの数と一致するとは限りません。
-					<code>from()</code>
-					で指定したエンティティに
-					<a href="s2jdbc_entity.html#一対多関連定義">1対多関連</a>
-					を
-					<a href="#結合">結合</a>
-					した場合、
-					<code>getCount()</code>
-					が返す行数は
-					<code>getResultList()</code>
-					が返すエンティティの数よりも多くなる場合があります。
-				</p>
+						が返すエンティティの数よりも多くなる場合があります。
+					</p>
+				</div>
 			</subsection>
 
 			<subsection name="結合">
 				<p>他のエンティティを結合する場合は、次のメソッドを使用します。</p>
 				<ul>
 					<li>
-						<p>
-							<code>innerJoin(String name)</code>
-						</p>
+						<code>innerJoin(CharSequence name)</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								innerJoin(String name, boolean fetch)
-							</code>
-						</p>
+						<code>
+							innerJoin(CharSequence name, boolean fetch)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>leftOuterJoin(String name)</code>
-						</p>
+						<code>leftOuterJoin(CharSequence name)</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								leftOuterJoin(String name, boolean
-								fetch)
-							</code>
-						</p>
+						<code>
+							leftOuterJoin(CharSequence name, boolean
+							fetch)
+						</code>
 					</li>
 				</ul>
 				<p>第1引数は、結合したいエンティティのプロパティ名です。</p>
@@ -574,44 +490,38 @@ List<Employee> results = jdbcManager.from(Employee.class)
 				<p>追加の結合条件をSQL文字列で指定する場合は、次のメソッドを使用します。</p>
 				<ul>
 					<li>
-						<p>
-							<code>
-								innerJoin(String name, String condition,
-								Object... params)
-							</code>
-						</p>
+						<code>
+							innerJoin(CharSequence name, String condition,
+							Object... params)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								innerJoin(String name, boolean fetch,
-								String condition, Object... params)
-							</code>
-						</p>
+						<code>
+							innerJoin(CharSequence name, boolean fetch,
+							String condition, Object... params)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								leftOuterJoin(String name, String
-								condition, Object... params)
-							</code>
-						</p>
+						<code>
+							leftOuterJoin(CharSequence name, String
+							condition, Object... params)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								leftOuterJoin(String name, boolean
-								fetch, String condition, Object...
-								params)
-							</code>
-						</p>
+						<code>
+							leftOuterJoin(CharSequence name, boolean
+							fetch, String condition, Object...
+							params)
+						</code>
 					</li>
 				</ul>
 				<p>
 					引数
 					<code>condition</code>
 					に指定できる条件は、SQLと同じです。 SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
-					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
+					関連先のプロパティを指定する場合は、
+					<code>innerJoin()/leftOuterJoin()</code>
+					で指定した名前.
 					プロパティ名になります。
 				</p>
 				<source><![CDATA[
@@ -631,35 +541,27 @@ List<Department> results = jdbcManager.from(Department.class)
 				</p>
 				<ul>
 					<li>
-						<p>
-							<code>
-								innerJoin(String name, Where condition)
-							</code>
-						</p>
+						<code>
+							innerJoin(CharSequence name, Where condition)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								innerJoin(String name, boolean fetch,
-								Where condition)
-							</code>
-						</p>
+						<code>
+							innerJoin(CharSequence name, boolean fetch,
+							Where condition)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								leftOuterJoin(String name, Where
-								condition)
-							</code>
-						</p>
+						<code>
+							leftOuterJoin(CharSequence name, Where
+							condition)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								leftOuterJoin(String name, boolean
-								fetch, Where condition)
-							</code>
-						</p>
+						<code>
+							leftOuterJoin(CharSequence name, boolean
+							fetch, Where condition)
+						</code>
 					</li>
 				</ul>
 				<source><![CDATA[
@@ -721,11 +623,15 @@ jdbcManager.from(Department.class)
 					<a name="SQL文字列による指定">SQL文字列による指定</a>
 				</h4>
 				<p>
-					より複雑な検索条件を指定する場合は、where()を使います。
-					where()に書くことのできる条件は、SQLと同じです。
+					より複雑な検索条件を指定する場合は、
+					<code>where(String criteria, Object... params)</code>
+					を使います。
+					<code>where(String criteria, Object... params)</code>
+					に書くことのできる条件は、SQLと同じです。
 					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
-					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
-					プロパティ名になります。
+					関連先のプロパティを指定する場合は、
+					<code>innerJoin()/leftOuterJoin()</code>
+					で指定した名前.プロパティ名になります。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Department.class)
@@ -739,9 +645,7 @@ jdbcManager.from(Department.class)
 					・
 					<code>java.util.Calendar</code>
 					型のパラメータを指定する場合は、時制を指定することができます。 時制の指定は
-					<code>
-						org.seasar.extension.jdbc.parameter.Parameter
-					</code>
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
 					のstaticメソッドを使います。
 				</p>
 				<dl>
@@ -883,7 +787,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								eq(String propertyName, Object value)
+								<code>eq(String propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName = ?</code>
@@ -892,7 +796,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								ne(String propertyName, Object value)
+								<code>ne(String propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &lt;&gt; ?</code>
@@ -901,7 +805,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								lt(String propertyName, Object value)
+								<code>lt(String propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &lt; ?</code>
@@ -910,7 +814,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								le(String propertyName, Object value)
+								<code>le(String propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &lt;= ?</code>
@@ -919,7 +823,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								gt(String propertyName, Object value)
+								<code>gt(String propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &gt; ?</code>
@@ -928,7 +832,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								ge(String propertyName, Object value)
+								<code>ge(String propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &gt;= ?</code>
@@ -937,8 +841,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								in(String propertyName, Object...
-								values)
+								<code>in(String propertyName, Object... values)</code>
 							</td>
 							<td>
 								<code>propertyName in (?, ...)</code>
@@ -947,8 +850,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								not in(String propertyName, Object...
-								values)
+								<code>not in(String propertyName, Object... values)</code>
 							</td>
 							<td>
 								<code>
@@ -959,7 +861,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								like(String propertyName, String value)
+								<code>like(String propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -968,8 +870,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								like(String propertyName, String value,
-								char escape)
+								<code>like(String propertyName, String value, char escape)</code>
 							</td>
 							<td>
 								<code>
@@ -980,8 +881,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								starts(String propertyName, String
-								value)
+								<code>starts(String propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -995,7 +895,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								ends(String propertyName, String value)
+								<code>ends(String propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -1009,8 +909,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								contains(String propertyName, String
-								value)
+								<code>contains(String propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -1024,8 +923,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								isNull(String propertyName, Boolean
-								value)
+								<code>isNull(String propertyName, Boolean value)</code>
 							</td>
 							<td>
 								<code>propertyName is null</code>
@@ -1035,8 +933,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								isNotNull(String propertyName, Boolean
-								value)
+								<code>isNotNull(String propertyName, Boolean value)</code>
 							</td>
 							<td>
 								<code>propertyName is not null</code>
@@ -1045,7 +942,9 @@ jdbcManager.from(Employee.class)
 							</td>
 						</tr>
 						<tr>
-							<td>excludesWhitespace()</td>
+							<td>
+								<code>excludesWhitespace()</code>
+							</td>
 							<td>valueが空白文字列の時は条件に追加されません。</td>
 						</tr>
 					</tbody>
@@ -1081,49 +980,49 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							<th>説明</th>
 						</tr>
 						<tr>
-							<td>_EQ</td>
+							<td><code>_EQ</code></td>
 							<td>
 								<code>propertyName = ?</code>
 								の条件を追加します。valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_NE</td>
+							<td><code>_NE</code></td>
 							<td>
 								<code>propertyName &lt;&gt; ?</code>
 								の条件を追加します。valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_LT</td>
+							<td><code>_LT</code></td>
 							<td>
 								<code>propertyName &lt; ?</code>
 								の条件を追加します。valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_LE</td>
+							<td><code>_LE</code></td>
 							<td>
 								<code>propertyName &lt;= ?</code>
 								の条件を追加します。valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_GT</td>
+							<td><code>_GT</code></td>
 							<td>
 								<code>propertyName &gt; ?</code>
 								の条件を追加します。valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_GE</td>
+							<td><code>_GE</code></td>
 							<td>
 								<code>propertyName &gt;= ?</code>
 								の条件を追加します。valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_IN</td>
+							<td><code>_IN</code></td>
 							<td>
 								<code>propertyName in (?, ...)</code>
 								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
@@ -1131,7 +1030,7 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
-							<td>_NOT_IN</td>
+							<td><code>_NOT_IN</code></td>
 							<td>
 								<code>
 									propertyName not in (?, ...)
@@ -1141,14 +1040,14 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
-							<td>_LIKE</td>
+							<td><code>_LIKE</code></td>
 							<td>
 								<code>propertyName like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
 							</td>
 						</tr>
 						<tr>
-							<td>_STARTS</td>
+							<td><code>_STARTS</code></td>
 							<td>
 								<code>propertyName like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
@@ -1158,7 +1057,7 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
-							<td>_ENDS</td>
+							<td><code>_ENDS</code></td>
 							<td>
 								<code>propertyName like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
@@ -1168,7 +1067,7 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
-							<td>_CONTAINS</td>
+							<td><code>_CONTAINS</code></td>
 							<td>
 								<code>propertyName like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
@@ -1178,7 +1077,7 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
-							<td>_IS_NULL</td>
+							<td><code>_IS_NULL</code></td>
 							<td>
 								<code>propertyName is null</code>
 								の条件を追加します。
@@ -1187,7 +1086,7 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
-							<td>_IS_NOT_NULL</td>
+							<td><code>_IS_NOT_NULL</code></td>
 							<td>
 								<code>propertyName is not null</code>
 								の条件を追加します。
@@ -1199,7 +1098,9 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 				</table>
 				<p>
 					マップの組み立てを手動でやる必要は、基本的にありません。
-					なぜなら、SimpleWhereのほうが便利だからです。 マップを使う場合は、次のように
+					なぜなら、
+					<code>SimpleWhere</code>
+					のほうが便利だからです。 マップを使う場合は、次のように
 					<code>org.seasar.framework.beans.util.Beans</code>
 					を使います。
 				</p>
@@ -1208,10 +1109,21 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 						createAndCopy(Class&lt;T&gt; destClass, Object
 						src)
 					</code>
-					の第一引数には、BeanMap.classを指定します。 BeanMapはMap&lt;String,
-					Object&gt;なクラスで、 存在しないキーにアクセスすると 例外が発生します。
-					キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
-					変換したものです。 第二引数にはコピー元になるオブジェクトを指定します。
+					の第一引数には、
+					<code>BeanMap.class</code>
+					を指定します。
+					<code>BeanMap</code>
+					は
+					<code>Map&lt;String, Object&gt;</code>
+					なクラスで、 存在しないキーにアクセスすると 例外が発生します。
+					キーの値は、
+					<code>AAA_BBB</code>
+					のような
+					<code>'_'</code>
+					記法の値をを
+					<code>aaaBbb</code>
+					のようなキャメル記法に変換したものです。
+					第二引数にはコピー元になるオブジェクトを指定します。
 				</p>
 				<p>
 					<code>prefix(String prefix)</code>
@@ -1242,13 +1154,32 @@ jdbcManager.from(Employee.class)
 					<code>orderBy()</code>
 					に書くことのできる条件は、SQLと同じです。
 					SQLとの違いは、カラム名の代わりにプロパティ名を書くことです。
-					関連先のプロパティを指定する場合は、innerJoin()/leftOuterJoin()で指定した名前.
-					プロパティ名になります。
+					関連先のプロパティを指定する場合は、
+					<code>innerJoin()/leftOuterJoin()</code>
+					で指定した名前.プロパティ名になります。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
     .leftOuterJoin("department")
     .orderBy("name, department.name")
+    .getResultList();
+]]></source>
+				<p>
+					<code>orderBy(OrderByItem... orderByItems)</code>
+					を使うこともできます。
+					<code>OrderByItems</code>
+					はソート順のキーとなるプロパティ名と昇順または降順を示すもので、
+					<code>org.seasar.extension.jdbc.operation.Operations</code>
+					のメソッド
+					<code>asc(CharSequence propertyName)</code>
+					および
+					<code>desc(CharSequence propertyName)</code>
+					を使って次のように指定することができます。
+				</p>
+				<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .leftOuterJoin("department")
+    .orderBy(asc("name"), desc("department.name"))
     .getResultList();
 ]]></source>
 			</subsection>
@@ -1257,41 +1188,28 @@ jdbcManager.from(Employee.class)
 				<p>SELECT時にロックを取得する場合は、</p>
 				<ul>
 					<li>
-						<p>
-							<code>forUpdate()</code>
-						</p>
+						<code>forUpdate()</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								forUpdate(String... propertyNames)
-							</code>
-						</p>
+						<code>
+							forUpdate(CharSequence... propertyNames)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>forUpdateNowait()</code>
-						</p>
+						<code>forUpdateNowait()</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								forUpdateNowait(String... propertyNames)
-							</code>
-						</p>
+						<code>
+							forUpdateNowait(CharSequence... propertyNames)
+						</code>
 					</li>
 					<li>
-						<p>
-							<code>forUpdateWait(int seconds)</code>
-						</p>
+						<code>forUpdateWait(int seconds)</code>
 					</li>
 					<li>
-						<p>
-							<code>
-								forUpdateWait(int seconds, String...
-								propertyNames)
-							</code>
-						</p>
+						<code>
+							forUpdateWait(int seconds, CharSequence... propertyNames)
+						</code>
 					</li>
 				</ul>
 				<p>
@@ -1315,7 +1233,7 @@ jdbcManager.from(Employee.class)
 					の第1引数では、ロックを獲得できるまでの最大待機時間を秒単位で指定します。
 				</p>
 				<p>
-					以下の例では、EmployeeとDepartmentを結合していて、
+					以下の例では、<code>Employee</code>と<code>Department</code>を結合していて、
 					ロック対象のプロパティが明示されていないので、両テーブルのロックが取得されます。
 				</p>
 				<source><![CDATA[
@@ -1326,8 +1244,8 @@ jdbcManager.from(Employee.class)
     .getResultList();
 ]]></source>
 				<p>
-					以下の例でもEmployeeとDepartmentを結合していますが、
-					指定されたプロパティを持つEmployeeのロックのみが取得されます。
+					以下の例でも<code>Employee</code>と<code>Department</code>を結合していますが、
+					指定されたプロパティを持つ<code>Employee</code>のロックのみが取得されます。
 				</p>
 				<source><![CDATA[
 jdbcManager.from(Employee.class)
@@ -1337,6 +1255,23 @@ jdbcManager.from(Employee.class)
     .getResultList();
 ]]></source>
 				<p>排他制御とページングを組み合わせることはできません。</p>
+			</subsection>
+
+			<subsection name="指定したプロパティをフェッチ対象にする">
+				<p>
+					<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+					を指定したプロパティをフェッチ対象にするには、
+					<code>eager(CharSequence... propertyNames)</code>
+					を使います。
+					関連先のプロパティを指定する場合は、
+					<code>innerJoin()/leftOuterJoin()</code>
+					で指定した名前.プロパティ名になります。
+				</p>
+				<source><![CDATA[
+List<Employee> results = jdbcManager.from(Employee.class)
+                                    .eager("largeDto")
+                                    .getResultList();
+]]></source>
 			</subsection>
 
 			<subsection name="ページング">
@@ -1511,8 +1446,11 @@ int[] countArray = jdbcManager.insertBatch(employees).execute();
 					挿入の対象からnullの項目を除外する場合は、
 					<code>excludesNull()</code>
 					を使います。 バッチ系の挿入は、すべてのエンティティに同じSQLを適用しなければならないので、
-					nullを除外してバッチ挿入することはできません。
-					なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。
+					<code>null</code>
+					を除外してバッチ挿入することはできません。
+					なぜなら、すべてのエンティティの
+					<code>null</code>
+					の項目が同じだとは限らないからです。
 				</p>
 				<source><![CDATA[
 int count = jdbcManager.insert(employee).excludesNull().execute();
@@ -1622,8 +1560,11 @@ int count = jdbcManager.update(employee).includesVersion().execute();
 					更新の対象からnullの項目を除外する場合は、
 					<code>excludesNull()</code>
 					を使います。 バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、
-					nullを除外してバッチ更新することはできません。
-					なぜなら、すべてのエンティティのnullの項目が同じだとは限らないからです。
+					<code>null</code>
+					を除外してバッチ更新することはできません。
+					なぜなら、すべてのエンティティの
+					<code>null</code>
+					の項目が同じだとは限らないからです。
 				</p>
 				<source><![CDATA[
 int count = jdbcManager.update(employee).excludesNull().execute();
@@ -1824,49 +1765,39 @@ jdbcManager.call("myproc", "hoge").execute();
 				</p>
 				<ul>
 					<li>
-						<p>
-							フィールドにアノテーションが付けられていない場合、
-							<code>IN</code>
-							パラメータになります。
-						</p>
+						フィールドにアノテーションが付けられていない場合、
+						<code>IN</code>
+						パラメータになります。
 					</li>
 					<li>
-						<p>
-							フィールドに
-							<code>@Out</code>
-							アノテーションが付けられている場合、
-							<code>OUT</code>
-							パラメータになります。
-						</p>
+						フィールドに
+						<code>@Out</code>
+						アノテーションが付けられている場合、
+						<code>OUT</code>
+						パラメータになります。
 					</li>
 					<li>
-						<p>
-							フィールドに
-							<code>@InOut</code>
-							アノテーションが付けられている場合、
-							<code>INOUT</code>
-							パラメータになります。
-						</p>
+						フィールドに
+						<code>@InOut</code>
+						アノテーションが付けられている場合、
+						<code>INOUT</code>
+						パラメータになります。
 					</li>
 					<li>
-						<p>
-							フィールドに
-							<code>@ResultSet</code>
-							アノテーションが付けられている場合、 パラメータ以外で戻される結果セットになります。
-							ただし、 OracleやPostgreSQLのように、
-							パラメータ以外で結果セットを返すことが出来ないRDBMSの場合は、
-							<code>OUT</code>
-							パラメータとして扱われます。
-						</p>
+						フィールドに
+						<code>@ResultSet</code>
+						アノテーションが付けられている場合、 パラメータ以外で戻される結果セットになります。
+						ただし、 OracleやPostgreSQLのように、
+						パラメータ以外で結果セットを返すことが出来ないRDBMSの場合は、
+						<code>OUT</code>
+						パラメータとして扱われます。
 					</li>
 					<li>
-						<p>
-							フィールドに
-							<code>@Lob</code>
-							が付けられている場合、 そのパラメータはLOBとして扱われます。
-							<code>@Lob</code>
-							アノテーションは他のアノテーションと組み合わせて使用することが出来ます。
-						</p>
+						フィールドに
+						<code>@Lob</code>
+						が付けられている場合、 そのパラメータはLOBとして扱われます。
+						<code>@Lob</code>
+						アノテーションは他のアノテーションと組み合わせて使用することが出来ます。
 					</li>
 				</ul>
 				<source><![CDATA[
@@ -1894,7 +1825,9 @@ System.out.println(dto.result);
 ]]></source>
 				<p>
 					ストアドプロシージャが複数のカラムを持つ結果セットを返す場合は、
-					対応するフィールドの型をList&lt;結果セットの行に対応するJavaBeansの型&gt;にします。
+					対応するフィールドの型を
+					<code>List&lt;結果セットの行に対応するJavaBeansの型&gt;</code>
+					にします。
 				</p>
 				<source><![CDATA[
 public class MyDto {
@@ -2067,7 +2000,9 @@ System.out.println(dto.result);
 ]]></source>
 				<p>
 					ストアドファンクションが複数のカラムを持つ結果セットを返す場合は、
-					対応するフィールドの型をList&lt;結果セットの行に対応するJavaBeansの型&gt;にします。
+					対応するフィールドの型を
+					<code>List&lt;結果セットの行に対応するJavaBeansの型&gt;</code>
+					にします。
 				</p>
 				<source><![CDATA[
 public class MyDto {
