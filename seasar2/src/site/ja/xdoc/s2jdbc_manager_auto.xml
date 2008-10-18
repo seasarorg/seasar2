@@ -787,7 +787,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>eq(String propertyName, Object value)</code>
+								<code>eq(CharSequence propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName = ?</code>
@@ -796,7 +796,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>ne(String propertyName, Object value)</code>
+								<code>ne(CharSequence propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &lt;&gt; ?</code>
@@ -805,7 +805,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>lt(String propertyName, Object value)</code>
+								<code>lt(CharSequence propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &lt; ?</code>
@@ -814,7 +814,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>le(String propertyName, Object value)</code>
+								<code>le(CharSequence propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &lt;= ?</code>
@@ -823,7 +823,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>gt(String propertyName, Object value)</code>
+								<code>gt(CharSequence propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &gt; ?</code>
@@ -832,7 +832,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>ge(String propertyName, Object value)</code>
+								<code>ge(CharSequence propertyName, Object value)</code>
 							</td>
 							<td>
 								<code>propertyName &gt;= ?</code>
@@ -841,7 +841,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>in(String propertyName, Object... values)</code>
+								<code>in(CharSequence propertyName, Object... values)</code>
 							</td>
 							<td>
 								<code>propertyName in (?, ...)</code>
@@ -850,7 +850,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>not in(String propertyName, Object... values)</code>
+								<code>not in(CharSequence propertyName, Object... values)</code>
 							</td>
 							<td>
 								<code>
@@ -861,7 +861,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>like(String propertyName, String value)</code>
+								<code>like(CharSequence propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -870,7 +870,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>like(String propertyName, String value, char escape)</code>
+								<code>like(CharSequence propertyName, String value, char escape)</code>
 							</td>
 							<td>
 								<code>
@@ -881,7 +881,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>starts(String propertyName, String value)</code>
+								<code>starts(CharSequence propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -895,7 +895,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>ends(String propertyName, String value)</code>
+								<code>ends(CharSequence propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -909,7 +909,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>contains(String propertyName, String value)</code>
+								<code>contains(CharSequence propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
@@ -923,7 +923,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>isNull(String propertyName, Boolean value)</code>
+								<code>isNull(CharSequence propertyName, Boolean value)</code>
 							</td>
 							<td>
 								<code>propertyName is null</code>
@@ -933,7 +933,7 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
-								<code>isNotNull(String propertyName, Boolean value)</code>
+								<code>isNotNull(CharSequence propertyName, Boolean value)</code>
 							</td>
 							<td>
 								<code>propertyName is not null</code>
