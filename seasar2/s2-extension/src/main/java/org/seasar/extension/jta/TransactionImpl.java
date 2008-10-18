@@ -97,7 +97,7 @@ public class TransactionImpl implements ExtendedTransaction,
      */
     public void suspend() throws SystemException {
         assertNotSuspended();
-        assertActive();
+        assertActiveOrMarkedRollback();
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             try {
@@ -166,6 +166,7 @@ public class TransactionImpl implements ExtendedTransaction,
      */
     public void resume() throws SystemException {
         assertSuspended();
+        assertActiveOrMarkedRollback();
         for (int i = 0; i < getXAResourceWrapperSize(); ++i) {
             XAResourceWrapper xarw = getXAResourceWrapper(i);
             try {

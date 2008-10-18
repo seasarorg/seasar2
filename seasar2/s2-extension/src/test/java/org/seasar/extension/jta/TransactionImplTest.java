@@ -87,6 +87,33 @@ public class TransactionImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testSuspend_MarkedRollback() throws Exception {
+        DefaultXAResource xaRes = new DefaultXAResource();
+        tx_.begin();
+        tx_.enlistResource(xaRes);
+        tx_.setRollbackOnly();
+        tx_.suspend();
+        assertEquals("1", true, tx_.isSuspended());
+        assertEquals("2", DefaultXAResource.RS_SUSPENDED, xaRes.getStatus());
+        try {
+            tx_.suspend();
+            fail("3");
+        } catch (IllegalStateException ex) {
+            System.out.println(ex);
+        }
+        tx_.resume();
+        tx_.rollback();
+        try {
+            tx_.suspend();
+            fail("4");
+        } catch (IllegalStateException ex) {
+            System.out.println(ex);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testResume() throws Exception {
         DefaultXAResource xaRes = new DefaultXAResource();
         tx_.begin();
