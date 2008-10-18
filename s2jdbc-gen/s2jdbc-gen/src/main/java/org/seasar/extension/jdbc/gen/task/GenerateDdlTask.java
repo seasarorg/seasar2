@@ -405,18 +405,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * スキーマ情報テーブルを作成するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param createSchemaInfoTableTemplateFileName
-     *            スキーマ情報テーブルを作成するDDLのテンプレートファイル名
-     */
-    public void setCreateSchemaInfoTableTemplateFileName(
-            String createSchemaInfoTableTemplateFileName) {
-        command
-                .setCreateSchemaInfoTableTemplateFileName(createSchemaInfoTableTemplateFileName);
-    }
-
-    /**
      * シーケンスを作成するDDLを格納するディレクトリ名を設定します。
      * 
      * @param createSequenceDirName
@@ -454,18 +442,6 @@ public class GenerateDdlTask extends AbstractTask {
      */
     public void setDropForeignKeyDirName(String dropForeignKeyDirName) {
         command.setDropForeignKeyDirName(dropForeignKeyDirName);
-    }
-
-    /**
-     * スキーマ情報テーブルを削除するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param dropSchemaInfoTableTemplateFileName
-     *            スキーマ情報テーブルを削除するDDLのテンプレートファイル名
-     */
-    public void setDropSchemaInfoTableTemplateFileName(
-            String dropSchemaInfoTableTemplateFileName) {
-        command
-                .setDropSchemaInfoTableTemplateFileName(dropSchemaInfoTableTemplateFileName);
     }
 
     /**

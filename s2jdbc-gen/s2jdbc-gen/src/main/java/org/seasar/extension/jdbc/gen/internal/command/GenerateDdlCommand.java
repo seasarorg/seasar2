@@ -135,9 +135,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** テーブルを作成するDDLのテンプレートファイル名 */
     protected String createTableTemplateFileName = "sql/create-table.ftl";
 
-    /** スキーマ情報テーブルを作成するDDLのテンプレートファイル名 */
-    protected String createSchemaInfoTableTemplateFileName = "sql/create-schemainfo-table.ftl";
-
     /** 一意キーを作成するDDLのテンプレートファイル名 */
     protected String createUniqueKeyTemplateFileName = "sql/create-uniquekey.ftl";
 
@@ -149,9 +146,6 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** テーブルを削除するDDLのテンプレートファイル名 */
     protected String dropTableTemplateFileName = "sql/drop-table.ftl";
-
-    /** スキーマ情報テーブルを削除するDDLのテンプレートファイル名 */
-    protected String dropSchemaInfoTableTemplateFileName = "sql/drop-schemainfo-table.ftl";
 
     /** 一意キーを削除するDDLのテンプレートファイル名 */
     protected String dropUniqueKeyTemplateFileName = "sql/drop-uniquekey.ftl";
@@ -938,46 +932,6 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     public void setDropForeignKeyDirName(String dropForeignKeyDirName) {
         this.dropForeignKeyDirName = dropForeignKeyDirName;
-    }
-
-    /**
-     * スキーマ情報テーブルを作成するDDLのテンプレートファイル名を返します。
-     * 
-     * @return スキーマ情報テーブルを作成するDDLのテンプレートファイル名
-     */
-    public String getCreateSchemaInfoTableTemplateFileName() {
-        return createSchemaInfoTableTemplateFileName;
-    }
-
-    /**
-     * スキーマ情報テーブルを作成するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param createSchemaInfoTableTemplateFileName
-     *            スキーマ情報テーブルを作成するDDLのテンプレートファイル名
-     */
-    public void setCreateSchemaInfoTableTemplateFileName(
-            String createSchemaInfoTableTemplateFileName) {
-        this.createSchemaInfoTableTemplateFileName = createSchemaInfoTableTemplateFileName;
-    }
-
-    /**
-     * スキーマ情報テーブルを削除するDDLのテンプレートファイル名を返します。
-     * 
-     * @return スキーマ情報テーブルを削除するDDLのテンプレートファイル名
-     */
-    public String getDropSchemaInfoTableTemplateFileName() {
-        return dropSchemaInfoTableTemplateFileName;
-    }
-
-    /**
-     * スキーマ情報テーブルを削除するDDLのテンプレートファイル名を設定します。
-     * 
-     * @param dropSchemaInfoTableTemplateFileName
-     *            スキーマ情報テーブルを削除するDDLのテンプレートファイル名
-     */
-    public void setDropSchemaInfoTableTemplateFileName(
-            String dropSchemaInfoTableTemplateFileName) {
-        this.dropSchemaInfoTableTemplateFileName = dropSchemaInfoTableTemplateFileName;
     }
 
     @Override
