@@ -264,7 +264,7 @@
 				<p>
 					データを編集する際は、上述の規則を守ってください。
 					編集にはCSVエディタを利用することを推奨します。
-					CSVエディタについては<a href="../setup.html#CSVエディタの設定">CSVエディタの設定</a>を参照してください。
+					CSVエディタについては<a href="../setup.html#CSVエディタ">セットアップのCSVエディタ</a>を参照してください。
 				</p>
 			</subsection>
 			<subsection name="タスク実行時のファイルのコピー">
@@ -318,12 +318,10 @@
 					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
-					<tr><td>createSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-schemainfo-table.ftl"</td><td>NO</td></tr>
 					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>createSequenceTemplateFileName</td><td>シーケンスを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-sequence.ftl"</td><td>NO</td></tr>
 					<tr><td>createForeignKeyTemplateFileName</td><td>外部キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-foreignkey.ftl"</td><td>NO</td></tr>
 					<tr><td>dropTableTemplateFileName</td><td>テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-table.ftl"</td><td>NO</td></tr>
-					<tr><td>dropSchemaInfoTableTemplateFileName</td><td>スキーマ情報テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-schemainfo-table.ftl"</td><td>NO</td></tr>
 					<tr><td>dropUniqueKeyTemplateFileName</td><td>一意キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>dropSequenceTemplateFileName</td><td>シーケンスを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-sequence.ftl"</td><td>NO</td></tr>
 					<tr><td>dropForeignKeyTemplateFileName</td><td>外部キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-foreignkey.ftl"</td><td>NO</td></tr>
@@ -405,7 +403,7 @@
     classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
-    createTableTemplateFileName="mytempletes/my-create-table.ftl"
+    createTableTemplateFileName="my-create-table.ftl"
     classpathRef="classpath"
 />]]></source>
 			</subsection>
