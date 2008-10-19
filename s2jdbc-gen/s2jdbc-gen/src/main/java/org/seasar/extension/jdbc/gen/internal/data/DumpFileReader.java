@@ -56,17 +56,17 @@ public class DumpFileReader {
     /** バッファ */
     protected char[] buf = new char[BUF_SIZE];
 
-    /** バッファ内の値の長さ */
-    protected int length;
-
     /** トークンタイプ */
-    protected TokenType tokenType;
+    protected TokenType tokenType = TokenType.END_OF_BUFFER;
 
     /** 行番号 */
     protected int lineNumber;
 
     /** ヘッダーの列数 */
     protected int headerColumnSize;
+
+    /** ファイルの終端の場合{@code true} */
+    protected boolean endOfFile;
 
     /**
      * インスタンスを構築します。
@@ -100,7 +100,7 @@ public class DumpFileReader {
      * @return ファイルの終端に達していなければ一行を表すリスト、ファイルの終端に達していれば{@code null}
      */
     public List<String> readLine() {
-        if (isEndOfFile()) {
+        if (endOfFile) {
             return null;
         }
         try {
@@ -136,42 +136,34 @@ public class DumpFileReader {
             reader = createBufferedReader();
         }
         Line line = new Line();
-        readLoop: for (; read();) {
-            nextTokenLoop: for (;;) {
+        readLoop: for (;;) {
+            if (tokenType == TokenType.END_OF_BUFFER) {
+                int length = reader.read(buf);
+                tokenizer.addChars(buf, length);
+            }
+            for (;;) {
                 tokenType = tokenizer.nextToken();
+                String token = tokenizer.getToken();
                 switch (tokenType) {
                 case VALUE:
                 case NULL:
-                    String token = tokenizer.getToken();
                     line.add(token);
                     break;
                 case END_OF_BUFFER:
-                    break nextTokenLoop;
+                    continue readLoop;
                 case END_OF_LINE:
-                    break readLoop;
+                    return line.toList();
+                case END_OF_FILE:
+                    endOfFile = true;
+                    if (!StringUtil.isEmpty(token)) {
+                        line.add(token);
+                    }
+                    return line.toList();
                 default:
                     break;
                 }
             }
         }
-        return line.toList();
-    }
-
-    /**
-     * バッファにデータを読み込みます。
-     * 
-     * @return ファイルの終端でない場合{@code true}、ファイルの終端の場合{@code false}
-     * @throws IOException
-     *             何らかのIO例外が発生した場合
-     */
-    protected boolean read() throws IOException {
-        if (tokenType == null || tokenType == TokenType.END_OF_BUFFER) {
-            length = reader.read(buf);
-            if (!isEndOfFile()) {
-                tokenizer.addChars(buf, length);
-            }
-        }
-        return !isEndOfFile();
     }
 
     /**
@@ -184,15 +176,6 @@ public class DumpFileReader {
     protected BufferedReader createBufferedReader() throws IOException {
         InputStream is = new FileInputStream(dumpFile);
         return new BufferedReader(new InputStreamReader(is, dumpFileEncoding));
-    }
-
-    /**
-     * ファイルの終端に達している場合{@code true}
-     * 
-     * @return ファイルの終端に達している場合{@code true}
-     */
-    protected boolean isEndOfFile() {
-        return length < 0;
     }
 
     /**
@@ -230,15 +213,6 @@ public class DumpFileReader {
          * @return 値のリスト
          */
         public List<String> toList() {
-            if (isEndOfFile() && tokenType == TokenType.END_OF_BUFFER) {
-                String value = tokenizer.getToken();
-                if (value.endsWith("\r")) {
-                    value = StringUtil.rtrim(value, "\r");
-                }
-                if (!StringUtil.isEmpty(value)) {
-                    addInternal(value);
-                }
-            }
             return !valueList.isEmpty() ? valueList : null;
         }
 
@@ -249,16 +223,6 @@ public class DumpFileReader {
          *            値
          */
         public void add(String value) {
-            addInternal(value);
-        }
-
-        /**
-         * 内部的に値を追加します。
-         * 
-         * @param value
-         *            値
-         */
-        protected void addInternal(String value) {
             valueList.add(DumpUtil.decode(value));
         }
     }

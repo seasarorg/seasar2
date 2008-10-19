@@ -120,19 +120,18 @@ public class SqlFileReader {
                     tokenizer.addLine(reader.readLine());
                     builder.notifyLineChanged();
                 }
-                nextTokenLoop: for (;;) {
+                for (;;) {
                     builder.build(tokenizer.nextToken(), tokenizer.getToken());
                     if (builder.isTokenRequired()) {
                         continue;
                     } else if (builder.isLineRequired()) {
-                        break nextTokenLoop;
+                        continue readLineLoop;
                     } else if (builder.isCompleted()) {
-                        break readLineLoop;
+                        return builder.getSql();
                     }
                     throw new IllegalStateException("builder");
                 }
             }
-            return builder.getSql();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }

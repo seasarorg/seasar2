@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.data;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.data.DumpFileTokenizer;
 
 import static org.junit.Assert.*;
 import static org.seasar.extension.jdbc.gen.internal.data.DumpFileTokenizer.TokenType.*;
@@ -51,6 +50,9 @@ public class DumpFileTokenizerTest {
         assertEquals("\r\n", tokenizer.getToken());
         assertEquals(END_OF_BUFFER, tokenizer.nextToken());
         assertEquals("", tokenizer.getToken());
+
+        tokenizer.addChars(null, -1);
+        assertEquals(END_OF_FILE, tokenizer.nextToken());
     }
 
     /**
@@ -261,5 +263,36 @@ public class DumpFileTokenizerTest {
         assertEquals("\"aaa\r\nbbb\"", tokenizer.getToken());
         assertEquals(END_OF_LINE, tokenizer.nextToken());
         assertEquals("\r\n", tokenizer.getToken());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndOfFile() throws Exception {
+        String s = "aaa\r";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
+        assertEquals("aaa\r", tokenizer.getToken());
+
+        tokenizer.addChars(null, -1);
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r", tokenizer.getToken());
+        assertEquals(END_OF_FILE, tokenizer.nextToken());
+        assertEquals("", tokenizer.getToken());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndOfFile_noValue() throws Exception {
+        tokenizer.addChars(null, -1);
+        assertEquals(END_OF_FILE, tokenizer.nextToken());
+        assertEquals("", tokenizer.getToken());
     }
 }

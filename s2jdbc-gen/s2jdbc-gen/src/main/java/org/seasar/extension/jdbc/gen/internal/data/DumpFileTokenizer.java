@@ -45,8 +45,8 @@ public class DumpFileTokenizer {
         /** バッファーの終端 */
         END_OF_BUFFER,
 
-        /** 未知 */
-        UNKOWN
+        /** ファイルの終端 */
+        END_OF_FILE
     }
 
     /** バッファ */
@@ -70,6 +70,9 @@ public class DumpFileTokenizer {
     /** トークン */
     protected String token;
 
+    /** ファイルの終端の場合{@code true} */
+    protected boolean endOfFile;
+
     /**
      * インスタンスを構築します。
      * 
@@ -86,10 +89,17 @@ public class DumpFileTokenizer {
      * @param chars
      *            char配列としての文字
      * @param len
-     *            有効な文字の長さ
+     *            有効な文字の長さ、ファイルの終端の場合-1
      */
     public void addChars(char[] chars, int len) {
-        buf.append(chars, 0, len);
+        if (endOfFile) {
+            throw new IllegalStateException("endOfFile");
+        }
+        if (len < 0) {
+            endOfFile = true;
+        } else {
+            buf.append(chars, 0, len);
+        }
         length = buf.length();
         peek(pos);
     }
@@ -124,7 +134,7 @@ public class DumpFileTokenizer {
                         }
                     }
                 }
-                type = END_OF_BUFFER;
+                type = endOfFile ? END_OF_FILE : END_OF_BUFFER;
             } else if (c == delimiter) {
                 if (type == END_OF_LINE || type == DELIMITER) {
                     type = NULL;
@@ -150,10 +160,10 @@ public class DumpFileTokenizer {
                         return;
                     }
                 }
-                type = END_OF_BUFFER;
+                type = endOfFile ? END_OF_FILE : END_OF_BUFFER;
             }
         } else {
-            type = END_OF_BUFFER;
+            type = endOfFile ? END_OF_FILE : END_OF_BUFFER;
         }
     }
 
@@ -167,7 +177,7 @@ public class DumpFileTokenizer {
     protected boolean isEndOfLine(int index) {
         char c = buf.charAt(index);
         if (c == '\r') {
-            if (index + 1 < length) {
+            if (index + 1 < length || endOfFile) {
                 return true;
             }
         } else if (c == '\n') {
@@ -222,8 +232,10 @@ public class DumpFileTokenizer {
             return END_OF_LINE;
         case END_OF_BUFFER:
             token = buf.substring(pos);
-            type = UNKOWN;
             return END_OF_BUFFER;
+        case END_OF_FILE:
+            token = buf.substring(pos);
+            return END_OF_FILE;
         }
 
         throw new IllegalStateException(type.name());
