@@ -122,8 +122,10 @@ public class GenerateEntityTask extends AbstractTask {
     }
 
     /**
+     * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
+     * 
      * @param overwrite
-     * @see org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand#setOverwrite(boolean)
+     *            上書きをする場合{@code true}、しない場合{@code false}
      */
     public void setOverwrite(boolean overwrite) {
         command.setOverwrite(overwrite);
@@ -317,11 +319,11 @@ public class GenerateEntityTask extends AbstractTask {
     /**
      * エンティティのスーパークラスの名前を設定します。
      * 
-     * @param enititySuperclassName
+     * @param entitySuperclassName
      *            エンティティのスーパークラスの名前
      */
-    public void setEnititySuperclassName(String enititySuperclassName) {
-        command.setEnititySuperclassName(enititySuperclassName);
+    public void setEntitySuperclassName(String entitySuperclassName) {
+        command.setEntitySuperclassName(entitySuperclassName);
     }
 
     /**

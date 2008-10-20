@@ -116,7 +116,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected String entityPackageName = "entity";
 
     /** エンティティのスーパークラスの名前 */
-    protected String enititySuperclassName = null;
+    protected String entitySuperclassName = null;
 
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "main"), "java");
@@ -593,18 +593,18 @@ public class GenerateEntityCommand extends AbstractCommand {
      * 
      * @return エンティティのスーパークラスの名前
      */
-    public String getEnititySuperclassName() {
-        return enititySuperclassName;
+    public String getEntitySuperclassName() {
+        return entitySuperclassName;
     }
 
     /**
      * エンティティのスーパークラスの名前を設定します。
      * 
-     * @param enititySuperclassName
+     * @param entitySuperclassName
      *            エンティティのスーパークラスの名前
      */
-    public void setEnititySuperclassName(String enititySuperclassName) {
-        this.enititySuperclassName = enititySuperclassName;
+    public void setEntitySuperclassName(String entitySuperclassName) {
+        this.entitySuperclassName = entitySuperclassName;
     }
 
     /**
@@ -698,8 +698,8 @@ public class GenerateEntityCommand extends AbstractCommand {
      * @return {@link EntityModelFactory}の実装
      */
     protected EntityModelFactory createEntityModelFactory() {
-        Class<?> superClass = enititySuperclassName != null ? ClassUtil
-                .forName(enititySuperclassName) : null;
+        Class<?> superClass = entitySuperclassName != null ? ClassUtil
+                .forName(entitySuperclassName) : null;
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
                 rootPackageName, entityPackageName), superClass, useAccessor,
                 showCatalogName, showSchemaName, showTableName, showColumnName,

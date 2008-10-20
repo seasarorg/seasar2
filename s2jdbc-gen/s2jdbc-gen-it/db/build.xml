@@ -64,7 +64,7 @@
 		<!-- test -->
 		<gen-entity
 			rootpackagename="${rootpackagename}"
-			enititysuperclassname="example.entity.AbstractEntity"
+			entitysuperclassname="example.entity.AbstractEntity"
 			javafiledestdir="${src}"
 			pluralformfile="plural.properties"
 			classpathref="classpath"
