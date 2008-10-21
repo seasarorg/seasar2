@@ -798,6 +798,19 @@ jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", "hoge").execut
 					の2番目の引数にJavaBeansを指定します。
 					プロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						S2JDBCは、ソースコード上に記述したフィールドの順番と、
+						コンパイルされた.classファイル内のフィールドの順番が同じになることを前提としていますが、
+						これはJavaの仕様では保証されていません．
+						SunのJDKやEclipseではソースコード上と.classファイル内のフィールド順は同じになっていますが、
+						フィールドの順番が変わってしまう環境ではストアドの呼び出しが失敗します。
+						フィールドの順番が変わってしまう環境があった場合は
+						<a href="https://www.seasar.org/mailman/listinfo/seasar-user">Seasar-userメーリングリスト</a>
+						までお知らせください．
+					</p>
+				</div>
 				<ul>
 					<li>
 						<p>
@@ -980,6 +993,19 @@ String result =
 					の3番目の引数にJavaBeansを指定します。
 					ストアドファンクションを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						S2JDBCは、ソースコード上に記述したフィールドの順番と、
+						コンパイルされた.classファイル内のフィールドの順番が同じになることを前提としていますが、
+						これはJavaの仕様では保証されていません．
+						SunのJDKやEclipseではソースコード上と.classファイル内のフィールド順は同じになっていますが、
+						フィールドの順番が変わってしまう環境ではストアドの呼び出しが失敗します。
+						フィールドの順番が変わってしまう環境があった場合は
+						<a href="https://www.seasar.org/mailman/listinfo/seasar-user">Seasar-userメーリングリスト</a>
+						までお知らせください．
+					</p>
+				</div>
 				<ul>
 					<li>
 						<p>

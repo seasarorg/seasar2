@@ -223,7 +223,8 @@ List<Employee> results = jdbcManager.from(Employee.class).getResultList();
 					が返されます。
 					<code>disallowNoResult()</code>
 					を呼び出すと、 結果がなかった場合は
-					<code>javax.persistence.NoResultException</code>
+					<code>javax.persistence.NoResultException
+					</code>
 					が発生します。
 				</p>
 				<source><![CDATA[
@@ -260,7 +261,8 @@ Employee result = jdbcManager.from(Employee.class)
 					が返されます。
 					<code>disallowNoResult()</code>
 					を呼び出すと、 結果がなかった場合は
-					<code>javax.persistence.NoResultException</code>
+					<code>javax.persistence.NoResultException
+					</code>
 					が発生します。
 				</p>
 				<source><![CDATA[
@@ -1763,6 +1765,19 @@ jdbcManager.call("myproc", "hoge").execute();
 					の2番目の引数にJavaBeansを指定します。
 					ストアドプロシージャを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						S2JDBCは、ソースコード上に記述したフィールドの順番と、
+						コンパイルされた.classファイル内のフィールドの順番が同じになることを前提としていますが、
+						これはJavaの仕様では保証されていません．
+						SunのJDKやEclipseではソースコード上と.classファイル内のフィールド順は同じになっていますが、
+						フィールドの順番が変わってしまう環境ではストアドの呼び出しが失敗します。
+						フィールドの順番が変わってしまう環境があった場合は
+						<a href="https://www.seasar.org/mailman/listinfo/seasar-user">Seasar-userメーリングリスト</a>
+						までお知らせください．
+					</p>
+				</div>
 				<ul>
 					<li>
 						フィールドにアノテーションが付けられていない場合、
@@ -1926,6 +1941,19 @@ String result = jdbcManager.call(String.class, "myfunc", "hoge")
 					の3番目の引数にJavaBeansを指定します。
 					ストアドファンクションを呼び出すパラメータの順番にJavaBeansのフィールドを定義します。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						S2JDBCは、ソースコード上に記述したフィールドの順番と、
+						コンパイルされた.classファイル内のフィールドの順番が同じになることを前提としていますが、
+						これはJavaの仕様では保証されていません．
+						SunのJDKやEclipseではソースコード上と.classファイル内のフィールド順は同じになっていますが、
+						フィールドの順番が変わってしまう環境ではストアドの呼び出しが失敗します。
+						フィールドの順番が変わってしまう環境があった場合は
+						<a href="https://www.seasar.org/mailman/listinfo/seasar-user">Seasar-userメーリングリスト</a>
+						までお知らせください．
+					</p>
+				</div>
 				<ul>
 					<li>
 						<p>
