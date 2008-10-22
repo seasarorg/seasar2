@@ -15,21 +15,21 @@
  */
 package org.seasar.extension.jdbc.gen.internal.exception;
 
-import org.junit.Test;
+import org.seasar.framework.exception.SRuntimeException;
 
 /**
  * @author taedium
  * 
  */
-public class IdentityNotSuppotedRuntimeExceptionTest {
+public class IdentityNotSupportedRuntimeException extends SRuntimeException {
+
+    private static final long serialVersionUID = 1L;
 
     /**
+     * インスタンスを構築します。
      * 
-     * @throws Exception
      */
-    @Test
-    public void test() throws Exception {
-        IdentityNotSuppotedRuntimeException e = new IdentityNotSuppotedRuntimeException();
-        System.out.println(e.getMessage());
+    public IdentityNotSupportedRuntimeException() {
+        super("ES2JDBCGen0024", new Object[] {});
     }
 }

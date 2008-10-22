@@ -266,13 +266,6 @@ public class FactoryImpl implements Factory {
                 overwrite);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.seasar.extension.jdbc.gen.internal.factory.Factory#
-     * createValueTypeResolver(org.seasar.extension.jdbc.gen.command.Command,
-     * org.seasar.extension.jdbc.DbmsDialect)
-     */
     public ValueTypeProvider createValueTypeProvider(Command command,
             DbmsDialect dbmsDialect) {
         return new ValueTypeProviderImpl(dbmsDialect);

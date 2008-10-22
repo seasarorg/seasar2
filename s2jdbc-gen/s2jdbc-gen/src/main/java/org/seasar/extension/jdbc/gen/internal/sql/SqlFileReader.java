@@ -192,9 +192,6 @@ public class SqlFileReader {
         /** SQLブロックのコンテキスト */
         protected SqlBlockContext sqlBlockContext;
 
-        /** SQLの区切り文字に到達したい場合{@code true} */
-        protected boolean delimited;
-
         /** 行が変更された場合{@code true} */
         protected boolean lineChanged;
 

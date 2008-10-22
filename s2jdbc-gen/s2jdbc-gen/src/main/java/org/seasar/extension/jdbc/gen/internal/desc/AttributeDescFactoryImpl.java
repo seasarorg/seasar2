@@ -25,7 +25,7 @@ import javax.persistence.Version;
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.desc.AttributeDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
-import org.seasar.extension.jdbc.gen.internal.exception.IdentityNotSuppotedRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.IdentityNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.SequenceNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
@@ -96,7 +96,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
                 .getDefaultGenerationType() : generationType;
         if (this.generationType == GenerationType.IDENTITY) {
             if (!dialect.supportsIdentity()) {
-                throw new IdentityNotSuppotedRuntimeException();
+                throw new IdentityNotSupportedRuntimeException();
             }
         } else if (this.generationType == GenerationType.SEQUENCE) {
             if (!dialect.supportsSequence()) {
