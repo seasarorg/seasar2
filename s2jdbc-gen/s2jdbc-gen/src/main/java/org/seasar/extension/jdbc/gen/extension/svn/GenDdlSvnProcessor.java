@@ -44,7 +44,7 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
  * 
  * @author koichik
  */
-public class GenerateDdlSvnProcessor implements GenDdlListener {
+public class GenDdlSvnProcessor implements GenDdlListener {
 
     /** SVNクライアントマネージャです。 */
     protected SVNClientManager clientManager = SVNClientManager.newInstance();
@@ -78,7 +78,7 @@ public class GenerateDdlSvnProcessor implements GenDdlListener {
      * インスタンスを構築します。
      * 
      */
-    public GenerateDdlSvnProcessor() {
+    public GenDdlSvnProcessor() {
     }
 
     /**
@@ -87,7 +87,7 @@ public class GenerateDdlSvnProcessor implements GenDdlListener {
      * @param version
      *            SVNのバージョン
      */
-    public GenerateDdlSvnProcessor(final int version) {
+    public GenDdlSvnProcessor(final int version) {
         SVNAdminAreaFactory.setSelector(new ISVNAdminAreaFactorySelector() {
 
             @SuppressWarnings("unchecked")

@@ -18,17 +18,17 @@ package org.seasar.extension.jdbc.gen.extension.svn;
 import org.tmatesoft.svn.core.internal.wc.admin.SVNAdminAreaFactory;
 
 /**
- * Gen-Ddlタスクによって生成されるディレクトリやファイルをSubversion1.4形式のワーキングコピーで管理するためのクラスです。
+ * Gen-Ddlタスクによって生成されるディレクトリやファイルをSubversion1.5形式のワーキングコピーで管理するためのクラスです。
  * 
  * @author koichik
  */
-public class GenerateDdlSvn14Processor extends GenerateDdlSvnProcessor {
+public class GenDdlSvn15Processor extends GenDdlSvnProcessor {
 
     /**
      * インスタンスを構築します。
      */
-    public GenerateDdlSvn14Processor() {
-        super(SVNAdminAreaFactory.WC_FORMAT_14);
+    public GenDdlSvn15Processor() {
+        super(SVNAdminAreaFactory.WC_FORMAT_15);
     }
 
 }

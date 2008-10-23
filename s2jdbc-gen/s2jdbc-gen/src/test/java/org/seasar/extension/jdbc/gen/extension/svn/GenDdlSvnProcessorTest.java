@@ -36,7 +36,7 @@ import static junit.framework.Assert.*;
 /**
  * @author koichik
  */
-public class GenerateDdlSvnProcessorTest {
+public class GenDdlSvnProcessorTest {
 
     static final String MIGRATE_PATH = "src/test/resources/org/seasar/extension/jdbc/gen/internal/version/migrate";
 
@@ -84,7 +84,7 @@ public class GenerateDdlSvnProcessorTest {
         // ACT preCreateCurrentVersionDir
         GenDdlEvent ev = new GenDdlEvent(this, currentVersion,
                 nextVersion);
-        GenerateDdlSvnProcessor svnProcessor = new GenerateDdlSvnProcessor();
+        GenDdlSvnProcessor svnProcessor = new GenDdlSvnProcessor();
         svnProcessor.preCreateNextVersionDir(ev);
 
         // ARRANGE
