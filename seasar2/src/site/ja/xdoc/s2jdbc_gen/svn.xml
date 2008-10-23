@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - Subversion連携</title>
+	</properties>
+	<body>
+		<section name="Subversion連携">
+			<ul>
+				<li>
+					<a href="#概要">概要</a>
+				</li>
+				<li>
+					<a href="#設定">設定</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				S2JDBC-GenのGen-Ddlタスクは，
+				バージョンごとのディレクトリにDDLファイルを生成します．
+			</p>
+			<source><![CDATA[db
+└─migrate
+    ├─0001
+    │  └─create
+    │      └─010-table
+    │          ├─employee.sql
+    │          └─・・・
+    └─0002
+        └─create
+            └─010-table
+                ├─employee.sql
+                └─・・・]]></source>
+			<p>
+				新しいバージョンディレクトリに作成されるファイルは，
+				以前のバージョンディレクトリに作成されたファイルの新しいバージョンと位置づけられます．
+				しかし，ファイルとしては別のものであるため，
+				このままSubversionにコミットするとリビジョンの履歴をたどることが出来ません．
+			</p>
+			<p>
+				Gen-DdlのSVN拡張機能を利用すると，
+				新しいバージョンのファイルは以前のバージョンのファイルから
+				<code>svn copy</code>
+				で作成します．
+				これにより，リビジョンの履歴を追跡できるようになり，
+				リビジョン間の差分を確認することも容易になります．
+			</p>
+		</section>
+
+		<section name="設定">
+			<p>
+				Gen-DdlのSVN拡張機能を使うには，
+				Antのビルドファイルで
+				<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>
+				のトップレベルパラメータ
+				<code>genDdlListenerClassName</code>
+				で指定します．
+			</p>
+			<p>
+				指定する値は，利用しているSubversion
+				(SubclipseまたはSubversiveを使っている場合はJavaHLまたはSVNKit) のバージョン
+				(ワーキングコピーの形式) により，
+				以下のいずれかになります．
+			</p>
+			<table>
+				<tr>
+					<th>Subversion/JavaHL</th>
+					<th>SVNKit</th>
+					<th>値</th>
+				</tr>
+				<tr>
+					<td>1.4.x</td>
+					<td>1.1.x</td>
+					<td>
+						<code>
+							org.seasar.extension.jdbc.gen.extension.svn.GenDdlSvn14Processor
+						</code>
+					</td>
+				</tr>
+				<tr>
+					<td>1.5.x</td>
+					<td>1.2.x</td>
+					<td>
+						<code>
+							org.seasar.extension.jdbc.gen.extension.svn.GenDdlSvn15Processor
+						</code>
+					</td>
+				</tr>
+			</table>
+			<p>
+				以下はSubversion 1.4形式のワーキングコピーフォーマットを使う場合の設定例です．
+			</p>
+			<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    ...
+    genDdlListenerClassName="org.seasar.extension.jdbc.gen.extension.svn.GenDdlSvn14Processor"
+/>]]></source>
+		</section>
+	</body>
+</document>
