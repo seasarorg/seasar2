@@ -45,27 +45,31 @@ public class ManagedFileImpl implements ManagedFile {
      * 
      * @param basePath
      *            ベースパス
-     * @param path
-     *            パス
+     * @param relativePath
+     *            ベースパスからの相対パス
      * @param env
      *            環境名
      */
-    public ManagedFileImpl(String basePath, String path, String env) {
+    protected ManagedFileImpl(String basePath, String relativePath, String env) {
         if (basePath == null) {
             throw new NullPointerException("basePath");
         }
-        if (path == null) {
-            throw new NullPointerException("path");
+        if (relativePath == null) {
+            throw new NullPointerException("relativePath");
         }
-        fileInfo = new FileInfo(basePath, basePath, path, env);
+        fileInfo = new FileInfo(basePath, basePath, relativePath, env);
         if (env != null) {
             envNamedFileInfo = new FileInfo(basePath + "#" + env, basePath,
-                    path, env);
+                    relativePath, env);
         }
     }
 
     public File asFile() {
-        return getFile();
+        return getFileInfo().file;
+    }
+
+    public String asRelativePath() {
+        return getFileInfo().relativePath;
     }
 
     public ManagedFile createChild(String relativePath) {
@@ -80,9 +84,9 @@ public class ManagedFileImpl implements ManagedFile {
      * @return バージョン管理されたファイル
      */
     protected ManagedFile createChildInternal(String relativePath) {
-        FileInfo holder = getFileInfo();
-        return new ManagedFileImpl(holder.logicalBasePath, holder.path
-                + File.separator + relativePath, holder.env);
+        FileInfo info = getFileInfo();
+        return new ManagedFileImpl(info.logicalBasePath, info.relativePath
+                + File.separator + relativePath, info.env);
     }
 
     public List<File> listAllFiles() {
@@ -131,15 +135,6 @@ public class ManagedFileImpl implements ManagedFile {
     }
 
     /**
-     * ファイルを返します。
-     * 
-     * @return ファイル
-     */
-    protected File getFile() {
-        return getFileInfo().file;
-    }
-
-    /**
      * ファイル情報です。
      * 
      * @author taedium
@@ -152,8 +147,8 @@ public class ManagedFileImpl implements ManagedFile {
         /** 論理的なベースパス */
         protected String logicalBasePath;
 
-        /** パス */
-        protected String path;
+        /** ベースパスからの相対パス */
+        protected String relativePath;
 
         /** 環境名 */
         protected String env;
@@ -168,18 +163,18 @@ public class ManagedFileImpl implements ManagedFile {
          *            実際のベースパス
          * @param logicalBasePath
          *            論理的なベースパス
-         * @param path
-         *            パス
+         * @param relativePath
+         *            ベースパスからの相対パス
          * @param env
          *            環境名
          */
         public FileInfo(String actualBasePath, String logicalBasePath,
-                String path, String env) {
+                String relativePath, String env) {
             this.actualBasePath = actualBasePath;
             this.logicalBasePath = logicalBasePath;
-            this.path = path;
+            this.relativePath = relativePath;
             this.env = env;
-            File f = new File(actualBasePath, path);
+            File f = new File(actualBasePath, relativePath);
             this.file = FileUtil.getCanonicalFile(f);
         }
     }
