@@ -20,7 +20,7 @@ import java.io.File;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.event.GenerateDdlEvent;
+import org.seasar.extension.jdbc.gen.event.GenDdlEvent;
 import org.seasar.extension.jdbc.gen.internal.version.DdlVersionDirectoryImpl;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.framework.util.ResourceUtil;
@@ -82,7 +82,7 @@ public class GenerateDdlSvnProcessorTest {
     @Test
     public void test() throws Exception {
         // ACT preCreateCurrentVersionDir
-        GenerateDdlEvent ev = new GenerateDdlEvent(this, currentVersion,
+        GenDdlEvent ev = new GenDdlEvent(this, currentVersion,
                 nextVersion);
         GenerateDdlSvnProcessor svnProcessor = new GenerateDdlSvnProcessor();
         svnProcessor.preCreateNextVersionDir(ev);
@@ -103,7 +103,7 @@ public class GenerateDdlSvnProcessorTest {
         assertSame(SVNStatusType.STATUS_ADDED, st.getContentsStatus());
 
         // ACT preCreateTargetFile
-        ev = new GenerateDdlEvent(this, currentVersion, nextVersion,
+        ev = new GenDdlEvent(this, currentVersion, nextVersion,
                 "create");
         svnProcessor.preCreateTargetFile(ev);
 
@@ -120,7 +120,7 @@ public class GenerateDdlSvnProcessorTest {
         assertSame(SVNStatusType.STATUS_ADDED, st.getContentsStatus());
 
         // ACT preCreateTargetFile
-        ev = new GenerateDdlEvent(this, currentVersion, nextVersion,
+        ev = new GenDdlEvent(this, currentVersion, nextVersion,
                 "create/aaa.txt");
         svnProcessor.preCreateTargetFile(ev);
 
@@ -135,7 +135,7 @@ public class GenerateDdlSvnProcessorTest {
         svnProcessor.postCreateTargetFile(ev);
 
         // ACT preRemoveCurrentVersionDir
-        ev = new GenerateDdlEvent(this, currentVersion, nextVersion);
+        ev = new GenDdlEvent(this, currentVersion, nextVersion);
         svnProcessor.preRemoveNextVersionDir(ev);
 
         // ASSERT

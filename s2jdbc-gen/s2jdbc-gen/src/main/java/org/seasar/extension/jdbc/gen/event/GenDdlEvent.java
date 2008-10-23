@@ -25,7 +25,7 @@ import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
  * 
  * @author koichik
  */
-public class GenerateDdlEvent extends EventObject {
+public class GenDdlEvent extends EventObject {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,7 +53,7 @@ public class GenerateDdlEvent extends EventObject {
      * @param currentVersionDir
      *            現在のバージョンディレクトリのパス
      */
-    public GenerateDdlEvent(final Object source,
+    public GenDdlEvent(final Object source,
             final DdlVersionDirectory previousVersionDir,
             final DdlVersionDirectory currentVersionDir) {
         super(source);
@@ -74,7 +74,7 @@ public class GenerateDdlEvent extends EventObject {
      * @param targetFile
      *            生成対象のファイルまたはディレクトリの現在バージョンディレクトリから見た相対パス
      */
-    public GenerateDdlEvent(final Object source,
+    public GenDdlEvent(final Object source,
             final DdlVersionDirectory previousVersionDir,
             final DdlVersionDirectory currentVersionDir, final String targetFile) {
         super(source);

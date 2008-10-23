@@ -24,7 +24,7 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateDdlCommand;
  * 
  * @author koichik
  */
-public interface GenerateDdlEventListener extends EventListener {
+public interface GenDdlListener extends EventListener {
 
     /**
      * 次 (実際の生成対象) のバージョンディレクトリが作成される前に呼び出されます。
@@ -32,7 +32,7 @@ public interface GenerateDdlEventListener extends EventListener {
      * @param event
      *            イベント
      */
-    void preCreateNextVersionDir(GenerateDdlEvent event);
+    void preCreateNextVersionDir(GenDdlEvent event);
 
     /**
      * 次 (実際の生成先) のバージョンディレクトリが作成された後に呼び出されます。
@@ -40,7 +40,7 @@ public interface GenerateDdlEventListener extends EventListener {
      * @param event
      *            イベント
      */
-    void postCreateNextVersionDir(GenerateDdlEvent event);
+    void postCreateNextVersionDir(GenDdlEvent event);
 
     /**
      * 次 (実際の生成先) のバージョンディレクトリが削除される前に呼び出されます。
@@ -48,7 +48,7 @@ public interface GenerateDdlEventListener extends EventListener {
      * @param event
      *            イベント
      */
-    void preRemoveNextVersionDir(GenerateDdlEvent event);
+    void preRemoveNextVersionDir(GenDdlEvent event);
 
     /**
      * 次 (実際の生成先) のバージョンディレクトリが削除された後に呼び出されます。
@@ -56,7 +56,7 @@ public interface GenerateDdlEventListener extends EventListener {
      * @param event
      *            イベント
      */
-    void postRemoveNextVersionDir(GenerateDdlEvent event);
+    void postRemoveNextVersionDir(GenDdlEvent event);
 
     /**
      * 生成対象のファイルまたはディレクトリが作成される前に呼び出されます。
@@ -64,7 +64,7 @@ public interface GenerateDdlEventListener extends EventListener {
      * @param event
      *            イベント
      */
-    void preCreateTargetFile(GenerateDdlEvent event);
+    void preCreateTargetFile(GenDdlEvent event);
 
     /**
      * 生成対象のファイルまたはディレクトリが作成された後に呼び出されます。
@@ -72,6 +72,6 @@ public interface GenerateDdlEventListener extends EventListener {
      * @param event
      *            イベント
      */
-    void postCreateTargetFile(GenerateDdlEvent event);
+    void postCreateTargetFile(GenDdlEvent event);
 
 }

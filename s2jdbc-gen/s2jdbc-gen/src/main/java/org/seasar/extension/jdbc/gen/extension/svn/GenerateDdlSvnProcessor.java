@@ -21,8 +21,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.seasar.extension.jdbc.gen.event.GenerateDdlEvent;
-import org.seasar.extension.jdbc.gen.event.GenerateDdlEventListener;
+import org.seasar.extension.jdbc.gen.event.GenDdlEvent;
+import org.seasar.extension.jdbc.gen.event.GenDdlListener;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.wc.admin.ISVNAdminAreaFactorySelector;
 import org.tmatesoft.svn.core.internal.wc.admin.SVNAdminAreaFactory;
@@ -44,7 +44,7 @@ import org.tmatesoft.svn.core.wc.SVNWCClient;
  * 
  * @author koichik
  */
-public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
+public class GenerateDdlSvnProcessor implements GenDdlListener {
 
     /** SVNクライアントマネージャです。 */
     protected SVNClientManager clientManager = SVNClientManager.newInstance();
@@ -107,7 +107,7 @@ public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
         });
     }
 
-    public void preCreateNextVersionDir(final GenerateDdlEvent event) {
+    public void preCreateNextVersionDir(final GenDdlEvent event) {
     }
 
     /**
@@ -117,7 +117,7 @@ public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
      * @param event
      *            イベント
      */
-    public void postCreateNextVersionDir(final GenerateDdlEvent event) {
+    public void postCreateNextVersionDir(final GenDdlEvent event) {
         try {
             currentVersionDir = event.getCurrentVersionDir().asFile();
             nextVersionDir = event.getNextVersionDir().asFile();
@@ -142,7 +142,7 @@ public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
      * @param event
      *            イベント
      */
-    public void preRemoveNextVersionDir(final GenerateDdlEvent event) {
+    public void preRemoveNextVersionDir(final GenDdlEvent event) {
         try {
             // svn delete nextVersionDir
             wcClient.doDelete(nextVersionDir, true, false, false);
@@ -151,7 +151,7 @@ public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
         }
     }
 
-    public void postRemoveNextVersionDir(final GenerateDdlEvent event) {
+    public void postRemoveNextVersionDir(final GenDdlEvent event) {
     }
 
     /**
@@ -162,7 +162,7 @@ public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
      * @param event
      *            イベント
      */
-    public void preCreateTargetFile(final GenerateDdlEvent event) {
+    public void preCreateTargetFile(final GenDdlEvent event) {
         try {
             final File currentFile = new File(currentVersionDir, event
                     .getTargetFile());
@@ -188,7 +188,7 @@ public class GenerateDdlSvnProcessor implements GenerateDdlEventListener {
      * @param event
      *            イベント
      */
-    public void postCreateTargetFile(final GenerateDdlEvent event) {
+    public void postCreateTargetFile(final GenDdlEvent event) {
         try {
             final File createdFile = new File(nextVersionDir, event
                     .getTargetFile());
