@@ -12,7 +12,7 @@
   <parent>
     <groupId>org.seasar.container</groupId>
     <artifactId>s2-container-project</artifactId>
-    <version>2.4.30</version>
+    <version>2.4.31-SNAPSHOT</version>
     <relativePath>../seasar2</relativePath>
   </parent>
 
@@ -90,6 +90,13 @@
           <artifactId>junit-addons-runner</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.tmatesoft.svnkit</groupId>
+      <artifactId>svnkit</artifactId>
+      <version>1.2.0.4949</version>
+      <type>jar</type>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 </project>
