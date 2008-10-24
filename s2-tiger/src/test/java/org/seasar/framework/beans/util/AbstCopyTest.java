@@ -17,6 +17,7 @@ package org.seasar.framework.beans.util;
 
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -724,7 +725,7 @@ public class AbstCopyTest extends TestCase {
                 Integer.class));
         assertEquals("19700101", new MyCopy().converter(
                 new DateConverter("yyyyMMdd")).convertValue(new Timestamp(0),
-                "aaa", java.util.Date.class));
+                "aaa", String.class));
     }
 
     /**
@@ -737,6 +738,14 @@ public class AbstCopyTest extends TestCase {
         } catch (ConverterRuntimeException e) {
             System.out.println(e);
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConvertValue_dateToDate() throws Exception {
+        Date date = new Date(1);
+        assertEquals(date, new MyCopy().convertValue(date, "aaa", Date.class));
     }
 
     /**
@@ -916,5 +925,16 @@ public class AbstCopyTest extends TestCase {
          * 
          */
         public Integer aaa;
+    }
+
+    /**
+     * 
+     */
+    public static class Bean3 {
+
+        /**
+         * 
+         */
+        public Date aaa;
     }
 }

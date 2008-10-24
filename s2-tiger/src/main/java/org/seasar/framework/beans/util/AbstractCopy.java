@@ -495,8 +495,10 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     @SuppressWarnings("unused")
     protected Object convertValue(Object value, String destPropertyName,
             Class<?> destPropertyClass) {
-        if (value == null) {
-            return null;
+        if (value == null || value.getClass() != String.class
+                && destPropertyClass != null
+                && destPropertyClass != String.class) {
+            return value;
         }
         Converter converter = converterMap.get(destPropertyName);
         if (converter == null) {
