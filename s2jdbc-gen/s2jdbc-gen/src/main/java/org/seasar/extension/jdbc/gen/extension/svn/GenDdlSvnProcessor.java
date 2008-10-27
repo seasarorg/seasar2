@@ -122,11 +122,10 @@ public class GenDdlSvnProcessor implements GenDdlListener {
             currentVersionDir = event.getCurrentVersionDir().asFile();
             nextVersionDir = event.getNextVersionDir().asFile();
             migrateDir = nextVersionDir.getParentFile();
-            if (!underSvn(migrateDir) || !underSvn(currentVersionDir)) {
-                underSvn = false;
+            underSvn = underSvn(migrateDir) && underSvn(currentVersionDir);
+            if (!underSvn) {
                 return;
             }
-            underSvn = true;
 
             // svn add nextVersionDir
             wcClient.doAdd(nextVersionDir, false, false, false, null, false,
@@ -220,6 +219,9 @@ public class GenDdlSvnProcessor implements GenDdlListener {
      */
     protected boolean underSvn(final File file) throws SVNException {
         final SVNStatus status = statusClient.doStatus(file, false);
+        if (status == null) {
+            return false;
+        }
         return status.getContentsStatus() != SVNStatusType.STATUS_UNVERSIONED;
     }
 
