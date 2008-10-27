@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.event.GenDdlEvent;
 import org.seasar.extension.jdbc.gen.event.GenDdlListener;
+import org.seasar.extension.jdbc.gen.internal.exception.NextVersionDirectoryExistsRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.DefaultExcludesFilenameFilter;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.internal.version.wrapper.DdlVersionDirectoryWrapper;
@@ -152,6 +153,10 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             final DdlVersionDirectory currentVersionDir) {
         final DdlVersionDirectory nextVersionDir = ddlVersionDirectoryTree
                 .getNextVersionDirectory();
+        if (nextVersionDir.exists()) {
+            throw new NextVersionDirectoryExistsRuntimeException(nextVersionDir
+                    .asFile().getPath());
+        }
 
         DdlVersionDirectory wrapper = new DdlVersionDirectoryWrapper(
                 nextVersionDir, genDdlListener, currentVersionDir,
@@ -159,22 +164,32 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
 
             @Override
             public boolean mkdir() {
+                if (getManagedFile().exists()) {
+                    return false;
+                }
                 GenDdlEvent event = new GenDdlEvent(this, currentVersionDir,
                         nextVersionDir);
                 genDdlListener.preCreateNextVersionDir(event);
-                boolean ret = getManagedFile().mkdir();
-                genDdlListener.postCreateNextVersionDir(event);
-                return ret;
+                boolean made = getManagedFile().mkdir();
+                if (made) {
+                    genDdlListener.postCreateNextVersionDir(event);
+                }
+                return made;
             }
 
             @Override
             public boolean delete() {
+                if (!getManagedFile().exists()) {
+                    return false;
+                }
                 GenDdlEvent event = new GenDdlEvent(this, currentVersionDir,
                         nextVersionDir);
                 genDdlListener.preRemoveNextVersionDir(event);
-                boolean ret = super.delete();
-                genDdlListener.postRemoveNextVersionDir(event);
-                return ret;
+                boolean deleted = super.delete();
+                if (deleted) {
+                    genDdlListener.postRemoveNextVersionDir(event);
+                }
+                return deleted;
             }
         };
 

@@ -117,13 +117,18 @@ public class ManagedFileWrapper implements ManagedFile {
     }
 
     public boolean createNewFile() {
+        if (getManagedFile().exists()) {
+            return false;
+        }
         mkdirs(parent);
         GenDdlEvent event = new GenDdlEvent(this, currentVersionDir,
                 nextVersionDir, getManagedFile().getRelativePath());
         genDdlListener.preCreateTargetFile(event);
-        boolean ret = getManagedFile().createNewFile();
-        genDdlListener.postCreateTargetFile(event);
-        return ret;
+        boolean made = getManagedFile().createNewFile();
+        if (made) {
+            genDdlListener.postCreateTargetFile(event);
+        }
+        return made;
     }
 
     public ManagedFile getParent() {
@@ -131,12 +136,17 @@ public class ManagedFileWrapper implements ManagedFile {
     }
 
     public boolean mkdir() {
+        if (getManagedFile().exists()) {
+            return false;
+        }
         GenDdlEvent event = new GenDdlEvent(this, currentVersionDir,
                 nextVersionDir, getManagedFile().getRelativePath());
         genDdlListener.preCreateTargetFile(event);
-        boolean ret = getManagedFile().mkdir();
-        genDdlListener.postCreateTargetFile(event);
-        return ret;
+        boolean made = getManagedFile().mkdir();
+        if (made) {
+            genDdlListener.postCreateTargetFile(event);
+        }
+        return made;
     }
 
     public boolean mkdirs() {
@@ -154,8 +164,11 @@ public class ManagedFileWrapper implements ManagedFile {
     protected boolean mkdirs(ManagedFile file) {
         ManagedFile parent = file.getParent();
         if (parent == null) {
-            if (!file.asFile().mkdirs()) {
-                return false;
+            File parentFile = file.asFile().getParentFile();
+            if (!parentFile.exists()) {
+                if (!parentFile.mkdirs()) {
+                    return false;
+                }
             }
         } else {
             if (!parent.exists()) {

@@ -36,7 +36,7 @@ public class GenDdlEvent extends EventObject {
     protected final DdlVersionDirectory nextVersionDir;
 
     /**
-     * 生成対象のファイルまたはディレクトリの現在バージョンディレクトリから見た相対パスです。
+     * 生成対象のファイルまたはディレクトリの次バージョンディレクトリから見た相対パスです。
      * <p>
      * バージョンディレクトリ生成または削除イベントの場合は{@literal null}です。
      * </p>
@@ -48,17 +48,17 @@ public class GenDdlEvent extends EventObject {
      * 
      * @param source
      *            イベントのソースオブジェクト
-     * @param previousVersionDir
-     *            一つ前のバージョンディレクトリのパス
      * @param currentVersionDir
      *            現在のバージョンディレクトリのパス
+     * @param nextVersionDir
+     *            次 (実際の生成対象) のバージョンディレクトリのパス
      */
     public GenDdlEvent(final Object source,
-            final DdlVersionDirectory previousVersionDir,
-            final DdlVersionDirectory currentVersionDir) {
+            final DdlVersionDirectory currentVersionDir,
+            final DdlVersionDirectory nextVersionDir) {
         super(source);
-        this.currentVersionDir = previousVersionDir;
-        this.nextVersionDir = currentVersionDir;
+        this.currentVersionDir = currentVersionDir;
+        this.nextVersionDir = nextVersionDir;
         this.targetFile = null;
     }
 
@@ -67,19 +67,19 @@ public class GenDdlEvent extends EventObject {
      * 
      * @param source
      *            イベントのソースオブジェクト
-     * @param previousVersionDir
-     *            一つ前のバージョンディレクトリのパス
      * @param currentVersionDir
      *            現在のバージョンディレクトリのパス
+     * @param nextVersionDir
+     *            次 (実際の生成対象) のバージョンディレクトリのパス
      * @param targetFile
-     *            生成対象のファイルまたはディレクトリの現在バージョンディレクトリから見た相対パス
+     *            生成対象のファイルまたはディレクトリの次バージョンディレクトリから見た相対パス
      */
     public GenDdlEvent(final Object source,
-            final DdlVersionDirectory previousVersionDir,
-            final DdlVersionDirectory currentVersionDir, final String targetFile) {
+            final DdlVersionDirectory currentVersionDir,
+            final DdlVersionDirectory nextVersionDir, final String targetFile) {
         super(source);
-        this.currentVersionDir = previousVersionDir;
-        this.nextVersionDir = currentVersionDir;
+        this.currentVersionDir = currentVersionDir;
+        this.nextVersionDir = nextVersionDir;
         this.targetFile = targetFile;
     }
 
@@ -102,9 +102,9 @@ public class GenDdlEvent extends EventObject {
     }
 
     /**
-     * 生成対象のファイルまたはディレクトリの現在バージョンディレクトリから見た相対パスを返します。
+     * 生成対象のファイルまたはディレクトリの次バージョンディレクトリから見た相対パスを返します。
      * 
-     * @return 生成対象のファイルまたはディレクトリの現在バージョンディレクトリから見た相対パス
+     * @return 生成対象のファイルまたはディレクトリの次バージョンディレクトリから見た相対パス
      */
     public String getTargetFile() {
         return targetFile;

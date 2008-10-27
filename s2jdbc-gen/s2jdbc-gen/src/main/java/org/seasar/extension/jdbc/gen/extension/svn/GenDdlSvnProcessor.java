@@ -144,6 +144,9 @@ public class GenDdlSvnProcessor implements GenDdlListener {
      */
     public void preRemoveNextVersionDir(final GenDdlEvent event) {
         try {
+            if (!underSvn) {
+                return;
+            }
             // svn delete nextVersionDir
             wcClient.doDelete(nextVersionDir, true, false, false);
         } catch (final SVNException e) {
@@ -166,7 +169,9 @@ public class GenDdlSvnProcessor implements GenDdlListener {
         try {
             final File currentFile = new File(currentVersionDir, event
                     .getTargetFile());
-            if (!currentFile.exists() || currentFile.isDirectory()) {
+            final File parentFile = currentFile.getParentFile();
+            if (!underSvn(parentFile) || !currentFile.exists()
+                    || currentFile.isDirectory()) {
                 return;
             }
 
