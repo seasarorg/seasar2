@@ -166,6 +166,9 @@ public class GenDdlSvnProcessor implements GenDdlListener {
      */
     public void preCreateTargetFile(final GenDdlEvent event) {
         try {
+            if (!underSvn) {
+                return;
+            }
             final File currentFile = new File(currentVersionDir, event
                     .getTargetFile());
             final File parentFile = currentFile.getParentFile();
@@ -194,6 +197,9 @@ public class GenDdlSvnProcessor implements GenDdlListener {
      */
     public void postCreateTargetFile(final GenDdlEvent event) {
         try {
+            if (!underSvn) {
+                return;
+            }
             final File createdFile = new File(nextVersionDir, event
                     .getTargetFile());
             if (!createdFile.isDirectory()) {
@@ -217,12 +223,14 @@ public class GenDdlSvnProcessor implements GenDdlListener {
      * @throws SVNException
      *             Subversion の操作中に例外が発生した場合
      */
-    protected boolean underSvn(final File file) throws SVNException {
-        final SVNStatus status = statusClient.doStatus(file, false);
-        if (status == null) {
+    protected boolean underSvn(final File file) {
+        try {
+            final SVNStatus status = statusClient.doStatus(file, false);
+            return status != null
+                    && status.getContentsStatus() != SVNStatusType.STATUS_UNVERSIONED;
+        } catch (final SVNException e) {
             return false;
         }
-        return status.getContentsStatus() != SVNStatusType.STATUS_UNVERSIONED;
     }
 
 }
