@@ -154,11 +154,14 @@ public class ManagedFileWrapper implements ManagedFile {
     protected boolean mkdirs(ManagedFile file) {
         ManagedFile parent = file.getParent();
         if (parent == null) {
-            return file.asFile().mkdirs();
-        }
-        if (!parent.exists()) {
-            if (!mkdirs(parent)) {
+            if (!file.asFile().mkdirs()) {
                 return false;
+            }
+        } else {
+            if (!parent.exists()) {
+                if (!mkdirs(parent)) {
+                    return false;
+                }
             }
         }
         return file.mkdir();

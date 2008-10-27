@@ -163,7 +163,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
                         nextVersionDir);
                 genDdlListener.preCreateNextVersionDir(event);
                 boolean ret = getManagedFile().mkdir();
-                genDdlListener.preCreateNextVersionDir(event);
+                genDdlListener.postCreateNextVersionDir(event);
                 return ret;
             }
 
