@@ -1141,7 +1141,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      *            ファイルの名前
      * @param templateName
      *            テンプレートファイルの名前
-     * @return
+     * @return {@link GenerationContext}の実装
      */
     protected GenerationContext createGenerationContext(DdlModel model,
             ManagedFile dir, String templateName) {

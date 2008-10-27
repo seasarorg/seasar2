@@ -115,9 +115,9 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     }
 
     public void increment(Callback callback) {
-        DdlVersionDirectory currentVersionDir = getCurrentDdlVersionDirectory();
-        DdlVersionDirectory nextVersionDir = getNextDdlVersionDirectory(currentVersionDir);
         try {
+            DdlVersionDirectory currentVersionDir = getCurrentDdlVersionDirectory();
+            DdlVersionDirectory nextVersionDir = getNextDdlVersionDirectory(currentVersionDir);
             copyDirectory(currentVersionDir, nextVersionDir);
             callback.execute(nextVersionDir);
             if (currentVersionDir.isFirstVersion()) {
@@ -198,7 +198,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
     }
 
     /**
-     * ディレクトリを作成します。
+     * バージョンディレクトリを作成します。
      * 
      * @param versionDir
      *            バージョンディレクトリ
