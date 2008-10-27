@@ -16,7 +16,10 @@
 package org.seasar.extension.jdbc.gen.internal.version;
 
 import java.io.File;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,9 @@ import org.seasar.framework.util.StringUtil;
  * @author taedium
  */
 public class ManagedFileImpl implements ManagedFile {
+
+    /** 親の{@link ManagedFile} */
+    protected ManagedFile parent;
 
     /** ファイル情報 */
     protected FileInfo fileInfo;
@@ -51,12 +57,30 @@ public class ManagedFileImpl implements ManagedFile {
      *            環境名
      */
     protected ManagedFileImpl(String basePath, String relativePath, String env) {
+        this(null, basePath, relativePath, env);
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param parent
+     *            親の{@link ManagedFile}、このインスタンスがバージョンディレクトリの場合{@code null}
+     * @param basePath
+     *            ベースパス
+     * @param relativePath
+     *            ベースパスからの相対パス
+     * @param env
+     *            環境名
+     */
+    protected ManagedFileImpl(ManagedFile parent, String basePath,
+            String relativePath, String env) {
         if (basePath == null) {
             throw new NullPointerException("basePath");
         }
         if (relativePath == null) {
             throw new NullPointerException("relativePath");
         }
+        this.parent = parent;
         fileInfo = new FileInfo(basePath, basePath, relativePath, env);
         if (env != null) {
             envNamedFileInfo = new FileInfo(basePath + "#" + env, basePath,
@@ -65,19 +89,75 @@ public class ManagedFileImpl implements ManagedFile {
     }
 
     public File asFile() {
-        return getFileInfo().file;
+        return getFile();
     }
 
-    public String asRelativePath() {
+    public String getRelativePath() {
         return getFileInfo().relativePath;
     }
 
-    public ManagedFile createChild(String relativePath) {
-        return createChildInternal(relativePath);
+    public String getName() {
+        return getFile().getName();
+    }
+
+    public boolean delete() {
+        return getFile().delete();
+    }
+
+    public boolean exists() {
+        return getFile().exists();
+    }
+
+    public boolean isDirectory() {
+        return getFile().isDirectory();
+    }
+
+    public ManagedFile getParent() {
+        return parent;
+    }
+
+    public boolean mkdir() {
+        return getFile().mkdir();
+    }
+
+    public boolean mkdirs() {
+        return getFile().mkdirs();
+    }
+
+    public boolean createNewFile() {
+        return FileUtil.createNewFile(getFile());
+    }
+
+    public List<ManagedFile> listManagedFiles() {
+        File[] files = getFile().listFiles();
+        if (files == null) {
+            return Collections.emptyList();
+        }
+        List<ManagedFile> list = new ArrayList<ManagedFile>(files.length);
+        for (File file : files) {
+            list.add(createChildInternal(file.getName()));
+        }
+        return list;
+    }
+
+    public List<ManagedFile> listManagedFiles(FilenameFilter filter) {
+        File[] files = getFile().listFiles(filter);
+        if (files == null) {
+            return Collections.emptyList();
+        }
+        List<ManagedFile> list = new ArrayList<ManagedFile>(files.length);
+        for (File file : files) {
+            list.add(createChildInternal(file.getName()));
+        }
+        return list;
+    }
+
+    public ManagedFile createChild(String childName) {
+        return createChildInternal(childName);
     }
 
     /**
-     * このインスタンスの子となるバージョン管理されたファイルを作成します。
+     * このインスタンスの子となるバージョン管理されたディレクトリを作成します。
      * 
      * @param relativePath
      *            このインスタンスが表すファイルからの相対パス
@@ -85,8 +165,9 @@ public class ManagedFileImpl implements ManagedFile {
      */
     protected ManagedFile createChildInternal(String relativePath) {
         FileInfo info = getFileInfo();
-        return new ManagedFileImpl(info.logicalBasePath, info.relativePath
-                + File.separator + relativePath, info.env);
+        ManagedFileImpl file = new ManagedFileImpl(this, info.logicalBasePath,
+                info.relativePath + File.separator + relativePath, info.env);
+        return file;
     }
 
     public List<File> listAllFiles() {
@@ -123,6 +204,15 @@ public class ManagedFileImpl implements ManagedFile {
                         }
                     }
                 });
+    }
+
+    /**
+     * ファイルを返します。
+     * 
+     * @return ファイル
+     */
+    protected File getFile() {
+        return getFileInfo().file;
     }
 
     /**

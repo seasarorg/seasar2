@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.event.GenDdlListener;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.data.DumperImpl;
@@ -160,11 +161,13 @@ public class FactoryImpl implements Factory {
 
     public DdlVersionIncrementer createDdlVersionIncrementer(Command command,
             DdlVersionDirectoryTree ddlVersionDirectoryTree,
-            GenDialect dialect, DataSource dataSource,
-            List<String> createDirNameList, List<String> dropFileNameList) {
+            GenDdlListener genDdlListener, GenDialect dialect,
+            DataSource dataSource, List<String> createDirNameList,
+            List<String> dropFileNameList) {
 
-        return new DdlVersionIncrementerImpl(ddlVersionDirectoryTree, dialect,
-                dataSource, createDirNameList, dropFileNameList);
+        return new DdlVersionIncrementerImpl(ddlVersionDirectoryTree,
+                genDdlListener, dialect, dataSource, createDirNameList,
+                dropFileNameList);
     }
 
     public TableModelFactory createTableModelFactory(Command command,

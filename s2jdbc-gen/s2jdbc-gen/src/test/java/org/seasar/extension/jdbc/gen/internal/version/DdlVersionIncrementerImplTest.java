@@ -21,6 +21,7 @@ import java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
+import org.seasar.extension.jdbc.gen.internal.event.GenDdlListenerImpl;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.framework.mock.sql.MockDataSource;
@@ -50,11 +51,12 @@ public class DdlVersionIncrementerImplTest {
         DdlVersionDirectoryTreeImpl directory = new DdlVersionDirectoryTreeImpl(
                 baseDir, versionFile, "v000", null);
         incrementer = new DdlVersionIncrementerImpl(directory,
-                new StandardGenDialect(), new MockDataSource(), Collections
-                        .<String> emptyList(), Collections.<String> emptyList()) {
+                new GenDdlListenerImpl(), new StandardGenDialect(),
+                new MockDataSource(), Collections.<String> emptyList(),
+                Collections.<String> emptyList()) {
 
             @Override
-            protected void makeDirectories(DdlVersionDirectory versionDir) {
+            protected void makeDirectory(DdlVersionDirectory versionDir) {
             }
 
             @Override

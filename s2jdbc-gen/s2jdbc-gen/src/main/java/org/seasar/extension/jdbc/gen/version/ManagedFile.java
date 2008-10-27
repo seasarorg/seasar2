@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.version;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.List;
 
 /**
@@ -33,11 +34,86 @@ public interface ManagedFile {
     File asFile();
 
     /**
-     * バージョンディレクトリからの相対パスとして返します。
+     * バージョンディレクトリからの相対パスを返します。
      * 
      * @return バージョンディレクトリからの相対パス
      */
-    String asRelativePath();
+    String getRelativePath();
+
+    /**
+     * 親の{@link ManagedFile}を返します。
+     * 
+     * @return 親の{@link ManagedFile}
+     */
+    ManagedFile getParent();
+
+    /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
+    String getName();
+
+    /**
+     * ファイルまたはディレクトリが存在するかどうかを判定します。
+     * 
+     * @return ファイルまたはディレクトリが存在する場合は{@code true}、そうでない場合は{@code false}
+     */
+    boolean exists();
+
+    /**
+     * ファイルまたはディレクトリを削除します。
+     * 
+     * @return ファイルまたはディレクトリが正常に削除された場合は{@code true}、そうでない場合は{@code false}
+     */
+    boolean delete();
+
+    /**
+     * ディレクトリを生成します。
+     * 
+     * @return ディレクトリが生成された場合は{@code true}、そうでない場合は{@code false}
+     */
+    boolean mkdir();
+
+    /**
+     * ディレクトリを生成します。存在していないが必要な親ディレクトリも一緒に作成されます。このオペレーションが失敗した場合でも、
+     * いくつかの必要な親ディレクトリの生成には成功している場合があります。
+     * 
+     * @return 必要なすべての親ディレクトリを含めてディレクトリが生成された場合は{@code true}、そうでない場合は{@code
+     *         false}
+     */
+    boolean mkdirs();
+
+    /**
+     * 空の新しいファイルを不可分 (atomic) に生成します。
+     * 
+     * @return 指定されたファイルが存在せず、ファイルの生成に成功した場合は{@code true}、示されたファイルがすでに存在する場合は
+     *         {@code false}
+     */
+    boolean createNewFile();
+
+    /**
+     * ディレクトリであるかどうかを判定します。
+     * 
+     * @return 存在しディレクトリである場合は{@code true}、そうでない場合は{@code false}
+     */
+    boolean isDirectory();
+
+    /**
+     * ディレクトリ内の{@link ManagedFile}のリストを返します。
+     * 
+     * @return {@link ManagedFile}のリスト
+     */
+    List<ManagedFile> listManagedFiles();
+
+    /**
+     * ディレクトリ内の{@link ManagedFile}のリストを返します。
+     * 
+     * @param filter
+     *            ファイル名フィルタ
+     * @return {@link ManagedFile}のリスト
+     */
+    List<ManagedFile> listManagedFiles(FilenameFilter filter);
 
     /**
      * このインスタンスがディレクトリを表す場合、ディレクトリ階層下に含まれる全ファイルを返します。
@@ -52,9 +128,10 @@ public interface ManagedFile {
     /**
      * このインスタンスの子となるバージョン管理されたファイルを作成します。
      * 
-     * @param relativePath
-     *            このインスタンスが表すファイルからの相対パス
+     * @param childName
+     *            子となるファイルまたはディレクトリの名前
      * @return バージョン管理されたファイル
      */
-    ManagedFile createChild(String relativePath);
+    ManagedFile createChild(String childName);
+
 }

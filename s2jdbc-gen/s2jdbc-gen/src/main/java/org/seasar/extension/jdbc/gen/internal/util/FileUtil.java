@@ -43,53 +43,6 @@ public class FileUtil {
     }
 
     /**
-     * ディレクトリをコピーします。
-     * 
-     * @param srcDir
-     *            コピー元ディレクトリ
-     * @param destDir
-     *            コピー先ディレクトリ
-     * @param filter
-     *            フィルタ
-     */
-    public static void copyDirectory(File srcDir, File destDir,
-            FilenameFilter filter) {
-        if (!srcDir.isDirectory()) {
-            throw new IllegalArgumentException("srcDir");
-        }
-        if (!getCanonicalPath(srcDir).equals(getCanonicalPath(srcDir))
-                && getCanonicalPath(srcDir)
-                        .startsWith(getCanonicalPath(srcDir))) {
-            throw new IllegalArgumentException("destDir");
-        }
-        copyDir(srcDir, destDir, filter);
-    }
-
-    /**
-     * ディレクトリを再帰的にコピーします。
-     * 
-     * @param srcDir
-     *            コピー元ディレクトリ
-     * @param destDir
-     *            コピー先ディレクトリ
-     * @param filter
-     *            フィルタ
-     */
-    protected static void copyDir(File srcDir, File destDir,
-            FilenameFilter filter) {
-        destDir.mkdirs();
-        File[] srcFiles = srcDir.listFiles(filter);
-        for (File src : srcFiles) {
-            File dest = new File(destDir, src.getName());
-            if (src.isDirectory()) {
-                copyDir(src, dest, filter);
-            } else {
-                copyFile(src, dest);
-            }
-        }
-    }
-
-    /**
      * ファイルをコピーします。
      * 
      * @param src
@@ -97,7 +50,7 @@ public class FileUtil {
      * @param dest
      *            コピー先ファイル
      */
-    protected static void copyFile(File src, File dest) {
+    public static void copy(File src, File dest) {
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
         try {
@@ -118,45 +71,11 @@ public class FileUtil {
     }
 
     /**
-     * ディレクトリを削除します。
-     * 
-     * @param dir
-     *            ディレクトリ
-     */
-    public static void deleteDirectory(File dir) {
-        if (!dir.isDirectory()) {
-            throw new IllegalArgumentException("dir");
-        }
-        if (!dir.exists()) {
-            throw new IllegalArgumentException("dir");
-        }
-        deleteDir(dir);
-    }
-
-    /**
-     * ディレクトリを再帰的に削除します。
-     * 
-     * @param dir
-     *            ディレクトリ
-     */
-    protected static void deleteDir(File dir) {
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory()) {
-                deleteDir(file);
-                file.delete();
-            } else {
-                file.delete();
-            }
-        }
-        dir.delete();
-    }
-
-    /**
-     * この抽象パス名の正規のパス名文字列を返します。
+     * ファイルの正規のパス名文字列を返します。
      * 
      * @param file
      *            ファイル
-     * @return この抽象パス名と同じファイルまたはディレクトリを示す正規パス名文字列
+     * @return ファイルの正規パス名文字列
      */
     public static String getCanonicalPath(File file) {
         try {
@@ -167,11 +86,27 @@ public class FileUtil {
     }
 
     /**
-     * この抽象パス名の正規の形式を返します。
+     * 新しいファイルを不可分 (atomic) に生成します。
      * 
      * @param file
      *            ファイル
-     * @return この抽象パス名と同じファイルまたはディレクトリを示す正規の形式
+     * @return 指定されたファイルが存在せず、ファイルの生成に成功した場合は{@code true}、示されたファイルがすでに存在する場合は
+     *         {@code false}
+     */
+    public static boolean createNewFile(File file) {
+        try {
+            return file.createNewFile();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * ファイルの正規の形式を返します。
+     * 
+     * @param file
+     *            ファイル
+     * @return 正規の形式
      */
     public static File getCanonicalFile(File file) {
         try {
@@ -185,9 +120,13 @@ public class FileUtil {
      * ディレクトリを横断します。
      * 
      * @param dir
+     *            ディレクトリ
      * @param filter
+     *            フィルタ
      * @param comparator
+     *            コンパレータ
      * @param handler
+     *            ハンドラ
      */
     public static void traverseDirectory(File dir, FilenameFilter filter,
             Comparator<File> comparator, FileHandler handler) {

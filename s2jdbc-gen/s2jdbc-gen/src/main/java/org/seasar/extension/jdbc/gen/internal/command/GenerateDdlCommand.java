@@ -26,9 +26,12 @@ import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.event.GenDdlListener;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
+import org.seasar.extension.jdbc.gen.internal.event.GenDdlListenerImpl;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.DdlModel;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
@@ -41,6 +44,7 @@ import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
+import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -186,6 +190,10 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
 
+    /** {@link GenDdlListener}の実装クラス名 */
+    protected String genDdlListenerClassName = GenDdlListenerImpl.class
+            .getName();
+
     /** 方言 */
     protected GenDialect dialect;
 
@@ -203,6 +211,9 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     /** DDLのバージョンを管理するディレクトリツリー */
     protected DdlVersionDirectoryTree ddlVersionDirectoryTree;
+
+    /** バージョンディレクトリやファイルが生成されたイベントを受け取るためのリスナー */
+    protected GenDdlListener genDdlListener;
 
     /** DDLのバージョンのインクリメンタ */
     protected DdlVersionIncrementer ddlVersionIncrementer;
@@ -934,6 +945,25 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.dropForeignKeyDirName = dropForeignKeyDirName;
     }
 
+    /**
+     * {@link GenDdlListener}の実装クラス名を返します。
+     * 
+     * @return {@link GenDdlListener}の実装クラス名
+     */
+    public String getGenDdlListenerClassName() {
+        return genDdlListenerClassName;
+    }
+
+    /**
+     * {@link GenDdlListener}の実装クラス名を設定します。
+     * 
+     * @param genDdlListenerClassName
+     *            {@link GenDdlListener}の実装クラス名
+     */
+    public void setGenDdlListenerClassName(String genDdlListenerClassName) {
+        this.genDdlListenerClassName = genDdlListenerClassName;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -944,6 +974,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         dialect = getGenDialect(genDialectClassName);
+        genDdlListener = ReflectUtil.newInstance(GenDdlListener.class,
+                genDdlListenerClassName);
         valueTypeProvider = createValueTypeProvider();
         ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
         ddlVersionIncrementer = createDdlVersionIncrementer();
@@ -963,10 +995,9 @@ public class GenerateDdlCommand extends AbstractCommand {
 
             public void execute(DdlVersionDirectory versionDirectory) {
 
-                final File createDir = versionDirectory.getCreateDirectory()
-                        .asFile();
-                final File dropDir = versionDirectory.getDropDirectory()
-                        .asFile();
+                final ManagedFile createDir = versionDirectory
+                        .getCreateDirectory();
+                final ManagedFile dropDir = versionDirectory.getDropDirectory();
                 final DatabaseDesc databaseDesc = databaseDescFactory
                         .getDatabaseDesc();
 
@@ -984,7 +1015,7 @@ public class GenerateDdlCommand extends AbstractCommand {
 
                         public void execute(SqlExecutionContext context) {
                             dumper.dump(context, databaseDesc, new File(
-                                    createDir, dumpDirName));
+                                    createDir.asFile(), dumpDirName));
                         }
                     });
                 }
@@ -1007,15 +1038,15 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param dropDir
      *            dropディレクトリ
      */
-    protected void generateTableDdl(TableModel model, File createDir,
-            File dropDir) {
+    protected void generateTableDdl(TableModel model, ManagedFile createDir,
+            ManagedFile dropDir) {
         GenerationContext createContext = createGenerationContext(model,
-                new File(createDir, createTableDirName),
+                createDir.createChild(createTableDirName),
                 createTableTemplateFileName);
         generator.generate(createContext);
 
-        GenerationContext dropContext = createGenerationContext(model,
-                new File(dropDir, dropTableDirName), dropTableTemplateFileName);
+        GenerationContext dropContext = createGenerationContext(model, dropDir
+                .createChild(dropTableDirName), dropTableTemplateFileName);
         generator.generate(dropContext);
     }
 
@@ -1029,19 +1060,19 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param dropDir
      *            dropディレクトリ
      */
-    protected void generateUniqueKeyDdl(TableModel model, File createDir,
-            File dropDir) {
+    protected void generateUniqueKeyDdl(TableModel model,
+            ManagedFile createDir, ManagedFile dropDir) {
         if (model.getUniqueKeyModelList().isEmpty()) {
             return;
         }
 
         GenerationContext createContext = createGenerationContext(model,
-                new File(createDir, createUniqueKeyDirName),
+                createDir.createChild(createUniqueKeyDirName),
                 createUniqueKeyTemplateFileName);
         generator.generate(createContext);
 
-        GenerationContext dropContext = createGenerationContext(model,
-                new File(dropDir, dropUniqueKeyDirName),
+        GenerationContext dropContext = createGenerationContext(model, dropDir
+                .createChild(dropUniqueKeyDirName),
                 dropUniqueKeyTemplateFileName);
         generator.generate(dropContext);
     }
@@ -1056,19 +1087,19 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param dropDir
      *            dropディレクトリ
      */
-    protected void generateForeignKeyDdl(TableModel model, File createDir,
-            File dropDir) {
+    protected void generateForeignKeyDdl(TableModel model,
+            ManagedFile createDir, ManagedFile dropDir) {
         if (model.getForeignKeyModelList().isEmpty()) {
             return;
         }
 
         GenerationContext createContext = createGenerationContext(model,
-                new File(createDir, createForeignKeyDirName),
+                createDir.createChild(createForeignKeyDirName),
                 createForeignKeyTemplateFileName);
         generator.generate(createContext);
 
-        GenerationContext dropContext = createGenerationContext(model,
-                new File(dropDir, dropForeignKeyDirName),
+        GenerationContext dropContext = createGenerationContext(model, dropDir
+                .createChild(dropForeignKeyDirName),
                 dropForeignKeyTemplateFileName);
         generator.generate(dropContext);
     }
@@ -1083,20 +1114,19 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @param dropDir
      *            dropディレクトリ
      */
-    protected void generateSequenceDdl(TableModel model, File createDir,
-            File dropDir) {
+    protected void generateSequenceDdl(TableModel model, ManagedFile createDir,
+            ManagedFile dropDir) {
         if (model.getSequenceModelList().isEmpty()) {
             return;
         }
 
         GenerationContext createContext = createGenerationContext(model,
-                new File(createDir, createSequenceDirName),
+                createDir.createChild(createSequenceDirName),
                 createSequenceTemplateFileName);
         generator.generate(createContext);
 
-        GenerationContext dropContext = createGenerationContext(model,
-                new File(dropDir, dropSequenceDirName),
-                dropSequenceTemplateFileName);
+        GenerationContext dropContext = createGenerationContext(model, dropDir
+                .createChild(dropSequenceDirName), dropSequenceTemplateFileName);
         generator.generate(dropContext);
     }
 
@@ -1114,10 +1144,12 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return
      */
     protected GenerationContext createGenerationContext(DdlModel model,
-            File dir, String templateName) {
+            ManagedFile dir, String templateName) {
         String fileName = model.getCanonicalTableName() + ".sql";
-        return factory.createGenerationContext(this, model, new File(dir,
-                fileName), templateName, ddlFileEncoding, true);
+        ManagedFile file = dir.createChild(fileName);
+        file.createNewFile();
+        return factory.createGenerationContext(this, model, file.asFile(),
+                templateName, ddlFileEncoding, true);
     }
 
     /**
@@ -1166,8 +1198,8 @@ public class GenerateDdlCommand extends AbstractCommand {
                 dropUniqueKeyDirName, dropSequenceDirName,
                 dropForeignKeyDirName);
         return factory.createDdlVersionIncrementer(this,
-                ddlVersionDirectoryTree, dialect, jdbcManager.getDataSource(),
-                createDirNameList, dropDirNameList);
+                ddlVersionDirectoryTree, genDdlListener, dialect, jdbcManager
+                        .getDataSource(), createDirNameList, dropDirNameList);
     }
 
     /**

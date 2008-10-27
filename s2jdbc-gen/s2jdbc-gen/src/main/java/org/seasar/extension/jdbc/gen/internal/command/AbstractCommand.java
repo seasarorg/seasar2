@@ -24,6 +24,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
 import org.seasar.extension.jdbc.gen.exception.CommandFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
+import org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 import org.seasar.extension.jdbc.gen.internal.util.SingletonS2ContainerFactorySupport;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
@@ -54,7 +55,7 @@ public abstract class AbstractCommand implements Command {
     protected String jdbcManagerName = "jdbcManager";
 
     /** {@link Factory}の実装クラス名 */
-    protected String factoryClassName = "org.seasar.extension.jdbc.gen.internal.factory.FactoryImpl";
+    protected String factoryClassName = FactoryImpl.class.getName();
 
     /** {@link SingletonS2ContainerFactory}のサポート */
     protected SingletonS2ContainerFactorySupport containerFactorySupport;

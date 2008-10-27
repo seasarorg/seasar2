@@ -33,6 +33,7 @@ import org.seasar.extension.jdbc.gen.data.Loader;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDescFactory;
 import org.seasar.extension.jdbc.gen.desc.EntitySetDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.event.GenDdlListener;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.meta.DbTableMetaReader;
@@ -231,6 +232,8 @@ public interface Factory {
      *            呼び出し元のコマンド
      * @param ddlVersionDirectoryTree
      *            DDLのバージョンを管理するディレクトリ
+     * @param genDdlListener
+     *            バージョンディレクトリやファイルが生成されたイベントを受け取るためのリスナー
      * @param dialect
      *            方言
      * @param dataSource
@@ -243,8 +246,9 @@ public interface Factory {
      */
     DdlVersionIncrementer createDdlVersionIncrementer(Command command,
             DdlVersionDirectoryTree ddlVersionDirectoryTree,
-            GenDialect dialect, DataSource dataSource,
-            List<String> createDirNameList, List<String> dropDirNameList);
+            GenDdlListener genDdlListener, GenDialect dialect,
+            DataSource dataSource, List<String> createDirNameList,
+            List<String> dropDirNameList);
 
     /**
      * {@link TableModelFactory}の実装を作成します。

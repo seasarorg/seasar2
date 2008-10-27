@@ -55,7 +55,7 @@ public class DdlVersionDirectoryImplTest {
      */
     @Test
     public void testAsRelativePath() throws Exception {
-        String path = directory.getCreateDirectory().asRelativePath();
+        String path = directory.getCreateDirectory().getRelativePath();
         assertEquals(new File(".", "create"), new File(path));
     }
 
