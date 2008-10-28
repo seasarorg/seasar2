@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="s2jdbc-gen-it extension" default="testGenerateDdl" basedir=".">
+	
+	<property name="build" value="build"/>
+	<property name="resources" value="resources"/>
+	<property name="sql" value="sql"/>	
+	<property name="rootpackagename" value="example"/>
+	
+	<path id="classpath">
+		<pathelement location="${build}"/>
+		<pathelement location="../../s2jdbc-gen/build/classes"/>
+		<pathelement location="../../seasar2/build/classes"/>
+		<pathelement location="../../s2-tiger/build/classes"/>
+		<fileset dir="../lib"/>
+		<fileset dir="../../s2jdbc-gen/lib"/>
+		<fileset dir="../../seasar2/lib" excludes="**/*-sources.jar"/>
+		<fileset dir="../../s2-tiger/lib" excludes="**/*-sources.jar"/>
+	</path>
+
+	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+	
+	<target name="testGenerateDdl" depends="clean">
+		<!-- setUp -->
+		<javac 
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath">
+			<src path="../src/main/java"/>
+		</javac>
+		<!-- test -->
+		<gen-ddl 
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			genddllistenerclassname="org.seasar.extension.jdbc.gen.extension.svn.GenDdlSvn15Processor"
+			classpathref="classpath"
+		/>
+		<refresh projectname="s2jdbc-gen-it"/>
+	</target>
+
+	<target name="clean">
+		<delete dir="${build}"/>
+		<mkdir dir="${build}"/>
+		<concat destfile="db/migrate/0001/create/070-role/role.sql">create role testrole;</concat>
+		<copy todir="${build}">
+			<fileset dir="${resources}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+	</target>
+
+</project>
