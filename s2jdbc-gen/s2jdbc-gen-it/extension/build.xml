@@ -42,6 +42,7 @@
 	<target name="clean">
 		<delete dir="${build}"/>
 		<mkdir dir="${build}"/>
+		<concat destfile="db/migrate/0001/create/060-view/address_view.sql">create view ADDRESS_VIEW (CITY) as select CITY from ADDRESS;</concat>
 		<concat destfile="db/migrate/0001/create/070-role/role.sql">create role testrole;</concat>
 		<copy todir="${build}">
 			<fileset dir="${resources}">

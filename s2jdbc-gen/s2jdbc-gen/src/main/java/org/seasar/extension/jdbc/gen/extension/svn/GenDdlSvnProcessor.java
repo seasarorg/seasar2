@@ -172,8 +172,8 @@ public class GenDdlSvnProcessor implements GenDdlListener {
             final File currentFile = new File(currentVersionDir, event
                     .getTargetFile());
             final File parentFile = currentFile.getParentFile();
-            if (!underSvn(parentFile) || !currentFile.exists()
-                    || currentFile.isDirectory()) {
+            if (!currentFile.exists() || currentFile.isDirectory()
+                    || !underSvn(currentFile) || !underSvn(parentFile)) {
                 return;
             }
 
