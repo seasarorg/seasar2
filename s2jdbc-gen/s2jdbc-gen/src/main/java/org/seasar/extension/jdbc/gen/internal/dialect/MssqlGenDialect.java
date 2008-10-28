@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
@@ -42,7 +43,8 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 public class MssqlGenDialect extends StandardGenDialect {
 
     /** テーブルが見つからないことを示すエラーコード */
-    protected static int TABLE_NOT_FOUND_ERROR_CODE = 208;
+    protected static List<Integer> TABLE_NOT_FOUND_ERROR_CODES = Arrays.asList(
+            208, 1088);
 
     /** カラムが見つからないことを示すエラーコード */
     protected static int COLUMN_NOT_FOUND_ERROR_CODE = 207;
@@ -112,8 +114,7 @@ public class MssqlGenDialect extends StandardGenDialect {
     @Override
     public boolean isTableNotFound(Throwable throwable) {
         Integer errorCode = getErrorCode(throwable);
-        return errorCode != null
-                && errorCode.intValue() == TABLE_NOT_FOUND_ERROR_CODE;
+        return TABLE_NOT_FOUND_ERROR_CODES.contains(errorCode);
     }
 
     @Override
