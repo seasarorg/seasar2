@@ -32,7 +32,7 @@ import javax.persistence.TemporalType;
  * 
  */
 @Entity
-public class Identity {
+public class IdentityCheck {
 
     /** */
     @Id
