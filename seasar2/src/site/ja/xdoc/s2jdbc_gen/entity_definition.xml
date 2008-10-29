@@ -10,8 +10,38 @@
 					<a href="#概要">概要</a>
 				</li>
 				<li>
+					<a href="#テーブル定義">テーブル定義</a>
+					<ul>
+						<li>
+							<p>
+								<a href="#カタログ名">カタログ名</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#スキーマ名">スキーマ名</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#テーブル名">テーブル名</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#複合一意制約">複合一意制約</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
 					<a href="#カラム定義">カラム定義</a>
 					<ul>
+						<li>
+							<p>
+								<a href="#カラム名">カラム名</a>
+							</p>
+						</li>
 						<li>
 							<p>
 								<a href="#データ型">データ型</a>
@@ -49,10 +79,60 @@
 			</p>
 		</section>
 
+		<section name="テーブル定義">
+			<p>
+				テーブルの定義はTableアノテーションを用いて行います。
+			</p>
+			<subsection name="カタログ名">
+				<p>
+					catalog属性を使用することで、カタログ名を指定できます。
+				</p>
+<source><![CDATA[@Table(catalog = "catalog")
+public class Employee {
+    ....
+}]]></source>
+			</subsection>
+			<subsection name="スキーマ名">
+				<p>
+					schema属性を使用することで、スキーマ名を指定できます。
+				</p>
+<source><![CDATA[@Table(schema = "schema")
+public class Employee {
+    ....
+}]]></source>
+			</subsection>
+			<subsection name="テーブル名">
+				<p>
+					name属性を使用することで、テーブル名を指定できます。
+				</p>
+<source><![CDATA[@Table(name = "emp")
+public class Employee {
+    ....
+}]]></source>
+			</subsection>
+			<subsection name="複合一意制約">
+				<p>
+					uniqueConstraints属性を使用することで、複合一意制約を指定できます。
+					（columnNames属性に指定する値を1つにすれば、単一の一意制約になります。）
+				</p>
+<source><![CDATA[@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "first_name", "last_name" }) })
+public class Employee {
+    ....
+}]]></source>
+			</subsection>
+		</section>
+
 		<section name="カラム定義">
 			<p>
 				カラムの定義はColumnアノテーションを用いて行います。
 			</p>
+			<subsection name="カラム名">
+			<p>
+				name属性を使用することで、カラム名を指定できます。
+			</p>
+<source><![CDATA[@Column(name = "ename")
+public String employeeName;]]></source>
+			</subsection>
 			<subsection name="データ型">
 				<p>
 					カラムのデータ型は長さのデフォルト値や2JDBC-Genのダイアレクトに従って自動で決定されます。
