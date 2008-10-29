@@ -188,6 +188,7 @@ ant -f s2jdbc-gen-build.xml ターゲット名
 						<li>ダイアログの「Run」ボタンを押しAntを実行します。</li>
 					</ol>
 				</p>
+				<img src="../images/s2jdbc_gen_console_enc.png" />
 			</subsection>
 		</section>
 		<section name="Eclipse">
