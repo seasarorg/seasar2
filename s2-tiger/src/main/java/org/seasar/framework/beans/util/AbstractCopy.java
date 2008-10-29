@@ -51,7 +51,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     /**
      * 空の文字列の配列です。
      */
-    protected static final String[] EMPTY_STRING_ARRAY = new String[0];
+    protected static final CharSequence[] EMPTY_STRING_ARRAY = new CharSequence[0];
 
     /**
      * 日付用のデフォルトコンバータです。
@@ -74,12 +74,12 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     /**
      * 操作の対象に含めるプロパティ名の配列です。
      */
-    protected String[] includePropertyNames = EMPTY_STRING_ARRAY;
+    protected CharSequence[] includePropertyNames = EMPTY_STRING_ARRAY;
 
     /**
      * 操作の対象に含めないプロパティ名の配列です。
      */
-    protected String[] excludePropertyNames = EMPTY_STRING_ARRAY;
+    protected CharSequence[] excludePropertyNames = EMPTY_STRING_ARRAY;
 
     /**
      * null値のプロパティを操作の対象外にするかどうかです。
@@ -109,7 +109,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     /**
      * 特定のプロパティに関連付けられたコンバータです。
      */
-    protected Map<String, Converter> converterMap = new HashMap<String, Converter>();
+    protected Map<CharSequence, Converter> converterMap = new HashMap<CharSequence, Converter>();
 
     /**
      * 特定のプロパティに関連付けられていないコンバータです。
@@ -124,7 +124,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * @return このインスタンス自身
      */
     @SuppressWarnings("unchecked")
-    public S includes(String... propertyNames) {
+    public S includes(CharSequence... propertyNames) {
         this.includePropertyNames = propertyNames;
         return (S) this;
     }
@@ -137,7 +137,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * @return このインスタンス自身
      */
     @SuppressWarnings("unchecked")
-    public S excludes(String... propertyNames) {
+    public S excludes(CharSequence... propertyNames) {
         this.excludePropertyNames = propertyNames;
         return (S) this;
     }
@@ -212,11 +212,11 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * @return このインスタンス自身
      */
     @SuppressWarnings("unchecked")
-    public S converter(Converter converter, String... propertyNames) {
+    public S converter(Converter converter, CharSequence... propertyNames) {
         if (propertyNames.length == 0) {
             converters.add(converter);
         } else {
-            for (String name : propertyNames) {
+            for (CharSequence name : propertyNames) {
                 converterMap.put(name, converter);
             }
         }
@@ -232,7 +232,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            プロパティ名の配列
      * @return このインスタンス自身
      */
-    public S dateConverter(String pattern, String... propertyNames) {
+    public S dateConverter(String pattern, CharSequence... propertyNames) {
         return converter(new DateConverter(pattern), propertyNames);
     }
 
@@ -245,7 +245,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            プロパティ名の配列
      * @return このインスタンス自身
      */
-    public S sqlDateConverter(String pattern, String... propertyNames) {
+    public S sqlDateConverter(String pattern, CharSequence... propertyNames) {
         return converter(new SqlDateConverter(pattern), propertyNames);
     }
 
@@ -258,7 +258,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            プロパティ名の配列
      * @return このインスタンス自身
      */
-    public S timeConverter(String pattern, String... propertyNames) {
+    public S timeConverter(String pattern, CharSequence... propertyNames) {
         return converter(new TimeConverter(pattern), propertyNames);
     }
 
@@ -271,7 +271,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            プロパティ名の配列
      * @return このインスタンス自身
      */
-    public S timestampConverter(String pattern, String... propertyNames) {
+    public S timestampConverter(String pattern, CharSequence... propertyNames) {
         return converter(new TimestampConverter(pattern), propertyNames);
     }
 
@@ -284,7 +284,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            プロパティ名の配列
      * @return このインスタンス自身
      */
-    public S numberConverter(String pattern, String... propertyNames) {
+    public S numberConverter(String pattern, CharSequence... propertyNames) {
         return converter(new NumberConverter(pattern), propertyNames);
     }
 
@@ -300,9 +300,9 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             return false;
         }
         if (includePropertyNames.length > 0) {
-            for (String s : includePropertyNames) {
+            for (CharSequence s : includePropertyNames) {
                 if (s.equals(name)) {
-                    for (String s2 : excludePropertyNames) {
+                    for (CharSequence s2 : excludePropertyNames) {
                         if (s2.equals(name)) {
                             return false;
                         }
@@ -313,7 +313,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             return false;
         }
         if (excludePropertyNames.length > 0) {
-            for (String s : excludePropertyNames) {
+            for (CharSequence s : excludePropertyNames) {
                 if (s.equals(name)) {
                     return false;
                 }
