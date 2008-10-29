@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - エンティティ定義</title>
+	</properties>
+	<body>
+		<section name="エンティティ定義">
+			<ul>
+				<li>
+					<a href="#概要">概要</a>
+				</li>
+				<li>
+					<a href="#カラム定義">カラム定義</a>
+					<ul>
+						<li>
+							<p>
+								<a href="#データ型">データ型</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#デフォルト値">デフォルト値</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#CHECK制約">CHECK制約</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#一意制約">一意制約</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#NOT NULL制約">NOT NULL制約</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				S2JDBC-Genでは、<a href="task/gen_ddl.html">Gen-Ddlタスク</a>を実行することで、エンティティ定義からDDLを出力できます。
+				ここでは、DDLの生成に大きく関わるエンティティの定義方法を説明します。
+			</p>
+		</section>
+
+		<section name="カラム定義">
+			<p>
+				カラムの定義はColumnアノテーションを用いて行います。
+			</p>
+			<subsection name="データ型">
+				<p>
+					カラムのデータ型は長さのデフォルト値や2JDBC-Genのダイアレクトに従って自動で決定されます。
+					長さ、精度、スケールを指定する場合やデータ型を明記する場合は、Columnアノテーションを使用します。
+				</p>
+<source><![CDATA[@Column(length = 20)
+public String employeeName;
+	
+@Column(precision = 10, scale = 2)
+public BigDecimal salary;]]></source>
+				<p>
+					上記の定義により、EMPLOYEE_NAMEカラムは長さ20の文字列型、
+					SALARYカラムは精度が10、スケールが2の数値型として定義されます。
+					Columnアノテーションを指定しない場合や、length、precision、scaleを指定しない場合のそれぞれのデフォルト値は次の表のとおりです。
+				</p>
+				<table>
+					<tr><th>属性</th><th>説明</th><th>デフォルト値</th></tr>
+					<tr><td>length</td><td>長さ。文字列型やバイナリ型に使用される。</td><td>255</td></tr>
+					<tr><td>precision</td><td>精度。数値型に使用される。</td><td>19</td></tr>
+					<tr><td>scale</td><td>スケール。数値型に使用される。</td><td>0</td></tr>
+				</table>
+				<p>
+					以下に、エンティティクラスのプロパティの型と代表的なRDBMSのカラムの型の対応表を示します。
+					$l、$p、$sには、Columnアノテーションで指定するlength、precision、scaleの値が設定されます。
+					（この表は、エンティティからDDLを生成する際の対応表です。データベースからエンティティを生成する際の対応表ではありませｎ。）
+				</p>
+				<table>
+					<tr><th>Javaの型</th><th>Oracle</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>
+					<tr><td>boolean/Boolean</td><td>number(1,0)</td><td>bit</td><td>smallint</td><td>bool</td><td>boolean</td></tr>
+					<tr><td>short/Short</td><td>number(5,0)</td><td>smallint</td><td>smallint</td><td>smallint</td><td>smallint</td></tr>
+					<tr><td>char/Character</td><td>char(1)</td><td>char(1)</td><td>char(1)</td><td>char(1)</td><td>char(1)</td></tr>
+					<tr><td>int/Integer</td><td>number(10,0)</td><td>int</td><td>integer</td><td>integer/serial</td><td>int</td></tr>
+					<tr><td>long/Long</td><td>number($p,0)</td><td>bigint</td><td>bigint</td><td>bigint/bigserial</td><td>bigint</td></tr>
+					<tr><td>float/Float</td><td>float</td><td>float</td><td>real</td><td>float4</td><td>float($p,$s)</td></tr>
+					<tr><td>double/Double</td><td>double precision</td><td>double</td><td>double</td><td>float8</td><td>double($p,$s)</td></tr>
+					<tr><td>BigInteger</td><td>number($p,0)</td><td>bigint</td><td>bigint</td><td>bigint/bigserial</td><td>bigint</td></tr>
+					<tr><td>BigDecimal</td><td>number($p,$s)</td><td>decimal($p,$s)</td><td>decimal($p,$s)</td><td>decimal($p,$s)</td><td>decimal($p,$s)</td></tr>
+					<tr><td>String</td><td>varchar2($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>varchar($l)</td></tr>
+					<tr><td>@LobつきString</td><td>clob</td><td>varchar(max)</td><td>clob($l)</td><td>text</td><td>tinytext/text/mediumtext/longtext</td></tr>
+					<tr><td>byte[]</td><td>raw</td><td>varbinary($l)</td><td>varchar($l) for bit data</td><td>bytea</td><td>binary($l)</td></tr>
+					<tr><td>@Lobつきbyte[]</td><td>blob</td><td>varbinary(max)</td><td>blob($l)</td><td>oid</td><td>tinyblob/blob/mediumblob/longblob</td></tr>
+					<tr><td>Serializable</td><td>raw</td><td>varbinary($l)</td><td>varchar($l) for bit data</td><td>bytea</td><td>binary($l)</td></tr>
+					<tr><td>@LobつきSerializable</td><td>blob</td><td>varbinary(max)</td><td>blob($l)</td><td>oid</td><td>tinyblob/blob/mediumblob/longblob</td></tr>
+					<tr><td>java.sql.Time, <br />@Temporal(TeporalType.TIME)つきjava.util.Date, <br />@Temporal(TeporalType.TIME)つきCalendar</td><td>date</td><td>datetime</td><td>time</td><td>time</td><td>time</td></tr>
+					<tr><td>java.sql.Date, <br />@Temporal(TeporalType.DATE)つきjava.util.Date, <br />@Temporal(TeporalType.DATE)つきCalendar</td><td>date</td><td>datetime</td><td>date</td><td>date</td><td>date</td></tr>
+					<tr><td>java.sql.Timestamp, <br />@Temporal(TeporalType.TIMESTAMP)つきjava.util.Date, <br />@Temporal(TeporalType.TIMESTAMP)つきCalendar</td><td>timestamp</td><td>datetime</td><td>timestamp</td><td>timestamp</td><td>timestamp</td></tr>
+					<tr><td>Enum型</td><td>number(10,0)/varchar2($l)</td><td>int/varchar($l)</td><td>integer/varchar($l)</td><td>integer/varchar($l)</td><td>int/varchar($l)</td></tr>
+				</table>
+				<p>
+					ここで示されたもの以外のデータ型にマッピングしたい場合は、ColumnアノテーションのcolumnDefinition属性を使用します。
+				</p>
+<source><![CDATA[@Column(columnDefinition ="nvarchar2(100)")
+public String employeeName;]]></source>
+				<p>
+					columnDefinition属性を使用した場合は、指定した値がそのままテーブル作成のDDLに組み込まれます。
+					そのため、length、precision、scale属性の値は、参照されません。
+				</p>
+			</subsection>
+			<subsection name="デフォルト値">
+				<p>
+					デフォルト値を指定するにはcolumnDefinition属性を使用します。
+				</p>
+<source><![CDATA[@Column(columnDefinition ="default 'unknown'")
+public String employeeName;]]></source>
+				<p>
+					columnDefinition属性にデータ型を指定する場合は、その値の後ろに指定します。
+				</p>
+<source><![CDATA[@Column(columnDefinition ="nvarchar2(100) default n'unknown'")
+public String employeeName;]]></source>
+			</subsection>
+			<subsection name="CHECK制約">
+				<p>
+					CHECK制約を指定するにはcolumnDefinition属性を使用します。
+				</p>
+<source><![CDATA[@Column(columnDefinition ="check ...")
+public String employeeName;]]></source>
+				<p>
+					columnDefinition属性にデータ型を指定する場合は、その値の後ろに指定します。
+				</p>
+<source><![CDATA[@Column(columnDefinition ="nvarchar2(100) check ...")
+public String employeeName;]]></source>
+			</subsection>
+			<subsection name="一意制約">
+				<p>
+					一意制約を指定するにはunique属性を使用します。
+				</p>
+<source><![CDATA[@Column(unique = true)
+public String employeeName;]]></source>
+			</subsection>
+			<subsection name="NOT NULL制約">
+				<p>
+					NOT NULL制約を指定するにはnullable属性を使用します。
+				</p>
+<source><![CDATA[@Column(nullable = false)
+public String employeeName;]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>
