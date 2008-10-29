@@ -98,7 +98,7 @@ DestBean dest = Beans.createAndCopy(DestBean.class, src).execute();
 <p>
 特定の型やプロパティに値を設定するときに、
 変換が必要な場合は、
-<code>converter(Converter converter, String... propertyNames)</code>を使います。
+<code>converter(Converter converter, CharSequence... propertyNames)</code>を使います。
 </p>
 <p>
 Converterは、下記のようなインターフェースです。
@@ -151,7 +151,7 @@ numberConverter()のショートカットも用意されています。
 <h2><a name="dateConverter">日付コンバータ</a></h2>
 <p>
 日付用のコンバータの指定は、
-<code>dateConverter(String pattern, String... propertyNames)</code>を使います。
+<code>dateConverter(String pattern, CharSequence... propertyNames)</code>を使います。
 </p>
 <p>
 patternは、DateFormatのパターンを指定します。
@@ -160,7 +160,7 @@ patternは、DateFormatのパターンを指定します。
 <h2><a name="sqlDateConverter">SQL用の日付コンバータ</a></h2>
 <p>
 SQL用の日付用のコンバータの指定は、
-<code>sqlDateConverter(String pattern, String... propertyNames)</code>を使います。
+<code>sqlDateConverter(String pattern, CharSequence... propertyNames)</code>を使います。
 </p>
 <p>
 patternは、DateFormatのパターンを指定します。
@@ -169,7 +169,7 @@ patternは、DateFormatのパターンを指定します。
 <h2><a name="timeConverter">時間コンバータ</a></h2>
 <p>
 時間用のコンバータの指定は、
-<code>timeConverter(String pattern, String... propertyNames)</code>を使います。
+<code>timeConverter(String pattern, CharSequence... propertyNames)</code>を使います。
 </p>
 <p>
 patternは、DateFormatのパターンを指定します。
@@ -178,7 +178,7 @@ patternは、DateFormatのパターンを指定します。
 <h2><a name="timestampConverter">日時コンバータ</a></h2>
 <p>
 日時用のコンバータの指定は、
-<code>timestampConverter(String pattern, String... propertyNames)</code>を使います。
+<code>timestampConverter(String pattern, CharSequence... propertyNames)</code>を使います。
 </p>
 <p>
 patternは、DateFormatのパターンを指定します。
@@ -187,7 +187,7 @@ patternは、DateFormatのパターンを指定します。
 <h2><a name="numberConverter">数値コンバータ</a></h2>
 <p>
 数値用のコンバータの指定は、
-<code>numberConverter(String pattern, String... propertyNames)</code>を使います。
+<code>numberConverter(String pattern, CharSequence... propertyNames)</code>を使います。
 </p>
 <p>
 patternは、DecimalFormatのパターンを指定します。
@@ -196,7 +196,7 @@ patternは、DecimalFormatのパターンを指定します。
 <h2><a name="includes">特定のプロパティだけを対象にする</a></h2>
 <p>
 特定のプロパティだけを対象にするには、
-<code>includes(String... propertyNames)</code>を使います。
+<code>includes(CharSequence... propertyNames)</code>を使います。
 </p>
 <pre>
 SrcBean src = new SrcBean();
@@ -208,7 +208,7 @@ Beans.copy(src, dest).includes("foo", "bar").execute();
 <h2><a name="excludes">特定のプロパティだけを対象外にする</a></h2>
 <p>
 特定のプロパティだけを対象外にするには、
-<code>excludes(String... propertyNames)</code>を使います。
+<code>excludes(CharSequence... propertyNames)</code>を使います。
 includes()と同時に指定した場合は、includes()で指定されたプロパティから
 excludes()で指定されているものが除かれます。
 </p>
