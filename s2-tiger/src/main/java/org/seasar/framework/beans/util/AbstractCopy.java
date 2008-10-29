@@ -49,7 +49,7 @@ import org.seasar.framework.util.TimestampConversionUtil;
 public abstract class AbstractCopy<S extends AbstractCopy<S>> {
 
     /**
-     * 空の文字列の配列です。
+     * 空のCharSequenceの配列です。
      */
     protected static final CharSequence[] EMPTY_STRING_ARRAY = new CharSequence[0];
 
