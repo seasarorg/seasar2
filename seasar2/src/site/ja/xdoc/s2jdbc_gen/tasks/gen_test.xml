@@ -89,13 +89,13 @@
 		</section>
 		<section name="例">
 			<subsection name="例">
-<source><![CDATA[    <gen-test
-      rootpackagename="examples"
-      classpathref="classpath"
-    />]]></source>
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
+<source><![CDATA[<gen-test
+    rootPackageName="examples"
+    classpathRef="classpath"
+/>]]></source>
 			</subsection>
 		</section>
 	</body>

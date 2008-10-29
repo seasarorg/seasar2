@@ -38,6 +38,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#環境名つきバージョンディレクトリにダンプ出力する">環境名つきバージョンディレクトリにダンプ出力する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -92,14 +99,35 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[   <dump-data
-      classpathDir="build/classes"
-      rootPackageName="examples"
-      classpathref="classpath"
-   />]]></source>
+			<subsection name="環境名つきバージョンディレクトリにダンプ出力する">
 				<p>
-					ルートパッケージに"examples"を設定してタスクを実行します。
+					プロジェクトで共有するダンプデータとは別にダンプデータを管理したい場合は、環境名つきバージョンディレクトリにダンプ出力します。
+					環境名つきバージョンディレクトリにダンプ出力するにはapplyEnvToVersion属性に"true"を設定します。
+				</p>
+<source><![CDATA[<dump-data
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    applyEnvToVersion="true"
+    env="ut"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					上記の設定でタスクを実行すると、バージョンディレクトリと環境名を#で連結したディレクトリ以下にダンプ出力されます。
+				</p>
+<source><![CDATA[db
+└─migrate
+    ├─0001
+    │  └─create
+    │      └─・・
+    │
+    └─0001#ut
+        └─create
+            └─040-dump
+                ├─employee.csv
+                ├─address.csv
+                └─・・]]></source>
+				<p>
+					環境名つきバージョンディレクトリ以下のダンプデータは、<a href="load_data.html">Load-Dataタスク</a>や<a href="migrate.html">Migrateタスク</a>で、環境名なしのバージョンディレクトリに優先してロードされます。
 				</p>
 			</subsection>
 		</section>

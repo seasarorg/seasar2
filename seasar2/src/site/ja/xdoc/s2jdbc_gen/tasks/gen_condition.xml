@@ -91,15 +91,16 @@
 		</section>
 		<section name="例">
 			<subsection name="例">
-<source><![CDATA[    <gen-condition
-      classpathDir="build/classes"
-      rootPackageName="examples"
-      classpathref="classpath"
-   />
-]]></source>
 				<p>
-					"examples"というルートパッケージを指定してタスクを実行します。
+					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
-			</subsection>		</section>
+<source><![CDATA[<gen-condition
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    classpathRef="classpath"
+/>
+]]></source>
+			</subsection>
+		</section>
 	</body>
 </document>

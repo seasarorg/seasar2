@@ -38,6 +38,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#同一トランザクション内で複数のSQLファイルを実行する">同一トランザクション内で複数のSQLファイルを実行する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -94,19 +101,19 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[    <exec-sql
-      transactional="true"
-      classpathref="classpath">
-        <sqlFileList dir="sql">
-          <file name="aaa.sql"/>
-          <file name="bbb.sql"/>
-          <file name="ccc.sql"/>
-        </sqlFileList>
-    </exec-sql>]]></source>
+			<subsection name="同一トランザクション内で複数のSQLファイルを実行する">
 				<p>
 					3つのSQLファイルを同一トランザクション内で実行します。
 				</p>
+<source><![CDATA[<exec-sql
+    transactional="true"
+    classpathRef="classpath">
+      <sqlFileList dir="sql">
+        <file name="aaa.sql"/>
+        <file name="bbb.sql"/>
+        <file name="ccc.sql"/>
+    </sqlFileList>
+</exec-sql>]]></source>
 			</subsection>
 		</section>
 	</body>

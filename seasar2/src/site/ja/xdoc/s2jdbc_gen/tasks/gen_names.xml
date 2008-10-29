@@ -153,8 +153,11 @@ public class AddressNames {
     }
 }]]></source>
 				<p>
+					名前クラスは、エンティティクラスの修正のたびに再作成し、常に最新のプロパティを反映させてください。
+				</p>
+				<p>
 					名前クラスのメソッドは、static importの機能を使って呼び出されることを想定しています。
-					名前クラスの使用例は次のようになります。
+					static importを利用した名前クラスの使用例は次のようになります。
 				</p>
 <source><![CDATA[List<Address> list = jdbcManager
     .from(Address.class)
@@ -213,7 +216,7 @@ public class AddressNames {
 <source><![CDATA[<gen-names
     rootPackageName="examples"
     namesPackageName="names"
-    classpathref="classpath"
+    classpathRef="classpath"
 />]]></source>
 			</subsection>
 		</section>

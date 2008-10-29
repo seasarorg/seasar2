@@ -38,6 +38,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#サービスクラスのパッケージを指定する">サービスクラスのパッケージを指定する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -77,10 +84,10 @@ public class AddressService extends AbstractService<Address> {
         return select().orderBy(asc(id())).getResultList();
     }
     
-    public List<Address> hoge() {
-        return select().orderBy(asc(id())).getResultList();
-    }
-}}]]></source>
+}]]></source>
+				<p>
+					生成後は、任意のメソッドを追加し自由に利用できます。
+				</p>
 			</subsection>
 		</section>
 		<section name="パラメータ">
@@ -126,14 +133,15 @@ public class AddressService extends AbstractService<Address> {
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[    <gen-service
-      rootpackagename="examples"
-      classpathref="classpath"
-    />]]></source>
+			<subsection name="サービスクラスのパッケージを指定する">
 				<p>
-					ルートパッケージに"examples"を設定してタスクを実行します。
+					サービスクラスのデフォルトのパッケージ名は"service"ですが、servicePackageName属性に任意のパッケージ名を指定できます。 次の例では"myservice"を指定しています。 
 				</p>
+<source><![CDATA[<gen-service
+    rootPackageName="examples"
+    servicePackageName="myservice"
+    classpathRef="classpath"
+/>]]></source>
 			</subsection>
 		</section>
 	</body>

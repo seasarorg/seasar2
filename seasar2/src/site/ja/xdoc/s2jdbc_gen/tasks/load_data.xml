@@ -38,6 +38,18 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#バッチサイズを変更する">バッチサイズを変更する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#環境名つきバージョンディレクトリ以下のダンプァイルを優先する">環境名つきバージョンディレクトリ以下のダンプァイルを優先する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -91,15 +103,52 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[    <load-data
-      rootpackagename="examples"
-      loadBatchSize="20"
-      classpathref="classpath"
-    />]]></source>
+			<subsection name="バッチサイズを変更する">
 				<p>
 					バッチサイズを変更してタスクを実行します。
 				</p>
-			</subsection>		</section>
+<source><![CDATA[<load-data
+    rootPackageName="examples"
+    loadBatchSize="20"
+    classpathRef="classpath"
+/>]]></source>
+			</subsection>
+			<subsection name="環境名つきバージョンディレクトリ以下のダンプァイルを優先する">
+				<p>
+					applyEnvToVersion属性に"true"を指定すると、環境名つきバージョンディレクトリ以下に同名の相対パスで表されるファイルがあれば、そちらが優先されるようになります。
+					設定例は次の通りです。
+				</p>
+<source><![CDATA[<load-data
+    rootPackageName="examples"
+    applyEnvToVersion="true"
+    env="ut"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					環境名つきバージョンディレクトリとは、バージョン名と環境名を#で連結したディレクトリのことです。
+					次の図で言えば、0001#utがバージョンディレクトリになります。
+				</p>
+<source><![CDATA[db
+└─migrate
+    ├─0001
+    │  └─create
+    │      └─040-dump
+    │          ├─employee.csv
+    │          └─address.csv
+    │          └─..
+    └─0001#ut
+        └─create
+            └─040-dump
+                └─employee.csv]]></source>
+				<p>
+					この例では、employee.csvについては0001#utディレクトリ以下のものが使用され、
+					0001ディレクトリ以下にあるemployee.csvは参照されません。
+					address.csvについては0001ディレクトリ以下にあるものが使用されます。
+				</p>
+				<p>
+					環境名つきバージョンディレクトリ以下のダンプデータは、<a href="dump_data.html">Dump-Dataタスク</a>により作成できます。
+				</p>
+			</subsection>
+		</section>
 	</body>
 </document>

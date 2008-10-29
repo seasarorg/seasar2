@@ -370,9 +370,13 @@
     classpathRef="classpath"
 />]]></source>
 				<p>
-					sqlKeywordCaseType属性に"lowercase"とsqlIdentifierCaseType属性に"uppercase"を指定した場合、生成されるSQLは次のようになります。
+					sqlKeywordCase属性に"lowercase"とsqlIdentifierCase属性に"uppercase"を指定した場合、生成されるSQLは次のようになります。
 				</p>
 <source><![CDATA[create table HOGE (AAA varchar(255));]]></source>
+				<p>
+					逆に、sqlKeywordCase属性に"uppercase"とsqlIdentifierCase属性に"lowercase"を指定した場合、生成されるSQLは次のようになります。
+				</p>
+<source><![CDATA[CREATE TABLE hoge (aaa VARCHAR(255));]]></source>
 			</subsection>
 			<subsection name="独自のテンプレートファイルを使用する">
 				<p>

@@ -38,6 +38,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#スキーマを指定する">スキーマを指定する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -80,15 +87,15 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
-<source><![CDATA[   <dump-db-meta
-      classpathDir="build/classes"
-      schema="PUBLIC"
-      classpathref="classpath"
-   />]]></source>
+			<subsection name="スキーマを指定する">
 				<p>
 					"PUBLIC"というスキーマを指定してタスクを実行します。
 				</p>
+<source><![CDATA[<dump-db-meta
+    classpathDir="build/classes"
+    schema="PUBLIC"
+    classpathRef="classpath"
+/>]]></source>
 			</subsection>
 		</section>
 	</body>

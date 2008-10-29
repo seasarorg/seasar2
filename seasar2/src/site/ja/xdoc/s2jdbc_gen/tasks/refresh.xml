@@ -38,6 +38,13 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#ポート番号を指定する">ポート番号を指定する</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -63,12 +70,12 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="ポート番号の指定">
-<source><![CDATA[<refresh projectName="example-project" port="9999"/>
-]]></source>
+			<subsection name="ポート番号を指定する">
 				<p>
 					ポート番号に"9999"を指定し実行します。
 				</p>
+<source><![CDATA[<refresh projectName="example-project" port="9999"/>
+]]></source>
 			</subsection>
 		</section>
 	</body>
