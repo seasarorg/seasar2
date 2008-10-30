@@ -77,7 +77,7 @@
 create table EMPLOYEE (
     EMPLOYEE_ID integer not null primary key, 
     EMPLOYEE_NAME varchar(20),
-    DEPARTMENT_ID integer
+    DEPARTMENT_ID integer,
     CONSTRAINT fk_department_id foreign key(DEPARTMENT_ID) references DEPARTMENT(DEPARTMENT_ID)
 );]]></source>
 			<p>
