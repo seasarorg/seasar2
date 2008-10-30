@@ -1884,6 +1884,22 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareCondition_empty() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id", null);
+        query.where(w);
+        query.prepare("getResultList");
+        assertEquals("", query.whereClause.toSql());
+        Object[] variables = query.getParamValues();
+        assertEquals(0, variables.length);
+        Class<?>[] variableClasses = query.getParamClasses();
+        assertEquals(0, variableClasses.length);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareSql() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.prepare("getResultList");

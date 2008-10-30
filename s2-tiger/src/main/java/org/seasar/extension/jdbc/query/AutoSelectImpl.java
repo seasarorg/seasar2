@@ -967,9 +967,13 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         for (Map.Entry<String, ? extends Object> e : conditions.entrySet()) {
             prepareCondition(whereTerm, e.getKey(), e.getValue());
         }
+        final String whereTermString = whereTerm.toSql();
+        if (StringUtil.isEmpty(whereTermString)) {
+            return;
+        }
         whereClause.addAndSql("(");
-        whereClause.addSql(whereTerm.toSql().substring(
-                WhereClause.WHERE_KEYWORD.length()));
+        whereClause.addSql(whereTermString.substring(WhereClause.WHERE_KEYWORD
+                .length()));
         whereClause.addSql(")");
     }
 
