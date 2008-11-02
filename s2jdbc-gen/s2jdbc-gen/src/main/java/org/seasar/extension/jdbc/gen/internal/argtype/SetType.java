@@ -15,31 +15,32 @@
  */
 package org.seasar.extension.jdbc.gen.internal.argtype;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
- * コマンドラインの引数の型を表すインタフェースです。
+ * {@link Set}を扱う{@link ArgumentType}の実装クラスです。
  * 
  * @author taedium
  * @param <T>
- *            引数の型
+ *            セットの要素の型
  */
-public interface ArgumentType<T> {
+public class SetType<T> extends CollectionType<T> {
 
     /**
-     * 引数の文字列を適切な型のオブジェクトに変換します。
+     * インスタンスを構築します。
      * 
-     * @param value
-     *            引数の文字列
-     * @return オブジェクト
+     * @param argumentType
+     *            引数の型
      */
-    T toObject(String value);
+    public SetType(ArgumentType<T> argumentType) {
+        super(argumentType);
+    }
 
-    /**
-     * 引数のオブジェクトを文字列に変換します。
-     * 
-     * @param value
-     *            引数のオブジェクト
-     * @return 文字列
-     */
-    String toText(T value);
+    @Override
+    protected Collection<T> createCollection() {
+        return new HashSet<T>();
+    }
 
 }

@@ -15,10 +15,9 @@
  */
 package org.seasar.extension.jdbc.gen.internal.argtype;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -28,12 +27,12 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ListTypeTest {
+public class SetTypeTest {
 
-    private ListType<String> stringListType = new ListType<String>(
+    private SetType<String> stringSetType = new SetType<String>(
             new StringType());
 
-    private ListType<Integer> numberListType = new ListType<Integer>(
+    private SetType<Integer> numberSetType = new SetType<Integer>(
             new NumberType<Integer>(Integer.class));
 
     /**
@@ -41,12 +40,11 @@ public class ListTypeTest {
      */
     @Test
     public void testToObject_stringValue() {
-        Collection<? extends String> collection = stringListType
+        Collection<? extends String> collection = stringSetType
                 .toObject("['aaa','bbb']");
         assertEquals(2, collection.size());
-        Iterator<? extends String> it = collection.iterator();
-        assertEquals("aaa", it.next());
-        assertEquals("bbb", it.next());
+        assertTrue(collection.contains("aaa"));
+        assertTrue(collection.contains("bbb"));
     }
 
     /**
@@ -54,12 +52,11 @@ public class ListTypeTest {
      */
     @Test
     public void testToObject_integerValue() {
-        Collection<? extends Integer> collection = numberListType
+        Collection<? extends Integer> collection = numberSetType
                 .toObject("[1,2]");
         assertEquals(2, collection.size());
-        Iterator<? extends Integer> it = collection.iterator();
-        assertEquals(new Integer(1), it.next());
-        assertEquals(new Integer(2), it.next());
+        assertTrue(collection.contains(1));
+        assertTrue(collection.contains(2));
     }
 
     /**
@@ -67,7 +64,7 @@ public class ListTypeTest {
      */
     @Test
     public void testToObject_empty() {
-        Collection<? extends String> collection = stringListType.toObject("[]");
+        Collection<? extends String> collection = stringSetType.toObject("[]");
         assertTrue(collection.isEmpty());
     }
 
@@ -76,10 +73,10 @@ public class ListTypeTest {
      */
     @Test
     public void testToText() {
-        List<String> list = new ArrayList<String>();
-        list.add("aaa");
-        list.add("bbb");
-        String s = stringListType.toText(list);
+        Set<String> set = new LinkedHashSet<String>();
+        set.add("aaa");
+        set.add("bbb");
+        String s = stringSetType.toText(set);
         assertEquals("['aaa','bbb']", s);
     }
 
@@ -88,8 +85,8 @@ public class ListTypeTest {
      */
     @Test
     public void testToText_empty() {
-        List<String> list = new ArrayList<String>();
-        String s = stringListType.toText(list);
+        Set<String> set = new LinkedHashSet<String>();
+        String s = stringSetType.toText(set);
         assertEquals("[]", s);
     }
 

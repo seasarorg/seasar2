@@ -73,9 +73,12 @@ public class ArgumentsBuilder {
             ArgumentType<Object> argumentType = ArgumentTypeRegistry
                     .getArgumentType(propertyDesc);
             if (argumentType == null) {
-                logger.log("WS2JDBCGEN0001", new Object[] {
-                        bean.getClass().getName(),
-                        propertyDesc.getPropertyName() });
+                String message = String
+                        .format(
+                                "No ArgumentType for the property(%s) of class(%s). Process skipped.",
+                                propertyDesc.getPropertyName(), bean.getClass()
+                                        .getName());
+                logger.warn(message);
                 continue;
             }
             String name = propertyDesc.getPropertyName();

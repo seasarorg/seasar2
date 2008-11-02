@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.argtype;
 import java.io.File;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.framework.beans.BeanDesc;
@@ -39,6 +40,17 @@ public class ArgumentTypeRegistryTest {
     @Before
     public void setUp() {
         beanDesc = BeanDescFactory.getBeanDesc(MyBean.class);
+    }
+
+    /**
+     * 
+     */
+    @After
+    public void tearDown() {
+        ArgumentTypeRegistry.registerArgumentType(String.class,
+                StringType.class);
+        ArgumentTypeRegistry.registerCollectionArgumentType(List.class,
+                ListType.class);
     }
 
     /**
@@ -90,15 +102,51 @@ public class ArgumentTypeRegistryTest {
      * @throws Exception
      */
     @Test
-    public void testRegister() throws Exception {
-        ArgumentTypeRegistry.register(MyArgumentType.class);
-        try {
-            ArgumentType<String> argumentType = ArgumentTypeRegistry
-                    .getArgumentType(MyArgumentType.class);
-            assertNotNull(argumentType);
-        } finally {
-            ArgumentTypeRegistry.deregister(MyArgumentType.class);
-        }
+    public void testRegisterArgumentType() throws Exception {
+        ArgumentTypeRegistry.registerArgumentType(String.class,
+                MyArgumentType.class);
+        ArgumentType<String> argumentType = ArgumentTypeRegistry
+                .getArgumentType(String.class);
+        assertTrue(argumentType instanceof MyArgumentType);
+        assertEquals("#aaa#", argumentType.toObject("aaa"));
+        assertEquals("*aaa*", argumentType.toText("aaa"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testDeregisterArgumentType() throws Exception {
+        ArgumentTypeRegistry.deregisterArgumentType(String.class);
+        ArgumentType<String> argumentType = ArgumentTypeRegistry
+                .getArgumentType(String.class);
+        assertNull(argumentType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testRegisterCollectionArgumentType() throws Exception {
+        ArgumentTypeRegistry.registerCollectionArgumentType(List.class,
+                MyCollectionArgumentType.class);
+        ArgumentType<List<String>> argumentType = ArgumentTypeRegistry
+                .getCollectionArgumentType(List.class, String.class);
+        assertTrue(argumentType instanceof MyCollectionArgumentType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testDeregisterCollectionArgumentType() throws Exception {
+        ArgumentTypeRegistry.deregisterCollectionArgumentType(List.class);
+        ArgumentType<List<String>> argumentType = ArgumentTypeRegistry
+                .getCollectionArgumentType(List.class, String.class);
+        assertNull(argumentType);
     }
 
     /**
@@ -196,11 +244,28 @@ public class ArgumentTypeRegistryTest {
     public static class MyArgumentType implements ArgumentType<String> {
 
         public String toObject(String value) {
-            return null;
+            return "#" + value + "#";
         }
 
         public String toText(String value) {
-            return null;
+            return "*" + value + "*";
+        }
+    }
+
+    /**
+     * 
+     * @author taedium
+     * 
+     * @param <T>
+     */
+    public static class MyCollectionArgumentType<T> extends CollectionType<T> {
+
+        /**
+         * 
+         * @param argumentType
+         */
+        public MyCollectionArgumentType(ArgumentType<T> argumentType) {
+            super(argumentType);
         }
     }
 

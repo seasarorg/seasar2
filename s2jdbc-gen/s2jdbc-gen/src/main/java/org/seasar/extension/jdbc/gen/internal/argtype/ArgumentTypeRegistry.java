@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.seasar.framework.beans.PropertyDesc;
@@ -33,7 +34,7 @@ import org.seasar.framework.util.tiger.ReflectionUtil;
  */
 public class ArgumentTypeRegistry {
 
-    /** 引数の値のクラスをキー、 {@link ArgumentType}のコンストラクタを値とするマップ */
+    /** クラスをキー、 {@link ArgumentType}のコンストラクタを値とするマップ */
     protected static Map<Class<?>, Constructor<? extends ArgumentType<?>>> argTypeMap = new ConcurrentHashMap<Class<?>, Constructor<? extends ArgumentType<?>>>();
     static {
         argTypeMap.put(Boolean.class, ReflectionUtil.getConstructor(
@@ -48,11 +49,23 @@ public class ArgumentTypeRegistry {
                 ClassType.class, null));
     }
 
+    /** コレクション型のクラスをキー、 コレクション型の{@link ArgumentType}のコンストラクタを値とするマップ */
+    @SuppressWarnings("unchecked")
+    protected static Map<Class<? extends Collection>, Constructor<? extends CollectionType>> collectionArgTypeMap = new ConcurrentHashMap<Class<? extends Collection>, Constructor<? extends CollectionType>>();
+    static {
+        collectionArgTypeMap.put(List.class, ReflectionUtil.getConstructor(
+                ListType.class, ArgumentType.class));
+        collectionArgTypeMap.put(Set.class, ReflectionUtil.getConstructor(
+                SetType.class, ArgumentType.class));
+        collectionArgTypeMap.put(Collection.class, ReflectionUtil
+                .getConstructor(CollectionType.class, ArgumentType.class));
+    }
+
     /**
      * {@link ArgumentType}を返します。
      * 
      * @param <T>
-     *            引数の値の型
+     *            引数の型
      * @param propertyDesc
      *            プロパティ記述
      * @return {@link ArgumentType}
@@ -71,9 +84,9 @@ public class ArgumentTypeRegistry {
      * {@link ArgumentType}を返します。
      * 
      * @param <T>
-     *            引数の値の型
+     *            引数の型
      * @param clazz
-     *            引数の値のクラス
+     *            引数のクラス
      * @return {@link ArgumentType}
      */
     @SuppressWarnings("unchecked")
@@ -98,7 +111,7 @@ public class ArgumentTypeRegistry {
      * {@link ArgumentType}を返します。
      * 
      * @param <T>
-     *            引数の値の型
+     *            引数の型
      * @param collectioinClass
      *            コレクションのクラス
      * @param elementClass
@@ -109,8 +122,10 @@ public class ArgumentTypeRegistry {
     protected static <T> ArgumentType<T> getCollectionArgumentType(
             Class<?> collectioinClass, Class<?> elementClass) {
         ArgumentType<?> argumentType = getArgumentType(elementClass);
-        if (List.class.isAssignableFrom(collectioinClass)) {
-            return new ListType(argumentType);
+        if (collectionArgTypeMap.containsKey(collectioinClass)) {
+            Constructor<? extends CollectionType> constructor = collectionArgTypeMap
+                    .get(collectioinClass);
+            return ReflectionUtil.newInstance(constructor, argumentType);
         }
         return null;
     }
@@ -119,14 +134,20 @@ public class ArgumentTypeRegistry {
      * {@link ArgumentType}を登録します。
      * 
      * @param clazz
-     *            引数の値のクラス
+     *            引数のクラス
+     * @param argumentTypeClass
+     *            引数の型を表すクラス
      */
-    protected static void register(Class<? extends ArgumentType<?>> clazz) {
+    public static void registerArgumentType(Class<?> clazz,
+            Class<? extends ArgumentType<?>> argumentTypeClass) {
         if (clazz == null) {
             throw new NullPointerException("clazz");
         }
+        if (argumentTypeClass == null) {
+            throw new NullPointerException("argumentTypeClass");
+        }
         Constructor<? extends ArgumentType<?>> constructor = ReflectionUtil
-                .getConstructor(clazz, null);
+                .getConstructor(argumentTypeClass, null);
         argTypeMap.put(clazz, constructor);
     }
 
@@ -134,12 +155,50 @@ public class ArgumentTypeRegistry {
      * {@link ArgumentType}を削除します。
      * 
      * @param clazz
-     *            引数の値のクラス
+     *            引数のクラス
      */
-    protected static void deregister(Class<? extends ArgumentType<?>> clazz) {
+    public static void deregisterArgumentType(Class<?> clazz) {
         if (clazz == null) {
             throw new NullPointerException("clazz");
         }
         argTypeMap.remove(clazz);
+    }
+
+    /**
+     * コレクション型の{@link ArgumentType}を登録します。
+     * 
+     * @param collectionClass
+     *            コレクション型のクラス
+     * @param argumentTypeClass
+     *            引数の型を表すクラス
+     */
+    @SuppressWarnings("unchecked")
+    public static void registerCollectionArgumentType(
+            Class<? extends Collection> collectionClass,
+            Class<? extends CollectionType> argumentTypeClass) {
+        if (collectionClass == null) {
+            throw new NullPointerException("collectionClass");
+        }
+        if (argumentTypeClass == null) {
+            throw new NullPointerException("argumentTypeClass");
+        }
+        Constructor<? extends CollectionType> constructor = ReflectionUtil
+                .getConstructor(argumentTypeClass, ArgumentType.class);
+        collectionArgTypeMap.put(collectionClass, constructor);
+    }
+
+    /**
+     * コレクション型の{@link ArgumentType}を削除します。
+     * 
+     * @param collectionClass
+     *            コレクション型の引数のクラス
+     */
+    @SuppressWarnings("unchecked")
+    public static void deregisterCollectionArgumentType(
+            Class<? extends Collection> collectionClass) {
+        if (collectionClass == null) {
+            throw new NullPointerException("collectionClass");
+        }
+        collectionArgTypeMap.remove(collectionClass);
     }
 }
