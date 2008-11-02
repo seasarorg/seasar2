@@ -144,6 +144,16 @@ public class OracleGenDialect extends StandardGenDialect {
         return "select " + sequenceName + ".nextval from dual";
     }
 
+    @Override
+    public boolean supportsCommentInCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean supportsCommentOn() {
+        return true;
+    }
+
     /**
      * Oracle用の{@link ColumnType}の実装クラスです。
      * 

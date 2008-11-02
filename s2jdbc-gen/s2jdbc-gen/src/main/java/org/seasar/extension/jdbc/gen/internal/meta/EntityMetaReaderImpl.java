@@ -24,12 +24,16 @@ import javax.persistence.Entity;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
+import org.seasar.extension.jdbc.gen.internal.exception.DocletUnavailableRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.EntityClassNotFoundRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassTraversal;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
+
+import com.sun.javadoc.Doclet;
 
 /**
  * {@link EntityMetaReader}の実装クラスです。
@@ -41,6 +45,16 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     /** ロガー */
     protected static Logger logger = Logger
             .getLogger(EntityMetaReaderImpl.class);
+
+    /** {@link Doclet}が使用可能な場合{@code true} */
+    protected static boolean docletAvailable;
+    {
+        try {
+            Class.forName("com.sun.javadoc.Doclet"); // tools.jar
+            docletAvailable = true;
+        } catch (final Throwable ignore) {
+        }
+    }
 
     /** ルートディレクトリ */
     protected File classpathDir;
@@ -57,6 +71,21 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     /** 読み取り非対象とするエンティティクラス名のパターン */
     protected Pattern ignoreShortClassNamePattern;
 
+    /** コメントを読む場合 {@code true} */
+    protected boolean readComment;
+
+    /**
+     * javaファイルが存在するディレクトリ、{@code useComment}が{@code true}の場合{@code null}
+     * であってはならない
+     */
+    protected File javaFileDestDir;
+
+    /**
+     * javaファイルのエンコーディング、{@code useComment}が{@code true}の場合{@code null}
+     * であってはならない
+     */
+    protected String javaFileEncoding;
+
     /**
      * インタスタンスを構築します。
      * 
@@ -70,10 +99,19 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      *            対象とするエンティティクラス名の正規表現
      * @param ignoreShortClassNamePattern
      *            対象としないエンティティクラス名の正規表現
+     * @param readComment
+     *            エンティティのコメントを使用する場合 {@code true}
+     * @param javaFileSrcDir
+     *            javaファイルが存在するディレクトリ、{@code readComment}が{@code true}の場合{@code
+     *            null}であってはならない
+     * @param javaFileEncoding
+     *            javaファイルのエンコーディング、{@code readComment}が{@code true}の場合{@code
+     *            null}であってはならない
      */
     public EntityMetaReaderImpl(File classpathDir, String packageName,
             EntityMetaFactory entityMetaFactory, String shortClassNamePattern,
-            String ignoreShortClassNamePattern) {
+            String ignoreShortClassNamePattern, boolean readComment,
+            File javaFileSrcDir, String javaFileEncoding) {
         if (classpathDir == null) {
             throw new NullPointerException("classpathDir");
         }
@@ -86,12 +124,21 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (ignoreShortClassNamePattern == null) {
             throw new NullPointerException("setEntityClassNamePattern");
         }
+        if (readComment && javaFileSrcDir == null) {
+            throw new NullPointerException("javaFileDestDir");
+        }
+        if (readComment && javaFileEncoding == null) {
+            throw new NullPointerException("javaFileEncoding");
+        }
         this.classpathDir = classpathDir;
         this.packageName = packageName;
         this.entityMetaFactory = entityMetaFactory;
         this.shortClassNamePattern = Pattern.compile(shortClassNamePattern);
         this.ignoreShortClassNamePattern = Pattern
                 .compile(ignoreShortClassNamePattern);
+        this.readComment = readComment;
+        this.javaFileDestDir = javaFileSrcDir;
+        this.javaFileEncoding = javaFileEncoding;
     }
 
     public List<EntityMeta> read() {
@@ -119,6 +166,11 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
                     packageName, shortClassNamePattern.pattern(),
                     ignoreShortClassNamePattern.pattern());
         }
+
+        if (readComment) {
+            readComment(entityMetaList);
+        }
+
         return entityMetaList;
     }
 
@@ -159,4 +211,41 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         return true;
     }
 
+    /**
+     * コメントを読みコメントをメタデータに設定します。
+     * 
+     * @param entityMetaList
+     *            エンティティメタデータのリスト
+     */
+    protected void readComment(List<EntityMeta> entityMetaList) {
+        if (!docletAvailable) {
+            throw new DocletUnavailableRuntimeException();
+        }
+        CommentDoclet.setEntityMetaList(entityMetaList);
+        try {
+            com.sun.tools.javadoc.Main.execute("commentDoclet",
+                    CommentDoclet.class.getName(), createDocletArgs());
+        } finally {
+            CommentDoclet.entityMetaList = null;
+        }
+    }
+
+    /**
+     * {@link Doclet}の引数を作成します。
+     * 
+     * @return {@link Doclet}の引数
+     */
+    protected String[] createDocletArgs() {
+        List<String> args = new ArrayList<String>();
+        args.add("-sourcepath");
+        args.add(FileUtil.getCanonicalPath(javaFileDestDir));
+        args.add("-encoding");
+        args.add(javaFileEncoding);
+        args.add("-subpackages");
+        args.add(packageName);
+        if (logger.isDebugEnabled()) {
+            args.add("-verbose");
+        }
+        return args.toArray(new String[args.size()]);
+    }
 }

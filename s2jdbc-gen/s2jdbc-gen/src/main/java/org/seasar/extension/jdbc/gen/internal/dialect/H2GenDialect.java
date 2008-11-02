@@ -117,6 +117,16 @@ public class H2GenDialect extends StandardGenDialect {
         return "call next value for " + sequenceName;
     }
 
+    @Override
+    public boolean supportsCommentInCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean supportsCommentOn() {
+        return true;
+    }
+
     /**
      * H2用の{@link ColumType}の実装です。
      * 

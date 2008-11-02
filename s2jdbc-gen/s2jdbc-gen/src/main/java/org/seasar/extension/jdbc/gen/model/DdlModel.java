@@ -36,14 +36,14 @@ public abstract class DdlModel {
     /** SQLステートメントの区切り文字 */
     protected char delimiter;
 
-    /** テーブルオプション */
-    protected String tableOption;
-
     /** SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型 */
     protected SqlKeywordCaseType sqlKeywordCaseType;
 
     /** SQLの識別子の大文字小文字を変換するかどうかを示す列挙型 */
     protected SqlIdentifierCaseType sqlIdentifierCaseType;
+
+    /** コメントを使用する場合{@code true} */
+    protected boolean useComment;
 
     /**
      * 標準のテーブル名を返します。
@@ -122,25 +122,6 @@ public abstract class DdlModel {
     }
 
     /**
-     * テーブルオプションを返します。
-     * 
-     * @return テーブルオプション
-     */
-    public String getTableOption() {
-        return tableOption;
-    }
-
-    /**
-     * テーブルオプションを設定します。
-     * 
-     * @param tableOption
-     *            テーブルオプション
-     */
-    public void setTableOption(String tableOption) {
-        this.tableOption = tableOption;
-    }
-
-    /**
      * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を返します。
      * 
      * @return SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型
@@ -180,6 +161,25 @@ public abstract class DdlModel {
     }
 
     /**
+     * コメントを使用する場合{@code true}を返します。
+     * 
+     * @return コメントを使用する場合{@code true}
+     */
+    public boolean isUseComment() {
+        return useComment;
+    }
+
+    /**
+     * コメントを使用する場合{@code true}を設定します。
+     * 
+     * @param useComment
+     *            コメントを使用する場合{@code true}
+     */
+    public void setUseComment(boolean useComment) {
+        this.useComment = useComment;
+    }
+
+    /**
      * キーワードの大文字小文字を変換します。
      * 
      * @param keyword
@@ -199,6 +199,24 @@ public abstract class DdlModel {
      */
     public String identifier(String identifier) {
         return sqlIdentifierCaseType.convert(identifier);
+    }
+
+    /**
+     * CREATE TABLEでコメントを出力する場合{@code true}
+     * 
+     * @return CREATE TABLEでコメントを出力する場合{@code true}
+     */
+    public boolean isCommentInCreateTableSupported() {
+        return useComment && dialect.supportsCommentInCreateTable();
+    }
+
+    /**
+     * COMMENT ONを出力する場合{@code true}を返します。
+     * 
+     * @return COMMENT ONを出力する場合{@code true}
+     */
+    public boolean isCommentOnSupported() {
+        return useComment && dialect.supportsCommentOn();
     }
 
 }

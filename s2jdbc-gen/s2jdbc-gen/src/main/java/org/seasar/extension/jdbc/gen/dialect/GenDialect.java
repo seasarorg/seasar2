@@ -257,6 +257,20 @@ public interface GenDialect {
     String getSequenceNextValString(String sequenceName, int allocationSize);
 
     /**
+     * CREATE TABLEでコメントをサポートする場合{@code true}を返します。
+     * 
+     * @return コメントをサポートする場合{@code true}
+     */
+    boolean supportsCommentInCreateTable();
+
+    /**
+     * COMMENT ONをサポートする場合{@code true}を返します。
+     * 
+     * @return COMMENT ONをサポートする場合{@code true}
+     */
+    boolean supportsCommentOn();
+
+    /**
      * カラム型です。
      * <p>
      * データベースのメタデータが返すカラムの型名に対応します。

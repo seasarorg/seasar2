@@ -90,11 +90,13 @@ public class FactoryImpl implements Factory {
     public EntityMetaReader createEntityMetaReader(Command command,
             File classpathDir, String packageName,
             EntityMetaFactory entityMetaFactory, String shortClassNamePattern,
-            String ignoreShortClassNamePattern) {
+            String ignoreShortClassNamePattern, boolean readComment,
+            File javaFileSrcDir, String javaFileEncoding) {
 
         return new EntityMetaReaderImpl(classpathDir, packageName,
                 entityMetaFactory, shortClassNamePattern,
-                ignoreShortClassNamePattern);
+                ignoreShortClassNamePattern, readComment, javaFileSrcDir,
+                javaFileEncoding);
     }
 
     public DatabaseDescFactory createDatabaseDescFactory(Command command,
@@ -174,11 +176,11 @@ public class FactoryImpl implements Factory {
             GenDialect dialect, DataSource dataSource,
             SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
-            String tableOption) {
+            String tableOption, boolean useComment) {
 
         return new TableModelFactoryImpl(dialect, dataSource,
                 sqlIdentifierCaseType, sqlKeywordCaseType, statementDelimiter,
-                tableOption);
+                tableOption, useComment);
     }
 
     public EntitySetDescFactory createEntitySetDescFactory(Command command,

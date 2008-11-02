@@ -43,6 +43,7 @@ import org.seasar.extension.jdbc.gen.desc.UniqueKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.UniqueKeyDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
+import org.seasar.extension.jdbc.gen.internal.util.EntityMetaUtil;
 import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
 
 /**
@@ -154,6 +155,7 @@ public class TableDescFactoryImpl implements TableDescFactory {
         Table table = getTable(entityMeta);
         TableDesc tableDesc = new TableDesc();
         doName(entityMeta, tableDesc, table);
+        doComment(entityMeta, tableDesc, table);
         doPrimaryKeyDesc(entityMeta, tableDesc, table);
         doColumnDesc(entityMeta, tableDesc, table);
         doForeignKeyDesc(entityMeta, tableDesc, table);
@@ -180,6 +182,22 @@ public class TableDescFactoryImpl implements TableDescFactory {
         tableDesc.setSchemaName(tableMeta.getSchema());
         tableDesc.setName(tableMeta.getName());
         tableDesc.setCanonicalName(buildCanonicalName(tableMeta));
+    }
+
+    /**
+     * コメントを処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param tableDesc
+     *            テーブル記述
+     * @param table
+     *            テーブル
+     */
+    protected void doComment(EntityMeta entityMeta, TableDesc tableDesc,
+            Table table) {
+        String comment = EntityMetaUtil.getComment(entityMeta);
+        tableDesc.setComment(comment);
     }
 
     /**

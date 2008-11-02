@@ -78,11 +78,20 @@ public interface Factory {
      *            対象とするエンティティクラス名の正規表現
      * @param ignoreShortClassNamePattern
      *            対象としないエンティティクラス名の正規表現
+     * @param readComment
+     *            コメントを読む場合 {@code true}
+     * @param javaFileSrcDir
+     *            javaファイルが存在するディレクトリ、{@code readComment}が{@code true}の場合{@code
+     *            null}であってはならない
+     * @param javaFileEncoding
+     *            javaファイルのエンコーディング、{@code readComment}が{@code true}の場合{@code
+     *            null}であってはならない
      * @return {@link EntityMetaReader}の実装
      */
     EntityMetaReader createEntityMetaReader(Command command, File classpathDir,
             String packageName, EntityMetaFactory entityMetaFactory,
-            String shortClassNamePattern, String ignoreShortClassNamePattern);
+            String shortClassNamePattern, String ignoreShortClassNamePattern,
+            boolean readComment, File javaFileSrcDir, String javaFileEncoding);
 
     /**
      * {@link DatabaseDescFactory}の実装を返します。
@@ -267,13 +276,15 @@ public interface Factory {
      *            SQLステートメントの区切り文字
      * @param tableOption
      *            テーブルオプション、存在しない場合は{@code null}
+     * @param useComment
+     *            コメントを使用する場合{@code true}
      * @return {@link TableModelFactory}の実装
      */
     TableModelFactory createTableModelFactory(Command command,
             GenDialect dialect, DataSource dataSource,
             SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char statementDelimiter,
-            String tableOption);
+            String tableOption, boolean useComment);
 
     /**
      * {@link EntitySetDescFactory}の実装を作成します。

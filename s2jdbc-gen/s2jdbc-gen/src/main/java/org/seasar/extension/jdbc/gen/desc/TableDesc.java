@@ -45,6 +45,9 @@ public class TableDesc {
     /** 一意性をもつ標準名 */
     protected String canonicalName;
 
+    /** コメント */
+    protected String comment;
+
     /** カラム記述のリスト */
     protected List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
 
@@ -158,6 +161,25 @@ public class TableDesc {
     public void setCanonicalName(String canonicalName) {
         this.canonicalName = canonicalName;
         key.setCanonicalName(canonicalName);
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**

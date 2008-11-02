@@ -97,7 +97,7 @@ public class GenerateSequenceTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new HsqlGenDialect(), dataSource,
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null) {
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false) {
 
             @Override
             protected Long getNextValue(String sequenceName, int allocationSize) {

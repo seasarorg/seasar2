@@ -75,6 +75,9 @@ public class TableModelFactoryImpl implements TableModelFactory {
     /** SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型 */
     protected SqlKeywordCaseType sqlKeywordCaseType;
 
+    /** コメントを使用する場合{@code true} */
+    protected boolean useComment;
+
     /**
      * @param dialect
      *            方言
@@ -88,11 +91,13 @@ public class TableModelFactoryImpl implements TableModelFactory {
      *            区切り文字
      * @param tableOption
      *            テーブルオプション、存在しない場合は{@code null}
+     * @param useComment
+     *            コメントを使用する場合{@code true}
      */
     public TableModelFactoryImpl(GenDialect dialect, DataSource dataSource,
             SqlIdentifierCaseType sqlIdentifierCaseType,
             SqlKeywordCaseType sqlKeywordCaseType, char delimiter,
-            String tableOption) {
+            String tableOption, boolean useComment) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
@@ -111,6 +116,7 @@ public class TableModelFactoryImpl implements TableModelFactory {
         this.sqlKeywordCaseType = sqlKeywordCaseType;
         this.delimiter = delimiter;
         this.tableOption = tableOption;
+        this.useComment = useComment;
     }
 
     public TableModel getTableModel(TableDesc tableDesc) {
@@ -122,6 +128,8 @@ public class TableModelFactoryImpl implements TableModelFactory {
         tableModel.setTableOption(keyword(tableOption));
         tableModel.setSqlIdentifierCaseType(sqlIdentifierCaseType);
         tableModel.setSqlKeywordCaseType(sqlKeywordCaseType);
+        tableModel.setComment(normalizeComment(tableDesc.getComment()));
+        tableModel.setUseComment(useComment);
         doPrimaryKeyModel(tableModel, tableDesc);
         doUniqueKeyModel(tableModel, tableDesc);
         doForeignKeyModel(tableModel, tableDesc);
@@ -248,6 +256,7 @@ public class TableModelFactoryImpl implements TableModelFactory {
                 }
             }
             columnModel.setDefinition(keyword(definition));
+            columnModel.setComment(normalizeComment(columnDesc.getComment()));
             tableModel.addColumnModel(columnModel);
         }
     }
@@ -316,6 +325,20 @@ public class TableModelFactoryImpl implements TableModelFactory {
      */
     protected String identifier(String identifier) {
         return sqlIdentifierCaseType.convert(identifier);
+    }
+
+    /**
+     * コメントを正規化します。
+     * 
+     * @param comment
+     *            コメント
+     * @return 正規化されたコメント
+     */
+    protected String normalizeComment(String comment) {
+        if (comment == null) {
+            return "";
+        }
+        return comment.replace("'", "''");
     }
 
 }

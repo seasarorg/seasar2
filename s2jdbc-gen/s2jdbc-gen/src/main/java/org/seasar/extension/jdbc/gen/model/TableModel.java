@@ -26,6 +26,12 @@ import java.util.List;
  */
 public class TableModel extends DdlModel {
 
+    /** テーブルオプション */
+    protected String tableOption;
+
+    /** コメント */
+    protected String comment;
+
     /** 主キーモデル */
     protected PrimaryKeyModel primaryKeyModel;
 
@@ -40,6 +46,44 @@ public class TableModel extends DdlModel {
 
     /** シーケンスモデルのリスト */
     protected List<SequenceModel> sequenceModelList = new ArrayList<SequenceModel>();
+
+    /**
+     * テーブルオプションを返します。
+     * 
+     * @return テーブルオプション
+     */
+    public String getTableOption() {
+        return tableOption;
+    }
+
+    /**
+     * テーブルオプションを設定します。
+     * 
+     * @param tableOption
+     *            テーブルオプション
+     */
+    public void setTableOption(String tableOption) {
+        this.tableOption = tableOption;
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     /**
      * 主キーモデルを返します。

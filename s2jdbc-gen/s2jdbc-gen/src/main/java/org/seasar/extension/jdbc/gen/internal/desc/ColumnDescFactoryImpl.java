@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.exception.NullableUniqueNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.UnsupportedGenerationTypeRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
+import org.seasar.extension.jdbc.gen.internal.util.PropertyMetaUtil;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.framework.util.StringUtil;
@@ -75,6 +76,7 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
         Column column = getColumn(propertyMeta);
         ColumnDesc columnDesc = new ColumnDesc();
         doName(entityMeta, propertyMeta, columnDesc, column);
+        doComment(entityMeta, propertyMeta, columnDesc, column);
         doIdentity(entityMeta, propertyMeta, columnDesc, column);
         doDefinition(entityMeta, propertyMeta, columnDesc, column);
         doNullable(entityMeta, propertyMeta, columnDesc, column);
@@ -99,6 +101,24 @@ public class ColumnDescFactoryImpl implements ColumnDescFactory {
             ColumnDesc columnDesc, Column column) {
         ColumnMeta columnMeta = propertyMeta.getColumnMeta();
         columnDesc.setName(columnMeta.getName());
+    }
+
+    /**
+     * コメントを処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param columnDesc
+     *            カラム記述
+     * @param column
+     *            カラム
+     */
+    protected void doComment(EntityMeta entityMeta, PropertyMeta propertyMeta,
+            ColumnDesc columnDesc, Column column) {
+        String comment = PropertyMetaUtil.getComment(propertyMeta);
+        columnDesc.setComment(comment);
     }
 
     /**

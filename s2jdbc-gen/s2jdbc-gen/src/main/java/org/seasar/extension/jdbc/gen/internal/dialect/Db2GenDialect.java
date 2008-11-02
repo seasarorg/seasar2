@@ -183,6 +183,16 @@ public class Db2GenDialect extends StandardGenDialect {
         return "values nextval for " + sequenceName;
     }
 
+    @Override
+    public boolean supportsCommentInCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean supportsCommentOn() {
+        return true;
+    }
+
     /**
      * DB2用の{@link StandardColumnType}の実装です。
      * 

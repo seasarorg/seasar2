@@ -166,7 +166,8 @@ public class GenerateTestCommand extends AbstractCommand {
      * @param ignoreEntityClassNamePattern
      *            対象としないエンティティクラス名の正規表現
      */
-    public void setIgnoreEntityClassNamePattern(String ignoreEntityClassNamePattern) {
+    public void setIgnoreEntityClassNamePattern(
+            String ignoreEntityClassNamePattern) {
         this.ignoreEntityClassNamePattern = ignoreEntityClassNamePattern;
     }
 
@@ -372,7 +373,7 @@ public class GenerateTestCommand extends AbstractCommand {
         return factory.createEntityMetaReader(this, classpathDir, ClassUtil
                 .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityClassNamePattern,
-                ignoreEntityClassNamePattern);
+                ignoreEntityClassNamePattern, false, null, null);
     }
 
     /**

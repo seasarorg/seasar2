@@ -10,5 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="lib" path="lib/freemarker-2.3.13.jar" sourcepath="libsrc/freemarker-2.3.13-sources.jar"/>
 	<classpathentry kind="lib" path="lib/svnkit-1.2.0.4949.jar" sourcepath="libsrc/svnkit-1.2.0.4949-sources.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JDK Library"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

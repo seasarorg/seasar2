@@ -187,6 +187,15 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** テーブルオプション */
     protected String tableOption = null;
 
+    /** エンティティクラスのコメントをDDLに適用する場合@{true} */
+    protected boolean applyJavaCommentToDdl = false;
+
+    /** Javaファイルのソースディレクトリ */
+    protected File javaFileSrcDir = new File(new File("src", "main"), "java");
+
+    /** Javaファイルのエンコーディング */
+    protected String javaFileEncoding = "UTF-8";
+
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
 
@@ -698,6 +707,63 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
+     * エンティティクラスのコメントをDDLに適用する場合@{true}@{true}を返します。
+     * 
+     * @return エンティティクラスのコメントをDDLに適用する場合@{true}
+     */
+    public boolean isApplyJavaCommentToDdl() {
+        return applyJavaCommentToDdl;
+    }
+
+    /**
+     * エンティティクラスのコメントをDDLに適用する場合@{true}を設定します。
+     * 
+     * @param applyJavaCommentToDdl
+     *            エンティティクラスのコメントをDDLに適用する場合@{true}
+     */
+    public void setApplyJavaCommentToDdl(boolean applyJavaCommentToDdl) {
+        this.applyJavaCommentToDdl = applyJavaCommentToDdl;
+    }
+
+    /**
+     * Javaファイルのソースディレクトリを返します。
+     * 
+     * @return Javaファイルのソースディレクトリ
+     */
+    public File getJavaFileSrcDir() {
+        return javaFileSrcDir;
+    }
+
+    /**
+     * Javaファイルのソースディレクトリを設定します。
+     * 
+     * @param javaFileSrcDir
+     *            Javaファイルのソースディレクトリ
+     */
+    public void setJavaFileSrcDir(File javaFileSrcDir) {
+        this.javaFileSrcDir = javaFileSrcDir;
+    }
+
+    /**
+     * Javaファイルのエンコーディングを返します。
+     * 
+     * @return Javaファイルのエンコーディング
+     */
+    public String getJavaFileEncoding() {
+        return javaFileEncoding;
+    }
+
+    /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
+     * @param javaFileEncoding
+     *            Javaファイルのエンコーディング
+     */
+    public void setJavaFileEncoding(String javaFileEncoding) {
+        this.javaFileEncoding = javaFileEncoding;
+    }
+
+    /**
      * ダンプファイルのエンコーディングを返します。
      * 
      * @return ダンプファイルのエンコーディング
@@ -1161,7 +1227,8 @@ public class GenerateDdlCommand extends AbstractCommand {
         return factory.createEntityMetaReader(this, classpathDir, ClassUtil
                 .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityClassNamePattern,
-                ignoreEntityClassNamePattern);
+                ignoreEntityClassNamePattern, applyJavaCommentToDdl,
+                javaFileSrcDir, javaFileEncoding);
     }
 
     /**
@@ -1210,7 +1277,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected TableModelFactory createTableModelFactory() {
         return factory.createTableModelFactory(this, dialect, jdbcManager
                 .getDataSource(), sqlIdentifierCaseType, sqlKeywordCaseType,
-                statementDelimiter, tableOption);
+                statementDelimiter, tableOption, applyJavaCommentToDdl);
     }
 
     /**

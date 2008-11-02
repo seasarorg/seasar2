@@ -29,6 +29,8 @@ import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.internal.dialect.MssqlGenDialect;
+import org.seasar.extension.jdbc.gen.internal.dialect.MysqlGenDialect;
+import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
 import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -117,7 +119,7 @@ public class GenerateTableTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new MssqlGenDialect(), new MockDataSource(),
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null) {
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false) {
 
             @Override
             protected Long getNextValue(String sequenceName, int allocationSize) {
@@ -169,7 +171,7 @@ public class GenerateTableTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new MssqlGenDialect(), dataSource,
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false);
         TableModel model = factory.getTableModel(tableDesc);
 
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -210,7 +212,7 @@ public class GenerateTableTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new MssqlGenDialect(), dataSource,
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false);
         TableModel model = factory.getTableModel(tableDesc);
 
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -256,7 +258,7 @@ public class GenerateTableTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new MssqlGenDialect(), dataSource,
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', "ENGINE = INNODB");
+                SqlKeywordCaseType.ORIGINALCASE, ';', "ENGINE = INNODB", false);
         TableModel model = factory.getTableModel(tableDesc);
 
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -265,6 +267,102 @@ public class GenerateTableTest {
 
         String path = getClass().getName().replace(".", "/")
                 + "_Create_tableOption.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCreate_commentOn() throws Exception {
+        ColumnDesc no = new ColumnDesc();
+        no.setName("no");
+        no.setDefinition("integer");
+        no.setComment("番号カラム");
+        no.setNullable(false);
+        no.setUnique(true);
+
+        ColumnDesc name = new ColumnDesc();
+        name.setName("name");
+        name.setDefinition("varchar");
+        name.setComment("'名前'カラム");
+        name.setNullable(false);
+        name.setUnique(false);
+
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        primaryKeyDesc.addColumnName("no");
+
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
+        tableDesc.setComment("HOGEテーブル");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
+        tableDesc.addColumnDesc(no);
+        tableDesc.addColumnDesc(name);
+        tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
+
+        TableModelFactoryImpl factory = new TableModelFactoryImpl(
+                new OracleGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, true);
+        TableModel model = factory.getTableModel(tableDesc);
+
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "sql/create-table.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_Create_commentOn.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCreate_commentInCreateTable() throws Exception {
+        ColumnDesc no = new ColumnDesc();
+        no.setName("no");
+        no.setDefinition("integer");
+        no.setComment("番号カラム");
+        no.setNullable(false);
+        no.setUnique(true);
+
+        ColumnDesc name = new ColumnDesc();
+        name.setName("name");
+        name.setDefinition("varchar");
+        name.setComment("'名前'カラム");
+        name.setNullable(false);
+        name.setUnique(false);
+
+        PrimaryKeyDesc primaryKeyDesc = new PrimaryKeyDesc();
+        primaryKeyDesc.addColumnName("no");
+
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
+        tableDesc.setComment("HOGEテーブル");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
+        tableDesc.addColumnDesc(no);
+        tableDesc.addColumnDesc(name);
+        tableDesc.setPrimaryKeyDesc(primaryKeyDesc);
+
+        TableModelFactoryImpl factory = new TableModelFactoryImpl(
+                new MysqlGenDialect(), dataSource,
+                SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, true);
+        TableModel model = factory.getTableModel(tableDesc);
+
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "sql/create-table.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_Create_commentInCreateTable.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
 
@@ -302,7 +400,7 @@ public class GenerateTableTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new MssqlGenDialect(), dataSource,
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null);
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false);
         TableModel model = factory.getTableModel(tableDesc);
 
         GenerationContext context = new GenerationContextImpl(model, new File(

@@ -399,7 +399,7 @@ public class GenerateConditionCommand extends AbstractCommand {
         return factory.createEntityMetaReader(this, classpathDir, ClassUtil
                 .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityClassNamePattern,
-                ignoreEntityClassNamePattern);
+                ignoreEntityClassNamePattern, false, null, null);
     }
 
     /**

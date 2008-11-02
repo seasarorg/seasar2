@@ -485,4 +485,34 @@ public class GenerateDdlTask extends AbstractTask {
         command.setGenDdlListenerClassName(genDdlListenerClassName);
     }
 
+    /**
+     * エンティティクラスのコメントをDDLに適用する場合@{true}を設定します。
+     * 
+     * @param applyJavaCommentToDdl
+     *            エンティティクラスのコメントをDDLに適用する場合@{true}
+     */
+    public void setApplyJavaCommentToDdl(boolean applyJavaCommentToDdl) {
+        command.setApplyJavaCommentToDdl(applyJavaCommentToDdl);
+    }
+
+    /**
+     * Javaファイルのソースディレクトリを設定します。
+     * 
+     * @param javaFileSrcDir
+     *            Javaファイルのソースディレクトリ
+     */
+    public void setJavaFileSrcDir(File javaFileSrcDir) {
+        command.setJavaFileSrcDir(javaFileSrcDir);
+    }
+
+    /**
+     * Javaファイルのエンコーディングを設定します。
+     * 
+     * @param javaFileEncoding
+     *            Javaファイルのエンコーディング
+     */
+    public void setJavaFileEncoding(String javaFileEncoding) {
+        command.setJavaFileEncoding(javaFileEncoding);
+    }
+
 }

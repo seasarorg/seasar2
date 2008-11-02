@@ -237,6 +237,14 @@ public class StandardGenDialect implements GenDialect {
         throw new UnsupportedOperationException("getSequenceNextValString");
     }
 
+    public boolean supportsCommentInCreateTable() {
+        return false;
+    }
+
+    public boolean supportsCommentOn() {
+        return false;
+    }
+
     /**
      * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
      * <p>

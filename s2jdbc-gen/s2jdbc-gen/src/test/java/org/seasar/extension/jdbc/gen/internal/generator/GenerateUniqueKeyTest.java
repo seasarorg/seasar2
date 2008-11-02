@@ -103,7 +103,7 @@ public class GenerateUniqueKeyTest {
         TableModelFactoryImpl factory = new TableModelFactoryImpl(
                 new StandardGenDialect(), dataSource,
                 SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null) {
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false) {
 
             @Override
             protected Long getNextValue(String sequenceName, int allocationSize) {

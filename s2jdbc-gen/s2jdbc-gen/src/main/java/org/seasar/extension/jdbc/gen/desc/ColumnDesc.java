@@ -45,6 +45,9 @@ public class ColumnDesc {
     /** SQL型 */
     protected SqlType sqlType;
 
+    /** コメント */
+    protected String comment;
+
     /**
      * 名前を返します。
      * 
@@ -158,6 +161,25 @@ public class ColumnDesc {
      */
     public void setSqlType(SqlType sqlType) {
         this.sqlType = sqlType;
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     @Override

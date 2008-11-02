@@ -15,12 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.internal.meta;
 
+import java.io.File;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.internal.meta.EntityMetaReaderImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -73,7 +73,8 @@ public class EntityMetaReaderImplTest {
     @Test
     public void testRead() throws Exception {
         EntityMetaReaderImpl reader = new EntityMetaReaderImpl(rootDir,
-                packageName, entityMetaFactory, "A.*", "Ab.*");
+                packageName, entityMetaFactory, "A.*", "Ab.*", false, new File(
+                        "dummy"), "UTF-8");
         List<EntityMeta> list = reader.read();
         assertEquals(1, list.size());
         assertEquals(Aaa.class, list.get(0).getEntityClass());

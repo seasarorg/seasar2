@@ -165,6 +165,16 @@ public class MysqlGenDialect extends StandardGenDialect {
         return true;
     }
 
+    @Override
+    public boolean supportsCommentInCreateTable() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsCommentOn() {
+        return false;
+    }
+
     /**
      * MySQL用の{@link ColumnType}の実装です。
      * 

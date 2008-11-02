@@ -1,0 +1,9 @@
+create table AAA.BBB.HOGE (
+    no integer not null,
+    name varchar not null,
+    constraint HOGE_PK primary key(no)
+);
+
+comment on table AAA.BBB.HOGE is 'HOGEテーブル';
+comment on column AAA.BBB.HOGE.no is '番号カラム';
+comment on column AAA.BBB.HOGE.name is '''名前''カラム';

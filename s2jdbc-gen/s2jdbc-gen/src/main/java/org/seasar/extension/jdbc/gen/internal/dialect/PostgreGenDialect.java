@@ -179,6 +179,16 @@ public class PostgreGenDialect extends StandardGenDialect {
         return "select nextval('" + sequenceName + "')";
     }
 
+    @Override
+    public boolean supportsCommentInCreateTable() {
+        return false;
+    }
+
+    @Override
+    public boolean supportsCommentOn() {
+        return true;
+    }
+
     /**
      * PostgreSQL用の{@link ColumnType}の実装です。
      * 
