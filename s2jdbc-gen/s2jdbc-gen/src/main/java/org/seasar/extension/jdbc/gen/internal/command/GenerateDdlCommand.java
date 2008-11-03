@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -190,8 +191,12 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** エンティティクラスのコメントをDDLに適用する場合@{true} */
     protected boolean applyJavaCommentToDdl = false;
 
-    /** Javaファイルのソースディレクトリ */
-    protected File javaFileSrcDir = new File(new File("src", "main"), "java");
+    /** Javaファイルのソースディレクトリのリスト */
+    protected List<File> javaFileSrcDirList = new ArrayList<File>();
+    {
+        File defaultSrcDir = new File(new File("src", "main"), "java");
+        javaFileSrcDirList.add(defaultSrcDir);
+    }
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
@@ -726,22 +731,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * Javaファイルのソースディレクトリを返します。
+     * Javaファイルのソースディレクトリのリストを返します。
      * 
-     * @return Javaファイルのソースディレクトリ
+     * @return Javaファイルのソースディレクトリのリスト
      */
-    public File getJavaFileSrcDir() {
-        return javaFileSrcDir;
+    public List<File> getJavaFileSrcDirList() {
+        return javaFileSrcDirList;
     }
 
     /**
-     * Javaファイルのソースディレクトリを設定します。
+     * Javaファイルのソースディレクトリのリストを設定します。
      * 
-     * @param javaFileSrcDir
-     *            Javaファイルのソースディレクトリ
+     * @param javaFileSrcDirList
+     *            Javaファイルのソースディレクトリのリスト
      */
-    public void setJavaFileSrcDir(File javaFileSrcDir) {
-        this.javaFileSrcDir = javaFileSrcDir;
+    public void setJavaFileSrcDirList(List<File> javaFileSrcDirList) {
+        this.javaFileSrcDirList = javaFileSrcDirList;
     }
 
     /**
@@ -1228,7 +1233,7 @@ public class GenerateDdlCommand extends AbstractCommand {
                 .concatName(rootPackageName, entityPackageName), jdbcManager
                 .getEntityMetaFactory(), entityClassNamePattern,
                 ignoreEntityClassNamePattern, applyJavaCommentToDdl,
-                javaFileSrcDir, javaFileEncoding);
+                javaFileSrcDirList, javaFileEncoding);
     }
 
     /**

@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.meta;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.MappedSuperclass;
@@ -39,24 +38,11 @@ import com.sun.javadoc.RootDoc;
  */
 public class CommentDoclet extends Doclet {
 
-    /** エンティティメタデータのリスト */
-    protected static List<EntityMeta> entityMetaList;
-
-    /**
-     * エンティティメタデータのリストを設定します。
-     * 
-     * @param _entityMetaList
-     *            エンティティメタデータのリスト
-     */
-    public static void setEntityMetaList(List<EntityMeta> _entityMetaList) {
-        entityMetaList = _entityMetaList;
-    }
-
     public static boolean start(RootDoc rootDoc) {
-        if (entityMetaList == null) {
-            throw new IllegalStateException("entityMetaList");
+        if (CommentDocletContext.entityMetaList == null) {
+            throw new NullPointerException("DocletContext.entityMetaList");
         }
-        for (EntityMeta entityMeta : entityMetaList) {
+        for (EntityMeta entityMeta : CommentDocletContext.entityMetaList) {
             ClassDoc classDoc = rootDoc.classNamed(entityMeta.getEntityClass()
                     .getName());
             if (classDoc == null) {

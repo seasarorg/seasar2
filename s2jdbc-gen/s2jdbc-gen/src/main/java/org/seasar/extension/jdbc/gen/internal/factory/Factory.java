@@ -80,9 +80,9 @@ public interface Factory {
      *            対象としないエンティティクラス名の正規表現
      * @param readComment
      *            コメントを読む場合 {@code true}
-     * @param javaFileSrcDir
-     *            javaファイルが存在するディレクトリ、{@code readComment}が{@code true}の場合{@code
-     *            null}であってはならない
+     * @param javaFileSrcDirList
+     *            javaファイルが存在するディレクトリのリスト、{@code readComment}が{@code true}の場合
+     *            {@code null}であってはならない
      * @param javaFileEncoding
      *            javaファイルのエンコーディング、{@code readComment}が{@code true}の場合{@code
      *            null}であってはならない
@@ -91,7 +91,8 @@ public interface Factory {
     EntityMetaReader createEntityMetaReader(Command command, File classpathDir,
             String packageName, EntityMetaFactory entityMetaFactory,
             String shortClassNamePattern, String ignoreShortClassNamePattern,
-            boolean readComment, File javaFileSrcDir, String javaFileEncoding);
+            boolean readComment, List<File> javaFileSrcDirList,
+            String javaFileEncoding);
 
     /**
      * {@link DatabaseDescFactory}の実装を返します。

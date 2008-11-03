@@ -75,10 +75,10 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     protected boolean readComment;
 
     /**
-     * javaファイルが存在するディレクトリ、{@code useComment}が{@code true}の場合{@code null}
+     * javaファイルが存在するディレクトリのリスト、{@code useComment}が{@code true}の場合{@code null}
      * であってはならない
      */
-    protected File javaFileDestDir;
+    protected List<File> javaFileSrcDirList = new ArrayList<File>();
 
     /**
      * javaファイルのエンコーディング、{@code useComment}が{@code true}の場合{@code null}
@@ -101,9 +101,9 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      *            対象としないエンティティクラス名の正規表現
      * @param readComment
      *            エンティティのコメントを使用する場合 {@code true}
-     * @param javaFileSrcDir
-     *            javaファイルが存在するディレクトリ、{@code readComment}が{@code true}の場合{@code
-     *            null}であってはならない
+     * @param javaFileSrcDirList
+     *            javaファイルが存在するディレクトリのリスト、{@code readComment}が{@code true}の場合
+     *            {@code null}であってはならない
      * @param javaFileEncoding
      *            javaファイルのエンコーディング、{@code readComment}が{@code true}の場合{@code
      *            null}であってはならない
@@ -111,7 +111,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
     public EntityMetaReaderImpl(File classpathDir, String packageName,
             EntityMetaFactory entityMetaFactory, String shortClassNamePattern,
             String ignoreShortClassNamePattern, boolean readComment,
-            File javaFileSrcDir, String javaFileEncoding) {
+            List<File> javaFileSrcDirList, String javaFileEncoding) {
         if (classpathDir == null) {
             throw new NullPointerException("classpathDir");
         }
@@ -124,8 +124,13 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (ignoreShortClassNamePattern == null) {
             throw new NullPointerException("setEntityClassNamePattern");
         }
-        if (readComment && javaFileSrcDir == null) {
-            throw new NullPointerException("javaFileDestDir");
+        if (readComment) {
+            if (javaFileSrcDirList == null) {
+                throw new NullPointerException("javaFileSrcDirSet");
+            }
+            if (javaFileSrcDirList.isEmpty()) {
+                throw new IllegalArgumentException("javaFileSrcDirSet");
+            }
         }
         if (readComment && javaFileEncoding == null) {
             throw new NullPointerException("javaFileEncoding");
@@ -137,7 +142,9 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         this.ignoreShortClassNamePattern = Pattern
                 .compile(ignoreShortClassNamePattern);
         this.readComment = readComment;
-        this.javaFileDestDir = javaFileSrcDir;
+        if (javaFileSrcDirList != null) {
+            this.javaFileSrcDirList.addAll(javaFileSrcDirList);
+        }
         this.javaFileEncoding = javaFileEncoding;
     }
 
@@ -221,12 +228,19 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (!docletAvailable) {
             throw new DocletUnavailableRuntimeException();
         }
-        CommentDoclet.setEntityMetaList(entityMetaList);
+        List<String> args = createDocletArgs();
+        StringBuilder buf = new StringBuilder();
+        for (String arg : args) {
+            buf.append(arg).append(" ");
+        }
+        logger.log("DS2JDBCGen0019", new Object[] { buf.toString() });
+
+        CommentDocletContext.entityMetaList = entityMetaList;
         try {
-            com.sun.tools.javadoc.Main.execute("commentDoclet",
-                    CommentDoclet.class.getName(), createDocletArgs());
+            com.sun.tools.javadoc.Main.execute(args.toArray(new String[args
+                    .size()]));
         } finally {
-            CommentDoclet.entityMetaList = null;
+            CommentDocletContext.entityMetaList = null;
         }
     }
 
@@ -235,10 +249,19 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
      * 
      * @return {@link Doclet}の引数
      */
-    protected String[] createDocletArgs() {
+    protected List<String> createDocletArgs() {
+        StringBuilder srcDirListBuf = new StringBuilder();
+        for (File dir : javaFileSrcDirList) {
+            srcDirListBuf.append(FileUtil.getCanonicalPath(dir));
+            srcDirListBuf.append(File.pathSeparator);
+        }
+        srcDirListBuf.setLength(srcDirListBuf.length() - 1);
+
         List<String> args = new ArrayList<String>();
+        args.add("-doclet");
+        args.add(CommentDoclet.class.getName());
         args.add("-sourcepath");
-        args.add(FileUtil.getCanonicalPath(javaFileDestDir));
+        args.add(srcDirListBuf.toString());
         args.add("-encoding");
         args.add(javaFileEncoding);
         args.add("-subpackages");
@@ -246,6 +269,6 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (logger.isDebugEnabled()) {
             args.add("-verbose");
         }
-        return args.toArray(new String[args.size()]);
+        return args;
     }
 }

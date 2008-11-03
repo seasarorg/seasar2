@@ -91,11 +91,11 @@ public class FactoryImpl implements Factory {
             File classpathDir, String packageName,
             EntityMetaFactory entityMetaFactory, String shortClassNamePattern,
             String ignoreShortClassNamePattern, boolean readComment,
-            File javaFileSrcDir, String javaFileEncoding) {
+            List<File> javaFileSrcDirList, String javaFileEncoding) {
 
         return new EntityMetaReaderImpl(classpathDir, packageName,
                 entityMetaFactory, shortClassNamePattern,
-                ignoreShortClassNamePattern, readComment, javaFileSrcDir,
+                ignoreShortClassNamePattern, readComment, javaFileSrcDirList,
                 javaFileEncoding);
     }
 

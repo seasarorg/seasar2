@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.task;
 
 import java.io.File;
+import java.util.StringTokenizer;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
@@ -496,13 +497,22 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * Javaファイルのソースディレクトリを設定します。
+     * Javaファイルのソースディレクトリをカンマまたは空白で区切って設定します。
      * 
-     * @param javaFileSrcDir
-     *            Javaファイルのソースディレクトリ
+     * @param javaFileSrcDirs
+     *            複数のJavaファイルのソースディレクトリ
      */
-    public void setJavaFileSrcDir(File javaFileSrcDir) {
-        command.setJavaFileSrcDir(javaFileSrcDir);
+    public void setJavaFileSrcDirs(String javaFileSrcDirs) {
+        command.getJavaFileSrcDirList().clear();
+        if (javaFileSrcDirs != null && javaFileSrcDirs.length() > 0) {
+            StringTokenizer tokenizer = new StringTokenizer(javaFileSrcDirs,
+                    ", \t\n\r\f", false);
+            while (tokenizer.hasMoreTokens()) {
+                File dir = new File(getProject().getBaseDir(), tokenizer
+                        .nextToken());
+                command.getJavaFileSrcDirList().add(dir);
+            }
+        }
     }
 
     /**

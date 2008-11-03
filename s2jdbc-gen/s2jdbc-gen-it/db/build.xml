@@ -85,7 +85,7 @@
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
 			applyjavacommenttoddl="true"
-			javafilesrcdir="${src}"
+			javafilesrcdirs="${src}, ../src/main/java"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
