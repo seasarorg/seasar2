@@ -15,6 +15,11 @@
  */
 package org.seasar.extension.jdbc.gen.dialect;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
+import java.util.Map;
+
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
 
@@ -269,6 +274,57 @@ public interface GenDialect {
      * @return COMMENT ONをサポートする場合{@code true}
      */
     boolean supportsCommentOn();
+
+    /**
+     * JDBCのコメント取得機能が利用できない場合{@code true}を返します。
+     * <p>
+     * JDBCのコメント取得機能が利用できないとは、次のメソッドでREMARKSカラムの値が取得できないことを意味します。
+     * </p>
+     * <ul>
+     * <li>{@link DatabaseMetaData#getTables(String, String, String, String[])}</li>
+     * <li>{@link DatabaseMetaData#getColumns(String, String, String, String)}</li>
+     * </ul>
+     * 
+     * @return JDBCのコメント取得機能が利用できない場合{@code true}
+     */
+    boolean isJdbcCommentUnavailable();
+
+    /**
+     * テーブルのコメントをデータベースから直接取得します。
+     * <p>
+     * {@link #isJdbcCommentUnavailable()}が{@code true}を返す場合に利用できます。
+     * </p>
+     * 
+     * @param connection
+     *            コネクション
+     * @param tableName
+     *            テーブル名
+     * @return テーブルのコメント、存在しない場合{@code null}
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    String getTableComment(Connection connection, String tableName)
+            throws SQLException;
+
+    /**
+     * カラムのコメントをデータベースから直接取得しマップに詰めて返します。
+     * <p>
+     * {@link #isJdbcCommentUnavailable()}が{@code true}を返す場合に利用できます。
+     * </p>
+     * <p>
+     * 戻り値のマップのキーは大文字小文字を気にしません。 カラム名に対応するコメントが存在しない、値は{@code null}になります。
+     * </p>
+     * 
+     * @param connection
+     *            コネクション
+     * @param tableName
+     *            テーブル名
+     * @return 大文字小文字を気にしないカラム名をキー、カラムのコメントを値とするマップ
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    Map<String, String> getColumnCommentMap(Connection connection,
+            String tableName) throws SQLException;
 
     /**
      * カラム型です。

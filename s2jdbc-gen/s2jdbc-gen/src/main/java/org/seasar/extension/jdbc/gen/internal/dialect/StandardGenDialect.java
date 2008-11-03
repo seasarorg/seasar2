@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -243,6 +244,20 @@ public class StandardGenDialect implements GenDialect {
 
     public boolean supportsCommentOn() {
         return false;
+    }
+
+    public boolean isJdbcCommentUnavailable() {
+        return false;
+    }
+
+    public String getTableComment(Connection connection, String tableName)
+            throws SQLException {
+        throw new UnsupportedOperationException("getTableComment");
+    }
+
+    public Map<String, String> getColumnCommentMap(Connection connection,
+            String tableName) throws SQLException {
+        throw new UnsupportedOperationException("getColumnCommentMap");
     }
 
     /**

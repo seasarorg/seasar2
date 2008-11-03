@@ -123,10 +123,11 @@ public class FactoryImpl implements Factory {
 
     public DbTableMetaReader createDbTableMetaReader(Command command,
             DataSource dataSource, GenDialect dialect, String schemaName,
-            String tableNamePattern, String ignoreTableNamePattern) {
+            String tableNamePattern, String ignoreTableNamePattern,
+            boolean readComment) {
 
         return new DbTableMetaReaderImpl(dataSource, dialect, schemaName,
-                tableNamePattern, ignoreTableNamePattern);
+                tableNamePattern, ignoreTableNamePattern, readComment);
     }
 
     public SqlFileExecutor createSqlFileExecutor(Command command,

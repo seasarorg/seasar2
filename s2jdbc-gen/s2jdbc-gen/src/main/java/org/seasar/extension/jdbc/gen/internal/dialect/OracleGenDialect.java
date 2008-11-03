@@ -17,9 +17,14 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.GenerationType;
 import javax.persistence.TemporalType;
@@ -35,6 +40,12 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.SmallIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.CaseInsensitiveMap;
+import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.util.ResultSetUtil;
+import org.seasar.framework.util.StatementUtil;
 
 /**
  * Oracleの方言を扱うクラスです。
@@ -42,6 +53,9 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
  * @author taedium
  */
 public class OracleGenDialect extends StandardGenDialect {
+
+    /** ロガー */
+    protected Logger logger = Logger.getLogger(OracleGenDialect.class);
 
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 942;
@@ -152,6 +166,59 @@ public class OracleGenDialect extends StandardGenDialect {
     @Override
     public boolean supportsCommentOn() {
         return true;
+    }
+
+    @Override
+    public boolean isJdbcCommentUnavailable() {
+        return true;
+    }
+
+    @Override
+    public String getTableComment(Connection connection, String tableName)
+            throws SQLException {
+        String sql = "select comments from user_tab_comments where table_name = ?";
+        logger.debug(sql);
+        logger.debug("table_name=" + tableName);
+        PreparedStatement ps = ConnectionUtil.prepareStatement(connection, sql);
+        try {
+            ps.setString(1, tableName);
+            ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+            try {
+                if (rs.next()) {
+                    return rs.getString(1);
+                }
+                return null;
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+        } finally {
+            StatementUtil.close(ps);
+        }
+    }
+
+    @Override
+    public Map<String, String> getColumnCommentMap(Connection connection,
+            String tableName) throws SQLException {
+        String sql = "select column_name, comments from user_col_comments where table_name = ?";
+        logger.debug(sql);
+        logger.debug("table_name=" + tableName);
+        PreparedStatement ps = ConnectionUtil.prepareStatement(connection, sql);
+        try {
+            ps.setString(1, tableName);
+            ResultSet rs = PreparedStatementUtil.executeQuery(ps);
+            try {
+                @SuppressWarnings("unchecked")
+                Map<String, String> commentMap = new CaseInsensitiveMap();
+                while (rs.next()) {
+                    commentMap.put(rs.getString(1), rs.getString(2));
+                }
+                return commentMap;
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+        } finally {
+            StatementUtil.close(ps);
+        }
     }
 
     /**

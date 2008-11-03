@@ -71,6 +71,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
     /** 読み取り非対象とするテーブル名のパターン */
     protected Pattern ignoreTableNamePattern;
 
+    /** コメントを読む場合{@code true} */
+    protected boolean readComment;
+
     /**
      * インスタンスを構築します。
      * 
@@ -84,10 +87,12 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      *            対象とするテーブル名の正規表現
      * @param ignoreTableNamePattern
      *            対象としないテーブル名の正規表現
+     * @param readComment
+     *            コメントを読む場合{@code true}
      */
     public DbTableMetaReaderImpl(DataSource dataSource, GenDialect dialect,
             String schemaName, String tableNamePattern,
-            String ignoreTableNamePattern) {
+            String ignoreTableNamePattern, boolean readComment) {
         if (dataSource == null) {
             throw new NullPointerException("dataSource");
         }
@@ -107,6 +112,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                 Pattern.CASE_INSENSITIVE);
         this.ignoreTableNamePattern = Pattern.compile(ignoreTableNamePattern,
                 Pattern.CASE_INSENSITIVE);
+        this.readComment = readComment;
     }
 
     public List<DbTableMeta> read() {
@@ -123,6 +129,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                 doDbUniqueKeyMeta(metaData, tableMeta, primaryKeySet);
                 doDbColumnMeta(metaData, tableMeta, primaryKeySet);
                 doDbForeignKeyMeta(metaData, tableMeta);
+            }
+            if (readComment && dialect.isJdbcCommentUnavailable()) {
+                readCommentFromDictinary(con, dbTableMetaList);
             }
             return dbTableMetaList;
         } finally {
@@ -239,7 +248,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     dbTableMeta.setCatalogName(rs.getString("TABLE_CAT"));
                     dbTableMeta.setSchemaName(rs.getString("TABLE_SCHEM"));
                     dbTableMeta.setName(rs.getString("TABLE_NAME"));
-                    dbTableMeta.setComment(rs.getString("REMARKS"));
+                    if (readComment) {
+                        dbTableMeta.setComment(rs.getString("REMARKS"));
+                    }
                     if (isTargetTable(dbTableMeta)) {
                         result.add(dbTableMeta);
                     }
@@ -297,7 +308,9 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     columnDesc.setScale(rs.getInt("DECIMAL_DIGITS"));
                     columnDesc.setNullable(rs.getBoolean("NULLABLE"));
                     columnDesc.setDefaultValue(rs.getString("COLUMN_DEF"));
-                    columnDesc.setComment(rs.getString("REMARKS"));
+                    if (readComment) {
+                        columnDesc.setComment(rs.getString("REMARKS"));
+                    }
                     result.add(columnDesc);
                 }
                 return result;
@@ -456,6 +469,37 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
             }
         } catch (SQLException ex) {
             throw new SQLRuntimeException(ex);
+        }
+    }
+
+    /**
+     * コメントをデータベースのディクショナリから直接取得します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param dbTableMetaList
+     *            テーブルメタデータのリスト
+     */
+    protected void readCommentFromDictinary(Connection connection,
+            List<DbTableMeta> dbTableMetaList) {
+        try {
+            for (DbTableMeta tableMeta : dbTableMetaList) {
+                String tableName = tableMeta.getName();
+                String tableComment = dialect.getTableComment(connection,
+                        tableName);
+                tableMeta.setComment(tableComment);
+                Map<String, String> columnCommentMap = dialect
+                        .getColumnCommentMap(connection, tableName);
+                for (DbColumnMeta columnMeta : tableMeta.getColumnMetaList()) {
+                    String columnName = columnMeta.getName();
+                    if (columnCommentMap.containsKey(columnName)) {
+                        String columnComment = columnCommentMap.get(columnName);
+                        columnMeta.setComment(columnComment);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new SQLRuntimeException(e);
         }
     }
 }

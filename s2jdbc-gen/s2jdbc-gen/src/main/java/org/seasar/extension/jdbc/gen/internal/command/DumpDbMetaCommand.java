@@ -178,7 +178,7 @@ public class DumpDbMetaCommand extends AbstractCommand {
     protected DbTableMetaReader createDbTableMetaReader() {
         return factory.createDbTableMetaReader(this, jdbcManager
                 .getDataSource(), dialect, schemaName, tableNamePattern,
-                ignoreTableNamePattern);
+                ignoreTableNamePattern, false);
     }
 
     @Override

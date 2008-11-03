@@ -128,7 +128,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected boolean overwrite = false;
 
     /** データベースのコメントをJavaコードに適用する場合{@code true} */
-    protected boolean applyDbCommentToJava;
+    protected boolean applyDbCommentToJava = false;
 
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
@@ -699,7 +699,7 @@ public class GenerateEntityCommand extends AbstractCommand {
     protected DbTableMetaReader createDbTableMetaReader() {
         return factory.createDbTableMetaReader(this, jdbcManager
                 .getDataSource(), dialect, schemaName, tableNamePattern,
-                ignoreTableNamePattern);
+                ignoreTableNamePattern, applyDbCommentToJava);
     }
 
     /**

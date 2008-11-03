@@ -160,11 +160,14 @@ public interface Factory {
      *            対象とするテーブル名の正規表現
      * @param ignoreTableNamePattern
      *            対象としないテーブル名の正規表現
+     * @param readComment
+     *            コメントを読む場合{@code true}
      * @return
      */
     DbTableMetaReader createDbTableMetaReader(Command command,
             DataSource dataSource, GenDialect dialect, String schemaName,
-            String tableNamePattern, String ignoreTableNamePattern);
+            String tableNamePattern, String ignoreTableNamePattern,
+            boolean readComment);
 
     /**
      * {@link SqlFileExecutor}の実装を返します。

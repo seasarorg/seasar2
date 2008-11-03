@@ -69,7 +69,7 @@ public class DbTableMetaReaderImplTest {
         };
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                ".*", "");
+                ".*", "", false);
         Set<String> list = reader.getPrimaryKeySet(metaData, new DbTableMeta());
         assertEquals(2, list.size());
         assertTrue(list.contains("pk1"));
@@ -118,7 +118,7 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                ".*", "");
+                ".*", "", true);
         List<DbColumnMeta> list = reader.getDbColumnMetaList(metaData,
                 new DbTableMeta());
         assertEquals(2, list.size());
@@ -184,7 +184,7 @@ public class DbTableMetaReaderImplTest {
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
                 new MockDataSource(), new StandardGenDialect(), "schemaName",
-                ".*", "TABLE3");
+                ".*", "TABLE3", true);
         List<DbTableMeta> list = reader.getDbTableMetaList(metaData,
                 "schemaName");
         assertEquals(2, list.size());
@@ -243,7 +243,8 @@ public class DbTableMetaReaderImplTest {
         };
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
-                new MockDataSource(), new StandardGenDialect(), null, ".*", "");
+                new MockDataSource(), new StandardGenDialect(), null, ".*", "",
+                false);
         List<DbForeignKeyMeta> list = reader.getDbForeignKeyMetaList(metaData,
                 new DbTableMeta());
 
@@ -308,7 +309,8 @@ public class DbTableMetaReaderImplTest {
         };
 
         DbTableMetaReaderImpl reader = new DbTableMetaReaderImpl(
-                new MockDataSource(), new StandardGenDialect(), null, ".*", "");
+                new MockDataSource(), new StandardGenDialect(), null, ".*", "",
+                false);
         List<DbUniqueKeyMeta> list = reader.getDbUniqueKeyMetaList(metaData,
                 new DbTableMeta());
 
