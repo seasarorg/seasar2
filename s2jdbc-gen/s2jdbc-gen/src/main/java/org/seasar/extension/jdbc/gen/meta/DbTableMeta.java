@@ -37,6 +37,9 @@ public class DbTableMeta {
     /** 名前 */
     protected String name;
 
+    /** コメント */
+    protected String comment;
+
     /** カラムメタデータのリスト */
     protected List<DbColumnMeta> columnMetaList = new ArrayList<DbColumnMeta>();
 
@@ -104,6 +107,25 @@ public class DbTableMeta {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**

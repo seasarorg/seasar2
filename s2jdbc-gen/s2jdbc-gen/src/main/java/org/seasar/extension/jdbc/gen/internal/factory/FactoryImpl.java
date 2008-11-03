@@ -197,17 +197,17 @@ public class FactoryImpl implements Factory {
 
     public EntityModelFactory createEntityModelFactory(Command command,
             String packageName, Class<?> superclass, boolean useAccessor,
-            boolean showCatalogName, boolean showSchemaName,
-            boolean showTableName, boolean showColumnName,
-            boolean showColumnDefinition, boolean showJoinColumn,
-            PersistenceConvention persistenceConvention) {
+            boolean useComment, boolean showCatalogName,
+            boolean showSchemaName, boolean showTableName,
+            boolean showColumnName, boolean showColumnDefinition,
+            boolean showJoinColumn, PersistenceConvention persistenceConvention) {
 
         return new EntityModelFactoryImpl(packageName, superclass,
                 new AttributeModelFactoryImpl(showColumnName,
                         showColumnDefinition, persistenceConvention),
                 new AssociationModelFactoryImpl(showJoinColumn),
                 new CompositeUniqueConstraintModelFactoryImpl(), useAccessor,
-                showCatalogName, showSchemaName, showTableName);
+                useComment, showCatalogName, showSchemaName, showTableName);
     }
 
     public ServiceModelFactory createServiceModelFactory(Command command,

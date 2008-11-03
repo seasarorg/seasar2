@@ -9,7 +9,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * Fooエンティティクラス
+ * FOOテーブル
  * 
  * @author S2JDBC-Gen
  */
@@ -17,50 +17,14 @@ import javax.persistence.Table;
 @Table(catalog = "AAA", schema = "BBB")
 public class Foo {
 
-    /** idプロパティ */
+    /** 識別子 */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
     @SequenceGenerator(name = "generator", initialValue = 100, allocationSize = 50)
     @Column(columnDefinition = "integer", nullable = false, unique = false)
-    private int id;
+    public int id;
 
-    /** manプロパティ */
+    /** 性別を表す。男ならばtrue */
     @Column(columnDefinition = "bool", nullable = false, unique = true)
-    private Boolean man;
-
-    /**
-     * idを返します。
-     * 
-     * @param id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * idを設定します。
-     * 
-     * @param id
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
-     * manを返します。
-     * 
-     * @param man
-     */
-    public Boolean isMan() {
-        return man;
-    }
-
-    /**
-     * manを設定します。
-     * 
-     * @param man
-     */
-    public void setMan(Boolean man) {
-        this.man = man;
-    }
+    public Boolean man;
 }

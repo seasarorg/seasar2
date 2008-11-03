@@ -92,6 +92,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("DECIMAL_DIGITS", 3);
         rowData.put("NULLABLE", DatabaseMetaData.columnNoNulls);
         rowData.put("COLUMN_DEF", "10.5");
+        rowData.put("REMARKS", "comment1");
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
@@ -102,6 +103,7 @@ public class DbTableMetaReaderImplTest {
         rowData.put("DECIMAL_DIGITS", 0);
         rowData.put("NULLABLE", DatabaseMetaData.columnNullable);
         rowData.put("COLUMN_DEF", "aaa");
+        rowData.put("REMARKS", "comment2");
         resultSet.addRowData(rowData);
 
         GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
@@ -128,6 +130,7 @@ public class DbTableMetaReaderImplTest {
         assertEquals(3, columnMeta.getScale());
         assertFalse(columnMeta.isNullable());
         assertEquals("10.5", columnMeta.getDefaultValue());
+        assertEquals("comment1", columnMeta.getComment());
 
         columnMeta = list.get(1);
         assertEquals("column2", columnMeta.getName());
@@ -137,6 +140,7 @@ public class DbTableMetaReaderImplTest {
         assertEquals(0, columnMeta.getScale());
         assertTrue(columnMeta.isNullable());
         assertEquals("aaa", columnMeta.getDefaultValue());
+        assertEquals("comment2", columnMeta.getComment());
     }
 
     /**
@@ -151,18 +155,21 @@ public class DbTableMetaReaderImplTest {
         rowData.put("TABLE_CAT", "catalog1");
         rowData.put("TABLE_SCHEM", "schemaName1");
         rowData.put("TABLE_NAME", "table1");
+        rowData.put("REMARKS", "comment1");
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
         rowData.put("TABLE_CAT", "catalog2");
         rowData.put("TABLE_SCHEM", "schemaName2");
         rowData.put("TABLE_NAME", "table2");
+        rowData.put("REMARKS", "comment2");
         resultSet.addRowData(rowData);
 
         rowData = new ArrayMap();
         rowData.put("TABLE_CAT", "catalog3");
         rowData.put("TABLE_SCHEM", "schemaName3");
         rowData.put("TABLE_NAME", "table3");
+        rowData.put("REMARKS", "comment3");
         resultSet.addRowData(rowData);
 
         GenMockDatabaseMetaData metaData = new GenMockDatabaseMetaData() {
@@ -184,9 +191,11 @@ public class DbTableMetaReaderImplTest {
         assertEquals("catalog1", list.get(0).getCatalogName());
         assertEquals("schemaName1", list.get(0).getSchemaName());
         assertEquals("table1", list.get(0).getName());
+        assertEquals("comment1", list.get(0).getComment());
         assertEquals("catalog2", list.get(1).getCatalogName());
         assertEquals("schemaName2", list.get(1).getSchemaName());
         assertEquals("table2", list.get(1).getName());
+        assertEquals("comment2", list.get(1).getComment());
     }
 
     /**

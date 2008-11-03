@@ -336,4 +336,14 @@ public class GenerateEntityTask extends AbstractTask {
         command.setUseAccessor(useAccessor);
     }
 
+    /**
+     * データベースのコメントをJavaコードに適用する場合{@code true}を設定します。
+     * 
+     * @param applyDbCommentToJava
+     *            データベースのコメントをJavaコードに適用する場合{@code true}
+     */
+    public void setApplyDbCommentToJava(boolean applyDbCommentToJava) {
+        command.setApplyDbCommentToJava(applyDbCommentToJava);
+    }
+
 }

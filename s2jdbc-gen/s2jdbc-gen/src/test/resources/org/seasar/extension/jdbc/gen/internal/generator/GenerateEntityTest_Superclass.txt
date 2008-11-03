@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import org.seasar.extension.jdbc.gen.internal.generator.Eee;
 
 /**
- * Fooエンティティクラスです。
+ * Fooエンティティクラス
  * 
  * @author S2JDBC-Gen
  */

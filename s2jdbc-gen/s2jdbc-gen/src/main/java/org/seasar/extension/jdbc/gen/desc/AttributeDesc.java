@@ -82,6 +82,9 @@ public class AttributeDesc {
     /** サポートされていないカラム型の場合{@code true} */
     protected boolean unsupportedColumnType;
 
+    /** コメント */
+    protected String comment;
+
     /**
      * インスタンスを構築します。
      */
@@ -447,6 +450,25 @@ public class AttributeDesc {
      */
     public void setAllocationSize(int allocationSize) {
         this.allocationSize = allocationSize;
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }

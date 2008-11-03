@@ -8,7 +8,11 @@ import ${importName};
 </#list>
 
 /**
- * ${shortClassName}エンティティクラスです。
+<#if useComment && comment??>
+ * ${comment}
+<#else>
+ * ${shortClassName}エンティティクラス
+</#if>
  * 
  * @author S2JDBC-Gen
  */
@@ -24,7 +28,11 @@ public class ${shortClassName}<#if shortSuperclassName??> extends ${shortSupercl
      * FIXME このプロパティに対応するカラムの型(${attr.columnTypeName})はサポート対象外です。
      */
   <#else>
+    <#if useComment && attr.comment??>
+    /** ${attr.comment} */
+    <#else>
     /** ${attr.name}プロパティ */
+    </#if>
   </#if>
   <#if attr.id>
     @Id

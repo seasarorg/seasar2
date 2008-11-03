@@ -73,6 +73,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     /** エンティティクラスでアクセサを使用する場合 {@code true} */
     protected boolean useAccessor;
 
+    /** コメントを使用する場合{@code true} */
+    protected boolean useComment;
+
     /** カタログ名を表示する場合{@code true} */
     protected boolean showCatalogName;
 
@@ -109,6 +112,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      *            複合一意制約モデルのファクトリ
      * @param useAccessor
      *            エンティティクラスでアクセサを使用する場合 {@code true}
+     * @param useComment
+     *            コメントを使用する場合{@code true}
      * @param showCatalogName
      *            カタログ名を表示する場合{@code true}
      * @param showSchemaName
@@ -122,7 +127,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             AttributeModelFactory attributeModelFactory,
             AssociationModelFactory associationModelFactory,
             CompositeUniqueConstraintModelFactory compositeUniqueConstraintModelFactory,
-            boolean useAccessor, boolean showCatalogName,
+            boolean useAccessor, boolean useComment, boolean showCatalogName,
             boolean showSchemaName, boolean showTableName) {
         if (attributeModelFactory == null) {
             throw new NullPointerException("attributeModelFactory");
@@ -140,6 +145,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         this.associationModelFactory = associationModelFactory;
         this.compositeUniqueConstraintModelFactory = compositeUniqueConstraintModelFactory;
         this.useAccessor = useAccessor;
+        this.useComment = useComment;
         this.showCatalogName = showCatalogName;
         this.showSchemaName = showSchemaName;
         this.showTableName = showTableName;
@@ -169,6 +175,8 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         }
         entityModel.setCompositeId(entityDesc.hasCompositeId());
         entityModel.setUseAccessor(useAccessor);
+        entityModel.setComment(entityDesc.getComment());
+        entityModel.setUseComment(useComment);
         doAttributeModel(entityModel, entityDesc);
         doAssociationModel(entityModel, entityDesc);
         doCompositeUniqueConstraintModel(entityModel, entityDesc);

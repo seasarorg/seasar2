@@ -224,6 +224,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         attributeDesc.setScale(columnMeta.getScale());
         attributeDesc.setNullable(columnMeta.isNullable());
         attributeDesc.setUnique(columnMeta.isUnique());
+        attributeDesc.setComment(columnMeta.getComment());
         GenDialect.ColumnType columnType = dialect.getColumnType(columnMeta
                 .getTypeName());
         if (columnType != null) {

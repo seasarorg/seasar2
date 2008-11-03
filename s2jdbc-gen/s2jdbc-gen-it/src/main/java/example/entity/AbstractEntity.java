@@ -24,6 +24,6 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public class AbstractEntity {
 
-    /** */
+    /** 都市 */
     public String city;
 }

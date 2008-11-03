@@ -52,6 +52,9 @@ public class DbColumnMeta {
     /** 一意の場合{@code true} */
     protected boolean unique;
 
+    /** コメント */
+    protected String comment;
+
     /**
      * 名前を返します。
      * 
@@ -241,6 +244,25 @@ public class DbColumnMeta {
      */
     public void setUnique(boolean unique) {
         this.unique = unique;
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }

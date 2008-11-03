@@ -16,7 +16,7 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 /**
- * Fooエンティティクラスです。
+ * Fooエンティティクラス
  * 
  * @author S2JDBC-Gen
  */

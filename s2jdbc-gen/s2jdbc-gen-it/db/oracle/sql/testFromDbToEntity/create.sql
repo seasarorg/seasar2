@@ -7,6 +7,11 @@ create table comp_key_employee(employee_id1 numeric(8) not null, employee_id2 nu
 alter table employee add constraint employee_uk1 unique (address_id);
 alter table comp_key_employee add constraint comp_key_employee_uk1 unique (address_id1, address_id2);
 
+comment on table address is '住所';
+comment on column address.address_id is '識別子';
+comment on column address.street is 'ストリート';
+comment on column address.version is 'バージョン';
+
 create table binary_double_table (binary_double_column binary_double);
 create table binary_float_table (binary_float_column binary_float);
 create table blob_table (blob_column blob);

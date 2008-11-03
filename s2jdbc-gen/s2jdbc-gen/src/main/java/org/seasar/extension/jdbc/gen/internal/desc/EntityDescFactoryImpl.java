@@ -96,7 +96,7 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
     }
 
     /**
-     * テーブルの名前を処理します。
+     * テーブルを処理します。
      * 
      * @param tableMeta
      *            テーブルメタ情報
@@ -107,6 +107,7 @@ public class EntityDescFactoryImpl implements EntityDescFactory {
         entityDesc.setCatalogName(tableMeta.getCatalogName());
         entityDesc.setSchemaName(tableMeta.getSchemaName());
         entityDesc.setTableName(tableMeta.getName());
+        entityDesc.setComment(tableMeta.getComment());
     }
 
     /**

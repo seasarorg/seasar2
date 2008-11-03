@@ -10,7 +10,7 @@
 			"oracle.jdbc.driver.OracleDriver"
 		</property>
 		<property name="URL">
-			"jdbc:oracle:thin:@10.24.1.65:1521:XE"
+			"jdbc:oracle:thin:@localhost:1521:XE"
 		</property>
 		<property name="user">"s2jdbcgen"</property>
 		<property name="password">"sa"</property>

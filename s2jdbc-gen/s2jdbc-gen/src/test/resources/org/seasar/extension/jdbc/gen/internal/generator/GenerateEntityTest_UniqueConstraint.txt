@@ -5,7 +5,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 /**
- * Fooエンティティクラスです。
+ * Fooエンティティクラス
  * 
  * @author S2JDBC-Gen
  */

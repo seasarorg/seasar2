@@ -6,7 +6,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
- * Hogeエンティティクラスです。
+ * Hogeエンティティクラス
  * 
  * @author S2JDBC-Gen
  */

@@ -41,6 +41,9 @@ public class EntityDesc {
     /** 複合識別子をもつならば{@code true} */
     protected boolean compositeId;
 
+    /** コメント */
+    protected String comment;
+
     /** 属性記述のリスト */
     protected List<AttributeDesc> attributeDescList = new ArrayList<AttributeDesc>();
 
@@ -149,6 +152,25 @@ public class EntityDesc {
             buf.append(schemaName).append(".");
         }
         return buf.append(tableName).toString();
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**
@@ -261,4 +283,5 @@ public class EntityDesc {
     public boolean hasCompositeId() {
         return idAttributeDescList.size() > 1;
     }
+
 }

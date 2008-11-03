@@ -20,6 +20,7 @@
 		<pathelement location="../../s2jdbc-gen/build/classes"/>
 		<pathelement location="../../seasar2/build/classes"/>
 		<pathelement location="../../s2-tiger/build/classes"/>
+		<pathelement location="${java.home}/../lib/tools.jar"/>
 		<fileset dir="../lib"/>
 		<fileset dir="../../s2jdbc-gen/lib"/>
 		<fileset dir="../../seasar2/lib" excludes="**/*-sources.jar"/>
@@ -67,6 +68,7 @@
 			entitysuperclassname="example.entity.AbstractEntity"
 			javafiledestdir="${src}"
 			pluralformfile="plural.properties"
+			applydbcommenttojava="true"
 			classpathref="classpath"
 		/>
 		<javac 
@@ -82,6 +84,8 @@
 			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
+			applyjavacommenttoddl="true"
+			javafilesrcdir="${src}"
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->

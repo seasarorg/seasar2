@@ -239,6 +239,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     dbTableMeta.setCatalogName(rs.getString("TABLE_CAT"));
                     dbTableMeta.setSchemaName(rs.getString("TABLE_SCHEM"));
                     dbTableMeta.setName(rs.getString("TABLE_NAME"));
+                    dbTableMeta.setComment(rs.getString("REMARKS"));
                     if (isTargetTable(dbTableMeta)) {
                         result.add(dbTableMeta);
                     }
@@ -296,6 +297,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                     columnDesc.setScale(rs.getInt("DECIMAL_DIGITS"));
                     columnDesc.setNullable(rs.getBoolean("NULLABLE"));
                     columnDesc.setDefaultValue(rs.getString("COLUMN_DEF"));
+                    columnDesc.setComment(rs.getString("REMARKS"));
                     result.add(columnDesc);
                 }
                 return result;

@@ -49,8 +49,8 @@ public class EntityModelFactoryImplTest {
             "aaa.bbb", Superclass.class, new AttributeModelFactoryImpl(true,
                     true, new PersistenceConventionImpl()),
             new AssociationModelFactoryImpl(true),
-            new CompositeUniqueConstraintModelFactoryImpl(), false, true, true,
-            true);
+            new CompositeUniqueConstraintModelFactoryImpl(), false, false,
+            true, true, true);
 
     /**
      * 

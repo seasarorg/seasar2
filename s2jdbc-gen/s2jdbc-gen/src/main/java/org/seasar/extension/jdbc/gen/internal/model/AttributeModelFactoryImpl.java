@@ -41,6 +41,9 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
     /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
+    /** コメントを使用する場合{@code true} */
+    protected boolean useComment;
+
     /**
      * インスタンスを構築します。
      * 
@@ -77,6 +80,7 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setTemporalType(attributeDesc.getTemporalType());
         attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
         attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
+        attributeModel.setComment(attributeDesc.getComment());
         doColumnName(attributeModel, attributeDesc);
         if (showColumnDefinition) {
             doColumnDefinition(attributeModel, attributeDesc);

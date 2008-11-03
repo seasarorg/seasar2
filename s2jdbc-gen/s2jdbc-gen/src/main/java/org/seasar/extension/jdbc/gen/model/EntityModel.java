@@ -44,6 +44,12 @@ public class EntityModel extends ClassModel {
     /** エンティティクラスでアクセサを使用する場合 {@code true} */
     protected boolean useAccessor;
 
+    /** コメントを使用する場合 {@code true} */
+    protected boolean useComment;
+
+    /** コメント */
+    protected String comment;
+
     /** 属性モデルのリスト */
     protected List<AttributeModel> attributeModelList = new ArrayList<AttributeModel>();
 
@@ -207,18 +213,60 @@ public class EntityModel extends ClassModel {
     }
 
     /**
-     * @return Returns the useAccessor.
+     * エンティティクラスでアクセサを使用する場合 {@code true}を返します。
+     * 
+     * @return エンティティクラスでアクセサを使用する場合 {@code true}
      */
     public boolean isUseAccessor() {
         return useAccessor;
     }
 
     /**
+     * エンティティクラスでアクセサを使用する場合 {@code true}を設定します。
+     * 
      * @param useAccessor
-     *            The useAccessor to set.
+     *            エンティティクラスでアクセサを使用する場合 {@code true}
      */
     public void setUseAccessor(boolean useAccessor) {
         this.useAccessor = useAccessor;
+    }
+
+    /**
+     * コメントを使用する場合 {@code true}を返します。
+     * 
+     * @return コメントを使用する場合 {@code true}
+     */
+    public boolean isUseComment() {
+        return useComment;
+    }
+
+    /**
+     * コメントを使用する場合 {@code true}を設定します。
+     * 
+     * @param useComment
+     *            コメントを使用する場合 {@code true}
+     */
+    public void setUseComment(boolean useComment) {
+        this.useComment = useComment;
+    }
+
+    /**
+     * コメントを返します。
+     * 
+     * @return コメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * コメントを設定します。
+     * 
+     * @param comment
+     *            コメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }

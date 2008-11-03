@@ -7,6 +7,11 @@ create table comp_key_employee(employee_id1 integer not null, employee_id2 integ
 alter table employee add constraint employee_uk1 unique (address_id);
 alter table comp_key_employee add constraint comp_key_employee_uk1 unique (address_id1, address_id2);
 
+comment on table address is '住所';
+comment on column address.address_id is '識別子';
+comment on column address.street is 'ストリート';
+comment on column address.version is 'バージョン';
+
 create table bigint_table (bigint_column bigint);
 create table bigserial_table (bigserial_column bigserial);
 create table bit_table (bit_column bit);

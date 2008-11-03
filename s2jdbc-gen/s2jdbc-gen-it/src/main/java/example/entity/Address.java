@@ -23,22 +23,23 @@ import javax.persistence.OneToOne;
 import javax.persistence.TableGenerator;
 
 /**
- * @author taedium
+ * 住所
  * 
+ * @author taedium
  */
 @Entity
 public class Address {
 
-    /** */
+    /** 識別子 */
     @Id
     @TableGenerator(name = "generator")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "generator")
     public Integer id;
 
-    /** */
+    /** 都市 */
     public String city;
 
-    /** */
+    /** 従業員 */
     @OneToOne(mappedBy = "address")
     public Employee employee;
 }

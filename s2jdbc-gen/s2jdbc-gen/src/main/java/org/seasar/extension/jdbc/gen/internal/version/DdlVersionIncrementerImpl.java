@@ -89,7 +89,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             DataSource dataSource, List<String> createDirNameList,
             List<String> dropDirNameList) {
         if (ddlVersionDirectoryTree == null) {
-            throw new NullPointerException("versionDirectories");
+            throw new NullPointerException("ddlVersionDirectoryTree");
         }
         if (genDdlListener == null) {
             throw new NullPointerException("genDdlListener");
@@ -101,10 +101,10 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             throw new NullPointerException("dataSource");
         }
         if (createDirNameList == null) {
-            throw new NullPointerException("createFileNameList");
+            throw new NullPointerException("createDirNameList");
         }
         if (dropDirNameList == null) {
-            throw new NullPointerException("dropFileNameList");
+            throw new NullPointerException("dropDirNameList");
         }
         this.ddlVersionDirectoryTree = ddlVersionDirectoryTree;
         this.genDdlListener = genDdlListener;

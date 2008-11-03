@@ -127,6 +127,9 @@ public class GenerateEntityCommand extends AbstractCommand {
     /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = false;
 
+    /** データベースのコメントをJavaコードに適用する場合{@code true} */
+    protected boolean applyDbCommentToJava;
+
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
 
@@ -626,6 +629,25 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.useAccessor = useAccessor;
     }
 
+    /**
+     * データベースのコメントをJavaコードに適用する場合{@code true}を返します。
+     * 
+     * @return データベースのコメントをJavaコードに適用する場合{@code true}
+     */
+    public boolean isApplyDbCommentToJava() {
+        return applyDbCommentToJava;
+    }
+
+    /**
+     * データベースのコメントをJavaコードに適用する場合{@code true}を設定します。
+     * 
+     * @param applyDbCommentToJava
+     *            データベースのコメントをJavaコードに適用する場合{@code true}
+     */
+    public void setApplyDbCommentToJava(boolean applyDbCommentToJava) {
+        this.applyDbCommentToJava = applyDbCommentToJava;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -702,9 +724,9 @@ public class GenerateEntityCommand extends AbstractCommand {
                 .forName(entitySuperclassName) : null;
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
                 rootPackageName, entityPackageName), superClass, useAccessor,
-                showCatalogName, showSchemaName, showTableName, showColumnName,
-                showColumnDefinition, showJoinColumn, jdbcManager
-                        .getPersistenceConvention());
+                applyDbCommentToJava, showCatalogName, showSchemaName,
+                showTableName, showColumnName, showColumnDefinition,
+                showJoinColumn, jdbcManager.getPersistenceConvention());
     }
 
     /**
