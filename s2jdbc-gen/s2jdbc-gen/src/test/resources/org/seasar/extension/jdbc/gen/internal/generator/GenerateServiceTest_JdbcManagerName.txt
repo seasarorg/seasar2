@@ -2,6 +2,8 @@ package hoge.service;
 
 import java.util.List;
 import javax.annotation.Resource;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
 
@@ -22,6 +24,7 @@ public class AaaService extends AbstractService<Aaa> {
      *            JDBCマネージャ
      */
     @Resource(name = "myJdbcManager")
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void setJdbcManager(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
     }

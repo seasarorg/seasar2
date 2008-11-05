@@ -20,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -155,11 +157,13 @@ public class ServiceModelFactoryImplTest {
         assertEquals("myJdbcManager", serviceModel.getJdbcManagerName());
         assertTrue(serviceModel.isJdbcManagerSetterNecessary());
 
-        assertEquals(5, serviceModel.getImportNameSet().size());
+        assertEquals(7, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(List.class.getName(), iterator.next());
         assertEquals(Resource.class.getName(), iterator.next());
+        assertEquals(TransactionAttribute.class.getName(), iterator.next());
+        assertEquals(TransactionAttributeType.class.getName(), iterator.next());
         assertEquals(JdbcManager.class.getName(), iterator.next());
         assertEquals(Bbb.class.getName(), iterator.next());
 

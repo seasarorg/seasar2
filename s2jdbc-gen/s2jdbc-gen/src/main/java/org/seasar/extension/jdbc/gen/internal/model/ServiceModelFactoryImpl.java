@@ -18,6 +18,8 @@ package org.seasar.extension.jdbc.gen.internal.model;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -158,6 +160,10 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         }
         if (serviceModel.isJdbcManagerSetterNecessary()) {
             classModelSupport.addImportName(serviceModel, Resource.class);
+            classModelSupport.addImportName(serviceModel,
+                    TransactionAttribute.class);
+            classModelSupport.addImportName(serviceModel,
+                    TransactionAttributeType.class);
             classModelSupport.addImportName(serviceModel, JdbcManager.class);
         }
     }

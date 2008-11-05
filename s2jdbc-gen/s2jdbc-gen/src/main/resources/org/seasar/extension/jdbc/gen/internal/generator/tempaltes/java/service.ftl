@@ -28,6 +28,7 @@ public class ${shortClassName} extends AbstractService<${shortEntityClassName}> 
      *            JDBCマネージャ
      */
     @Resource(name = "${jdbcManagerName}")
+    @TransactionAttribute(TransactionAttributeType.NEVER)
     public void setJdbcManager(JdbcManager jdbcManager) {
         this.jdbcManager = jdbcManager;
     }
