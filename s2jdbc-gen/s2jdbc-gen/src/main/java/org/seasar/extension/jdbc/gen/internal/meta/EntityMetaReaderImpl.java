@@ -126,10 +126,10 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         }
         if (readComment) {
             if (javaFileSrcDirList == null) {
-                throw new NullPointerException("javaFileSrcDirSet");
+                throw new NullPointerException("javaFileSrcDirList");
             }
             if (javaFileSrcDirList.isEmpty()) {
-                throw new IllegalArgumentException("javaFileSrcDirSet");
+                throw new IllegalArgumentException("javaFileSrcDirList");
             }
         }
         if (readComment && javaFileEncoding == null) {
@@ -228,7 +228,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (!docletAvailable) {
             throw new DocletUnavailableRuntimeException();
         }
-        List<String> args = createDocletArgs();
+        String[] args = createDocletArgs();
         StringBuilder buf = new StringBuilder();
         for (String arg : args) {
             buf.append(arg).append(" ");
@@ -237,25 +237,25 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
 
         CommentDocletContext.entityMetaList = entityMetaList;
         try {
-            com.sun.tools.javadoc.Main.execute(args.toArray(new String[args
-                    .size()]));
+            com.sun.tools.javadoc.Main.execute(args);
         } finally {
             CommentDocletContext.entityMetaList = null;
         }
     }
 
     /**
-     * {@link Doclet}の引数を作成します。
+     * {@link Doclet}の引数の配列を作成します。
      * 
-     * @return {@link Doclet}の引数
+     * @return {@link Doclet}の引数の配列
      */
-    protected List<String> createDocletArgs() {
+    protected String[] createDocletArgs() {
         StringBuilder srcDirListBuf = new StringBuilder();
         for (File dir : javaFileSrcDirList) {
             srcDirListBuf.append(FileUtil.getCanonicalPath(dir));
             srcDirListBuf.append(File.pathSeparator);
         }
-        srcDirListBuf.setLength(srcDirListBuf.length() - 1);
+        srcDirListBuf.setLength(srcDirListBuf.length()
+                - File.pathSeparator.length());
 
         List<String> args = new ArrayList<String>();
         args.add("-doclet");
@@ -269,6 +269,6 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         if (logger.isDebugEnabled()) {
             args.add("-verbose");
         }
-        return args;
+        return args.toArray(new String[args.size()]);
     }
 }
