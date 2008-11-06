@@ -317,6 +317,9 @@
 					<tr><td>dump</td><td>"true"の場合、データベースのデータのダンプ出力を行います。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>applyJavaCommentToDdl</td><td>"true"の場合、エンティティのJavaDocコメントを（テーブル作成用の）DDLファイルに反映させます。クラスのJavaDocコメントはテーブルに反映され、プロパティのJavaDocコメントはカラムに反映されます。"true"を指定する場合、Docletを使用できるようにJDKのtools.jarをクラスパス（classpathもしくはclasspathref）に含める必要があります。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>javaFileSrcDirs</td><td>Javaソースファイルのディレクトリです。カンマや空白区切りで複数指定できます。applyJavaCommentToDdlに"true"を指定した場合にのみ使用されます。</td><td>"src/main/java"</td><td>NO</td></tr>
+					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。applyJavaCommentToDdlに"true"を指定した場合にのみ使用されます。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
 					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>createSequenceTemplateFileName</td><td>シーケンスを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-sequence.ftl"</td><td>NO</td></tr>
