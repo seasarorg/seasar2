@@ -152,12 +152,12 @@ public BigDecimal salary;]]></source>
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th></tr>
 					<tr><td>length</td><td>長さ。文字列型やバイナリ型に使用される。</td><td>255</td></tr>
 					<tr><td>precision</td><td>精度。数値型に使用される。</td><td>19</td></tr>
-					<tr><td>scale</td><td>スケール。数値型に使用される。</td><td>0</td></tr>
+					<tr><td>scale</td><td>スケール。数値型に使用される。</td><td>2</td></tr>
 				</table>
 				<p>
 					以下に、エンティティクラスのプロパティの型と代表的なRDBMSのカラムの型の対応表を示します。
 					$l、$p、$sには、Columnアノテーションで指定するlength、precision、scaleの値が設定されます。
-					（この表は、エンティティからDDLを生成する際の対応表です。データベースからエンティティを生成する際の対応表ではありませｎ。）
+					（この表は、エンティティからDDLを生成する際の対応表です。データベースからエンティティを生成する際の対応表ではありません。）
 				</p>
 				<table>
 					<tr><th>Javaの型</th><th>Oracle</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>

@@ -137,12 +137,12 @@
 			</subsection>
 			<subsection name="タスク定義の参照">
 				<p>
-					S2JDBC-Genのタスク定義は、s2jdbc-gen-core-x.x.x.jar内のs2jdbc-gen-task.propertiesに含まれています。
+					S2JDBC-Genのタスク定義は、s2jdbc-gen-x.x.x.jar内のs2jdbc-gen-task.propertiesに含まれています。
 					これを参照するためのに&lt;taskdef&gt;の定義が必要です。
 				</p>
 <source><![CDATA[<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>]]></source>
 				<p>
-					classpathref属性でs2jdbc-gen-core-x.x.x.jarを含めたクラスパスを参照するようにします。
+					classpathref属性でs2jdbc-gen-x.x.x.jarを含めたクラスパスを参照するようにします。
 				</p>
 			</subsection>
 			<subsection name="タスクの記述">
