@@ -169,7 +169,8 @@ public class ResourcesUtilTest extends TestCase {
         assertEquals(2, set.size());
         assertTrue(set.contains(ResultPrinter.class.getName()));
         assertTrue(set.contains(TestRunner.class.getName()));
-        assertFalse(set.contains(junit.awtui.TestRunner.class.getName()));
+        assertFalse(set
+                .contains(junit.extensions.TestDecorator.class.getName()));
     }
 
 }
