@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC - タイプセーフAPI</title>
+	</properties>
+	<body>
+		<section name="タイプセーフAPI">
+			<p></p>
+			<ul>
+				<li>
+					<a href="#概要">概要</a>
+				</li>
+				<li>
+					<a href="#Names_クラス">Names クラス</a>
+				</li>
+				<li>
+					<a href="#Operations_クラス">Operations クラス</a>
+				</li>
+				<li>
+					<a href="#Service_クラス">Service クラス</a>
+				</li>
+			</ul>
+		</section>
+
+		<section name="概要">
+			<p>
+				<a href="s2jdbc_manager_auto.html">SQL自動生成による操作</a>
+				の
+				<a href="s2jdbc_manager_auto.html#検索条件">検索条件</a>
+				や
+				<a href="s2jdbc_manager_auto.html#結合条件">結合条件</a>
+				では，
+				<a href="s2jdbc_manager_auto.html#SimpleWhereによる指定">SimpleWhereによる指定</a>
+				や
+				<a href="s2jdbc_manager_auto.html#Mapによる指定">Mapによる指定</a>
+				ができますが， これらはプロパティ名を文字列で扱うため， 実行するまで名前の間違いに気づきにくくなります．
+				また，
+				プロパティの型と異なる型をパラメータに指定した場合も実行するまで気づきにくくなります．
+			</p>
+			<p>
+				S2JDBC のタイプセーフ API を利用すると，
+				プロパティの名前や型の間違いをコンパイル時にチェックできるようになります．
+				タイプセーフ API は，
+				<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a>
+				の
+				<a href="s2jdbc_gen/tasks/gen_names.html">Gen-Names</a>
+				タスクで生成される
+				<a href="#Names_クラス">Names クラス</a>
+				と，
+				S2JDBC が提供する
+				<a href="#Operations_クラス">Operations クラス</a>
+				によって構成されます．
+				<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a>
+				の
+				<a href="s2jdbc_gen/tasks/gen_service.html">Gen-Service</a>
+				タスクによって生成される
+				<a href="#Service_クラス">Service クラス</a>
+				クラスを使うと， タイプセーフ API を容易に利用することができます．
+			</p>
+		</section>
+
+		<section name="Names クラス">
+			<p>
+				<code>Names</code>
+				クラスは，
+				<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a>
+				の
+				<a href="s2jdbc_gen/tasks/gen_names.html">Gen-Names</a>
+				タスクによって生成されるクラスで， エンティティのプロパティに対応した
+				<code>static</code>
+				メソッドが定義されます．
+			</p>
+			<p>
+				<code>Names</code>
+				クラスのメソッドを static import して使うと，
+				<code>SimpleWhere</code>
+				を使った次の例は，
+			</p>
+			<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .innerJoin("department")
+    .where(new SimpleWhere()
+        .eq("name", name)
+        .eq("department.name", deptName)
+    .getResultList();
+]]></source>
+			<p>
+				次のようになります．
+			</p>
+			<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .innerJoin(department())
+    .where(new SimpleWhere()
+        .eq(name(), name)
+        .eq(department().name(), deptName))
+    .getResultList();
+]]></source>
+			<p>
+				<code>name()</code>
+				や
+				<code>department()</code>
+				が static import された
+				<code>Names</code>
+				クラスのメソッドです．
+				メソッド名が間違っているとコンパイルでエラーとなるため，実行する前に間違いを見つけることができます．
+				また，IDE
+				で補完できるため，
+				入力も容易になります (
+				<a href="s2jdbc_gen/setup.html#Organize_Importsの設定">Eclipse で static import を使う場合の設定について</a>
+				)．
+			</p>
+			<p>
+				関連先のプロパティは
+				<code>department().name()</code>
+				のように指定します．
+				ネストは何段階でも無制限に指定可能です．
+			</p>
+			<div class="caution">
+				<div>注意事項</div>
+				<p>
+					<code>SimpleWhere</code>
+					クラスを使った場合，プロパティの型とパラメータの値の整合性はチェックされません．
+					タイプセーフに使うには，
+					<code>SimpleWhere</code>
+					クラスではなく， 後述の
+					<a href="Operations_クラス">Operations クラス</a>
+					を使用してください．
+				</p>
+			</div>
+		</section>
+
+		<section name="Operations クラス">
+			<p>
+				<code>Operations</code>
+				クラスは S2JDBC が提供するクラスで，FQNは次のとおりです．
+			</p>
+			<ul>
+				<li>
+					<code>org.seasar.extension.jdbc.operation.Operations
+					</code>
+				</li>
+			</ul>
+			<p>
+				<code>Operations</code>
+				クラスは
+				<code>SimpleWhere</code>
+				クラスと同じようなメソッドを
+				<code>static</code>
+				メソッドとして提供します．
+				<code>Operations</code>
+				クラスのメソッドを static import し，
+				<code>Names</code>
+				クラスと組み合わせて使用することで，
+				プロパティの型とパラメータの型が適合していることをコンパイル時にチェックすることができます (
+				<a href="s2jdbc_gen/setup.html#Organize_Importsの設定">Eclipse で static import を使う場合の設定について</a>
+				)．
+			</p>
+			<p>
+				<code>SimpleWhere</code>
+				クラスを使った次の例は，
+			</p>
+			<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .where(new SimpleWhere()
+        .eq("name", name)
+        .gt("salary", salary))
+    .getResultList();
+]]></source>
+			<p>
+				<code>Operations</code>
+				クラスのメソッドを static import して使うと次のようになります．
+			</p>
+			<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .where(
+        eq(name(), name),
+        gt(salary(), salary))
+    .getResultList();
+]]></source>
+			<p>
+				<code>eq()</code>
+				メソッドや
+				<code>gt()</code>
+				メソッドが
+				<code>Operations</code>
+				クラスのメソッドです．
+				<code>eq()</code>
+				メソッドなどは次のように定義されています．
+			</p>
+			<ul>
+				<li>
+					<code>
+						public static &lt;PropType, ParamType extends PropType&gt;<br/> SingleValueOperator eq(PropertyName&lt;PropType&gt; propertyName, ParamType param)
+					</code>
+				</li>
+			</ul>
+			<p>
+				<code>Names</code>
+				クラスのメソッドは， プロパティの型を型引数とする
+				<code>PropertyName</code>
+				型を返すように定義されているため， プロパティの型にパラメータの型が代入可能でないとコンパイルでエラーとなります．
+			</p>
+			<p>
+				<code>Operations</code>
+				クラスには次のメソッドが定義されています．
+			</p>
+			<table border="1">
+				<tbody>
+					<tr>
+						<th>メソッド</th>
+						<th>説明</th>
+					</tr>
+					<tr>
+						<td>
+							<code>eq(PropertyName&lt;PropType&gt; propertyName, ParamType param)</code>
+						</td>
+						<td>
+							<code>propertyName = ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>ne(PropertyName&lt;PropType&gt; propertyName, ParamType param)</code>
+						</td>
+						<td>
+							<code>propertyName &lt;&gt; ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>lt(PropertyName&lt;PropType&gt; propertyName, ParamType param)</code>
+						</td>
+						<td>
+							<code>propertyName &lt; ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>le(PropertyName&lt;PropType&gt; propertyName, ParamType param)</code>
+						</td>
+						<td>
+							<code>propertyName &lt;= ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>gt(PropertyName&lt;PropType&gt; propertyName, ParamType param)</code>
+						</td>
+						<td>
+							<code>propertyName &gt; ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>ge(PropertyName&lt;PropType&gt; propertyName, ParamType param)</code>
+						</td>
+						<td>
+							<code>propertyName &gt;= ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>in(PropertyName&lt;PropType&gt; propertyName, ParamType... params)</code>
+						</td>
+						<td>
+							<code>propertyName in (?, ...)</code>
+							の条件を追加します．
+							<code>param</code> の配列の長さが <code>0</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>not in(PropertyName&lt;PropType&gt; propertyName, ParamType... params)</code>
+						</td>
+						<td>
+							<code>
+								propertyName not in (?, ...)
+							</code>
+							の条件を追加します．
+							<code>param</code> の配列の長さが <code>0</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>like(PropertyName&lt;String&gt; propertyName, String param)</code>
+						</td>
+						<td>
+							<code>propertyName like ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>like(PropertyName&lt;String&gt; propertyName, String param, char escape)</code>
+						</td>
+						<td>
+							<code>
+								propertyName like ? escape ?
+							</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>starts(PropertyName&lt;String&gt; propertyName, String param)</code>
+						</td>
+						<td>
+							<code>propertyName like ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+							<code>param</code>の末尾に自動的に
+							<code>%</code>
+							が追加されます．
+							<code>param</code>
+							に半角の
+							<code>'%', '_'</code>
+							や全角の
+							<code>'％', '＿'</code>
+							が含まれる場合はエスケープされます．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>ends(PropertyName&lt;String&gt; propertyName, String param)</code>
+						</td>
+						<td>
+							<code>propertyName like ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+							<code>param</code>の先頭に自動的に
+							<code>%</code>
+							が追加されます．
+							<code>param</code>
+							に半角の
+							<code>'%', '_'</code>
+							や全角の
+							<code>'％', '＿'</code>
+							が含まれる場合はエスケープされます．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>contains(PropertyName&lt;String&gt; propertyName, String param)</code>
+						</td>
+						<td>
+							<code>propertyName like ?</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> の時は追加されません．
+							<code>param</code>の先頭と末尾に自動的に
+							<code>%</code>
+							が追加されます．
+							<code>param</code>
+							に半角の
+							<code>'%', '_'</code>
+							や全角の
+							<code>'％', '＿'</code>
+							が含まれる場合はエスケープされます．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>isNull(PropertyName&lt;?&gt; propertyName)</code>
+						</td>
+						<td>
+							<code>propertyName is null</code>
+							の条件を追加します．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>isNull(PropertyName&lt;?&gt; propertyName, Boolean param)</code>
+						</td>
+						<td>
+							<code>propertyName is null</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> あるいは
+							<code>Boolean.FALSE</code> の時は追加されません。
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>isNotNull(PropertyName&lt;?&gt; propertyName)</code>
+						</td>
+						<td>
+							<code>propertyName is not null</code>
+							の条件を追加します．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>isNotNull(PropertyName&lt;?&gt; propertyName, Boolan param)</code>
+						</td>
+						<td>
+							<code>propertyName is not null</code>
+							の条件を追加します．
+							<code>param</code> が <code>null</code> あるいは
+							<code>Boolean.FALSE</code> の時は追加されません。
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>and(Where... children)</code>
+						</td>
+						<td>
+							子供の検索条件を <code>AND</code> で結合した条件を追加します．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>or(Where... children)</code>
+						</td>
+						<td>
+							子供の検索条件を <code>OR</code> で結合した条件を追加します．
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				<a href="s2jdbc_manager_auto.html#ソート順">ソート順</a>
+				で利用するために，以下のメソッドも定義されています．
+			</p>
+			<table border="1">
+				<tbody>
+					<tr>
+						<th>メソッド</th>
+						<th>説明</th>
+					</tr>
+					<tr>
+						<td>
+							<code>asc(CharSequence propertyName)</code>
+						</td>
+						<td>
+							昇順のソート順を返します．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>desc(CharSequence propertyName)</code>
+						</td>
+						<td>
+							降順のソート順を返します．
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				これらのメソッドを使うと，次の例は，
+			</p>
+			<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .leftOuterJoin("department")
+    .orderBy("department.name DESC, name")
+    .getResultList();
+]]></source>
+			<p>
+				次のようになります．
+			</p>
+			<source><![CDATA[
+jdbcManager.from(Employee.class)
+    .leftOuterJoin(department())
+    .orderBy(desc(department().name()), asc(name()))
+    .getResultList();
+]]></source>
+		</section>
+
+		<section name="Service クラス">
+			<p>
+				<code>Service</code>
+				クラスは，
+				<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a>
+				の
+				<a href="s2jdbc_gen/tasks/gen_service.html">Gen-Service</a>
+				タスクによって生成されるクラスです．
+				対応するエンティティの
+				<code>names</code>
+				クラスおよび
+				<code>Operations</code>
+				の
+				<code>static</code>
+				メソッドがあらかじめ static import されているため，
+				タイプセーフ API をすぐに利用することができます．
+				<code>Service</code>
+				クラスにあらかじめ生成されている
+				<code>findAllOrderById()</code>
+				メソッドの実装には， タイプセーフ API が使われています．
+			</p>
+			<source><![CDATA[
+    public List<Emp> findAllOrderById() {
+        return select().orderBy(asc(id())).getResultList();
+    }
+]]></source>
+		</section>
+	</body>
+</document>
