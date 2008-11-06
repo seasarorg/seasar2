@@ -15,10 +15,8 @@
  */
 package org.seasar.extension.jdbc.where;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.seasar.extension.jdbc.ConditionType;
+import org.seasar.extension.jdbc.util.LikeUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -27,12 +25,6 @@ import org.seasar.framework.util.StringUtil;
  * @author koichik
  */
 public class LikeOperator extends SingleValueOperator {
-
-    /** LIKE 述語で指定される検索条件中のワイルドカードをエスケープするためのパターン */
-    protected static final Pattern WILDCARD_PATTERN = Pattern.compile("[$%_]");
-
-    /** LIKE述語で指定される検索条件中のワイルドカード文字をエスケープするための文字 */
-    protected static final char WILDCARD_ESCAPE_CHAR = '$';
 
     /** エスケープ文字です。 */
     protected String escapeChar;
@@ -121,8 +113,7 @@ public class LikeOperator extends SingleValueOperator {
         }
 
         final String normalizedValue = (String) param;
-        if (normalizedValue.indexOf('%') == -1
-                && normalizedValue.indexOf('_') == -1) {
+        if (!LikeUtil.containsWildcard(normalizedValue)) {
             return normalizedValue;
         }
         switch (conditionType) {
@@ -136,19 +127,7 @@ public class LikeOperator extends SingleValueOperator {
             conditionType = ConditionType.CONTAINS_ESCAPE;
             break;
         }
-        return escapeWildcard(String.class.cast(normalizedValue));
-    }
-
-    /**
-     * LIKE述語で使用される検索条件のワイルドカードを<code>'$'</code>でエスケープします．
-     * 
-     * @param likeCondition
-     *            LIKE述語で使用される検索条件の文字列
-     * @return ワイルドカードを<code>'$'</code>でエスケープした文字列
-     */
-    protected String escapeWildcard(final String likeCondition) {
-        final Matcher matcher = WILDCARD_PATTERN.matcher(likeCondition);
-        return matcher.replaceAll("\\$$0");
+        return LikeUtil.escapeWildcard(String.class.cast(normalizedValue));
     }
 
 }

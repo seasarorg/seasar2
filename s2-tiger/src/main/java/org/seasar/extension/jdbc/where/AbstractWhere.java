@@ -17,11 +17,10 @@ package org.seasar.extension.jdbc.where;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.Where;
+import org.seasar.extension.jdbc.util.LikeUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
 
@@ -33,12 +32,6 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  *            このクラスのサブクラス
  */
 public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
-
-    /** LIKE 述語で指定される検索条件中のワイルドカードをエスケープするためのパターン */
-    protected static final Pattern WILDCARD_PATTERN = Pattern.compile("[$%_]");
-
-    /** LIKE述語で指定される検索条件中のワイルドカード文字をエスケープするための文字 */
-    protected static final char WILDCARD_ESCAPE_CHAR = '$';
 
     /** 現在のクライテリアを保持する文字列バッファ */
     protected StringBuilder criteriaSb = new StringBuilder(100);
@@ -272,14 +265,12 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
         assertPropertyName(propertyName);
         final String normalizedValue = String.class.cast(normalize(value));
         if (ConditionType.STARTS.isTarget(normalizedValue)) {
-            if (normalizedValue.indexOf('%') == -1
-                    && normalizedValue.indexOf('_') == -1) {
+            if (!LikeUtil.containsWildcard(normalizedValue)) {
                 addCondition(ConditionType.STARTS, propertyName.toString(),
                         normalizedValue);
             } else {
                 addCondition(ConditionType.STARTS_ESCAPE, propertyName
-                        .toString(), escapeWildcard(String.class
-                        .cast(normalizedValue)));
+                        .toString(), LikeUtil.escapeWildcard(normalizedValue));
             }
         }
         return (T) this;
@@ -297,14 +288,13 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
         assertPropertyName(propertyName);
         final String normalizedValue = String.class.cast(normalize(value));
         if (ConditionType.ENDS.isTarget(normalizedValue)) {
-            if (normalizedValue.indexOf('%') == -1
-                    && normalizedValue.indexOf('_') == -1) {
+            if (!LikeUtil.containsWildcard(normalizedValue)) {
                 addCondition(ConditionType.ENDS, propertyName.toString(),
                         normalizedValue);
             } else {
                 addCondition(ConditionType.ENDS_ESCAPE,
-                        propertyName.toString(), escapeWildcard(String.class
-                                .cast(normalizedValue)));
+                        propertyName.toString(), LikeUtil
+                                .escapeWildcard(normalizedValue));
             }
         }
         return (T) this;
@@ -322,14 +312,12 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
         assertPropertyName(propertyName);
         final String normalizedValue = String.class.cast(normalize(value));
         if (ConditionType.CONTAINS.isTarget(normalizedValue)) {
-            if (normalizedValue.indexOf('%') == -1
-                    && normalizedValue.indexOf('_') == -1) {
+            if (!LikeUtil.containsWildcard(normalizedValue)) {
                 addCondition(ConditionType.CONTAINS, propertyName.toString(),
                         normalizedValue);
             } else {
                 addCondition(ConditionType.CONTAINS_ESCAPE, propertyName
-                        .toString(), escapeWildcard(String.class
-                        .cast(normalizedValue)));
+                        .toString(), LikeUtil.escapeWildcard(normalizedValue));
             }
         }
         return (T) this;
@@ -441,18 +429,6 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
             }
         }
         return list.toArray(new Object[list.size()]);
-    }
-
-    /**
-     * LIKE述語で使用される検索条件のワイルドカードを<code>'$'</code>でエスケープします．
-     * 
-     * @param likeCondition
-     *            LIKE述語で使用される検索条件の文字列
-     * @return ワイルドカードを<code>'$'</code>でエスケープした文字列
-     */
-    protected String escapeWildcard(final String likeCondition) {
-        final Matcher matcher = WILDCARD_PATTERN.matcher(likeCondition);
-        return matcher.replaceAll("\\$$0");
     }
 
     /**
