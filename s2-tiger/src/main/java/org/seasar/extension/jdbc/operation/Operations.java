@@ -188,8 +188,6 @@ public class Operations {
      * 
      * @param propertyName
      *            プロパティ名
-     * @param params
-     *            引数
      * @return 条件
      */
     public static SingleValueOperator isNull(final PropertyName<?> propertyName) {
@@ -198,18 +196,46 @@ public class Operations {
     }
 
     /**
+     * <code>IS NULL</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @return 条件
+     */
+    public static SingleValueOperator isNull(
+            final PropertyName<?> propertyName, final Boolean param) {
+        return new SingleValueOperator(ConditionType.IS_NULL, propertyName,
+                param);
+    }
+
+    /**
      * <code>IS NOT NULL</code>演算子による{@link Where 検索条件}を作成します。
      * 
      * @param propertyName
      *            プロパティ名
-     * @param params
-     *            引数
      * @return 条件
      */
     public static SingleValueOperator isNotNull(
             final PropertyName<?> propertyName) {
         return new SingleValueOperator(ConditionType.IS_NOT_NULL, propertyName,
                 true);
+    }
+
+    /**
+     * <code>IS NOT NULL</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @return 条件
+     */
+    public static SingleValueOperator isNotNull(
+            final PropertyName<?> propertyName, final Boolean param) {
+        return new SingleValueOperator(ConditionType.IS_NOT_NULL, propertyName,
+                param);
     }
 
     /**
