@@ -39,14 +39,27 @@ public class SqlFileTestModelFactoryImplTest {
     public void test() throws Exception {
         File classpathDir = ResourceUtil.getBuildDir(getClass());
         String basePath = getClass().getPackage().getName().replace(".", "/");
+
         Set<File> sqlFileSet = new HashSet<File>();
-        sqlFileSet.add(ResourceUtil
-                .getResourceAsFile(basePath + "/sub/ccc.sql"));
-        sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/bbb.sql"));
-        sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/aaa.sql"));
+        sqlFileSet.add(new File(ResourceUtil.getResourceAsFile(basePath
+                + "/sub"), "ccc.sql"));
+        sqlFileSet.add(new File(ResourceUtil.getResourceAsFile(basePath),
+                "bbb.sql"));
+        sqlFileSet.add(new File(ResourceUtil.getResourceAsFile(basePath),
+                "bbb_oracle.sql"));
+        sqlFileSet.add(new File(ResourceUtil.getResourceAsFile(basePath),
+                "aaa_oracle.sql"));
         SqlFileTestModelFactoryImpl factory = new SqlFileTestModelFactoryImpl(
                 classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
-                "hoge", "SqlFileTest");
+                "hoge", "SqlFileTest") {
+
+            @Override
+            protected Set<String> getDbmsNameSet() {
+                Set<String> set = new HashSet<String>();
+                set.add("oracle");
+                return set;
+            }
+        };
 
         SqlFileTestModel model = factory.getSqlFileTestModel();
         assertEquals("s2jdbc.dicon", model.getConfigPath());

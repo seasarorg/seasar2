@@ -18,13 +18,17 @@ package org.seasar.extension.jdbc.gen.internal.model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModel;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
+import org.seasar.framework.container.S2Container;
+import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
  * {@link SqlFileTestModelFactory}の実装クラスです。
@@ -46,13 +50,13 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
     protected String shortClassName;
 
     /** SQLファイルのパスのリスト */
-    protected List<String> sqlFilePathList = new ArrayList<String>();
+    protected List<String> sqlFilePathList;
 
     /**
      * インスタンスを構築します。
      * 
      * @param classpathDir
-     *            ルートディレクトリ
+     *            クラスパスのディレクトリ
      * @param sqlFileSet
      *            SQLファイルのセット
      * @param configPath
@@ -86,17 +90,69 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         this.jdbcManagerName = jdbcManagerName;
         this.packageName = packageName;
         this.shortClassName = shortClassName;
+        this.sqlFilePathList = createSqlFilePathList(classpathDir, sqlFileSet);
+    }
 
+    /**
+     * SQLファイルのパスのリストを作成します。
+     * 
+     * @param classpathDir
+     *            クラスパスのディレクトリ
+     * @param sqlFileSet
+     *            SQLファイルのセット
+     * @return SQLファイルのパスのリスト
+     */
+    protected List<String> createSqlFilePathList(File classpathDir,
+            Set<File> sqlFileSet) {
+        List<String> sqlFilePathList = new ArrayList<String>();
+        Set<String> dbmsNameSet = getDbmsNameSet();
         String basePath = FileUtil.getCanonicalPath(classpathDir)
                 + File.separator;
+
         for (File sqlFile : sqlFileSet) {
             String path = FileUtil.getCanonicalPath(sqlFile);
-            if (path.startsWith(basePath)) {
-                path = path.substring(basePath.length());
-                sqlFilePathList.add(path.replace(File.separator, "/"));
+            if (!path.startsWith(basePath)) {
+                continue;
             }
+            path = path.substring(basePath.length());
+            if (path.endsWith(".sql")) {
+                path = path.substring(0, path.length() - 4);
+            }
+            for (String dbmsName : dbmsNameSet) {
+                if (path.endsWith("_" + dbmsName)) {
+                    path = path.substring(0, path.length() - dbmsName.length()
+                            - 1);
+                    break;
+                }
+            }
+            String resourcePath = path.replace(File.separator, "/") + ".sql";
+            if (sqlFilePathList.contains(resourcePath)) {
+                continue;
+            }
+            sqlFilePathList.add(resourcePath);
         }
+
         Collections.sort(sqlFilePathList);
+        return sqlFilePathList;
+    }
+
+    /**
+     * コンテナに登録されているすべての{@link DbmsDialect}について名前のセットを返します。
+     * 
+     * @return {@link DbmsDialect}の名前のセット
+     */
+    protected Set<String> getDbmsNameSet() {
+        if (!SingletonS2ContainerFactory.hasContainer()) {
+            return Collections.emptySet();
+        }
+        Set<String> dbmsNameSet = new HashSet<String>();
+        S2Container container = SingletonS2ContainerFactory.getContainer();
+        DbmsDialect[] dialects = (DbmsDialect[]) container
+                .findAllComponents(DbmsDialect.class);
+        for (DbmsDialect dialect : dialects) {
+            dbmsNameSet.add(dialect.getName());
+        }
+        return dbmsNameSet;
     }
 
     public SqlFileTestModel getSqlFileTestModel() {
