@@ -21,7 +21,11 @@ import org.seasar.framework.util.StatementUtil;
 
 /**
  * SQLファイルのテストクラスです。
- * 
+ * <p>
+ * このファイルは修正されることを意図していません。
+ * SQLファイルのテストを独自に行いたい場合は、サービスやエンティティのテストクラスを使用してください。
+ * </p>
+ *
  * @author S2JDBC-Gen
  */
 public class ${shortClassName} extends S2TestCase {
