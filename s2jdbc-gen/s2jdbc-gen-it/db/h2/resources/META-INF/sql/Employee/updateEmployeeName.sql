@@ -1,0 +1,1 @@
+update employee set employee_name = /*employeeName*/'hoge' where employee_id = /*employeeId*/1
