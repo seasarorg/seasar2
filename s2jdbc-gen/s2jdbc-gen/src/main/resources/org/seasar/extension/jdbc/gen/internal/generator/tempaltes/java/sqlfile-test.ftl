@@ -24,7 +24,7 @@ import org.seasar.framework.util.StatementUtil;
  * 
  * @author S2JDBC-Gen
  */
-public class SqlFileTest extends S2TestCase {
+public class ${shortClassName} extends S2TestCase {
 
     private JdbcManager ${jdbcManagerName};
 
@@ -129,6 +129,10 @@ public class SqlFileTest extends S2TestCase {
             String sql = ReaderUtil.readText(reader);
             if (sql.length() > 0 && sql.charAt(0) == '\uFEFF') {
                 sql = sql.substring(1);
+            }
+            sql = sql.trim();
+            if (sql.endsWith(";")) {
+                sql = sql.substring(0, sql.length() - 1);
             }
             return sql;
         }

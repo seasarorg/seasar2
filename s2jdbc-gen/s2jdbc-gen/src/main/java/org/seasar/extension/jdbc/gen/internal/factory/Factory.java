@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.factory;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
@@ -43,6 +44,7 @@ import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
@@ -512,4 +514,27 @@ public interface Factory {
      */
     ValueTypeProvider createValueTypeProvider(Command command,
             DbmsDialect dbmsDialect);
+
+    /**
+     * {@link SqlFileTestModelFactory}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param classpathDir
+     *            クラスパスのディレクトリ
+     * @param sqlFileSet
+     *            SQLファイルのセット
+     * @param configPath
+     *            設定ファイルのパス
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     * @param packageName
+     *            パッケージ名
+     * @param shortClassName
+     *            テストクラスの単純名
+     * @return {@link SqlFileTestModelFactory}の実装
+     */
+    SqlFileTestModelFactory createSqlFileTestModelFactory(Command command,
+            File classpathDir, Set<File> sqlFileSet, String configPath,
+            String jdbcManagerName, String packageName, String shortClassName);
 }

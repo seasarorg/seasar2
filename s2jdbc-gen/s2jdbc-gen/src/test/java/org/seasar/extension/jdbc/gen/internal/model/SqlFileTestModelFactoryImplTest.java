@@ -45,12 +45,14 @@ public class SqlFileTestModelFactoryImplTest {
         sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/bbb.sql"));
         sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/aaa.sql"));
         SqlFileTestModelFactoryImpl factory = new SqlFileTestModelFactoryImpl(
-                classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager", "hoge");
+                classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
+                "hoge", "SqlFileTest");
 
         SqlFileTestModel model = factory.getSqlFileTestModel();
         assertEquals("s2jdbc.dicon", model.getConfigPath());
         assertEquals("jdbcManager", model.getJdbcManagerName());
         assertEquals("hoge", model.getPackageName());
+        assertEquals("SqlFileTest", model.getShortClassName());
         assertEquals(3, model.getSqlFilePathList().size());
         assertEquals(basePath + "/aaa.sql", model.getSqlFilePathList().get(0));
         assertEquals(basePath + "/bbb.sql", model.getSqlFilePathList().get(1));

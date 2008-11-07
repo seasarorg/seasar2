@@ -123,6 +123,10 @@ public class SqlFileTest extends S2TestCase {
             if (sql.length() > 0 && sql.charAt(0) == '\uFEFF') {
                 sql = sql.substring(1);
             }
+            sql = sql.trim();
+            if (sql.endsWith(";")) {
+                sql = sql.substring(0, sql.length() - 1);
+            }
             return sql;
         }
 

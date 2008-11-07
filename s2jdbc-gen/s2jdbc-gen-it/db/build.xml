@@ -156,7 +156,7 @@
 			classpathref="classpath"
 		/>
 		<junit 
-			haltonfailure="no" 
+			haltonfailure="true" 
 			printsummary="true">
 			<formatter type="xml"/>
 			<batchtest todir="${testresult}" fork="true">
@@ -204,6 +204,56 @@
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
+		<refresh projectname="s2jdbc-gen-it"/>
+	</target>
+	
+	<target name="testGenerateSqlFileTest" depends="showRdbmsName, clean">
+		<!-- setUp -->
+		<exec-sql 
+			classpathref="classpath">
+			<sqlFileList dir="${sql}/testGenerateSqlFileTest">
+				<file name="create.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<!-- test -->
+		<gen-sqlfiletest
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			classpathref="classpath"
+		>
+			<sqlfileset dir="${build}">
+				<include name="META-INF/sql/**/*.sql" />
+			</sqlfileset>
+		</gen-sqlfiletest>
+		<javac 
+			srcdir="${src}"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<junit 
+			haltonfailure="true" 
+			printsummary="true">
+			<formatter type="xml"/>
+			<batchtest todir="${testresult}" fork="true">
+				<fileset dir="${src}">
+					<include name="**/SqlFileTest.java"/>
+				</fileset>
+			</batchtest>
+			<classpath>
+				<path refid="classpath"/>
+			</classpath>
+		</junit>
+		<!-- tearDown -->
+		<exec-sql 
+			classpathref="classpath">
+			<sqlFileList dir="${sql}/testGenerateSqlFileTest">
+				<file name="drop.sql"/>
+			</sqlFileList>
+		</exec-sql>
 		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
@@ -255,7 +305,7 @@
 			classpathref="classpath"
 		/>
 		<junit 
-			haltonfailure="no" 
+			haltonfailure="true" 
 			printsummary="true">
 			<formatter type="xml"/>
 			<batchtest todir="${testresult}" fork="true">

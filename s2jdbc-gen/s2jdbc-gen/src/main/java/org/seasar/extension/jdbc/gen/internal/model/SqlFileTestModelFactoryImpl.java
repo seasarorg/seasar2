@@ -42,6 +42,9 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
     /** パッケージ名、パッケージ名を指定しない場合は{@code null} */
     protected String packageName;
 
+    /** テストクラスの単純名 */
+    protected String shortClassName;
+
     /** SQLファイルのパスのリスト */
     protected List<String> sqlFilePathList = new ArrayList<String>();
 
@@ -58,9 +61,12 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
      *            {@link JdbcManager}のコンポーネント名
      * @param packageName
      *            パッケージ名
+     * @param shortClassName
+     *            テストクラスの単純名
      */
     public SqlFileTestModelFactoryImpl(File classpathDir, Set<File> sqlFileSet,
-            String configPath, String jdbcManagerName, String packageName) {
+            String configPath, String jdbcManagerName, String packageName,
+            String shortClassName) {
         if (classpathDir == null) {
             throw new NullPointerException("classpathDir");
         }
@@ -73,9 +79,13 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         if (jdbcManagerName == null) {
             throw new NullPointerException("jdbcManagerName");
         }
+        if (shortClassName == null) {
+            throw new NullPointerException("shortClassName");
+        }
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
         this.packageName = packageName;
+        this.shortClassName = shortClassName;
 
         String basePath = FileUtil.getCanonicalPath(classpathDir)
                 + File.separator;
@@ -94,6 +104,7 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         model.setConfigPath(configPath);
         model.setJdbcManagerName(jdbcManagerName);
         model.setPackageName(packageName);
+        model.setShortClassName(shortClassName);
         for (String sqlFilePath : sqlFilePathList) {
             model.addSqlFilePath(sqlFilePath);
         }

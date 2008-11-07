@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.factory;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.GenerationType;
 import javax.sql.DataSource;
@@ -51,6 +52,7 @@ import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.SqlFileTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
@@ -67,6 +69,7 @@ import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
@@ -275,6 +278,14 @@ public class FactoryImpl implements Factory {
     public ValueTypeProvider createValueTypeProvider(Command command,
             DbmsDialect dbmsDialect) {
         return new ValueTypeProviderImpl(dbmsDialect);
+    }
+
+    public SqlFileTestModelFactory createSqlFileTestModelFactory(
+            Command command, File classpathDir, Set<File> sqlFileSet,
+            String configPath, String jdbcManagerName, String packageName,
+            String shortClassName) {
+        return new SqlFileTestModelFactoryImpl(classpathDir, sqlFileSet,
+                configPath, jdbcManagerName, packageName, shortClassName);
     }
 
 }

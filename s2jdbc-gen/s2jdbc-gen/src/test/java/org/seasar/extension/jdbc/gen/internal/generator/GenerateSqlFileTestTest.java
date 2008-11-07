@@ -59,7 +59,8 @@ public class GenerateSqlFileTestTest {
         sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/aaa.sql"));
         sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/bbb.sql"));
         SqlFileTestModelFactoryImpl sqlFileTestModelFactory = new SqlFileTestModelFactoryImpl(
-                classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager", "hoge");
+                classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
+                "hoge", "SqlFileTest");
         SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
 
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -80,7 +81,7 @@ public class GenerateSqlFileTestTest {
         File classpathDir = ResourceUtil.getBuildDir(getClass());
         SqlFileTestModelFactoryImpl sqlFileTestModelFactory = new SqlFileTestModelFactoryImpl(
                 classpathDir, Collections.<File> emptySet(), "s2jdbc.dicon",
-                "jdbcManager", "hoge");
+                "jdbcManager", "hoge", "SqlFileTest");
         SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
 
         GenerationContext context = new GenerationContextImpl(model, new File(
