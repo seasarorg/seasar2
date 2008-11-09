@@ -133,6 +133,12 @@
 			javafiledestdir="${src}"
 			classpathref="classpath"
 		/>
+		<gen-servicetest
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			classpathref="classpath"
+		/>
 		<javac 
 			srcdir="${src}"
 			destdir="${build}"

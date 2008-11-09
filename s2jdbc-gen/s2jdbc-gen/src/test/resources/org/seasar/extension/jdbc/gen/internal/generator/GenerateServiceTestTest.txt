@@ -1,0 +1,33 @@
+package hoge.service;
+
+import org.seasar.extension.unit.S2TestCase;
+
+/**
+ * {@link AaaService}のテストクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+public class AaaServiceTest extends S2TestCase {
+
+    private AaaService aaaService;
+
+    /**
+     * 事前処理をします。
+     * 
+     * @throws Exception
+     */
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        include("app.dicon");
+    }
+
+    /**
+     * {@link AaaService#getCount()}が動作することをテストします。
+     * 
+     * @throws Exception
+     */
+    public void testGetCountTx() throws Exception {
+        aaaService.getCount();
+    }
+}
