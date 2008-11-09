@@ -174,14 +174,15 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public String getTableComment(Connection connection, String tableName)
-            throws SQLException {
-        String sql = "select comments from user_tab_comments where table_name = ?";
-        logger.debug(sql);
-        logger.debug("table_name=" + tableName);
+    public String getTableComment(Connection connection, String catalogName,
+            String schemaName, String tableName) throws SQLException {
+        String sql = "select comments from all_tab_comments where owner = ? and table_name = ? and table_type = 'TABLE'";
+        logger.debug(String.format(sql.replace("?", "'%s'"), schemaName,
+                tableName));
         PreparedStatement ps = ConnectionUtil.prepareStatement(connection, sql);
         try {
-            ps.setString(1, tableName);
+            ps.setString(1, schemaName);
+            ps.setString(2, tableName);
             ResultSet rs = PreparedStatementUtil.executeQuery(ps);
             try {
                 if (rs.next()) {
@@ -198,13 +199,15 @@ public class OracleGenDialect extends StandardGenDialect {
 
     @Override
     public Map<String, String> getColumnCommentMap(Connection connection,
-            String tableName) throws SQLException {
-        String sql = "select column_name, comments from user_col_comments where table_name = ?";
-        logger.debug(sql);
-        logger.debug("table_name=" + tableName);
+            String catalogName, String schemaName, String tableName)
+            throws SQLException {
+        String sql = "select column_name, comments from all_col_comments where owner = ? and table_name = ?";
+        logger.debug(String.format(sql.replace("?", "'%s'"), schemaName,
+                tableName));
         PreparedStatement ps = ConnectionUtil.prepareStatement(connection, sql);
         try {
-            ps.setString(1, tableName);
+            ps.setString(1, schemaName);
+            ps.setString(2, tableName);
             ResultSet rs = PreparedStatementUtil.executeQuery(ps);
             try {
                 @SuppressWarnings("unchecked")

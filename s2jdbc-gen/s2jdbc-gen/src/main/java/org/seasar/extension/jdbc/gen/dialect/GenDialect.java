@@ -297,14 +297,18 @@ public interface GenDialect {
      * 
      * @param connection
      *            コネクション
+     * @param catalogName
+     *            カタログ名
+     * @param schemaName
+     *            スキーマ名
      * @param tableName
      *            テーブル名
      * @return テーブルのコメント、存在しない場合{@code null}
      * @throws SQLException
      *             SQL例外が発生した場合
      */
-    String getTableComment(Connection connection, String tableName)
-            throws SQLException;
+    String getTableComment(Connection connection, String catalogName,
+            String schemaName, String tableName) throws SQLException;
 
     /**
      * カラムのコメントをデータベースから直接取得しマップに詰めて返します。
@@ -317,6 +321,10 @@ public interface GenDialect {
      * 
      * @param connection
      *            コネクション
+     * @param catalogName
+     *            カタログ名
+     * @param schemaName
+     *            スキーマ名
      * @param tableName
      *            テーブル名
      * @return 大文字小文字を気にしないカラム名をキー、カラムのコメントを値とするマップ
@@ -324,7 +332,8 @@ public interface GenDialect {
      *             SQL例外が発生した場合
      */
     Map<String, String> getColumnCommentMap(Connection connection,
-            String tableName) throws SQLException;
+            String catalogName, String schemaName, String tableName)
+            throws SQLException;
 
     /**
      * カラム型です。

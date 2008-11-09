@@ -484,12 +484,14 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
             List<DbTableMeta> dbTableMetaList) {
         try {
             for (DbTableMeta tableMeta : dbTableMetaList) {
-                String tableName = tableMeta.getName();
                 String tableComment = dialect.getTableComment(connection,
-                        tableName);
+                        tableMeta.getCatalogName(), tableMeta.getSchemaName(),
+                        tableMeta.getName());
                 tableMeta.setComment(tableComment);
                 Map<String, String> columnCommentMap = dialect
-                        .getColumnCommentMap(connection, tableName);
+                        .getColumnCommentMap(connection, tableMeta
+                                .getCatalogName(), tableMeta.getSchemaName(),
+                                tableMeta.getName());
                 for (DbColumnMeta columnMeta : tableMeta.getColumnMetaList()) {
                     String columnName = columnMeta.getName();
                     if (columnCommentMap.containsKey(columnName)) {

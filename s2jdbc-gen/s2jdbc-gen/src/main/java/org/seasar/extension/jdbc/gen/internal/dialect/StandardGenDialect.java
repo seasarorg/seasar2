@@ -250,13 +250,14 @@ public class StandardGenDialect implements GenDialect {
         return false;
     }
 
-    public String getTableComment(Connection connection, String tableName)
-            throws SQLException {
+    public String getTableComment(Connection connection, String catalogName,
+            String schemaName, String tableName) throws SQLException {
         throw new UnsupportedOperationException("getTableComment");
     }
 
     public Map<String, String> getColumnCommentMap(Connection connection,
-            String tableName) throws SQLException {
+            String catalogName, String schemaName, String tableName)
+            throws SQLException {
         throw new UnsupportedOperationException("getColumnCommentMap");
     }
 

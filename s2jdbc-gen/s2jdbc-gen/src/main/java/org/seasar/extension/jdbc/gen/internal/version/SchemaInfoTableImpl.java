@@ -219,8 +219,7 @@ public class SchemaInfoTableImpl implements SchemaInfoTable {
             } finally {
                 StatementUtil.close(delete);
             }
-            logger.debug(insertSql);
-            logger.debug(columnName + "=" + versionNo);
+            logger.debug(insertSql.replace("?", Integer.toString(versionNo)));
             PreparedStatement insert = ConnectionUtil.prepareStatement(conn,
                     insertSql);
             try {
