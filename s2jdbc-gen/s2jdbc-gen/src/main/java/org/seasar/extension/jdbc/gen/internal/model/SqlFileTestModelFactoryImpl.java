@@ -150,7 +150,10 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         DbmsDialect[] dialects = (DbmsDialect[]) container
                 .findAllComponents(DbmsDialect.class);
         for (DbmsDialect dialect : dialects) {
-            dbmsNameSet.add(dialect.getName());
+            String name = dialect.getName();
+            if (name != null) {
+                dbmsNameSet.add(name);
+            }
         }
         return dbmsNameSet;
     }

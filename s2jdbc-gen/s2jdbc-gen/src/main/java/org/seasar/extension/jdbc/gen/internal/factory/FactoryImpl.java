@@ -50,11 +50,12 @@ import org.seasar.extension.jdbc.gen.internal.model.ConditionAssociationModelFac
 import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.ServiceTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.SqlFileTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
@@ -67,13 +68,14 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
+import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
-import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -221,6 +223,14 @@ public class FactoryImpl implements Factory {
 
         return new ServiceModelFactoryImpl(packageName, serviceClassNameSuffix,
                 namesModelFactory, useNamesClass, jdbcManagerName);
+    }
+
+    public ServiceTestModelFactory createServiceTestModelFactory(
+            Command command, String configPath, String packageName,
+            String serviceClassNameSuffix, String testClassNameSuffix) {
+
+        return new ServiceTestModelFactoryImpl(configPath, packageName,
+                serviceClassNameSuffix, testClassNameSuffix);
     }
 
     public AbstServiceModelFactory createAbstServiceModelFactory(

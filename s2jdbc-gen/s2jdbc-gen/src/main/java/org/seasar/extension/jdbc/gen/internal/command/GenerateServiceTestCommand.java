@@ -22,7 +22,6 @@ import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.model.ServiceTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
@@ -50,8 +49,8 @@ public class GenerateServiceTestCommand extends AbstractCommand {
     protected static Logger logger = Logger
             .getLogger(GenerateServiceTestCommand.class);
 
-    /** テスト用の設定ファイルのパス */
-    protected String testConfigPath = "app.dicon";
+    /** アプリケーション用の設定ファイルのパス */
+    protected String appConfigPath = "app.dicon";
 
     /** クラスパスのディレクトリ */
     protected File classpathDir;
@@ -105,22 +104,22 @@ public class GenerateServiceTestCommand extends AbstractCommand {
     protected Generator generator;
 
     /**
-     * テスト用の設定ファイルのパスを返します。
+     * アプリケーション用の設定ファイルのパスを返します。
      * 
-     * @return テスト用の設定ファイルのパス
+     * @return アプリケーション用の設定ファイルのパス
      */
-    public String getTestConfigPath() {
-        return testConfigPath;
+    public String getAppConfigPath() {
+        return appConfigPath;
     }
 
     /**
-     * テスト用の設定ファイルのパスを設定します。
+     * アプリケーション用の設定ファイルのパスを設定します。
      * 
-     * @param testConfigPath
-     *            テスト用の設定ファイルのパス
+     * @param appConfigPath
+     *            アプリケーション用の設定ファイルのパス
      */
-    public void setTestConfigPath(String testConfigPath) {
-        this.testConfigPath = testConfigPath;
+    public void setAppConfigPath(String appConfigPath) {
+        this.appConfigPath = appConfigPath;
     }
 
     /**
@@ -450,8 +449,8 @@ public class GenerateServiceTestCommand extends AbstractCommand {
      * @return {@link ServiceTestModelFactory}の実装
      */
     protected ServiceTestModelFactory createServiceTestModelFactory() {
-        return new ServiceTestModelFactoryImpl(testConfigPath, ClassUtil
-                .concatName(rootPackageName, servicePackageName),
+        return factory.createServiceTestModelFactory(this, appConfigPath,
+                ClassUtil.concatName(rootPackageName, servicePackageName),
                 serviceClassNameSuffix, testClassNameSuffix);
     }
 

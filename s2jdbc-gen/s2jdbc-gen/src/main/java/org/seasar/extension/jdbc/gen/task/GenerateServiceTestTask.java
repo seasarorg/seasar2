@@ -199,13 +199,13 @@ public class GenerateServiceTestTask extends AbstractTask {
     }
 
     /**
-     * テスト用の設定ファイルのパスを設定します。
+     * アプリケーション用の設定ファイルのパスを設定します。
      * 
-     * @param testConfigPath
-     *            テスト用の設定ファイルのパス
+     * @param appConfigPath
+     *            アプリケーション用の設定ファイルのパス
      */
-    public void setTestConfigPath(String testConfigPath) {
-        command.setTestConfigPath(testConfigPath);
+    public void setAppConfigPath(String appConfigPath) {
+        command.setAppConfigPath(appConfigPath);
     }
 
     /**

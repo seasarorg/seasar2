@@ -42,13 +42,14 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
+import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
-import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -365,7 +366,7 @@ public interface Factory {
      * @param command
      *            呼び出し元のコマンド
      * @param packageName
-     *            パッケージ名
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param serviceClassNameSuffix
      *            サービスクラス名のサフィックス
      * @param namesModelFactory
@@ -382,12 +383,31 @@ public interface Factory {
             String jdbcManagerName);
 
     /**
+     * インスタンスを構築します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param packageName
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
+     * @param serviceClassNameSuffix
+     *            サービスクラス名のサフィックス
+     * @param testClassNameSuffix
+     *            テストクラス名のサフィックス
+     * @param configPath
+     *            設定ファイルのパス
+     * @return {@link ServiceTestModelFactory}の実装
+     */
+    ServiceTestModelFactory createServiceTestModelFactory(Command command,
+            String configPath, String packageName,
+            String serviceClassNameSuffix, String testClassNameSuffix);
+
+    /**
      * {@link AbstServiceModelFactory}の実装を作成します。
      * 
      * @param command
      *            呼び出し元のコマンド
      * @param packageName
-     *            パッケージ名
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param serviceClassNameSuffix
      *            サービスクラス名のサフィックス
      * @return {@link AbstServiceModelFactory}の実装
@@ -408,8 +428,9 @@ public interface Factory {
      *            テストクラス名のサフィックス
      * @return {@link EntityTestModelFactory}の実装
      */
-    EntityTestModelFactory createEntityTestModelFactory(Command command, String configPath,
-            String jdbcManagerName, String testClassNameSuffix);
+    EntityTestModelFactory createEntityTestModelFactory(Command command,
+            String configPath, String jdbcManagerName,
+            String testClassNameSuffix);
 
     /**
      * {@link NamesModelFactory}の実装を作成します。
@@ -417,7 +438,7 @@ public interface Factory {
      * @param command
      *            呼び出し元のコマンド
      * @param packageName
-     *            パッケージ名
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param namesClassNameSuffix
      *            名前クラス名のサフィックス
      * @return {@link NamesModelFactory}の実装
@@ -529,7 +550,7 @@ public interface Factory {
      * @param jdbcManagerName
      *            {@link JdbcManager}のコンポーネント名
      * @param packageName
-     *            パッケージ名
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param shortClassName
      *            テストクラスの単純名
      * @return {@link SqlFileTestModelFactory}の実装
