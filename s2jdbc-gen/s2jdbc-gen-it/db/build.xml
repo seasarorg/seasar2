@@ -437,7 +437,7 @@
 			</sqlFileList>
 		</exec-sql>
 		<!-- test -->
-		<dump-db-meta 
+		<dump-dbmeta 
 			classpathref="classpath"
 		/>
 		<!-- tearDown -->
