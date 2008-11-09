@@ -22,9 +22,48 @@
   <!-- Profiles -->
   <profiles>
     <profile>
-      <id>hsqldb</id>
+      <id>standard</id>
       <activation>
         <activeByDefault>true</activeByDefault>
+        <property>
+          <name>RDBMS</name>
+          <value>standard</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>org.apache.derby</groupId>
+          <artifactId>derby</artifactId>
+          <version>10.3.1.4</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.derby</groupId>
+          <artifactId>derbyLocale_ja_JP</artifactId>
+          <version>10.3.1.4</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.derby</groupId>
+          <artifactId>derbytools</artifactId>
+          <version>10.3.1.4</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.derby</groupId>
+          <artifactId>derby</artifactId>
+          <version>10.3.1.4</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>hsqldb</id>
+      <activation>
         <property>
           <name>RDBMS</name>
           <value>hsqldb</value>
