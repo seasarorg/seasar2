@@ -19,6 +19,64 @@
   <name>S2JDBC-IT</name>
   <url>http://s2container.seasar.org/</url>
 
+  <!-- Profiles -->
+  <profiles>
+    <profile>
+      <id>hsqldb</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    </profile>
+    <profile>
+      <id>h2</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+          <version>1.0.60</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>oracle</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.oracle</groupId>
+          <artifactId>ojdbc5</artifactId>
+          <version>11.1.0.7.0</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>db2</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.ibm</groupId>
+          <artifactId>db2jcc</artifactId>
+          <version>3.50.152</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>mssql</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.microsoft</groupId>
+          <artifactId>sqljdbc</artifactId>
+          <version>1.2.2828</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
+
   <!-- Build Settings -->
   <build>
     <defaultGoal>validate</defaultGoal>
@@ -104,13 +162,6 @@
           <artifactId>junit-addons-runner</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <version>1.0.60</version>
-      <type>jar</type>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
