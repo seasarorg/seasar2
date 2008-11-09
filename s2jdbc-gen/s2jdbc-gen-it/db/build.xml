@@ -109,7 +109,7 @@
 			classpathref="classpath"
 		/>
 		<!-- test -->
-		<gen-test
+		<gen-entitytest
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
@@ -195,7 +195,7 @@
 			classpathref="classpath"
 		/>
 		<!-- test -->
-		<gen-test
+		<gen-entitytest
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"

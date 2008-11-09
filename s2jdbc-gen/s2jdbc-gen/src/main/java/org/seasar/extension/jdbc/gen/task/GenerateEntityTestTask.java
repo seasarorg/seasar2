@@ -19,18 +19,18 @@ import java.io.File;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateTestCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityTestCommand;
 
 /**
  * エンティティに対するテストクラスのJavaファイルを生成する{@link Task}です。
  * 
  * @author taedium
- * @see GenerateTestCommand
+ * @see GenerateEntityTestCommand
  */
-public class GenerateTestTask extends AbstractTask {
+public class GenerateEntityTestTask extends AbstractTask {
 
     /** コマンド */
-    protected GenerateTestCommand command = new GenerateTestCommand();
+    protected GenerateEntityTestCommand command = new GenerateEntityTestCommand();
 
     @Override
     protected Command getCommand() {

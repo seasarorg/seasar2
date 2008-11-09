@@ -18,11 +18,11 @@ package org.seasar.extension.jdbc.gen.model;
 import org.seasar.extension.jdbc.EntityMeta;
 
 /**
- * {@link TestModel テストモデル}のファクトリです。
+ * {@link EntityTestModel テストモデル}のファクトリです。
  * 
  * @author taedium
  */
-public interface TestModelFactory {
+public interface EntityTestModelFactory {
 
     /**
      * テストモデルを返します。
@@ -31,5 +31,5 @@ public interface TestModelFactory {
      *            エンティティメタデータ
      * @return テストモデル
      */
-    TestModel getEntityTestModel(EntityMeta entityMeta);
+    EntityTestModel getEntityTestModel(EntityMeta entityMeta);
 }

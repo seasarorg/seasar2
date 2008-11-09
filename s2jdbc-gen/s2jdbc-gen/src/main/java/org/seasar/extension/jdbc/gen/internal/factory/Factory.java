@@ -48,7 +48,7 @@ import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
-import org.seasar.extension.jdbc.gen.model.TestModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -396,7 +396,7 @@ public interface Factory {
             String packageName, String serviceClassNameSuffix);
 
     /**
-     * {@link TestModelFactory}の実装を作成します。
+     * {@link EntityTestModelFactory}の実装を作成します。
      * 
      * @param command
      *            呼び出し元のコマンド
@@ -406,9 +406,9 @@ public interface Factory {
      *            {@link JdbcManager}のコンポーネント名
      * @param testClassNameSuffix
      *            テストクラス名のサフィックス
-     * @return {@link TestModelFactory}の実装
+     * @return {@link EntityTestModelFactory}の実装
      */
-    TestModelFactory createTestModelFactory(Command command, String configPath,
+    EntityTestModelFactory createEntityTestModelFactory(Command command, String configPath,
             String jdbcManagerName, String testClassNameSuffix);
 
     /**

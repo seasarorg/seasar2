@@ -27,7 +27,7 @@ import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModel;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
-import org.seasar.extension.jdbc.gen.model.TestModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -321,7 +321,7 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     /**
      * {@link SqlFileTestModelFactory}の実装を作成します。
      * 
-     * @return {@link TestModelFactory}の実装
+     * @return {@link EntityTestModelFactory}の実装
      */
     protected SqlFileTestModelFactory createSqlFileTestModelFactory() {
         return factory.createSqlFileTestModelFactory(this, classpathDir,

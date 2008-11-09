@@ -25,17 +25,17 @@ import java.util.Date;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
-import org.seasar.extension.jdbc.gen.model.TestModel;
-import org.seasar.extension.jdbc.gen.model.TestModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModel;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * {@link TestModelFactory}の実装クラスです。
+ * {@link EntityTestModelFactory}の実装クラスです。
  * 
  * @author taedium
  */
-public class TestModelFactoryImpl implements TestModelFactory {
+public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
 
     /** 設定ファイルのパス */
     protected String configPath;
@@ -59,7 +59,7 @@ public class TestModelFactoryImpl implements TestModelFactory {
      * @param testClassNameSuffix
      *            テストクラス名のサフィックス
      */
-    public TestModelFactoryImpl(String configPath, String jdbcManagerName,
+    public EntityTestModelFactoryImpl(String configPath, String jdbcManagerName,
             String testClassNameSuffix) {
         if (configPath == null) {
             throw new NullPointerException("configPath");
@@ -75,33 +75,33 @@ public class TestModelFactoryImpl implements TestModelFactory {
         this.testClassNameSuffix = testClassNameSuffix;
     }
 
-    public TestModel getEntityTestModel(EntityMeta entityMeta) {
-        TestModel testModel = new TestModel();
-        testModel.setConfigPath(configPath);
-        testModel.setJdbcManagerName(jdbcManagerName);
+    public EntityTestModel getEntityTestModel(EntityMeta entityMeta) {
+        EntityTestModel entityTestModel = new EntityTestModel();
+        entityTestModel.setConfigPath(configPath);
+        entityTestModel.setJdbcManagerName(jdbcManagerName);
         String packageName = ClassUtil.splitPackageAndShortClassName(entityMeta
                 .getEntityClass().getName())[0];
-        testModel.setPackageName(packageName);
-        testModel.setShortClassName(entityMeta.getName() + testClassNameSuffix);
-        testModel.setShortEntityClassName(entityMeta.getName());
-        doIdValue(testModel, entityMeta);
-        doAssociationName(testModel, entityMeta);
-        doImportName(testModel, entityMeta);
-        return testModel;
+        entityTestModel.setPackageName(packageName);
+        entityTestModel.setShortClassName(entityMeta.getName() + testClassNameSuffix);
+        entityTestModel.setShortEntityClassName(entityMeta.getName());
+        doIdValue(entityTestModel, entityMeta);
+        doAssociationName(entityTestModel, entityMeta);
+        doImportName(entityTestModel, entityMeta);
+        return entityTestModel;
     }
 
     /**
      * 識別子の式を処理します。
      * 
-     * @param testModel
+     * @param entityTestModel
      *            テストモデル
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void doIdValue(TestModel testModel, EntityMeta entityMeta) {
+    protected void doIdValue(EntityTestModel entityTestModel, EntityMeta entityMeta) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
-            testModel.addIdExpression(getExpression(propertyClass));
+            entityTestModel.addIdExpression(getExpression(propertyClass));
         }
     }
 
@@ -170,15 +170,15 @@ public class TestModelFactoryImpl implements TestModelFactory {
     /**
      * 関連名を処理します。
      * 
-     * @param testModel
+     * @param entityTestModel
      *            テストモデル
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void doAssociationName(TestModel testModel, EntityMeta entityMeta) {
+    protected void doAssociationName(EntityTestModel entityTestModel, EntityMeta entityMeta) {
         for (PropertyMeta propertyMeta : entityMeta.getAllPropertyMeta()) {
             if (propertyMeta.isRelationship()) {
-                testModel.addAssociationName(propertyMeta.getName());
+                entityTestModel.addAssociationName(propertyMeta.getName());
             }
         }
     }
@@ -186,16 +186,16 @@ public class TestModelFactoryImpl implements TestModelFactory {
     /**
      * インポート名を処理します。
      * 
-     * @param testModel
+     * @param entityTestModel
      *            テストモデル
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void doImportName(TestModel testModel, EntityMeta entityMeta) {
-        classModelSupport.addImportName(testModel, JdbcManager.class);
-        classModelSupport.addImportName(testModel, S2TestCase.class);
+    protected void doImportName(EntityTestModel entityTestModel, EntityMeta entityMeta) {
+        classModelSupport.addImportName(entityTestModel, JdbcManager.class);
+        classModelSupport.addImportName(entityTestModel, S2TestCase.class);
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            classModelSupport.addImportName(testModel, propertyMeta
+            classModelSupport.addImportName(entityTestModel, propertyMeta
                     .getPropertyClass());
         }
     }

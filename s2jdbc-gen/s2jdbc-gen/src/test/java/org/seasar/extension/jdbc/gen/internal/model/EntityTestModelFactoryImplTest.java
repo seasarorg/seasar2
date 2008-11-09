@@ -25,7 +25,7 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
-import org.seasar.extension.jdbc.gen.model.TestModel;
+import org.seasar.extension.jdbc.gen.model.EntityTestModel;
 
 import static org.junit.Assert.*;
 
@@ -33,9 +33,9 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class TestModelFactoryImplTest {
+public class EntityTestModelFactoryImplTest {
 
-    private TestModelFactoryImpl factory;
+    private EntityTestModelFactoryImpl factory;
 
     /**
      * 
@@ -43,7 +43,7 @@ public class TestModelFactoryImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        factory = new TestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
+        factory = new EntityTestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
                 "Test");
     }
 
@@ -56,14 +56,15 @@ public class TestModelFactoryImplTest {
         EntityMeta entityMeta = new EntityMeta();
         entityMeta.setName("Foo");
         entityMeta.setEntityClass(getClass());
-        TestModel testModel = factory.getEntityTestModel(entityMeta);
-        assertEquals("s2jdbc.dicon", testModel.getConfigPath());
-        assertEquals("jdbcManager", testModel.getJdbcManagerName());
-        assertEquals("org.seasar.extension.jdbc.gen.internal.model", testModel
-                .getPackageName());
-        assertEquals("FooTest", testModel.getShortClassName());
-        assertEquals("Foo", testModel.getShortEntityClassName());
-        assertEquals(2, testModel.getImportNameSet().size());
+        EntityTestModel entityTestModel = factory
+                .getEntityTestModel(entityMeta);
+        assertEquals("s2jdbc.dicon", entityTestModel.getConfigPath());
+        assertEquals("jdbcManager", entityTestModel.getJdbcManagerName());
+        assertEquals("org.seasar.extension.jdbc.gen.internal.model",
+                entityTestModel.getPackageName());
+        assertEquals("FooTest", entityTestModel.getShortClassName());
+        assertEquals("Foo", entityTestModel.getShortEntityClassName());
+        assertEquals(2, entityTestModel.getImportNameSet().size());
     }
 
     /**

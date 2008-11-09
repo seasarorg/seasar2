@@ -21,8 +21,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
-import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.model.TestModel;
+import org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.model.EntityTestModel;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
@@ -36,11 +36,11 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateTestTest {
+public class GenerateEntityTestTest {
 
     private EntityMetaFactoryImpl entityMetaFactory;
 
-    private TestModelFactoryImpl entityTestModelFactory;
+    private EntityTestModelFactoryImpl entityTestModelFactory;
 
     private GeneratorImplStub generator;
 
@@ -62,7 +62,7 @@ public class GenerateTestTest {
         entityMetaFactory.setPersistenceConvention(pc);
         entityMetaFactory.setPropertyMetaFactory(propertyMetaFactory);
         entityMetaFactory.setTableMetaFactory(tmf);
-        entityTestModelFactory = new TestModelFactoryImpl("s2jdbc.dicon",
+        entityTestModelFactory = new EntityTestModelFactoryImpl("s2jdbc.dicon",
                 "jdbcManager", "Test");
         generator = new GeneratorImplStub();
     }
@@ -74,9 +74,10 @@ public class GenerateTestTest {
     @Test
     public void testCompositeId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ccc.class);
-        TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
+        EntityTestModel model = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/test.ftl", "UTF-8", false);
+                "file"), "java/entity-test.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
@@ -91,9 +92,10 @@ public class GenerateTestTest {
     @Test
     public void testNoId() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
-        TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
+        EntityTestModel model = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/test.ftl", "UTF-8", false);
+                "file"), "java/entity-test.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_NoId.txt";
@@ -107,9 +109,10 @@ public class GenerateTestTest {
     @Test
     public void testLeftOuterJoin() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
-        TestModel model = entityTestModelFactory.getEntityTestModel(entityMeta);
+        EntityTestModel model = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/test.ftl", "UTF-8", false);
+                "file"), "java/entity-test.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")

@@ -25,8 +25,8 @@ import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRunt
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
-import org.seasar.extension.jdbc.gen.model.TestModel;
-import org.seasar.extension.jdbc.gen.model.TestModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModel;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -43,11 +43,11 @@ import org.seasar.framework.util.ClassUtil;
  * 
  * @author taedium
  */
-public class GenerateTestCommand extends AbstractCommand {
+public class GenerateEntityTestCommand extends AbstractCommand {
 
     /** ロガー */
     protected static Logger logger = Logger
-            .getLogger(GenerateTestCommand.class);
+            .getLogger(GenerateEntityTestCommand.class);
 
     /** クラスパスのディレクトリ */
     protected File classpathDir;
@@ -68,7 +68,7 @@ public class GenerateTestCommand extends AbstractCommand {
     protected String testClassNameSuffix = "Test";
 
     /** テストクラスのテンプレート名 */
-    protected String templateFileName = "java/test.ftl";
+    protected String templateFileName = "java/entity-test.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -89,7 +89,7 @@ public class GenerateTestCommand extends AbstractCommand {
     protected EntityMetaReader entityMetaReader;
 
     /** テストのモデルのファクトリ */
-    protected TestModelFactory testModelFactory;
+    protected EntityTestModelFactory entityTestModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -336,7 +336,7 @@ public class GenerateTestCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         entityMetaReader = createEntityMetaReader();
-        testModelFactory = createTestModelFactory();
+        entityTestModelFactory = createEntityTestModelFactory();
         generator = createGenerator();
     }
 
@@ -358,8 +358,9 @@ public class GenerateTestCommand extends AbstractCommand {
      *            エンティティメタデータ
      */
     protected void generateTest(EntityMeta entityMeta) {
-        TestModel testModel = testModelFactory.getEntityTestModel(entityMeta);
-        GenerationContext context = createGenerationContext(testModel,
+        EntityTestModel entityTestModel = entityTestModelFactory
+                .getEntityTestModel(entityMeta);
+        GenerationContext context = createGenerationContext(entityTestModel,
                 templateFileName);
         generator.generate(context);
     }
@@ -377,12 +378,12 @@ public class GenerateTestCommand extends AbstractCommand {
     }
 
     /**
-     * {@link TestModelFactory}の実装を作成します。
+     * {@link EntityTestModelFactory}の実装を作成します。
      * 
-     * @return {@link TestModelFactory}の実装
+     * @return {@link EntityTestModelFactory}の実装
      */
-    protected TestModelFactory createTestModelFactory() {
-        return factory.createTestModelFactory(this, configPath,
+    protected EntityTestModelFactory createEntityTestModelFactory() {
+        return factory.createEntityTestModelFactory(this, configPath,
                 jdbcManagerName, testClassNameSuffix);
     }
 

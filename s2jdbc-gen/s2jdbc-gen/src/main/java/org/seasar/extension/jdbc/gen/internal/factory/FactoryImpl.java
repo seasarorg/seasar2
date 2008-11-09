@@ -54,7 +54,7 @@ import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.SqlFileTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
-import org.seasar.extension.jdbc.gen.internal.model.TestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlFileExecutorImpl;
 import org.seasar.extension.jdbc.gen.internal.sql.SqlUnitExecutorImpl;
@@ -73,7 +73,7 @@ import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 import org.seasar.extension.jdbc.gen.model.TableModelFactory;
-import org.seasar.extension.jdbc.gen.model.TestModelFactory;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
@@ -230,11 +230,11 @@ public class FactoryImpl implements Factory {
                 serviceClassNameSuffix);
     }
 
-    public TestModelFactory createTestModelFactory(Command command,
+    public EntityTestModelFactory createEntityTestModelFactory(Command command,
             String configPath, String jdbcManagerName,
             String testClassNameSuffix) {
 
-        return new TestModelFactoryImpl(configPath, jdbcManagerName,
+        return new EntityTestModelFactoryImpl(configPath, jdbcManagerName,
                 testClassNameSuffix);
     }
 

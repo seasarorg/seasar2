@@ -19,7 +19,7 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateTestCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityTestCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class GenerateTestCommandTest {
+public class GenerateEntityTestCommandTest {
 
     /**
      * 
@@ -46,7 +46,7 @@ public class GenerateTestCommandTest {
      */
     @Test
     public void testValidate() throws Exception {
-        GenerateTestCommand command = new GenerateTestCommand();
+        GenerateEntityTestCommand command = new GenerateEntityTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         try {
             command.validate();
@@ -61,13 +61,13 @@ public class GenerateTestCommandTest {
      */
     @Test
     public void testInit() throws Exception {
-        GenerateTestCommand command = new GenerateTestCommand();
+        GenerateEntityTestCommand command = new GenerateEntityTestCommand();
         command.setConfigPath("s2jdbc-gen-core-test.dicon");
         command.setClasspathDir(new File("dir"));
         command.validate();
         command.init();
         assertNotNull(command.entityMetaReader);
-        assertNotNull(command.testModelFactory);
+        assertNotNull(command.entityTestModelFactory);
         assertNotNull(command.generator);
     }
 }

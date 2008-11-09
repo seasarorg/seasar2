@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.JdbcManager;
  * 
  * @author taedium
  */
-public class TestModel extends ClassModel {
+public class EntityTestModel extends ClassModel {
 
     /** 識別子の式のリスト */
     protected List<String> idExpressionList = new ArrayList<String>();
