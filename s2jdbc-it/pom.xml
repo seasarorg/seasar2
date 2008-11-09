@@ -25,10 +25,20 @@
       <id>hsqldb</id>
       <activation>
         <activeByDefault>true</activeByDefault>
+        <property>
+          <name>RDBMS</name>
+          <value>hsqldb</value>
+        </property>
       </activation>
     </profile>
     <profile>
       <id>h2</id>
+      <activation>
+        <property>
+          <name>RDBMS</name>
+          <value>h2</value>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>com.h2database</groupId>
@@ -41,6 +51,12 @@
     </profile>
     <profile>
       <id>oracle</id>
+      <activation>
+        <property>
+          <name>RDBMS</name>
+          <value>oracle</value>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>com.oracle</groupId>
@@ -53,6 +69,12 @@
     </profile>
     <profile>
       <id>db2</id>
+      <activation>
+        <property>
+          <name>RDBMS</name>
+          <value>db2</value>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>com.ibm</groupId>
@@ -65,6 +87,12 @@
     </profile>
     <profile>
       <id>mssql</id>
+      <activation>
+        <property>
+          <name>RDBMS</name>
+          <value>mssgl</value>
+        </property>
+      </activation>
       <dependencies>
         <dependency>
           <groupId>com.microsoft</groupId>
