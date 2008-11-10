@@ -57,7 +57,7 @@ public class AbstCopyTest extends TestCase {
      */
     public void testPrefix() throws Exception {
         MyCopy copy = new MyCopy();
-        assertSame(copy, copy.prefix("search_"));
+        assertSame(copy, copy.prefix(BeanNames.search_()));
         assertEquals("search_", copy.prefix);
     }
 
@@ -101,7 +101,7 @@ public class AbstCopyTest extends TestCase {
      */
     public void testIsTargetProperty_includes_prefix() throws Exception {
         MyCopy copy = new MyCopy().includes(BeanNames.search_aaa(),
-                BeanNames.bbb()).prefix("search_");
+                BeanNames.bbb()).prefix(BeanNames.search_());
         assertTrue(copy.isTargetProperty("search_aaa"));
         assertFalse(copy.isTargetProperty("bbb"));
     }
@@ -119,7 +119,7 @@ public class AbstCopyTest extends TestCase {
      * @throws Exception
      */
     public void testIsTargetProperty_excludes_prefix() throws Exception {
-        MyCopy copy = new MyCopy().prefix("abc_").excludes(
+        MyCopy copy = new MyCopy().prefix(BeanNames.abc_()).excludes(
                 BeanNames.abc_exclude());
         assertTrue(copy.isTargetProperty("abc_value"));
         assertFalse(copy.isTargetProperty("abc_exclude"));
@@ -130,7 +130,7 @@ public class AbstCopyTest extends TestCase {
      * @throws Exception
      */
     public void testIsTargetProperty_prefix() throws Exception {
-        MyCopy copy = new MyCopy().prefix("search_");
+        MyCopy copy = new MyCopy().prefix(BeanNames.search_());
         assertTrue(copy.isTargetProperty("search_aaa"));
         assertFalse(copy.isTargetProperty("bbb"));
     }
@@ -154,7 +154,7 @@ public class AbstCopyTest extends TestCase {
     public void testTrimPrefix() throws Exception {
         MyCopy copy = new MyCopy();
         assertEquals("aaa", copy.trimPrefix("aaa"));
-        copy.prefix("search_");
+        copy.prefix(BeanNames.search_());
         assertEquals("aaa", copy.trimPrefix("search_aaa"));
     }
 
@@ -259,7 +259,7 @@ public class AbstCopyTest extends TestCase {
         SrcBean src = new SrcBean();
         src.search_eee$fff = "hoge";
         DestBean dest = new DestBean();
-        new MyCopy().prefix("search_").copyBeanToBean(src, dest);
+        new MyCopy().prefix(BeanNames.search_()).copyBeanToBean(src, dest);
         assertEquals("hoge", dest.eee$fff);
     }
 
@@ -378,7 +378,7 @@ public class AbstCopyTest extends TestCase {
         SrcBean src = new SrcBean();
         src.search_eee$fff = "hoge";
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().prefix("search_").copyBeanToMap(src, dest);
+        new MyCopy().prefix(BeanNames.search_()).copyBeanToMap(src, dest);
         assertEquals("hoge", dest.get("eee.fff"));
     }
 
@@ -544,7 +544,7 @@ public class AbstCopyTest extends TestCase {
         Map<String, Object> src = new HashMap<String, Object>();
         src.put("search_eee.fff", "hoge");
         DestBean dest = new DestBean();
-        new MyCopy().prefix("search_").copyMapToBean(src, dest);
+        new MyCopy().prefix(BeanNames.search_()).copyMapToBean(src, dest);
         assertEquals("hoge", dest.eee$fff);
     }
 
@@ -644,7 +644,7 @@ public class AbstCopyTest extends TestCase {
         Map<String, Object> src = new HashMap<String, Object>();
         src.put("search_eee.fff", "hoge");
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().prefix("search_").copyMapToMap(src, dest);
+        new MyCopy().prefix(BeanNames.search_()).copyMapToMap(src, dest);
         assertEquals("hoge", dest.get("eee.fff"));
     }
 
@@ -1028,6 +1028,20 @@ public class AbstCopyTest extends TestCase {
          */
         public static CharSequence abc_exclude() {
             return createCharSequence("abc_exclude");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence search_() {
+            return createCharSequence("search_");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence abc_() {
+            return createCharSequence("abc_");
         }
 
     }

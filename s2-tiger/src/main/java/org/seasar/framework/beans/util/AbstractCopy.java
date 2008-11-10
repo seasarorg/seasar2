@@ -189,8 +189,8 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * 
      */
     @SuppressWarnings("unchecked")
-    public S prefix(String prefix) {
-        this.prefix = prefix;
+    public S prefix(CharSequence prefix) {
+        this.prefix = prefix.toString();
         return (S) this;
     }
 
