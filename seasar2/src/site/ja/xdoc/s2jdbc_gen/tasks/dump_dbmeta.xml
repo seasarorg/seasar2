@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>S2JDBC-Gen - Dump-DbMeta</title>
+		<title>S2JDBC-Gen - DumpDbMeta</title>
 	</properties>
 	<body>
-		<section name="Dump-Db-Meta">
+		<section name="Dump-DbMeta">
 			<ul>
 				<li>
 					<p>
@@ -89,7 +89,7 @@
 				<p>
 					"PUBLIC"というスキーマを指定してタスクを実行します。
 				</p>
-<source><![CDATA[<dump-db-meta
+<source><![CDATA[<dump-dbmeta
     classpathDir="build/classes"
     schema="PUBLIC"
     classpathRef="classpath"

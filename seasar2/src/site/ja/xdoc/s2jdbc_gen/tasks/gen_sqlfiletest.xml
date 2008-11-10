@@ -63,9 +63,8 @@
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
-					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>shortClassName</td><td>テストクラス名です。</td><td>"SqlFileTest"</td><td>NO</td></tr>
+					<tr><td>useS2junit4</td><td>"true"の場合、<a href="../../S2JUnit4.html">S2JUnit4</a>を使ったテストコードを生成します。"false"の場合、<a href="../../S2Unit.html">S2Unit</a>を使ったテストコードを生成します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/sqlfiletest.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
