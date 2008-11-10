@@ -26,7 +26,7 @@ import org.seasar.extension.jdbc.JdbcManager;
  * 
  * @author taedium
  */
-public class SqlFileTestModel extends ClassModel {
+public class SqlFileTestModel extends TestClassModel {
 
     /** 設定ファイルのパス */
     protected String configPath;

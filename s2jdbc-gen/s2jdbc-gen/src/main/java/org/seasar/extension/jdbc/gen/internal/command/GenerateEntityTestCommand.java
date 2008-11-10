@@ -67,6 +67,9 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     /** テストクラス名のサフィックス */
     protected String testClassNameSuffix = "Test";
 
+    /** テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
+    protected boolean useS2junit4;
+
     /** テストクラスのテンプレート名 */
     protected String templateFileName = "java/entitytest.ftl";
 
@@ -323,6 +326,25 @@ public class GenerateEntityTestCommand extends AbstractCommand {
         this.classpathDir = classpathDir;
     }
 
+    /**
+     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を返します。
+     * 
+     * @return テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     */
+    public boolean isUseS2junit4() {
+        return useS2junit4;
+    }
+
+    /**
+     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を設定します。
+     * 
+     * @param useS2junit4
+     *            テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     */
+    public void setUseS2junit4(boolean useS2junit4) {
+        this.useS2junit4 = useS2junit4;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -384,7 +406,7 @@ public class GenerateEntityTestCommand extends AbstractCommand {
      */
     protected EntityTestModelFactory createEntityTestModelFactory() {
         return factory.createEntityTestModelFactory(this, configPath,
-                jdbcManagerName, testClassNameSuffix);
+                jdbcManagerName, testClassNameSuffix, useS2junit4);
     }
 
     /**

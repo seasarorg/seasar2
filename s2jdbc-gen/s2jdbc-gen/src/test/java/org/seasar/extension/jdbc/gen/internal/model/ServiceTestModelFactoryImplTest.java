@@ -37,7 +37,7 @@ public class ServiceTestModelFactoryImplTest {
     @Before
     public void setUp() throws Exception {
         factory = new ServiceTestModelFactoryImpl("app.dicon", "hoge",
-                "Service", "Test");
+                "Service", "Test", false);
     }
 
     /**

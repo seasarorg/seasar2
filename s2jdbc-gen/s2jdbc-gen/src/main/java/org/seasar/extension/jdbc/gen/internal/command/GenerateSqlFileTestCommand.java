@@ -57,6 +57,9 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     /** 生成するテストクラスの単純名 */
     protected String shortClassName = "SqlFileTest";
 
+    /** テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
+    protected boolean useS2junit4;
+
     /** テストクラスのテンプレート名 */
     protected String templateFileName = "java/sqlfiletest.ftl";
 
@@ -290,6 +293,25 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
         this.shortClassName = shortClassName;
     }
 
+    /**
+     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を返します。
+     * 
+     * @return テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     */
+    public boolean isUseS2junit4() {
+        return useS2junit4;
+    }
+
+    /**
+     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を設定します。
+     * 
+     * @param useS2junit4
+     *            テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     */
+    public void setUseS2junit4(boolean useS2junit4) {
+        this.useS2junit4 = useS2junit4;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -326,7 +348,8 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     protected SqlFileTestModelFactory createSqlFileTestModelFactory() {
         return factory.createSqlFileTestModelFactory(this, classpathDir,
                 sqlFileSet, configPath, jdbcManagerName, ClassUtil.concatName(
-                        rootPackageName, entityPackageName), shortClassName);
+                        rootPackageName, entityPackageName), shortClassName,
+                useS2junit4);
     }
 
     /**

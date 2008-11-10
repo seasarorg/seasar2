@@ -1,0 +1,24 @@
+package hoge.service;
+
+import org.junit.runner.RunWith;
+import org.seasar.framework.unit.Seasar2;
+
+/**
+ * {@link AaaService}のテストクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+@RunWith(Seasar2.class)
+public class AaaServiceTest {
+
+    private AaaService aaaService;
+
+    /**
+     * {@link AaaService#getCount()}が動作することをテストします。
+     * 
+     * @throws Exception
+     */
+    public void testGetCountTx() throws Exception {
+        aaaService.getCount();
+    }
+}

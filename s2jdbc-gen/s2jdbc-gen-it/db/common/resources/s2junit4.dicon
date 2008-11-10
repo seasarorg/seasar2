@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="s2junit4">
+	
+	<component name="context" class="org.seasar.framework.unit.impl.InternalTestContextImpl"/>
+
+	<component class="org.seasar.framework.unit.impl.DataAccessorImpl"/>
+
+	<component class="org.seasar.framework.unit.impl.ConfigFileIncluderImpl">
+		<initMethod name="addConfigFile">
+			<arg>"app.dicon"</arg>
+		</initMethod>
+		<initMethod name="addConfigFile">
+			<arg>context.testClassShortName + ".dicon"</arg>
+		</initMethod>
+	</component>
+		
+	<component class="org.seasar.framework.unit.impl.TestDataPreparerImpl">
+		<initMethod name="addTestDataXlsPath">
+			<arg>context.testClassShortName + "_" + context.testMethodName + ".xls"</arg>
+		</initMethod>
+		<initMethod name="addTestDataXlsPath">
+			<arg>context.testClassShortName + ".xls"</arg>
+		</initMethod>
+	</component>
+
+	<component class="org.seasar.framework.unit.impl.ExpectedDataReaderImpl">
+		<initMethod name="addExpectedDataXlsPath">
+			<arg>context.testClassShortName + "_" + context.testMethodName + "_Expected" + ".xls"</arg>
+		</initMethod>
+	</component>
+</components>

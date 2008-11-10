@@ -20,7 +20,7 @@ package org.seasar.extension.jdbc.gen.model;
  * 
  * @author taedium
  */
-public class ServiceTestModel extends ClassModel {
+public class ServiceTestModel extends TestClassModel {
 
     /** サービスクラスの単純名 */
     protected String shortServiceClassName;

@@ -12,9 +12,13 @@ import ${importName};
  * 
  * @author S2JDBC-Gen
  */
-public class ${shortClassName} extends S2TestCase {
+<#if useS2junit4>
+@RunWith(Seasar2.class)
+</#if>
+public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
 
     private ${shortServiceClassName} ${shortServiceClassName?uncap_first};
+<#if !useS2junit4>
 
     /**
      * 事前処理をします。
@@ -26,6 +30,7 @@ public class ${shortClassName} extends S2TestCase {
         super.setUp();
         include("${configPath}");
     }
+</#if>
 
     /**
      * {@link ${shortServiceClassName}#getCount()}が動作することをテストします。

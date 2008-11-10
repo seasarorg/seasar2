@@ -227,10 +227,11 @@ public class FactoryImpl implements Factory {
 
     public ServiceTestModelFactory createServiceTestModelFactory(
             Command command, String configPath, String packageName,
-            String serviceClassNameSuffix, String testClassNameSuffix) {
+            String serviceClassNameSuffix, String testClassNameSuffix,
+            boolean useS2junit4) {
 
         return new ServiceTestModelFactoryImpl(configPath, packageName,
-                serviceClassNameSuffix, testClassNameSuffix);
+                serviceClassNameSuffix, testClassNameSuffix, useS2junit4);
     }
 
     public AbstServiceModelFactory createAbstServiceModelFactory(
@@ -242,10 +243,10 @@ public class FactoryImpl implements Factory {
 
     public EntityTestModelFactory createEntityTestModelFactory(Command command,
             String configPath, String jdbcManagerName,
-            String testClassNameSuffix) {
+            String testClassNameSuffix, boolean useS2junit4) {
 
         return new EntityTestModelFactoryImpl(configPath, jdbcManagerName,
-                testClassNameSuffix);
+                testClassNameSuffix, useS2junit4);
     }
 
     public NamesModelFactory createNamesModelFactory(Command command,
@@ -293,9 +294,10 @@ public class FactoryImpl implements Factory {
     public SqlFileTestModelFactory createSqlFileTestModelFactory(
             Command command, File classpathDir, Set<File> sqlFileSet,
             String configPath, String jdbcManagerName, String packageName,
-            String shortClassName) {
+            String shortClassName, boolean useS2junit4) {
         return new SqlFileTestModelFactoryImpl(classpathDir, sqlFileSet,
-                configPath, jdbcManagerName, packageName, shortClassName);
+                configPath, jdbcManagerName, packageName, shortClassName,
+                useS2junit4);
     }
 
 }

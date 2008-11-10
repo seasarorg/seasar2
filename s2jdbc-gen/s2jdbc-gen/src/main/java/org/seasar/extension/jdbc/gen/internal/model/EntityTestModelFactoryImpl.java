@@ -22,12 +22,15 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.EntityTestModel;
 import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.TestContext;
 import org.seasar.framework.util.ClassUtil;
 
 /**
@@ -46,6 +49,9 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
     /** テストクラス名のサフィックス */
     protected String testClassNameSuffix;
 
+    /** S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
+    protected boolean useS2junit4;
+
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
 
@@ -58,9 +64,12 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
      *            {@link JdbcManager}のコンポーネント名
      * @param testClassNameSuffix
      *            テストクラス名のサフィックス
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      */
-    public EntityTestModelFactoryImpl(String configPath, String jdbcManagerName,
-            String testClassNameSuffix) {
+    public EntityTestModelFactoryImpl(String configPath,
+            String jdbcManagerName, String testClassNameSuffix,
+            boolean useS2junit4) {
         if (configPath == null) {
             throw new NullPointerException("configPath");
         }
@@ -73,6 +82,7 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
         this.testClassNameSuffix = testClassNameSuffix;
+        this.useS2junit4 = useS2junit4;
     }
 
     public EntityTestModel getEntityTestModel(EntityMeta entityMeta) {
@@ -82,8 +92,10 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         String packageName = ClassUtil.splitPackageAndShortClassName(entityMeta
                 .getEntityClass().getName())[0];
         entityTestModel.setPackageName(packageName);
-        entityTestModel.setShortClassName(entityMeta.getName() + testClassNameSuffix);
+        entityTestModel.setShortClassName(entityMeta.getName()
+                + testClassNameSuffix);
         entityTestModel.setShortEntityClassName(entityMeta.getName());
+        entityTestModel.setUseS2junit4(useS2junit4);
         doIdValue(entityTestModel, entityMeta);
         doAssociationName(entityTestModel, entityMeta);
         doImportName(entityTestModel, entityMeta);
@@ -98,7 +110,8 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void doIdValue(EntityTestModel entityTestModel, EntityMeta entityMeta) {
+    protected void doIdValue(EntityTestModel entityTestModel,
+            EntityMeta entityMeta) {
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             Class<?> propertyClass = propertyMeta.getPropertyClass();
             entityTestModel.addIdExpression(getExpression(propertyClass));
@@ -175,7 +188,8 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void doAssociationName(EntityTestModel entityTestModel, EntityMeta entityMeta) {
+    protected void doAssociationName(EntityTestModel entityTestModel,
+            EntityMeta entityMeta) {
         for (PropertyMeta propertyMeta : entityMeta.getAllPropertyMeta()) {
             if (propertyMeta.isRelationship()) {
                 entityTestModel.addAssociationName(propertyMeta.getName());
@@ -191,9 +205,16 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
      * @param entityMeta
      *            エンティティメタデータ
      */
-    protected void doImportName(EntityTestModel entityTestModel, EntityMeta entityMeta) {
+    protected void doImportName(EntityTestModel entityTestModel,
+            EntityMeta entityMeta) {
         classModelSupport.addImportName(entityTestModel, JdbcManager.class);
-        classModelSupport.addImportName(entityTestModel, S2TestCase.class);
+        if (useS2junit4) {
+            classModelSupport.addImportName(entityTestModel, RunWith.class);
+            classModelSupport.addImportName(entityTestModel, Seasar2.class);
+            classModelSupport.addImportName(entityTestModel, TestContext.class);
+        } else {
+            classModelSupport.addImportName(entityTestModel, S2TestCase.class);
+        }
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             classModelSupport.addImportName(entityTestModel, propertyMeta
                     .getPropertyClass());

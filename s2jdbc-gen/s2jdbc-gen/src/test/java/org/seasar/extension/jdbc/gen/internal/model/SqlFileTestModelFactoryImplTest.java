@@ -51,7 +51,7 @@ public class SqlFileTestModelFactoryImplTest {
                 "aaa_oracle.sql"));
         SqlFileTestModelFactoryImpl factory = new SqlFileTestModelFactoryImpl(
                 classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
-                "hoge", "SqlFileTest") {
+                "hoge", "SqlFileTest", false) {
 
             @Override
             protected Set<String> getDbmsNameSet() {

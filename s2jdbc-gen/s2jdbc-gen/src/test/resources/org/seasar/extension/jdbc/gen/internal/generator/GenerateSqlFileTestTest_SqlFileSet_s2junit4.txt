@@ -1,27 +1,17 @@
-<#include "/copyright.ftl">
-<#if packageName??>
-package ${packageName};
-</#if>
+package hoge;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-<#if useS2junit4>
 import org.junit.runner.RunWith;
-</#if>
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
-<#if !useS2junit4>
-import org.seasar.extension.unit.S2TestCase;
-</#if>
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
-<#if useS2junit4>
 import org.seasar.framework.unit.Seasar2;
 import org.seasar.framework.unit.TestContext;
-</#if>
 import org.seasar.framework.util.InputStreamReaderUtil;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ReaderUtil;
@@ -37,58 +27,42 @@ import org.seasar.framework.util.StatementUtil;
  *
  * @author S2JDBC-Gen
  */
-<#if useS2junit4>
 @RunWith(Seasar2.class)
-</#if>
-public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
-<#if useS2junit4>
+public class SqlFileTest {
 
     private TestContext testContext;
-</#if>
 
-    private JdbcManager ${jdbcManagerName};
+    private JdbcManager jdbcManager;
 
     /**
      * 事前処理をします。
      * 
      * @throws Exception
      */
-<#if useS2junit4>
     public void before() throws Exception {
         testContext.setAutoIncluding(false);
-        testContext.include("${configPath}");
+        testContext.include("s2jdbc.dicon");
     }
-<#else>
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        include("${configPath}");
-    }
-</#if>
-<#if sqlFilePathList?size == 0>
-
-    /**
-     * SQLファイルがひとつもありません。
-     * ダミーのテストメソッドです。
-     * 
-     * @throws Exception
-     */
-    public void test() throws Exception {
-    }
-<#else>
-  <#list sqlFilePathList as path>
 
     /**
      * SQLファイルをテストします。
      * 
      * @throws Exception
      */
-    public void testSqlFile${path_index}<#if !useS2junit4>Tx</#if>() throws Exception {
-        String path = "${path}";
+    public void testSqlFile0() throws Exception {
+        String path = "org/seasar/extension/jdbc/gen/internal/generator/aaa.sql";
         new SqlFile(path).execute();
     }
-  </#list>
-</#if>
+
+    /**
+     * SQLファイルをテストします。
+     * 
+     * @throws Exception
+     */
+    public void testSqlFile1() throws Exception {
+        String path = "org/seasar/extension/jdbc/gen/internal/generator/bbb.sql";
+        new SqlFile(path).execute();
+    }
 
     /**
      * SQLファイルを表すクラスです。

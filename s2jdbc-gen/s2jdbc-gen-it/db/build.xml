@@ -168,6 +168,7 @@
 			<batchtest todir="${testresult}" fork="true">
 				<fileset dir="${src}">
 					<include name="**/AddressTest.java"/>
+					<include name="**/AddressServiceTest.java"/>
 				</fileset>
 			</batchtest>
 			<classpath refid="classpath"/>
@@ -184,6 +185,89 @@
 		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 
+	<target name="testFromEntityToDb_s2junit4" depends="showRdbmsName, clean">
+		<!-- setUp -->
+		<javac 
+			srcdir="../src/main/java"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<!-- test -->
+		<gen-entitytest
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			uses2junit4="true"
+			classpathref="classpath"
+		/>
+		<gen-names
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			classpathref="classpath"
+		/>
+		<gen-service
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			classpathref="classpath"
+		/>
+		<gen-servicetest
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			uses2junit4="true"
+			classpathref="classpath"
+		/>
+		<javac 
+			srcdir="${src}"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<gen-ddl 
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			classpathref="classpath"
+		/>
+		<migrate 
+			classpathDir="${build}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
+		/>
+		<junit 
+			haltonfailure="true" 
+			printsummary="true">
+			<formatter type="xml"/>
+			<batchtest todir="${testresult}" fork="true">
+				<fileset dir="${src}">
+					<include name="**/AddressTest.java"/>
+					<include name="**/AddressServiceTest.java"/>
+				</fileset>
+			</batchtest>
+			<classpath refid="classpath"/>
+		</junit>
+		<!-- tearDown -->
+		<migrate 
+			classpathDir="${build}"
+			migratedir="${migrate}"
+			ddlInfofile="${ddl-info}"
+			version="0"
+			rootpackagename="${rootpackagename}"
+			classpathref="classpath"
+		/>
+		<refresh projectname="s2jdbc-gen-it"/>
+	</target>
+	
 	<target name="testGenerateTest" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
@@ -226,6 +310,57 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
+			classpathref="classpath"
+		>
+			<sqlfileset dir="${build}">
+				<include name="META-INF/sql/**/*.sql" />
+			</sqlfileset>
+		</gen-sqlfiletest>
+		<javac 
+			srcdir="${src}"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<junit 
+			haltonfailure="true" 
+			printsummary="true">
+			<formatter type="xml"/>
+			<batchtest todir="${testresult}" fork="true">
+				<fileset dir="${src}">
+					<include name="**/SqlFileTest.java"/>
+				</fileset>
+			</batchtest>
+			<classpath>
+				<path refid="classpath"/>
+			</classpath>
+		</junit>
+		<!-- tearDown -->
+		<exec-sql 
+			classpathref="classpath">
+			<sqlFileList dir="${sql}/testGenerateSqlFileTest">
+				<file name="drop.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<refresh projectname="s2jdbc-gen-it"/>
+	</target>
+
+	<target name="testGenerateSqlFileTest_s2junit4" depends="showRdbmsName, clean">
+		<!-- setUp -->
+		<exec-sql 
+			classpathref="classpath">
+			<sqlFileList dir="${sql}/testGenerateSqlFileTest">
+				<file name="create.sql"/>
+			</sqlFileList>
+		</exec-sql>
+		<!-- test -->
+		<gen-sqlfiletest
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			uses2junit4="true"
 			classpathref="classpath"
 		>
 			<sqlfileset dir="${build}">
@@ -564,6 +699,9 @@
 		<mkdir dir="${build}"/>
 		<mkdir dir="${testresult}"/>
 		<copy todir="${build}">
+			<fileset dir="common/resources">
+				<include name="**"/>
+			</fileset>
 			<fileset dir="${resources}">
 				<include name="**"/>
 			</fileset>

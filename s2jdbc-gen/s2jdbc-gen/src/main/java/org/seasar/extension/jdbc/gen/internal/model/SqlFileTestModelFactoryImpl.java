@@ -49,6 +49,9 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
     /** テストクラスの単純名 */
     protected String shortClassName;
 
+    /** S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
+    protected boolean useS2junit4;
+
     /** SQLファイルのパスのリスト */
     protected List<String> sqlFilePathList;
 
@@ -67,10 +70,12 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
      *            パッケージ名
      * @param shortClassName
      *            テストクラスの単純名
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      */
     public SqlFileTestModelFactoryImpl(File classpathDir, Set<File> sqlFileSet,
             String configPath, String jdbcManagerName, String packageName,
-            String shortClassName) {
+            String shortClassName, boolean useS2junit4) {
         if (classpathDir == null) {
             throw new NullPointerException("classpathDir");
         }
@@ -90,6 +95,7 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         this.jdbcManagerName = jdbcManagerName;
         this.packageName = packageName;
         this.shortClassName = shortClassName;
+        this.useS2junit4 = useS2junit4;
         this.sqlFilePathList = createSqlFilePathList(classpathDir, sqlFileSet);
     }
 
@@ -164,10 +170,10 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         model.setJdbcManagerName(jdbcManagerName);
         model.setPackageName(packageName);
         model.setShortClassName(shortClassName);
+        model.setUseS2junit4(useS2junit4);
         for (String sqlFilePath : sqlFilePathList) {
             model.addSqlFilePath(sqlFilePath);
         }
         return model;
     }
-
 }

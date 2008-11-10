@@ -1,0 +1,39 @@
+package org.seasar.extension.jdbc.gen.internal.generator;
+
+import java.math.BigDecimal;
+import org.junit.runner.RunWith;
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.framework.unit.Seasar2;
+import org.seasar.framework.unit.TestContext;
+
+/**
+ * {@link Ccc}のテストクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+@RunWith(Seasar2.class)
+public class CccTest {
+
+    private TestContext testContext;
+
+    private JdbcManager jdbcManager;
+
+    /**
+     * 事前処理をします。
+     * 
+     * @throws Exception
+     */
+    public void before() throws Exception {
+        testContext.setAutoIncluding(false);
+        testContext.include("s2jdbc.dicon");
+    }
+
+    /**
+     * 識別子による取得をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testFindById() throws Exception {
+        jdbcManager.from(Ccc.class).id("aaa", BigDecimal.ONE).getSingleResult();
+    }
+}

@@ -180,6 +180,16 @@ public class GenerateSqlFileTestTask extends AbstractTask {
     }
 
     /**
+     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を設定します。
+     * 
+     * @param useS2junit4
+     *            テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     */
+    public void setUseS2junit4(boolean useS2junit4) {
+        command.setUseS2junit4(useS2junit4);
+    }
+
+    /**
      * すでに値が設定された{@link FileSet}を追加します。
      * 
      * @param sqlFileSet
@@ -192,4 +202,5 @@ public class GenerateSqlFileTestTask extends AbstractTask {
             command.getSqlFileSet().add(new File(baseDir, fileName));
         }
     }
+
 }

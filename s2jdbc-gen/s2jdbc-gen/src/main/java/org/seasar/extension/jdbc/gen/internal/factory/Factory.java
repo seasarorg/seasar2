@@ -395,11 +395,14 @@ public interface Factory {
      *            テストクラス名のサフィックス
      * @param configPath
      *            設定ファイルのパス
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      * @return {@link ServiceTestModelFactory}の実装
      */
     ServiceTestModelFactory createServiceTestModelFactory(Command command,
             String configPath, String packageName,
-            String serviceClassNameSuffix, String testClassNameSuffix);
+            String serviceClassNameSuffix, String testClassNameSuffix,
+            boolean useS2junit4);
 
     /**
      * {@link AbstServiceModelFactory}の実装を作成します。
@@ -426,11 +429,13 @@ public interface Factory {
      *            {@link JdbcManager}のコンポーネント名
      * @param testClassNameSuffix
      *            テストクラス名のサフィックス
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      * @return {@link EntityTestModelFactory}の実装
      */
     EntityTestModelFactory createEntityTestModelFactory(Command command,
             String configPath, String jdbcManagerName,
-            String testClassNameSuffix);
+            String testClassNameSuffix, boolean useS2junit4);
 
     /**
      * {@link NamesModelFactory}の実装を作成します。
@@ -553,9 +558,12 @@ public interface Factory {
      *            パッケージ名、デフォルトパッケージの場合は{@code null}
      * @param shortClassName
      *            テストクラスの単純名
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      * @return {@link SqlFileTestModelFactory}の実装
      */
     SqlFileTestModelFactory createSqlFileTestModelFactory(Command command,
             File classpathDir, Set<File> sqlFileSet, String configPath,
-            String jdbcManagerName, String packageName, String shortClassName);
+            String jdbcManagerName, String packageName, String shortClassName,
+            boolean useS2junit4);
 }

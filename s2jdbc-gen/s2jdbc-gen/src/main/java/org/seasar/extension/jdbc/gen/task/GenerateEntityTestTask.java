@@ -198,4 +198,14 @@ public class GenerateEntityTestTask extends AbstractTask {
         command.setIgnoreEntityClassNamePattern(ignoreEntityClassNamePattern);
     }
 
+    /**
+     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を設定します。
+     * 
+     * @param useS2junit4
+     *            テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     */
+    public void setUseS2junit4(boolean useS2junit4) {
+        command.setUseS2junit4(useS2junit4);
+    }
+
 }

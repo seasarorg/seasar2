@@ -44,7 +44,7 @@ public class EntityTestModelFactoryImplTest {
     @Before
     public void setUp() throws Exception {
         factory = new EntityTestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
-                "Test");
+                "Test", false);
     }
 
     /**

@@ -60,7 +60,7 @@ public class GenerateSqlFileTestTest {
         sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/bbb.sql"));
         SqlFileTestModelFactoryImpl sqlFileTestModelFactory = new SqlFileTestModelFactoryImpl(
                 classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
-                "hoge", "SqlFileTest");
+                "hoge", "SqlFileTest", false);
         SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
 
         GenerationContext context = new GenerationContextImpl(model, new File(
@@ -77,11 +77,36 @@ public class GenerateSqlFileTestTest {
      * @throws Exception
      */
     @Test
+    public void testSqlFileSet_s2junit4() throws Exception {
+        File classpathDir = ResourceUtil.getBuildDir(getClass());
+        String basePath = getClass().getPackage().getName().replace(".", "/");
+        Set<File> sqlFileSet = new HashSet<File>();
+        sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/aaa.sql"));
+        sqlFileSet.add(ResourceUtil.getResourceAsFile(basePath + "/bbb.sql"));
+        SqlFileTestModelFactoryImpl sqlFileTestModelFactory = new SqlFileTestModelFactoryImpl(
+                classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
+                "hoge", "SqlFileTest", true);
+        SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
+
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/sqlfiletest.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_SqlFileSet_s2junit4.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testNoSqlFile() throws Exception {
         File classpathDir = ResourceUtil.getBuildDir(getClass());
         SqlFileTestModelFactoryImpl sqlFileTestModelFactory = new SqlFileTestModelFactoryImpl(
                 classpathDir, Collections.<File> emptySet(), "s2jdbc.dicon",
-                "jdbcManager", "hoge", "SqlFileTest");
+                "jdbcManager", "hoge", "SqlFileTest", false);
         SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
 
         GenerationContext context = new GenerationContextImpl(model, new File(

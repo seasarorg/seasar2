@@ -12,7 +12,14 @@ import ${importName};
  * 
  * @author S2JDBC-Gen
  */
-public class ${shortClassName} extends S2TestCase {
+<#if useS2junit4>
+@RunWith(Seasar2.class)
+</#if>
+public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
+<#if useS2junit4>
+
+    private TestContext testContext;
+</#if>
 
     private JdbcManager ${jdbcManagerName};
 
@@ -21,11 +28,18 @@ public class ${shortClassName} extends S2TestCase {
      * 
      * @throws Exception
      */
+<#if useS2junit4>
+    public void before() throws Exception {
+        testContext.setAutoIncluding(false);
+        testContext.include("${configPath}");
+    }
+<#else>
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         include("${configPath}");
     }
+</#if>
 
 <#if idExpressionList?size == 0>
     /**

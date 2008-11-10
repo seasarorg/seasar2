@@ -15,10 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModel;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.unit.Seasar2;
 
 /**
  * {@link ServiceTestModelFactory}の実装クラスです。
@@ -39,6 +41,9 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
     /** 設定ファイルのパス */
     protected String configPath;
 
+    /** S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
+    protected boolean useS2junit4;
+
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
 
@@ -53,9 +58,12 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
      *            テストクラス名のサフィックス
      * @param configPath
      *            設定ファイルのパス
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      */
     public ServiceTestModelFactoryImpl(String configPath, String packageName,
-            String serviceClassNameSuffix, String testClassNameSuffix) {
+            String serviceClassNameSuffix, String testClassNameSuffix,
+            boolean useS2junit4) {
         if (configPath == null) {
             throw new NullPointerException("configPath");
         }
@@ -69,6 +77,7 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
         this.packageName = packageName;
         this.serviceClassNameSuffix = serviceClassNameSuffix;
         this.testClassNameSuffix = testClassNameSuffix;
+        this.useS2junit4 = useS2junit4;
     }
 
     public ServiceTestModel getServiceTestModel(EntityMeta entityMeta) {
@@ -81,7 +90,26 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
         serviceTestModel.setShortServiceClassName(shortServiceClassName);
         serviceTestModel.setShortClassName(shortServiceClassName
                 + testClassNameSuffix);
-        classModelSupport.addImportName(serviceTestModel, S2TestCase.class);
+        serviceTestModel.setUseS2junit4(useS2junit4);
+        doImportName(serviceTestModel, entityMeta);
         return serviceTestModel;
+    }
+
+    /**
+     * インポート名を処理します。
+     * 
+     * @param serviceTestModel
+     *            サービステストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doImportName(ServiceTestModel serviceTestModel,
+            EntityMeta entityMeta) {
+        if (useS2junit4) {
+            classModelSupport.addImportName(serviceTestModel, RunWith.class);
+            classModelSupport.addImportName(serviceTestModel, Seasar2.class);
+        } else {
+            classModelSupport.addImportName(serviceTestModel, S2TestCase.class);
+        }
     }
 }
