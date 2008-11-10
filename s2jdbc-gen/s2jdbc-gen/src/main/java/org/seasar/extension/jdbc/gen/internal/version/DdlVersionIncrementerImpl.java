@@ -114,7 +114,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
         this.dropDirNameList.addAll(dropDirNameList);
     }
 
-    public void increment(Callback callback) {
+    public void increment(String comment, Callback callback) {
         try {
             DdlVersionDirectory currentVersionDir = getCurrentDdlVersionDirectory();
             DdlVersionDirectory nextVersionDir = getNextDdlVersionDirectory(currentVersionDir);
@@ -123,7 +123,7 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
             if (currentVersionDir.isFirstVersion()) {
                 copyDropDirectory(nextVersionDir, currentVersionDir);
             }
-            incrementVersionNo();
+            incrementVersionNo(comment);
         } catch (RuntimeException e) {
             recover();
             throw e;
@@ -305,9 +305,12 @@ public class DdlVersionIncrementerImpl implements DdlVersionIncrementer {
 
     /**
      * バージョン番号を増分します。
+     * 
+     * @param comment
+     *            バージョンを増分する理由を示すコメント
      */
-    protected void incrementVersionNo() {
-        ddlVersionDirectoryTree.getDdlInfoFile().applyNextVersionNo();
+    protected void incrementVersionNo(String comment) {
+        ddlVersionDirectoryTree.getDdlInfoFile().applyNextVersionNo(comment);
     }
 
     /**

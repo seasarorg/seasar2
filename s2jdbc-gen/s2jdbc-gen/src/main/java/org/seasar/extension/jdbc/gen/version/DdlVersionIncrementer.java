@@ -25,10 +25,12 @@ public interface DdlVersionIncrementer {
     /**
      * バージョンを増分します。
      * 
+     * @param comment
+     *            バージョンを増分する理由を示すコメント
      * @param callback
      *            コールバック
      */
-    void increment(Callback callback);
+    void increment(String comment, Callback callback);
 
     /**
      * コールバックのインタフェースです。

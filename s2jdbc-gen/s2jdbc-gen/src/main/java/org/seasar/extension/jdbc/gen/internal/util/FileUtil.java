@@ -18,14 +18,16 @@ package org.seasar.extension.jdbc.gen.internal.util;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Comparator;
 
 import org.seasar.framework.exception.IORuntimeException;
-import org.seasar.framework.util.FileInputStreamUtil;
-import org.seasar.framework.util.FileOutputStreamUtil;
 import org.seasar.framework.util.InputStreamUtil;
 import org.seasar.framework.util.OutputStreamUtil;
 
@@ -54,19 +56,57 @@ public class FileUtil {
         BufferedInputStream in = null;
         BufferedOutputStream out = null;
         try {
-            in = new BufferedInputStream(FileInputStreamUtil.create(src));
-            out = new BufferedOutputStream(FileOutputStreamUtil.create(dest));
-            byte[] buf = new byte[1024];
-            int length;
-            while (-1 < (length = in.read(buf))) {
-                out.write(buf, 0, length);
-                out.flush();
-            }
+            in = new BufferedInputStream(new FileInputStream(src));
+            out = new BufferedOutputStream(new FileOutputStream(dest));
+            copyInternal(in, out);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         } finally {
             InputStreamUtil.close(in);
             OutputStreamUtil.close(out);
+        }
+    }
+
+    /**
+     * ファイルをコピーし追加します。
+     * 
+     * @param src
+     *            コピー元ファイル
+     * @param dest
+     *            コピー先ファイル
+     */
+    public static void append(File src, File dest) {
+        BufferedInputStream in = null;
+        BufferedOutputStream out = null;
+        try {
+            in = new BufferedInputStream(new FileInputStream(src));
+            out = new BufferedOutputStream(new FileOutputStream(dest, true));
+            copyInternal(in, out);
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        } finally {
+            InputStreamUtil.close(in);
+            OutputStreamUtil.close(out);
+        }
+    }
+
+    /**
+     * 内部的にコピーします。
+     * 
+     * @param in
+     *            コピー元
+     * @param out
+     *            コピー先
+     * @throws IOException
+     *             IO例外が発生した場合
+     */
+    protected static void copyInternal(InputStream in, OutputStream out)
+            throws IOException {
+        byte[] buf = new byte[1024];
+        int length;
+        while (-1 < (length = in.read(buf))) {
+            out.write(buf, 0, length);
+            out.flush();
         }
     }
 
@@ -96,6 +136,23 @@ public class FileUtil {
     public static boolean createNewFile(File file) {
         try {
             return file.createNewFile();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    /**
+     * 一時ファイルを作成します。
+     * 
+     * @param prefix
+     *            接頭辞文字列。3 文字以上の長さが必要である
+     * @param suffix
+     *            接尾辞文字列。null も指定でき、その場合は、接尾辞 ".tmp" が使用される
+     * @return
+     */
+    public static File createTempFile(String prefix, String suffix) {
+        try {
+            return File.createTempFile(prefix, suffix);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }

@@ -525,4 +525,14 @@ public class GenerateDdlTask extends AbstractTask {
         command.setJavaFileEncoding(javaFileEncoding);
     }
 
+    /**
+     * DDLを生成する理由を示すコメントを設定します。
+     * 
+     * @param comment
+     *            DDLを生成する理由を示すコメント
+     */
+    public void setComment(String comment) {
+        command.setComment(comment);
+    }
+
 }

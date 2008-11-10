@@ -201,6 +201,9 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
 
+    /** DDLを生成する理由を示すコメント */
+    protected String comment = "";
+
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
 
@@ -1035,6 +1038,25 @@ public class GenerateDdlCommand extends AbstractCommand {
         this.genDdlListenerClassName = genDdlListenerClassName;
     }
 
+    /**
+     * DDLを生成する理由を示すコメントを返します。
+     * 
+     * @return DDLを生成する理由を示すコメント
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * DDLを生成する理由を示すコメントを設定します。
+     * 
+     * @param comment
+     *            DDLを生成する理由を示すコメント
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -1062,10 +1084,9 @@ public class GenerateDdlCommand extends AbstractCommand {
 
     @Override
     protected void doExecute() throws Throwable {
-        ddlVersionIncrementer.increment(new DdlVersionIncrementer.Callback() {
+        DdlVersionIncrementer.Callback callback = new DdlVersionIncrementer.Callback() {
 
             public void execute(DdlVersionDirectory versionDirectory) {
-
                 final ManagedFile createDir = versionDirectory
                         .getCreateDirectory();
                 final ManagedFile dropDir = versionDirectory.getDropDirectory();
@@ -1090,9 +1111,10 @@ public class GenerateDdlCommand extends AbstractCommand {
                         }
                     });
                 }
-
             }
-        });
+        };
+
+        ddlVersionIncrementer.increment(comment, callback);
     }
 
     @Override

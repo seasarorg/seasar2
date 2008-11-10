@@ -47,7 +47,10 @@ public interface DdlInfoFile {
 
     /**
      * 次のバージョン番号を適用します。
+     * 
+     * @param comment
+     *            バージョンを増分する理由を示すコメント
      */
-    void applyNextVersionNo();
+    void applyNextVersionNo(String comment);
 
 }

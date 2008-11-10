@@ -15,24 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen.internal.version;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
 
 import org.seasar.extension.jdbc.gen.internal.exception.IllegalVersionRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.NextVersionExceededRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
+import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.version.DdlInfoFile;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.FileInputStreamUtil;
-import org.seasar.framework.util.FileOutputStreamUtil;
-import org.seasar.framework.util.InputStreamReaderUtil;
-import org.seasar.framework.util.ReaderUtil;
 
 /**
  * {@link DdlInfoFile}の実装クラスです。
@@ -87,10 +85,33 @@ public class DdlInfoFileImpl implements DdlInfoFile {
             versionNo = 0;
             return versionNo;
         }
-        InputStream is = FileInputStreamUtil.create(file);
-        Reader reader = InputStreamReaderUtil.create(is, ENCODING);
-        String value = ReaderUtil.readText(reader).trim();
-        return convertToInt(value);
+
+        String line = readLine();
+        if (line == null) {
+            logger.log("IS2JDBCGen0007", new Object[] { file.getPath() });
+            versionNo = 0;
+            return versionNo;
+        }
+        int pos = line.indexOf("=");
+        String value = pos > -1 ? line.substring(0, pos) : line;
+        versionNo = convertToInt(value.trim());
+        return versionNo;
+    }
+
+    /**
+     * １行を読みます。
+     * 
+     * @return １行
+     */
+    protected String readLine() {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(file), ENCODING));
+            return reader.readLine();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
     }
 
     public int getNextVersionNo() {
@@ -117,19 +138,40 @@ public class DdlInfoFileImpl implements DdlInfoFile {
         return convertToInt(version);
     }
 
-    public void applyNextVersionNo() {
-        int versionNo = getNextVersionNoInternal();
-        OutputStream os = FileOutputStreamUtil.create(file);
-        Writer writer = null;
+    public void applyNextVersionNo(String comment) {
+        File temp = null;
+        if (file.exists()) {
+            temp = FileUtil.createTempFile("ddl-info", null);
+            temp.deleteOnExit();
+            FileUtil.copy(file, temp);
+        }
+
+        writeLine(getNextVersionNoInternal() + "=" + comment);
+
+        if (temp != null) {
+            FileUtil.append(temp, file);
+        }
+        this.versionNo = null;
+    }
+
+    /**
+     * １行を書きます。
+     * 
+     * @param line
+     *            １行
+     */
+    protected void writeLine(String line) {
+        BufferedWriter writer = null;
         try {
-            writer = new OutputStreamWriter(os, ENCODING);
-            writer.write(String.valueOf(versionNo));
+            writer = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(file), ENCODING));
+            writer.write(line);
+            writer.newLine();
         } catch (IOException e) {
             throw new IORuntimeException(e);
         } finally {
             CloseableUtil.close(writer);
         }
-        this.versionNo = null;
     }
 
     /**

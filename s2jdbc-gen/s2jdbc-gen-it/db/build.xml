@@ -274,11 +274,16 @@
 			<src path="../src/main/java"/>
 		</javac>
 		<!-- test -->
-		<migrate 
+		<input 
+			message="DDLを生成する理由（リファクタリングの内容）を入力してください。このコメントはDDL情報ファイルに記録されます。"
+			addproperty="gen-ddl.comment"
+		/>
+		<gen-ddl 
 			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
 			migratedir="${migrate}"
 			ddlInfofile="${ddl-info}"
-			rootpackagename="${rootpackagename}"
+			comment="${gen-ddl.comment}"
 			classpathref="classpath"
 		/>
 		<refresh projectname="s2jdbc-gen-it"/>

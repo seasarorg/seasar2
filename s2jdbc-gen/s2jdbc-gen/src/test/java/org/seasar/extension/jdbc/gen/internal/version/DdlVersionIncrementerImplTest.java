@@ -70,7 +70,7 @@ public class DdlVersionIncrementerImplTest {
             }
 
             @Override
-            protected void incrementVersionNo() {
+            protected void incrementVersionNo(String changeLog) {
             }
         };
     }
@@ -83,14 +83,17 @@ public class DdlVersionIncrementerImplTest {
     public void testIncrement() throws Exception {
         final Object[] values = new Object[3];
 
-        incrementer.increment(new DdlVersionIncrementer.Callback() {
+        incrementer.increment("changeLog",
+                new DdlVersionIncrementer.Callback() {
 
-            public void execute(DdlVersionDirectory versionDirectory) {
-                values[0] = versionDirectory.getCreateDirectory().asFile();
-                values[1] = versionDirectory.getDropDirectory().asFile();
-                values[2] = versionDirectory.getVersionNo();
-            }
-        });
+                    public void execute(DdlVersionDirectory versionDirectory) {
+                        values[0] = versionDirectory.getCreateDirectory()
+                                .asFile();
+                        values[1] = versionDirectory.getDropDirectory()
+                                .asFile();
+                        values[2] = versionDirectory.getVersionNo();
+                    }
+                });
 
         File v012 = new File(baseDir, "v012");
         assertEquals(new File(v012, "create"), values[0]);
