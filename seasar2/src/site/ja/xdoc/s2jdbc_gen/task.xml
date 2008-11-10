@@ -34,16 +34,18 @@
 			<subsection name="オプションタスク">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>タスク名</th><th>説明</th></tr>
-					<tr><td><a href="tasks/gen_test.html">Gen-Test</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
-					<tr><td><a href="tasks/gen_condition.html">Gen-Condition</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
 					<tr><td><a href="tasks/gen_names.html">Gen-Names</a></td><td>エンティティクラスから名前クラスのJavaコードを生成するクラスです。名前クラスはエンティティのプロパティ名に対応するメソッドをもつクラスです。JdbcManagerを使った問い合わせで名前クラスを使用することで、結合条件や検索条件をタイプセーフで指定できます。</td></tr>
 					<tr><td><a href="tasks/gen_service.html">Gen-Service</a></td><td>エンティティクラスからサービスクラスのJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
+					<tr><td><a href="tasks/gen_condition.html">Gen-Condition</a></td><td>エンティティクラスから条件クラスのJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った問い合わせをタイプセーフにすることができます。</td></tr>
+					<tr><td><a href="tasks/gen_entitytest.html">Gen-EntityTest</a></td><td>エンティティクラスからテストクラスのJavaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
+					<tr><td><a href="tasks/gen_servicetest.html">Gen-ServiceTest</a></td><td>エンティティクラスからサービスクラスのテスト用Javaコードを生成するクラスです。</td></tr>
+					<tr><td><a href="tasks/gen_sqlfiletest.html">Gen-SqlFileTest</a></td><td>SQLファイルのテスト用Javaコードを生成するクラスです。</td></tr>
 				</table>
 			</subsection>
 			<subsection name="ユーティリティタスク">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>タスク名</th><th>説明</th></tr>
-					<tr><td><a href="tasks/dump_db_meta.html">Dump-Db-Meta</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
+					<tr><td><a href="tasks/dump_dbmeta.html">Dump-DbMeta</a></td><td>テーブルやカラムのメタデータをダンプするタスクです。主にS2JDBC-Genの開発者が利用することを想定しています。</td></tr>
 					<tr><td><a href="tasks/dump_data.html">Dump-Data</a></td><td>データベースのデータをCSV形式でダンプするタスクです。ダンプの機能はGen-Ddlタスクに含まれていますが、Gen-Ddlタスクとは別にダンプを行いたい場合に使用できます。</td></tr>
 					<tr><td><a href="tasks/load_data.html">Load-Data</a></td><td>CSV形式のダンプファイルをロードするタスクです。ロードの機能はMigrateタスクに含まれていますが、Migrateタスクとは別にロードを行いたい場合に使用できます。</td></tr>
 					<tr><td><a href="tasks/exec_sql.html">Exec-Sql</a></td><td>SQLファイルに含まれた任意のSQLを実行するタスクです。</td></tr>

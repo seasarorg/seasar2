@@ -84,6 +84,16 @@
 									<a href="#バージョンディレクトリのパターンを指定する">バージョンディレクトリのパターンを指定する</a>
 								</p>
 							</li>
+							<li>
+								<p>
+									<a href="#DDLを生成する理由を記録する">DDLを生成する理由を記録する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる">エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる</a>
+								</p>
+							</li>
 						</ul>
 					</p>
 				</li>
@@ -317,7 +327,7 @@
 					<tr><td>dump</td><td>"true"の場合、データベースのデータのダンプ出力を行います。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>dumpDirName</td><td>ダンプファイルの出力先のディレクトリです。</td><td>"040-dump"</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
-					<tr><td>applyJavaCommentToDdl</td><td>"true"の場合、エンティティのJavaDocコメントを（テーブル作成用の）DDLファイルに反映させます。クラスのJavaDocコメントはテーブルに反映され、プロパティのJavaDocコメントはカラムに反映されます。"true"を指定する場合、Docletを使用できるようにJDKのtools.jarをクラスパス（classpathもしくはclasspathref）に含める必要があります。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>applyJavaCommentToDdl</td><td>"true"の場合、エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させます。クラスのJavaDocコメントはテーブルに反映され、プロパティのJavaDocコメントはカラムに反映されます。"true"を指定する場合、Docletを使用できるようにJDKのtools.jarをクラスパス（classpathもしくはclasspathref）に含める必要があります。対応しているRDBMSは、Oracle、DB2、PostgreSQL、MySQL、H2です。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>javaFileSrcDirs</td><td>Javaソースファイルのディレクトリです。カンマや空白区切りで複数指定できます。applyJavaCommentToDdlに"true"を指定した場合にのみ使用されます。</td><td>"src/main/java"</td><td>NO</td></tr>
 					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。applyJavaCommentToDdlに"true"を指定した場合にのみ使用されます。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
@@ -337,8 +347,9 @@
 					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
 					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
 					<tr><td>tableOption</td><td>CREATE TABLE文の最後に付与されるオプションです。MySQLで、データベースのエンジンを指定する場合、たとえば、"ENGINE = INNODB"というように指定できます。</td><td>-</td><td>NO</td></tr>
+					<tr><td>comment</td><td>DDLを生成する理由を示すコメントです。エンティティの変更内容を記述するのが適当です。ここに記述した文字列はddlInfoFile属性で指定されたファイルに記録されます。</td><td>""</td><td>NO</td></tr>
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
-					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。このタスクの実行に使用されます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>
 					                        JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
@@ -443,6 +454,44 @@
 />]]></source>
 				<p>
 					上記の定義でGen-Ddlタスクを実行すると、バージョン番号に対応するディレクトリの名前はバージョン番号が大きくなるにつれ、00000000、00000001、00000002となります。
+				</p>
+			</subsection>
+			<subsection name="DDLを生成する理由を記録する">
+				<p>
+					DDLを生成する理由（エンティティの変更内容）をcomment属性に記述しddlInfoFile属性で指定されたファイルに記録できます。
+					AntのInputタスクと組み合わせて使用すると良いでしょう。
+				</p>
+<source><![CDATA[<input
+    message="DDLを生成する理由（エンティティの変更内容）を入力してください。"
+    addproperty="gen-ddl.comment"
+/>
+<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    comment="${gen-ddl.comment}"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					上記の定義を利用すると、コンソールからの入力をコメントとして使用できます。
+				</p>
+			</subsection>
+			<subsection name="エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる">
+				<p>
+					エンティティのJavaDocコメントをDDLに反映させるには、applyJavaCommentToDdl属性に"true"を指定します。
+					javaFileSrcDirs属性については、カンマや空白区切りで複数の値を指定できることに注意してください。
+					また、必要に応じてjavaFileSrcDirs属性とjavaFileEncoding属性を使用します。
+				</p>				
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    applyJavaCommentToDdl="true"
+    javaFileSrcDirs="src1, src2"
+    javaFileEncoding="MS932"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					この機能では、Docletを使用してソースコード上のコメントを読み取るため、クラスパスにJDKのtools.jarが指定されている必要があります。
+					コメントに対応していないRDBMSでは、applyJavaCommentToDdl属性に"true"を指定しても、JavaDocコメントはDDLに反映されません。
 				</p>
 			</subsection>
 		</section>

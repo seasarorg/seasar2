@@ -56,9 +56,6 @@
 				<p>
 					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
 				</p>
-				<p>
-					接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。
-				</p>
 			</subsection>
 		</section>
 		<section name="パラメータ">
@@ -77,7 +74,7 @@
 					<tr><td>dumpDir</td><td>ダンプファイルを出力するディレクトリです。指定しない場合、migrateDir、ddlInfoFile、versionNoPattern、dumpDirNameにより出力先ディレクトリが決まります。</td><td>-</td><td>NO</td></tr>
 					<tr><td>dumpFileEncoding</td><td>ダンプファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
-					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。このタスクの実行に使用されます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>applyEnvToVersion</td><td>バージョンディレクトリに環境名を適用する場合"true"を指定します。trueを指定すると、通常のバージョンディレクトリとは別の環境名つきのバージョンディレクトリにダンプファイルが出力されます。dumpDirを指定しない場合にのみ有効です。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>

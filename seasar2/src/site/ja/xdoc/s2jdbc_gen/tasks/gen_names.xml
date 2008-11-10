@@ -187,7 +187,7 @@ public class AddressNames {
 					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
 					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>overwrite</td><td>"true"の場合、名前インタフェースのJavaファイルを上書きします。</td><td>"true"</td><td>NO</td></tr>
-					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。このタスクの実行に使用されます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>

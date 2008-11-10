@@ -65,11 +65,13 @@
           <item name="Gen-Entity" href="s2jdbc_gen/tasks/gen_entity.html"/>
           <item name="Gen-Ddl" href="s2jdbc_gen/tasks/gen_ddl.html"/>
           <item name="Migrate" href="s2jdbc_gen/tasks/migrate.html"/>
-          <item name="Gen-Test" href="s2jdbc_gen/tasks/gen_test.html"/>
-          <item name="Gen-Condition" href="s2jdbc_gen/tasks/gen_condition.html"/>
           <item name="Gen-Names" href="s2jdbc_gen/tasks/gen_names.html"/>
           <item name="Gen-Service" href="s2jdbc_gen/tasks/gen_service.html"/>
-          <item name="Dump-Db-Meta" href="s2jdbc_gen/tasks/dump_db_meta.html"/>
+          <item name="Gen-Condition" href="s2jdbc_gen/tasks/gen_condition.html"/>
+          <item name="Gen-EntityTest" href="s2jdbc_gen/tasks/gen_entitytest.html"/>
+          <item name="Gen-ServiceTest" href="s2jdbc_gen/tasks/gen_servicetest.html"/>
+          <item name="Gen-SqlFileTest" href="s2jdbc_gen/tasks/gen_sqlfiletest.html"/>
+          <item name="Dump-DbMeta" href="s2jdbc_gen/tasks/dump_dbmeta.html"/>
           <item name="Dump-Data" href="s2jdbc_gen/tasks/dump_data.html"/>
           <item name="Load-Data" href="s2jdbc_gen/tasks/load_data.html"/>
           <item name="Exec-Sql" href="s2jdbc_gen/tasks/exec_sql.html"/>

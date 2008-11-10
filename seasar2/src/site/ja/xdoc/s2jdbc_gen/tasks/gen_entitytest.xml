@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>S2JDBC-Gen - Dump-Db-Meta</title>
+		<title>S2JDBC-Gen - Gen-EntityTest</title>
 	</properties>
 	<body>
-		<section name="Dump-Db-Meta">
+		<section name="Gen-EntityTest">
 			<ul>
 				<li>
 					<p>
@@ -38,13 +38,6 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
-						<ul>
-							<li>
-								<p>
-									<a href="#スキーマを指定する">スキーマを指定する</a>
-								</p>
-							</li>
-						</ul>
 					</p>
 				</li>
 			</ul>
@@ -52,9 +45,9 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					データベースのテーブルとカラムのメタデータを出力します。</p>
+					エンティティのテストクラスを作成します。</p>
 				<p>
-					接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。
+					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
 				</p>
 			</subsection>
 		</section>
@@ -62,13 +55,21 @@
 			<subsection name="トップレベルのパラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
-					<tr><td>schemaName</td><td>このタスクが対象とするスキーマ名です。</td><td>-</td><td>NO</td></tr>
-					<tr><td>tableNamePattern</td><td>このタスクが対象とするテーブル名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
-					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないこのタスクが対象としないテーブル名の正規表現です。</td><td>".*\$.*"</td><td>NO</td></tr>
-					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>
-					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
+					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
+					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
+					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>testClassNameSuffix</td><td>テストクラス名のサフィックスです。</td><td>"Test"</td><td>NO</td></tr>
+					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/entitytest.ftl"</td><td>NO</td></tr>
+					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/test/java"</td><td>NO</td></tr>
+					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>overwrite</td><td>"true"の場合、テストクラスのJavaファイルを上書きします。</td><td>"false"</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。このタスクの実行に使用されます。また、テストコードではこの設定ファイルがincludeされます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
-					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。</td><td>"jdbcManager"</td><td>NO</td></tr>
+					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>
 					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
 					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
@@ -87,13 +88,12 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="スキーマを指定する">
+			<subsection name="例">
 				<p>
-					"PUBLIC"というスキーマを指定してタスクを実行します。
+					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
-<source><![CDATA[<dump-db-meta
-    classpathDir="build/classes"
-    schema="PUBLIC"
+<source><![CDATA[<gen-entitytest
+    rootPackageName="examples"
     classpathRef="classpath"
 />]]></source>
 			</subsection>

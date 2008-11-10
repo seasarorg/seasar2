@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>S2JDBC-Gen - Gen-Test</title>
+		<title>S2JDBC-Gen - Gen-ServiceTest</title>
 	</properties>
 	<body>
-		<section name="Gen-Test">
+		<section name="Gen-ServiceTest">
 			<ul>
 				<li>
 					<p>
@@ -45,7 +45,7 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					エンティティのテストクラスを作成します。</p>
+					サービスのテストクラスを作成します。</p>
 				<p>
 					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
 				</p>
@@ -60,14 +60,16 @@
 					<tr><td>entityPackageName</td><td>エンティティクラスのパッケージ名です。エンティティクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>servicePackageName</td><td>サービスクラスのパッケージ名です。サービスクラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"service"</td><td>NO</td></tr>
 					<tr><td>testClassNameSuffix</td><td>テストクラス名のサフィックスです。</td><td>"Test"</td><td>NO</td></tr>
-					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/test.ftl"</td><td>NO</td></tr>
+					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/servicetest.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/test/java"</td><td>NO</td></tr>
 					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>overwrite</td><td>"true"の場合、テストクラスのJavaファイルを上書きします。</td><td>"false"</td><td>NO</td></tr>
-					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。テストコードではこの設定ファイルがincludeされます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>appConfigPath</td><td>サービスのコンポーネント定義やS2JDBCの設定ファイルを含むアプリケーション用の設定ファイルです。テストコードではこの設定ファイルがincludeされます。</td><td>"app.dicon"</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。このタスクの実行に使用されます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
 					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
 					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
 					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>
@@ -92,7 +94,7 @@
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
-<source><![CDATA[<gen-test
+<source><![CDATA[<gen-servicetest
     rootPackageName="examples"
     classpathRef="classpath"
 />]]></source>
