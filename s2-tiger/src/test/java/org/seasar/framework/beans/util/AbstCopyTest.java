@@ -27,8 +27,6 @@ import org.seasar.framework.beans.ConverterRuntimeException;
 import org.seasar.framework.beans.converter.DateConverter;
 import org.seasar.framework.beans.converter.NumberConverter;
 
-import static org.seasar.framework.beans.util.MyBeanNames.*;
-
 /**
  * @author higa
  */
@@ -39,7 +37,7 @@ public class AbstCopyTest extends TestCase {
      */
     public void testIncludes() throws Exception {
         MyCopy copy = new MyCopy();
-        assertSame(copy, copy.includes("hoge"));
+        assertSame(copy, copy.includes(BeanNames.hoge()));
         assertEquals(1, copy.includePropertyNames.length);
         assertEquals("hoge", copy.includePropertyNames[0]);
     }
@@ -49,7 +47,7 @@ public class AbstCopyTest extends TestCase {
      */
     public void testExcludes() throws Exception {
         MyCopy copy = new MyCopy();
-        assertSame(copy, copy.excludes("hoge"));
+        assertSame(copy, copy.excludes(BeanNames.hoge()));
         assertEquals(1, copy.excludePropertyNames.length);
         assertEquals("hoge", copy.excludePropertyNames[0]);
     }
@@ -93,7 +91,7 @@ public class AbstCopyTest extends TestCase {
      * @throws Exception
      */
     public void testIsTargetProperty_includes() throws Exception {
-        MyCopy copy = new MyCopy().includes("hoge");
+        MyCopy copy = new MyCopy().includes(BeanNames.hoge());
         assertTrue(copy.isTargetProperty("hoge"));
         assertFalse(copy.isTargetProperty("hoge2"));
     }
@@ -102,8 +100,8 @@ public class AbstCopyTest extends TestCase {
      * @throws Exception
      */
     public void testIsTargetProperty_includes_prefix() throws Exception {
-        MyCopy copy = new MyCopy().includes("search_aaa", "bbb").prefix(
-                "search_");
+        MyCopy copy = new MyCopy().includes(BeanNames.search_aaa(),
+                BeanNames.bbb()).prefix("search_");
         assertTrue(copy.isTargetProperty("search_aaa"));
         assertFalse(copy.isTargetProperty("bbb"));
     }
@@ -112,7 +110,7 @@ public class AbstCopyTest extends TestCase {
      * @throws Exception
      */
     public void testIsTargetProperty_excludes() throws Exception {
-        MyCopy copy = new MyCopy().excludes("hoge");
+        MyCopy copy = new MyCopy().excludes(BeanNames.hoge());
         assertFalse(copy.isTargetProperty("hoge"));
         assertTrue(copy.isTargetProperty("hoge2"));
     }
@@ -121,7 +119,8 @@ public class AbstCopyTest extends TestCase {
      * @throws Exception
      */
     public void testIsTargetProperty_excludes_prefix() throws Exception {
-        MyCopy copy = new MyCopy().prefix("abc_").excludes("abc_exclude");
+        MyCopy copy = new MyCopy().prefix("abc_").excludes(
+                BeanNames.abc_exclude());
         assertTrue(copy.isTargetProperty("abc_value"));
         assertFalse(copy.isTargetProperty("abc_exclude"));
         assertFalse(copy.isTargetProperty("ab"));
@@ -141,8 +140,8 @@ public class AbstCopyTest extends TestCase {
      */
     public void testIsTargetProperty_includes_excludes() throws Exception {
         MyCopy copy = new MyCopy();
-        copy.includes("hoge", "hoge2");
-        copy.excludes("hoge2", "hoge3");
+        copy.includes(BeanNames.hoge(), BeanNames.hoge2());
+        copy.excludes(BeanNames.hoge2(), BeanNames.hoge3());
         assertTrue(copy.isTargetProperty("hoge"));
         assertFalse(copy.isTargetProperty("hoge2"));
         assertFalse(copy.isTargetProperty("hoge3"));
@@ -184,7 +183,7 @@ public class AbstCopyTest extends TestCase {
         src.aaa = "aaa";
         src.bbb = "bbb";
         MyBean dest = new MyBean();
-        new MyCopy().includes(aaa()).copyBeanToBean(src, dest);
+        new MyCopy().includes(BeanNames.aaa()).copyBeanToBean(src, dest);
         assertEquals("aaa", dest.aaa);
         assertNull(dest.bbb);
     }
@@ -197,7 +196,7 @@ public class AbstCopyTest extends TestCase {
         src.aaa = "aaa";
         src.bbb = "bbb";
         MyBean dest = new MyBean();
-        new MyCopy().excludes(bbb()).copyBeanToBean(src, dest);
+        new MyCopy().excludes(BeanNames.bbb()).copyBeanToBean(src, dest);
         assertEquals("aaa", dest.aaa);
         assertNull(dest.bbb);
     }
@@ -301,7 +300,7 @@ public class AbstCopyTest extends TestCase {
         src.bbb = "bbb";
         src.ccc = "ccc";
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().includes(aaa()).copyBeanToMap(src, dest);
+        new MyCopy().includes(BeanNames.aaa()).copyBeanToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("ccc"));
     }
@@ -315,7 +314,7 @@ public class AbstCopyTest extends TestCase {
         src.bbb = "bbb";
         src.ccc = "ccc";
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().excludes("ccc").copyBeanToMap(src, dest);
+        new MyCopy().excludes(BeanNames.ccc()).copyBeanToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("ccc"));
     }
@@ -402,7 +401,7 @@ public class AbstCopyTest extends TestCase {
         Bean bean = new Bean();
         bean.aaa = "1,000";
         Map<String, Object> map = new HashMap<String, Object>();
-        new MyCopy().converter(new NumberConverter("#,##0"), aaa())
+        new MyCopy().converter(new NumberConverter("#,##0"), BeanNames.aaa())
                 .copyBeanToMap(bean, map);
         assertEquals(new Long(1000), map.get("aaa"));
     }
@@ -467,7 +466,7 @@ public class AbstCopyTest extends TestCase {
         src.put("bbb", "bbb");
         src.put("ccc", "ccc");
         DestBean dest = new DestBean();
-        new MyCopy().includes(bbb()).copyMapToBean(src, dest);
+        new MyCopy().includes(BeanNames.bbb()).copyMapToBean(src, dest);
         assertEquals("bbb", dest.bbb);
         assertNull(dest.ccc);
     }
@@ -481,7 +480,7 @@ public class AbstCopyTest extends TestCase {
         src.put("bbb", "bbb");
         src.put("ccc", "ccc");
         DestBean dest = new DestBean();
-        new MyCopy().excludes(ccc()).copyMapToBean(src, dest);
+        new MyCopy().excludes(BeanNames.ccc()).copyMapToBean(src, dest);
         assertEquals("bbb", dest.bbb);
         assertNull(dest.ccc);
     }
@@ -570,7 +569,7 @@ public class AbstCopyTest extends TestCase {
         src.put("aaa", "aaa");
         src.put("bbb", "bbb");
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().includes(aaa()).copyMapToMap(src, dest);
+        new MyCopy().includes(BeanNames.aaa()).copyMapToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("bbb"));
     }
@@ -583,7 +582,7 @@ public class AbstCopyTest extends TestCase {
         src.put("aaa", "aaa");
         src.put("bbb", "bbb");
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().excludes(bbb()).copyMapToMap(src, dest);
+        new MyCopy().excludes(BeanNames.bbb()).copyMapToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("bbb"));
     }
@@ -706,8 +705,8 @@ public class AbstCopyTest extends TestCase {
      */
     public void testConvertValue_propertyConverter_asObject() throws Exception {
         assertEquals(new Long(1), new MyCopy().converter(
-                new NumberConverter("##0"), aaa()).convertValue("1", "aaa",
-                null));
+                new NumberConverter("##0"), BeanNames.aaa()).convertValue("1",
+                "aaa", null));
     }
 
     /**
@@ -939,4 +938,98 @@ public class AbstCopyTest extends TestCase {
          */
         public Date aaa;
     }
+
+    /**
+     * @author kato
+     * 
+     */
+    public static class BeanNames {
+
+        /**
+         * CharSequenceを作成します。
+         * 
+         * @param name
+         * @return
+         */
+        protected static CharSequence createCharSequence(final String name) {
+            return new CharSequence() {
+
+                @Override
+                public String toString() {
+                    return name;
+                }
+
+                public char charAt(int index) {
+                    return name.charAt(index);
+                }
+
+                public int length() {
+                    return name.length();
+                }
+
+                public CharSequence subSequence(int start, int end) {
+                    return name.subSequence(start, end);
+                }
+
+            };
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence aaa() {
+            return createCharSequence("aaa");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence bbb() {
+            return createCharSequence("bbb");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence ccc() {
+            return createCharSequence("ccc");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence hoge() {
+            return createCharSequence("hoge");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence hoge2() {
+            return createCharSequence("hoge2");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence hoge3() {
+            return createCharSequence("hoge3");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence search_aaa() {
+            return createCharSequence("search_aaa");
+        }
+
+        /**
+         * @return
+         */
+        public static CharSequence abc_exclude() {
+            return createCharSequence("abc_exclude");
+        }
+
+    }
+
 }
