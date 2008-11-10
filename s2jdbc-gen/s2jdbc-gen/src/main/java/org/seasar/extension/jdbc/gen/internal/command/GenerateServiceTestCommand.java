@@ -77,7 +77,7 @@ public class GenerateServiceTestCommand extends AbstractCommand {
     protected String testClassNameSuffix = "Test";
 
     /** テストクラスのテンプレート名 */
-    protected String templateFileName = "java/service-test.ftl";
+    protected String templateFileName = "java/servicetest.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";

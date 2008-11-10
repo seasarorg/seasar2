@@ -64,7 +64,7 @@ public class GenerateSqlFileTestTest {
         SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
 
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/sqlfile-test.ftl", "UTF-8", false);
+                "file"), "java/sqlfiletest.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
@@ -85,7 +85,7 @@ public class GenerateSqlFileTestTest {
         SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
 
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/sqlfile-test.ftl", "UTF-8", false);
+                "file"), "java/sqlfiletest.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_NoSqlFile.txt";

@@ -25,9 +25,9 @@ import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
+import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModel;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
-import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -58,7 +58,7 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     protected String shortClassName = "SqlFileTest";
 
     /** テストクラスのテンプレート名 */
-    protected String templateFileName = "java/sqlfile-test.ftl";
+    protected String templateFileName = "java/sqlfiletest.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";

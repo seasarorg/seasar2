@@ -77,7 +77,7 @@ public class GenerateEntityTestTest {
         EntityTestModel model = entityTestModelFactory
                 .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/entity-test.ftl", "UTF-8", false);
+                "file"), "java/entitytest.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")
@@ -95,7 +95,7 @@ public class GenerateEntityTestTest {
         EntityTestModel model = entityTestModelFactory
                 .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/entity-test.ftl", "UTF-8", false);
+                "file"), "java/entitytest.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/") + "_NoId.txt";
@@ -112,7 +112,7 @@ public class GenerateEntityTestTest {
         EntityTestModel model = entityTestModelFactory
                 .getEntityTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/entity-test.ftl", "UTF-8", false);
+                "file"), "java/entitytest.ftl", "UTF-8", false);
         generator.generate(context);
 
         String path = getClass().getName().replace(".", "/")

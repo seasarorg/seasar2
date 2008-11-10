@@ -75,7 +75,7 @@ public class GenerateServiceTestTest {
         ServiceTestModel model = serviceTestModelFactory
                 .getServiceTestModel(entityMeta);
         GenerationContext context = new GenerationContextImpl(model, new File(
-                "file"), "java/service-test.ftl", "UTF-8", false);
+                "file"), "java/servicetest.ftl", "UTF-8", false);
         generator.generate(context);
         String path = getClass().getName().replace(".", "/") + ".txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());

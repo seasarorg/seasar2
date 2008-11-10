@@ -68,7 +68,7 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     protected String testClassNameSuffix = "Test";
 
     /** テストクラスのテンプレート名 */
-    protected String templateFileName = "java/entity-test.ftl";
+    protected String templateFileName = "java/entitytest.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
