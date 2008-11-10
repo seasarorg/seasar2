@@ -123,7 +123,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            CharSequenceの配列
      * @return Stringの配列
      */
-    private String[] toStringArray(CharSequence[] charSequenceArray) {
+    protected String[] toStringArray(CharSequence[] charSequenceArray) {
         int length = charSequenceArray.length;
         String[] stringArray = new String[length];
         for (int index = 0; index < length; index++) {
