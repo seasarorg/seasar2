@@ -27,6 +27,8 @@ import org.seasar.framework.beans.ConverterRuntimeException;
 import org.seasar.framework.beans.converter.DateConverter;
 import org.seasar.framework.beans.converter.NumberConverter;
 
+import static org.seasar.framework.beans.util.MyBeanNames.*;
+
 /**
  * @author higa
  */
@@ -182,7 +184,7 @@ public class AbstCopyTest extends TestCase {
         src.aaa = "aaa";
         src.bbb = "bbb";
         MyBean dest = new MyBean();
-        new MyCopy().includes("aaa").copyBeanToBean(src, dest);
+        new MyCopy().includes(aaa()).copyBeanToBean(src, dest);
         assertEquals("aaa", dest.aaa);
         assertNull(dest.bbb);
     }
@@ -195,7 +197,7 @@ public class AbstCopyTest extends TestCase {
         src.aaa = "aaa";
         src.bbb = "bbb";
         MyBean dest = new MyBean();
-        new MyCopy().excludes("bbb").copyBeanToBean(src, dest);
+        new MyCopy().excludes(bbb()).copyBeanToBean(src, dest);
         assertEquals("aaa", dest.aaa);
         assertNull(dest.bbb);
     }
@@ -299,7 +301,7 @@ public class AbstCopyTest extends TestCase {
         src.bbb = "bbb";
         src.ccc = "ccc";
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().includes("aaa").copyBeanToMap(src, dest);
+        new MyCopy().includes(aaa()).copyBeanToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("ccc"));
     }
@@ -400,7 +402,7 @@ public class AbstCopyTest extends TestCase {
         Bean bean = new Bean();
         bean.aaa = "1,000";
         Map<String, Object> map = new HashMap<String, Object>();
-        new MyCopy().converter(new NumberConverter("#,##0"), "aaa")
+        new MyCopy().converter(new NumberConverter("#,##0"), aaa())
                 .copyBeanToMap(bean, map);
         assertEquals(new Long(1000), map.get("aaa"));
     }
@@ -465,7 +467,7 @@ public class AbstCopyTest extends TestCase {
         src.put("bbb", "bbb");
         src.put("ccc", "ccc");
         DestBean dest = new DestBean();
-        new MyCopy().includes("bbb").copyMapToBean(src, dest);
+        new MyCopy().includes(bbb()).copyMapToBean(src, dest);
         assertEquals("bbb", dest.bbb);
         assertNull(dest.ccc);
     }
@@ -479,7 +481,7 @@ public class AbstCopyTest extends TestCase {
         src.put("bbb", "bbb");
         src.put("ccc", "ccc");
         DestBean dest = new DestBean();
-        new MyCopy().excludes("ccc").copyMapToBean(src, dest);
+        new MyCopy().excludes(ccc()).copyMapToBean(src, dest);
         assertEquals("bbb", dest.bbb);
         assertNull(dest.ccc);
     }
@@ -568,7 +570,7 @@ public class AbstCopyTest extends TestCase {
         src.put("aaa", "aaa");
         src.put("bbb", "bbb");
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().includes("aaa").copyMapToMap(src, dest);
+        new MyCopy().includes(aaa()).copyMapToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("bbb"));
     }
@@ -581,7 +583,7 @@ public class AbstCopyTest extends TestCase {
         src.put("aaa", "aaa");
         src.put("bbb", "bbb");
         Map<String, Object> dest = new HashMap<String, Object>();
-        new MyCopy().excludes("bbb").copyMapToMap(src, dest);
+        new MyCopy().excludes(bbb()).copyMapToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
         assertNull(dest.get("bbb"));
     }
@@ -704,7 +706,7 @@ public class AbstCopyTest extends TestCase {
      */
     public void testConvertValue_propertyConverter_asObject() throws Exception {
         assertEquals(new Long(1), new MyCopy().converter(
-                new NumberConverter("##0"), "aaa").convertValue("1", "aaa",
+                new NumberConverter("##0"), aaa()).convertValue("1", "aaa",
                 null));
     }
 

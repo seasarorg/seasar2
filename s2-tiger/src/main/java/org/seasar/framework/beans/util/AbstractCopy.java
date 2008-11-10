@@ -49,9 +49,9 @@ import org.seasar.framework.util.TimestampConversionUtil;
 public abstract class AbstractCopy<S extends AbstractCopy<S>> {
 
     /**
-     * 空のCharSequenceの配列です。
+     * 空文字列の配列です。
      */
-    protected static final CharSequence[] EMPTY_STRING_ARRAY = new CharSequence[0];
+    protected static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * 日付用のデフォルトコンバータです。
@@ -74,12 +74,12 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     /**
      * 操作の対象に含めるプロパティ名の配列です。
      */
-    protected CharSequence[] includePropertyNames = EMPTY_STRING_ARRAY;
+    protected String[] includePropertyNames = EMPTY_STRING_ARRAY;
 
     /**
      * 操作の対象に含めないプロパティ名の配列です。
      */
-    protected CharSequence[] excludePropertyNames = EMPTY_STRING_ARRAY;
+    protected String[] excludePropertyNames = EMPTY_STRING_ARRAY;
 
     /**
      * null値のプロパティを操作の対象外にするかどうかです。
@@ -109,12 +109,28 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
     /**
      * 特定のプロパティに関連付けられたコンバータです。
      */
-    protected Map<CharSequence, Converter> converterMap = new HashMap<CharSequence, Converter>();
+    protected Map<String, Converter> converterMap = new HashMap<String, Converter>();
 
     /**
      * 特定のプロパティに関連付けられていないコンバータです。
      */
     protected List<Converter> converters = new ArrayList<Converter>();
+
+    /**
+     * CharSequenceの配列をStringの配列に変換します。
+     * 
+     * @param charSequenceArray
+     *            CharSequenceの配列
+     * @return Stringの配列
+     */
+    private String[] toStringArray(CharSequence[] charSequenceArray) {
+        int length = charSequenceArray.length;
+        String[] stringArray = new String[length];
+        for (int index = 0; index < length; index++) {
+            stringArray[index] = charSequenceArray[index].toString();
+        }
+        return stringArray;
+    }
 
     /**
      * 操作の対象に含めるプロパティ名を指定します。
@@ -125,7 +141,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      */
     @SuppressWarnings("unchecked")
     public S includes(CharSequence... propertyNames) {
-        this.includePropertyNames = propertyNames;
+        this.includePropertyNames = toStringArray(propertyNames);
         return (S) this;
     }
 
@@ -138,7 +154,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      */
     @SuppressWarnings("unchecked")
     public S excludes(CharSequence... propertyNames) {
-        this.excludePropertyNames = propertyNames;
+        this.excludePropertyNames = toStringArray(propertyNames);
         return (S) this;
     }
 
@@ -217,7 +233,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             converters.add(converter);
         } else {
             for (CharSequence name : propertyNames) {
-                converterMap.put(name, converter);
+                converterMap.put(name.toString(), converter);
             }
         }
         return (S) this;
@@ -300,9 +316,9 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             return false;
         }
         if (includePropertyNames.length > 0) {
-            for (CharSequence s : includePropertyNames) {
+            for (String s : includePropertyNames) {
                 if (s.equals(name)) {
-                    for (CharSequence s2 : excludePropertyNames) {
+                    for (String s2 : excludePropertyNames) {
                         if (s2.equals(name)) {
                             return false;
                         }
@@ -313,7 +329,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
             return false;
         }
         if (excludePropertyNames.length > 0) {
-            for (CharSequence s : excludePropertyNames) {
+            for (String s : excludePropertyNames) {
                 if (s.equals(name)) {
                     return false;
                 }
