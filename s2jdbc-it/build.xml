@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="s2jdbc-it" default="checkEnv" basedir=".">
 
-	<path id="pathId">
-		<pathelement location="build/classes"/>
-		<pathelement location="../seasar2/build/classes"/>
-		<pathelement location="../s2-tiger/build/classes"/>
-		<fileset dir="lib"/>
-		<fileset dir="../seasar2/lib"/>
-		<fileset dir="../s2-tiger/lib"/>
-	</path>
-	<property name="classpath" refid="pathId"/>
-
 	<taskdef name="env" classname="org.seasar.extension.jdbc.it.util.EnvTask" classpath="${classpath}"/>
 	<taskdef name="exec-sql" classname="org.seasar.extension.jdbc.it.util.ExecuteSqlTask" classpath="${classpath}"/>
 
