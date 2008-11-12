@@ -17,5 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="lib" path="lib/postgresql-8.3-603.jdbc3.jar" sourcepath="libsrc/postgresql-jdbc-8.3-603.src..zip"/>
+	<classpathentry kind="lib" path="lib/ant-1.7.0.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
