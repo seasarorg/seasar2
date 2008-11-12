@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="s2jdbc-it" default="checkEnv" basedir=".">
 
-	<path id="pathid">
+	<path id="pathId">
 		<pathelement location="build/classes"/>
 		<pathelement location="../seasar2/build/classes"/>
 		<pathelement location="../s2-tiger/build/classes"/>
@@ -9,17 +9,17 @@
 		<fileset dir="../seasar2/lib"/>
 		<fileset dir="../s2-tiger/lib"/>
 	</path>
+	<property name="classpath" refid="pathId"/>
 
-	<property name="classpath" value="pathid"/>
+	<taskdef name="env" classname="org.seasar.extension.jdbc.it.util.EnvTask" classpath="${classpath}"/>
+	<taskdef name="exec-sql" classname="org.seasar.extension.jdbc.it.util.ExecuteSqlTask" classpath="${classpath}"/>
 
-	<taskdef name="env" classname="org.seasar.extension.jdbc.it.util.EnvTask" classpathref="${classpath}"/>
-	<taskdef name="exec-sql" classname="org.seasar.extension.jdbc.it.util.ExecuteSqlTask" classpathref="${classpath}"/>
-	
 	<target name="setUp" if="isTargetEnv" depends="checkEnv">
 		<exec-sql 
 			haltOnError="false"
 			sqlFile="sql/drop_${envValue}.sql"/>
 		<exec-sql 
+			haltOnError="true"
 			sqlFile="sql/create_${envValue}.sql"/>
 	</target>
 
@@ -30,7 +30,7 @@
 	</target>
 
 	<target name="checkEnv">
-		<env envProperty="envValue"/>
+		<env envValueProperty="envValue"/>
 		<echo message="envValue=${envValue}"/>
 		<condition property="isTargetEnv">
 			<or>
@@ -42,4 +42,5 @@
 			</or>
 		</condition>
 	</target>
+
 </project>

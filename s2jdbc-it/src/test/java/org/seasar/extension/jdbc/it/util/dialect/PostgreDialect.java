@@ -16,8 +16,9 @@
 package org.seasar.extension.jdbc.it.util.dialect;
 
 /**
- * @author taedium
+ * PostgreSQL用の方言です。
  * 
+ * @author taedium
  */
 public class PostgreDialect extends StandardDialect {
 
@@ -26,6 +27,11 @@ public class PostgreDialect extends StandardDialect {
         return new PostgreSqlBlockContext();
     }
 
+    /**
+     * PostgreSQL用の{@link SqlBlockContext}の実装クラスです。
+     * 
+     * @author taedium
+     */
     public static class PostgreSqlBlockContext implements SqlBlockContext {
 
         /** ブロックの内側の場合{@code true} */

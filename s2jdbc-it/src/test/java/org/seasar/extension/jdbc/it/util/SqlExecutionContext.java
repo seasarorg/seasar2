@@ -75,14 +75,11 @@ public class SqlExecutionContext {
         openConnection();
     }
 
-    public boolean isHaltOnError() {
-        return haltOnError;
-    }
-
-    public void setHaltOnError(boolean haltOnError) {
-        this.haltOnError = haltOnError;
-    }
-
+    /**
+     * ステートメントを返します。
+     * 
+     * @return ステートメント
+     */
     public Statement getStatement() {
         if (statement != null) {
             return statement;
@@ -91,6 +88,13 @@ public class SqlExecutionContext {
         return statement;
     }
 
+    /**
+     * 準備されたステートメントを返します。
+     * 
+     * @param sql
+     *            SQL
+     * @return 準備されたステートメント
+     */
     public PreparedStatement getPreparedStatement(String sql) {
         if (connection != null && preparedStatement != null) {
             StatementUtil.close(preparedStatement);
@@ -99,10 +103,20 @@ public class SqlExecutionContext {
         return preparedStatement;
     }
 
+    /**
+     * 例外のリストを返します。
+     * 
+     * @return 例外のリスト
+     */
     public List<RuntimeException> getExceptionList() {
         return Collections.unmodifiableList(exceptionList);
     }
 
+    /**
+     * 例外を追加します。
+     * 
+     * @param exception
+     */
     public void addException(RuntimeException exception) {
         closeStatements();
         closeConnection();
@@ -114,12 +128,18 @@ public class SqlExecutionContext {
         openConnection();
     }
 
+    /**
+     * 例外を通知します。
+     */
     public void notifyException() {
         closeStatements();
         closeConnection();
         openConnection();
     }
 
+    /**
+     * 破棄します。
+     */
     public void destroy() {
         if (connection == null) {
             return;

@@ -20,57 +20,37 @@ import org.apache.tools.ant.Task;
 import org.seasar.framework.env.Env;
 
 /**
- * @author taedium
+ * 環境名をプロパティに設定するタスクです。
  * 
+ * @author taedium
  */
 public class EnvTask extends Task {
 
-    protected String envFilePath = "env_ut.txt";
-
-    protected String envProperty;
-
-    /**
-     * @return Returns the envFilePath.
-     */
-    public String getEnvFilePath() {
-        return envFilePath;
-    }
+    /** 環境名を表すプロパティ */
+    protected String envValueProperty;
 
     /**
-     * @param envFilePath
-     *            The envFilePath to set.
+     * 環境名を表すプロパティを設定します。
+     * 
+     * @param envValueProperty
+     *            環境名を表すプロパティ
      */
-    public void setEnvFilePath(String envFilePath) {
-        this.envFilePath = envFilePath;
-    }
-
-    /**
-     * @return Returns the envProperty.
-     */
-    public String getEnvProperty() {
-        return envProperty;
-    }
-
-    /**
-     * @param envProperty
-     *            The envProperty to set.
-     */
-    public void setEnvProperty(String envProperty) {
-        this.envProperty = envProperty;
+    public void setEnvValueProperty(String envValueProperty) {
+        this.envValueProperty = envValueProperty;
     }
 
     @Override
     public void execute() throws BuildException {
-        if (envProperty == null) {
-            throw new BuildException("envProperty not specified.");
+        if (envValueProperty == null) {
+            throw new BuildException("envValueProperty not specified.");
         }
 
         ClassLoader original = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(
                 getClass().getClassLoader());
-            Env.setFilePath(envFilePath);
-            getProject().setNewProperty(envProperty, Env.getValue());
+            Env.setFilePath("env_ut.txt");
+            getProject().setNewProperty(envValueProperty, Env.getValue());
         } finally {
             Thread.currentThread().setContextClassLoader(original);
         }

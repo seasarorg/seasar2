@@ -16,19 +16,45 @@
 package org.seasar.extension.jdbc.it.util;
 
 /**
- * @author taedium
+ * 方言です。
  * 
+ * @author taedium
  */
 public interface Dialect {
 
+    /**
+     * SQLブロックの区切り文字を返します。
+     * 
+     * @return SQLブロックの区切り文字
+     */
     String getSqlBlockDelimiter();
 
+    /**
+     * SQLブロックのコンテキストを返します。
+     * 
+     * @return
+     */
     SqlBlockContext createSqlBlockContext();
 
+    /**
+     * SQLブロックのコンテキストです。
+     * 
+     * @author taedium
+     */
     public static interface SqlBlockContext {
 
+        /**
+         * SQLのキーワードを追加します。
+         * 
+         * @param keyword
+         */
         void addKeyword(String keyword);
 
+        /**
+         * SQLブロックの内側の場合{@code true}を返します。
+         * 
+         * @return SQLブロックの内側の場合{@code true}
+         */
         boolean isInSqlBlock();
     }
 }

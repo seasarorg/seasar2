@@ -21,8 +21,9 @@ import java.util.List;
 import org.seasar.extension.jdbc.it.util.Dialect;
 
 /**
- * @author taedium
+ * 標準の方言です。
  * 
+ * @author taedium
  */
 public class StandardDialect implements Dialect {
 
@@ -34,8 +35,12 @@ public class StandardDialect implements Dialect {
         return null;
     }
 
-    public static class StandardSqlBlockContext implements
-            Dialect.SqlBlockContext {
+    /**
+     * 標準の{@link SqlBlockContext}の実装クラスです。
+     * 
+     * @author taedium
+     */
+    public static class StandardSqlBlockContext implements SqlBlockContext {
 
         /** SQLブロックの開始を表すキーワードの連なりのリスト */
         protected List<List<String>> sqlBlockStartKeywordsList =

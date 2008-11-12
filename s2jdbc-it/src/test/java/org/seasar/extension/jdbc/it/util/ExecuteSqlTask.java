@@ -23,90 +23,54 @@ import javax.sql.DataSource;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.seasar.extension.jdbc.it.util.dialect.Db2Dialect;
+import org.seasar.extension.jdbc.it.util.dialect.Mssql2005Dialect;
+import org.seasar.extension.jdbc.it.util.dialect.MysqlDialect;
+import org.seasar.extension.jdbc.it.util.dialect.OracleDialect;
 import org.seasar.extension.jdbc.it.util.dialect.PostgreDialect;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.env.Env;
 
 /**
- * @author taedium
+ * SQLを実行するタスクです。
  * 
+ * @author taedium
  */
 public class ExecuteSqlTask extends Task {
 
+    /** 環境名をキー、方言を値とするマップ */
     protected static Map<String, Dialect> dialectMap =
         new HashMap<String, Dialect>();
     static {
         dialectMap.put("postgre", new PostgreDialect());
+        dialectMap.put("mysql", new MysqlDialect());
+        dialectMap.put("oracle", new OracleDialect());
+        dialectMap.put("db2", new Db2Dialect());
+        dialectMap.put("mssql2005", new Mssql2005Dialect());
     }
 
-    protected String envFilePath = "env_ut.txt";
-
-    protected String configPath = "s2jdbc.dicon";
-
+    /** エラー時に即座に中止する場合{@code true}、継続する場合{@code false} */
     protected boolean haltOnError = true;
 
-    protected String sqlFileEncoding = "UTF-8";
-
-    /** SQLステートメントの区切り文字 */
-    protected char statementDelimiter = ';';
-
-    /** SQLブロックの区切り文字 */
-    protected String blockDelimiter = null;
-
+    /** SQLファイル */
     protected File sqlFile = null;
 
     /**
-     * @param envFilePath
-     *            The envFilePath to set.
-     */
-    public void setEnvFilePath(String envFilePath) {
-        this.envFilePath = envFilePath;
-    }
-
-    /**
-     * @param configPath
-     *            The configPath to set.
-     */
-    public void setConfigPath(String configPath) {
-        this.configPath = configPath;
-    }
-
-    /**
+     * エラー時に即座に中止する場合{@code true}、継続する場合{@code false}を設定します。
+     * 
      * @param haltOnError
-     *            The haltOnError to set.
+     *            エラー時に即座に中止する場合{@code true}、継続する場合{@code false}
      */
     public void setHaltOnError(boolean haltOnError) {
         this.haltOnError = haltOnError;
     }
 
     /**
-     * @param sqlFileEncoding
-     *            The sqlFileEncoding to set.
-     */
-    public void setSqlFileEncoding(String sqlFileEncoding) {
-        this.sqlFileEncoding = sqlFileEncoding;
-    }
-
-    /**
-     * @param statementDelimiter
-     *            The statementDelimiter to set.
-     */
-    public void setStatementDelimiter(char statementDelimiter) {
-        this.statementDelimiter = statementDelimiter;
-    }
-
-    /**
-     * @param blockDelimiter
-     *            The blockDelimiter to set.
-     */
-    public void setBlockDelimiter(String blockDelimiter) {
-        this.blockDelimiter = blockDelimiter;
-    }
-
-    /**
+     * SQLファイルを設定します。
+     * 
      * @param sqlFile
-     *            The sqlFile to set.
+     *            SQLファイル
      */
     public void setSqlFile(File sqlFile) {
         this.sqlFile = sqlFile;
@@ -122,15 +86,22 @@ public class ExecuteSqlTask extends Task {
         try {
             Thread.currentThread().setContextClassLoader(
                 getClass().getClassLoader());
-            Env.setFilePath(envFilePath);
-            SingletonS2ContainerFactory.setConfigPath(configPath);
+            Env.setFilePath("env_ut.txt");
+            SingletonS2ContainerFactory.setConfigPath("s2jdbc.dicon");
             SingletonS2ContainerFactory.init();
-            executeSql();
+            try {
+                executeSql();
+            } finally {
+                SingletonS2ContainerFactory.destroy();
+            }
         } finally {
             Thread.currentThread().setContextClassLoader(original);
         }
     }
 
+    /**
+     * SQLを実行します。
+     */
     protected void executeSql() {
         String env = Env.getValue();
         Dialect dialect = dialectMap.get(env);
@@ -140,18 +111,18 @@ public class ExecuteSqlTask extends Task {
         }
 
         SqlFileExecutor executor =
-            new SqlFileExecutor(
-                dialect,
-                sqlFileEncoding,
-                statementDelimiter,
-                blockDelimiter);
+            new SqlFileExecutor(dialect, "UTF-8", ';', null);
 
         S2Container container = SingletonS2ContainerFactory.getContainer();
         DataSource dataSource =
             (DataSource) container.getComponent(DataSource.class);
+
         SqlExecutionContext context =
             new SqlExecutionContext(dataSource, haltOnError);
-
-        executor.execute(context, sqlFile);
+        try {
+            executor.execute(context, sqlFile);
+        } finally {
+            context.destroy();
+        }
     }
 }

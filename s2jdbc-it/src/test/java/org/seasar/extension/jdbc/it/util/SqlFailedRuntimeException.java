@@ -15,7 +15,7 @@
  */
 package org.seasar.extension.jdbc.it.util;
 
-import org.seasar.framework.exception.SRuntimeException;
+import java.text.MessageFormat;
 
 /**
  * @author taedium
@@ -26,7 +26,7 @@ import org.seasar.framework.exception.SRuntimeException;
  * 
  * @author taedium
  */
-public class SqlFailedRuntimeException extends SRuntimeException {
+public class SqlFailedRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,6 +38,9 @@ public class SqlFailedRuntimeException extends SRuntimeException {
 
     /** SQL */
     protected String sql;
+
+    /** メッセージ */
+    protected String message;
 
     /**
      * インスタンスを構築します。
@@ -53,11 +56,15 @@ public class SqlFailedRuntimeException extends SRuntimeException {
      */
     public SqlFailedRuntimeException(Exception cause, String sqlFilePath,
             int lineNumber, String sql) {
-        super("ES2JDBCGen0003", new Object[] { sqlFilePath, lineNumber, sql,
-            cause }, cause);
+        super(cause);
         this.sqlFilePath = sqlFilePath;
         this.lineNumber = lineNumber;
         this.sql = sql;
+        message =
+            MessageFormat
+                .format(
+                    "SQL failed(path=[{1}], sql=[{2}], lineNumber=[{3}]). because {0}",
+                    new Object[] { sqlFilePath, lineNumber, sql, cause });
     }
 
     /**
@@ -85,6 +92,11 @@ public class SqlFailedRuntimeException extends SRuntimeException {
      */
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
     }
 
 }

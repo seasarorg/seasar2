@@ -21,7 +21,7 @@ import java.sql.Statement;
 import org.seasar.framework.log.Logger;
 
 /**
- * {@link SqlFileExecutor}の実装クラスです。
+ * SQLファイルを実行するクラスです。
  * 
  * @author taedium
  */
@@ -68,8 +68,16 @@ public class SqlFileExecutor {
         this.dialect = dialect;
     }
 
+    /**
+     * 実行します。
+     * 
+     * @param context
+     *            実行コンテキスト
+     * @param sqlFile
+     *            SQLファイル
+     */
     public void execute(SqlExecutionContext context, File sqlFile) {
-        logger.log("DS2JDBCGen0006", new Object[] { sqlFile.getPath() });
+        logger.debug("executing " + sqlFile.getPath());
         SqlFileReader reader = createSqlFileReader(sqlFile);
         try {
             for (String sql = reader.readSql(); sql != null; sql =
@@ -89,15 +97,7 @@ public class SqlFileExecutor {
         } finally {
             reader.close();
         }
-        logger.log("DS2JDBCGen0007", new Object[] { sqlFile.getPath() });
-    }
-
-    public boolean isTarget(File file) {
-        if (file == null) {
-            return false;
-        }
-        String name = file.getName();
-        return name.endsWith(".sql") || name.endsWith(".ddl");
+        logger.debug("executed " + sqlFile.getPath());
     }
 
     /**

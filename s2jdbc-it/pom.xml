@@ -89,6 +89,42 @@
       </dependencies>
     </profile>
     <profile>
+      <id>postgre</id>
+      <activation>
+        <property>
+          <name>RDBMS</name>
+          <value>postgre</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>8.3-603.jdbc3</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>mysql</id>
+      <activation>
+        <property>
+          <name>RDBMS</name>
+          <value>mysql</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.6</version>
+          <type>jar</type>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>oracle</id>
       <activation>
         <property>
@@ -125,11 +161,11 @@
       </dependencies>
     </profile>
     <profile>
-      <id>mssql</id>
+      <id>mssql2005</id>
       <activation>
         <property>
           <name>RDBMS</name>
-          <value>mssgl</value>
+          <value>mssql2005</value>
         </property>
       </activation>
       <dependencies>
@@ -159,6 +195,59 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>ant-setUp</id>
+            <phase>pre-integration-test</phase>
+            <configuration>
+              <tasks>
+                <ant antfile="build.xml" target="setUp">
+                  <property name="classpath" refid="maven.test.classpath"/>
+                </ant>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>ant-tearDown</id>
+            <phase>post-integration-test</phase>
+            <configuration>
+              <tasks>
+                <ant antfile="build.xml" target="tearDown">
+                  <property name="classpath" refid="maven.test.classpath"/>
+                </ant>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <!-- Dependency Settings -->
