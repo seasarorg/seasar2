@@ -70,7 +70,8 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     }
 
     /**
-     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}をテストします。
+     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}
+     * をテストします。
      * 
      * @throws Exception
      */
@@ -91,7 +92,25 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     }
 
     /**
-     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}をテストします。
+     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}
+     * をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testLoadPersistenceClassesFromJar() throws Exception {
+        PersistenceUnitInfoImpl unitInfo = new PersistenceUnitInfoImpl();
+        unitInfo.setPersistenceUnitRootUrl(new URL("jar:"
+                + jarFileUrl.toExternalForm() + "!/"));
+        PersistenceClassTransformerImpl transformer = new PersistenceClassTransformerImpl();
+        transformer.loadPersistenceClasses(unitInfo, loader);
+
+        assertEquals(1, names.size());
+        assertTrue(names.contains(aaa)); // unlisted class from root url
+    }
+
+    /**
+     * {@link PersistenceClassTransformerImpl#loadPersistenceClasses(PersistenceUnitInfo, ClassLoader)}
+     * をテストします。
      * 
      * @throws Exception
      */
@@ -114,7 +133,8 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     }
 
     /**
-     * {@link PersistenceClassTransformerImpl#getTargetClassLoader(ClassLoader)}をテストします。
+     * {@link PersistenceClassTransformerImpl#getTargetClassLoader(ClassLoader)}
+     * をテストします。
      * 
      * @throws Exception
      */
@@ -128,7 +148,7 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     }
 
     /**
-     * @{link {@link #testTransformClasses()}}で利用するクラスです。
+     * @{link {@link #testTransformClasses()} で利用するクラスです。
      * 
      * @author taedium
      */
@@ -136,7 +156,7 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     }
 
     /**
-     * @{link {@link #testTransformClasses()}}で利用するクラスです。
+     * @{link {@link #testTransformClasses()} で利用するクラスです。
      * 
      * @author taedium
      */
@@ -144,7 +164,7 @@ public class PersistenceClassTransformerImplTest extends S2TigerTestCase {
     }
 
     /**
-     * @{link {@link #testTransformClasses()}}で利用するクラスです。
+     * @{link {@link #testTransformClasses()} で利用するクラスです。
      * 
      * @author taedium
      */

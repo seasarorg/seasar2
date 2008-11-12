@@ -32,6 +32,7 @@ import org.seasar.framework.jpa.util.ClassLoaderListener;
 import org.seasar.framework.jpa.util.ClassTransformerUtil;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.JarFileUtil;
 import org.seasar.framework.util.URLUtil;
 import org.seasar.framework.util.tiger.CollectionsUtil;
@@ -89,8 +90,8 @@ public class PersistenceClassTransformerImpl implements
         loadPersistenceClasses(unitInfo, tempLoader);
     }
 
-    public Class<?> transform(final PersistenceUnitInfo unitInfo, final String className,
-            final byte[] bytecode) {
+    public Class<?> transform(final PersistenceUnitInfo unitInfo,
+            final String className, final byte[] bytecode) {
         final List<ClassTransformer> transformers = PersistenceUnitInfoImpl.class
                 .cast(unitInfo).getTransformers();
         final ClassLoader classLoader = unitInfo.getClassLoader();
@@ -124,7 +125,8 @@ public class PersistenceClassTransformerImpl implements
             if ("file".equals(rootUrl.getProtocol())) {
                 loadClass(loader, URLUtil.toFile(rootUrl), null);
             } else {
-                loadClass(loader, rootUrl);
+                loadClass(loader, FileUtil.toURL(new File(JarFileUtil
+                        .toJarFilePath(rootUrl))));
             }
         }
     }
