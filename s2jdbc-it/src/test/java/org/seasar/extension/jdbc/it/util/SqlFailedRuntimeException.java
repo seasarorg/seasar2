@@ -63,7 +63,7 @@ public class SqlFailedRuntimeException extends RuntimeException {
         message =
             MessageFormat
                 .format(
-                    "SQL failed(path=[{1}], sql=[{2}], lineNumber=[{3}]). because {0}",
+                    "SQL failed(path=[{0}], lineNumber=[{1}], sql=[{2}]). because {3}",
                     new Object[] { sqlFilePath, lineNumber, sql, cause });
     }
 
