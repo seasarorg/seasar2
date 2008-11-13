@@ -1,34 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="s2jdbc-it" default="checkEnv" basedir=".">
+<project name="s2jdbc-it" default="check-RDBMS" basedir=".">
 
-	<taskdef name="env" classname="org.seasar.extension.jdbc.it.util.EnvTask" classpath="${classpath}"/>
 	<taskdef name="exec-sql" classname="org.seasar.extension.jdbc.it.util.ExecuteSqlTask" classpath="${classpath}"/>
 
-	<target name="setUp" if="isTargetEnv" depends="checkEnv">
+	<target name="setup-data" if="isTargetRDBMS" depends="check-RDBMS">
 		<exec-sql 
 			haltOnError="false"
-			sqlFile="sql/drop_${envValue}.sql"/>
+			sqlFile="sql/drop_${RDBMS}.sql"/>
 		<exec-sql 
 			haltOnError="true"
-			sqlFile="sql/create_${envValue}.sql"/>
+			sqlFile="sql/create_${RDBMS}.sql"/>
 	</target>
 
-	<target name="tearDown" if="isTargetEnv" depends="checkEnv">
-		<exec-sql 
-			haltOnError="false"
-			sqlFile="sql/drop_${envValue}.sql"/>
-	</target>
-
-	<target name="checkEnv">
-		<env envValueProperty="envValue"/>
-		<echo message="envValue=${envValue}"/>
-		<condition property="isTargetEnv">
+	<target name="check-RDBMS">
+		<echo message="RDBMS=${RDBMS}"/>
+		<condition property="isTargetRDBMS">
 			<or>
-				<equals arg1="${envValue}" arg2="db2"/>
-				<equals arg1="${envValue}" arg2="mssql2005"/>
-				<equals arg1="${envValue}" arg2="mysql"/>
-				<equals arg1="${envValue}" arg2="oracle"/>
-				<equals arg1="${envValue}" arg2="postgre"/>
+				<equals arg1="${RDBMS}" arg2="db2"/>
+				<equals arg1="${RDBMS}" arg2="mssql2005"/>
+				<equals arg1="${RDBMS}" arg2="mysql"/>
+				<equals arg1="${RDBMS}" arg2="oracle"/>
+				<equals arg1="${RDBMS}" arg2="postgre"/>
 			</or>
 		</condition>
 	</target>

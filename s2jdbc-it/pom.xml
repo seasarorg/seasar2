@@ -197,32 +197,27 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-        <executions>
-          <execution>
-            <id>integration-test</id>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <skip>false</skip>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>ant-setUp</id>
-            <phase>pre-integration-test</phase>
+            <id>ant-setup-env</id>
+            <phase>generate-test-resources</phase>
             <configuration>
               <tasks>
-                <ant antfile="build.xml" target="setUp">
+                <echo message="${RDBMS}" file="src/test/resources/env_ut.txt"/>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>ant-setup-data</id>
+            <phase>test-compile</phase>
+            <configuration>
+              <tasks>
+                <ant antfile="build.xml" target="setup-data">
+                  <property name="RDBMS" value="${RDBMS}"/>
                   <property name="classpath" refid="maven.test.classpath"/>
                 </ant>
               </tasks>
@@ -232,13 +227,11 @@
             </goals>
           </execution>
           <execution>
-            <id>ant-tearDown</id>
-            <phase>post-integration-test</phase>
+            <id>ant-teardown-env</id>
+            <phase>test</phase>
             <configuration>
               <tasks>
-                <ant antfile="build.xml" target="tearDown">
-                  <property name="classpath" refid="maven.test.classpath"/>
-                </ant>
+                <echo message="hsqldb" file="src/test/resources/env_ut.txt"/>
               </tasks>
             </configuration>
             <goals>
