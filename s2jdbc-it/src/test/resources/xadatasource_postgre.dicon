@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components>
+	<component name="xaDataSource"
+		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
+		<property name="driverClassName">
+			"org.postgresql.Driver"
+		</property>
+		<property name="URL">
+			"jdbc:postgresql://localhost/s2container_2_4_s2jdbc_it"
+		</property>
+		<property name="user">"s2container_2_4_s2jdbc_it"</property>
+		<property name="password">"s2container_2_4_s2jdbc_it"</property>
+	</component>
+	<component class="org.seasar.extension.jdbc.dialect.Postgre81Dialect"/>
+</components>
