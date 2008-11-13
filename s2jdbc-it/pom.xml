@@ -26,7 +26,7 @@
       <activation>
         <activeByDefault>true</activeByDefault>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>standard</value>
         </property>
       </activation>
@@ -65,7 +65,7 @@
       <id>hsqldb</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>hsqldb</value>
         </property>
       </activation>
@@ -74,7 +74,7 @@
       <id>h2</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>h2</value>
         </property>
       </activation>
@@ -92,7 +92,7 @@
       <id>postgre</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>postgre</value>
         </property>
       </activation>
@@ -110,7 +110,7 @@
       <id>mysql</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>mysql</value>
         </property>
       </activation>
@@ -128,7 +128,7 @@
       <id>oracle</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>oracle</value>
         </property>
       </activation>
@@ -146,7 +146,7 @@
       <id>db2</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>db2</value>
         </property>
       </activation>
@@ -164,7 +164,7 @@
       <id>mssql2005</id>
       <activation>
         <property>
-          <name>RDBMS</name>
+          <name>database</name>
           <value>mssql2005</value>
         </property>
       </activation>
@@ -204,7 +204,7 @@
             <phase>generate-test-resources</phase>
             <configuration>
               <tasks>
-                <echo message="${RDBMS}" file="src/test/resources/env_ut.txt"/>
+                <echo message="${database}" file="src/test/resources/env_ut.txt"/>
               </tasks>
             </configuration>
             <goals>
@@ -217,7 +217,7 @@
             <configuration>
               <tasks>
                 <ant antfile="build.xml" target="setup-data">
-                  <property name="RDBMS" value="${RDBMS}"/>
+                  <property name="database" value="${database}"/>
                   <property name="classpath" refid="maven.test.classpath"/>
                 </ant>
               </tasks>
