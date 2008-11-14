@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-import org.seasar.extension.jdbc.gen.internal.exception.IllegalVersionRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalDdlInfoVersionRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.NextVersionExceededRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
@@ -44,9 +44,6 @@ public class DdlInfoFileImpl implements DdlInfoFile {
 
     /** エンコーディング */
     protected static final String ENCODING = "UTF-8";
-
-    /** 最新バージョンを表す文字列 */
-    protected static String LATEST_VERSION = "latest";
 
     /** DDLファイル */
     protected File file;
@@ -131,13 +128,6 @@ public class DdlInfoFileImpl implements DdlInfoFile {
         return (int) nextVersionNo;
     }
 
-    public int getVersionNo(String version) {
-        if (LATEST_VERSION.equalsIgnoreCase(version)) {
-            return getCurrentVersionNoInternal();
-        }
-        return convertToInt(version);
-    }
-
     public void applyNextVersionNo(String comment) {
         File temp = null;
         if (file.exists()) {
@@ -186,10 +176,10 @@ public class DdlInfoFileImpl implements DdlInfoFile {
         try {
             versionNo = Integer.valueOf(value);
         } catch (NumberFormatException e) {
-            throw new IllegalVersionRuntimeException(value);
+            throw new IllegalDdlInfoVersionRuntimeException(file.getPath(), value);
         }
         if (versionNo < 0) {
-            throw new IllegalVersionRuntimeException(value);
+            throw new IllegalDdlInfoVersionRuntimeException(file.getPath(), value);
         }
         return versionNo;
     }

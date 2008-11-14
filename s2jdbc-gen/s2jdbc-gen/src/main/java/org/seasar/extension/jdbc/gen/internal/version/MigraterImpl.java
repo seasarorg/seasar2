@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.version;
 import java.io.File;
 import java.util.List;
 
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalVersionRuntimeException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
@@ -32,6 +33,15 @@ import org.seasar.framework.log.Logger;
  * @author taedium
  */
 public class MigraterImpl implements Migrater {
+
+    /** 最新バージョンを表す文字列 */
+    protected static String LATEST_VERSION = "latest";
+
+    /** 1つ次のバージョンを表す文字列 */
+    protected static String NEXT_VERSION = "next";
+
+    /** 1つ前のバージョンを表す文字列 */
+    protected static String PREVIOUS_VERSION = "previous";
 
     /** ロガー */
     protected static Logger logger = Logger.getLogger(MigraterImpl.class);
@@ -73,10 +83,10 @@ public class MigraterImpl implements Migrater {
             throw new NullPointerException("sqlUnitExecutor");
         }
         if (schemaInfoTable == null) {
-            throw new NullPointerException("schemaVersion");
+            throw new NullPointerException("schemaInfoTable");
         }
         if (ddlVersionDirectoryTree == null) {
-            throw new NullPointerException("versionDirectories");
+            throw new NullPointerException("ddlVersionDirectoryTree");
         }
         if (version == null) {
             throw new NullPointerException("version");
@@ -93,11 +103,73 @@ public class MigraterImpl implements Migrater {
 
     public void migrate(Callback callback) {
         int from = schemaInfoTable.getVersionNo();
-        int to = ddlVersionDirectoryTree.getDdlInfoFile().getVersionNo(version);
+        int to = getDestVersion(from);
 
         logger.log("IS2JDBCGen0005", new Object[] { from, to });
         migrateInternal(callback, from, to);
         logger.log("IS2JDBCGen0006", new Object[] { from, to });
+    }
+
+    /**
+     * マイグレーション先のバージョン番号を返します。
+     * 
+     * @param from
+     *            マイグレーション元のバージョン番号
+     * @return マイグレーション先のバージョン番号
+     */
+    protected int getDestVersion(int from) {
+        int latest = ddlVersionDirectoryTree.getDdlInfoFile()
+                .getCurrentVersionNo();
+        if (LATEST_VERSION.equalsIgnoreCase(version)) {
+            return latest;
+        } else if (NEXT_VERSION.equalsIgnoreCase(version)) {
+            long next = from + 1;
+            if (next > latest) {
+                return latest;
+            }
+            checkVersionRange(next);
+            return (int) next;
+        } else if (PREVIOUS_VERSION.equalsIgnoreCase(version)) {
+            long previous = from - 1;
+            if (previous < 0) {
+                return 0;
+            }
+            checkVersionRange(previous);
+            return (int) previous;
+        }
+        return convertToInt(version);
+    }
+
+    /**
+     * 文字列としてのバージョン番号をint型に変換します。
+     * 
+     * @param value
+     *            文字列としてのバージョン番号
+     * @return intとしてのバージョン番号
+     */
+    protected int convertToInt(String value) {
+        int versionNo;
+        try {
+            versionNo = Integer.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new IllegalVersionRuntimeException(version, value);
+        }
+        if (versionNo < 0) {
+            throw new IllegalVersionRuntimeException(version, value);
+        }
+        return versionNo;
+    }
+
+    /**
+     * バージョン番号の範囲をチェックします。
+     * 
+     * @param value
+     *            バージョン番号
+     */
+    protected void checkVersionRange(long value) {
+        if (value < 0 || Integer.MAX_VALUE < value) {
+            new IllegalVersionRuntimeException(version, value);
+        }
     }
 
     /**
@@ -135,5 +207,4 @@ public class MigraterImpl implements Migrater {
             }
         });
     }
-
 }

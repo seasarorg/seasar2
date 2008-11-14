@@ -18,9 +18,8 @@ package org.seasar.extension.jdbc.gen.internal.version;
 import java.io.File;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.exception.IllegalVersionRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.exception.IllegalDdlInfoVersionRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.exception.NextVersionExceededRuntimeException;
-import org.seasar.extension.jdbc.gen.internal.version.DdlInfoFileImpl;
 import org.seasar.framework.util.ResourceUtil;
 
 import static org.junit.Assert.*;
@@ -65,7 +64,7 @@ public class DdlInfoFileImplTest {
         try {
             ddlInfoFile.getCurrentVersionNo();
             fail();
-        } catch (IllegalVersionRuntimeException expected) {
+        } catch (IllegalDdlInfoVersionRuntimeException expected) {
         }
     }
 
@@ -104,7 +103,7 @@ public class DdlInfoFileImplTest {
         try {
             ddlInfoFile.convertToInt(null);
             fail();
-        } catch (IllegalVersionRuntimeException expected) {
+        } catch (IllegalDdlInfoVersionRuntimeException expected) {
         }
     }
 
@@ -117,7 +116,7 @@ public class DdlInfoFileImplTest {
         try {
             ddlInfoFile.convertToInt("aaa");
             fail();
-        } catch (IllegalVersionRuntimeException expected) {
+        } catch (IllegalDdlInfoVersionRuntimeException expected) {
         }
     }
 
@@ -130,7 +129,7 @@ public class DdlInfoFileImplTest {
         try {
             ddlInfoFile.convertToInt("-10");
             fail();
-        } catch (IllegalVersionRuntimeException expected) {
+        } catch (IllegalDdlInfoVersionRuntimeException expected) {
         }
     }
 
@@ -144,7 +143,7 @@ public class DdlInfoFileImplTest {
         try {
             ddlInfoFile.convertToInt(String.valueOf(value));
             fail();
-        } catch (IllegalVersionRuntimeException expected) {
+        } catch (IllegalDdlInfoVersionRuntimeException expected) {
         }
     }
 }

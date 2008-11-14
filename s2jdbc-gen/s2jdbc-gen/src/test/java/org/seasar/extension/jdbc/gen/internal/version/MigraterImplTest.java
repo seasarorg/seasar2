@@ -36,7 +36,9 @@ import static org.junit.Assert.*;
  */
 public class MigraterImplTest {
 
-    private MigraterImpl migrater;
+    private SqlUnitExecutorImpl sqlUnitExecutor;
+
+    private DdlVersionDirectoryTreeImpl directory;
 
     private File baseDir;
 
@@ -45,33 +47,33 @@ public class MigraterImplTest {
      */
     @Before
     public void setUp() {
-        SqlUnitExecutorImpl sqlUnitExecutor = new SqlUnitExecutorImpl(
-                new MockDataSource(), null, false);
-        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+        sqlUnitExecutor = new SqlUnitExecutorImpl(new MockDataSource(), null,
+                false);
 
-            public int getVersionNo() {
-                return 10;
-            }
-
-            public void setVersionNo(int versionNo) {
-            }
-        };
         String path = getClass().getPackage().getName().replace('.', '/')
                 + "/migrate";
         baseDir = ResourceUtil.getResourceAsFile(path);
         File versionFile = new File(baseDir, "ddl-version.txt");
-
-        DdlVersionDirectoryTreeImpl directory = new DdlVersionDirectoryTreeImpl(
-                baseDir, versionFile, "v000", null);
-        migrater = new MigraterImpl(sqlUnitExecutor, schemaInfoTable,
-                directory, "latest", "ut");
+        directory = new DdlVersionDirectoryTreeImpl(baseDir, versionFile,
+                "v000", null);
     }
 
     /**
      * 
      */
     @Test
-    public void testMigrate() {
+    public void testMigrate_latestVersion() {
+        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+
+            public int getVersionNo() {
+                return 9;
+            }
+
+            public void setVersionNo(int versionNo) {
+            }
+        };
+        MigraterImpl migrater = new MigraterImpl(sqlUnitExecutor,
+                schemaInfoTable, directory, "latest", "ut");
         final List<File> dropFileList = new ArrayList<File>();
         final List<File> createFileList = new ArrayList<File>();
 
@@ -88,8 +90,8 @@ public class MigraterImplTest {
         });
 
         assertEquals(3, dropFileList.size());
-        File v010 = new File(baseDir, "v010");
-        File drop = new File(v010, "drop");
+        File v009 = new File(baseDir, "v009");
+        File drop = new File(v009, "drop");
         assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
         assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
         assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
@@ -98,5 +100,221 @@ public class MigraterImplTest {
         File v011 = new File(baseDir, "v011");
         File create = new File(v011, "create");
         assertEquals(new File(create, "aaa.sql"), createFileList.get(0));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testMigrate_specificVersion() {
+        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+
+            public int getVersionNo() {
+                return 9;
+            }
+
+            public void setVersionNo(int versionNo) {
+            }
+        };
+        MigraterImpl migrater = new MigraterImpl(sqlUnitExecutor,
+                schemaInfoTable, directory, "11", "ut");
+        final List<File> dropFileList = new ArrayList<File>();
+        final List<File> createFileList = new ArrayList<File>();
+
+        migrater.migrate(new Migrater.Callback() {
+
+            public void drop(SqlExecutionContext sqlExecutionContext, File file) {
+                dropFileList.add(file);
+            }
+
+            public void create(SqlExecutionContext sqlExecutionContext,
+                    File file) {
+                createFileList.add(file);
+            }
+        });
+
+        assertEquals(3, dropFileList.size());
+        File v009 = new File(baseDir, "v009");
+        File drop = new File(v009, "drop");
+        assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
+
+        assertEquals(1, createFileList.size());
+        File v011 = new File(baseDir, "v011");
+        File create = new File(v011, "create");
+        assertEquals(new File(create, "aaa.sql"), createFileList.get(0));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testMigrate_nextVersion() {
+        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+
+            public int getVersionNo() {
+                return 9;
+            }
+
+            public void setVersionNo(int versionNo) {
+            }
+        };
+        MigraterImpl migrater = new MigraterImpl(sqlUnitExecutor,
+                schemaInfoTable, directory, "next", "ut");
+        final List<File> dropFileList = new ArrayList<File>();
+        final List<File> createFileList = new ArrayList<File>();
+
+        migrater.migrate(new Migrater.Callback() {
+
+            public void drop(SqlExecutionContext sqlExecutionContext, File file) {
+                dropFileList.add(file);
+            }
+
+            public void create(SqlExecutionContext sqlExecutionContext,
+                    File file) {
+                createFileList.add(file);
+            }
+        });
+
+        assertEquals(3, dropFileList.size());
+        File v009 = new File(baseDir, "v009");
+        File drop = new File(v009, "drop");
+        assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
+
+        assertEquals(1, createFileList.size());
+        File v010 = new File(baseDir, "v010");
+        File create = new File(v010, "create");
+        assertEquals(new File(create, "aaa.sql"), createFileList.get(0));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testMigrate_nextVersion_GE_LatestVersion() {
+        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+
+            public int getVersionNo() {
+                return 11;
+            }
+
+            public void setVersionNo(int versionNo) {
+            }
+        };
+        MigraterImpl migrater = new MigraterImpl(sqlUnitExecutor,
+                schemaInfoTable, directory, "next", "ut");
+        final List<File> dropFileList = new ArrayList<File>();
+        final List<File> createFileList = new ArrayList<File>();
+
+        migrater.migrate(new Migrater.Callback() {
+
+            public void drop(SqlExecutionContext sqlExecutionContext, File file) {
+                dropFileList.add(file);
+            }
+
+            public void create(SqlExecutionContext sqlExecutionContext,
+                    File file) {
+                createFileList.add(file);
+            }
+        });
+
+        assertEquals(3, dropFileList.size());
+        File v011 = new File(baseDir, "v011");
+        File drop = new File(v011, "drop");
+        assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
+
+        assertEquals(1, createFileList.size());
+        File create = new File(v011, "create");
+        assertEquals(new File(create, "aaa.sql"), createFileList.get(0));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testMigrate_previousVersion() {
+        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+
+            public int getVersionNo() {
+                return 9;
+            }
+
+            public void setVersionNo(int versionNo) {
+            }
+        };
+        MigraterImpl migrater = new MigraterImpl(sqlUnitExecutor,
+                schemaInfoTable, directory, "previous", "ut");
+        final List<File> dropFileList = new ArrayList<File>();
+        final List<File> createFileList = new ArrayList<File>();
+
+        migrater.migrate(new Migrater.Callback() {
+
+            public void drop(SqlExecutionContext sqlExecutionContext, File file) {
+                dropFileList.add(file);
+            }
+
+            public void create(SqlExecutionContext sqlExecutionContext,
+                    File file) {
+                createFileList.add(file);
+            }
+        });
+
+        assertEquals(3, dropFileList.size());
+        File v009 = new File(baseDir, "v009");
+        File drop = new File(v009, "drop");
+        assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
+
+        assertEquals(1, createFileList.size());
+        File v008 = new File(baseDir, "v008");
+        File create = new File(v008, "create");
+        assertEquals(new File(create, "aaa.sql"), createFileList.get(0));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testMigrate_previousVersion_LE_zero() {
+        SchemaInfoTable schemaInfoTable = new SchemaInfoTable() {
+
+            public int getVersionNo() {
+                return 0;
+            }
+
+            public void setVersionNo(int versionNo) {
+            }
+        };
+        MigraterImpl migrater = new MigraterImpl(sqlUnitExecutor,
+                schemaInfoTable, directory, "previous", "ut");
+        final List<File> dropFileList = new ArrayList<File>();
+        final List<File> createFileList = new ArrayList<File>();
+
+        migrater.migrate(new Migrater.Callback() {
+
+            public void drop(SqlExecutionContext sqlExecutionContext, File file) {
+                dropFileList.add(file);
+            }
+
+            public void create(SqlExecutionContext sqlExecutionContext,
+                    File file) {
+                createFileList.add(file);
+            }
+        });
+
+        assertEquals(3, dropFileList.size());
+        File v000 = new File(baseDir, "v000");
+        File drop = new File(v000, "drop");
+        assertEquals(new File(drop, "aaa.sql"), dropFileList.get(0));
+        assertEquals(new File(drop, "bbb.sql"), dropFileList.get(1));
+        assertEquals(new File(drop, "ccc.sql"), dropFileList.get(2));
+
+        assertEquals(0, createFileList.size());
     }
 }

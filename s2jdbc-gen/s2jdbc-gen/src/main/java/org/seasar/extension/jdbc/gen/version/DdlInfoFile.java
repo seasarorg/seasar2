@@ -37,15 +37,6 @@ public interface DdlInfoFile {
     int getNextVersionNo();
 
     /**
-     * 文字列に対応するバージョン番号を返します。
-     * 
-     * @param version
-     *            文字列で表されたバージョン
-     * @return バージョン番号
-     */
-    int getVersionNo(String version);
-
-    /**
      * 次のバージョン番号を適用します。
      * 
      * @param comment
