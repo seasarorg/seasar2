@@ -94,6 +94,11 @@
 									<a href="#エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる">エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる</a>
 								</p>
 							</li>
+							<li>
+								<p>
+									<a href="#外部キーのDDL生成を抑制する">外部キーのDDL生成を抑制する</a>
+								</p>
+							</li>
 						</ul>
 					</p>
 				</li>
@@ -330,6 +335,7 @@
 					<tr><td>applyJavaCommentToDdl</td><td>"true"の場合、エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させます。クラスのJavaDocコメントはテーブルに反映され、プロパティのJavaDocコメントはカラムに反映されます。"true"を指定する場合、Docletを使用できるようにJDKのtools.jarをクラスパス（classpathもしくはclasspathref）に含める必要があります。対応しているRDBMSは、Oracle、DB2、PostgreSQL、MySQL、H2です。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>javaFileSrcDirs</td><td>Javaソースファイルのディレクトリです。カンマや空白区切りで複数指定できます。applyJavaCommentToDdlに"true"を指定した場合にのみ使用されます。</td><td>"src/main/java"</td><td>NO</td></tr>
 					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。applyJavaCommentToDdlに"true"を指定した場合にのみ使用されます。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>suppressFkGenerationClass</td><td>外部キーの生成を抑制することを示すアノテーションのクラス名です。</td><td>-</td><td>NO</td></tr>
 					<tr><td>createTableTemplateFileName</td><td>テーブルを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-table.ftl"</td><td>NO</td></tr>
 					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>createSequenceTemplateFileName</td><td>シーケンスを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-sequence.ftl"</td><td>NO</td></tr>
@@ -494,6 +500,43 @@
 					コメントに対応していないRDBMSでは、applyJavaCommentToDdl属性に"true"を指定しても、JavaDocコメントはDDLに反映されません。
 				</p>
 			</subsection>
+			<subsection name="外部キーのDDL生成を抑制する">
+				<p>
+					Gen-Ddlタスクは関連の所有側の@ManyToOneや@OneToOneに対応する外部キーのDDLを自動で生成します。
+					この生成を抑制するには、任意のアノテーションを作成し、そのアノテーションのクラス名をsuppressFkGenerationClass属性に指定します。
+				</p>
+<source><![CDATA[<gen-ddl
+    classpathDir="build/classes"
+    rootPackageName="examples"
+    suppressFkGenerationClass="examples.entity.SuppressFkGeneration"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					SuppressFkGenerationアノテーションクラスの定義は次のようにします。TargetやRetentionの指定に注意してください。
+				</p>
+			</subsection>
+<source><![CDATA[@Target( { ElementType.TYPE, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SuppressFkGeneration {
+}]]></source>
+				<p>
+					関連ごとに抑制するには、フィールドに注釈します。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  ・・・
+  @SuppressFkGeneration
+  @ManyToOne
+  public Department department;
+}]]></source>
+				<p>
+					クラスに定義された関連すべてに対し抑制するには、クラスに注釈します。
+				</p>
+<source><![CDATA[@SuppressFkGeneration
+@Entity
+public class Employee {
+  ・・・
+}]]></source>
 		</section>
 	</body>
 </document>

@@ -138,7 +138,7 @@
 					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
 					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
 					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。</td><td>"0000"</td><td>NO</td></tr>
-					<tr><td>version</td><td>マイグレーション先のバージョンです。</td><td>"latest"</td><td>NO</td></tr>
+					<tr><td>version</td><td>マイグレーション先のバージョンです。ここには、特定の文字列もしくはバージョン番号を表す数値を指定できます。文字列としては、最新のバージョン番号を表す"latest"、現在のデータベーススキーマの次のバージョンを表す"next"、現在のデータベーススキーマの1つ前のバージョンを表す"previous"の3つがサポートされています。数値としては、0以上2147483647以下の値でなければいけません。</td><td>"latest"</td><td>NO</td></tr>
 					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
 					<tr><td>blockDelimiter</td><td>SQLブロックの区切り文字です。指定しない場合は、データベースのデフォルトの区切り文字が使用されます。たとえば、SQL Serverでは"go"、Oralce Databaseでは"/"、MySQLでは"/"、DB2では"@"が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
