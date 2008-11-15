@@ -328,7 +328,7 @@ public String employeeName;]]></source>
 			</p>
 <source><![CDATA[create table ... (
   ...
-  EMPLOYEE_NAME varchar(100) check ...,
+  EMPLOYEE_NAME varchar(100) not null,
   ...
 );]]></source>
 		</section>
@@ -346,7 +346,7 @@ public class Employee {
 				上記の定義からは次のDDLが生成されます。
 			</p>
 <source><![CDATA[create table Employee (
-  ID integer,
+  ID integer not null,
   ...
   constraint EMPLOYEE_PK primary key(ID)
 );]]></source>
