@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
 	<properties>
-		<title>S2JDBC-Gen - エンティティ定義</title>
+		<title>S2JDBC-Gen - DDL生成のためのエンティティ定義</title>
 	</properties>
 	<body>
-		<section name="エンティティ定義">
+		<section name="DDL生成のためのエンティティ定義">
 			<ul>
 				<li>
 					<a href="#概要">概要</a>
@@ -69,13 +69,57 @@
 						</li>
 					</ul>
 				</li>
+				<li>
+					<a href="#主キー定義">主キー定義</a>
+				</li>
+				<li>
+					<a href="#主キーの自動生成に関する定義">主キーの自動生成に関する定義</a>
+					<ul>
+						<li>
+							<p>
+								<a href="#データベース固有の自動生成を利用する定義">データベース固有の自動生成を利用する定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#テーブルを利用する定義">テーブルを利用する定義</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#シーケンスを利用する定義">シーケンスを利用する定義</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#外部キー定義">外部キー定義</a>
+					<ul>
+						<li>
+							<p>
+								<a href="#外部キー">外部キー</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#一意制約つき外部キー">一意制約つき外部キー</a>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<a href="#コメント定義">コメント定義</a>
+				</li>
 			</ul>
 		</section>
 
 		<section name="概要">
 			<p>
-				S2JDBC-Genでは、<a href="task/gen_ddl.html">Gen-Ddlタスク</a>を実行することで、エンティティ定義からDDLを出力できます。
+				S2JDBC-Genでは、<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>を実行することで、エンティティ定義からDDLを出力できます。
 				ここでは、DDLの生成に大きく関わるエンティティの定義方法を説明します。
+			</p>
+			<p>
+				S2JDBC実行時に関するエンティティ定義については<a href="../s2jdbc_entity.html">エンティティ</a>を参照してください。
 			</p>
 		</section>
 
@@ -87,41 +131,54 @@
 				<p>
 					catalog属性を使用することで、カタログ名を指定できます。
 				</p>
-<source><![CDATA[@Table(catalog = "catalog")
+<source><![CDATA[@Table(catalog = "CATALOG")
 public class Employee {
     ....
 }]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table CATALOG.EMPLOYEE ...;]]></source>
 			</subsection>
 			<subsection name="スキーマ名">
 				<p>
 					schema属性を使用することで、スキーマ名を指定できます。
 				</p>
-<source><![CDATA[@Table(schema = "schema")
+<source><![CDATA[@Table(schema = "SCHEMA")
 public class Employee {
     ....
 }]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table SCHEMA.EMPLOYEE ...;]]></source>
 			</subsection>
 			<subsection name="テーブル名">
 				<p>
 					name属性を使用することで、テーブル名を指定できます。
 				</p>
-<source><![CDATA[@Table(name = "emp")
+<source><![CDATA[@Table(name = "EMP")
 public class Employee {
     ....
 }]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table EMP ...;]]></source>
 			</subsection>
 			<subsection name="複合一意制約">
 				<p>
 					uniqueConstraints属性を使用することで、複合一意制約を指定できます。
 					（columnNames属性に指定する値を1つにすれば、単一の一意制約になります。）
 				</p>
-<source><![CDATA[@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "first_name", "last_name" }) })
+<source><![CDATA[@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "FIRST_NAME", "LAST_NAME" }) })
 public class Employee {
     ....
 }]]></source>
+上記の定義からは次のDDLが生成されます。
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique (FIRST_NAME, LAST_NAME);]]></source>
 			</subsection>
 		</section>
-
 		<section name="カラム定義">
 			<p>
 				カラムの定義はColumnアノテーションを用いて行います。
@@ -130,8 +187,16 @@ public class Employee {
 			<p>
 				name属性を使用することで、カラム名を指定できます。
 			</p>
-<source><![CDATA[@Column(name = "ename")
+<source><![CDATA[@Column(name = "ENAME")
 public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  ENAME varchar(255),
+  ...
+);]]></source>
 			</subsection>
 			<subsection name="データ型">
 				<p>
@@ -179,18 +244,27 @@ public BigDecimal salary;]]></source>
 					<tr><td>java.sql.Time, <br />@Temporal(TeporalType.TIME)つきjava.util.Date, <br />@Temporal(TeporalType.TIME)つきCalendar</td><td>date</td><td>datetime</td><td>time</td><td>time</td><td>time</td></tr>
 					<tr><td>java.sql.Date, <br />@Temporal(TeporalType.DATE)つきjava.util.Date, <br />@Temporal(TeporalType.DATE)つきCalendar</td><td>date</td><td>datetime</td><td>date</td><td>date</td><td>date</td></tr>
 					<tr><td>java.sql.Timestamp, <br />@Temporal(TeporalType.TIMESTAMP)つきjava.util.Date, <br />@Temporal(TeporalType.TIMESTAMP)つきCalendar</td><td>timestamp</td><td>datetime</td><td>timestamp</td><td>timestamp</td><td>timestamp</td></tr>
-					<tr><td>Enum型</td><td>number(10,0)/varchar2($l)</td><td>int/varchar($l)</td><td>integer/varchar($l)</td><td>integer/varchar($l)</td><td>int/varchar($l)</td></tr>
+					<tr><td>Enum型, @Enumerated(EnumType.ORDINAL)つきEnum型</td><td>number(10,0)</td><td>int</td><td>integer</td><td>integer</td><td>int</td></tr>
+					<tr><td>@Enumerated(EnumType.STRING)つきEnum型</td><td>varchar2($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>int/varchar($l)</td></tr>
 				</table>
 				<p>
 					ここで示されたもの以外のデータ型にマッピングしたい場合は、ColumnアノテーションのcolumnDefinition属性を使用します。
 				</p>
-<source><![CDATA[@Column(columnDefinition ="nvarchar2(100)")
+<source><![CDATA[@Column(columnDefinition ="nvarchar(100)")
 public String employeeName;]]></source>
 				<p>
 					columnDefinition属性を使用した場合は、指定した値がそのままテーブル作成のDDLに組み込まれます。
 					そのため、length、precision、scale属性の値は、参照されません。
 				</p>
 			</subsection>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME nvarchar(100),
+  ...
+);]]></source>
 			<subsection name="デフォルト値">
 				<p>
 					デフォルト値を指定するにはcolumnDefinition属性を使用します。
@@ -200,8 +274,16 @@ public String employeeName;]]></source>
 				<p>
 					columnDefinition属性にデータ型を指定する場合は、その値の後ろに指定します。
 				</p>
-<source><![CDATA[@Column(columnDefinition ="nvarchar2(100) default n'unknown'")
+<source><![CDATA[@Column(columnDefinition ="nvarchar(100) default n'unknown'")
 public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME nvarchar(100) default n'unknown',
+  ...
+);]]></source>
 			</subsection>
 			<subsection name="CHECK制約">
 				<p>
@@ -212,8 +294,16 @@ public String employeeName;]]></source>
 				<p>
 					columnDefinition属性にデータ型を指定する場合は、その値の後ろに指定します。
 				</p>
-<source><![CDATA[@Column(columnDefinition ="nvarchar2(100) check ...")
+<source><![CDATA[@Column(columnDefinition ="nvarchar(100) check ...")
 public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME nvarchar(100) check ...,
+  ...
+);]]></source>
 			</subsection>
 			<subsection name="一意制約">
 				<p>
@@ -222,6 +312,10 @@ public String employeeName;]]></source>
 <source><![CDATA[@Column(unique = true)
 public String employeeName;]]></source>
 			</subsection>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique (EMPLOYEE_NAME);]]></source>
 			<subsection name="NOT NULL制約">
 				<p>
 					NOT NULL制約を指定するにはnullable属性を使用します。
@@ -229,6 +323,292 @@ public String employeeName;]]></source>
 <source><![CDATA[@Column(nullable = false)
 public String employeeName;]]></source>
 			</subsection>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME varchar(100) check ...,
+  ...
+);]]></source>
+		</section>
+		<section name="主キー定義">
+			<p>
+				主キーの定義はIdアノテーションを用いて行います。
+			</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  ...
+}]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table Employee (
+  ID integer,
+  ...
+  constraint EMPLOYEE_PK primary key(ID)
+);]]></source>
+			<p>
+				複合主キーの場合はIdアノテーションを複数用います。
+			</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id1;
+  @Id
+  public Integer id2;
+  ...
+}]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table Employee (
+  ID1 integer not null,
+  ID2 integer not null,
+  ...
+  constraint EMPLOYEE_PK primary key(ID1, ID2)
+);]]></source>
+		</section>
+		<section name="主キーの自動生成に関する定義">
+			<p>
+				主キーの自動生成に関する定義はGeneratedValueアノテーションを用いて行います。
+			</p>
+			<subsection name="データベース固有の自動生成を利用する定義">
+				<p>
+					データベース固有の自動生成を利用するには、GeneratedValueのstrategy属性にGenerationType.IDENTITYを指定します。
+					データベースがデータベース固有の自動生成をサポートしている場合にのみ使用できます。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  public Integer id;
+  ...
+}]]></source>
+			<p>
+				MySQLでは、上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table EMPLOYEE (
+  ID int not null auto_increment,
+  ...
+);]]></source>
+			</subsection>
+			<subsection name="テーブルを利用する定義">
+				<p>
+					テーブルを利用するには、GeneratedValueのstrategy属性にGenerationType.TABLEを指定します。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  @GeneratedValue(strategy = GenerationType.TABLE)
+  public Integer id;
+  ...
+}]]></source>
+				<p>
+					Oracleでは、上記の定義からは次のDDLが生成されます。このDDLは、EMPLOYEEテーブルに関するDDLとは別に生成されます。
+				</p>
+<source><![CDATA[create table ID_GENERATOR (
+    PK varchar2(255) not null,
+    VALUE number(19, 0) not null,
+    constraint ID_GENERATOR_PK primary key(PK)
+);]]></source>
+				<p>
+					TableGeneratorアノテーションを使ってテーブル名やカラム名をカスタマイズできます。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  @GeneratedValue(strategy = GenerationType.TABLE, generator = "EMPLOYEE_GEN")
+  @TableGenerator(
+    name = "EMPLOYEE_GEN",
+    table = "ID_GEN",
+    pkColumnName = "GEN_NAME",
+    valueColumnName = "GEN_VALUE")
+  public Integer id;
+  ...
+}]]></source>
+				<p>
+					Oracleでは、上記の定義からは次のDDLが生成されます。
+				</p>
+<source><![CDATA[create table ID_GEN (
+    GEN_NAME varchar2(255) not null,
+    GEN_VALUE number(19, 0) not null,
+    constraint ID_GENERATOR_PK primary key(PK)
+);]]></source>
+			</subsection>
+			<subsection name="シーケンスを利用する定義">
+				<p>
+					シーケンスを利用するには、GeneratedValueのstrategy属性にGenerationType.SEQUENCEを指定します。
+					データベースがシーケンスをサポートしている場合にのみ使用できます。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  public Integer id;
+  ...
+}]]></source>
+			<p>
+				Oracleでは、上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create sequence EMPLOYEE_ID increment by 50 start with 1;]]></source>
+				<p>
+					SequenceGeneratorアノテーションを使ってシーケンス名や初期値や割り当てサイズをカスタマイズできます。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  @GeneratedValue(strategy = GenerationType.TABLE, generator = "EMPLOYEE_GEN")
+  @SequenceGenerator(
+    name = "EMPLOYEE_GEN",
+    sequenceName = "EMPLOYEE_SEQ"
+    initialValue = 100
+    allocationSize = 10)
+  public Integer id;
+  ...
+}]]></source>
+				<p>
+					Oracleでは、上記の定義からは次のDDLが生成されます。
+				</p>
+<source><![CDATA[create sequence EMPLOYEE_SEQ increment by 10 start with 100;]]></source>
+			</subsection>
+		</section>
+		<section name="外部キー定義">
+			<p>
+				外部キーの定義はManyToOneアノテーションやOneToOneアノテーションを用いて行います。
+				ManyToOneアノテーションやOneToOneアノテーションを使用しても外部キーを定義したくない場合は<a href="tasks/gen_ddl.html#外部キーのDDL生成を抑制する">外部キーのDDL生成を抑制する例</a>を参照してください。
+			</p>
+			<subsection name="外部キー">
+				<p>
+					ManyToOneアノテーションは関連のプロパティに指定します。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer departmentId;
+  @ManyToOne
+  public Department department;
+}]]></source>
+				<p>
+					ここでは、外部キーのカラム（departmentId）と関連プロパティ（department）を規約に従って関連付けています。
+					この関係を明示するにはJoinColumnアノテーションを使います。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer departmentId;
+  @ManyToOne
+  @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
+  public Department department;
+}]]></source>
+				<p>
+					上記の定義からは次のDDLが生成されます。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID);]]></source>
+				<p>
+					複合外部キーの場合は、JoinColumnsアノテーションを使用します。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer departmentId1;
+  public Integer departmentId2;
+  @ManyToOne
+  @JoinColumns( {
+    @JoinColumn(name = "DEPARTMENT_ID1", referencedColumnName = "ID1"),
+    @JoinColumn(name = "DEPARTMENT_ID2", referencedColumnName = "ID2") })
+  public Department department;
+}]]></source>
+				<p>
+					上記の定義からは次のDDLが生成されます。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID1, DEPARTMENT_ID2) references DEPARTMENT (ID1, ID2);]]></source>
+			</subsection>
+			<subsection name="一意制約つき外部キー">
+				<p>
+					OneToOneアノテーションを使用することで、外部キーとともに一意制約のDDLも生成できます。
+					OneToOneアノテーションは関連のプロパティに指定します。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer addressId;
+  @OneToOne
+  public Address address;
+}]]></source>
+				<p>
+					ここでは、外部キーのカラム（addressId）と関連プロパティ（address）を規約に従って関連付けています。
+					この関係を明示するにはJoinColumnアノテーションを使います。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer addressId;
+  @OneToOne
+  @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
+  public Address address;
+}]]></source>
+				<p>
+					上記の定義からは、外部キーのDDLと一意制約（一意キー）のDDLが生成されます。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique key (ADDRESS_ID);]]></source>
+				<p>
+					複合外部キーの場合は、JoinColumnsアノテーションを使用します。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer addressId1;
+  public Integer addressId2;
+  @ManyToOne
+  @JoinColumns( {
+    @JoinColumn(name = "ADDRESS_ID1", referencedColumnName = "ID1"),
+    @JoinColumn(name = "ADDRESS_ID2", referencedColumnName = "ID2") })
+  public Address address;
+}]]></source>
+				<p>
+					上記の定義からは、複合外部キーのDDLと複合一意制約（一意キー）のDDLが生成されます。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID1, ADDRESS_ID2) references ADDRESS (ID1, ID2);]]></source>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique key (ADDRESS_ID1, ADDRESS_ID2);]]></source>
+			</subsection>
+		</section>
+		<section name="コメント定義">
+			<p>
+				JavaDocコメントをデータベースのテーブルやカラムに対するコメントとして使用できます。
+				サポートしているデータベースは、Oracle、DB2、PostgreSQL、MySQL、H2です。
+				この機能を利用するには、<a href="tasks/gen_ddl.html#エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる">エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる例</a>を参照してください。
+			</p>
+			<p>
+				クラスのJavaDocコメントがテーブル、フィールドのJavaDocコメントがカラムに対するコメントになります。
+			</p>
+<source><![CDATA[/**
+ * 従業員
+ */
+@Entity
+public class Employee {
+  /** 主キー */
+  @Id
+  public Integer id;
+  /** 従業員名 */
+  public Integer employeeName;
+}]]></source>
+			<p>
+				Oracleでは、上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[comment on table EMPLOYEE is '従業員';
+comment on column EMPLOYEE.ID is '主キー';
+comment on column EMPLOYEE.EMPLOYEE_NAME is '従業員名';
+]]></source>
 		</section>
 	</body>
 </document>

@@ -524,7 +524,7 @@ public @interface SuppressFkGeneration {
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
-  ・・・
+  ...
   @SuppressFkGeneration
   @ManyToOne
   public Department department;
@@ -535,7 +535,7 @@ public class Employee {
 <source><![CDATA[@SuppressFkGeneration
 @Entity
 public class Employee {
-  ・・・
+  ...
 }]]></source>
 		</section>
 	</body>

@@ -523,7 +523,7 @@ public Integer id;
 					上記のように指定した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
 				</p>
 				<source><![CDATA[
-create table ID_GENERATOR {
+create table ID_GENERATOR (
   PK varchar(80) not null primary key,
   VALUE integer);
 ]]></source>
@@ -557,7 +557,7 @@ public Integer id;
 					を定義した場合、あらかじめ、次のようなテーブルとデータを用意しておく必要があります。
 				</p>
 				<source><![CDATA[
-create table ID_GEN {
+create table ID_GEN (
   GEN_NAME varchar(80) not null primary key,
   GEN_VALUE integer);
 ]]></source>
