@@ -158,10 +158,10 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
 
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName(pkColumnName);
-        SqlType sqlType = dialect.getSqlType(Types.BIGINT);
+        SqlType sqlType = dialect.getSqlType(Types.VARCHAR);
         columnDesc.setSqlType(sqlType);
         Column column = AnnotationUtil.getDefaultColumn();
-        columnDesc.setDefinition(sqlType.getDataType(0, column.precision(), 0,
+        columnDesc.setDefinition(sqlType.getDataType(column.length(), 0, 0,
                 false));
         tableDesc.addColumnDesc(columnDesc);
     }
@@ -186,10 +186,10 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
         }
         ColumnDesc columnDesc = new ColumnDesc();
         columnDesc.setName(valueColumnName);
-        SqlType sqlType = dialect.getSqlType(Types.VARCHAR);
+        SqlType sqlType = dialect.getSqlType(Types.BIGINT);
         columnDesc.setSqlType(sqlType);
         Column column = AnnotationUtil.getDefaultColumn();
-        columnDesc.setDefinition(sqlType.getDataType(column.length(), 0, 0,
+        columnDesc.setDefinition(sqlType.getDataType(0, column.precision(), 0,
                 false));
         columnDesc.setNullable(false);
         tableDesc.addColumnDesc(columnDesc);

@@ -103,10 +103,10 @@ public class IdTableDescFactoryImplTest {
         assertEquals(2, tableDesc.getColumnDescList().size());
         ColumnDesc columnDesc = tableDesc.getColumnDescList().get(0);
         assertEquals("DDD", columnDesc.getName());
-        assertNotNull(columnDesc.getDefinition());
+        assertEquals("varchar(255)", columnDesc.getDefinition());
         columnDesc = tableDesc.getColumnDescList().get(1);
         assertEquals("EEE", columnDesc.getName());
-        assertNotNull(columnDesc.getDefinition());
+        assertEquals("bigint", columnDesc.getDefinition());
     }
 
     /**
