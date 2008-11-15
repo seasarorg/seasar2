@@ -535,4 +535,16 @@ public class GenerateDdlTask extends AbstractTask {
         command.setComment(comment);
     }
 
+    /**
+     * 外部キーの生成を抑制するアノテーションのクラス名を設定します。
+     * 
+     * @param suppressFkGennerationClassName
+     *            外部キーの生成を抑制するアノテーションのクラス名
+     */
+    public void setSuppressFkGennerationClassName(
+            String suppressFkGennerationClassName) {
+        command
+                .setSuppressFkGennerationClassName(suppressFkGennerationClassName);
+    }
+
 }

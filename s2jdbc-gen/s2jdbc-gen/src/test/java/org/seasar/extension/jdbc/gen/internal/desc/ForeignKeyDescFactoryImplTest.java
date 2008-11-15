@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -73,7 +77,7 @@ public class ForeignKeyDescFactoryImplTest {
         entityMetaFactory.setTableMetaFactory(tmf);
         GenDialect dialect = new StandardGenDialect();
         foreignKeyDescFactory = new ForeignKeyDescFactoryImpl(dialect,
-                entityMetaFactory);
+                entityMetaFactory, SuppressFkGeneration.class);
     }
 
     /**
@@ -116,6 +120,19 @@ public class ForeignKeyDescFactoryImplTest {
         assertEquals(2, foreignKeyDesc.getReferencedColumnNameList().size());
         assertEquals("ID1", foreignKeyDesc.getReferencedColumnNameList().get(0));
         assertEquals("ID2", foreignKeyDesc.getReferencedColumnNameList().get(1));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testSuppressFkGeneration() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
+        ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
+                .getForeignKeyDesc(entityMeta, entityMeta
+                        .getPropertyMeta("bbb"));
+        assertNull(foreignKeyDesc);
     }
 
     /**
@@ -185,7 +202,6 @@ public class ForeignKeyDescFactoryImplTest {
         /** */
         @OneToMany(mappedBy = "bbb")
         public List<Aaa> aaas;
-
     }
 
     /** */
@@ -200,6 +216,32 @@ public class ForeignKeyDescFactoryImplTest {
         /** */
         @Id
         public Integer id2;
+    }
 
+    /** */
+    @Entity
+    @Table(catalog = "hoge", schema = "foo", name = "DDD")
+    public static class Ddd {
+
+        /** */
+        @Id
+        public Integer id;
+
+        /** */
+        public Integer bbbId;
+
+        /** */
+        @SuppressFkGeneration
+        @ManyToOne
+        public Bbb bbb;
+    }
+
+    /**
+     * 
+     * @author taedium
+     */
+    @Target( { ElementType.FIELD })
+    @Retention(RetentionPolicy.RUNTIME)
+    private @interface SuppressFkGeneration {
     }
 }

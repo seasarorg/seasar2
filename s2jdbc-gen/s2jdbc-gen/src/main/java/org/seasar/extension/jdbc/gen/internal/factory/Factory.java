@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.factory;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -110,12 +111,15 @@ public interface Factory {
      *            方言
      * @param valueTypeProvider
      *            {@link ValueType}の提供者
+     * @param suppressFkGenerationClass
+     *            外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null}
      * @return {@link DatabaseDescFactory}の実装
      */
     DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
             EntityMetaReader entityMetaReader, GenDialect dialect,
-            ValueTypeProvider valueTypeProvider);
+            ValueTypeProvider valueTypeProvider,
+            Class<? extends Annotation> suppressFkGenerationClass);
 
     /**
      * {@link Dumper}の実装を返します。

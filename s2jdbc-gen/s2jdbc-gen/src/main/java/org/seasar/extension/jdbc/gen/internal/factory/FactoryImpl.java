@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.factory;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -107,10 +108,11 @@ public class FactoryImpl implements Factory {
     public DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
             EntityMetaReader entityMetaReader, GenDialect dialect,
-            ValueTypeProvider valueTypeProvider) {
+            ValueTypeProvider valueTypeProvider,
+            Class<? extends Annotation> suppressFkGenerationClass) {
 
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect, valueTypeProvider);
+                dialect, valueTypeProvider, suppressFkGenerationClass);
     }
 
     public Dumper createDumper(Command command, GenDialect dialect,
@@ -288,6 +290,7 @@ public class FactoryImpl implements Factory {
 
     public ValueTypeProvider createValueTypeProvider(Command command,
             DbmsDialect dbmsDialect) {
+
         return new ValueTypeProviderImpl(dbmsDialect);
     }
 
@@ -295,6 +298,7 @@ public class FactoryImpl implements Factory {
             Command command, File classpathDir, Set<File> sqlFileSet,
             String configPath, String jdbcManagerName, String packageName,
             String shortClassName, boolean useS2junit4) {
+
         return new SqlFileTestModelFactoryImpl(classpathDir, sqlFileSet,
                 configPath, jdbcManagerName, packageName, shortClassName,
                 useS2junit4);

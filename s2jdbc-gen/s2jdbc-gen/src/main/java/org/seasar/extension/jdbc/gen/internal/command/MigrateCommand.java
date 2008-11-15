@@ -608,7 +608,7 @@ public class MigrateCommand extends AbstractCommand {
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return factory.createDatabaseDescFactory(this, jdbcManager
                 .getEntityMetaFactory(), entityMetaReader, dialect,
-                valueTypeProvider);
+                valueTypeProvider, null);
     }
 
     /**

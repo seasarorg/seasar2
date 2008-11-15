@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
+import java.lang.annotation.Annotation;
+
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JoinColumnMeta;
@@ -37,15 +39,22 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
+    /** 外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null} */
+    protected Class<? extends Annotation> suppressFkGenerationClass;
+
     /**
      * インスタンスを構築します。
      * 
      * @param dialect
      *            方言
      * @param entityMetaFactory
+     *            エンティティメタデータのファクトリ
+     * @param suppressFkGenerationClass
+     *            外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null}
      */
     public ForeignKeyDescFactoryImpl(GenDialect dialect,
-            EntityMetaFactory entityMetaFactory) {
+            EntityMetaFactory entityMetaFactory,
+            Class<? extends Annotation> suppressFkGenerationClass) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
@@ -54,12 +63,18 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         }
         this.dialect = dialect;
         this.entityMetaFactory = entityMetaFactory;
+        this.suppressFkGenerationClass = suppressFkGenerationClass;
     }
 
     public ForeignKeyDesc getForeignKeyDesc(EntityMeta entityMeta,
             PropertyMeta propertyMeta) {
         if (!propertyMeta.isRelationship()
                 || propertyMeta.getMappedBy() != null) {
+            return null;
+        }
+        if (suppressFkGenerationClass != null
+                && propertyMeta.getField().isAnnotationPresent(
+                        suppressFkGenerationClass)) {
             return null;
         }
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
