@@ -201,8 +201,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
 
-    /** 外部キーを生成する場合{@code true}、しない場合{@code false} */
-    protected boolean generateForeignKey = true;
+    /** 外部キーを自動生成する場合{@code true}、しない場合{@code false} */
+    protected boolean autoGenerateForeignKey = true;
 
     /** DDLを生成する理由を示すコメント */
     protected String comment = "";
@@ -1061,22 +1061,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 外部キーを生成する場合{@code true}、しない場合{@code false}を返します。
+     * 外部キーを自動生成する場合{@code true}、しない場合{@code false}を返します。
      * 
-     * @return 外部キーを生成する場合{@code true}、しない場合{@code false}
+     * @return 外部キーを自動生成する場合{@code true}、しない場合{@code false}
      */
-    public boolean isGenerateForeignKey() {
-        return generateForeignKey;
+    public boolean isAutoGenerateForeignKey() {
+        return autoGenerateForeignKey;
     }
 
     /**
-     * 外部キーを生成する場合{@code true}、しない場合{@code false}を設定します。
+     * 外部キーを自動生成する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param generateForeignKey
-     *            外部キーを生成する場合{@code true}、しない場合{@code false}
+     * @param autoGenerateForeignKey
+     *            外部キーを自動生成する場合{@code true}、しない場合{@code false}
      */
-    public void setGenerateForeignKey(boolean generateForeignKey) {
-        this.generateForeignKey = generateForeignKey;
+    public void setAutoGenerateForeignKey(boolean autoGenerateForeignKey) {
+        this.autoGenerateForeignKey = autoGenerateForeignKey;
     }
 
     @Override
@@ -1288,7 +1288,7 @@ public class GenerateDdlCommand extends AbstractCommand {
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return factory.createDatabaseDescFactory(this, jdbcManager
                 .getEntityMetaFactory(), entityMetaReader, dialect,
-                valueTypeProvider, generateForeignKey);
+                valueTypeProvider, autoGenerateForeignKey);
     }
 
     /**

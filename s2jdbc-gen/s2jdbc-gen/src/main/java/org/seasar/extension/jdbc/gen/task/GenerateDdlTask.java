@@ -536,13 +536,13 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 外部キーを生成する場合{@code true}、しない場合{@code false}を設定します。
+     * 外部キーを自動生成する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param generateForeignKey
-     *            外部キーを生成する場合{@code true}、しない場合{@code false}
+     * @param autoGenerateForeignKey
+     *            外部キーを自動生成する場合{@code true}、しない場合{@code false}
      */
-    public void setGenerateForeignKey(boolean generateForeignKey) {
-        command.setGenerateForeignKey(generateForeignKey);
+    public void setAutoGenerateForeignKey(boolean autoGenerateForeignKey) {
+        command.setAutoGenerateForeignKey(autoGenerateForeignKey);
     }
 
 }
