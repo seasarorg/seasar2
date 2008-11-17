@@ -1602,11 +1602,11 @@ int count = jdbcManager.updateBatch(employees).excludes("version").execute();
 					を使います。バッチ系の更新は、すべてのエンティティに同じSQLを適用しなければならないので、
 					変更のあったプロパティのみをバッチ更新することはできません。
 					なぜなら、変更のあったプロパティがすべてのエンティティで同じだとは限らないからです。
-					最初の引数は、比較の対象にする以前のエンティティもしくはマップです。
+					最初の引数は、変更前の状態を持ったエンティティもしくはマップです。
 				</p>
 				<source><![CDATA[
 Employee before = ...;
-int count = jdbcManager.updateBatch(employees).changedFrom(before).execute();
+int count = jdbcManager.update(employee).changedFrom(before).execute();
 ]]></source>
 			</subsection>
 
