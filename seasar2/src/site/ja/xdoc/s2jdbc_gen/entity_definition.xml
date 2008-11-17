@@ -29,7 +29,7 @@
 						</li>
 						<li>
 							<p>
-								<a href="#複合一意制約">複合一意制約</a>
+								<a href="#複合一意キー">複合一意キー</a>
 							</p>
 						</li>
 					</ul>
@@ -40,6 +40,16 @@
 						<li>
 							<p>
 								<a href="#カラム名">カラム名</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#一意キー">一意キー</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#NOT NULL制約">NOT NULL制約</a>
 							</p>
 						</li>
 						<li>
@@ -55,16 +65,6 @@
 						<li>
 							<p>
 								<a href="#CHECK制約">CHECK制約</a>
-							</p>
-						</li>
-						<li>
-							<p>
-								<a href="#一意制約">一意制約</a>
-							</p>
-						</li>
-						<li>
-							<p>
-								<a href="#NOT NULL制約">NOT NULL制約</a>
 							</p>
 						</li>
 					</ul>
@@ -97,12 +97,12 @@
 					<ul>
 						<li>
 							<p>
-								<a href="#外部キー">外部キー</a>
+								<a href="#自動生成が有効な場合">自動生成が有効な場合</a>
 							</p>
 						</li>
 						<li>
 							<p>
-								<a href="#一意制約つき外部キー">一意制約つき外部キー</a>
+								<a href="#自動生成が無効な場合">自動生成が無効な場合</a>
 							</p>
 						</li>
 					</ul>
@@ -129,7 +129,7 @@
 			</p>
 			<subsection name="カタログ名">
 				<p>
-					catalog属性を使用することで、カタログ名を指定できます。
+					catalog要素を使用することで、カタログ名を指定できます。
 				</p>
 <source><![CDATA[@Table(catalog = "CATALOG")
 public class Employee {
@@ -142,7 +142,7 @@ public class Employee {
 			</subsection>
 			<subsection name="スキーマ名">
 				<p>
-					schema属性を使用することで、スキーマ名を指定できます。
+					schema要素を使用することで、スキーマ名を指定できます。
 				</p>
 <source><![CDATA[@Table(schema = "SCHEMA")
 public class Employee {
@@ -155,7 +155,7 @@ public class Employee {
 			</subsection>
 			<subsection name="テーブル名">
 				<p>
-					name属性を使用することで、テーブル名を指定できます。
+					name要素を使用することで、テーブル名を指定できます。
 				</p>
 <source><![CDATA[@Table(name = "EMP")
 public class Employee {
@@ -166,10 +166,10 @@ public class Employee {
 			</p>
 <source><![CDATA[create table EMP ...;]]></source>
 			</subsection>
-			<subsection name="複合一意制約">
+			<subsection name="複合一意キー">
 				<p>
-					uniqueConstraints属性を使用することで、複合一意制約を指定できます。
-					（columnNames属性に指定する値を1つにすれば、単一の一意制約になります。）
+					uniqueConstraints要素を使用することで、複合一意キーを指定できます。
+					（columnNames要素に指定する値を1つにすれば、単一の一意キーになります。）
 				</p>
 <source><![CDATA[@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "FIRST_NAME", "LAST_NAME" }) })
 public class Employee {
@@ -185,7 +185,7 @@ public class Employee {
 			</p>
 			<subsection name="カラム名">
 			<p>
-				name属性を使用することで、カラム名を指定できます。
+				name要素を使用することで、カラム名を指定できます。
 			</p>
 <source><![CDATA[@Column(name = "ENAME")
 public String employeeName;]]></source>
@@ -195,6 +195,37 @@ public String employeeName;]]></source>
 <source><![CDATA[create table ... (
   ...
   ENAME varchar(255),
+  ...
+);]]></source>
+			</subsection>
+			<subsection name="一意キー">
+				<p>
+					一意キーを指定するにはunique要素を使用します。
+				</p>
+<source><![CDATA[@Column(unique = true)
+public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME varchar(100),
+  ...
+);]]></source>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique (EMPLOYEE_NAME);]]></source>
+			</subsection>
+			<subsection name="NOT NULL制約">
+				<p>
+					NOT NULL制約を指定するにはnullable要素を使用します。
+				</p>
+<source><![CDATA[@Column(nullable = false)
+public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME varchar(100) not null,
   ...
 );]]></source>
 			</subsection>
@@ -214,7 +245,7 @@ public BigDecimal salary;]]></source>
 					Columnアノテーションを指定しない場合や、length、precision、scaleを指定しない場合のそれぞれのデフォルト値は次の表のとおりです。
 				</p>
 				<table>
-					<tr><th>属性</th><th>説明</th><th>デフォルト値</th></tr>
+					<tr><th>要素</th><th>説明</th><th>デフォルト値</th></tr>
 					<tr><td>length</td><td>長さ。文字列型やバイナリ型に使用される。</td><td>255</td></tr>
 					<tr><td>precision</td><td>精度。数値型に使用される。</td><td>19</td></tr>
 					<tr><td>scale</td><td>スケール。数値型に使用される。</td><td>2</td></tr>
@@ -248,13 +279,13 @@ public BigDecimal salary;]]></source>
 					<tr><td>@Enumerated(EnumType.STRING)つきEnum型</td><td>varchar2($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>int/varchar($l)</td></tr>
 				</table>
 				<p>
-					ここで示されたもの以外のデータ型にマッピングしたい場合は、ColumnアノテーションのcolumnDefinition属性を使用します。
+					ここで示されたもの以外のデータ型にマッピングしたい場合は、ColumnアノテーションのcolumnDefinition要素を使用します。
 				</p>
 <source><![CDATA[@Column(columnDefinition ="nvarchar(100)")
 public String employeeName;]]></source>
 				<p>
-					columnDefinition属性を使用した場合は、指定した値がそのままテーブル作成のDDLに組み込まれます。
-					そのため、length、precision、scale属性の値は、参照されません。
+					columnDefinition要素を使用した場合は、指定した値がそのままテーブル作成のDDLに組み込まれます。
+					そのため、length、precision、scale要素の値は、参照されません。
 				</p>
 			</subsection>
 			<p>
@@ -267,12 +298,20 @@ public String employeeName;]]></source>
 );]]></source>
 			<subsection name="デフォルト値">
 				<p>
-					デフォルト値を指定するにはcolumnDefinition属性を使用します。
+					デフォルト値を指定するにはcolumnDefinition要素を使用します。
 				</p>
 <source><![CDATA[@Column(columnDefinition ="default 'unknown'")
 public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME varchar(255) default n'unknown',
+  ...
+);]]></source>
 				<p>
-					columnDefinition属性にデータ型を指定する場合は、その値の後ろに指定します。
+					columnDefinition要素にデータ型を指定する場合は、その値の後ろに指定します。
 				</p>
 <source><![CDATA[@Column(columnDefinition ="nvarchar(100) default n'unknown'")
 public String employeeName;]]></source>
@@ -287,12 +326,20 @@ public String employeeName;]]></source>
 			</subsection>
 			<subsection name="CHECK制約">
 				<p>
-					CHECK制約を指定するにはcolumnDefinition属性を使用します。
+					CHECK制約を指定するにはcolumnDefinition要素を使用します。
 				</p>
 <source><![CDATA[@Column(columnDefinition ="check ...")
 public String employeeName;]]></source>
+			<p>
+				上記の定義からは次のDDLが生成されます。
+			</p>
+<source><![CDATA[create table ... (
+  ...
+  EMPLOYEE_NAME varchar(255) check ...,
+  ...
+);]]></source>
 				<p>
-					columnDefinition属性にデータ型を指定する場合は、その値の後ろに指定します。
+					columnDefinition要素にデータ型を指定する場合は、その値の後ろに指定します。
 				</p>
 <source><![CDATA[@Column(columnDefinition ="nvarchar(100) check ...")
 public String employeeName;]]></source>
@@ -305,32 +352,6 @@ public String employeeName;]]></source>
   ...
 );]]></source>
 			</subsection>
-			<subsection name="一意制約">
-				<p>
-					一意制約を指定するにはunique属性を使用します。
-				</p>
-<source><![CDATA[@Column(unique = true)
-public String employeeName;]]></source>
-			</subsection>
-			<p>
-				上記の定義からは次のDDLが生成されます。
-			</p>
-<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique (EMPLOYEE_NAME);]]></source>
-			<subsection name="NOT NULL制約">
-				<p>
-					NOT NULL制約を指定するにはnullable属性を使用します。
-				</p>
-<source><![CDATA[@Column(nullable = false)
-public String employeeName;]]></source>
-			</subsection>
-			<p>
-				上記の定義からは次のDDLが生成されます。
-			</p>
-<source><![CDATA[create table ... (
-  ...
-  EMPLOYEE_NAME varchar(100) not null,
-  ...
-);]]></source>
 		</section>
 		<section name="主キー定義">
 			<p>
@@ -370,6 +391,9 @@ public class Employee {
   ...
   constraint EMPLOYEE_PK primary key(ID1, ID2)
 );]]></source>
+			<p>
+				主キーのプロパティに指定された@Columnのunique要素やnullabl要素の値は使用されません。
+			</p>
 		</section>
 		<section name="主キーの自動生成に関する定義">
 			<p>
@@ -377,7 +401,7 @@ public class Employee {
 			</p>
 			<subsection name="データベース固有の自動生成を利用する定義">
 				<p>
-					データベース固有の自動生成を利用するには、GeneratedValueのstrategy属性にGenerationType.IDENTITYを指定します。
+					データベース固有の自動生成を利用するには、GeneratedValueのstrategy要素にGenerationType.IDENTITYを指定します。
 					データベースがデータベース固有の自動生成をサポートしている場合にのみ使用できます。
 				</p>
 <source><![CDATA[@Entity
@@ -397,7 +421,7 @@ public class Employee {
 			</subsection>
 			<subsection name="テーブルを利用する定義">
 				<p>
-					テーブルを利用するには、GeneratedValueのstrategy属性にGenerationType.TABLEを指定します。
+					テーブルを利用するには、GeneratedValueのstrategy要素にGenerationType.TABLEを指定します。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -440,7 +464,7 @@ public class Employee {
 			</subsection>
 			<subsection name="シーケンスを利用する定義">
 				<p>
-					シーケンスを利用するには、GeneratedValueのstrategy属性にGenerationType.SEQUENCEを指定します。
+					シーケンスを利用するには、GeneratedValueのstrategy要素にGenerationType.SEQUENCEを指定します。
 					データベースがシーケンスをサポートしている場合にのみ使用できます。
 				</p>
 <source><![CDATA[@Entity
@@ -477,40 +501,33 @@ public class Employee {
 		</section>
 		<section name="外部キー定義">
 			<p>
-				外部キーの定義はManyToOneアノテーションやOneToOneアノテーションを用いて行います。
-				ManyToOneアノテーションやOneToOneアノテーションを使用しても外部キーを定義したくない場合は<a href="tasks/gen_ddl.html#外部キーのDDL生成を抑制する">外部キーのDDL生成を抑制する例</a>を参照してください。
+				外部キーの定義は関連プロパティに対応して生成されますが、定義方法は、外部キーの自動生成を有効にしているか無効にしているかで異なります。
+				全てのエンティティに対する有効/無効は<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>のautoGenerateForeignKey属性で制御します。
+				個々の関連プロパティごとに外部キーの生成を制御するには、<code>org.seasar.extension.jdbc.annotation.ReferentialConstraint</code>アノテーションを利用します。
 			</p>
-			<subsection name="外部キー">
+			<subsection name="自動生成が有効な場合">
 				<p>
-					ManyToOneアノテーションは関連のプロパティに指定します。
+					自動生成が有効な場合、関連の所有側のプロパティに対応するカラムはすべて外部キーとみなされます。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
   @Id
   public Integer id;
   public Integer departmentId;
+  public Integer addressId;
   @ManyToOne
   public Department department;
+  @OneToOne
+  public Address address;
 }]]></source>
 				<p>
-					ここでは、外部キーのカラム（departmentId）と関連プロパティ（department）を規約に従って関連付けています。
-					この関係を明示するにはJoinColumnアノテーションを使います。
+					上記の定義からは、departmentプロパティに対応するDEPARTMENT_IDカラムと
+					addressプロパティに対応するADDRESS_IDカラムがそれぞれ外部キーとみなされ次のDDLが生成されます。
 				</p>
-<source><![CDATA[@Entity
-public class Employee {
-  @Id
-  public Integer id;
-  public Integer departmentId;
-  @ManyToOne
-  @JoinColumn(name = "DEPARTMENT_ID", referencedColumnName = "ID")
-  public Department department;
-}]]></source>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID);
+alter table EMPLOYEE add constraint EMPLOYEE_FK2 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
 				<p>
-					上記の定義からは次のDDLが生成されます。
-				</p>
-<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID);]]></source>
-				<p>
-					複合外部キーの場合は、JoinColumnsアノテーションを使用します。
+					複合外部キーを生成するにはJoinColumnsアノテーションを使用します。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -528,58 +545,89 @@ public class Employee {
 					上記の定義からは次のDDLが生成されます。
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID1, DEPARTMENT_ID2) references DEPARTMENT (ID1, ID2);]]></source>
-			</subsection>
-			<subsection name="一意制約つき外部キー">
 				<p>
-					OneToOneアノテーションを使用することで、外部キーとともに一意制約のDDLも生成できます。
-					OneToOneアノテーションは関連のプロパティに指定します。
+					関連プロパティに@ReferentialConstraint(false)を指定することで、特定の外部キーの生成を抑制できます。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
   @Id
   public Integer id;
+  public Integer departmentId;
   public Integer addressId;
+  @ManyToOne
+  public Department department;
+  @ReferentialConstraint(false)
   @OneToOne
   public Address address;
 }]]></source>
 				<p>
-					ここでは、外部キーのカラム（addressId）と関連プロパティ（address）を規約に従って関連付けています。
-					この関係を明示するにはJoinColumnアノテーションを使います。
+					addressプロパティに指定された<code>@ReferentialConstraint(false)</code>に注目してください。
+					上記の定義では、DEPARTMENT_IDだけが外部キーとなりADDRESS_IDは外部キーになりません。
+					したがって、生成されるDDLは次のものになります。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID);]]></source>
+				<p>
+					同様に複合外部キーの生成も抑制できます。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
   @Id
   public Integer id;
-  public Integer addressId;
-  @OneToOne
-  @JoinColumn(name = "ADDRESS_ID", referencedColumnName = "ID")
-  public Address address;
-}]]></source>
-				<p>
-					上記の定義からは、外部キーのDDLと一意制約（一意キー）のDDLが生成されます。
-				</p>
-<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
-<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique key (ADDRESS_ID);]]></source>
-				<p>
-					複合外部キーの場合は、JoinColumnsアノテーションを使用します。
-				</p>
-<source><![CDATA[@Entity
-public class Employee {
-  @Id
-  public Integer id;
-  public Integer addressId1;
-  public Integer addressId2;
+  public Integer departmentId1;
+  public Integer departmentId2;
+  @ReferentialConstraint(false)
   @ManyToOne
   @JoinColumns( {
-    @JoinColumn(name = "ADDRESS_ID1", referencedColumnName = "ID1"),
-    @JoinColumn(name = "ADDRESS_ID2", referencedColumnName = "ID2") })
+    @JoinColumn(name = "DEPARTMENT_ID1", referencedColumnName = "ID1"),
+    @JoinColumn(name = "DEPARTMENT_ID2", referencedColumnName = "ID2") })
+  public Department department;
+}]]></source>
+				<p>
+					この例では、departmentプロパティに指定された<code>@ReferentialConstraint(false)</code>により、外部キーのDDLは生成されません。
+				</p>
+			</subsection>
+			<subsection name="自動生成が無効な場合">
+				<p>
+					自動生成が無効な場合、<code>@ReferentialConstraint(true)</code>で明示的に指定しない限り、外部キーの生成は行われません。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer departmentId;
+  public Integer addressId;
+  @ManyToOne
+  public Department department;
+  @ReferentialConstraint(true)
+  @OneToOne
   public Address address;
 }]]></source>
 				<p>
-					上記の定義からは、複合外部キーのDDLと複合一意制約（一意キー）のDDLが生成されます。
+					addressプロパティに指定された<code>@ReferentialConstraint(true)</code>に注目してください。
+					上記の定義では、ADDRESS_IDだけが外部キーとなりDEPARTMENT_IDは外部キーになりません。
+					次のDDLが生成されます。
 				</p>
-<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID1, ADDRESS_ID2) references ADDRESS (ID1, ID2);]]></source>
-<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_UK1 unique key (ADDRESS_ID1, ADDRESS_ID2);]]></source>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
+				<p>
+					<code>@ReferentialConstraint(true)</code>は複合外部キーにも有効です。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer departmentId1;
+  public Integer departmentId2;
+  @ReferentialConstraint(true)
+  @ManyToOne
+  @JoinColumns( {
+    @JoinColumn(name = "DEPARTMENT_ID1", referencedColumnName = "ID1"),
+    @JoinColumn(name = "DEPARTMENT_ID2", referencedColumnName = "ID2") })
+  public Department department;
+}]]></source>
+				<p>
+					上記の定義からは次のDDLが生成されます。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID1, DEPARTMENT_ID2) references DEPARTMENT (ID1, ID2);]]></source>
 			</subsection>
 		</section>
 		<section name="コメント定義">
