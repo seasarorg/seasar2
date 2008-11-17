@@ -536,15 +536,13 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * 外部キーの生成を抑制するアノテーションのクラス名を設定します。
+     * 外部キーを生成する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param suppressFkGennerationClassName
-     *            外部キーの生成を抑制するアノテーションのクラス名
+     * @param generateForeignKey
+     *            外部キーを生成する場合{@code true}、しない場合{@code false}
      */
-    public void setSuppressFkGennerationClassName(
-            String suppressFkGennerationClassName) {
-        command
-                .setSuppressFkGennerationClassName(suppressFkGennerationClassName);
+    public void setGenerateForeignKey(boolean generateForeignKey) {
+        command.setGenerateForeignKey(generateForeignKey);
     }
 
 }

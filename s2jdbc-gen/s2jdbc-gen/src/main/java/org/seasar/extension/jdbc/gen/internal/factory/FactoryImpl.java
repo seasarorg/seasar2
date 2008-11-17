@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.factory;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Set;
 
@@ -108,11 +107,10 @@ public class FactoryImpl implements Factory {
     public DatabaseDescFactory createDatabaseDescFactory(Command command,
             EntityMetaFactory entityMetaFactory,
             EntityMetaReader entityMetaReader, GenDialect dialect,
-            ValueTypeProvider valueTypeProvider,
-            Class<? extends Annotation> suppressFkGenerationClass) {
+            ValueTypeProvider valueTypeProvider, boolean regardRelationshipAsFk) {
 
         return new DatabaseDescFactoryImpl(entityMetaFactory, entityMetaReader,
-                dialect, valueTypeProvider, suppressFkGenerationClass);
+                dialect, valueTypeProvider, regardRelationshipAsFk);
     }
 
     public Dumper createDumper(Command command, GenDialect dialect,

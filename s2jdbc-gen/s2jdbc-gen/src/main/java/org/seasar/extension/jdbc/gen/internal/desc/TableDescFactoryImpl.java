@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,9 +60,6 @@ public class TableDescFactoryImpl implements TableDescFactory {
     /** 方言 */
     protected GenDialect dialect;
 
-    /** 外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null} */
-    protected Class<? extends Annotation> suppressFkGenerationClass;
-
     /** カラム記述のファクトリ */
     protected ColumnDescFactory columnDescFactory;
 
@@ -87,8 +83,6 @@ public class TableDescFactoryImpl implements TableDescFactory {
      * 
      * @param dialect
      *            方言
-     * @param suppressFkGenerationClass
-     *            外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null}
      * @param columnDescFactory
      *            カラム記述のファクトリ
      * @param primaryKeyDescFactory
@@ -103,7 +97,6 @@ public class TableDescFactoryImpl implements TableDescFactory {
      *            識別子生成用のテーブル記述のファクトリ
      */
     public TableDescFactoryImpl(GenDialect dialect,
-            Class<? extends Annotation> suppressFkGenerationClass,
             ColumnDescFactory columnDescFactory,
             PrimaryKeyDescFactory primaryKeyDescFactory,
             UniqueKeyDescFactory uniqueKeyDescFactory,
@@ -132,7 +125,6 @@ public class TableDescFactoryImpl implements TableDescFactory {
             throw new NullPointerException("idTableDescFactory");
         }
         this.dialect = dialect;
-        this.suppressFkGenerationClass = suppressFkGenerationClass;
         this.columnDescFactory = columnDescFactory;
         this.primaryKeyDescFactory = primaryKeyDescFactory;
         this.uniqueKeyDescFactory = uniqueKeyDescFactory;
@@ -278,11 +270,6 @@ public class TableDescFactoryImpl implements TableDescFactory {
      */
     protected void doForeignKeyDesc(EntityMeta entityMeta, TableDesc tableDesc,
             Table table) {
-        if (suppressFkGenerationClass != null
-                && entityMeta.getEntityClass().isAnnotationPresent(
-                        suppressFkGenerationClass)) {
-            return;
-        }
         for (int i = 0; i < entityMeta.getPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getPropertyMeta(i);
             ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory

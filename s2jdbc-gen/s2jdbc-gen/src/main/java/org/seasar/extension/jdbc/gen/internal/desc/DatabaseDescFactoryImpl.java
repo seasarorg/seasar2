@@ -15,7 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
@@ -54,8 +53,8 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
     /** {@link ValueType}の提供者 */
     protected ValueTypeProvider valueTypeProvider;
 
-    /** 外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null} */
-    protected Class<? extends Annotation> suppressFkGenerationClass;
+    /** 関連を外部キーとみなす場合{@code true}、みなさない場合{@code false} */
+    protected boolean regardRelationshipAsFk;
 
     /** テーブル記述のファクトリ */
     protected TableDescFactory tableDescFactory;
@@ -71,13 +70,12 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
      *            方言
      * @param valueTypeProvider
      *            {@link ValueType}の提供者
-     * @param suppressFkGenerationClass
-     *            外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null}
+     * @param regardRelationshipAsFk
+     *            関連を外部キーとみなす場合{@code true}、みなさない場合{@code false}
      */
     public DatabaseDescFactoryImpl(EntityMetaFactory entityMetaFactory,
             EntityMetaReader entityMetaReader, GenDialect dialect,
-            ValueTypeProvider valueTypeProvider,
-            Class<? extends Annotation> suppressFkGenerationClass) {
+            ValueTypeProvider valueTypeProvider, boolean regardRelationshipAsFk) {
         if (entityMetaFactory == null) {
             throw new NullPointerException("entityMetaFactory");
         }
@@ -94,7 +92,7 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
         this.entityMetaReader = entityMetaReader;
         this.dialect = dialect;
         this.valueTypeProvider = valueTypeProvider;
-        this.suppressFkGenerationClass = suppressFkGenerationClass;
+        this.regardRelationshipAsFk = regardRelationshipAsFk;
         this.tableDescFactory = createTableDescFactory();
     }
 
@@ -123,9 +121,8 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
         ForeignKeyDescFactory fkFactory = createForeignKeyDescFactory();
         SequenceDescFactory seqFactory = createSequenceDescFactory();
         IdTableDescFactory idTabFactory = createIdTableDescFactory(ukFactory);
-        return new TableDescFactoryImpl(dialect, suppressFkGenerationClass,
-                colFactory, pkFactory, ukFactory, fkFactory, seqFactory,
-                idTabFactory);
+        return new TableDescFactoryImpl(dialect, colFactory, pkFactory,
+                ukFactory, fkFactory, seqFactory, idTabFactory);
     }
 
     /**
@@ -162,7 +159,7 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
      */
     protected ForeignKeyDescFactory createForeignKeyDescFactory() {
         return new ForeignKeyDescFactoryImpl(dialect, entityMetaFactory,
-                suppressFkGenerationClass);
+                regardRelationshipAsFk);
     }
 
     /**

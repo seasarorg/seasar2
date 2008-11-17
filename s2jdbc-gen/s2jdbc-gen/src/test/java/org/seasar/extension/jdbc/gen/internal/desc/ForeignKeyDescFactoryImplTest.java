@@ -15,10 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -33,6 +29,7 @@ import javax.persistence.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.seasar.extension.jdbc.EntityMeta;
+import org.seasar.extension.jdbc.annotation.ReferentialConstraint;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
@@ -77,7 +74,7 @@ public class ForeignKeyDescFactoryImplTest {
         entityMetaFactory.setTableMetaFactory(tmf);
         GenDialect dialect = new StandardGenDialect();
         foreignKeyDescFactory = new ForeignKeyDescFactoryImpl(dialect,
-                entityMetaFactory, SuppressFkGeneration.class);
+                entityMetaFactory, true);
     }
 
     /**
@@ -127,7 +124,22 @@ public class ForeignKeyDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testSuppressFkGeneration() throws Exception {
+    public void testReferentialConstraint_true() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Eee.class);
+        foreignKeyDescFactory = new ForeignKeyDescFactoryImpl(
+                new StandardGenDialect(), entityMetaFactory, false);
+        ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
+                .getForeignKeyDesc(entityMeta, entityMeta
+                        .getPropertyMeta("bbb"));
+        assertNotNull(foreignKeyDesc);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testReferentialConstraint_false() throws Exception {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Ddd.class);
         ForeignKeyDesc foreignKeyDesc = foreignKeyDescFactory
                 .getForeignKeyDesc(entityMeta, entityMeta
@@ -231,17 +243,27 @@ public class ForeignKeyDescFactoryImplTest {
         public Integer bbbId;
 
         /** */
-        @SuppressFkGeneration
+        @ReferentialConstraint(false)
         @ManyToOne
         public Bbb bbb;
     }
 
-    /**
-     * 
-     * @author taedium
-     */
-    @Target( { ElementType.FIELD })
-    @Retention(RetentionPolicy.RUNTIME)
-    private @interface SuppressFkGeneration {
+    /** */
+    @Entity
+    @Table(catalog = "hoge", schema = "foo", name = "EEE")
+    public static class Eee {
+
+        /** */
+        @Id
+        public Integer id;
+
+        /** */
+        public Integer bbbId;
+
+        /** */
+        @ReferentialConstraint
+        @ManyToOne
+        public Bbb bbb;
     }
+
 }

@@ -15,13 +15,12 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.lang.annotation.Annotation;
-
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.JoinColumnMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.TableMeta;
+import org.seasar.extension.jdbc.annotation.ReferentialConstraint;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
@@ -39,8 +38,8 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
     /** エンティティメタデータのファクトリ */
     protected EntityMetaFactory entityMetaFactory;
 
-    /** 外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null} */
-    protected Class<? extends Annotation> suppressFkGenerationClass;
+    /** 関連を外部キーとみなす場合{@code true}、みなさない場合{@code false} */
+    protected boolean regardRelationshipAsFk;
 
     /**
      * インスタンスを構築します。
@@ -49,12 +48,11 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
      *            方言
      * @param entityMetaFactory
      *            エンティティメタデータのファクトリ
-     * @param suppressFkGenerationClass
-     *            外部キーの生成を抑制するアノテーションのクラス、指定しない場合は{@code null}
+     * @param regardRelationshipAsFk
+     *            関連を外部キーとみなす場合{@code true}、みなさない場合{@code false}
      */
     public ForeignKeyDescFactoryImpl(GenDialect dialect,
-            EntityMetaFactory entityMetaFactory,
-            Class<? extends Annotation> suppressFkGenerationClass) {
+            EntityMetaFactory entityMetaFactory, boolean regardRelationshipAsFk) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
@@ -63,7 +61,7 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         }
         this.dialect = dialect;
         this.entityMetaFactory = entityMetaFactory;
-        this.suppressFkGenerationClass = suppressFkGenerationClass;
+        this.regardRelationshipAsFk = regardRelationshipAsFk;
     }
 
     public ForeignKeyDesc getForeignKeyDesc(EntityMeta entityMeta,
@@ -72,11 +70,18 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
                 || propertyMeta.getMappedBy() != null) {
             return null;
         }
-        if (suppressFkGenerationClass != null
-                && propertyMeta.getField().isAnnotationPresent(
-                        suppressFkGenerationClass)) {
-            return null;
+        ReferentialConstraint referentialConstraint = propertyMeta.getField()
+                .getAnnotation(ReferentialConstraint.class);
+        if (referentialConstraint == null) {
+            if (!regardRelationshipAsFk) {
+                return null;
+            }
+        } else {
+            if (!referentialConstraint.value()) {
+                return null;
+            }
         }
+
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
         doColumn(entityMeta, propertyMeta, foreignKeyDesc);
         doTable(entityMeta, propertyMeta, foreignKeyDesc);

@@ -417,7 +417,7 @@ public class DumpDataCommand extends AbstractCommand {
     protected DatabaseDescFactory createDatabaseDescFactory() {
         return factory.createDatabaseDescFactory(this, jdbcManager
                 .getEntityMetaFactory(), entityMetaReader, dialect,
-                valueTypeProvider, null);
+                valueTypeProvider, true);
     }
 
     /**

@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +48,6 @@ import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.version.ManagedFile;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
-import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
  * DDLのSQLファイルを生成する{@link Command}の実装です。
@@ -203,8 +201,8 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
 
-    /** 外部キーの生成を抑制するアノテーションのクラス名 */
-    protected String suppressFkGennerationClassName = null;
+    /** 外部キーを生成する場合{@code true}、しない場合{@code false} */
+    protected boolean generateForeignKey = true;
 
     /** DDLを生成する理由を示すコメント */
     protected String comment = "";
@@ -1063,23 +1061,22 @@ public class GenerateDdlCommand extends AbstractCommand {
     }
 
     /**
-     * 外部キーの生成を抑制するアノテーションのクラス名を返します。
+     * 外部キーを生成する場合{@code true}、しない場合{@code false}を返します。
      * 
-     * @return 外部キーの生成を抑制するアノテーションのクラス名
+     * @return 外部キーを生成する場合{@code true}、しない場合{@code false}
      */
-    public String getSuppressFkGennerationClassName() {
-        return suppressFkGennerationClassName;
+    public boolean isGenerateForeignKey() {
+        return generateForeignKey;
     }
 
     /**
-     * 外部キーの生成を抑制するアノテーションのクラス名を設定します。
+     * 外部キーを生成する場合{@code true}、しない場合{@code false}を設定します。
      * 
-     * @param suppressFkGennerationClassName
-     *            外部キーの生成を抑制するアノテーションのクラス名
+     * @param generateForeignKey
+     *            外部キーを生成する場合{@code true}、しない場合{@code false}
      */
-    public void setSuppressFkGennerationClassName(
-            String suppressFkGennerationClassName) {
-        this.suppressFkGennerationClassName = suppressFkGennerationClassName;
+    public void setGenerateForeignKey(boolean generateForeignKey) {
+        this.generateForeignKey = generateForeignKey;
     }
 
     @Override
@@ -1289,13 +1286,9 @@ public class GenerateDdlCommand extends AbstractCommand {
      * @return {@link DatabaseDescFactory}の実装
      */
     protected DatabaseDescFactory createDatabaseDescFactory() {
-        Class<? extends Annotation> clazz = null;
-        if (suppressFkGennerationClassName != null) {
-            clazz = ReflectionUtil.forName(suppressFkGennerationClassName);
-        }
         return factory.createDatabaseDescFactory(this, jdbcManager
                 .getEntityMetaFactory(), entityMetaReader, dialect,
-                valueTypeProvider, clazz);
+                valueTypeProvider, generateForeignKey);
     }
 
     /**

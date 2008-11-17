@@ -15,10 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -90,15 +86,14 @@ public class TableDescFactoryImplTest {
         UniqueKeyDescFactoryImpl ukFactory = new UniqueKeyDescFactoryImpl(
                 dialect);
         ForeignKeyDescFactoryImpl fkFactory = new ForeignKeyDescFactoryImpl(
-                dialect, entityMetaFactory, null);
+                dialect, entityMetaFactory, true);
         SequenceDescFactoryImpl seqFactory = new SequenceDescFactoryImpl(
                 dialect, valueTypeProvider);
         IdTableDescFactoryImpl idTabFactory = new IdTableDescFactoryImpl(
                 dialect, ukFactory);
 
-        tableDescFactory = new TableDescFactoryImpl(dialect,
-                SuppressFkGeneration.class, colFactory, pkFactory, ukFactory,
-                fkFactory, seqFactory, idTabFactory);
+        tableDescFactory = new TableDescFactoryImpl(dialect, colFactory,
+                pkFactory, ukFactory, fkFactory, seqFactory, idTabFactory);
     }
 
     /**
@@ -175,17 +170,6 @@ public class TableDescFactoryImplTest {
         EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
         TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
         assertEquals(1, tableDesc.getForeignKeyDescList().size());
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testForeignKeyDescList_suppressFkGeneration() throws Exception {
-        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Hhh.class);
-        TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
-        assertEquals(0, tableDesc.getForeignKeyDescList().size());
     }
 
     /**
@@ -322,33 +306,4 @@ public class TableDescFactoryImplTest {
         public String name3;
     }
 
-    /** */
-    @SuppressFkGeneration
-    @Entity
-    @Table(catalog = "hoge", schema = "foo", name = "HHH")
-    public static class Hhh {
-
-        /** */
-        @Id
-        public Integer id;
-
-        /** */
-        public Integer bbbId;
-
-        /** */
-        public Integer cccId;
-
-        /** */
-        @ManyToOne
-        public Bbb bbb;
-
-        /** */
-        @ManyToOne
-        public Ccc ccc;
-    }
-
-    @Target( { ElementType.TYPE })
-    @Retention(RetentionPolicy.RUNTIME)
-    private @interface SuppressFkGeneration {
-    }
 }
