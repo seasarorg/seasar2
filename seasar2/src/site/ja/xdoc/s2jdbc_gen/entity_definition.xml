@@ -168,8 +168,8 @@ public class Employee {
 			</subsection>
 			<subsection name="複合一意キー">
 				<p>
-					uniqueConstraints要素を使用することで、複合一意キーを指定できます。
-					（columnNames要素に指定する値を1つにすれば、単一の一意キーになります。）
+					uniqueConstraints要素を使用することで、複合一意キー制約を指定できます。
+					（columnNames要素に指定する値を1つにすれば、単一の一意キー制約になります。）
 				</p>
 <source><![CDATA[@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "FIRST_NAME", "LAST_NAME" }) })
 public class Employee {
@@ -200,7 +200,7 @@ public String employeeName;]]></source>
 			</subsection>
 			<subsection name="一意キー">
 				<p>
-					一意キーを指定するにはunique要素を使用します。
+					一意キー制約を指定するにはunique要素を使用します。
 				</p>
 <source><![CDATA[@Column(unique = true)
 public String employeeName;]]></source>
@@ -501,9 +501,9 @@ public class Employee {
 		</section>
 		<section name="外部キー定義">
 			<p>
-				外部キーの定義は関連プロパティに対応して生成されますが、定義方法は、外部キーの自動生成を有効にしているか無効にしているかで異なります。
+				外部キーの定義は関連プロパティに対応して生成されますが、定義方法は、外部キー制約の自動生成を有効にしているか無効にしているかで異なります。
 				全てのエンティティに対する有効/無効は<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>のautoGenerateForeignKey属性で制御します。
-				個々の関連プロパティごとに外部キーの生成を制御するには、<code>org.seasar.extension.jdbc.annotation.ReferentialConstraint</code>アノテーションを利用します。
+				個々の関連プロパティごとに外部キー制約の生成を制御するには、<code>org.seasar.extension.jdbc.annotation.ReferentialConstraint</code>アノテーションを利用します。
 			</p>
 			<subsection name="自動生成が有効な場合">
 				<p>
@@ -527,7 +527,7 @@ public class Employee {
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID);
 alter table EMPLOYEE add constraint EMPLOYEE_FK2 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
 				<p>
-					複合外部キーを生成するにはJoinColumnsアノテーションを使用します。
+					複合外部キー制約を生成するにはJoinColumnsアノテーションを使用します。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -546,7 +546,7 @@ public class Employee {
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID1, DEPARTMENT_ID2) references DEPARTMENT (ID1, ID2);]]></source>
 				<p>
-					関連プロパティに@ReferentialConstraint(false)を指定することで、特定の外部キーの生成を抑制できます。
+					関連プロパティに@ReferentialConstraint(false)を指定することで、特定の外部キー制約の生成を抑制できます。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -567,7 +567,7 @@ public class Employee {
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID);]]></source>
 				<p>
-					同様に複合外部キーの生成も抑制できます。
+					同様に複合外部キー制約の生成も抑制できます。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -583,12 +583,12 @@ public class Employee {
   public Department department;
 }]]></source>
 				<p>
-					この例では、departmentプロパティに指定された<code>@ReferentialConstraint(false)</code>により、外部キーのDDLは生成されません。
+					この例では、departmentプロパティに指定された<code>@ReferentialConstraint(false)</code>により、外部キー制約のDDLは生成されません。
 				</p>
 			</subsection>
 			<subsection name="自動生成が無効な場合">
 				<p>
-					自動生成が無効な場合、<code>@ReferentialConstraint(true)</code>で明示的に指定しない限り、外部キーの生成は行われません。
+					自動生成が無効な場合、<code>@ReferentialConstraint(true)</code>で明示的に指定しない限り、外部キー制約の生成は行われません。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -609,7 +609,7 @@ public class Employee {
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
 				<p>
-					<code>@ReferentialConstraint(true)</code>は複合外部キーにも有効です。
+					<code>@ReferentialConstraint(true)</code>を使って複合外部キー制約の生成を指定することも可能です。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
