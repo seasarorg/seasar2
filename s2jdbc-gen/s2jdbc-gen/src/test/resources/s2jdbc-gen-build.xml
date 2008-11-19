@@ -1,0 +1,216 @@
+<project name="example-s2jdbc-gen" default="gen-ddl" basedir=".">
+
+  <property name="classpathdir" value="src/main/webapp/WEB-INF/classes"/>
+  <property name="rootpackagename" value="example"/>
+  <property name="entitypackagename" value="entity"/>
+  <property name="javafiledestdir" value="src/main/java"/>
+  <property name="testjavafiledestdir" value="src/test/java"/>
+  <property name="javafileencoding" value="UTF-8"/>
+  <property name="version" value="latest"/>
+  <property name="sqlfilepattern" value="META-INF/sql/**/*.sql"/>
+  <property name="applyenvtoversion" value="false"/>
+  <property name="uses2junit4" value="false"/>
+  <property name="env" value="ut"/>
+  <property name="jdbcmanagername" value="jdbcManager"/>
+
+  <path id="classpath">
+    <pathelement location="${classpathdir}"/>
+    <fileset dir="src/main/webapp/WEB-INF/lib">
+      <exclude name="src/main/webapp/WEB-INF/lib/sources/**"/>
+    </fileset>
+    <fileset dir="lib">
+      <exclude name="lib/sources/**"/>
+    </fileset>
+  </path>
+
+  <taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
+
+  <target name="gen-entity">
+    <gen-entity
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <javac 
+      srcdir="${javafiledestdir}"
+      destdir="${classpathdir}"
+      encoding="${javafileencoding}"
+      fork="true"
+      debug="on"
+      classpathref="classpath">
+        <include name="${rootpackagename}/${entitypackagename}/**"/>
+    </javac>
+    <gen-names
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-service
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-entitytest
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      uses2junit4="${uses2junit4}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-servicetest
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      uses2junit4="${uses2junit4}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-sqlfiletest
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      uses2junit4="${uses2junit4}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath">
+        <sqlfileset dir="${classpathdir}">
+          <include name="${sqlfilepattern}" />
+        </sqlfileset>
+    </gen-sqlfiletest>
+  </target>
+
+  <target name="gen-ddl">
+    <gen-ddl
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <javac 
+      srcdir="${javafiledestdir}"
+      destdir="${classpathdir}"
+      encoding="${javafileencoding}"
+      fork="true"
+      debug="on"
+      classpathref="classpath">
+      <include name="${rootpackagename}/${entitypackagename}/**"/>
+    </javac>
+    <gen-names
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-service
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${javafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-entitytest
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      uses2junit4="${uses2junit4}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-servicetest
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      uses2junit4="${uses2junit4}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <gen-sqlfiletest
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      uses2junit4="${uses2junit4}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath">
+        <sqlfileset dir="${classpathdir}">
+          <include name="${sqlfilepattern}" />
+        </sqlfileset>
+    </gen-sqlfiletest>
+  </target>
+
+  <target name="migrate">
+    <migrate
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      applyenvtoversion="${applyenvtoversion}"
+      version="${version}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+    <refresh projectName="${projectname}"/>
+  </target>
+
+  <target name="rollback">
+    <migrate
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      entitypackagename="${entitypackagename}"
+      applyenvtoversion="${applyenvtoversion}"
+      version="previous"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+  </target>
+
+  <target name="dump">
+    <dump-data
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      applyenvtoversion="${applyenvtoversion}"
+      entitypackagename="${entitypackagename}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath"
+    />
+  </target>
+
+</project>
