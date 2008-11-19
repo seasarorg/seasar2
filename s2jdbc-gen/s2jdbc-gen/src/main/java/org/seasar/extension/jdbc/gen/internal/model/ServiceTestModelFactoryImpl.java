@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModel;
@@ -108,6 +109,7 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
         if (useS2junit4) {
             classModelSupport.addImportName(serviceTestModel, RunWith.class);
             classModelSupport.addImportName(serviceTestModel, Seasar2.class);
+            classModelSupport.addStaticImportName(serviceTestModel, Assert.class);
         } else {
             classModelSupport.addImportName(serviceTestModel, S2TestCase.class);
         }

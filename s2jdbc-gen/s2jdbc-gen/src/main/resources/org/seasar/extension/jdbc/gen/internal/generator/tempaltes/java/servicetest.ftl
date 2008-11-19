@@ -40,12 +40,10 @@ public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
 
     /**
      * {@link #${shortServiceClassName?uncap_first}}が利用可能であることをテストします。
-     * <p>
-     * このテストが成功すれば、{@link #${shortServiceClassName?uncap_first}}に対するDIが正常に行われているとみなせます。
-     * </p>
-     *
+     * 
      * @throws Exception
      */
     public void testAvailable() throws Exception {
+        assertNotNull(${shortServiceClassName?uncap_first});
     }
 }
