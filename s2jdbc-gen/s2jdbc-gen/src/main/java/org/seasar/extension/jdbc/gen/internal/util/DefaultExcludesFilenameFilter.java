@@ -26,9 +26,32 @@ import java.util.regex.Pattern;
  */
 public class DefaultExcludesFilenameFilter implements FilenameFilter {
 
-    /** デフォルトの除外名のパターン */
-    protected static Pattern filterPattern = Pattern
-            .compile("^(.*~|#.*#|\\.#.*|%.*%|\\._.*|CVS|\\.cvsignore|SCCS|vssver\\.scc|\\.svn|\\.DS_Store)$");
+    /** 除外すべき名前を表すデフォルトの正規表現 */
+    protected static String defaultFilterRegex = "^(.*~|#.*#|\\.#.*|%.*%|\\._.*|CVS|\\.cvsignore|SCCS|vssver\\.scc|\\.svn|\\.DS_Store)$";
+
+    /** 除外名のパターン */
+    protected static Pattern filterPattern;
+
+    static {
+        resetFilterPattern();
+    }
+
+    /**
+     * 除外すべき名前を表すデフォルトの正規表現でフィルタパターンをリセットします。
+     */
+    public static void resetFilterPattern() {
+        filterPattern = Pattern.compile(defaultFilterRegex);
+    }
+
+    /**
+     * 除外すべき名前を表す正規表現を設定します。
+     * 
+     * @param filterRegex
+     *            除外すべき名前を表す正規表現
+     */
+    public static void setFilterRegex(String filterRegex) {
+        filterPattern = Pattern.compile(filterRegex);
+    }
 
     public boolean accept(File dir, String name) {
         return !filterPattern.matcher(name).matches();

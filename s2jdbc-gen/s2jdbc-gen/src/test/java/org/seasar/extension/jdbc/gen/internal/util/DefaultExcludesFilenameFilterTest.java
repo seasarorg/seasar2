@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.util;
 
+import org.junit.After;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -24,6 +25,14 @@ import static org.junit.Assert.*;
  * 
  */
 public class DefaultExcludesFilenameFilterTest {
+
+    /**
+     * 
+     */
+    @After
+    public void tearDown() {
+        DefaultExcludesFilenameFilter.resetFilterPattern();
+    }
 
     /**
      * 
@@ -43,6 +52,17 @@ public class DefaultExcludesFilenameFilterTest {
         assertFalse(filter.accept(null, "vssver.scc"));
         assertFalse(filter.accept(null, ".svn"));
         assertFalse(filter.accept(null, ".DS_Store"));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testSetFilterRegex() {
+        DefaultExcludesFilenameFilter.setFilterRegex("test");
+        DefaultExcludesFilenameFilter filter = new DefaultExcludesFilenameFilter();
+        assertTrue(filter.accept(null, "aaa"));
+        assertFalse(filter.accept(null, "test"));
     }
 
 }
