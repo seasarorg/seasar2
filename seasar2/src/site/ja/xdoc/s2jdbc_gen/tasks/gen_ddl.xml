@@ -404,7 +404,7 @@
 					独自のテンプレートファイルを使用できます。
 				</p>
 				<p>
-					S2JDBC-Genのテンプレートは、配布ファイルのsrc/main/resources/org/seasar/extension/jdbc/gen/internal/generator/tempaltesディレクトリ以下にあります。
+					S2JDBC-Genのテンプレートは、配布ファイルのresources/tempaltesディレクトリ以下にあります。
 					ここでは、テーブルのcreate文のテンプレートを置き換える例を示します。
 					テーブルのcreate文のテンプレートトはsql/create-table.ftlです。
 					修正は、これをコピーして行うと良いでしょう。

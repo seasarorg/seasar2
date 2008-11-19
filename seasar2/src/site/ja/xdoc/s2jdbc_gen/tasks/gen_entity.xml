@@ -251,7 +251,7 @@ public class Department {
 					独自のテンプレートファイルを使用できます。
 				</p>
 				<p>
-					S2JDBC-Genのテンプレートは、配布ファイルのsrc/main/resources/org/seasar/extension/jdbc/gen/internal/generator/tempaltesディレクトリ以下にあります。
+					S2JDBC-Genのテンプレートは、配布ファイルのresources/tempaltesディレクトリ以下にあります。
 					エンティティクラスのテンプレートはjava/entity.ftlになります。これをコピーして、修正を加えるのが良いでしょう。
 				</p>
 				<p>
