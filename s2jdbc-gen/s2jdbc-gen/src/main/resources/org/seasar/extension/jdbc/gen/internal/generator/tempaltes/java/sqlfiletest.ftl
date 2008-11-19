@@ -110,7 +110,7 @@ public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
          *            SQLファイルのパス
          */
         public SqlFile(String path) {
-            implementor = JdbcManagerImplementor.class.cast(jdbcManager);
+            implementor = JdbcManagerImplementor.class.cast(${jdbcManagerName});
             this.sql = getSql(path);
         }
 

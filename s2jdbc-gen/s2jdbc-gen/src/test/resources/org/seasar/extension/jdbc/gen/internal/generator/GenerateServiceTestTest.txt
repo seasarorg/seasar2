@@ -23,11 +23,13 @@ public class AaaServiceTest extends S2TestCase {
     }
 
     /**
-     * {@link AaaService#getCount()}が動作することをテストします。
-     * 
+     * {@link #aaaService}が利用可能であることをテストします。
+     * <p>
+     * このテストが成功すれば、{@link #aaaService}に対するDIが正常に行われているとみなせます。
+     * </p>
+     *
      * @throws Exception
      */
-    public void testGetCountTx() throws Exception {
-        aaaService.getCount();
+    public void testAvailable() throws Exception {
     }
 }

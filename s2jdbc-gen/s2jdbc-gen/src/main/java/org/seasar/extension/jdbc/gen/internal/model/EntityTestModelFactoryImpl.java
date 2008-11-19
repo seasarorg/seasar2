@@ -226,7 +226,14 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
      */
     protected void doNamesModel(EntityTestModel entityTestModel,
             EntityMeta entityMeta) {
-        if (entityMeta.getIdPropertyMetaList().size() > 0 && useNamesClass) {
+        boolean relationshipExistent = false;
+        for (PropertyMeta propertyMeta : entityMeta.getAllPropertyMeta()) {
+            if (propertyMeta.isRelationship()) {
+                relationshipExistent = true;
+                break;
+            }
+        }
+        if (relationshipExistent && useNamesClass) {
             NamesModel namesModel = namesModelFactory.getNamesModel(entityMeta);
             entityTestModel.setNamesModel(namesModel);
         }
