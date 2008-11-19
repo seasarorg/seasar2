@@ -43,6 +43,9 @@ public class EntityTestModel extends TestClassModel {
     /** {@link JdbcManager}のコンポーネント名 */
     protected String jdbcManagerName;
 
+    /** 名前モデル */
+    protected NamesModel namesModel;
+
     /**
      * エンティティクラスの単純名を返します。
      * 
@@ -136,6 +139,25 @@ public class EntityTestModel extends TestClassModel {
      */
     public void addAssociationName(String associationName) {
         associationNameList.add(associationName);
+    }
+
+    /**
+     * 名前モデルを返します。
+     * 
+     * @return 名前モデル
+     */
+    public NamesModel getNamesModel() {
+        return namesModel;
+    }
+
+    /**
+     * 名前モデルを設定します。
+     * 
+     * @param namesModel
+     *            名前モデル
+     */
+    public void setNamesModel(NamesModel namesModel) {
+        this.namesModel = namesModel;
     }
 
 }

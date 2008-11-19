@@ -6,6 +6,12 @@ package ${packageName};
 <#list importNameSet as importName>
 import ${importName};
 </#list>
+<#if staticImportNameSet?size gt 0>
+
+  <#list staticImportNameSet as importName>
+import static ${importName};
+  </#list>
+</#if>
 
 /**
  * {@link ${shortEntityClassName}}のテストクラスです。
@@ -59,7 +65,20 @@ public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
     public void testFindById() throws Exception {
         ${jdbcManagerName}.from(${shortEntityClassName}.class).id(<#list idExpressionList as idExpression>${idExpression}<#if idExpression_has_next>, </#if></#list>).getSingleResult();
     }
-<#list associationNameList as associationName>
+  <#if namesModel??>
+    <#list namesModel.namesAssociationModelList as namesAssociationModel>
+
+    /**
+     * ${namesAssociationModel.name}との外部結合をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testLeftOuterJoin_${namesAssociationModel.name}() throws Exception {
+        ${jdbcManagerName}.from(${shortEntityClassName}.class).leftOuterJoin(${namesAssociationModel.name}()).id(<#list idExpressionList as idExpression>${idExpression}<#if idExpression_has_next>, </#if></#list>).getSingleResult();
+    }
+    </#list>
+  <#else>
+    <#list associationNameList as associationName>
 
     /**
      * ${associationName}との外部結合をテストします。
@@ -69,6 +88,7 @@ public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
     public void testLeftOuterJoin_${associationName}() throws Exception {
         ${jdbcManagerName}.from(${shortEntityClassName}.class).leftOuterJoin("${associationName}").id(<#list idExpressionList as idExpression>${idExpression}<#if idExpression_has_next>, </#if></#list>).getSingleResult();
     }
-</#list>
+    </#list>
+  </#if>
 </#if>
 }

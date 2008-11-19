@@ -6,6 +6,12 @@ package ${packageName};
 <#list importNameSet as importName>
 import ${importName};
 </#list>
+<#if staticImportNameSet?size gt 0>
+
+  <#list staticImportNameSet as importName>
+import static ${importName};
+  </#list>
+</#if>
 
 /**
  * {@link ${shortEntityClassName}}のプロパティ名の集合です。

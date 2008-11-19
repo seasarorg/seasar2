@@ -431,13 +431,18 @@ public interface Factory {
      *            {@link JdbcManager}のコンポーネント名
      * @param testClassNameSuffix
      *            テストクラス名のサフィックス
+     * @param namesModelFactory
+     *            名前モデルのファクトリ
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}
      * @param useS2junit4
      *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      * @return {@link EntityTestModelFactory}の実装
      */
     EntityTestModelFactory createEntityTestModelFactory(Command command,
             String configPath, String jdbcManagerName,
-            String testClassNameSuffix, boolean useS2junit4);
+            String testClassNameSuffix, NamesModelFactory namesModelFactory,
+            boolean useNamesClass, boolean useS2junit4);
 
     /**
      * {@link NamesModelFactory}の実装を作成します。

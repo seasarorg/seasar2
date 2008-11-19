@@ -208,4 +208,34 @@ public class GenerateEntityTestTask extends AbstractTask {
         command.setUseS2junit4(useS2junit4);
     }
 
+    /**
+     * 名前クラス名のサフィックスを設定します。
+     * 
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
+     */
+    public void setNamesClassNameSuffix(String namesClassNameSuffix) {
+        command.setNamesClassNameSuffix(namesClassNameSuffix);
+    }
+
+    /**
+     * 名前クラスのパッケージ名を設定します。
+     * 
+     * @param namesPackageName
+     *            名前クラスのパッケージ名
+     */
+    public void setNamesPackageName(String namesPackageName) {
+        command.setNamesPackageName(namesPackageName);
+    }
+
+    /**
+     * 名前クラスを使用する場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}、しない場合{@code false}
+     */
+    public void setUseNamesClass(boolean useNamesClass) {
+        command.setUseNamesClass(useNamesClass);
+    }
+
 }

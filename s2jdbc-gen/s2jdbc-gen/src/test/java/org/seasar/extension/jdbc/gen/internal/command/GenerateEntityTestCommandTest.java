@@ -19,7 +19,6 @@ import java.io.File;
 
 import org.junit.After;
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityTestCommand;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
@@ -67,6 +66,7 @@ public class GenerateEntityTestCommandTest {
         command.validate();
         command.init();
         assertNotNull(command.entityMetaReader);
+        assertNotNull(command.namesModelFactory);
         assertNotNull(command.entityTestModelFactory);
         assertNotNull(command.generator);
     }

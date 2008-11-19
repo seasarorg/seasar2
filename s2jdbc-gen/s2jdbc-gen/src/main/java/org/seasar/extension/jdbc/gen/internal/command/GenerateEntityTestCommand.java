@@ -27,6 +27,7 @@ import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
 import org.seasar.extension.jdbc.gen.model.EntityTestModel;
 import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -79,6 +80,15 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     /** テンプレートファイルを格納するプライマリディレクトリ */
     protected File templateFilePrimaryDir = null;
 
+    /** 名前クラスを使用する場合{@code true} */
+    protected boolean useNamesClass = true;
+
+    /** 名前クラス名のサフィックス */
+    protected String namesClassNameSuffix = "Names";
+
+    /** 名前クラスのパッケージ名 */
+    protected String namesPackageName = "entity";
+
     /** 生成するJavaファイルの出力先ディレクトリ */
     protected File javaFileDestDir = new File(new File("src", "test"), "java");
 
@@ -93,6 +103,9 @@ public class GenerateEntityTestCommand extends AbstractCommand {
 
     /** テストのモデルのファクトリ */
     protected EntityTestModelFactory entityTestModelFactory;
+
+    /** 名前モデルのファクトリ */
+    protected NamesModelFactory namesModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -345,6 +358,63 @@ public class GenerateEntityTestCommand extends AbstractCommand {
         this.useS2junit4 = useS2junit4;
     }
 
+    /**
+     * 名前クラス名のサフィックスを返します。
+     * 
+     * @return 名前クラス名のサフィックス
+     */
+    public String getNamesClassNameSuffix() {
+        return namesClassNameSuffix;
+    }
+
+    /**
+     * 名前クラス名のサフィックスを設定します。
+     * 
+     * @param namesClassNameSuffix
+     *            名前クラス名のサフィックス
+     */
+    public void setNamesClassNameSuffix(String namesClassNameSuffix) {
+        this.namesClassNameSuffix = namesClassNameSuffix;
+    }
+
+    /**
+     * 名前クラスのパッケージ名を返します。
+     * 
+     * @return 名前クラスのパッケージ名
+     */
+    public String getNamesPackageName() {
+        return namesPackageName;
+    }
+
+    /**
+     * 名前クラスのパッケージ名を設定します。
+     * 
+     * @param namesPackageName
+     *            名前クラスのパッケージ名
+     */
+    public void setNamesPackageName(String namesPackageName) {
+        this.namesPackageName = namesPackageName;
+    }
+
+    /**
+     * 名前クラスを使用する場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return 名前クラスを使用する場合{@code true}、しない場合{@code false}
+     */
+    public boolean isUseNamesClass() {
+        return useNamesClass;
+    }
+
+    /**
+     * 名前クラスを使用する場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}、しない場合{@code false}
+     */
+    public void setUseNamesClass(boolean useNamesClass) {
+        this.useNamesClass = useNamesClass;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -358,6 +428,7 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         entityMetaReader = createEntityMetaReader();
+        namesModelFactory = createNamesModelFactory();
         entityTestModelFactory = createEntityTestModelFactory();
         generator = createGenerator();
     }
@@ -400,13 +471,24 @@ public class GenerateEntityTestCommand extends AbstractCommand {
     }
 
     /**
+     * {@link NamesModelFactory}の実装を作成します。
+     * 
+     * @return {@link NamesModelFactory}の実装
+     */
+    protected NamesModelFactory createNamesModelFactory() {
+        return factory.createNamesModelFactory(this, ClassUtil.concatName(
+                rootPackageName, namesPackageName), namesClassNameSuffix);
+    }
+
+    /**
      * {@link EntityTestModelFactory}の実装を作成します。
      * 
      * @return {@link EntityTestModelFactory}の実装
      */
     protected EntityTestModelFactory createEntityTestModelFactory() {
         return factory.createEntityTestModelFactory(this, configPath,
-                jdbcManagerName, testClassNameSuffix, useS2junit4);
+                jdbcManagerName, testClassNameSuffix, namesModelFactory,
+                useNamesClass, useS2junit4);
     }
 
     /**

@@ -243,10 +243,12 @@ public class FactoryImpl implements Factory {
 
     public EntityTestModelFactory createEntityTestModelFactory(Command command,
             String configPath, String jdbcManagerName,
-            String testClassNameSuffix, boolean useS2junit4) {
+            String testClassNameSuffix, NamesModelFactory namesModelFactory,
+            boolean useNamesClass, boolean useS2junit4) {
 
         return new EntityTestModelFactoryImpl(configPath, jdbcManagerName,
-                testClassNameSuffix, useS2junit4);
+                testClassNameSuffix, namesModelFactory, useNamesClass,
+                useS2junit4);
     }
 
     public NamesModelFactory createNamesModelFactory(Command command,

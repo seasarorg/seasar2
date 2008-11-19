@@ -28,6 +28,8 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.EntityTestModel;
 import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.NamesModel;
+import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.unit.Seasar2;
 import org.seasar.framework.unit.TestContext;
@@ -52,6 +54,12 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
     /** S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
     protected boolean useS2junit4;
 
+    /** 名前モデルのファクトリ */
+    protected NamesModelFactory namesModelFactory;
+
+    /** 名前クラスを使用する場合{@code true} */
+    protected boolean useNamesClass;
+
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
 
@@ -64,11 +72,16 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
      *            {@link JdbcManager}のコンポーネント名
      * @param testClassNameSuffix
      *            テストクラス名のサフィックス
+     * @param namesModelFactory
+     *            名前モデルのファクトリ
+     * @param useNamesClass
+     *            名前クラスを使用する場合{@code true}
      * @param useS2junit4
      *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
      */
     public EntityTestModelFactoryImpl(String configPath,
             String jdbcManagerName, String testClassNameSuffix,
+            NamesModelFactory namesModelFactory, boolean useNamesClass,
             boolean useS2junit4) {
         if (configPath == null) {
             throw new NullPointerException("configPath");
@@ -79,9 +92,14 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         if (testClassNameSuffix == null) {
             throw new NullPointerException("testClassNameSuffix");
         }
+        if (namesModelFactory == null) {
+            throw new NullPointerException("namesModelFactory");
+        }
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
         this.testClassNameSuffix = testClassNameSuffix;
+        this.namesModelFactory = namesModelFactory;
+        this.useNamesClass = useNamesClass;
         this.useS2junit4 = useS2junit4;
     }
 
@@ -98,6 +116,7 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         entityTestModel.setUseS2junit4(useS2junit4);
         doIdValue(entityTestModel, entityMeta);
         doAssociationName(entityTestModel, entityMeta);
+        doNamesModel(entityTestModel, entityMeta);
         doImportName(entityTestModel, entityMeta);
         return entityTestModel;
     }
@@ -198,6 +217,22 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
     }
 
     /**
+     * 名前モデルを処理します。
+     * 
+     * @param entityTestModel
+     *            テストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doNamesModel(EntityTestModel entityTestModel,
+            EntityMeta entityMeta) {
+        if (entityMeta.getIdPropertyMetaList().size() > 0 && useNamesClass) {
+            NamesModel namesModel = namesModelFactory.getNamesModel(entityMeta);
+            entityTestModel.setNamesModel(namesModel);
+        }
+    }
+
+    /**
      * インポート名を処理します。
      * 
      * @param entityTestModel
@@ -214,6 +249,13 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
             classModelSupport.addImportName(entityTestModel, TestContext.class);
         } else {
             classModelSupport.addImportName(entityTestModel, S2TestCase.class);
+        }
+        NamesModel namesModel = entityTestModel.getNamesModel();
+        if (namesModel != null) {
+            String namesClassName = ClassUtil.concatName(namesModel
+                    .getPackageName(), namesModel.getShortClassName());
+            classModelSupport.addStaticImportName(entityTestModel,
+                    namesClassName);
         }
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
             classModelSupport.addImportName(entityTestModel, propertyMeta

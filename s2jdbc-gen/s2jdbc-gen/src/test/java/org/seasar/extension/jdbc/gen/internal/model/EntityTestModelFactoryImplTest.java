@@ -44,7 +44,8 @@ public class EntityTestModelFactoryImplTest {
     @Before
     public void setUp() throws Exception {
         factory = new EntityTestModelFactoryImpl("s2jdbc.dicon", "jdbcManager",
-                "Test", false);
+                "Test", new NamesModelFactoryImpl("hoge.entity", "Names"),
+                true, false);
     }
 
     /**

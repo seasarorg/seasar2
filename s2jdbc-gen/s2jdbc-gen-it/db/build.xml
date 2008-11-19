@@ -36,8 +36,7 @@
 	<target name="testAll">
 		<antcall target="testFromDbToEntity"/>
 		<antcall target="testFromEntityToDb"/>
-		<antcall target="testGenerateDdl"/>
-		<antcall target="testGenerateTest"/>
+		<antcall target="testGenerateEntityTest"/>
 		<antcall target="testMigrate"/>
 		<antcall target="testDumpDbMeta"/>
 		<antcall target="testDumpData"/>
@@ -268,7 +267,7 @@
 		<refresh projectname="s2jdbc-gen-it"/>
 	</target>
 	
-	<target name="testGenerateTest" depends="showRdbmsName, clean">
+	<target name="testGenerateEntityTest" depends="showRdbmsName, clean">
 		<!-- setUp -->
 		<javac 
 			srcdir="../src/main/java"
@@ -283,6 +282,7 @@
 			classpathDir="${build}"
 			rootpackagename="${rootpackagename}"
 			javafiledestdir="${src}"
+			usenamesclass="false"
 			classpathref="classpath"
 		/>
 		<javac 
