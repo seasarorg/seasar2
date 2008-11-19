@@ -25,6 +25,8 @@ import java.util.Comparator;
 public class FileComparetor implements Comparator<File> {
 
     public int compare(File file1, File file2) {
-        return file1.compareTo(file2);
+        String path1 = FileUtil.getCanonicalPath(file1);
+        String path2 = FileUtil.getCanonicalPath(file2);
+        return path1.compareTo(path2);
     }
 }
