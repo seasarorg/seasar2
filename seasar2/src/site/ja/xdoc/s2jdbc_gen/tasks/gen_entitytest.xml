@@ -61,6 +61,9 @@
 					<tr><td>entityClassNamePattern</td><td>このタスクで対象とするエンティティ名の正規表現です。</td><td>".*"</td><td>NO</td></tr>
 					<tr><td>ignoreEntityClassNamePattern</td><td>このタスクで対象としないエンティティ名の正規表現です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>testClassNameSuffix</td><td>テストクラス名のサフィックスです。</td><td>"Test"</td><td>NO</td></tr>
+					<tr><td>useNamesClass</td><td>"true"の場合、名前クラスを使用します。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>namesClassNameSuffix</td><td>名前クラス名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
+					<tr><td>namesPackageName</td><td>名前クラスのパッケージ名です。名前インタフェースは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>useS2junit4</td><td>"true"の場合、<a href="../../S2JUnit4.html">S2JUnit4</a>を使ったテストコードを生成します。"false"の場合、<a href="../../S2Unit.html">S2Unit</a>を使ったテストコードを生成します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/entitytest.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>

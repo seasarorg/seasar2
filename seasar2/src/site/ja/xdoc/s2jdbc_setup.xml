@@ -142,12 +142,12 @@
 					</tr>
 					<tr>
 						<td>mssql2005Dialect</td>
-						<td>MS SQLServer 2005</td>
+						<td>MS SQL Server (2005以降)</td>
 						<td>_mssql</td>
 					</tr>
 					<tr>
 						<td>mssqlDialect</td>
-						<td>MS SQLServer</td>
+						<td>MS SQL Server (2000以前)</td>
 						<td>_mssql</td>
 					</tr>
 					<tr>

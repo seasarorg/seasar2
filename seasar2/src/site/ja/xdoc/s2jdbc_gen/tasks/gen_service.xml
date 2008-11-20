@@ -103,7 +103,7 @@ public class AddressService extends AbstractService<Address> {
 					<tr><td>serviceClassNameSuffix</td><td>サービスクラス名のサフィックスです。</td><td>"Service"</td><td>NO</td></tr>
 					<tr><td>abstractServiceTemplateFileName</td><td>抽象サービスクラスのテンプレートファイル名です。</td><td>"java/abstract-service.ftl"</td><td>NO</td></tr>
 					<tr><td>serviceTemplateFileName</td><td>サービスクラスのテンプレートファイル名です。</td><td>"java/service.ftl"</td><td>NO</td></tr>
-					<tr><td>useNames</td><td>"true"の場合、名前クラスを使用します。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>useNamesClass</td><td>"true"の場合、名前クラスを使用します。</td><td>"true"</td><td>NO</td></tr>
 					<tr><td>namesClassNameSuffix</td><td>名前クラス名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
 					<tr><td>namesPackageName</td><td>名前クラスのパッケージ名です。名前インタフェースは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
