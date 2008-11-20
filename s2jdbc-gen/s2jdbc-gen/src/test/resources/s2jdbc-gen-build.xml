@@ -3,6 +3,7 @@
   <property name="classpathdir" value="src/main/webapp/WEB-INF/classes"/>
   <property name="rootpackagename" value="example"/>
   <property name="entitypackagename" value="entity"/>
+  <property name="entityfilepattern" value="example/entity/**/*.java"/>
   <property name="javafiledestdir" value="src/main/java"/>
   <property name="testjavafiledestdir" value="src/test/java"/>
   <property name="javafileencoding" value="UTF-8"/>
@@ -42,7 +43,7 @@
       fork="true"
       debug="on"
       classpathref="classpath">
-        <include name="${rootpackagename}/${entitypackagename}/**"/>
+        <include name="${entityfilepattern}"/>
     </javac>
     <gen-names
       classpathdir="${classpathdir}"
