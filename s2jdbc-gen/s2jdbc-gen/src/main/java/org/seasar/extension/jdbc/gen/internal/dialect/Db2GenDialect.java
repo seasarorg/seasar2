@@ -60,14 +60,14 @@ public class Db2GenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
         sqlTypeMap.put(Types.FLOAT, new FloatType("real"));
 
-        columnTypeByNameMap.put("blob", Db2ColumnType.BLOB);
-        columnTypeByNameMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
-        columnTypeByNameMap.put("clob", Db2ColumnType.CLOB);
-        columnTypeByNameMap.put("decimal", Db2ColumnType.DECIMAL);
-        columnTypeByNameMap.put("long varchar for bit data",
+        columnTypeMap.put("blob", Db2ColumnType.BLOB);
+        columnTypeMap.put("char () for bit data", Db2ColumnType.CHAR_BIT);
+        columnTypeMap.put("clob", Db2ColumnType.CLOB);
+        columnTypeMap.put("decimal", Db2ColumnType.DECIMAL);
+        columnTypeMap.put("long varchar for bit data",
                 Db2ColumnType.LONGVARCHAR_BIT);
-        columnTypeByNameMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
-        columnTypeByNameMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
+        columnTypeMap.put("long varchar", Db2ColumnType.LONGVARCHAR);
+        columnTypeMap.put("varchar () for bit data", Db2ColumnType.VARCHAR_BIT);
     }
 
     @Override

@@ -47,8 +47,8 @@ public class HsqlGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BLOB, new BlobType("longvarbinary"));
         sqlTypeMap.put(Types.CLOB, new ClobType("longvarchar"));
 
-        columnTypeByNameMap.put("int", HsqlColumnType.INT);
-        columnTypeByNameMap.put("varchar_ignorecase",
+        columnTypeMap.put("int", HsqlColumnType.INT);
+        columnTypeMap.put("varchar_ignorecase",
                 HsqlColumnType.VARCHAR_IGNORECASE);
     }
 

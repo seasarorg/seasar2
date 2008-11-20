@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.util.Date;
 
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.ColumnType;
@@ -55,6 +56,17 @@ public class OracleGenDialectTest {
         ColumnType type = dialect.getColumnType("varchar2", Types.OTHER);
         assertEquals("varchar2(10)", type.getColumnDefinition(10, 0, 0, null));
         assertEquals(String.class, type.getAttributeClass(10, 0, 0));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_timestamp() throws Exception {
+        ColumnType type = dialect.getColumnType("timestamp(", Types.OTHER);
+        assertEquals("timestamp(5)", type.getColumnDefinition(0, 0, 5, null));
+        assertEquals(Date.class, type.getAttributeClass(0, 0, 5));
     }
 
     /**

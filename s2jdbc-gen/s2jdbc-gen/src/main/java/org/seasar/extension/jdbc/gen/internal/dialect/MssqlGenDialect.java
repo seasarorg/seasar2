@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.DoubleType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * MS SQL Serverの方言を扱うクラスです。
@@ -64,21 +65,21 @@ public class MssqlGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.TIME, new TimeType("datetime"));
         sqlTypeMap.put(Types.TIMESTAMP, new TimestampType("datetime"));
 
-        columnTypeByNameMap.put("binary", MssqlColumnType.BINARY);
-        columnTypeByNameMap.put("bit", MssqlColumnType.BIT);
-        columnTypeByNameMap.put("datetime", MssqlColumnType.DATETIME);
-        columnTypeByNameMap.put("decimal", MssqlColumnType.DECIMAL);
-        columnTypeByNameMap.put("image", MssqlColumnType.IMAGE);
-        columnTypeByNameMap.put("int", MssqlColumnType.INT);
-        columnTypeByNameMap.put("money", MssqlColumnType.MONEY);
-        columnTypeByNameMap.put("nchar", MssqlColumnType.NCHAR);
-        columnTypeByNameMap.put("ntext", MssqlColumnType.NTEXT);
-        columnTypeByNameMap.put("numeric", MssqlColumnType.NUMERIC);
-        columnTypeByNameMap.put("nvarchar", MssqlColumnType.NVARCHAR);
-        columnTypeByNameMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
-        columnTypeByNameMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
-        columnTypeByNameMap.put("text", MssqlColumnType.TEXT);
-        columnTypeByNameMap.put("varbinary", MssqlColumnType.VARBINARY);
+        columnTypeMap.put("binary", MssqlColumnType.BINARY);
+        columnTypeMap.put("bit", MssqlColumnType.BIT);
+        columnTypeMap.put("datetime", MssqlColumnType.DATETIME);
+        columnTypeMap.put("decimal", MssqlColumnType.DECIMAL);
+        columnTypeMap.put("image", MssqlColumnType.IMAGE);
+        columnTypeMap.put("int", MssqlColumnType.INT);
+        columnTypeMap.put("money", MssqlColumnType.MONEY);
+        columnTypeMap.put("nchar", MssqlColumnType.NCHAR);
+        columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
+        columnTypeMap.put("numeric", MssqlColumnType.NUMERIC);
+        columnTypeMap.put("nvarchar", MssqlColumnType.NVARCHAR);
+        columnTypeMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
+        columnTypeMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
+        columnTypeMap.put("text", MssqlColumnType.TEXT);
+        columnTypeMap.put("varbinary", MssqlColumnType.VARBINARY);
     }
 
     @Override
@@ -122,6 +123,29 @@ public class MssqlGenDialect extends StandardGenDialect {
         Integer errorCode = getErrorCode(throwable);
         return errorCode != null
                 && errorCode.intValue() == COLUMN_NOT_FOUND_ERROR_CODE;
+    }
+
+    @Override
+    public ColumnType getColumnType(String typeName, int sqlType) {
+        ColumnType columnType = columnTypeMap.get(typeName);
+        if (columnType != null) {
+            return columnType;
+        }
+
+        if (StringUtil.startsWithIgnoreCase(typeName, "int")) {
+            typeName = "int";
+        } else if (StringUtil.startsWithIgnoreCase(typeName, "bigint")) {
+            typeName = "bigint";
+        } else if (StringUtil.startsWithIgnoreCase(typeName, "smallint")) {
+            typeName = "smallint";
+        } else if (StringUtil.startsWithIgnoreCase(typeName, "tinyint")) {
+            typeName = "tinyint";
+        } else if (StringUtil.startsWithIgnoreCase(typeName, "decimal")) {
+            typeName = "decimal";
+        } else if (StringUtil.startsWithIgnoreCase(typeName, "numeric")) {
+            typeName = "numeric";
+        }
+        return super.getColumnType(typeName, sqlType);
     }
 
     @Override

@@ -135,7 +135,7 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
                 doDbColumnMeta(metaData, tableMeta, primaryKeySet);
                 doDbForeignKeyMeta(metaData, tableMeta);
             }
-            if (readComment && dialect.isJdbcCommentUnavailable()) {
+            if (readComment && !dialect.isJdbcCommentAvailable()) {
                 readCommentFromDictinary(con, dbTableMetaList);
             }
             return dbTableMetaList;

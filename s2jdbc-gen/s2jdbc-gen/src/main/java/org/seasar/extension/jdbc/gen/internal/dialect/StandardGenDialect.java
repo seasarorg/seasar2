@@ -65,10 +65,10 @@ public class StandardGenDialect implements GenDialect {
 
     /** カラムの型名をキー、{@link ColumnType}を値とするマップ */
     @SuppressWarnings("unchecked")
-    protected Map<Object, ColumnType> columnTypeByNameMap = new CaseInsensitiveMap();
+    protected Map<Object, ColumnType> columnTypeMap = new CaseInsensitiveMap();
 
-    /** カラムのSQL型をキー、{@link ColumnType}を値とするマップ */
-    protected Map<Integer, ColumnType> columnTypeBySqlTypeMap = new HashMap<Integer, ColumnType>();
+    /** カラムのSQL型をキー、{@link ColumnType}を値とするマップ。 */
+    protected Map<Integer, ColumnType> fallbackColumnTypeMap = new HashMap<Integer, ColumnType>();
 
     /**
      * インスタンスを構築します。
@@ -90,56 +90,55 @@ public class StandardGenDialect implements GenDialect {
         sqlTypeMap.put(Types.TIMESTAMP, new TimestampType());
         sqlTypeMap.put(Types.VARCHAR, new VarcharType());
 
-        columnTypeByNameMap.put("bigint", StandardColumnType.BIGINT);
-        columnTypeByNameMap.put("binary", StandardColumnType.BINARY);
-        columnTypeByNameMap.put("bit", StandardColumnType.BIT);
-        columnTypeByNameMap.put("blob", StandardColumnType.BLOB);
-        columnTypeByNameMap.put("boolean", StandardColumnType.BOOLEAN);
-        columnTypeByNameMap.put("char", StandardColumnType.CHAR);
-        columnTypeByNameMap.put("clob", StandardColumnType.CLOB);
-        columnTypeByNameMap.put("date", StandardColumnType.DATE);
-        columnTypeByNameMap.put("decimal", StandardColumnType.DECIMAL);
-        columnTypeByNameMap.put("double", StandardColumnType.DOUBLE);
-        columnTypeByNameMap.put("float", StandardColumnType.FLOAT);
-        columnTypeByNameMap.put("integer", StandardColumnType.INTEGER);
-        columnTypeByNameMap.put("longvarbinary",
-                StandardColumnType.LONGVARBINARY);
-        columnTypeByNameMap.put("longvarchar", StandardColumnType.LONGVARCHAR);
-        columnTypeByNameMap.put("numeric", StandardColumnType.NUMERIC);
-        columnTypeByNameMap.put("real", StandardColumnType.REAL);
-        columnTypeByNameMap.put("smallint", StandardColumnType.SMALLINT);
-        columnTypeByNameMap.put("time", StandardColumnType.TIME);
-        columnTypeByNameMap.put("timestamp", StandardColumnType.TIMESTAMP);
-        columnTypeByNameMap.put("tinyint", StandardColumnType.TINYINT);
-        columnTypeByNameMap.put("varbinary", StandardColumnType.VARBINARY);
-        columnTypeByNameMap.put("varchar", StandardColumnType.VARCHAR);
+        columnTypeMap.put("bigint", StandardColumnType.BIGINT);
+        columnTypeMap.put("binary", StandardColumnType.BINARY);
+        columnTypeMap.put("bit", StandardColumnType.BIT);
+        columnTypeMap.put("blob", StandardColumnType.BLOB);
+        columnTypeMap.put("boolean", StandardColumnType.BOOLEAN);
+        columnTypeMap.put("char", StandardColumnType.CHAR);
+        columnTypeMap.put("clob", StandardColumnType.CLOB);
+        columnTypeMap.put("date", StandardColumnType.DATE);
+        columnTypeMap.put("decimal", StandardColumnType.DECIMAL);
+        columnTypeMap.put("double", StandardColumnType.DOUBLE);
+        columnTypeMap.put("float", StandardColumnType.FLOAT);
+        columnTypeMap.put("integer", StandardColumnType.INTEGER);
+        columnTypeMap.put("longvarbinary", StandardColumnType.LONGVARBINARY);
+        columnTypeMap.put("longvarchar", StandardColumnType.LONGVARCHAR);
+        columnTypeMap.put("numeric", StandardColumnType.NUMERIC);
+        columnTypeMap.put("real", StandardColumnType.REAL);
+        columnTypeMap.put("smallint", StandardColumnType.SMALLINT);
+        columnTypeMap.put("time", StandardColumnType.TIME);
+        columnTypeMap.put("timestamp", StandardColumnType.TIMESTAMP);
+        columnTypeMap.put("tinyint", StandardColumnType.TINYINT);
+        columnTypeMap.put("varbinary", StandardColumnType.VARBINARY);
+        columnTypeMap.put("varchar", StandardColumnType.VARCHAR);
 
-        columnTypeBySqlTypeMap.put(Types.BIGINT, StandardColumnType.BIGINT);
-        columnTypeBySqlTypeMap.put(Types.BINARY, StandardColumnType.BINARY);
-        columnTypeBySqlTypeMap.put(Types.BIT, StandardColumnType.BIT);
-        columnTypeBySqlTypeMap.put(Types.BLOB, StandardColumnType.BLOB);
-        columnTypeBySqlTypeMap.put(Types.BOOLEAN, StandardColumnType.BOOLEAN);
-        columnTypeBySqlTypeMap.put(Types.CHAR, StandardColumnType.CHAR);
-        columnTypeBySqlTypeMap.put(Types.CLOB, StandardColumnType.CLOB);
-        columnTypeBySqlTypeMap.put(Types.DATE, StandardColumnType.DATE);
-        columnTypeBySqlTypeMap.put(Types.DECIMAL, StandardColumnType.DECIMAL);
-        columnTypeBySqlTypeMap.put(Types.DOUBLE, StandardColumnType.DOUBLE);
-        columnTypeBySqlTypeMap.put(Types.FLOAT, StandardColumnType.FLOAT);
-        columnTypeBySqlTypeMap.put(Types.INTEGER, StandardColumnType.INTEGER);
-        columnTypeBySqlTypeMap.put(Types.LONGVARBINARY,
+        fallbackColumnTypeMap.put(Types.BIGINT, StandardColumnType.BIGINT);
+        fallbackColumnTypeMap.put(Types.BINARY, StandardColumnType.BINARY);
+        fallbackColumnTypeMap.put(Types.BIT, StandardColumnType.BIT);
+        fallbackColumnTypeMap.put(Types.BLOB, StandardColumnType.BLOB);
+        fallbackColumnTypeMap.put(Types.BOOLEAN, StandardColumnType.BOOLEAN);
+        fallbackColumnTypeMap.put(Types.CHAR, StandardColumnType.CHAR);
+        fallbackColumnTypeMap.put(Types.CLOB, StandardColumnType.CLOB);
+        fallbackColumnTypeMap.put(Types.DATE, StandardColumnType.DATE);
+        fallbackColumnTypeMap.put(Types.DECIMAL, StandardColumnType.DECIMAL);
+        fallbackColumnTypeMap.put(Types.DOUBLE, StandardColumnType.DOUBLE);
+        fallbackColumnTypeMap.put(Types.FLOAT, StandardColumnType.FLOAT);
+        fallbackColumnTypeMap.put(Types.INTEGER, StandardColumnType.INTEGER);
+        fallbackColumnTypeMap.put(Types.LONGVARBINARY,
                 StandardColumnType.LONGVARBINARY);
-        columnTypeBySqlTypeMap.put(Types.LONGVARCHAR,
+        fallbackColumnTypeMap.put(Types.LONGVARCHAR,
                 StandardColumnType.LONGVARCHAR);
-        columnTypeBySqlTypeMap.put(Types.NUMERIC, StandardColumnType.NUMERIC);
-        columnTypeBySqlTypeMap.put(Types.REAL, StandardColumnType.REAL);
-        columnTypeBySqlTypeMap.put(Types.SMALLINT, StandardColumnType.SMALLINT);
-        columnTypeBySqlTypeMap.put(Types.TIME, StandardColumnType.TIME);
-        columnTypeBySqlTypeMap.put(Types.TIMESTAMP,
-                StandardColumnType.TIMESTAMP);
-        columnTypeBySqlTypeMap.put(Types.TINYINT, StandardColumnType.TINYINT);
-        columnTypeBySqlTypeMap.put(Types.VARBINARY,
-                StandardColumnType.VARBINARY);
-        columnTypeBySqlTypeMap.put(Types.VARCHAR, StandardColumnType.VARCHAR);
+        fallbackColumnTypeMap.put(Types.NUMERIC, StandardColumnType.NUMERIC);
+        fallbackColumnTypeMap.put(Types.REAL, StandardColumnType.REAL);
+        fallbackColumnTypeMap.put(Types.SMALLINT, StandardColumnType.SMALLINT);
+        fallbackColumnTypeMap.put(Types.TIME, StandardColumnType.TIME);
+        fallbackColumnTypeMap
+                .put(Types.TIMESTAMP, StandardColumnType.TIMESTAMP);
+        fallbackColumnTypeMap.put(Types.TINYINT, StandardColumnType.TINYINT);
+        fallbackColumnTypeMap
+                .put(Types.VARBINARY, StandardColumnType.VARBINARY);
+        fallbackColumnTypeMap.put(Types.VARCHAR, StandardColumnType.VARCHAR);
     }
 
     public String getDefaultSchemaName(String userName) {
@@ -172,8 +171,8 @@ public class StandardGenDialect implements GenDialect {
     }
 
     public ColumnType getColumnType(String typeName, int sqlType) {
-        ColumnType columnType = columnTypeByNameMap.get(typeName);
-        return columnType != null ? columnType : columnTypeBySqlTypeMap
+        ColumnType columnType = columnTypeMap.get(typeName);
+        return columnType != null ? columnType : fallbackColumnTypeMap
                 .get(sqlType);
     }
 
@@ -279,8 +278,8 @@ public class StandardGenDialect implements GenDialect {
         return false;
     }
 
-    public boolean isJdbcCommentUnavailable() {
-        return false;
+    public boolean isJdbcCommentAvailable() {
+        return true;
     }
 
     public String getTableComment(Connection connection, String catalogName,

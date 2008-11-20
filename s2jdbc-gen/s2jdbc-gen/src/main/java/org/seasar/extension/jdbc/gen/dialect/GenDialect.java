@@ -288,12 +288,12 @@ public interface GenDialect {
      * 
      * @return JDBCのコメント取得機能が利用できない場合{@code true}
      */
-    boolean isJdbcCommentUnavailable();
+    boolean isJdbcCommentAvailable();
 
     /**
      * テーブルのコメントをデータベースから直接取得します。
      * <p>
-     * {@link #isJdbcCommentUnavailable()}が{@code true}を返す場合に利用できます。
+     * {@link #isJdbcCommentAvailable()}が{@code true}を返す場合に利用できます。
      * </p>
      * 
      * @param connection
@@ -314,7 +314,7 @@ public interface GenDialect {
     /**
      * カラムのコメントをデータベースから直接取得しマップに詰めて返します。
      * <p>
-     * {@link #isJdbcCommentUnavailable()}が{@code true}を返す場合に利用できます。
+     * {@link #isJdbcCommentAvailable()}が{@code true}を返す場合に利用できます。
      * </p>
      * <p>
      * 戻り値のマップのキーは大文字小文字を気にしません。 カラム名に対応するコメントが存在しない、値は{@code null}になります。

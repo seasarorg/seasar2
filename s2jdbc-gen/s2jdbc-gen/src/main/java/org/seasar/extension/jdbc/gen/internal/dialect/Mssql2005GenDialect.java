@@ -37,9 +37,9 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
         sqlTypeMap.put(Types.BLOB, new BlobType("varbinary(max)"));
         sqlTypeMap.put(Types.CLOB, new ClobType("varchar(max)"));
 
-        columnTypeByNameMap.put("image", MssqlColumnType.IMAGE);
-        columnTypeByNameMap.put("ntext", MssqlColumnType.NTEXT);
-        columnTypeByNameMap.put("text", MssqlColumnType.TEXT);
+        columnTypeMap.put("image", MssqlColumnType.IMAGE);
+        columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
+        columnTypeMap.put("text", MssqlColumnType.TEXT);
     }
 
     /**
