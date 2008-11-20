@@ -39,7 +39,7 @@ public class OracleGenDialectTest {
      */
     @Test
     public void testGetColumnType_number() throws Exception {
-        ColumnType type = dialect.getColumnType("NUMBER");
+        ColumnType type = dialect.getColumnType("NUMBER", Types.OTHER);
         assertEquals("number(10,5)", type.getColumnDefinition(0, 10, 5, null));
         assertEquals(Integer.class, type.getAttributeClass(0, 9, 0));
         assertEquals(BigDecimal.class, type.getAttributeClass(0, 9, 2));
@@ -52,7 +52,7 @@ public class OracleGenDialectTest {
      */
     @Test
     public void testGetColumnType_varchar2() throws Exception {
-        ColumnType type = dialect.getColumnType("varchar2");
+        ColumnType type = dialect.getColumnType("varchar2", Types.OTHER);
         assertEquals("varchar2(10)", type.getColumnDefinition(10, 0, 0, null));
         assertEquals(String.class, type.getAttributeClass(10, 0, 0));
     }

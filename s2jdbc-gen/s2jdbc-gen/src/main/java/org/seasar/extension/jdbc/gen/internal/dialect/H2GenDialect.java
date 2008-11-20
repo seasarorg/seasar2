@@ -47,10 +47,10 @@ public class H2GenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.BINARY, new BinaryType("binary($l)"));
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
 
-        columnTypeMap.put("binary", H2ColumnType.BINARY);
-        columnTypeMap.put("decimal", H2ColumnType.DECIMAL);
-        columnTypeMap.put("uuid", H2ColumnType.UUID);
-        columnTypeMap
+        columnTypeByNameMap.put("binary", H2ColumnType.BINARY);
+        columnTypeByNameMap.put("decimal", H2ColumnType.DECIMAL);
+        columnTypeByNameMap.put("uuid", H2ColumnType.UUID);
+        columnTypeByNameMap
                 .put("varchar_ignorecase", H2ColumnType.VARCHAR_IGNORECASE);
     }
 

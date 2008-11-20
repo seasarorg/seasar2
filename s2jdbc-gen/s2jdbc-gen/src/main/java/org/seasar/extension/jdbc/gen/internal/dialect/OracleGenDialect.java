@@ -82,18 +82,18 @@ public class OracleGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.TIME, new TimeType("date"));
         sqlTypeMap.put(Types.VARCHAR, new VarcharType("varchar2($l)"));
 
-        columnTypeMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
-        columnTypeMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
-        columnTypeMap.put("blob", OracleColumnType.BLOB);
-        columnTypeMap.put("clob", OracleColumnType.CLOB);
-        columnTypeMap.put("long", OracleColumnType.LONG);
-        columnTypeMap.put("long raw", OracleColumnType.LONG_RAW);
-        columnTypeMap.put("nchar", OracleColumnType.NCHAR);
-        columnTypeMap.put("nclob", OracleColumnType.NCLOB);
-        columnTypeMap.put("number", OracleColumnType.NUMBER);
-        columnTypeMap.put("nvarchar2", OracleColumnType.NVARCHAR2);
-        columnTypeMap.put("raw", OracleColumnType.RAW);
-        columnTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
+        columnTypeByNameMap.put("binary_double", OracleColumnType.BINARY_DOUBLE);
+        columnTypeByNameMap.put("binary_float", OracleColumnType.BINARY_FLOAT);
+        columnTypeByNameMap.put("blob", OracleColumnType.BLOB);
+        columnTypeByNameMap.put("clob", OracleColumnType.CLOB);
+        columnTypeByNameMap.put("long", OracleColumnType.LONG);
+        columnTypeByNameMap.put("long raw", OracleColumnType.LONG_RAW);
+        columnTypeByNameMap.put("nchar", OracleColumnType.NCHAR);
+        columnTypeByNameMap.put("nclob", OracleColumnType.NCLOB);
+        columnTypeByNameMap.put("number", OracleColumnType.NUMBER);
+        columnTypeByNameMap.put("nvarchar2", OracleColumnType.NVARCHAR2);
+        columnTypeByNameMap.put("raw", OracleColumnType.RAW);
+        columnTypeByNameMap.put("varchar2", OracleColumnType.VARCHAR2);
     }
 
     @Override
@@ -139,12 +139,12 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
-    public ColumnType getColumnType(String typeName) {
+    public ColumnType getColumnType(String typeName, int sqlType) {
         if (org.seasar.framework.util.StringUtil.startsWithIgnoreCase(typeName,
                 "timestamp")) {
             return OracleColumnType.TIMESTAMP;
         }
-        return super.getColumnType(typeName);
+        return super.getColumnType(typeName, sqlType);
     }
 
     @Override

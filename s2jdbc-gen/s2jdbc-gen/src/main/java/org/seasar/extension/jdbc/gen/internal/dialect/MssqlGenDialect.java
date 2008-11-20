@@ -64,21 +64,21 @@ public class MssqlGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.TIME, new TimeType("datetime"));
         sqlTypeMap.put(Types.TIMESTAMP, new TimestampType("datetime"));
 
-        columnTypeMap.put("binary", MssqlColumnType.BINARY);
-        columnTypeMap.put("bit", MssqlColumnType.BIT);
-        columnTypeMap.put("datetime", MssqlColumnType.DATETIME);
-        columnTypeMap.put("decimal", MssqlColumnType.DECIMAL);
-        columnTypeMap.put("image", MssqlColumnType.IMAGE);
-        columnTypeMap.put("int", MssqlColumnType.INT);
-        columnTypeMap.put("money", MssqlColumnType.MONEY);
-        columnTypeMap.put("nchar", MssqlColumnType.NCHAR);
-        columnTypeMap.put("ntext", MssqlColumnType.NTEXT);
-        columnTypeMap.put("numeric", MssqlColumnType.NUMERIC);
-        columnTypeMap.put("nvarchar", MssqlColumnType.NVARCHAR);
-        columnTypeMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
-        columnTypeMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
-        columnTypeMap.put("text", MssqlColumnType.TEXT);
-        columnTypeMap.put("varbinary", MssqlColumnType.VARBINARY);
+        columnTypeByNameMap.put("binary", MssqlColumnType.BINARY);
+        columnTypeByNameMap.put("bit", MssqlColumnType.BIT);
+        columnTypeByNameMap.put("datetime", MssqlColumnType.DATETIME);
+        columnTypeByNameMap.put("decimal", MssqlColumnType.DECIMAL);
+        columnTypeByNameMap.put("image", MssqlColumnType.IMAGE);
+        columnTypeByNameMap.put("int", MssqlColumnType.INT);
+        columnTypeByNameMap.put("money", MssqlColumnType.MONEY);
+        columnTypeByNameMap.put("nchar", MssqlColumnType.NCHAR);
+        columnTypeByNameMap.put("ntext", MssqlColumnType.NTEXT);
+        columnTypeByNameMap.put("numeric", MssqlColumnType.NUMERIC);
+        columnTypeByNameMap.put("nvarchar", MssqlColumnType.NVARCHAR);
+        columnTypeByNameMap.put("smalldatetime", MssqlColumnType.SMALLDATETIME);
+        columnTypeByNameMap.put("smallmoney", MssqlColumnType.SMALLMONEY);
+        columnTypeByNameMap.put("text", MssqlColumnType.TEXT);
+        columnTypeByNameMap.put("varbinary", MssqlColumnType.VARBINARY);
     }
 
     @Override

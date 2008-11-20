@@ -75,9 +75,10 @@ public interface GenDialect {
      * 
      * @param columnTypeName
      *            カラムの型名
+     * @param sqlType TODO
      * @return カラム型、サポートされていないカラムの型名の場合{@code null}
      */
-    ColumnType getColumnType(String columnTypeName);
+    ColumnType getColumnType(String columnTypeName, int sqlType);
 
     /**
      * デフォルトの{@link GenerationType}を返します。

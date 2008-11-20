@@ -226,7 +226,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         attributeDesc.setUnique(columnMeta.isUnique());
         attributeDesc.setComment(columnMeta.getComment());
         GenDialect.ColumnType columnType = dialect.getColumnType(columnMeta
-                .getTypeName());
+                .getTypeName(), columnMeta.getSqlType());
         if (columnType != null) {
             Class<?> clazz = columnType
                     .getAttributeClass(columnMeta.getLength(), columnMeta

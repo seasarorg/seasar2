@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.dialect;
 
 import org.junit.After;
 import org.junit.Test;
+import org.seasar.extension.jdbc.dialect.MssqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
@@ -39,12 +40,25 @@ public class GenDialectRegistryTest {
      * 
      */
     @Test
-    public void testGetGenDialect() {
+    public void testGetGenDialect_oracle() {
         OracleDialect oracle = new OracleDialect();
         GenDialect genDialect = GenDialectRegistry.getGenDialect(oracle);
         assertNotNull(genDialect);
         assertSame(GenDialectRegistry.ORACLE, genDialect);
         GenDialect genDialect2 = GenDialectRegistry.getGenDialect(oracle);
+        assertSame(genDialect, genDialect2);
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testGetGenDialect_mssql() {
+        MssqlDialect mssql = new MssqlDialect();
+        GenDialect genDialect = GenDialectRegistry.getGenDialect(mssql);
+        assertNotNull(genDialect);
+        assertSame(GenDialectRegistry.MSSQL, genDialect);
+        GenDialect genDialect2 = GenDialectRegistry.getGenDialect(mssql);
         assertSame(genDialect, genDialect2);
     }
 

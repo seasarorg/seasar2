@@ -53,14 +53,14 @@ public class DerbyGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
         sqlTypeMap.put(Types.FLOAT, new FloatType("real"));
 
-        columnTypeMap.put("blob", DerbyColumnType.BLOB);
-        columnTypeMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);
-        columnTypeMap.put("clob", DerbyColumnType.CLOB);
-        columnTypeMap.put("decimal", DerbyColumnType.DECIMAL);
-        columnTypeMap.put("long varchar for bit data",
+        columnTypeByNameMap.put("blob", DerbyColumnType.BLOB);
+        columnTypeByNameMap.put("char () for bit data", DerbyColumnType.CHAR_BIT);
+        columnTypeByNameMap.put("clob", DerbyColumnType.CLOB);
+        columnTypeByNameMap.put("decimal", DerbyColumnType.DECIMAL);
+        columnTypeByNameMap.put("long varchar for bit data",
                 DerbyColumnType.LONGVARCHAR_BIT);
-        columnTypeMap.put("long varchar", DerbyColumnType.LONGVARCHAR);
-        columnTypeMap.put("varchar () for bit data",
+        columnTypeByNameMap.put("long varchar", DerbyColumnType.LONGVARCHAR);
+        columnTypeByNameMap.put("varchar () for bit data",
                 DerbyColumnType.VARCHAR_BIT);
     }
 

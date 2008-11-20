@@ -56,21 +56,21 @@ public class SybaseGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.TIME, new TimeType("datetime"));
         sqlTypeMap.put(Types.TIMESTAMP, new TimestampType("datetime"));
 
-        columnTypeMap.put("binary", SybaseColumnType.BINARY);
-        columnTypeMap.put("bit", SybaseColumnType.BIT);
-        columnTypeMap.put("datetime", SybaseColumnType.DATETIME);
-        columnTypeMap.put("decimal", SybaseColumnType.DECIMAL);
-        columnTypeMap.put("image", SybaseColumnType.IMAGE);
-        columnTypeMap.put("int", SybaseColumnType.INT);
-        columnTypeMap.put("money", SybaseColumnType.MONEY);
-        columnTypeMap.put("nchar", SybaseColumnType.NCHAR);
-        columnTypeMap.put("ntext", SybaseColumnType.NTEXT);
-        columnTypeMap.put("numeric", SybaseColumnType.NUMERIC);
-        columnTypeMap.put("nvarchar", SybaseColumnType.NVARCHAR);
-        columnTypeMap.put("smalldatetime", SybaseColumnType.SMALLDATETIME);
-        columnTypeMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
-        columnTypeMap.put("text", SybaseColumnType.TEXT);
-        columnTypeMap.put("varbinary", SybaseColumnType.VARBINARY);
+        columnTypeByNameMap.put("binary", SybaseColumnType.BINARY);
+        columnTypeByNameMap.put("bit", SybaseColumnType.BIT);
+        columnTypeByNameMap.put("datetime", SybaseColumnType.DATETIME);
+        columnTypeByNameMap.put("decimal", SybaseColumnType.DECIMAL);
+        columnTypeByNameMap.put("image", SybaseColumnType.IMAGE);
+        columnTypeByNameMap.put("int", SybaseColumnType.INT);
+        columnTypeByNameMap.put("money", SybaseColumnType.MONEY);
+        columnTypeByNameMap.put("nchar", SybaseColumnType.NCHAR);
+        columnTypeByNameMap.put("ntext", SybaseColumnType.NTEXT);
+        columnTypeByNameMap.put("numeric", SybaseColumnType.NUMERIC);
+        columnTypeByNameMap.put("nvarchar", SybaseColumnType.NVARCHAR);
+        columnTypeByNameMap.put("smalldatetime", SybaseColumnType.SMALLDATETIME);
+        columnTypeByNameMap.put("smallmoney", SybaseColumnType.SMALLMONEY);
+        columnTypeByNameMap.put("text", SybaseColumnType.TEXT);
+        columnTypeByNameMap.put("varbinary", SybaseColumnType.VARBINARY);
     }
 
     @Override

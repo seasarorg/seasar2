@@ -73,7 +73,19 @@ public class StandardGenDialectTest {
      */
     @Test
     public void testGetColumnType_unknown() throws Exception {
-        assertNull(dialect.getColumnType("hoge"));
+        assertNull(dialect.getColumnType("hoge", Types.OTHER));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_unknown_bySqlType() throws Exception {
+        GenDialect.ColumnType columnType = dialect.getColumnType("hoge",
+                Types.VARCHAR);
+        assertEquals("varchar(10)", columnType.getColumnDefinition(10, 0, 0,
+                null));
     }
 
     /**
@@ -82,7 +94,8 @@ public class StandardGenDialectTest {
      */
     @Test
     public void testGetColumnType_defaultValue() throws Exception {
-        GenDialect.ColumnType columnType = dialect.getColumnType("integer");
+        GenDialect.ColumnType columnType = dialect.getColumnType("integer",
+                Types.OTHER);
         String definition = columnType.getColumnDefinition(10, 0, 0, "5");
         assertEquals("integer default 5", definition);
     }
@@ -93,7 +106,8 @@ public class StandardGenDialectTest {
      */
     @Test
     public void testGetTemporalType_time() throws Exception {
-        GenDialect.ColumnType columnType = dialect.getColumnType("time");
+        GenDialect.ColumnType columnType = dialect.getColumnType("time",
+                Types.OTHER);
         assertEquals(TemporalType.TIME, columnType.getTemporalType());
     }
 
@@ -103,7 +117,8 @@ public class StandardGenDialectTest {
      */
     @Test
     public void testGetTemporalType_timestamp() throws Exception {
-        GenDialect.ColumnType columnType = dialect.getColumnType("timestamp");
+        GenDialect.ColumnType columnType = dialect.getColumnType("timestamp",
+                Types.OTHER);
         assertEquals(TemporalType.TIMESTAMP, columnType.getTemporalType());
     }
 
