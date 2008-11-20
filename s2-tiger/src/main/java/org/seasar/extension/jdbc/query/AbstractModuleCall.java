@@ -236,16 +236,22 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
     }
 
     /**
-     * <code>OUT</code>パラメータにマッピングされない1つ以上の結果セットを処理します。
+     * <code>OUT</code>パラメータにマッピングされない結果セットを処理します。
      * <p>
      * このメソッドは{@link #handleOutParams(CallableStatement)}よりも前に呼び出さなくてはなりません。
      * </p>
      * 
      * @param cs
      *            呼び出し可能なステートメント
+     * @param resultSetGettable
+     *            呼び出し可能なステートメントから結果セットを取得可能な場合{@code true}
      */
-    protected void handleNonParamResultSets(final CallableStatement cs) {
+    protected void handleNonParamResultSets(final CallableStatement cs,
+            final boolean resultSetGettable) {
         try {
+            if (!resultSetGettable) {
+                cs.getMoreResults();
+            }
             for (int i = 0; i < nonParamList.size(); i++) {
                 final ResultSet rs = getResultSet(cs);
                 if (rs == null) {

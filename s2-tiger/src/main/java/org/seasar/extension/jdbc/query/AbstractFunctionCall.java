@@ -103,9 +103,8 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             final CallableStatement cs = getCallableStatement(jdbcContext);
-            if (PreparedStatementUtil.execute(cs)) {
-                handleNonParamResultSets(cs);
-            }
+            final boolean resultSetGettable = PreparedStatementUtil.execute(cs);
+            handleNonParamResultSets(cs, resultSetGettable);
             final T result = handleSingleResult(cs);
             handleOutParams(cs);
             return result;
@@ -125,9 +124,8 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             final CallableStatement cs = getCallableStatement(jdbcContext);
-            if (PreparedStatementUtil.execute(cs)) {
-                handleNonParamResultSets(cs);
-            }
+            final boolean resultSetGettable = PreparedStatementUtil.execute(cs);
+            handleNonParamResultSets(cs, resultSetGettable);
             final List<T> result = handleResultList(cs);
             handleOutParams(cs);
             return result;

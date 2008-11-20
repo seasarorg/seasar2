@@ -48,9 +48,8 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
         JdbcContext jdbcContext = jdbcManager.getJdbcContext();
         try {
             CallableStatement cs = getCallableStatement(jdbcContext);
-            if (PreparedStatementUtil.execute(cs)) {
-                handleNonParamResultSets(cs);
-            }
+            boolean resultSetGettable = PreparedStatementUtil.execute(cs);
+            handleNonParamResultSets(cs, resultSetGettable);
             handleOutParams(cs);
         } finally {
             if (!jdbcContext.isTransactional()) {

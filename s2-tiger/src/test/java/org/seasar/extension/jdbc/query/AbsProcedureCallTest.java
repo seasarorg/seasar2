@@ -210,7 +210,7 @@ public class AbsProcedureCallTest extends TestCase {
         query.addNonParam(field);
         MyDto dto = new MyDto();
         query.parameter = dto;
-        query.handleNonParamResultSets(cs);
+        query.handleNonParamResultSets(cs, true);
         query.handleOutParams(cs);
         assertNotNull(dto.aaaList_OUT);
         assertEquals(1, dto.aaaList_OUT.size());
