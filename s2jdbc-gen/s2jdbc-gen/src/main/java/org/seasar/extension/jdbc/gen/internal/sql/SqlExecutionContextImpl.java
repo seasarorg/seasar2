@@ -109,7 +109,7 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         if (haltOnError) {
             throw exception;
         }
-        logger.debug(exception);
+        logger.log("DS2JDBCGen0020", new Object[] { exception });
         exceptionList.add(exception);
         openConnection();
     }

@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import javax.sql.DataSource;
 
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.exception.TableNotFoundRuntimeException;
 import org.seasar.extension.jdbc.gen.meta.DbColumnMeta;
 import org.seasar.extension.jdbc.gen.meta.DbForeignKeyMeta;
 import org.seasar.extension.jdbc.gen.meta.DbTableMeta;
@@ -119,10 +120,14 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
         Connection con = DataSourceUtil.getConnection(dataSource);
         try {
             DatabaseMetaData metaData = ConnectionUtil.getMetaData(con);
-            String schemaName = this.schemaName != null ? this.schemaName
-                    : getDefaultSchemaName(metaData);
             List<DbTableMeta> dbTableMetaList = getDbTableMetaList(metaData,
-                    schemaName);
+                    schemaName != null ? schemaName
+                            : getDefaultSchemaName(metaData));
+            if (dbTableMetaList.isEmpty()) {
+                throw new TableNotFoundRuntimeException(dialect.getClass()
+                        .getName(), schemaName, tableNamePattern.pattern(),
+                        ignoreTableNamePattern.pattern());
+            }
             for (DbTableMeta tableMeta : dbTableMetaList) {
                 Set<String> primaryKeySet = getPrimaryKeySet(metaData,
                         tableMeta);
