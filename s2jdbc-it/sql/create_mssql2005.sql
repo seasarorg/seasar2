@@ -161,7 +161,7 @@ CREATE PROCEDURE [dbo].[PROC_RESULTSET]
     @employeeId int
 AS
 BEGIN
-    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
+    SELECT EMPLOYEE_NO, EMPLOYEE_NAME FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
 END
 GO
 
@@ -181,6 +181,15 @@ AS
 BEGIN
     SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
     UPDATE DEPARTMENT SET DEPARTMENT_NAME = 'HOGE' WHERE department_id = 1;
+END
+GO
+
+CREATE PROCEDURE [dbo].[PROC_RESULTSET_UPDATE2]
+    @employeeId int
+AS
+BEGIN
+    UPDATE DEPARTMENT SET DEPARTMENT_NAME = 'HOGE' WHERE department_id = 1;
+    SELECT * FROM EMPLOYEE WHERE employee_id > @employeeId ORDER BY employee_id;
 END
 GO
 

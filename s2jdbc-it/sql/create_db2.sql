@@ -154,7 +154,7 @@ LANGUAGE SQL
 DYNAMIC RESULT SETS 1
 BEGIN
   DECLARE c_emp CURSOR WITH RETURN FOR
-    SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+    SELECT EMPLOYEE_NO, EMPLOYEE_NAME FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   OPEN c_emp;
 END@
 
@@ -179,6 +179,17 @@ BEGIN
     SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   OPEN c_emp;
   UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+END@
+
+CREATE PROCEDURE PROC_RESULTSET_UPDATE2(
+  IN employeeId INTEGER)
+LANGUAGE SQL
+DYNAMIC RESULT SETS 1
+BEGIN
+  DECLARE c_emp CURSOR WITH RETURN FOR
+    SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  OPEN c_emp;
 END@
 
 CREATE PROCEDURE PROC_RESULTSETS(

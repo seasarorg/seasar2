@@ -162,6 +162,32 @@ public class AutoFunctionCallTest {
 
     /**
      * 
+     * @throws Exception
+     */
+    @Prerequisite("#ENV not in {'mssql2005', 'mysql'}")
+    public void testParameter_resultSetUpdate2() throws Exception {
+        List<Employee> employees =
+            jdbcManager
+                .call(Employee.class, "FUNC_RESULTSET_UPDATE2", 10)
+                .getResultList();
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        String departmentName =
+            jdbcManager
+                .selectBySql(
+                    String.class,
+                    "select department_name from Department where department_id = ?",
+                    1)
+                .getSingleResult();
+        assertEquals("HOGE", departmentName);
+    }
+
+    /**
+     * 
      * @author taedium
      * 
      */

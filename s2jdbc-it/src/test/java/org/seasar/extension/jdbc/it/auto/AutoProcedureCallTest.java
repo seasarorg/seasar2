@@ -112,9 +112,13 @@ public class AutoProcedureCallTest {
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());
+        assertEquals(7876, employees.get(0).employeeNo);
         assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals(7900, employees.get(1).employeeNo);
         assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals(7902, employees.get(2).employeeNo);
         assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals(7934, employees.get(3).employeeNo);
         assertEquals("MILLER", employees.get(3).employeeName);
     }
 
@@ -144,6 +148,31 @@ public class AutoProcedureCallTest {
         ResultSetUpdateDto dto = new ResultSetUpdateDto();
         dto.employeeId = 10;
         jdbcManager.call("PROC_RESULTSET_UPDATE", dto).execute();
+        List<Employee> employees = dto.employees;
+        assertNotNull(employees);
+        assertEquals(4, employees.size());
+        assertEquals("ADAMS", employees.get(0).employeeName);
+        assertEquals("JAMES", employees.get(1).employeeName);
+        assertEquals("FORD", employees.get(2).employeeName);
+        assertEquals("MILLER", employees.get(3).employeeName);
+        String departmentName =
+            jdbcManager
+                .selectBySql(
+                    String.class,
+                    "select department_name from Department where department_id = ?",
+                    1)
+                .getSingleResult();
+        assertEquals("HOGE", departmentName);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testParameter_resultSetUpdate2() throws Exception {
+        ResultSetUpdateDto dto = new ResultSetUpdateDto();
+        dto.employeeId = 10;
+        jdbcManager.call("PROC_RESULTSET_UPDATE2", dto).execute();
         List<Employee> employees = dto.employees;
         assertNotNull(employees);
         assertEquals(4, employees.size());

@@ -156,7 +156,7 @@ CREATE OR REPLACE FUNCTION PROC_RESULTSET(
   employeeId IN INTEGER)
 AS $$
 BEGIN
-  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  OPEN cur FOR SELECT EMPLOYEE_NO, EMPLOYEE_NAME FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   RETURN;
 END;
 $$ language plpgsql;
@@ -182,6 +182,17 @@ AS $$
 BEGIN
   OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  RETURN;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION PROC_RESULTSET_UPDATE2(
+  cur OUT refcursor,
+  employeeId IN INTEGER)
+AS $$
+BEGIN
+  UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   RETURN;
 END;
 $$ language plpgsql;
@@ -276,6 +287,18 @@ DECLARE
 BEGIN
   OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  RETURN cur;
+END;
+$$ language plpgsql;
+
+CREATE OR REPLACE FUNCTION FUNC_RESULTSET_UPDATE2(
+  employeeId IN INTEGER) RETURNS refcursor
+AS $$
+DECLARE
+    cur refcursor;
+BEGIN
+  UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  OPEN cur FOR SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   RETURN cur;
 END;
 $$ language plpgsql;

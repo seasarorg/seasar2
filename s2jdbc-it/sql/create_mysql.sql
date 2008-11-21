@@ -143,7 +143,7 @@ END
 CREATE PROCEDURE PROC_RESULTSET(
   IN employeeId INTEGER)
 BEGIN
-  SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
+  SELECT EMPLOYEE_NO, EMPLOYEE_NAME FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
 END
 /
 
@@ -161,6 +161,14 @@ CREATE PROCEDURE PROC_RESULTSET_UPDATE(
 BEGIN
   SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
   UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+END
+/
+
+CREATE PROCEDURE PROC_RESULTSET_UPDATE2(
+  IN employeeId INTEGER)
+BEGIN
+  UPDATE DEPARTMENT SET department_name = 'HOGE' WHERE department_id = 1;
+  SELECT * FROM EMPLOYEE WHERE employee_id > employeeId ORDER BY employee_id;
 END
 /
 
