@@ -414,7 +414,7 @@ public class AutoBatchInsertTest {
             jdbcManager.insertBatch(department, department2).execute();
         assertEquals(2, result.length);
         String sql =
-            "select department_name from Department where department_id = ?";
+            "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?";
         String departmentName =
             jdbcManager.selectBySql(String.class, sql, 98).getSingleResult();
         assertNull(departmentName);
@@ -441,7 +441,7 @@ public class AutoBatchInsertTest {
             jdbcManager.insertBatch(department, department2).execute();
         assertEquals(2, result.length);
         String sql =
-            "select department_name from Department where department_id = ?";
+            "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?";
         String departmentName =
             jdbcManager.selectBySql(String.class, sql, 98).getSingleResult();
         assertNull(departmentName);
@@ -468,7 +468,7 @@ public class AutoBatchInsertTest {
             jdbcManager.insertBatch(department, department2).execute();
         assertEquals(2, result.length);
         String sql =
-            "select department_name from Department where department_id = ?";
+            "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?";
         String departmentName =
             jdbcManager.selectBySql(String.class, sql, 98).getSingleResult();
         assertNull(departmentName);

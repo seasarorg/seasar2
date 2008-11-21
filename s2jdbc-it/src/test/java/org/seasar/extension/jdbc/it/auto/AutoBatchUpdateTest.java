@@ -435,7 +435,7 @@ public class AutoBatchUpdateTest {
         int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
         String sql =
-            "select department_name from Department where department_id = ?";
+            "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?";
         String departmentName =
             jdbcManager.selectBySql(String.class, sql, 1).getSingleResult();
         assertEquals("ACCOUNTING", departmentName);
@@ -464,7 +464,7 @@ public class AutoBatchUpdateTest {
         int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
         String sql =
-            "select department_name from Department where department_id = ?";
+            "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?";
         String departmentName =
             jdbcManager.selectBySql(String.class, sql, 1).getSingleResult();
         assertEquals("ACCOUNTING", departmentName);
@@ -493,7 +493,7 @@ public class AutoBatchUpdateTest {
         int[] result = jdbcManager.updateBatch(list).execute();
         assertEquals(2, result.length);
         String sql =
-            "select department_name from Department where department_id = ?";
+            "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?";
         String departmentName =
             jdbcManager.selectBySql(String.class, sql, 1).getSingleResult();
         assertEquals("ACCOUNTING", departmentName);

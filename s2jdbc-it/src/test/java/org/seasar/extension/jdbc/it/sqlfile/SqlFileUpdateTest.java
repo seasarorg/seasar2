@@ -52,7 +52,7 @@ public class SqlFileUpdateTest {
             jdbcManager
                 .selectBySql(
                     Department.class,
-                    "select * from Department where department_id = 1")
+                    "select * from DEPARTMENT where DEPARTMENT_ID = 1")
                 .getSingleResult();
         assertEquals(1, department.departmentId);
         assertEquals(10, department.departmentNo);
@@ -74,7 +74,7 @@ public class SqlFileUpdateTest {
             jdbcManager
                 .selectBySql(
                     Department.class,
-                    "select * from Department where department_id = 2")
+                    "select * from DEPARTMENT where DEPARTMENT_ID = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);
@@ -98,7 +98,7 @@ public class SqlFileUpdateTest {
             jdbcManager
                 .selectBySql(
                     Department.class,
-                    "select * from Department where department_id = 2")
+                    "select * from DEPARTMENT where DEPARTMENT_ID = 2")
                 .getSingleResult();
         assertEquals(2, department.departmentId);
         assertEquals(20, department.departmentNo);
@@ -132,7 +132,7 @@ public class SqlFileUpdateTest {
     public void testEntityExistsException_update() throws Exception {
         jdbcManager
             .updateBySql(
-                "insert into Department (department_id, department_no) values (99, 99)")
+                "insert into DEPARTMENT (DEPARTMENT_ID, DEPARTMENT_NO) values (99, 99)")
             .execute();
         String path =
             getClass().getName().replace(".", "/")
@@ -182,7 +182,7 @@ public class SqlFileUpdateTest {
             jdbcManager
                 .selectBySql(
                     Tense.class,
-                    "select date_date, date_time, date_timestamp, cal_date, cal_time, cal_timestamp, sql_date, sql_time, sql_timestamp from Tense where id = 1")
+                    "select DATE_DATE, DATE_TIME, DATE_TIMESTAMP, CAL_DATE, CAL_TIME, CAL_TIMESTAMP, SQL_DATE, SQL_TIME, SQL_TIMESTAMP from TENSE where ID = 1")
                 .getSingleResult();
         assertEquals(date, tense.calDate.getTimeInMillis());
         assertEquals(date, tense.dateDate.getTime());

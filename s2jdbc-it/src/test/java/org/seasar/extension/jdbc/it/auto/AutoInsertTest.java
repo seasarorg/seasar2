@@ -389,7 +389,7 @@ public class AutoInsertTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     99)
                 .getSingleResult();
         assertNull(departmentName);
@@ -410,7 +410,7 @@ public class AutoInsertTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     99)
                 .getSingleResult();
         assertNull(departmentName);
@@ -431,7 +431,7 @@ public class AutoInsertTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     99)
                 .getSingleResult();
         assertNull(departmentName);

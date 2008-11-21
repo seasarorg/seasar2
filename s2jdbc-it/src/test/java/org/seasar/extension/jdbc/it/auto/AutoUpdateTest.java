@@ -318,7 +318,7 @@ public class AutoUpdateTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     1)
                 .getSingleResult();
         assertEquals("ACCOUNTING", departmentName);
@@ -338,7 +338,7 @@ public class AutoUpdateTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     1)
                 .getSingleResult();
         assertEquals("ACCOUNTING", departmentName);
@@ -358,7 +358,7 @@ public class AutoUpdateTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     1)
                 .getSingleResult();
         assertEquals("ACCOUNTING", departmentName);

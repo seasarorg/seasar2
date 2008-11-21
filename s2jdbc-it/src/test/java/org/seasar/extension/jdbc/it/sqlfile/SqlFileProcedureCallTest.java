@@ -185,7 +185,7 @@ public class SqlFileProcedureCallTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "select DEPARTMENT_NAME from DEPARTMENT where DEPARTMENT_ID = ?",
                     1)
                 .getSingleResult();
         assertEquals("HOGE", departmentName);
@@ -251,13 +251,13 @@ public class SqlFileProcedureCallTest {
         String street =
             jdbcManager.selectBySql(
                 String.class,
-                "select street from Address where address_id = ?",
+                "select STREET from ADDRESS where ADDRESS_ID = ?",
                 1).getSingleResult();
         assertEquals("HOGE", street);
         street =
             jdbcManager.selectBySql(
                 String.class,
-                "select street from Address where address_id = ?",
+                "select STREET from ADDRESS where ADDRESS_ID = ?",
                 2).getSingleResult();
         assertEquals("FOO", street);
         assertEquals(14, dto.employeeCount);
