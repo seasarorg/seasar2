@@ -41,7 +41,12 @@
 						<ul>
 							<li>
 								<p>
-									<a href="#同一トランザクション内で複数のSQLファイルを実行する">同一トランザクション内で複数のSQLファイルを実行する</a>
+									<a href="#SQLファイルを実行する">SQLファイルを実行する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#トランザクション内で実行する">トランザクション内で実行する</a>
 								</p>
 							</li>
 						</ul>
@@ -101,9 +106,57 @@
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="同一トランザクション内で複数のSQLファイルを実行する">
+			<subsection name="SQLファイルを実行する">
 				<p>
-					3つのSQLファイルを同一トランザクション内で実行します。
+					SQLファイルを実行するには、実行したいSQLファイルを&lt;SqlFileList&gt;に指定します。
+					次の例では1つのSQLファイルを指定していますが、複数のSQLを指定可能です。
+				</p>
+<source><![CDATA[<exec-sql
+    classpathRef="classpath">
+      <sqlFileList dir="sql">
+        <file name="aaa.sql"/>
+    </sqlFileList>
+</exec-sql>]]></source>
+				<p>
+					SQLファイルは次のように記述できます。
+				</p>
+<source><![CDATA[/* テーブル定義 */
+create table EMPLOYEE (
+  ID numeric(5) primary key,  -- 識別子
+  NAME varchar2(20)           -- 名前
+);
+
+/* データの追加*/
+insert into EMPLOYEE (ID, NAME) values (1, 'SMITH');
+
+/* プロシージャー定義*/
+create or replace procedure proc 
+( cur out sys_refcursor, 
+  employeeid in numeric
+) as
+begin
+  open cur for select * from employee where id > employeeid order by id; 
+end proc_resultset;
+/
+]]></source>
+				<p>
+					コメントは1行コメント（--）とブロックコメント（/* */）の2種類が使用できます。
+					SQL文からはコメントが取り除かれ実行されます。
+				</p>
+				<p>
+					1つのSQL文は複数行に分けて記述することができます。
+					文はstatementDelimiter属性に指定した値で区切る必要があります。
+					改行は文の区切りとはみなされません。
+				</p>
+				<p>
+					ストアドプロシージャーなどのSQLブロックは、blockDelimiter属性に指定した値で区切ってください。
+					区切り文字は行頭に記述し、区切り文字の後ろには何も記述しないようにしてください。
+					つまり、区切り文字だけの行としなければいけません。
+				</p>
+			</subsection>
+			<subsection name="トランザクション内で実行する">
+				<p>
+					SQLファイル内のSQLをトランザクション内で実行するには、transactional属性に"true"を指定します。
 				</p>
 <source><![CDATA[<exec-sql
     transactional="true"
@@ -114,6 +167,10 @@
         <file name="ccc.sql"/>
     </sqlFileList>
 </exec-sql>]]></source>
+				<p>
+					上記の定義では、トランザクションが開始された後、aaa.sql、bbb.sql、ccc.sqlに記述されたSQLが順に実行され、エラーが発生しなければコミットされます。
+					エラーが発生した場合、トランザクションはロールバックされます。
+				</p>
 			</subsection>
 		</section>
 	</body>

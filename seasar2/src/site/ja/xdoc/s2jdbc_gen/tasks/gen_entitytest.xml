@@ -45,9 +45,63 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					エンティティのテストクラスを作成します。</p>
+					エンティティクラスに対するテストクラスを作成します。
+				</p>
 				<p>
-					このタスクを実行するにはエンティティクラスが1つ以上存在している必要があります。
+					例えば、次のようなコードを生成できます。
+				</p>
+<source><![CDATA[/**
+ * {@link Department}のテストクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+public class DepartmentTest extends S2TestCase {
+
+    private JdbcManager jdbcManager;
+
+    /**
+     * 事前処理をします。
+     * 
+     * @throws Exception
+     */
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        include("s2jdbc.dicon");
+    }
+
+    /**
+     * 識別子による取得をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testFindById() throws Exception {
+        jdbcManager.from(Department.class).id(1).getSingleResult();
+    }
+
+    /**
+     * employeesとの外部結合をテストします。
+     * 
+     * @throws Exception
+     */
+    public void testLeftOuterJoin_employees() throws Exception {
+        jdbcManager.from(Department.class).leftOuterJoin(employees()).id(1).getSingleResult();
+    }
+}]]></source>
+				<p>
+					これはエンティティクラスDepartmentに対するテストクラスです。
+					テストクラスでは、実際にSQLを発行し次のことを確認します。
+				</p>
+				<ul>
+					<li>
+						エンティティクラスとテーブルのマッピングが正しいこと
+					</li>
+					<li>
+						関連プロパティの設定が正しいこと
+					</li>
+				</ul>
+				<p>
+					テストクラスは、自由に修正して利用できます。
 				</p>
 			</subsection>
 		</section>

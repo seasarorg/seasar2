@@ -52,7 +52,171 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					SQLファイルのテストクラスを作成します。
+					SQLファイルに対するテストクラスを作成します。
+				</p>
+				<p>
+					例えば、次のようなコードを生成できます。
+				</p>
+<source><![CDATA[/**
+ * SQLファイルのテストクラスです。
+ * <p>
+ * このファイルは修正されることを意図していません。
+ * SQLファイルのテストを独自に行いたい場合は、サービスやエンティティのテストクラスを使用してください。
+ * </p>
+ *
+ * @author S2JDBC-Gen
+ */
+public class SqlFileTest extends S2TestCase {
+
+    private JdbcManager jdbcManager;
+
+    /**
+     * 事前処理をします。
+     * 
+     * @throws Exception
+     */
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        include("s2jdbc.dicon");
+    }
+
+    /**
+     * SQLファイルをテストします。
+     * 
+     * @throws Exception
+     */
+    public void testSqlFile0Tx() throws Exception {
+        String path = "META-INF/sql/Address/getStreet.sql";
+        new SqlFile(path).execute();
+    }
+
+    /**
+     * SQLファイルをテストします。
+     * 
+     * @throws Exception
+     */
+    public void testSqlFile1Tx() throws Exception {
+        String path = "META-INF/sql/Employee/updateEmployeeName.sql";
+        new SqlFile(path).execute();
+    }
+
+    /**
+     * SQLファイルを表すクラスです。
+     * 
+     * @author S2JDBC-Gen
+     */
+    public class SqlFile {
+
+        /** SQL */
+        protected String sql;
+
+        /** 内部的なJDBCマネジャ */
+        protected JdbcManagerImplementor implementor;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param path
+         *            SQLファイルのパス
+         */
+        public SqlFile(String path) {
+            implementor = JdbcManagerImplementor.class.cast(jdbcManager);
+            this.sql = getSql(path);
+        }
+
+        /**
+         * SQLを返します。
+         * 
+         * @param path
+         *            SQLファイルのパス
+         * @return SQL
+         */
+        protected String getSql(String path) {
+            if (path.endsWith(".sql")) {
+                path = path.substring(0, path.length() - 4);
+            }
+            String dbmsName = implementor.getDialect().getName();
+            if (dbmsName != null) {
+                String sql = readSql(path + "_" + dbmsName);
+                if (sql != null) {
+                    return sql;
+                }
+            }
+            String sql = readSql(path);
+            if (sql != null) {
+                return sql;
+            }
+            throw new ResourceNotFoundRuntimeException(path);
+        }
+
+        /**
+         * SQLをファイルから読み取ります。
+         * 
+         * @param path
+         *            SQLファイルのパス
+         * @return SQL
+         */
+        protected String readSql(String path) {
+            InputStream is = ResourceUtil.getResourceAsStreamNoException(path,
+                    "sql");
+            if (is == null) {
+                return null;
+            }
+            Reader reader = InputStreamReaderUtil.create(is, "UTF-8");
+            String sql = ReaderUtil.readText(reader);
+            if (sql.length() > 0 && sql.charAt(0) == '\uFEFF') {
+                sql = sql.substring(1);
+            }
+            sql = sql.trim();
+            if (sql.endsWith(";")) {
+                sql = sql.substring(0, sql.length() - 1);
+            }
+            return sql;
+        }
+
+        /**
+         * SQLを実行します。
+         */
+        public void execute() {
+            System.out.println(sql);
+            Connection connection = org.seasar.extension.jdbc.util.DataSourceUtil
+                    .getConnection(implementor.getDataSource());
+            try {
+                PreparedStatement ps = ConnectionUtil.prepareStatement(
+                        connection, sql);
+                try {
+                    PreparedStatementUtil.execute(ps);
+                } finally {
+                    StatementUtil.close(ps);
+                }
+            } finally {
+                ConnectionUtil.close(connection);
+            }
+        }
+    }
+}]]></source>
+				<p>
+					テストクラスでは、実際にSQLを発行し次のことを確認します。
+				</p>
+				<ul>
+					<li>
+						SQLが構文的に間違っていないこと
+					</li>
+					<li>
+						SQLで存在しないテーブルやカラムを参照していないこと
+					</li>
+				</ul>
+				<p>
+					このとき、実行されるSQLはSQLファイルに記述されたままの文で実行されます。
+					JdbcManagerのAPIを使ったときのようにバインド変数コメントが解決されるわけではないことに注意してください。
+					テストメソッドは、SQLファイルごとに生成されます。
+				</p>
+				<p>
+					SQLファイルに対するテストを実行することで、IDEのリファクタリング機能では検出できないSQL文上の修正対象を検出したり、修正漏れを防いだりすることができます。
+				</p>
+				<p>
+					テストクラスは、常に自動生成するようにしてください。
 				</p>
 			</subsection>
 		</section>
@@ -102,7 +266,7 @@
 		<section name="例">
 			<subsection name="SQLファイルを指定する">
 				<p>
-					SQLファイルを指定するには、SqlFileSet要素を使用します。
+					SQLファイルを指定するには、&lt;SqlFileSet&gt;を使用します。
 					SQLファイルはclasspathDir属性に指定されるディレクトリ以下に存在している必要があります。
 				</p>
 <source><![CDATA[<gen-sqlfiletest

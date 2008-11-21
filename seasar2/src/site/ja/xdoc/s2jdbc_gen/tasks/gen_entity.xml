@@ -77,7 +77,42 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					データベースのメタデータを読み取りエンティティクラスを生成します。
+					データベースのメタデータを読み取りエンティティクラスのコードを生成します。エンティティクラスとは、データベースのテーブルに対応するクラスです。
+				</p>
+				<p>
+					例えば、次のようなコードを生成できます。
+				</p>
+<source><![CDATA[/**
+ * Departmentエンティティクラスです。
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+public class Department {
+
+    /** departmentIdプロパティ */
+    @Id
+    @GeneratedValue
+    @Column(nullable = false, unique = true)
+    public Integer departmentId;
+
+    /** departmentNameプロパティ */
+    @Column(length = 20, nullable = true, unique = false)
+    public String departmentName;
+
+    /** employees関連プロパティ */
+    @OneToMany(mappedBy = "department")
+    public List<Employee> employeeList;
+}]]></source>
+				<p>
+					これは、次のDDLで表されるDEPARATMENTテーブルに対応します。
+				</p>
+<source><![CDATA[create table DEPARTMENT (
+    DEPARTMENT_ID integer not null primary key, 
+    DEPARTMENT_NAME varchar(20)
+);]]></source>
+				<p>
+					エンティティクラスは、自由に修正して利用できます。
 				</p>
 			</subsection>
 		</section>

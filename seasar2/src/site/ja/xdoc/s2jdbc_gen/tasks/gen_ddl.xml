@@ -107,7 +107,7 @@
 		<section name="説明">
 			<subsection name="概要">
 				<p>
-					エンティティクラスのメタデータを読み取りDDLを生成します。
+					エンティティクラスのメタデータを読み取りDDLスクリプトを生成します。
 					このタスクでは、次のオブジェクトのcreate文とdrop文を生成します。
 					<ul>
 						<li>
@@ -130,7 +130,7 @@
 				</p>
 				<p>
 					このタスクは、DDLを生成しますが、生成したDDLをデータベースへ適用させるわけではありません。
-					DDLのデータベースへの適用はMigrateタスクが担います。
+					DDLのデータベースへの適用は<a href="migrate.html">Migrate</a>タスクが担います。
 				</p>
 			</subsection>
 			<subsection name="ディレクトリ構成">
