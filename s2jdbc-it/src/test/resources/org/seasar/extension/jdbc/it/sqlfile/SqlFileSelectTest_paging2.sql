@@ -1,1 +1,1 @@
-select employee_id, employee_no from Employee order by employee_no
+SELECT EMPLOYEE_ID, EMPLOYEE_NO FROM EMPLOYEE ORDER BY EMPLOYEE_NO

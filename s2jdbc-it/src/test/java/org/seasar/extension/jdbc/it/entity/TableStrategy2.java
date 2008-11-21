@@ -30,7 +30,7 @@ public class TableStrategy2 {
 
     /** */
     @Id
-    @TableGenerator(name = "aaa", table = "my_ID_GENERATOR", pkColumnName = "my_PK", valueColumnName = "my_VALUE", pkColumnValue = "TableStrategy2")
+    @TableGenerator(name = "aaa", table = "MY_ID_GENERATOR", pkColumnName = "MY_PK", valueColumnName = "MY_VALUE", pkColumnValue = "TableStrategy2")
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "aaa")
     public Integer id;
 

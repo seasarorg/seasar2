@@ -1,1 +1,1 @@
-select employee_id from Employee
+SELECT EMPLOYEE_ID FROM EMPLOYEE

@@ -1,1 +1,1 @@
-select * from Employee where department_id = 1
+SELECT * FROM EMPLOYEE WHERE DEPARTMENT_ID = 1

@@ -1,1 +1,1 @@
-insert into Department (department_id, department_no) values(/*departmentId*/99, /*departmentNo*/99)
+INSERT INTO DEPARTMENT (DEPARTMENT_ID, DEPARTMENT_NO) VALUES(/*departmentId*/99, /*departmentNo*/99)

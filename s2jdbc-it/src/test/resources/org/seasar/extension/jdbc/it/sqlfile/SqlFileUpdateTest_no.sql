@@ -1,1 +1,1 @@
-update Department set location = 'hoge' where department_id = 1
+UPDATE DEPARTMENT SET LOCATION = 'hoge' WHERE DEPARTMENT_ID = 1

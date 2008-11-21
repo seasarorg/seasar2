@@ -46,7 +46,7 @@ public class SqlUpdateTest {
      * @throws Exception
      */
     public void testParameter_none() throws Exception {
-        String sql = "delete from Employee";
+        String sql = "DELETE FROM EMPLOYEE";
         int actual = jdbcManager.updateBySql(sql).execute();
         assertEquals(14, actual);
     }
@@ -57,7 +57,7 @@ public class SqlUpdateTest {
      */
     public void testParameter() throws Exception {
         String sql =
-            "delete from Employee where department_Id = ? and salary > ?";
+            "DELETE FROM EMPLOYEE WHERE DEPARTMENT_ID = ? AND SALARY > ?";
         int actual =
             jdbcManager.updateBySql(sql, int.class, BigDecimal.class).params(
                 3,
@@ -71,7 +71,7 @@ public class SqlUpdateTest {
      */
     public void testEntityExistsException_insert() throws Exception {
         String sql =
-            "insert into Department (department_id, department_no) values(?, ?)";
+            "INSERT INTO DEPARTMENT (DEPARTMENT_ID, DEPARTMENT_NO) VALUES(?, ?)";
         try {
             jdbcManager
                 .updateBySql(sql, int.class, int.class)
@@ -89,10 +89,10 @@ public class SqlUpdateTest {
     public void testEntityExistsException_update() throws Exception {
         jdbcManager
             .updateBySql(
-                "insert into Department (department_id, department_no) values (99, 99)")
+                "INSERT INTO DEPARTMENT (DEPARTMENT_ID, DEPARTMENT_NO) VALUES (99, 99)")
             .execute();
         String sql =
-            "update Department set department_id = ? where department_id = ?";
+            "UPDATE DEPARTMENT SET DEPARTMENT_ID = ? WHERE DEPARTMENT_ID = ?";
         try {
             jdbcManager
                 .updateBySql(sql, int.class, int.class)
@@ -109,7 +109,7 @@ public class SqlUpdateTest {
      */
     public void testTemporalType() throws Exception {
         String sql =
-            "update Tense set date_date = ?, date_time = ?, date_timestamp = ?, cal_date = ?, cal_time = ?, cal_timestamp = ?, sql_date = ?, sql_time = ?, sql_timestamp = ? where id = ?";
+            "UPDATE TENSE SET DATE_DATE = ?, DATE_TIME = ?, DATE_TIMESTAMP = ?, CAL_DATE = ?, CAL_TIME = ?, CAL_TIMESTAMP = ?, SQL_DATE = ?, SQL_TIME = ?, SQL_TIMESTAMP = ? WHERE ID = ?";
         long date =
             new SimpleDateFormat("yyyy-MM-dd").parse("2005-03-14").getTime();
         long time =
@@ -151,7 +151,7 @@ public class SqlUpdateTest {
             jdbcManager
                 .selectBySql(
                     Tense.class,
-                    "select date_date, date_time, date_timestamp, cal_date, cal_time, cal_timestamp, sql_date, sql_time, sql_timestamp from Tense where id = 1")
+                    "SELECT DATE_DATE, DATE_TIME, DATE_TIMESTAMP, CAL_DATE, CAL_TIME, CAL_TIMESTAMP, SQL_DATE, SQL_TIME, SQL_TIMESTAMP FROM TENSE WHERE ID = 1")
                 .getSingleResult();
         assertEquals(date, tense.calDate.getTimeInMillis());
         assertEquals(date, tense.dateDate.getTime());

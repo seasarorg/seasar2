@@ -32,10 +32,10 @@ import static org.junit.Assert.*;
 @RunWith(Seasar2.class)
 public class SqlSelectPagingTest {
 
-    private static String sql = "select * from Employee order by employee_no";
+    private static String sql = "SELECT * FROM EMPLOYEE ORDER BY EMPLOYEE_NO";
 
     private static String sql2 =
-        "select employee_id, employee_no from Employee order by employee_no";
+        "SELECT EMPLOYEE_ID, EMPLOYEE_NO FROM EMPLOYEE ORDER BY EMPLOYEE_NO";
 
     private JdbcManager jdbcManager;
 

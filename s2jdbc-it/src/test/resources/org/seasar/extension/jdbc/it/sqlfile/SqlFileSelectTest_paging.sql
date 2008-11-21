@@ -1,1 +1,1 @@
-select * from Employee order by employee_no
+SELECT * FROM EMPLOYEE ORDER BY EMPLOYEE_NO

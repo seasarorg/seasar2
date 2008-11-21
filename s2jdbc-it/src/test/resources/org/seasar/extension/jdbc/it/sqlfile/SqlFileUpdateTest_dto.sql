@@ -1,1 +1,1 @@
-update Department set location = /*location*/'hoge' where department_id = /*departmentId*/1
+UPDATE DEPARTMENT SET LOCATION = /*location*/'hoge' WHERE DEPARTMENT_ID = /*departmentId*/1

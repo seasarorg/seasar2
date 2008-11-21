@@ -1,1 +1,1 @@
-select employee_id from Employee where department_id = 1
+SELECT EMPLOYEE_ID FROM EMPLOYEE WHERE DEPARTMENT_ID = 1

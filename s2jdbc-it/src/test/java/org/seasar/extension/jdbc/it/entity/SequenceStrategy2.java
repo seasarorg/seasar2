@@ -30,7 +30,7 @@ public class SequenceStrategy2 {
 
     /** */
     @Id
-    @SequenceGenerator(name = "aaa", sequenceName = "my_SEQUENCE_STRATEGY_ID", initialValue = 100, allocationSize = 30)
+    @SequenceGenerator(name = "aaa", sequenceName = "MY_SEQUENCE_STRATEGY_ID", initialValue = 100, allocationSize = 30)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "aaa")
     public Integer id;
 

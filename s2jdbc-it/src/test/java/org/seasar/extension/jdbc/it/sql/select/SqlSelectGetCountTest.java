@@ -37,7 +37,7 @@ public class SqlSelectGetCountTest {
     public void testGetCount() throws Exception {
         long count =
             jdbcManager.getCountBySql(
-                "select * from Employee where manager_id = ?",
+                "SELECT * FROM EMPLOYEE WHERE MANAGER_ID = ?",
                 9);
         assertEquals(3L, count);
     }

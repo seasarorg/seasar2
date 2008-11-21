@@ -160,7 +160,7 @@ public class SqlFunctionCallTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "SELECT DEPARTMENT_NAME FROM DEPARTMENT WHERE DEPARTMENT_ID = ?",
                     1)
                 .getSingleResult();
         assertEquals("HOGE", departmentName);

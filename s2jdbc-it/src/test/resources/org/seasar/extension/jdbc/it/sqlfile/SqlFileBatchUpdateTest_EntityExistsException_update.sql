@@ -1,1 +1,1 @@
-update Department set department_id = /*departmentId*/99 where department_id = /*departmentId2*/99
+UPDATE DEPARTMENT SET DEPARTMENT_ID = /*departmentId*/99 WHERE DEPARTMENT_ID = /*departmentId2*/99

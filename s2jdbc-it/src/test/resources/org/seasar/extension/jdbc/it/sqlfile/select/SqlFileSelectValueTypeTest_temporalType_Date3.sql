@@ -1,1 +1,1 @@
-select * from Tense where date_timestamp = /*dateTimestamp*/'2000-01-01'
+SELECT * FROM TENSE WHERE DATE_TIMESTAMP = /*dateTimestamp*/'2000-01-01'

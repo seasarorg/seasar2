@@ -1,1 +1,1 @@
-select * from Tense where cal_time = /*calTime*/'2000-01-01'
+SELECT * FROM TENSE WHERE CAL_TIME = /*calTime*/'2000-01-01'

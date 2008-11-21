@@ -44,7 +44,7 @@ public class SqlSelectValueTypeTest {
      * @throws Exception
      */
     public void testBean_temporalType() throws Exception {
-        String sql = "select * from Tense where id = 1";
+        String sql = "SELECT * FROM TENSE WHERE ID = 1";
         Tense tense =
             jdbcManager.selectBySql(Tense.class, sql).getSingleResult();
         long date =
@@ -77,7 +77,7 @@ public class SqlSelectValueTypeTest {
         Tense tense =
             jdbcManager.selectBySql(
                 Tense.class,
-                "select * from Tense where cal_date = ?",
+                "SELECT * FROM TENSE WHERE CAL_DATE = ?",
                 date(calendar)).getSingleResult();
         assertNotNull(tense);
 
@@ -85,7 +85,7 @@ public class SqlSelectValueTypeTest {
         tense =
             jdbcManager.selectBySql(
                 Tense.class,
-                "select * from Tense where cal_time = ?",
+                "SELECT * FROM TENSE WHERE CAL_TIME = ?",
                 time(calendar)).getSingleResult();
         assertNotNull(tense);
 
@@ -94,7 +94,7 @@ public class SqlSelectValueTypeTest {
         tense =
             jdbcManager.selectBySql(
                 Tense.class,
-                "select * from Tense where cal_timestamp = ?",
+                "SELECT * FROM TENSE WHERE CAL_TIMESTAMP = ?",
                 timestamp(calendar)).getSingleResult();
         assertNotNull(tense);
     }
@@ -108,7 +108,7 @@ public class SqlSelectValueTypeTest {
         Tense tense =
             jdbcManager.selectBySql(
                 Tense.class,
-                "select * from Tense where date_date = ?",
+                "SELECT * FROM TENSE WHERE DATE_DATE = ?",
                 date(date)).getSingleResult();
         assertNotNull(tense);
 
@@ -116,7 +116,7 @@ public class SqlSelectValueTypeTest {
         tense =
             jdbcManager.selectBySql(
                 Tense.class,
-                "select * from Tense where date_time = ?",
+                "SELECT * FROM TENSE WHERE DATE_TIME = ?",
                 time(date)).getSingleResult();
         assertNotNull(tense);
 
@@ -126,7 +126,7 @@ public class SqlSelectValueTypeTest {
         tense =
             jdbcManager.selectBySql(
                 Tense.class,
-                "select * from Tense where date_timestamp = ?",
+                "SELECT * FROM TENSE WHERE DATE_TIMESTAMP = ?",
                 timestamp(date)).getSingleResult();
         assertNotNull(tense);
     }
@@ -136,7 +136,7 @@ public class SqlSelectValueTypeTest {
      * @throws Exception
      */
     public void testMap_temporalType() throws Exception {
-        String sql = "select * from Tense where id = 1";
+        String sql = "SELECT * FROM TENSE WHERE ID = 1";
         Map<?, ?> tense =
             jdbcManager.selectBySql(Map.class, sql).getSingleResult();
         assertNotNull(tense);
@@ -156,7 +156,7 @@ public class SqlSelectValueTypeTest {
      * @throws Exception
      */
     public void testObject_temporalType() throws Exception {
-        String sql = "select cal_timestamp from Tense where id = 1";
+        String sql = "SELECT CAL_TIMESTAMP FROM TENSE WHERE ID = 1";
         Calendar calTimestamp =
             jdbcManager.selectBySql(Calendar.class, sql).temporal(
                 TemporalType.TIMESTAMP).getSingleResult();

@@ -1,1 +1,1 @@
-select cal_timestamp from Tense where id = 1
+SELECT CAL_TIMESTAMP FROM TENSE WHERE ID = 1

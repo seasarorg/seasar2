@@ -1,13 +1,13 @@
-update Tense 
-set 
-date_date = /*dateDate*/'2000-01-01', 
-date_time = /*dateTime*/'2000-01-01', 
-date_timestamp = /*dateTimestamp*/'2000-01-01', 
-cal_date = /*calDate*/'2000-01-01', 
-cal_time = /*calTime*/'2000-01-01', 
-cal_timestamp = /*calTimestamp*/'2000-01-01', 
-sql_date = /*sqlDate*/'2000-01-01', 
-sql_time = /*sqlTime*/'2000-01-01', 
-sql_timestamp = /*sqlTimestamp*/'2000-01-01' 
-where 
-id = /*id*/'99'
+UPDATE TENSE 
+SET 
+DATE_DATE = /*dateDate*/'2000-01-01', 
+DATE_TIME = /*dateTime*/'2000-01-01', 
+DATE_TIMESTAMP = /*dateTimestamp*/'2000-01-01', 
+CAL_DATE = /*calDate*/'2000-01-01', 
+CAL_TIME = /*calTime*/'2000-01-01', 
+CAL_TIMESTAMP = /*calTimestamp*/'2000-01-01', 
+SQL_DATE = /*sqlDate*/'2000-01-01', 
+SQL_TIME = /*sqlTime*/'2000-01-01', 
+SQL_TIMESTAMP = /*sqlTimestamp*/'2000-01-01' 
+WHERE 
+ID = /*id*/'99'

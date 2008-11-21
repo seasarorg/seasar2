@@ -1,1 +1,1 @@
-select * from Employee where manager_id = /*manager_id*/99
+SELECT * FROM EMPLOYEE WHERE MANAGER_ID = /*manager_id*/99

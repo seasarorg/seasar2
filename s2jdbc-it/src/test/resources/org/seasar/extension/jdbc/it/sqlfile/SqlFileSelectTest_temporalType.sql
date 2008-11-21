@@ -1,1 +1,1 @@
-select * from Tense where id = 1
+SELECT * FROM TENSE WHERE ID = 1

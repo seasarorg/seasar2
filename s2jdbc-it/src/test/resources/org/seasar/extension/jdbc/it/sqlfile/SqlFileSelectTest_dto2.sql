@@ -1,3 +1,3 @@
-select employee_id, employee_name from Employee
-where department_id = /*departmentId*/1 and salary > /*salary*/3000.12 
-order by /*orderBy*/department_id
+SELECT EMPLOYEE_ID, EMPLOYEE_NAME FROM EMPLOYEE
+WHERE DEPARTMENT_ID = /*departmentId*/1 AND SALARY > /*salary*/3000.12 
+ORDER BY /*orderBy*/DEPARTMENT_ID

@@ -40,7 +40,7 @@ public class SqlSelectWhereTest {
      */
     public void testBean_parameter() throws Exception {
         String sql =
-            "select * from Employee where department_Id = ? and salary = ?";
+            "SELECT * FROM EMPLOYEE WHERE DEPARTMENT_ID = ? AND SALARY = ?";
         List<Employee> list =
             jdbcManager
                 .selectBySql(Employee.class, sql, 2, 3000)
@@ -53,7 +53,7 @@ public class SqlSelectWhereTest {
      * @throws Exception
      */
     public void testBean_parameter_none() throws Exception {
-        String sql = "select * from Employee";
+        String sql = "SELECT * FROM EMPLOYEE";
         List<Employee> list =
             jdbcManager.selectBySql(Employee.class, sql).getResultList();
         assertEquals(14, list.size());
@@ -65,7 +65,7 @@ public class SqlSelectWhereTest {
      */
     public void testMap_parameter() throws Exception {
         String sql =
-            "select * from Employee where department_Id = ? and salary = ?";
+            "SELECT * FROM EMPLOYEE WHERE DEPARTMENT_ID = ? AND SALARY = ?";
         @SuppressWarnings("unchecked")
         List<Map> list =
             jdbcManager.selectBySql(Map.class, sql, 2, 3000).getResultList();
@@ -77,7 +77,7 @@ public class SqlSelectWhereTest {
      * @throws Exception
      */
     public void testMap_parameter_none() throws Exception {
-        String sql = "select * from Employee";
+        String sql = "SELECT * FROM EMPLOYEE";
         @SuppressWarnings("unchecked")
         List<Map> list =
             jdbcManager.selectBySql(Map.class, sql).getResultList();
@@ -90,7 +90,7 @@ public class SqlSelectWhereTest {
      */
     public void testObject_parameter() throws Exception {
         String sql =
-            "select employee_id from Employee where department_Id = ? and salary = ?";
+            "SELECT EMPLOYEE_ID FROM EMPLOYEE WHERE DEPARTMENT_ID = ? AND SALARY = ?";
         List<Integer> list =
             jdbcManager
                 .selectBySql(Integer.class, sql, 2, 3000)
@@ -103,7 +103,7 @@ public class SqlSelectWhereTest {
      * @throws Exception
      */
     public void testObject_parameter_none() throws Exception {
-        String sql = "select employee_id from Employee";
+        String sql = "SELECT EMPLOYEE_ID FROM EMPLOYEE";
         List<Integer> list =
             jdbcManager.selectBySql(Integer.class, sql).getResultList();
         assertEquals(14, list.size());

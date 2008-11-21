@@ -35,10 +35,10 @@ import static org.junit.Assert.*;
 public class SqlSelectIterationCallbackTest {
 
     private static final String SQL =
-        "select * from Employee order by employee_id";
+        "SELECT * FROM EMPLOYEE ORDER BY EMPLOYEE_ID";
 
     private static final String SQL2 =
-        "select salary, employee_id from Employee order by employee_id";
+        "SELECT SALARY, EMPLOYEE_ID FROM EMPLOYEE ORDER BY EMPLOYEE_ID";
 
     private JdbcManager jdbcManager;
 

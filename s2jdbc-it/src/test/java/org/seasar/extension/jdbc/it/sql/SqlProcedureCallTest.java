@@ -179,7 +179,7 @@ public class SqlProcedureCallTest {
             jdbcManager
                 .selectBySql(
                     String.class,
-                    "select department_name from Department where department_id = ?",
+                    "SELECT DEPARTMENT_NAME FROM DEPARTMENT WHERE DEPARTMENT_ID = ?",
                     1)
                 .getSingleResult();
         assertEquals("HOGE", departmentName);
@@ -244,13 +244,13 @@ public class SqlProcedureCallTest {
         String street =
             jdbcManager.selectBySql(
                 String.class,
-                "select street from Address where address_id = ?",
+                "SELECT STREET FROM ADDRESS WHERE ADDRESS_ID = ?",
                 1).getSingleResult();
         assertEquals("HOGE", street);
         street =
             jdbcManager.selectBySql(
                 String.class,
-                "select street from Address where address_id = ?",
+                "SELECT STREET FROM ADDRESS WHERE ADDRESS_ID = ?",
                 2).getSingleResult();
         assertEquals("FOO", street);
         assertEquals(14, dto.employeeCount);
