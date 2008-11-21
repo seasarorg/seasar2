@@ -24,7 +24,7 @@ import javax.persistence.Table;
  * 
  */
 @Entity
-@Table(name = "Department")
+@Table(name = "DEPARTMENT")
 public class ConcreteDepartment extends AbstractDepartment {
 
     /** */

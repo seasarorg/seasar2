@@ -24,7 +24,7 @@ import javax.persistence.Version;
  * 
  */
 @Entity
-@Table(name = "Address")
+@Table(name = "ADDRESS")
 public class ConcreteAddress extends AbstractAddress {
 
     /** */
