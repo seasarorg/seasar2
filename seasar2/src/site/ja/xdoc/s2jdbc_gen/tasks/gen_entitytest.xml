@@ -38,6 +38,23 @@
 				<li>
 					<p>
 						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#ルートパッケージを指定する">ルートパッケージを指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#独自のテンプレートファイルを使用する">独自のテンプレートファイルを使用する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#生成するJavaファイルに共通のヘッダーとしてコピーライトを含める">生成するJavaファイルに共通のヘッダーとしてコピーライトを含める</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 			</ul>
@@ -146,12 +163,55 @@ public class DepartmentTest extends S2TestCase {
 			</subsection>
 		</section>
 		<section name="例">
-			<subsection name="例">
+			<subsection name="ルートパッケージを指定する">
 				<p>
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
 <source><![CDATA[<gen-entitytest
     rootPackageName="examples"
+    classpathRef="classpath"
+/>]]></source>
+			</subsection>
+			<subsection name="独自のテンプレートファイルを使用する">
+				<p>
+					任意のディレクトリに独自のテンプレートファイルを置き、templateFilePrimaryDir属性にそのディレクトリを指定することで、
+					独自のテンプレートファイルを使用できます。
+				</p>
+				<p>
+					S2JDBC-Genのテンプレートは、配布ファイルのresources/tempaltesディレクトリ以下にあります。
+					エンティティのテストクラスのテンプレートはjava/entitytest.ftlになります。
+					これをコピーして、修正を加えるのが良いでしょう。
+					テンプレートの記述方法については<a href="http://freemarker.sourceforge.net/">FreeMarker</a>のドキュメントを参照してください。
+				</p>
+				<p>
+					テンプレートファイルを格納するディレクトリをmytempletesとする場合、
+					修正した独自テンプレートを使用するにはテンプレートをmytempletes/java/entitytest.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
+				</p>
+<source><![CDATA[<gen-entitytest
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					mytempletes/my-entitytest.ftlのように、テンプレートファイルを任意の名前で配置したい場合は、
+					templateFilePrimaryDir属性に加え、templateFileName属性も指定します。
+				</p>
+<source><![CDATA[<gen-entitytest
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    templateFileName="my-entitytest.ftl"
+    classpathRef="classpath"
+/>]]></source>
+			</subsection>
+			<subsection name="生成するJavaファイルに共通のヘッダーとしてコピーライトを含める">
+				<p>
+					copyright.ftlというファイルにコピーライトを記述し、これをtemplateFilePrimaryDir属性に指定するディレクトリに配置すると、
+					生成されるJavaファイルのヘッダーにコピーライトの記述が含まれるようになります。
+					mytempletes/copyright.ftlと配置する場合、タスクの定義は次のようになります。
+				</p>
+<source><![CDATA[<gen-entitytest
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"
 />]]></source>
 			</subsection>

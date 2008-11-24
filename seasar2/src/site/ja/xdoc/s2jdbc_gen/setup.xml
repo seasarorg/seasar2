@@ -74,7 +74,7 @@
 				S2JDBC-Genのセットアップの前に<a href="../s2jdbc_setup.html">S2JDBCのセットアップ</a>をしてください。
 			</p>
 			<p>
-				S2JDBC-Genの動作にはSeasar2、FreeMarkerが必要です。
+				S2JDBC-Genの動作にはSeasar2、<a href="http://freemarker.sourceforge.net/">FreeMarker</a>が必要です。
 				S2JDBC-Gen-x.x.x.zipを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-x.x.x.jar）とFreeMarkerのjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
 				S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
 			</p>

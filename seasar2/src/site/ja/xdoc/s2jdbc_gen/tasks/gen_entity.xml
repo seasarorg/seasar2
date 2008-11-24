@@ -287,7 +287,9 @@ public class Department {
 				</p>
 				<p>
 					S2JDBC-Genのテンプレートは、配布ファイルのresources/tempaltesディレクトリ以下にあります。
-					エンティティクラスのテンプレートはjava/entity.ftlになります。これをコピーして、修正を加えるのが良いでしょう。
+					エンティティクラスのテンプレートはjava/entity.ftlになります。
+					これをコピーして、修正を加えるのが良いでしょう。
+					テンプレートの記述方法については<a href="http://freemarker.sourceforge.net/">FreeMarker</a>のドキュメントを参照してください。
 				</p>
 				<p>
 					テンプレートファイルを格納するディレクトリをmytempletesとする場合、
