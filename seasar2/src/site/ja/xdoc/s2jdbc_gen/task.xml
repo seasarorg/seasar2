@@ -58,7 +58,7 @@
 				タスクは組み合わせて使用します。
 			</p>
 			<p>
-				以下の定義は、配布ファイルで提供しているサンプル用ビルドファイル（resources/s2jdbc-gen-build.xml）の内容です。
+				以下の定義は、S2JDBC-Genの配布ファイルで提供しているサンプル用ビルドファイル（resources/s2jdbc-gen-build.xml）の内容です。
 				このビルドファイルでは、タスクを組み合わせ5つのターゲットを定義しています。
 			</p>
 			<source><![CDATA[<project name="example-s2jdbc-gen" default="gen-ddl" basedir=".">
@@ -297,7 +297,7 @@
 				このビルドファイルは、propertyやpathを環境に合わせてカスタマイズし、利用してください。
 			</p>
 			<p>
-				<a href="setup.html#Doltengの利用">Dolteng</a>を使用する場合は、このビルドファイルと同等のビルドファイルを自動生成できるので、そちらを利用してください。
+				<a href="setup.html#Doltengの利用">Doltengを使用する</a>場合は、このビルドファイルと同等のビルドファイルを自動生成できるので、そちらを利用してください。
 				Doltengが環境に応じたビルドファイルを生成するため、propertyやpathを修正する必要がありません。
 			</p>
 		</section>

@@ -10,6 +10,14 @@
 				<li>
 					<p>
 						<a href="#概要">概要</a>
+						<ul>
+							<li>
+								<a href="#配布ファイルを使用する場合">配布ファイルを使用する場合</a>
+							</li>
+							<li>
+								<a href="#Doltengを使用する場合">Doltengを使用する場合</a>
+							</li>
+						</ul>
 					</p>
 				</li>
 				<li>
@@ -70,19 +78,33 @@
 			</ul>
 		</section>
 		<section name="概要">
-			<p>
-				S2JDBC-Genのセットアップの前に<a href="../s2jdbc_setup.html">S2JDBCのセットアップ</a>をしてください。
-			</p>
-			<p>
-				S2JDBC-Genの動作にはSeasar2、<a href="http://freemarker.sourceforge.net/">FreeMarker</a>が必要です。
-				S2JDBC-Gen-x.x.x.zipを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-x.x.x.jar）とFreeMarkerのjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
-				S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
-			</p>
+			<subsection name="配布ファイルを使用する場合">
+				<p>
+					S2JDBC-Genのセットアップの前に<a href="../s2jdbc_setup.html">S2JDBCのセットアップ</a>が必要です。
+				</p>
+				<p>
+					配布ファイルのS2JDBC-Gen-x.x.x.zipは、<a href="../downloads.html">ダウンロードのページ</a>から取得できます。
+					配布ファイルを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-x.x.x.jar）と<a href="http://freemarker.sourceforge.net/">FreeMarker</a>のjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
+				</p>
+				<p>
+					S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
+				</p>
+			</subsection>
+			<subsection name="Doltengを使用する場合">
+				<p>
+					<a href="#Doltengの利用">Doltengの利用</a>を参照してください。
+				</p>
+				<p>
+					S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
+				</p>
+			</subsection>
 		</section>
 		<section name="ビルドファイルの準備">
 			<p>
-				S2JDBC-GenのAntタスクを実行するにはAntのビルドファイルが必要です。
+				S2JDBC-GenのAntタスクを実行するためにAntのビルドファイルが必要です。
 				簡易的なビルドファイルを用いて説明します。
+			</p>
+			<p>
 				実践的なビルドファイルの例は<a href="task.html#タスクの使用例">タスクの使用例</a>を参照ください。
 				Doletengを使って最適なビルドファイルを自動生成させることもできます。
 				Doltengについては<a href="#Doltengの利用">Doltengの利用</a>を参照してください。
@@ -245,7 +267,33 @@ public class EmployeeService {
 					Doltengを使うと、S2JDBCを利用するプロジェクトの雛形を自動生成できます。
 					Doltengはプロジェクトの生成時にS2JDBC-Gen用のビルドファイルも一緒に作成します。
 					ビルドファイルにはプロジェクトの構成が反映されているため、特別な修正を施すことなくそのまま使用できます。
-					EclipseからAntを実行する場合は<a href="#Eclipseからの実行">Eclipseからの実行</a>も参照してください。
+				</p>
+				<h4>Doltengプロジェクトの作成</h4>
+				<p>
+					Doltengプロジェクトを作成する方法を説明します。
+				</p>
+				<p>
+					Eclipseのメニューから「File」-「New」-「Project」と選択し、プロジェクト作成のダイアログを開きます。
+				</p>
+				<img src="../images/s2jdbc_gen_new_project.png"
+					width="500" height="500" alt="新規プロジェクト" />
+				<p>
+					Dolteng Projectを選択すると次のダイアログが開きます。
+				</p>
+				<img src="../images/s2jdbc_gen_create_project.png"
+					width="498" height="633" alt="Doltengプロジェクトの作成" />
+				<p>
+					Presentationに「SAStruts」、Persistenceに「S2JDBC」を選び、「Finish」ボタンを押してください。
+					プロジェクトが生成されます。
+				</p>
+				<img src="../images/s2jdbc_gen_init_project.png"
+					width="368" height="278" alt="初期プロジェクト" />
+				<p>
+					生成されたプロジェクトには、プロジェクト専用のビルドファイル「s2jdbc-gen-build.xml」が含まれます。
+				</p>
+				<p>
+					このビルドファイルは、S2JDBC-Genの配布ファイルで提供されるビルドファイルとほぼ同等のものです。
+					ビルドファイルに定義されたターゲットの説明は、<a href="task.html#タスクの使用例">タスクの使用例</a>を参照ください。
 				</p>
 			</subsection>
 			<subsection name="ResourceSynchronizerの利用">
@@ -285,14 +333,16 @@ public class EmployeeService {
 							メニューから「表示」-「一行目を固定」を選びます。これによりヘッダー行が固定されます。
 						</li>
 						<li>
-							メニューから「オプション」-「オプション」を選びます。ダイアログが表示されたら「データ形式」を選択し、「必要なセルのみ""で囲む」にチェックします。これにより、nullのデータをnullのデータとして維持できます。
+							メニューから「オプション」-「オプション」を選びます。ダイアログが表示されたら「データ形式」を選択し、「必要なセルのみ""で囲む」にチェックします。これにより、nullのデータを維持できます。
 						</li>
 						<li>
 							メニューから「オプション」-「セーブ時文字コード」でタスクが利用するエンコーディング（デフォルトではUTF-8）と同じものを指定します。これにより、エンコーディングの誤変換を防ぎます。
 						</li>
 					</ul>
 				</p>
-				S2JDBC-Genで扱うCSV形式の詳細については<a href="tasks/gen_ddl.html#ダンプファイル">ダンプファイル</a>を参照してください。
+				<p>
+					S2JDBC-Genで扱うCSV形式の詳細については<a href="tasks/gen_ddl.html#ダンプファイル">ダンプファイル</a>を参照してください。
+				</p>
 			</subsection>
 		</section>
 	</body>
