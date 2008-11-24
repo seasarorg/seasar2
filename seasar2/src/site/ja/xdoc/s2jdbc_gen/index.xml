@@ -38,6 +38,18 @@
 					<p>
 						<a href="#S2JDBC-Genの効果的な利用法">S2JDBC-Genの効果的な利用法</a>
 					</p>
+					<ul>
+						<li>
+							<p>
+								<a href="#開発スタイル">開発スタイル</a>
+							</p>
+						</li>
+						<li>
+							<p>
+								<a href="#開発環境">開発環境</a>
+							</p>
+						</li>
+					</ul>
 				</li>
 				<li>
 					<p>
@@ -212,7 +224,7 @@ public class Employee {
 					この機能を利用すると、DDLスクリプトとDDLスクリプトに対応したデータを一緒に管理できます。
 				</p>
 				<p>
-					詳しくは、<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクを参照ください。
+					詳しくは、<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクや<a href="entity_definition.html">DDL生成のためのエンティティ定義</a>を参照ください。
 				</p>
 			</subsection>
 			<subsection name="マイグレーション">

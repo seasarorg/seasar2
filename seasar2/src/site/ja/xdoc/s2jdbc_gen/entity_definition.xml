@@ -116,7 +116,7 @@
 		<section name="概要">
 			<p>
 				S2JDBC-Genでは、<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクを実行することで、エンティティ定義からDDLを出力できます。
-				ここでは、DDLの生成に大きく関わるエンティティの定義方法を説明します。
+				ここでは、DDLの生成に大きく関わるエンティティクラスの定義方法を説明します。
 			</p>
 			<p>
 				<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスク生成できるDDLの種類には限りがあります。

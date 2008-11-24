@@ -45,6 +45,11 @@
 							</li>
 							<li>
 								<a href="#Eclipseからの実行">Eclipseからの実行</a>
+								<ul>
+									<li>
+										<a href="#Windows上でEclipse3.4を利用する場合">Windows上でEclipse3.4を利用する場合</a>
+									</li>
+								</ul>
 							</li>
 						</ul>
 					</p>
@@ -58,6 +63,11 @@
 							</li>
 							<li>
 								<a href="#Doltengの利用">Doltengの利用</a>
+								<ul>
+									<li>
+										<a href="Doltengプロジェクトの作成">Doltengプロジェクトの作成</a>
+									</li>
+								</ul>
 							</li>
 							<li>
 								<a href="#ResourceSynchronizerの利用">ResourceSynchronizerの利用</a>
@@ -86,16 +96,10 @@
 					配布ファイルのS2JDBC-Gen-x.x.x.zipは、<a href="../downloads.html">ダウンロードのページ</a>から取得できます。
 					配布ファイルを解凍し、S2JDBC-Genのjarファイル（s2jdbc-gen-x.x.x.jar）と<a href="http://freemarker.sourceforge.net/">FreeMarker</a>のjarファイル（freemarker-2.3.x.jar）を任意の場所に配置してください。
 				</p>
-				<p>
-					S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
-				</p>
 			</subsection>
 			<subsection name="Doltengを使用する場合">
 				<p>
 					<a href="#Doltengの利用">Doltengの利用</a>を参照してください。
-				</p>
-				<p>
-					S2JDBC-GenのAntタスクをコマンドラインから動作させる場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
 				</p>
 			</subsection>
 		</section>
@@ -190,27 +194,38 @@
 			</p>
 			<subsection name="コマンドラインからの実行">
 				<p>
-					Antをコマンドラインから実行する場合は、ビルドファイルが存在する階層に移動し、次のコマンドを実行してください。
+					Antをコマンドラインから実行する場合は、<a href="http://ant.apache.org/">Apache Ant</a>のインストールが別途必要です。
+				</p>
+				<p>
+					ビルドファイルが存在する階層に移動し、次のコマンドを実行してください。
+				</p>
 			<source><![CDATA[
 ant -f s2jdbc-gen-build.xml ターゲット名
 ]]></source>
-				</p>
 			</subsection>
 			<subsection name="Eclipseからの実行">
 				<p>
-					AntをEclipse上で起動する場合は、s2jdbc-gen-build.xmlをAntエディタで開き、実行してください。<br />
-					ただし、Windows上でEclipse 3.4を利用している場合は、Console EncodingにMS932を指定して実行する必要があります。
-					MS932を指定しない場合、ログがコンソールに正しく出力されません。
-					Console Encodingを指定して実行する手順は次のようになります。
-					<ol>
-						<li>s2jdbc-gen-build.xmlをAntエディタで開きます。</li>
-						<li>メニューから「Run」-「Extenal Tools」-「Extenal Tools Configurations...」を選択します。Extenal Tools Configurationsダイアログが開きます。</li>
-						<li>左側のメニューにある「Ant Build」という項目をダブルクリックし、s2jdbc-gen-build.xmlに対する設定を新規作成します。</li>
-						<li>ダイアログの「Common」タブの「Console Encoding」にMS932を指定します。MS932がコンボボックスに表示されていない場合は一旦ワークスペースやプロジェクトのエンコーディングをMS932に変更すると登場するようになります。</li>
-						<li>ダイアログの「Run」ボタンを押しAntを実行します。</li>
-					</ol>
+					AntをEclipse上で起動する場合は、s2jdbc-gen-build.xmlをAntエディタで開き、実行してください。
 				</p>
+				<h4><a name="Windows上でEclipse3.4を利用する場合"></a>Windows上でEclipse3.4を利用する場合</h4>
+				<p>	
+					Windows上でEclipse3.4を利用している場合、Antは、Console EncodingにMS932を指定して実行する必要があります。
+					MS932を指定しない場合、ログがコンソールに正しく出力されません。
+				</p>
+				<p>
+					Console Encodingを指定して実行する手順は次のようになります。
+				</p>
+				<ol>
+					<li>s2jdbc-gen-build.xmlをAntエディタで開きます。</li>
+					<li>メニューから「Run」-「Extenal Tools」-「Extenal Tools Configurations...」を選択します。Extenal Tools Configurationsダイアログが開きます。</li>
+					<li>左側のメニューにある「Ant Build」という項目をダブルクリックし、s2jdbc-gen-build.xmlに対する設定を新規作成します。</li>
+					<li>ダイアログの「Common」タブの「Console Encoding」にMS932を指定します。MS932がコンボボックスに表示されていない場合は一旦ワークスペースやプロジェクトのエンコーディングをMS932に変更すると登場するようになります。</li>
+					<li>ダイアログの「Run」ボタンを押しAntを実行します。</li>
+				</ol>
 				<img src="../images/s2jdbc_gen_console_enc.png" />
+				<p>
+					この設定は、ビルドファイルに含まれるターゲットごとに行う必要があります。
+				</p>
 			</subsection>
 		</section>
 		<section name="Eclipse">
@@ -268,7 +283,7 @@ public class EmployeeService {
 					Doltengはプロジェクトの生成時にS2JDBC-Gen用のビルドファイルも一緒に作成します。
 					ビルドファイルにはプロジェクトの構成が反映されているため、特別な修正を施すことなくそのまま使用できます。
 				</p>
-				<h4>Doltengプロジェクトの作成</h4>
+				<h4><a name="Doltengプロジェクトの作成"></a>Doltengプロジェクトの作成</h4>
 				<p>
 					Doltengプロジェクトを作成する方法を説明します。
 				</p>
@@ -290,10 +305,15 @@ public class EmployeeService {
 					width="368" height="278" alt="初期プロジェクト" />
 				<p>
 					生成されたプロジェクトには、プロジェクト専用のビルドファイル「s2jdbc-gen-build.xml」が含まれます。
-				</p>
-				<p>
 					このビルドファイルは、S2JDBC-Genの配布ファイルで提供されるビルドファイルとほぼ同等のものです。
 					ビルドファイルに定義されたターゲットの説明は、<a href="task.html#タスクの使用例">タスクの使用例</a>を参照ください。
+				</p>
+				<p>
+					デフォルトでは、データベースにH2 Database Engineを使用する設定になっています。
+					他のデータベースを使用するには、jdbc.diconとs2jdbc.diconを修正してください。
+					設定方法については<a href="../jdbc.html">JDBCのセットアップ</a>
+					と<a href="../s2jdbc_setup.html">S2JDBCのセットアップ</a>を参照してください。
+					これらのファイルは、生成されたプロジェクトのsrc/main/resourcesディレクトリに配置されています。
 				</p>
 			</subsection>
 			<subsection name="ResourceSynchronizerの利用">
@@ -341,7 +361,7 @@ public class EmployeeService {
 					</ul>
 				</p>
 				<p>
-					S2JDBC-Genで扱うCSV形式の詳細については<a href="tasks/gen_ddl.html#ダンプファイル">ダンプファイル</a>を参照してください。
+					S2JDBC-Genで扱うCSV形式の詳細については<a href="file_format.html#ダンプファイル">ダンプファイル</a>を参照してください。
 				</p>
 			</subsection>
 		</section>
