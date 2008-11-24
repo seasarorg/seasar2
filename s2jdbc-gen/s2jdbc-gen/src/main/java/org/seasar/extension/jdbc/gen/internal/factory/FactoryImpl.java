@@ -275,9 +275,9 @@ public class FactoryImpl implements Factory {
     }
 
     public Loader createLoader(Command command, GenDialect dialect,
-            String dumpFileEncoding, int batchSize) {
+            String dumpFileEncoding, int batchSize, boolean delete) {
 
-        return new LoaderImpl(dialect, dumpFileEncoding, batchSize);
+        return new LoaderImpl(dialect, dumpFileEncoding, batchSize, delete);
     }
 
     public GenerationContext createGenerationContext(Command command,

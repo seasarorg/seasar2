@@ -668,7 +668,7 @@ public class MigrateCommand extends AbstractCommand {
      */
     protected Loader createLoader() {
         return factory.createLoader(this, dialect, dumpFileEncoding,
-                loadBatchSize);
+                loadBatchSize, false);
     }
 
     /**

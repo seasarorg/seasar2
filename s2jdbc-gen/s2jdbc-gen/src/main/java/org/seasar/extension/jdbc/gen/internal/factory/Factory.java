@@ -510,10 +510,12 @@ public interface Factory {
      *            ダンプファイルのエンコーディング
      * @param batchSize
      *            バッチサイズ
+     * @param delete
+     *            ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}を設定します。
      * @return {@link Loader}の実装
      */
     Loader createLoader(Command command, GenDialect dialect,
-            String dumpFileEncoding, int batchSize);
+            String dumpFileEncoding, int batchSize, boolean delete);
 
     /**
      * {@link GenerationContext}の実装を作成します。

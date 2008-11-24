@@ -49,7 +49,7 @@ public class LoaderImplTest {
         tableDesc.addColumnDesc(columnDesc2);
 
         LoaderImpl loader = new LoaderImpl(new StandardGenDialect(), "UTF-8",
-                10);
+                10, false);
         String sql = loader.buildSql(tableDesc, Arrays.asList("FOO", "BAR"));
         assertEquals("insert into AAA.BBB.HOGE (FOO, BAR) values (?, ?)", sql);
     }

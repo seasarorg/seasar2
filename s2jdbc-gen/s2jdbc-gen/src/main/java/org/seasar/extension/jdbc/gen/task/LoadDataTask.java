@@ -228,4 +228,15 @@ public class LoadDataTask extends AbstractTask {
     public void setApplyEnvToVersion(boolean applyEnvToVersion) {
         command.setApplyEnvToVersion(applyEnvToVersion);
     }
+
+    /**
+     * ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}を設定します。
+     * 
+     * @param delete
+     *            ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}
+     */
+    public void setDelete(boolean delete) {
+        command.setDelete(delete);
+    }
+
 }

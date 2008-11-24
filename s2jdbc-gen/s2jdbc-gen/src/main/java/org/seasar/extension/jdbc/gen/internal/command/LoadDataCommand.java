@@ -96,6 +96,9 @@ public class LoadDataCommand extends AbstractCommand {
     /** データをロードする際のバッチサイズ */
     protected int loadBatchSize = 10;
 
+    /** ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false} */
+    protected boolean delete = false;
+
     /** トランザクション内で実行する場合{@code true}、そうでない場合{@code false} */
     protected boolean transactional = false;
 
@@ -421,6 +424,25 @@ public class LoadDataCommand extends AbstractCommand {
         this.applyEnvToVersion = applyEnvToVersion;
     }
 
+    /**
+     * ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}を返します。
+     * 
+     * @return ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}
+     */
+    public boolean isDelete() {
+        return delete;
+    }
+
+    /**
+     * ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}を設定します。
+     * 
+     * @param delete
+     *            ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}
+     */
+    public void setDelete(boolean delete) {
+        this.delete = delete;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -521,7 +543,7 @@ public class LoadDataCommand extends AbstractCommand {
      */
     protected Loader createLoader() {
         return factory.createLoader(this, dialect, dumpFileEncoding,
-                loadBatchSize);
+                loadBatchSize, delete);
     }
 
     /**

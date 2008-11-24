@@ -59,6 +59,9 @@ public class LoaderImpl implements Loader {
     /** バッチサイズ */
     protected int batchSize;
 
+    /** ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}を設定します。 */
+    protected boolean delete;
+
     /**
      * インスタンスを構築します。
      * 
@@ -68,8 +71,11 @@ public class LoaderImpl implements Loader {
      *            ダンプファイルのエンコーディング
      * @param batchSize
      *            バッチサイズ
+     * @param delete
+     *            ロードの前に存在するデータを削除する場合{@code true}、削除しない場合{@code false}を設定します。
      */
-    public LoaderImpl(GenDialect dialect, String dumpFileEncoding, int batchSize) {
+    public LoaderImpl(GenDialect dialect, String dumpFileEncoding,
+            int batchSize, boolean delete) {
         if (dialect == null) {
             throw new NullPointerException("dialect");
         }
@@ -82,6 +88,7 @@ public class LoaderImpl implements Loader {
         this.dialect = dialect;
         this.dumpFileEncoding = dumpFileEncoding;
         this.batchSize = batchSize;
+        this.delete = delete;
     }
 
     public void load(SqlExecutionContext sqlExecutionContext,
@@ -103,6 +110,9 @@ public class LoaderImpl implements Loader {
                     columnNameList);
             String sql = buildSql(tableDesc, columnNameList);
             try {
+                if (delete) {
+                    deleteData(sqlExecutionContext, tableDesc);
+                }
                 preLoadData(sqlExecutionContext, tableDesc);
                 loadData(sqlExecutionContext, reader, sqlTypeList, sql);
                 postLoadData(sqlExecutionContext, tableDesc);
@@ -129,6 +139,24 @@ public class LoaderImpl implements Loader {
     }
 
     /**
+     * データを削除します。
+     * 
+     * @param sqlExecutionContext
+     *            SQL実行コンテキスト
+     * @param tableDesc
+     *            テーブル記述
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    protected void deleteData(SqlExecutionContext sqlExecutionContext,
+            TableDesc tableDesc) throws SQLException {
+        Statement statement = sqlExecutionContext.getStatement();
+        String sql = "delete from " + tableDesc.getFullName();
+        logger.debug(sql);
+        statement.execute(sql);
+    }
+
+    /**
      * データのロード前に処理します。
      * 
      * @param sqlExecutionContext
@@ -145,6 +173,7 @@ public class LoaderImpl implements Loader {
             Statement statement = sqlExecutionContext.getStatement();
             String sql = dialect.getIdentityInsertEnableStatement(tableDesc
                     .getFullName());
+            logger.debug(sql);
             statement.execute(sql);
         }
     }
@@ -173,6 +202,7 @@ public class LoaderImpl implements Loader {
             bindArgs(ps, sqlTypeList, valueList);
             ps.addBatch();
             if (batchSize > 0 && (i + 1) % batchSize == 0) {
+                logger.debug(sql);
                 ps.executeBatch();
                 remaining = false;
             } else {
@@ -180,6 +210,7 @@ public class LoaderImpl implements Loader {
             }
         }
         if (remaining) {
+            logger.debug(sql);
             ps.executeBatch();
         }
     }
@@ -201,6 +232,7 @@ public class LoaderImpl implements Loader {
             Statement statement = sqlExecutionContext.getStatement();
             String sql = dialect.getIdentityInsertDisableStatement(tableDesc
                     .getFullName());
+            logger.debug(sql);
             statement.execute(sql);
         }
     }
