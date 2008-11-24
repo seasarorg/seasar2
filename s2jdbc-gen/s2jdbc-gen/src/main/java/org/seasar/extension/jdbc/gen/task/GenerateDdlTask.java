@@ -317,26 +317,6 @@ public class GenerateDdlTask extends AbstractTask {
     }
 
     /**
-     * スキーマのバージョン番号を格納するカラム名を設定します。
-     * 
-     * @param schemaInfoColumnName
-     *            スキーマのバージョン番号を格納するカラム名
-     */
-    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
-        command.setSchemaInfoColumnName(schemaInfoColumnName);
-    }
-
-    /**
-     * スキーマ情報を格納する完全なテーブル名を設定します。
-     * 
-     * @param schemaInfoFullTableName
-     *            スキーマ情報を格納する完全なテーブル名
-     */
-    public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
-        command.setSchemaInfoFullTableName(schemaInfoFullTableName);
-    }
-
-    /**
      * テーブルオプションを設定します。
      * 
      * @param tableOption

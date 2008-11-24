@@ -179,12 +179,6 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** SQLステートメントの区切り文字 */
     protected char statementDelimiter = ';';
 
-    /** スキーマ情報を格納する完全なテーブル名 */
-    protected String schemaInfoFullTableName = "SCHEMA_INFO";
-
-    /** スキーマのバージョン番号を格納するカラム名 */
-    protected String schemaInfoColumnName = "VERSION";
-
     /** テーブルオプション */
     protected String tableOption = null;
 
@@ -601,44 +595,6 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     public void setTemplateFilePrimaryDir(File templateFilePrimaryDir) {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
-    }
-
-    /**
-     * スキーマ情報を格納する完全なテーブル名を返します。
-     * 
-     * @return スキーマ情報を格納する完全なテーブル名
-     */
-    public String getSchemaInfoFullTableName() {
-        return schemaInfoFullTableName;
-    }
-
-    /**
-     * スキーマ情報を格納する完全なテーブル名を設定します。
-     * 
-     * @param schemaInfoFullTableName
-     *            スキーマ情報を格納する完全なテーブル名
-     */
-    public void setSchemaInfoFullTableName(String schemaInfoFullTableName) {
-        this.schemaInfoFullTableName = schemaInfoFullTableName;
-    }
-
-    /**
-     * スキーマのバージョン番号を格納するカラム名を返します。
-     * 
-     * @return スキーマのバージョン番号を格納するカラム名
-     */
-    public String getSchemaInfoColumnName() {
-        return schemaInfoColumnName;
-    }
-
-    /**
-     * スキーマのバージョン番号を格納するカラム名を設定します。
-     * 
-     * @param schemaInfoColumnName
-     *            スキーマのバージョン番号を格納するカラム名
-     */
-    public void setSchemaInfoColumnName(String schemaInfoColumnName) {
-        this.schemaInfoColumnName = schemaInfoColumnName;
     }
 
     /**
