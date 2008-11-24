@@ -116,9 +116,9 @@
 				</p>
 <source><![CDATA[<exec-sql
     classpathRef="classpath">
-      <sqlFileList dir="sql">
-        <file name="aaa.sql"/>
-    </sqlFileList>
+        <sqlFileList dir="sql">
+            <file name="aaa.sql"/>
+        </sqlFileList>
 </exec-sql>]]></source>
 			</subsection>
 			<subsection name="トランザクション内で実行する">
@@ -128,11 +128,11 @@
 <source><![CDATA[<exec-sql
     transactional="true"
     classpathRef="classpath">
-      <sqlFileList dir="sql">
-        <file name="aaa.sql"/>
-        <file name="bbb.sql"/>
-        <file name="ccc.sql"/>
-    </sqlFileList>
+        <sqlFileList dir="sql">
+            <file name="aaa.sql"/>
+            <file name="bbb.sql"/>
+            <file name="ccc.sql"/>
+        </sqlFileList>
 </exec-sql>]]></source>
 				<p>
 					上記の定義では、トランザクションが開始された後、aaa.sql、bbb.sql、ccc.sqlに記述されたSQLが順に実行され、エラーが発生しなければコミットされます。

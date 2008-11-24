@@ -310,8 +310,11 @@ public class SqlFileTest extends S2TestCase {
 <source><![CDATA[<gen-sqlfiletest
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
-    classpathRef="classpath"
-/>]]></source>
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfiletest>]]></source>
 				<p>
 					mytempletes/my-sqlfiletest.ftlのように、テンプレートファイルを任意の名前で配置したい場合は、
 					templateFilePrimaryDir属性に加え、templateFileName属性も指定します。
@@ -320,8 +323,11 @@ public class SqlFileTest extends S2TestCase {
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     templateFileName="my-sqlfiletest.ftl"
-    classpathRef="classpath"
-/>]]></source>
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfiletest>]]></source>
 			</subsection>
 			<subsection name="生成するJavaファイルに共通のヘッダーとしてコピーライトを含める">
 				<p>
@@ -332,8 +338,11 @@ public class SqlFileTest extends S2TestCase {
 <source><![CDATA[<gen-sqlfiletest
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
-    classpathRef="classpath"
-/>]]></source>
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfiletest>]]></source>
 			</subsection>
 		</section>
 	</body>
