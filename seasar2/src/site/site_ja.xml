@@ -78,6 +78,7 @@
           <item name="Refresh" href="s2jdbc_gen/tasks/refresh.html"/>
         </item>
         <item name="DDL生成のためのエンティティ定義" href="s2jdbc_gen/entity_definition.html"/>
+        <item name="ファイルの形式" href="s2jdbc_gen/file_format.html"/>
         <item name="Subversion連携" href="s2jdbc_gen/svn.html"/>
       </item>
 

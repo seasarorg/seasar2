@@ -129,7 +129,7 @@
 					DDLファイルとダンプファイルは、migrateDir属性に指定されたディレクトリ以下に出力されます。
 				</p>
 				<p>
-					このタスクは、DDLを生成しますが、生成したDDLをデータベースへ適用させるわけではありません。
+					このタスクは、DDLを生成しますが、生成したDDLをデータベースへ適用するわけではありません。
 					DDLのデータベースへの適用は<a href="migrate.html">Migrate</a>タスクが担います。
 				</p>
 			</subsection>
@@ -142,10 +142,10 @@
     ├─0000
     │  ├─create
     │  └─drop
-    │      ├─010-foreignkey
-    │      ├─020-sequence
-    │      ├─030-uniquekey
-    │      └─040-table
+    │     ├─010-foreignkey
+    │     ├─020-sequence
+    │     ├─030-uniquekey
+    │     └─040-table
     ├─0001
     │  ├─create
     │  │  ├─010-table
@@ -154,10 +154,10 @@
     │  │  ├─040-dump
     │  │  └─050-foreignkey
     │  └─drop
-    │      ├─010-foreignkey
-    │      ├─020-sequence
-    │      ├─030-uniquekey
-    │      └─040-table
+    │     ├─010-foreignkey
+    │     ├─020-sequence
+    │     ├─030-uniquekey
+    │     └─040-table
     └─0002
         ├─create
         │  ├─010-table
@@ -166,10 +166,10 @@
         │  ├─040-dump
         │  └─050-foreignkey
         └─drop
-            ├─010-foreignkey
-            ├─020-sequence
-            ├─030-uniquekey
-            └─040-table]]></source>
+           ├─010-foreignkey
+           ├─020-sequence
+           ├─030-uniquekey
+           └─040-table]]></source>
 				<p>
 					db/migrateディレクトリ以下の、0000、0001、0002はDDLのバージョンを表すディレクトリです。
 					バージョンを表すディレクトリは、Gen-Ddlタスクを実行するごとに新しく作成されます。
@@ -185,109 +185,44 @@
 			</subsection>
 			<subsection name="バージョン番号">
 				<p>
-					バージョン番号は、ddlInfoFile属性に指定したテキストファイルで管理されます。
+					DDLのバージョン番号は、ddlInfoFile属性に指定したテキストファイルで管理されます。
 					バージョン番号は0から始まり、上限の2147483647まで1ずつ増分します。
 					バージョン番号を管理するテキストファイルは、番号を振り直すなどの特別な理由がない限り編集しないでください。
 				</p>
 			</subsection>
 			<subsection name="DDLファイル">
-				<h4>テーブル</h4>
 				<p>
-					Gen-Ddlタスクでは次の3種類のテーブルに対してDDLを生成します。
-					<ul>
-						<li>
-							エンティティに対応するテーブル
-						</li>
-						<li>
-							エンティティの識別子生成用テーブル
-						</li>
-						<li>
-							スキーマのバージョンを管理するテーブル
-						</li>
-					</ul>
+					エンティティクラスの定義からDDLファイルが出力されます。
+					どのようなエンティティ定義からどのようなDDLを生成できるかは、<a href="../entity_definition.html">DDL生成のためのエンティティ定義</a>を参照してください。
 				</p>
 				<p>
-					エンティティの識別子生成用テーブルのDDLは、エンティティの識別子に@TableGeneratorを指定した場合に生成されます。
+					Gen-Ddlタスクでサポートしていないストアドプロシージャー、トリガー、ビューなどのDDLを扱うには、Migrateタスクの<a href="tasks/migrate.html#任意のSQLの実行">任意のSQLの実行</a>を参照してください。
 				</p>
 				<p>
-					スキーマのバージョンを管理するテーブルのDDLは、Gen-Ddlタスクを実行すると必ず生成されます。
-					これは、データベーススキーマのバージョンを管理するテーブルです。
-					テーブル名やカラム名はschemaInfoFullTableName属性とschemaInfoColumnName属性で決まります。
+					出力先のディレクトリはパラメータにより変更できます。
 				</p>
-				<h4>シーケンス</h4>
 				<p>
-					シーケンスのDDLは、エンティティの識別子に@SequenceGeneratorを指定した場合に生成されます。
+					生成されるファイルの形式は、<a href="../sql_format.html#SQLファイル">SQLファイル</a>と同様です。
 				</p>
-				<h4>一意キー</h4>
-					<p>
-						一意キーのDDLを生成する方法は3つあります。
-						<ul>
-							<li>
-								@Columnのunique属性にtrueを指定する
-							</li>
-							<li>
-								@TableのuniqueConstraints属性に値を指定する
-							</li>
-							<li>
-								@TableGeneratorのuniqueConstraints属性に値を指定する
-							</li>
-						</ul>
-						いずれの方法でも一意キーのDDLが生成されます。
-					</p>
-				<h4>外部キー</h4>
-					<p>
-						外部キーのDDLは、エンティティクラスで関連プロパティを定義した場合に生成されます。
-					</p>
 			</subsection>
 			<subsection name="ダンプファイル">
 				<p>
-					ダンプファイルはCSV形式で出力されます。
-					CSVは次の規則を持ちます。
+					dump属性が"true"の場合、データベースのデータがCSV形式でダンプ出力されます。
 				</p>
 				<p>
-					<ul>
-						<li>
-							ファイル名は、ロード時にテーブル名として利用されます（カタログ名やスキーマ名を含むこともあります）。したがって、修正しないでください。
-						</li>
-						<li>
-							最初の一行目はテーブルのカラムを表すヘッダー行になります。ヘッダー行は必須です。
-						</li>
-						<li>
-							ヘッダー行とデータ行の列数は同じでなければいけません。
-						</li>
-						<li>
-							null以外のすべてのデータはダブルクォテーションで囲むことができます（Gen-Ddlは必ずダブルクォテーションで囲んで出力します）。
-						</li>
-						<li>
-							nullは長さ0のデータで表されます。ダブルクォテーションで囲んではいけません。ダブルクォテーションで囲まれた長さ0のデータは空文字列とみなされます。
-						</li>
-					</ul>
+					出力先のディレクトリはパラメータにより変更できます。
 				</p>
 				<p>
-					CSV上のデータの形式は、エンティティのプロパティの型により決まります。
-				</p>
-				<table border="1" cellpadding="2" cellspacing="0">
-					<tr><th>プロパティの型</th><th>データの形式</th></tr>
-					<tr><td>String、char/Character</td><td>文字列表現です。ただし、ダブルクォテーション、カンマ、改行コードのいずれかを含む場合は、文字列全体がダブルクォテーションで囲まれる必要があります。そのとき、データとしてのダブルクォテーションはダブルクォテーションを2重にすることでエスケープされなければいけません。空文字は、ダブルクォテーションで囲まれる必要があります。</td></tr>
-					<tr><td>@Temporal(TemporalType.DATE)が指定されたjava.util.Date、@Temporal(TemporalType.DATE)が指定されたjava.util.Calendar、java.sql.Date</td><td>yyyy/MM/ddの形式でなければいけません。</td></tr>
-					<tr><td>@Temporal(TemporalType.TIME)が指定されたjava.util.Date、@Temporal(TemporalType.TIME)が指定されたjava.util.Calendar、java.sql.Time</td><td>hh:mm:ssの形式でなければいけません。</td></tr>
-					<tr><td>@Temporal(TemporalType.TIMESTAMP)が指定されたjava.util.Date、@Temporal(TemporalType.TIMESTAMP)が指定されたjava.util.Calendar、java.sql.Timestamp</td><td>yyyy/MM/dd hh:mm:ss.fffffffffの形式でなければいけません。ただし、.fffffffffについてはなくてもかまいません。</td></tr>
-					<tr><td>byte[]、Serializable</td><td>Base64でエンコードされた形式で表現されます。</td></tr>
-					<tr><td>Enumのサブクラス</td><td>S2JDBCで永続化される際に使用される値の文字列表現です。</td></tr>
-					<tr><td>その他の型</td><td>文字列表現です。</td></tr>
-				</table>
-				<p>
-					データを編集する際は、上述の規則を守ってください。
-					編集にはCSVエディタを利用することを推奨します。
-					CSVエディタについては<a href="../setup.html#CSVエディタ">セットアップのCSVエディタ</a>を参照してください。
+					出力されるデータの形式は、<a href="../file_format.html#ダンプファイル">ダンプファイル</a>の説明を参照してください。
 				</p>
 			</subsection>
 			<subsection name="タスク実行時のファイルのコピー">
 				<p>
 					Gen-Ddlタスクは、DDLやダンプデータを生成後、生成対象外かつ前バージョンのディレクトリに含まれるファイルを新しいバージョンのディレクトリにコピーします。
 					この仕組みにより、Gen-Ddlで生成される以外のファイルをGen-Ddlで生成されるファイルと同様の方法で管理できます。
+				</p>
+				<p>
 					たとえば、バージョン0002のcreateディレクトリの下に061-procedureや062-view、dropディレクトリの下に001-viewや002-procedureといったディレクトリを作成し、そこにストアドプロシージャーやビューの作成用DDLと削除用DDLファイルを置くとします。
-					Gen-Ddlタスクを実行すると、これらはバージョン0003のcreateディレクトリやdropディレクトリ以下にそのままコピーされます。
 				</p>
 <source><![CDATA[db
 └─migrate
@@ -301,12 +236,15 @@
         │  ├─061-procedure
         │  └─062-view
         └─drop
-            ├─001-view
-            ├─002-procedure
-            ├─010-foreignkey
-            ├─020-sequence
-            ├─030-uniquekey
-            └─040-table]]></source>
+           ├─001-view
+           ├─002-procedure
+           ├─010-foreignkey
+           ├─020-sequence
+           ├─030-uniquekey
+           └─040-table]]></source>
+				<p>
+					Gen-Ddlタスクを実行すると、これらはバージョン0003のcreateディレクトリやdropディレクトリ以下にそのままコピーされます。
+				</p>
 			</subsection>
 		</section>
 		<section name="パラメータ">
@@ -350,8 +288,6 @@
 					<tr><td>ddlInfoFile</td><td>DDLのバージョン番号を管理するファイルです。</td><td>"db/ddl-info.txt"</td><td>NO</td></tr>
 					<tr><td>versionNoPattern</td><td>バージョン番号のパターンです。バージョン番号に対応するディレクトリ名に使用されます。java.text.DecimalFormatで使用可能なパターンを指定できます。</td><td>"0000"</td><td>NO</td></tr>
 					<tr><td>statementDelimiter</td><td>SQLステートメントの区切り文字です。</td><td>";"</td><td>NO</td></tr>
-					<tr><td>schemaInfoFullTableName</td><td>スキーマのバージョンを管理するテーブル名です。</td><td>"SCHEMA_INFO"</td><td>NO</td></tr>
-					<tr><td>schemaInfoColumnName</td><td>スキーマのバージョンを管理するカラム名です。</td><td>"VERSION"</td><td>NO</td></tr>
 					<tr><td>tableOption</td><td>CREATE TABLE文の最後に付与されるオプションです。MySQLで、データベースのエンジンを指定する場合、たとえば、"ENGINE = INNODB"というように指定できます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>comment</td><td>DDLを生成する理由を示すコメントです。エンティティの変更内容を記述するのが適当です。ここに記述した文字列はddlInfoFile属性で指定されたファイルに記録されます。</td><td>""</td><td>NO</td></tr>
 					<tr><td>genDialectClassName</td><td>S2JDBC-Genのダイアレクトインタフェースの実装クラス名です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.dialect.GenDialectインタフェースを実装している必要があります。指定しない場合は<a href="../s2jdbc_setup.html#ダイアレクト">S2JDBCのダイアレクト</a>に対応したデフォルトのクラスが使用されます。</td><td>-</td><td>NO</td></tr>

@@ -53,6 +53,7 @@
 			<subsection name="概要">
 				<p>
 					SQLファイルに対するテストクラスを作成します。
+					ここでのSQLファイルとは、JdbcManagerの<a href="../../s2jdbc_manager_sqlfile.html">SQLファイルによる操作</a>で使用されるSQLファイルを指します。
 				</p>
 				<p>
 					例えば、次のようなコードを生成できます。
@@ -210,7 +211,7 @@ public class SqlFileTest extends S2TestCase {
 				<p>
 					このとき、実行されるSQLはSQLファイルに記述されたままの文で実行されます。
 					JdbcManagerのAPIを使ったときのようにバインド変数コメントが解決されるわけではないことに注意してください。
-					テストメソッドは、SQLファイルごとに生成されます。
+					テストメソッドは、testSqlFile<i>連番</i>Txという名前でSQLファイルごとに生成されます。
 				</p>
 				<p>
 					SQLファイルに対するテストを実行することで、IDEのリファクタリング機能では検出できないSQL文上の修正対象を検出したり、修正漏れを防いだりすることができます。

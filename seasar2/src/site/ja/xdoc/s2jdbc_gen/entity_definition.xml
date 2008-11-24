@@ -115,8 +115,12 @@
 
 		<section name="概要">
 			<p>
-				S2JDBC-Genでは、<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>を実行することで、エンティティ定義からDDLを出力できます。
+				S2JDBC-Genでは、<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクを実行することで、エンティティ定義からDDLを出力できます。
 				ここでは、DDLの生成に大きく関わるエンティティの定義方法を説明します。
+			</p>
+			<p>
+				<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスク生成できるDDLの種類には限りがあります。
+				ストアドプロシージャー、トリガー、ビューなどのDDLを扱うには、<a href="tasks/migrate.html">Migrate</a>タスクの<a href="tasks/migrate.html#任意のSQLの実行">任意のSQLの実行</a>を参照してください。
 			</p>
 			<p>
 				S2JDBC実行時に関するエンティティ定義については<a href="../s2jdbc_entity.html">エンティティ</a>を参照してください。
@@ -161,10 +165,31 @@ public class Employee {
 public class Employee {
     ....
 }]]></source>
-			<p>
-				上記の定義からは次のDDLが生成されます。
-			</p>
+				<p>
+					上記の定義からは次のDDLが生成されます。
+				</p>
 <source><![CDATA[create table EMP ...;]]></source>
+				<p>
+					指定しない場合、テーブル名はエンティティ名と同じになります。
+					ただし、エンティティ名が、
+					<code>AaaBbb</code>
+					のようなキャメル記法の場合、テーブル名は、
+					<code>AAA_BBB</code>
+					のように
+					<code>'_'</code>
+					区切りだとみなされます。
+				</p>
+				<p>
+					このルールは、
+					<code>convention.dicon</code>
+					で指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					の
+					<code>fromEntityNameToTableName()</code>
+					の実装を変えることで、カスタマイズできます。
+				</p> 
 			</subsection>
 			<subsection name="複合一意キー">
 				<p>
@@ -184,19 +209,50 @@ public class Employee {
 				カラムの定義はColumnアノテーションを用いて行います。
 			</p>
 			<subsection name="カラム名">
-			<p>
-				name要素を使用することで、カラム名を指定できます。
-			</p>
+				<p>
+					name要素を使用することで、カラム名を指定できます。
+				</p>
 <source><![CDATA[@Column(name = "ENAME")
 public String employeeName;]]></source>
-			<p>
-				上記の定義からは次のDDLが生成されます。
-			</p>
+				<p>
+					上記の定義からは次のDDLが生成されます。
+				</p>
 <source><![CDATA[create table ... (
   ...
   ENAME varchar(255),
   ...
 );]]></source>
+				<p>
+					指定しない場合、カラム名はフィールド名と同じになります。フィールド名が、
+					<code>aaaBbb</code>
+					のようなキャメル記法の場合、カラム名は、
+					<code>AAA_BBB</code>
+					のように
+					<code>'_'</code>
+					区切りだとみなされます。
+				</p>
+				<p>
+					このルールは、
+					<code>convention.dicon</code>
+					で指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					の
+					<code>fromPropertyNameToColumnName()</code>
+					の実装を変えることで、カスタマイズすることができます。
+				</p>
+				<p>
+					デフォルトでは、プロパティ名とフィールド名は同じになりますが、
+					<code>convention.dicon</code>
+					で指定されている
+					<code>
+						org.seasar.framework.convention.impl.PersistenceNamingConventionImpl
+					</code>
+					の
+					<code>fromFieldNameToPropertyName()</code>
+					の実装を変えることで、カスタマイズすることができます。
+				</p>
 			</subsection>
 			<subsection name="一意キー">
 				<p>
@@ -307,7 +363,7 @@ public String employeeName;]]></source>
 			</p>
 <source><![CDATA[create table ... (
   ...
-  EMPLOYEE_NAME varchar(255) default n'unknown',
+  EMPLOYEE_NAME varchar(255) default 'unknown',
   ...
 );]]></source>
 				<p>

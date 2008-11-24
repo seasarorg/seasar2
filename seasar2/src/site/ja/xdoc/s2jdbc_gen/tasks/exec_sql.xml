@@ -60,6 +60,9 @@
 					指定されたファイルに含まれる任意のSQLを実行します。
 				</p>
 				<p>
+					実行できるSQLファイルの形式については、<a href="../file_format.html#SQLファイル">SQLファイル</a>を参照ください。
+				</p>
+				<p>
 					接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。
 				</p>
 			</subsection>
@@ -117,42 +120,6 @@
         <file name="aaa.sql"/>
     </sqlFileList>
 </exec-sql>]]></source>
-				<p>
-					SQLファイルは次のように記述できます。
-				</p>
-<source><![CDATA[/* テーブル定義 */
-create table EMPLOYEE (
-  ID numeric(5) primary key,  -- 識別子
-  NAME varchar2(20)           -- 名前
-);
-
-/* データの追加*/
-insert into EMPLOYEE (ID, NAME) values (1, 'SMITH');
-
-/* プロシージャー定義*/
-create or replace procedure proc 
-( cur out sys_refcursor, 
-  employeeid in numeric
-) as
-begin
-  open cur for select * from employee where id > employeeid order by id; 
-end proc_resultset;
-/
-]]></source>
-				<p>
-					コメントは1行コメント（--）とブロックコメント（/* */）の2種類が使用できます。
-					SQL文からはコメントが取り除かれ実行されます。
-				</p>
-				<p>
-					1つのSQL文は複数行に分けて記述することができます。
-					文はstatementDelimiter属性に指定した値で区切る必要があります。
-					改行は文の区切りとはみなされません。
-				</p>
-				<p>
-					ストアドプロシージャーなどのSQLブロックは、blockDelimiter属性に指定した値で区切ってください。
-					区切り文字は行頭に記述し、区切り文字の後ろには何も記述しないようにしてください。
-					つまり、区切り文字だけの行としなければいけません。
-				</p>
 			</subsection>
 			<subsection name="トランザクション内で実行する">
 				<p>
