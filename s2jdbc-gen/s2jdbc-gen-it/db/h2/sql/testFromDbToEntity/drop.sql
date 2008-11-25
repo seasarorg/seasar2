@@ -64,3 +64,4 @@ drop table mediumtext_table;
 drop table longtext_table;
 drop table ntext_table;
 drop table nclob_table;
+drop table テーブル;

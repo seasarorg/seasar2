@@ -29,3 +29,4 @@ drop table bigint_table;
 drop table real_table;
 drop table varbinary_table;
 drop table longvarbinary_table;
+drop table テーブル;

@@ -46,6 +46,7 @@ create table mediumblob_table (mediumblob_column mediumblob);
 create table mediumtext_table (mediumtext_column mediumtext);
 create table longblob_table (longblob_column longblob);
 create table longtext_table (longtext_column longtext);
+--create table テーブル (カラム varchar(255));
 
 CREATE FUNCTION FUNC_SIMPLETYPE_PARAM(
   param1 INTEGER)

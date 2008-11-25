@@ -29,6 +29,7 @@ create table blob_table (blob_column blob);
 create table date_table (date_column date);
 create table time_table (time_column time);
 create table timestamp_table (timestamp_column timestamp);
+create table テーブル (カラム varchar(255));
 
 CREATE PROCEDURE PROC_DTO_PARAM(
   IN param1 INTEGER,

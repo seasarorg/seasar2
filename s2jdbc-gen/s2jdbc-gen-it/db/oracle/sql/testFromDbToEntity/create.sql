@@ -27,6 +27,7 @@ create table nvarchar2_table (nvarchar2_column nvarchar2(2000));
 create table raw_table (raw_column raw(2000));
 create table timestamp_table (timestamp_column timestamp);
 create table varchar2_table (varchar2_column varchar2(4000));
+create table テーブル (カラム varchar2(4000));
 
 CREATE OR REPLACE FUNCTION FUNC_SIMPLETYPE_PARAM
 ( param1 IN NUMBER )

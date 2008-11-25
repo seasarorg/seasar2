@@ -23,6 +23,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -413,6 +414,15 @@ public class DbTableMetaReaderImpl implements DbTableMetaReader {
      */
     protected List<DbUniqueKeyMeta> getDbUniqueKeyMetaList(
             DatabaseMetaData metaData, DbTableMeta tableMeta) {
+
+        if (!dialect.supportsGetIndexInfo(tableMeta.getCatalogName(), tableMeta
+                .getSchemaName(), tableMeta.getName())) {
+            logger.log("WS2JDBCGen0002", new Object[] {
+                    tableMeta.getCatalogName(), tableMeta.getSchemaName(),
+                    tableMeta.getName() });
+            return Collections.emptyList();
+        }
+
         @SuppressWarnings("unchecked")
         Map<String, DbUniqueKeyMeta> map = new ArrayMap();
         try {

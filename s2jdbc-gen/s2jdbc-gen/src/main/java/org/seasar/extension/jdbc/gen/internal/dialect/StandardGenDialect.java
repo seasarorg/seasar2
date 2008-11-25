@@ -204,6 +204,11 @@ public class StandardGenDialect implements GenDialect {
         return false;
     }
 
+    public boolean supportsGetIndexInfo(String catalogName, String schemaName,
+            String tableName) {
+        return true;
+    }
+
     public String getSequenceDefinitionFragment(String dataType,
             long initialValue, int allocationSize) {
         throw new UnsupportedOperationException("getSequenceDefinitionFragment");

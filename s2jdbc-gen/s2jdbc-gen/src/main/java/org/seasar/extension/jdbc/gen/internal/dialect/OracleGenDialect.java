@@ -40,6 +40,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.SmallIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
+import org.seasar.extension.jdbc.gen.internal.util.CharUtil;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
@@ -105,6 +106,20 @@ public class OracleGenDialect extends StandardGenDialect {
 
     @Override
     public boolean supportsSequence() {
+        return true;
+    }
+
+    @Override
+    public boolean supportsGetIndexInfo(String catalogName, String schemaName,
+            String tableName) {
+        if (tableName == null) {
+            throw new NullPointerException("tableName");
+        }
+        for (int i = 0; i < tableName.length(); i++) {
+            if (!CharUtil.isAscii(tableName.charAt(i))) {
+                return false;
+            }
+        }
         return true;
     }
 

@@ -45,6 +45,7 @@ create table int2_table (int2_column int2);
 create table serial4_table (serial4_column serial4);
 create table timetz_table (timetz_column timetz);
 create table timestamptz_table (timestamptz_column timestamptz);
+create table テーブル (カラム varchar(255));
 
 CREATE OR REPLACE FUNCTION FUNC_SIMPLETYPE_PARAM(
   param1 IN INTEGER) RETURNS INTEGER 

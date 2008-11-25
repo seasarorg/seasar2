@@ -44,5 +44,6 @@ drop table mediumblob_table;
 drop table mediumtext_table;
 drop table longblob_table;
 drop table longtext_table;
+--drop table テーブル;
 
 DROP FUNCTION FUNC_SIMPLETYPE_PARAM;

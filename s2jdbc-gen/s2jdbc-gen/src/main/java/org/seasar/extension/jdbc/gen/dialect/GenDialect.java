@@ -75,7 +75,8 @@ public interface GenDialect {
      * 
      * @param columnTypeName
      *            カラムの型名
-     * @param sqlType TODO
+     * @param sqlType
+     *            TODO
      * @return カラム型、サポートされていないカラムの型名の場合{@code null}
      */
     ColumnType getColumnType(String columnTypeName, int sqlType);
@@ -125,6 +126,22 @@ public interface GenDialect {
      * @return シーケンスをサポートする場合{@code true}、しない場合{@code false}
      */
     boolean supportsSequence();
+
+    /**
+     * {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
+     * をサポートする場合{@code true}を返します。
+     * 
+     * @param catalogName
+     *            カタログ名
+     * @param schemaName
+     *            スキーマ名
+     * @param tableName
+     *            テーブル名
+     * @return {@link DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)}
+     *         をサポートする場合{@code true}
+     */
+    boolean supportsGetIndexInfo(String catalogName, String schemaName,
+            String tableName);
 
     /**
      * シーケンス定義の断片を返します。

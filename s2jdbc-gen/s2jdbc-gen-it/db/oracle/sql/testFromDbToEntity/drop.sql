@@ -20,5 +20,6 @@ drop table nvarchar2_table;
 drop table raw_table;
 drop table timestamp_table;
 drop table varchar2_table;
+drop table テーブル;
 
 DROP FUNCTION FUNC_SIMPLETYPE_PARAM;

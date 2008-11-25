@@ -71,3 +71,4 @@ create table mediumtext_table (mediumtext_column mediumtext);
 create table longtext_table (longtext_column longtext);
 create table ntext_table (ntext_column ntext);
 create table nclob_table (nclob_column nclob);
+create table テーブル (カラム varchar(255));
