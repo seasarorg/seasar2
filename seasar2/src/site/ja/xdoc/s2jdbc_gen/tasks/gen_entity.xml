@@ -15,6 +15,11 @@
 									<a href="#概要">概要</a>
 								</p>
 							</li>
+							<li>
+								<p>
+									<a href="#制限">制限</a>
+								</p>
+							</li>
 						</ul>
 					</p>
 				</li>
@@ -113,6 +118,28 @@ public class Department {
 );]]></source>
 				<p>
 					エンティティクラスは、自由に修正して利用できます。
+				</p>
+			</subsection>
+			<subsection name="制限">
+				<p>
+					Oracle Databaseでは、日本語を含むテーブル名については、一意キー制約の情報をデータベースのメタデータから取得でないという制限があります。
+					この制限により、3つの点でコードが正しく生成されません。
+				</p>
+				<p>
+					<ol>
+						<li>
+							該当のテーブルに単一の一意キー制約が存在しても、@Columnのunique要素が<code>true</code>になりません。
+						</li>
+						<li>
+							該当のテーブルに複合一意キー制約が存在しても、@TableのuniqueConstraints要素にキーとなるカラム名が指定されません。
+						</li>
+						<li>
+							該当のテーブルの外部キーのカラムに一意キー制約が存在しても、@OneToOneが指定されません。代わりに@ManyToOneが指定されます。
+						</li>
+					</ol>
+				</p>
+				<p>
+					コード生成後、手動で修正してください。
 				</p>
 			</subsection>
 		</section>
