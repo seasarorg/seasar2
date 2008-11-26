@@ -113,6 +113,50 @@ public class DumpFileTokenizerTest {
      * @throws Exception
      */
     @Test
+    public void testEndOfBuffer_CRAfterDelimiter() throws Exception {
+        String s = "aaa,\r";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(DELIMITER, tokenizer.nextToken());
+        assertEquals(",", tokenizer.getToken());
+        assertEquals(NULL, tokenizer.nextToken());
+        assertEquals("", tokenizer.getToken());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
+        assertEquals("\r", tokenizer.getToken());
+
+        s = "\n";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testEndOfBuffer_CRAfterCRLF() throws Exception {
+        String s = "aaa\r\n\r";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(VALUE, tokenizer.nextToken());
+        assertEquals("aaa", tokenizer.getToken());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+        assertEquals("\r\n", tokenizer.getToken());
+        assertEquals(NULL, tokenizer.nextToken());
+        assertEquals("", tokenizer.getToken());
+        assertEquals(END_OF_BUFFER, tokenizer.nextToken());
+        assertEquals("\r", tokenizer.getToken());
+
+        s = "\n";
+        tokenizer.addChars(s.toCharArray(), s.length());
+        assertEquals(END_OF_LINE, tokenizer.nextToken());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testNull() throws Exception {
         String s = "aaa,,bbb\r\n";
         tokenizer.addChars(s.toCharArray(), s.length());

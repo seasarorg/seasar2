@@ -151,6 +151,13 @@ public class DumpFileTokenizer {
                     type = END_OF_LINE;
                     nextPos = isCRLF(index) ? index + 2 : index + 1;
                 }
+            } else if (c == '\r') {
+                if (type == END_OF_LINE || type == DELIMITER) {
+                    type = NULL;
+                    nextPos = index;
+                } else {
+                    type = endOfFile ? END_OF_FILE : END_OF_BUFFER;
+                }
             } else {
                 for (int i = index; i < length; i++) {
                     c = buf.charAt(i);

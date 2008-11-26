@@ -202,7 +202,6 @@ public class LoaderImpl implements Loader {
             bindArgs(ps, sqlTypeList, valueList);
             ps.addBatch();
             if (batchSize > 0 && (i + 1) % batchSize == 0) {
-                logger.debug(sql);
                 ps.executeBatch();
                 remaining = false;
             } else {
@@ -210,7 +209,6 @@ public class LoaderImpl implements Loader {
             }
         }
         if (remaining) {
-            logger.debug(sql);
             ps.executeBatch();
         }
     }
