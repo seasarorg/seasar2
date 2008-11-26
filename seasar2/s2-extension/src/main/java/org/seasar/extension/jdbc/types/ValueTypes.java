@@ -233,6 +233,8 @@ public class ValueTypes {
         registerValueType(String.class, STRING);
         registerValueType(char.class, CHARACTER);
         registerValueType(Character.class, CHARACTER);
+        registerValueType(byte.class, BYTE);
+        registerValueType(Byte.class, BYTE);
         registerValueType(short.class, SHORT);
         registerValueType(Short.class, SHORT);
         registerValueType(int.class, INTEGER);
@@ -540,6 +542,7 @@ public class ValueTypes {
     public static Class getType(int sqltype) {
         switch (sqltype) {
         case Types.TINYINT:
+            return Byte.class;
         case Types.SMALLINT:
             return Short.class;
         case Types.INTEGER:
