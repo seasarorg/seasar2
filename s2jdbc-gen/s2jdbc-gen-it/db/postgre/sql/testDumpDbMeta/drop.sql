@@ -31,5 +31,7 @@ drop table int2_table;
 drop table serial4_table;
 drop table timetz_table;
 drop table timestamptz_table;
+drop table bytea_table;
+drop table oid_table;
 
 DROP FUNCTION FUNC_SIMPLETYPE_PARAM(param1 IN INTEGER);

@@ -16,6 +16,8 @@ drop table long_table;
 drop table long_raw_table;
 drop table nchar_table;
 drop table number_table;
+drop table numeric_table;
+drop table decimal_table;
 drop table nvarchar2_table;
 drop table raw_table;
 drop table timestamp_table;

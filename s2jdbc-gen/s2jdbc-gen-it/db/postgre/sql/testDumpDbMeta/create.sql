@@ -31,6 +31,8 @@ create table int2_table (int2_column int2);
 create table serial4_table (serial4_column serial4);
 create table timetz_table (timetz_column timetz);
 create table timestamptz_table (timestamptz_column timestamptz);
+create table bytea_table (bytea_column bytea);
+create table oid_table (oid_column oid);
 
 CREATE OR REPLACE FUNCTION FUNC_SIMPLETYPE_PARAM(
   param1 IN INTEGER) RETURNS INTEGER 

@@ -10,6 +10,8 @@ create table long_table (long_column long);
 create table long_raw_table (long_raw_column long raw);
 create table nchar_table (nchar_column nchar(1));
 create table number_table (number_column number(10,5));
+create table numeric_table (numeric_column number(10,5));
+create table decimal_table (decimal_column number(10,5));
 create table nvarchar2_table (nvarchar2_column nvarchar2(2000));
 create table raw_table (raw_column raw(2000));
 create table timestamp_table (timestamp_column timestamp);
