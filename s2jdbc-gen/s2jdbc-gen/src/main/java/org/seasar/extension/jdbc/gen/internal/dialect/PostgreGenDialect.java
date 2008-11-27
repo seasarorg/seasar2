@@ -94,6 +94,7 @@ public class PostgreGenDialect extends StandardGenDialect {
         columnTypeMap.put("int8", PostgreColumnType.INT8);
         columnTypeMap.put("money", PostgreColumnType.MONEY);
         columnTypeMap.put("numeric", PostgreColumnType.NUMERIC);
+        columnTypeMap.put("oid", PostgreColumnType.OID);
         columnTypeMap.put("serial", PostgreColumnType.SERIAL);
         columnTypeMap.put("text", PostgreColumnType.TEXT);
         columnTypeMap.put("timestamptz", PostgreColumnType.TIMESTAMPTZ);
@@ -247,6 +248,9 @@ public class PostgreGenDialect extends StandardGenDialect {
 
         private static PostgreColumnType MONEY = new PostgreColumnType("money",
                 Float.class);
+
+        private static PostgreColumnType OID = new PostgreColumnType("oid",
+                byte[].class, true);
 
         private static PostgreColumnType TEXT = new PostgreColumnType("text",
                 String.class, true);
