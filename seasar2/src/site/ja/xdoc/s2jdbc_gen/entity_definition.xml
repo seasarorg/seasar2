@@ -312,12 +312,12 @@ public BigDecimal salary;]]></source>
 					<tr><td>scale</td><td>スケール。数値型に使用される。</td><td>2</td></tr>
 				</table>
 				<p>
-					以下に、エンティティクラスのプロパティの型と代表的なRDBMSのカラムの型の対応表を示します。
+					以下に、エンティティクラスのプロパティの型と代表的なデータベースのカラムの型の対応表を示します。
 					$l、$p、$sには、Columnアノテーションで指定するlength、precision、scaleの値が設定されます。
 					（この表は、エンティティからDDLを生成する際の対応表です。データベースからエンティティを生成する際の対応表ではありません。）
 				</p>
 				<table>
-					<tr><th>Javaの型</th><th>Oracle</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>
+					<tr><th>Javaの型</th><th>Oracle Database</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>
 					<tr><td>boolean/Boolean</td><td>number(1,0)</td><td>bit</td><td>smallint</td><td>bool</td><td>boolean</td></tr>
 					<tr><td>short/Short</td><td>number(5,0)</td><td>smallint</td><td>smallint</td><td>smallint</td><td>smallint</td></tr>
 					<tr><td>char/Character</td><td>char(1)</td><td>char(1)</td><td>char(1)</td><td>char(1)</td><td>char(1)</td></tr>

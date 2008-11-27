@@ -232,6 +232,9 @@ public class SqlFileTest extends S2TestCase {
 			</subsection>
 		</section>
 		<section name="パラメータ">
+			<p>
+				Antタスクへのパラメータを以下に示します。
+			</p>
 			<subsection name="トップレベルのパラメータ">
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
