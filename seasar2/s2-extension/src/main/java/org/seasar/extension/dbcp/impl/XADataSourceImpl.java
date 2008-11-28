@@ -154,29 +154,26 @@ public class XADataSourceImpl implements XADataSource {
     public XAConnection getXAConnection(String user, String password)
             throws SQLException {
 
-        Connection con = null;
+        Properties info = new Properties();
+        info.putAll(properties);
         if (StringUtil.isEmpty(user)) {
-            con = DriverManager.getConnection(url);
-        } else if (properties.isEmpty()) {
-            con = DriverManager.getConnection(url, user, password);
-        } else {
-            Properties info = new Properties();
-            info.putAll(properties);
             info.put("user", user);
+        }
+        if (StringUtil.isEmpty(password)) {
             info.put("password", password);
-            int currentLoginTimeout = DriverManager.getLoginTimeout();
+        }
+        int currentLoginTimeout = DriverManager.getLoginTimeout();
+        try {
+            DriverManager.setLoginTimeout(loginTimeout);
+            Connection con = DriverManager.getConnection(url, info);
+            return new XAConnectionImpl(con);
+        } finally {
             try {
-                DriverManager.setLoginTimeout(loginTimeout);
-                con = DriverManager.getConnection(url, info);
-            } finally {
-                try {
-                    DriverManager.setLoginTimeout(currentLoginTimeout);
-                } catch (Exception e) {
-                    logger.log("ESSR0017", new Object[] { e.toString() }, e);
-                }
+                DriverManager.setLoginTimeout(currentLoginTimeout);
+            } catch (Exception e) {
+                logger.log("ESSR0017", new Object[] { e.toString() }, e);
             }
         }
-        return new XAConnectionImpl(con);
     }
 
     public PrintWriter getLogWriter() throws SQLException {
