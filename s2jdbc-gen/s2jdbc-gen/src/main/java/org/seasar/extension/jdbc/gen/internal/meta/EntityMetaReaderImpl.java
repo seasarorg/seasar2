@@ -235,11 +235,11 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         }
         logger.log("DS2JDBCGen0019", new Object[] { buf.toString() });
 
-        CommentDocletContext.entityMetaList = entityMetaList;
+        CommentDocletContext.setEntityMetaList(entityMetaList);
         try {
             com.sun.tools.javadoc.Main.execute(args);
         } finally {
-            CommentDocletContext.entityMetaList = null;
+            CommentDocletContext.setEntityMetaList(null);
         }
     }
 

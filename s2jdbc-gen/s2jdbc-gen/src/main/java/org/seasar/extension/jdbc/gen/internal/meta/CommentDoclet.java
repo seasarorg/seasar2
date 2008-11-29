@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.gen.internal.meta;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.MappedSuperclass;
@@ -39,10 +40,12 @@ import com.sun.javadoc.RootDoc;
 public class CommentDoclet extends Doclet {
 
     public static boolean start(RootDoc rootDoc) {
-        if (CommentDocletContext.entityMetaList == null) {
-            throw new NullPointerException("DocletContext.entityMetaList");
+        List<EntityMeta> entityMetaList = CommentDocletContext
+                .getEntityMetaList();
+        if (entityMetaList == null) {
+            throw new NullPointerException("entityMetaList");
         }
-        for (EntityMeta entityMeta : CommentDocletContext.entityMetaList) {
+        for (EntityMeta entityMeta : entityMetaList) {
             ClassDoc classDoc = rootDoc.classNamed(entityMeta.getEntityClass()
                     .getName());
             if (classDoc == null) {
