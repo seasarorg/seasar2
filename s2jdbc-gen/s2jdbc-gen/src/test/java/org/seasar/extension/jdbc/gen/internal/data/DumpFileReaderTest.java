@@ -51,6 +51,7 @@ public class DumpFileReaderTest {
         assertEquals(Arrays.asList("3", "", "30"), reader.readLine());
         assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
+        assertEquals(4, reader.getLineNumber());
     }
 
     /**
@@ -72,6 +73,7 @@ public class DumpFileReaderTest {
         assertEquals(Arrays.asList("3", "\r\n", "30"), reader.readLine());
         assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
+        assertEquals(4, reader.getLineNumber());
     }
 
     /**
@@ -92,6 +94,7 @@ public class DumpFileReaderTest {
         assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
         assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
+        assertEquals(4, reader.getLineNumber());
     }
 
     /**
@@ -112,6 +115,7 @@ public class DumpFileReaderTest {
         assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
         assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
+        assertEquals(4, reader.getLineNumber());
     }
 
     /**
@@ -133,6 +137,7 @@ public class DumpFileReaderTest {
         assertEquals(Arrays.asList("3", "ccc", "30"), reader.readLine());
         assertEquals(4, reader.getLineNumber());
         assertNull(reader.readLine());
+        assertEquals(4, reader.getLineNumber());
     }
 
     /**
@@ -148,6 +153,7 @@ public class DumpFileReaderTest {
         assertEquals(Arrays.asList("ID", "NAME", "AGE"), reader.readLine());
         assertEquals(1, reader.getLineNumber());
         assertNull(reader.readLine());
+        assertEquals(1, reader.getLineNumber());
     }
 
     /**

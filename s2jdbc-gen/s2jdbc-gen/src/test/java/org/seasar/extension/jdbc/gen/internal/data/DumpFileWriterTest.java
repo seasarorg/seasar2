@@ -91,6 +91,7 @@ public class DumpFileWriterTest {
     public void testWriteHeaderOnly() throws Exception {
         dumpFileWriter.writeHeaderOnly();
         bufferedWriter.flush();
+        assertEquals(1, dumpFileWriter.getLineNumber());
         assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator, stringWriter
                 .toString());
     }
@@ -123,6 +124,8 @@ public class DumpFileWriterTest {
 
         dumpFileWriter.writeRows(rs);
         bufferedWriter.flush();
+
+        assertEquals(3, dumpFileWriter.getLineNumber());
         assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator
                 + "\"hoge\",,\"100\"" + separator + "\"f\"\"oo\",,\"200\""
                 + separator, stringWriter.toString());
@@ -166,6 +169,8 @@ public class DumpFileWriterTest {
 
         dumpFileWriter.writeRows(rs);
         bufferedWriter.flush();
+
+        assertEquals(3, dumpFileWriter.getLineNumber());
         assertEquals("\"aaa\",\"bbb\",\"ccc\"" + separator
                 + "\"hoge\",\"bar\",\"100\"" + separator
                 + "\"f\"\"oo\",\"baz\",\"200\"" + separator, stringWriter

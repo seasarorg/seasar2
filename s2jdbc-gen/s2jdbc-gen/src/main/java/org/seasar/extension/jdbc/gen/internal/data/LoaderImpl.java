@@ -127,11 +127,11 @@ public class LoaderImpl implements Loader {
                     sqlExecutionContext.addException(ex);
                 }
             }
+            logger.log("DS2JDBCGen0014", new Object[] { dumpFile.getPath(),
+                    tableDesc.getFullName(), reader.getLineNumber() - 1 });
         } finally {
             reader.close();
         }
-        logger.log("DS2JDBCGen0014", new Object[] { dumpFile.getPath(),
-                tableDesc.getFullName() });
     }
 
     public boolean isTarget(File file) {

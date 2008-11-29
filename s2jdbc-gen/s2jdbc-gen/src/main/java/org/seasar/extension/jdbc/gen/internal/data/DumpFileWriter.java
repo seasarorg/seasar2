@@ -71,6 +71,9 @@ public class DumpFileWriter {
     /** ライタ */
     protected BufferedWriter writer;
 
+    /** 行番号 */
+    protected int lineNumber;
+
     /**
      * インスタンスを構築します。
      * 
@@ -230,6 +233,7 @@ public class DumpFileWriter {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+        lineNumber++;
     }
 
     /**
@@ -250,6 +254,15 @@ public class DumpFileWriter {
      */
     public void close() {
         CloseableUtil.close(writer);
+    }
+
+    /**
+     * 行番号を返します。
+     * 
+     * @return 行番号
+     */
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     /**

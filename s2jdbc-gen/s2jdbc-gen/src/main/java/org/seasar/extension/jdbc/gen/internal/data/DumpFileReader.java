@@ -107,6 +107,7 @@ public class DumpFileReader {
             lineNumber++;
             List<String> valueList = readLineInternal();
             if (valueList == null) {
+                lineNumber--;
                 return null;
             }
             if (lineNumber == 1) {

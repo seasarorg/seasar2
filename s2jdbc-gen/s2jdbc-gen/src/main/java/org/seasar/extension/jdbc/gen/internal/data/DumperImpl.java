@@ -85,11 +85,12 @@ public class DumperImpl implements Dumper {
                 if (fail) {
                     dumpTable(sqlExecutionContext, tableDesc, writer);
                 }
+                logger.log("DS2JDBCGen0016", new Object[] {
+                        tableDesc.getFullName(), dumpFile.getPath(),
+                        writer.getLineNumber() - 1 });
             } finally {
                 writer.close();
             }
-            logger.log("DS2JDBCGen0016", new Object[] {
-                    tableDesc.getFullName(), dumpFile.getPath() });
         }
     }
 
