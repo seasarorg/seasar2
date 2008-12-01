@@ -97,12 +97,24 @@
 					<ul>
 						<li>
 							<p>
-								<a href="#自動生成が有効な場合">自動生成が有効な場合</a>
+								<a href="#生成の制御">生成の制御</a>
+								<ul>
+									<li>
+										<p>
+											<a href="#自動生成が有効な場合">自動生成が有効な場合</a>
+										</p>
+									</li>
+									<li>
+										<p>
+											<a href="#自動生成が無効な場合">自動生成が無効な場合</a>
+										</p>
+									</li>
+								</ul>
 							</p>
 						</li>
 						<li>
 							<p>
-								<a href="#自動生成が無効な場合">自動生成が無効な場合</a>
+								<a href="#参照動作">参照動作</a>
 							</p>
 						</li>
 					</ul>
@@ -561,12 +573,19 @@ public class Employee {
 			</subsection>
 		</section>
 		<section name="外部キー定義">
-			<p>
-				外部キーの定義は関連プロパティに対応して生成されますが、定義方法は、外部キー制約の自動生成を有効にしているか無効にしているかで異なります。
-				全てのエンティティに対する有効/無効は<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>のautoGenerateForeignKey属性で制御します。
-				個々の関連プロパティごとに外部キー制約の生成を制御するには、<code>org.seasar.extension.jdbc.annotation.ReferentialConstraint</code>アノテーションを利用します。
-			</p>
-			<subsection name="自動生成が有効な場合">
+			<subsection name="生成の制御">
+				<p>
+					外部キーの定義は関連プロパティに対応して生成されますが、定義方法は、外部キー制約の自動生成を有効にしているか無効にしているかで異なります。
+				</p>
+				<p>
+					全てのエンティティに対する有効/無効は<a href="tasks/gen_ddl.html">Gen-Ddlタスク</a>のautoGenerateForeignKey属性で制御します。
+					デフォルトでは有効です。
+					無効にするには、<a href="tasks/gen_ddl.html#外部キー制約の自動生成を無効化する">外部キー制約の自動生成を無効化する</a>を参照してください。
+				</p>
+				<p>
+					個々の関連プロパティごとに外部キー制約の生成を制御するには、<code>org.seasar.extension.jdbc.annotation.ReferentialConstraint</code>アノテーションの<code>enable</code>要素を利用します。
+				</p>
+				<h4><a name="自動生成が有効な場合"></a>自動生成が有効な場合</h4>
 				<p>
 					自動生成が有効な場合、関連の所有側のプロパティに対応するカラムはすべて外部キーとみなされます。
 				</p>
@@ -607,7 +626,7 @@ public class Employee {
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID1, DEPARTMENT_ID2) references DEPARTMENT (ID1, ID2);]]></source>
 				<p>
-					関連プロパティに@ReferentialConstraint(false)を指定することで、特定の外部キー制約の生成を抑制できます。
+					関連プロパティに@ReferentialConstraintを指定しenable要素をfalseに指定することで、特定の外部キー制約の生成を抑制できます。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -617,12 +636,12 @@ public class Employee {
   public Integer addressId;
   @ManyToOne
   public Department department;
-  @ReferentialConstraint(false)
+  @ReferentialConstraint(enable = false)
   @OneToOne
   public Address address;
 }]]></source>
 				<p>
-					addressプロパティに指定された<code>@ReferentialConstraint(false)</code>に注目してください。
+					addressプロパティに指定された<code>@ReferentialConstraint(enable = false)</code>に注目してください。
 					上記の定義では、DEPARTMENT_IDだけが外部キーとなりADDRESS_IDは外部キーになりません。
 					したがって、生成されるDDLは次のものになります。
 				</p>
@@ -636,7 +655,7 @@ public class Employee {
   public Integer id;
   public Integer departmentId1;
   public Integer departmentId2;
-  @ReferentialConstraint(false)
+  @ReferentialConstraint(enable = false)
   @ManyToOne
   @JoinColumns( {
     @JoinColumn(name = "DEPARTMENT_ID1", referencedColumnName = "ID1"),
@@ -644,12 +663,11 @@ public class Employee {
   public Department department;
 }]]></source>
 				<p>
-					この例では、departmentプロパティに指定された<code>@ReferentialConstraint(false)</code>により、外部キー制約のDDLは生成されません。
+					この例では、departmentプロパティに指定された<code>@ReferentialConstraint(enable = false)</code>により、外部キー制約のDDLは生成されません。
 				</p>
-			</subsection>
-			<subsection name="自動生成が無効な場合">
+				<h4><a name="自動生成が無効な場合"></a>自動生成が無効な場合</h4>
 				<p>
-					自動生成が無効な場合、<code>@ReferentialConstraint(true)</code>で明示的に指定しない限り、外部キー制約の生成は行われません。
+					自動生成が無効な場合、<code>@ReferentialConstraint</code>を明示的に指定しない限り、外部キー制約の生成は行われません。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -659,18 +677,19 @@ public class Employee {
   public Integer addressId;
   @ManyToOne
   public Department department;
-  @ReferentialConstraint(true)
+  @ReferentialConstraint
   @OneToOne
   public Address address;
 }]]></source>
 				<p>
-					addressプロパティに指定された<code>@ReferentialConstraint(true)</code>に注目してください。
+					addressプロパティに指定された<code>@ReferentialConstraint</code>に注目してください。
+					（<code>@ReferentialConstraint</code>は、<code>@ReferentialConstraint(enable = true)</code>と記述することもできます。）
 					上記の定義では、ADDRESS_IDだけが外部キーとなりDEPARTMENT_IDは外部キーになりません。
 					次のDDLが生成されます。
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (ADDRESS_ID) references ADDRESS (ID);]]></source>
 				<p>
-					<code>@ReferentialConstraint(true)</code>を使って複合外部キー制約の生成を指定することも可能です。
+					<code>@ReferentialConstraint</code>を使って複合外部キー制約の生成を指定することも可能です。
 				</p>
 <source><![CDATA[@Entity
 public class Employee {
@@ -678,7 +697,7 @@ public class Employee {
   public Integer id;
   public Integer departmentId1;
   public Integer departmentId2;
-  @ReferentialConstraint(true)
+  @ReferentialConstraint
   @ManyToOne
   @JoinColumns( {
     @JoinColumn(name = "DEPARTMENT_ID1", referencedColumnName = "ID1"),
@@ -689,6 +708,31 @@ public class Employee {
 					上記の定義からは次のDDLが生成されます。
 				</p>
 <source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID1, DEPARTMENT_ID2) references DEPARTMENT (ID1, ID2);]]></source>
+			</subsection>
+			<subsection name="参照動作">
+				<p>
+					ReferentialConstraintアノテーションのonDelete要素やonUpdate要素に
+					参照動作を表す列挙型<code>org.seasar.extension.jdbc.annotation.ReferentialActionType</code>を指定できます。
+					<code>ReferentialActionType</code>は、SQL99で定められた5つの参照動作を定義します。
+					データベースによっては、すべての参照動作がサポートされていないことに注意してください。
+				</p>
+<source><![CDATA[@Entity
+public class Employee {
+  @Id
+  public Integer id;
+  public Integer departmentId;
+  public Integer addressId;
+  @ReferentialConstraint(onDelete = ReferentialActionType.CASCADE, onUpdate = ReferentialActionType.RESTRICT)
+  @ManyToOne
+  public Department department;
+  @OneToOne
+  public Address address;
+}]]></source>
+				<p>
+					departmentプロパティに指定された<code>@ReferentialConstraint</code>に注目してください。
+					上記の定義からは、次のDDLが生成されます。
+				</p>
+<source><![CDATA[alter table EMPLOYEE add constraint EMPLOYEE_FK1 foreign key (DEPARTMENT_ID) references DEPARTMENT (ID) on delete cascade on update restrict;]]></source>
 			</subsection>
 		</section>
 		<section name="コメント定義">
