@@ -202,7 +202,7 @@
 					出力先のディレクトリはパラメータにより変更できます。
 				</p>
 				<p>
-					生成されるファイルの形式は、<a href="../sql_format.html#SQLファイル">SQLファイル</a>と同様です。
+					生成されるファイルの形式は、<a href="../file_format.html#SQLファイル">SQLファイル</a>と同様です。
 				</p>
 			</subsection>
 			<subsection name="ダンプファイル">
