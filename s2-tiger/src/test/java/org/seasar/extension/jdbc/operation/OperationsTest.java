@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.operation;
 
 import java.sql.Date;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -52,6 +53,78 @@ public class OperationsTest extends TestCase {
         assertEquals("name", names[0]);
         assertEquals("department.id", names[1]);
         assertEquals("hireDate", names[2]);
+    }
+
+    /**
+     * 
+     */
+    public void testIn() {
+        Where w = in(department().id(), 111, 222);
+        assertEquals("department.id in (?, ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals(Integer.valueOf(111), params[0]);
+        assertEquals(Integer.valueOf(222), params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.id", names[0]);
+        assertEquals("department.id", names[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testIn_List() {
+        Where w = in(department().id(), Arrays.asList(111, 222));
+        assertEquals("department.id in (?, ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals(Integer.valueOf(111), params[0]);
+        assertEquals(Integer.valueOf(222), params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.id", names[0]);
+        assertEquals("department.id", names[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn() {
+        Where w = notIn(department().id(), 111, 222);
+        assertEquals("department.id not in (?, ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals(Integer.valueOf(111), params[0]);
+        assertEquals(Integer.valueOf(222), params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.id", names[0]);
+        assertEquals("department.id", names[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn_List() {
+        Where w = notIn(department().id(), Arrays.asList(111, 222));
+        assertEquals("department.id not in (?, ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals(Integer.valueOf(111), params[0]);
+        assertEquals(Integer.valueOf(222), params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.id", names[0]);
+        assertEquals("department.id", names[1]);
     }
 
 }

@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1589,6 +1590,26 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareCondition_IN_List() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_IN", Arrays.asList(1, 2));
+        query.where(w);
+        query.prepare("getResultList");
+        assertEquals(" where (T1_.ID in (?, ?))", query.whereClause.toSql());
+        Object[] variables = query.getParamValues();
+        assertEquals(2, variables.length);
+        assertEquals(1, variables[0]);
+        assertEquals(2, variables[1]);
+        Class<?>[] variableClasses = query.getParamClasses();
+        assertEquals(2, variableClasses.length);
+        assertEquals(Integer.class, variableClasses[0]);
+        assertEquals(Integer.class, variableClasses[1]);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareCondition_IN_nest() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.leftOuterJoin("bbb");
@@ -1614,6 +1635,26 @@ public class AutoSelectImplTest extends TestCase {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         Map<String, Object> w = new HashMap<String, Object>();
         w.put("id_NOT_IN", new Object[] { 1, 2 });
+        query.where(w);
+        query.prepare("getResultList");
+        assertEquals(" where (T1_.ID not in (?, ?))", query.whereClause.toSql());
+        Object[] variables = query.getParamValues();
+        assertEquals(2, variables.length);
+        assertEquals(1, variables[0]);
+        assertEquals(2, variables[1]);
+        Class<?>[] variableClasses = query.getParamClasses();
+        assertEquals(2, variableClasses.length);
+        assertEquals(Integer.class, variableClasses[0]);
+        assertEquals(Integer.class, variableClasses[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareCondition_NOT_IN_List() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        Map<String, Object> w = new HashMap<String, Object>();
+        w.put("id_NOT_IN", Arrays.asList(1, 2));
         query.where(w);
         query.prepare("getResultList");
         assertEquals(" where (T1_.ID not in (?, ?))", query.whereClause.toSql());

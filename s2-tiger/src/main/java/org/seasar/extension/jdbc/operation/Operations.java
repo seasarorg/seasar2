@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.operation;
 
+import java.util.Collection;
+
 import org.seasar.extension.jdbc.AutoSelect;
 import org.seasar.extension.jdbc.ConditionType;
 import org.seasar.extension.jdbc.OrderByItem;
@@ -164,6 +166,25 @@ public class Operations {
     }
 
     /**
+     * <code>IN</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
+     *            引数の型
+     * @param propertyName
+     *            プロパティ名
+     * @param params
+     *            引数
+     * @return 条件
+     */
+    public static <PropType, ParamType extends PropType> MultiValueOperator in(
+            final PropertyName<PropType> propertyName,
+            final Collection<? extends ParamType> params) {
+        return new MultiValueOperator(ConditionType.IN, propertyName, params);
+    }
+
+    /**
      * <code>NOT IN</code>演算子による{@link Where 検索条件}を作成します。
      * 
      * @param <PropType>
@@ -179,6 +200,26 @@ public class Operations {
     public static <PropType, ParamType extends PropType> MultiValueOperator notIn(
             final PropertyName<PropType> propertyName,
             final ParamType... params) {
+        return new MultiValueOperator(ConditionType.NOT_IN, propertyName,
+                params);
+    }
+
+    /**
+     * <code>NOT IN</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param <PropType>
+     *            プロパティの型
+     * @param <ParamType>
+     *            引数の型
+     * @param propertyName
+     *            プロパティ名
+     * @param params
+     *            引数
+     * @return 条件
+     */
+    public static <PropType, ParamType extends PropType> MultiValueOperator notIn(
+            final PropertyName<PropType> propertyName,
+            final Collection<? extends ParamType> params) {
         return new MultiValueOperator(ConditionType.NOT_IN, propertyName,
                 params);
     }
@@ -270,6 +311,37 @@ public class Operations {
     }
 
     /**
+     * <code>NOT LIKE</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @return 条件
+     */
+    public static LikeOperator notLike(final PropertyName<String> propertyName,
+            final String param) {
+        return new LikeOperator(ConditionType.NOT_LIKE, propertyName, param);
+    }
+
+    /**
+     * <code>NOT LIKE ～ ESCAPE</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @param escapeChar
+     *            エスケープ文字
+     * @return 条件
+     */
+    public static LikeOperator notLike(final PropertyName<String> propertyName,
+            final String param, final String escapeChar) {
+        return new LikeOperator(ConditionType.NOT_LIKE_ESCAPE, propertyName,
+                param, escapeChar);
+    }
+
+    /**
      * <code>LIKE ～%</code>演算子による{@link Where 検索条件}を作成します。
      * 
      * @param propertyName
@@ -281,6 +353,20 @@ public class Operations {
     public static LikeOperator starts(final PropertyName<String> propertyName,
             final String param) {
         return new LikeOperator(ConditionType.STARTS, propertyName, param);
+    }
+
+    /**
+     * <code>NOT LIKE ～%</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @return 条件
+     */
+    public static LikeOperator notStarts(
+            final PropertyName<String> propertyName, final String param) {
+        return new LikeOperator(ConditionType.NOT_STARTS, propertyName, param);
     }
 
     /**
@@ -298,6 +384,20 @@ public class Operations {
     }
 
     /**
+     * <code>NOT LIKE %～</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @return 条件
+     */
+    public static LikeOperator notEnds(final PropertyName<String> propertyName,
+            final String param) {
+        return new LikeOperator(ConditionType.NOT_ENDS, propertyName, param);
+    }
+
+    /**
      * <code>LIKE %～%</code>演算子による{@link Where 検索条件}を作成します。
      * 
      * @param propertyName
@@ -309,6 +409,20 @@ public class Operations {
     public static LikeOperator contains(
             final PropertyName<String> propertyName, final String param) {
         return new LikeOperator(ConditionType.CONTAINS, propertyName, param);
+    }
+
+    /**
+     * <code>NOT LIKE %～%</code>演算子による{@link Where 検索条件}を作成します。
+     * 
+     * @param propertyName
+     *            プロパティ名
+     * @param param
+     *            引数
+     * @return 条件
+     */
+    public static LikeOperator notContains(
+            final PropertyName<String> propertyName, final String param) {
+        return new LikeOperator(ConditionType.NOT_CONTAINS, propertyName, param);
     }
 
     /**

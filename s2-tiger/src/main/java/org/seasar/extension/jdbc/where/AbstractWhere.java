@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.where;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.seasar.extension.jdbc.ConditionType;
@@ -191,7 +192,24 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     @SuppressWarnings("unchecked")
     public T in(final CharSequence propertyName, Object... values) {
         assertPropertyName(propertyName);
-        values = normalize(values);
+        values = normalizeArray(values);
+        if (ConditionType.IN.isTarget(values)) {
+            addCondition(ConditionType.IN, propertyName.toString(), values);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>in</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param values
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T in(final CharSequence propertyName, Collection<?> values) {
+        assertPropertyName(propertyName);
+        values = normalizeList(values);
         if (ConditionType.IN.isTarget(values)) {
             addCondition(ConditionType.IN, propertyName.toString(), values);
         }
@@ -208,7 +226,24 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     @SuppressWarnings("unchecked")
     public T notIn(final CharSequence propertyName, Object... values) {
         assertPropertyName(propertyName);
-        values = normalize(values);
+        values = normalizeArray(values);
+        if (ConditionType.NOT_IN.isTarget(values)) {
+            addCondition(ConditionType.NOT_IN, propertyName.toString(), values);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>not in</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param values
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notIn(final CharSequence propertyName, Collection<?> values) {
+        assertPropertyName(propertyName);
+        values = normalizeList(values);
         if (ConditionType.NOT_IN.isTarget(values)) {
             addCondition(ConditionType.NOT_IN, propertyName.toString(), values);
         }
@@ -254,6 +289,45 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     }
 
     /**
+     * <code>not like</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notLike(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final Object normalizedValue = normalize(value);
+        if (ConditionType.NOT_LIKE.isTarget(normalizedValue)) {
+            addCondition(ConditionType.NOT_LIKE, propertyName.toString(),
+                    normalizedValue);
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>not like</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @param escape
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notLike(final CharSequence propertyName, final String value,
+            final char escape) {
+        assertPropertyName(propertyName);
+        final Object normalizedValue = normalize(value);
+        if (ConditionType.NOT_LIKE_ESCAPE.isTarget(normalizedValue)) {
+            addCondition(ConditionType.NOT_LIKE_ESCAPE,
+                    propertyName.toString(), new Object[] { normalizedValue,
+                            escape });
+        }
+        return (T) this;
+    }
+
+    /**
      * <code>like '?%'</code>の条件を追加します。
      * 
      * @param propertyName
@@ -270,6 +344,29 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
                         normalizedValue);
             } else {
                 addCondition(ConditionType.STARTS_ESCAPE, propertyName
+                        .toString(), LikeUtil.escapeWildcard(normalizedValue));
+            }
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>not like '?%'</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notStarts(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final String normalizedValue = String.class.cast(normalize(value));
+        if (ConditionType.NOT_STARTS.isTarget(normalizedValue)) {
+            if (!LikeUtil.containsWildcard(normalizedValue)) {
+                addCondition(ConditionType.NOT_STARTS, propertyName.toString(),
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.NOT_STARTS_ESCAPE, propertyName
                         .toString(), LikeUtil.escapeWildcard(normalizedValue));
             }
         }
@@ -301,6 +398,29 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
     }
 
     /**
+     * <code>not like '%?'</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notEnds(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final String normalizedValue = String.class.cast(normalize(value));
+        if (ConditionType.NOT_ENDS.isTarget(normalizedValue)) {
+            if (!LikeUtil.containsWildcard(normalizedValue)) {
+                addCondition(ConditionType.NOT_ENDS, propertyName.toString(),
+                        normalizedValue);
+            } else {
+                addCondition(ConditionType.NOT_ENDS_ESCAPE, propertyName
+                        .toString(), LikeUtil.escapeWildcard(normalizedValue));
+            }
+        }
+        return (T) this;
+    }
+
+    /**
      * <code>like '%?%'</code>の条件を追加します。
      * 
      * @param propertyName
@@ -317,6 +437,29 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
                         normalizedValue);
             } else {
                 addCondition(ConditionType.CONTAINS_ESCAPE, propertyName
+                        .toString(), LikeUtil.escapeWildcard(normalizedValue));
+            }
+        }
+        return (T) this;
+    }
+
+    /**
+     * <code>not like '%?%'</code>の条件を追加します。
+     * 
+     * @param propertyName
+     * @param value
+     * @return このインスタンス自身
+     */
+    @SuppressWarnings("unchecked")
+    public T notContains(final CharSequence propertyName, final String value) {
+        assertPropertyName(propertyName);
+        final String normalizedValue = String.class.cast(normalize(value));
+        if (ConditionType.NOT_CONTAINS.isTarget(normalizedValue)) {
+            if (!LikeUtil.containsWildcard(normalizedValue)) {
+                addCondition(ConditionType.NOT_CONTAINS, propertyName
+                        .toString(), normalizedValue);
+            } else {
+                addCondition(ConditionType.NOT_CONTAINS_ESCAPE, propertyName
                         .toString(), LikeUtil.escapeWildcard(normalizedValue));
             }
         }
@@ -417,7 +560,7 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
      * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値の要素が空文字列または空白のみの文字列なら
      *         <code>null</code>、 それ以外なら元の値からなる配列
      */
-    protected Object[] normalize(final Object... values) {
+    protected Object[] normalizeArray(final Object... values) {
         if (!excludesWhitespace || values == null) {
             return values;
         }
@@ -429,6 +572,29 @@ public class AbstractWhere<T extends AbstractWhere<T>> implements Where {
             }
         }
         return list.toArray(new Object[list.size()]);
+    }
+
+    /**
+     * {@link #ignoreWhitespace()}が呼び出された場合で パラメータ値の要素が空文字列または空白のみの文字列なら
+     * <code>null</code>、 それ以外なら元の値からなるリストを返します。
+     * 
+     * @param values
+     *            パラメータ値のコレクション
+     * @return {@link #ignoreWhitespace()}が呼び出された場合でパラメータ値の要素が空文字列または空白のみの文字列なら
+     *         <code>null</code>、 それ以外なら元の値からなるリスト
+     */
+    protected Collection<?> normalizeList(final Collection<?> values) {
+        if (!excludesWhitespace || values == null) {
+            return values;
+        }
+        final List<Object> list = CollectionsUtil.newArrayList(values.size());
+        for (final Object value : values) {
+            final Object normalizedValue = normalize(value);
+            if (normalizedValue != null) {
+                list.add(normalizedValue);
+            }
+        }
+        return list;
     }
 
     /**

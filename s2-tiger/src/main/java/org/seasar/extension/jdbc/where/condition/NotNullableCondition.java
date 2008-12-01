@@ -15,6 +15,9 @@
  */
 package org.seasar.extension.jdbc.where.condition;
 
+import java.util.Collection;
+import java.util.List;
+
 import org.seasar.extension.jdbc.where.SimpleWhere;
 
 /**
@@ -147,6 +150,20 @@ public class NotNullableCondition<CONDITION extends AbstractEntityCondition<COND
     }
 
     /**
+     * <code>in</code>の条件を追加します。
+     * 
+     * @param values
+     *            条件となる値のコレクション
+     * @return このインスタンス自身
+     * @return このプロパティを持つエンティティの問い合わせ条件
+     * @see SimpleWhere#in(String, List)
+     */
+    public CONDITION in(final Collection<? extends VALUETYPE> values) {
+        condition.where.in(condition.prefix + propertyName, values);
+        return condition;
+    }
+
+    /**
      * <code>not in</code>の条件を追加します。
      * 
      * @param values
@@ -156,6 +173,20 @@ public class NotNullableCondition<CONDITION extends AbstractEntityCondition<COND
      * @see SimpleWhere#notIn(String, Object...)
      */
     public CONDITION notIn(final VALUETYPE... values) {
+        condition.where.notIn(condition.prefix + propertyName, values);
+        return condition;
+    }
+
+    /**
+     * <code>not in</code>の条件を追加します。
+     * 
+     * @param values
+     *            条件となる値のコレクション
+     * @return このインスタンス自身
+     * @return このプロパティを持つエンティティの問い合わせ条件
+     * @see SimpleWhere#notIn(String, List)
+     */
+    public CONDITION notIn(final Collection<? extends VALUETYPE> values) {
         condition.where.notIn(condition.prefix + propertyName, values);
         return condition;
     }

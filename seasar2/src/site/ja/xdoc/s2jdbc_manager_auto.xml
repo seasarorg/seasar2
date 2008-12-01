@@ -847,18 +847,38 @@ jdbcManager.from(Employee.class)
 							</td>
 							<td>
 								<code>propertyName in (?, ...)</code>
-								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
+								の条件を追加します。 valuesがnullの時または配列の長さが0の時は追加されません。
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<code>not in(CharSequence propertyName, Object... values)</code>
+								<code>in(CharSequence propertyName, Collection&lt;?&gt; values)</code>
+							</td>
+							<td>
+								<code>propertyName in (?, ...)</code>
+								の条件を追加します。 valuesがnullの時またはリストの長さが0の時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<code>notIn(CharSequence propertyName, Object... values)</code>
 							</td>
 							<td>
 								<code>
 									propertyName not in (?, ...)
 								</code>
-								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
+								の条件を追加します。 valuesがnullの時または配列の長さが0の時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<code>notIn(CharSequence propertyName, Collection&lt;?&gt; values)</code>
+							</td>
+							<td>
+								<code>
+									propertyName not in (?, ...)
+								</code>
+								の条件を追加します。 valuesがnullの時またはリストの長さが0の時は追加されません。
 							</td>
 						</tr>
 						<tr>
@@ -883,10 +903,44 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
+								<code>notLike(CharSequence propertyName, String value)</code>
+							</td>
+							<td>
+								<code>propertyName not like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<code>notLike(CharSequence propertyName, String value, char escape)</code>
+							</td>
+							<td>
+								<code>
+									propertyName not like ? escape ?
+								</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<code>starts(CharSequence propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最後に自動的に
+								<code>%</code>
+								が追加されます。 valueに
+								<code>'%', '_'</code>
+								が含まれる場合はエスケープされます。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<code>notStarts(CharSequence propertyName, String value)</code>
+							</td>
+							<td>
+								<code>propertyName not like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最後に自動的に
 								<code>%</code>
@@ -911,10 +965,38 @@ jdbcManager.from(Employee.class)
 						</tr>
 						<tr>
 							<td>
+								<code>notEnds(CharSequence propertyName, String value)</code>
+							</td>
+							<td>
+								<code>propertyName not like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初に自動的に
+								<code>%</code>
+								が追加されます。 valueに
+								<code>'%', '_'</code>
+								が含まれる場合はエスケープされます。
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<code>contains(CharSequence propertyName, String value)</code>
 							</td>
 							<td>
 								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初と最後に自動的に
+								<code>%</code>
+								が追加されます。 valueに
+								<code>'%', '_'</code>
+								が含まれる場合はエスケープされます。
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<code>notContains(CharSequence propertyName, String value)</code>
+							</td>
+							<td>
+								<code>propertyName not like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最初と最後に自動的に
 								<code>%</code>
@@ -1027,8 +1109,11 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							<td><code>_IN</code></td>
 							<td>
 								<code>propertyName in (?, ...)</code>
-								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
-								値は配列のみをサポートしています。
+								の条件を追加します。 
+								値は配列または
+								<code>java.util.Collection</code>
+								をサポートしています。
+								valueがnullの時または長さが0の時は追加されません。
 							</td>
 						</tr>
 						<tr>
@@ -1037,8 +1122,11 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 								<code>
 									propertyName not in (?, ...)
 								</code>
-								の条件を追加します。 valuesの配列の長さが0の時は追加されません。
-								値は配列のみをサポートしています。
+								の条件を追加します。 
+								値は配列または
+								<code>java.util.Collection</code>
+								をサポートしています。
+								valueがnullの時または長さが0の時は追加されません。
 							</td>
 						</tr>
 						<tr>
@@ -1049,9 +1137,26 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
+							<td><code>_NOT_LIKE</code></td>
+							<td>
+								<code>propertyName not like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+							</td>
+						</tr>
+						<tr>
 							<td><code>_STARTS</code></td>
 							<td>
 								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最後に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td><code>_NOT_STARTS</code></td>
+							<td>
+								<code>propertyName not like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最後に自動的に
 								<code>%</code>
@@ -1069,9 +1174,29 @@ jdbcManager.from(Employee.class).where(w).getResultList();
 							</td>
 						</tr>
 						<tr>
+							<td><code>_NOT_ENDS</code></td>
+							<td>
+								<code>propertyName not like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
 							<td><code>_CONTAINS</code></td>
 							<td>
 								<code>propertyName like ?</code>
+								の条件を追加します。 valueがnullの時は追加されません。
+								valueの最初と最後に自動的に
+								<code>%</code>
+								が追加されます。
+							</td>
+						</tr>
+						<tr>
+							<td><code>_NOT_CONTAINS</code></td>
+							<td>
+								<code>propertyName not like ?</code>
 								の条件を追加します。 valueがnullの時は追加されません。
 								valueの最初と最後に自動的に
 								<code>%</code>

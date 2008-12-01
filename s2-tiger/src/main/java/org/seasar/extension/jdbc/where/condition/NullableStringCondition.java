@@ -55,6 +55,20 @@ public class NullableStringCondition<CONDITION extends AbstractEntityCondition<C
     }
 
     /**
+     * <code>not like</code>の条件を追加します。
+     * 
+     * @param value
+     *            条件となる値
+     * @return このインスタンス自身
+     * @return このプロパティを持つエンティティの問い合わせ条件
+     * @see SimpleWhere#notLike(String, String)
+     */
+    public CONDITION notLike(final String value) {
+        condition.where.notLike(condition.prefix + propertyName, value);
+        return condition;
+    }
+
+    /**
      * <code>like '?%'</code>の条件を追加します。
      * 
      * @param value
@@ -65,6 +79,20 @@ public class NullableStringCondition<CONDITION extends AbstractEntityCondition<C
      */
     public CONDITION starts(final String value) {
         condition.where.starts(condition.prefix + propertyName, value);
+        return condition;
+    }
+
+    /**
+     * <code>not like '?%'</code>の条件を追加します。
+     * 
+     * @param value
+     *            条件となる値
+     * @return このインスタンス自身
+     * @return このプロパティを持つエンティティの問い合わせ条件
+     * @see SimpleWhere#notStarts(String, String)
+     */
+    public CONDITION notStarts(final String value) {
+        condition.where.notStarts(condition.prefix + propertyName, value);
         return condition;
     }
 
@@ -83,6 +111,20 @@ public class NullableStringCondition<CONDITION extends AbstractEntityCondition<C
     }
 
     /**
+     * <code>not like '%?'</code>の条件を追加します。
+     * 
+     * @param value
+     *            条件となる値
+     * @return このインスタンス自身
+     * @return このプロパティを持つエンティティの問い合わせ条件
+     * @see SimpleWhere#notEnds(String, String)
+     */
+    public CONDITION notEnds(final String value) {
+        condition.where.notEnds(condition.prefix + propertyName, value);
+        return condition;
+    }
+
+    /**
      * <code>like '%?%'</code>の条件を追加します。
      * 
      * @param value
@@ -93,6 +135,20 @@ public class NullableStringCondition<CONDITION extends AbstractEntityCondition<C
      */
     public CONDITION contains(final String value) {
         condition.where.contains(condition.prefix + propertyName, value);
+        return condition;
+    }
+
+    /**
+     * <code>not like '%?%'</code>の条件を追加します。
+     * 
+     * @param value
+     *            条件となる値
+     * @return このインスタンス自身
+     * @return このプロパティを持つエンティティの問い合わせ条件
+     * @see SimpleWhere#notContains(String, String)
+     */
+    public CONDITION notContains(final String value) {
+        condition.where.notContains(condition.prefix + propertyName, value);
         return condition;
     }
 

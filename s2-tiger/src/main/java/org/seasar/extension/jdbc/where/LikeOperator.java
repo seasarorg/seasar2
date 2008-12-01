@@ -47,8 +47,11 @@ public class LikeOperator extends SingleValueOperator {
         super(conditionType, propertyName, value);
         switch (conditionType) {
         case STARTS:
+        case NOT_STARTS:
         case ENDS:
+        case NOT_ENDS:
         case CONTAINS:
+        case NOT_CONTAINS:
             needEscape = true;
             break;
         }
@@ -120,11 +123,20 @@ public class LikeOperator extends SingleValueOperator {
         case STARTS:
             conditionType = ConditionType.STARTS_ESCAPE;
             break;
+        case NOT_STARTS:
+            conditionType = ConditionType.NOT_STARTS_ESCAPE;
+            break;
         case ENDS:
             conditionType = ConditionType.ENDS_ESCAPE;
             break;
+        case NOT_ENDS:
+            conditionType = ConditionType.NOT_ENDS_ESCAPE;
+            break;
         case CONTAINS:
             conditionType = ConditionType.CONTAINS_ESCAPE;
+            break;
+        case NOT_CONTAINS:
+            conditionType = ConditionType.NOT_CONTAINS_ESCAPE;
             break;
         }
         return LikeUtil.escapeWildcard(String.class.cast(normalizedValue));

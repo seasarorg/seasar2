@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.where;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.ConditionType;
@@ -48,13 +52,13 @@ public class SimpleWhereTest extends TestCase {
      */
     public void testNormalize() {
         SimpleWhere w = new SimpleWhere();
-        assertNull(w.normalize(null));
+        assertNull(w.normalizeArray(null));
         assertEquals("", w.normalize(""));
         assertEquals(" ", w.normalize(" "));
         assertEquals(Integer.valueOf(1), w.normalize(Integer.valueOf(1)));
 
-        assertNull(w.normalize((Object[]) null));
-        Object[] normalized = w.normalize(null, "", " ", Integer.valueOf(1));
+        assertNull(w.normalizeArray((Object[]) null));
+        Object[] normalized = w.normalizeArray(null, "", " ", Integer.valueOf(1));
         assertEquals(4, normalized.length);
         assertNull(normalized[0]);
         assertEquals("", normalized[1]);
@@ -63,13 +67,13 @@ public class SimpleWhereTest extends TestCase {
 
         w.excludesWhitespace();
 
-        assertNull(w.normalize(null));
+        assertNull(w.normalizeArray(null));
         assertNull(w.normalize(""));
         assertNull(w.normalize(" "));
         assertEquals(Integer.valueOf(1), w.normalize(Integer.valueOf(1)));
 
-        assertNull(w.normalize((Object[]) null));
-        normalized = w.normalize(null, "", " ", Integer.valueOf(1));
+        assertNull(w.normalizeArray((Object[]) null));
+        normalized = w.normalizeArray(null, "", " ", Integer.valueOf(1));
         assertEquals(1, normalized.length);
         assertEquals(Integer.valueOf(1), normalized[0]);
     }
@@ -275,6 +279,42 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
+    public void testIn_List() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.in("id", Arrays.asList(1, 2)));
+        assertEquals("id in (?, ?)", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testIn_List_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.in("id", (List<?>) null));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testIn_List_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.in("id", Arrays.asList("", " ", "\t")));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testIn_List_zero() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.in("id", new ArrayList<Object>()));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
     public void testNotIn() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.notIn("id", 1, 2));
@@ -305,6 +345,42 @@ public class SimpleWhereTest extends TestCase {
     public void testNotIn_zero() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.notIn("id"));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn_List() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notIn("id", Arrays.asList(1, 2)));
+        assertEquals("id not in (?, ?)", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn_List_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notIn("id", (List<?>) null));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn_List_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.notIn("id", Arrays.asList(null, "", " ", "\n")));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn_List_zero() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notIn("id", new ArrayList<Object>()));
         assertEquals("", w.getCriteria());
     }
 
@@ -367,6 +443,62 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
+    public void testNotLike() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notLike("name", "hoge"));
+        assertEquals("name not like ?", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notLike("name", null));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.notLike("name", ""));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_escape() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notLike("name", "100$%", '$'));
+        assertEquals("name not like ? escape ?", w.getCriteria());
+        assertEquals("100$%", w.paramList.get(0));
+        assertEquals('$', w.paramList.get(1));
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_escape_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notLike("name", null, '$'));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_escape_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.notLike("name", "", '$'));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
     public void testStarts() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.starts("name", "hoge"));
@@ -398,6 +530,43 @@ public class SimpleWhereTest extends TestCase {
     public void testStarts_excludesWhitespace() {
         SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.starts("name", ""));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotStarts() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notStarts("name", "hoge"));
+        assertEquals("name not like ?", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotStarts_withMetachar() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notStarts("name", "$100%"));
+        assertEquals("name not like ? escape '$'", w.getCriteria());
+        assertEquals("$$100$%%", w.paramList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testNotStarts_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notStarts("name", null));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotStarts_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.notStarts("name", ""));
         assertEquals("", w.getCriteria());
     }
 
@@ -441,6 +610,43 @@ public class SimpleWhereTest extends TestCase {
     /**
      * 
      */
+    public void testNotEnds() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notEnds("name", "hoge"));
+        assertEquals("name not like ?", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotEnds_withMetachar() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notEnds("name", "$100%"));
+        assertEquals("name not like ? escape '$'", w.getCriteria());
+        assertEquals("%$$100$%", w.paramList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testNotEnds_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notEnds("name", null));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotEnds_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.notEnds("name", ""));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
     public void testContains() {
         SimpleWhere w = new SimpleWhere();
         assertSame(w, w.contains("name", "hoge"));
@@ -472,6 +678,43 @@ public class SimpleWhereTest extends TestCase {
     public void testContains_excludesWhitespace() {
         SimpleWhere w = new SimpleWhere().excludesWhitespace();
         assertSame(w, w.contains("name", ""));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotContains() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notContains("name", "hoge"));
+        assertEquals("name not like ?", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotContains_withMetachar() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notContains("name", "$100%"));
+        assertEquals("name not like ? escape '$'", w.getCriteria());
+        assertEquals("%$$100$%%", w.paramList.get(0));
+    }
+
+    /**
+     * 
+     */
+    public void testNotContains_null() {
+        SimpleWhere w = new SimpleWhere();
+        assertSame(w, w.notContains("name", null));
+        assertEquals("", w.getCriteria());
+    }
+
+    /**
+     * 
+     */
+    public void testNotContains_excludesWhitespace() {
+        SimpleWhere w = new SimpleWhere().excludesWhitespace();
+        assertSame(w, w.notContains("name", ""));
         assertEquals("", w.getCriteria());
     }
 

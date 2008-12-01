@@ -29,7 +29,7 @@ public class LikeOperatorTest extends TestCase {
     /**
      * 
      */
-    public void test() {
+    public void testLike() {
         ComposableWhere w = new LikeOperator(ConditionType.LIKE, name(), "1%1");
         assertEquals("name like ?", w.getCriteria());
 
@@ -45,10 +45,105 @@ public class LikeOperatorTest extends TestCase {
     /**
      * 
      */
-    public void testEscape() {
+    public void testLike_Null() {
+        ComposableWhere w = new LikeOperator(ConditionType.LIKE, name(), null);
+        assertEquals("", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(0, params.length);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(0, names.length);
+    }
+
+    /**
+     * 
+     */
+    public void testLike_ExcludeWhitespace() {
+        ComposableWhere w = new LikeOperator(ConditionType.LIKE, name(), "   ")
+                .excludesWhitespace();
+        assertEquals("", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(0, params.length);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(0, names.length);
+    }
+
+    /**
+     * 
+     */
+    public void testLikeEscape() {
         ComposableWhere w = new LikeOperator(ConditionType.LIKE_ESCAPE,
                 department().name(), "1%1", "$");
         assertEquals("department.name like ? escape ?", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals("1%1", params[0]);
+        assertEquals("$", params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.name", names[0]);
+        assertEquals("department.name", names[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_LIKE, name(),
+                "1%1");
+        assertEquals("name not like ?", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("1%1", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_Null() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_LIKE, name(),
+                null);
+        assertEquals("", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(0, params.length);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(0, names.length);
+    }
+
+    /**
+     * 
+     */
+    public void testNotLike_ExcludeWhitespace() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_LIKE, name(),
+                "   ").excludesWhitespace();
+        assertEquals("", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(0, params.length);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(0, names.length);
+    }
+
+    /**
+     * 
+     */
+    public void testNotLikeEscape() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_LIKE_ESCAPE,
+                department().name(), "1%1", "$");
+        assertEquals("department.name not like ? escape ?", w.getCriteria());
 
         Object[] params = w.getParams();
         assertEquals(2, params.length);
@@ -98,30 +193,169 @@ public class LikeOperatorTest extends TestCase {
     /**
      * 
      */
-    public void testNull() {
-        ComposableWhere w = new LikeOperator(ConditionType.LIKE, name(), null);
-        assertEquals("", w.getCriteria());
+    public void testNotStarts() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_STARTS, name(),
+                "111");
+        assertEquals("name not like ?", w.getCriteria());
 
         Object[] params = w.getParams();
-        assertEquals(0, params.length);
+        assertEquals(1, params.length);
+        assertEquals("111%", params[0]);
 
         String[] names = w.getPropertyNames();
-        assertEquals(0, names.length);
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
     }
 
     /**
      * 
      */
-    public void testExcludeWhitespace() {
-        ComposableWhere w = new LikeOperator(ConditionType.LIKE, name(), "   ")
-                .excludesWhitespace();
-        assertEquals("", w.getCriteria());
+    public void testNotStartsEscape() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_STARTS, name(),
+                "$%_");
+        assertEquals("name not like ? escape '$'", w.getCriteria());
 
         Object[] params = w.getParams();
-        assertEquals(0, params.length);
+        assertEquals(1, params.length);
+        assertEquals("$$$%$_%", params[0]);
 
         String[] names = w.getPropertyNames();
-        assertEquals(0, names.length);
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testEnds() {
+        ComposableWhere w = new LikeOperator(ConditionType.ENDS, name(), "111");
+        assertEquals("name like ?", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%111", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testEndsEscape() {
+        ComposableWhere w = new LikeOperator(ConditionType.ENDS, name(), "$%_");
+        assertEquals("name like ? escape '$'", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%$$$%$_", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotEnds() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_ENDS, name(),
+                "111");
+        assertEquals("name not like ?", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%111", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotEndsEscape() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_ENDS, name(),
+                "$%_");
+        assertEquals("name not like ? escape '$'", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%$$$%$_", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testContains() {
+        ComposableWhere w = new LikeOperator(ConditionType.CONTAINS, name(),
+                "111");
+        assertEquals("name like ?", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%111%", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testContainsEscape() {
+        ComposableWhere w = new LikeOperator(ConditionType.CONTAINS, name(),
+                "$%_");
+        assertEquals("name like ? escape '$'", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%$$$%$_%", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotContains() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_CONTAINS,
+                name(), "111");
+        assertEquals("name not like ?", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%111%", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotContainsEscape() {
+        ComposableWhere w = new LikeOperator(ConditionType.NOT_CONTAINS,
+                name(), "$%_");
+        assertEquals("name not like ? escape '$'", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(1, params.length);
+        assertEquals("%$$$%$_%", params[0]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(1, names.length);
+        assertEquals("name", names[0]);
     }
 
 }

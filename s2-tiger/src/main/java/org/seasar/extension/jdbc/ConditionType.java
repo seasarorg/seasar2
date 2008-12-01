@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.seasar.extension.jdbc.exception.NonArrayInConditionRuntimeException;
@@ -120,9 +121,7 @@ public enum ConditionType {
 
         @Override
         public int addValue(List<Object> paramList, Object value) {
-            Object[] values = (Object[]) value;
-            paramList.addAll(Arrays.asList(values));
-            return values.length;
+            return addValueForIn(paramList, value);
         }
     },
 
@@ -144,9 +143,7 @@ public enum ConditionType {
 
         @Override
         public int addValue(List<Object> paramList, Object value) {
-            Object[] values = (Object[]) value;
-            paramList.addAll(Arrays.asList(values));
-            return values.length;
+            return addValueForIn(paramList, value);
         }
     },
 
@@ -171,6 +168,39 @@ public enum ConditionType {
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
             return makeConditionForLike(tableAlias, columnName, "like", "?");
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            final Object[] values = Object[].class.cast(value);
+            super.addValue(valueList, values[0]);
+            super.addValue(valueList, values[1]);
+            return 2;
+        }
+    },
+
+    /**
+     * not like ?です。
+     */
+    NOT_LIKE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    null);
+        }
+    },
+
+    /**
+     * not like ? escape ?です。
+     */
+    NOT_LIKE_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like", "?");
         }
 
         @Override
@@ -217,6 +247,42 @@ public enum ConditionType {
     },
 
     /**
+     * not like '?%'です。
+     */
+    NOT_STARTS {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    null);
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, value + "%");
+        }
+    },
+
+    /**
+     * not like '?%' escape '$'です。
+     */
+    NOT_STARTS_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    "'$'");
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, value + "%");
+        }
+    },
+
+    /**
      * like '%?'です。
      */
     ENDS {
@@ -251,6 +317,42 @@ public enum ConditionType {
     },
 
     /**
+     * not like '%?'です。
+     */
+    NOT_ENDS {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    null);
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value);
+        }
+    },
+
+    /**
+     * not like '%?' escape '$'です。
+     */
+    NOT_ENDS_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    "'$'");
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value);
+        }
+    },
+
+    /**
      * like '%?%'です。
      */
     CONTAINS {
@@ -276,6 +378,42 @@ public enum ConditionType {
         public String getCondition(String tableAlias, String columnName,
                 Object value) {
             return makeConditionForLike(tableAlias, columnName, "like", "'$'");
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value + "%");
+        }
+    },
+
+    /**
+     * not like '%?%'です。
+     */
+    NOT_CONTAINS {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    null);
+        }
+
+        @Override
+        public int addValue(List<Object> valueList, Object value) {
+            return super.addValue(valueList, "%" + value + "%");
+        }
+    },
+
+    /**
+     * not like '%?%' escape '$'です。
+     */
+    NOT_CONTAINS_ESCAPE {
+
+        @Override
+        public String getCondition(String tableAlias, String columnName,
+                Object value) {
+            return makeConditionForLike(tableAlias, columnName, "not like",
+                    "'$'");
         }
 
         @Override
@@ -526,15 +664,20 @@ public enum ConditionType {
      * @return 条件に追加する対象かどうか
      */
     protected boolean isTargetForIn(String conditionName, Object value) {
-        if (value != null && !value.getClass().isArray()) {
+        Collection<?> values = null;
+        if (value == null) {
+            return false;
+        } else if (value.getClass().isArray()) {
+            values = Arrays.asList((Object[]) value);
+        } else if (value instanceof Collection) {
+            values = (Collection<?>) value;
+        } else {
             throw new NonArrayInConditionRuntimeException(conditionName, value
                     .getClass());
         }
-        if (value == null || !value.getClass().isArray()
-                || Array.getLength(value) == 0) {
+        if (values.isEmpty()) {
             return false;
         }
-        Object[] values = Object[].class.cast(value);
         for (Object element : values) {
             if (element != null) {
                 return true;
@@ -558,7 +701,8 @@ public enum ConditionType {
      */
     protected String makeConditionForIn(String tableAlias, String columnName,
             String conditionName, Object value) {
-        int size = Array.getLength(value);
+        int size = value instanceof Collection ? ((Collection<?>) value).size()
+                : Array.getLength(value);
         StringBuilder buf = new StringBuilder(30);
         if (!StringUtil.isEmpty(tableAlias)) {
             buf.append(tableAlias).append('.');
@@ -572,6 +716,22 @@ public enum ConditionType {
         }
         buf.append(")");
         return buf.toString();
+    }
+
+    /**
+     * <code>in, not in</code>用に値を追加します。
+     * 
+     * @param valueList
+     *            値のリスト
+     * @param value
+     *            値
+     * @return 追加した値の数
+     */
+    protected int addValueForIn(List<Object> valueList, Object value) {
+        final Collection<?> list = value instanceof Collection ? (Collection<?>) value
+                : Arrays.asList((Object[]) value);
+        valueList.addAll(list);
+        return list.size();
     }
 
     /**

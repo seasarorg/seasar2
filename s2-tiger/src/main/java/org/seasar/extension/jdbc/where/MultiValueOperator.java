@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.where;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.seasar.extension.jdbc.ConditionType;
@@ -43,6 +45,21 @@ public class MultiValueOperator extends SingleValueOperator {
     }
 
     /**
+     * インスタンスを構築します。
+     * 
+     * @param conditionType
+     *            条件タイプ
+     * @param propertyName
+     *            パラメータのプロパティ名
+     * @param value
+     *            パラメータとなる値のコレクション
+     */
+    public MultiValueOperator(final ConditionType conditionType,
+            final CharSequence propertyName, final Collection<?> value) {
+        super(conditionType, propertyName, value);
+    }
+
+    /**
      * {@link #ignoreWhitespace()}が呼び出された場合で パラメータ値の要素が空文字列または空白のみの文字列なら
      * <code>null</code>、 それ以外なら元の値からなる配列を返します。
      * 
@@ -56,15 +73,16 @@ public class MultiValueOperator extends SingleValueOperator {
         if (!excludesWhitespace || value == null) {
             return value;
         }
-        final Object[] values = (Object[]) value;
-        final List<Object> list = CollectionsUtil.newArrayList(values.length);
-        for (int i = 0; i < values.length; ++i) {
-            final Object normalizedValue = super.normalize(values[i]);
+        final Collection<?> values = value instanceof Collection ? (List<?>) value
+                : Arrays.asList((Object[]) value);
+        final List<Object> list = CollectionsUtil.newArrayList(values.size());
+        for (final Object element : values) {
+            final Object normalizedValue = super.normalize(element);
             if (normalizedValue != null) {
                 list.add(normalizedValue);
             }
         }
-        return list.toArray(new Object[list.size()]);
+        return list;
     }
 
 }
