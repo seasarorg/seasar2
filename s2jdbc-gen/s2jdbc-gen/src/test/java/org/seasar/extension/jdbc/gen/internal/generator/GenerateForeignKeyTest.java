@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.seasar.extension.jdbc.annotation.ReferentialActionType;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
@@ -51,7 +52,7 @@ public class GenerateForeignKeyTest {
 
     private DataSource dataSource;
 
-    private TableModel model;
+    private TableModelFactoryImpl factory;
 
     /**
      * 
@@ -84,6 +85,24 @@ public class GenerateForeignKeyTest {
             }
         };
 
+        factory = new TableModelFactoryImpl(new StandardGenDialect(),
+                dataSource, SqlIdentifierCaseType.ORIGINALCASE,
+                SqlKeywordCaseType.ORIGINALCASE, ';', null, false) {
+
+            @Override
+            protected Long getNextValue(String sequenceName, int allocationSize) {
+                return null;
+            }
+        };
+
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCreate() throws Exception {
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
         foreignKeyDesc.addColumnName("FK1-1");
         foreignKeyDesc.addColumnName("FK1-2");
@@ -112,25 +131,7 @@ public class GenerateForeignKeyTest {
         tableDesc.addForeignKeyDesc(foreignKeyDesc);
         tableDesc.addForeignKeyDesc(foreignKeyDesc2);
 
-        TableModelFactoryImpl factory = new TableModelFactoryImpl(
-                new StandardGenDialect(), dataSource,
-                SqlIdentifierCaseType.ORIGINALCASE,
-                SqlKeywordCaseType.ORIGINALCASE, ';', null, false) {
-
-            @Override
-            protected Long getNextValue(String sequenceName, int allocationSize) {
-                return null;
-            }
-        };
-        model = factory.getTableModel(tableDesc);
-    }
-
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testCreate() throws Exception {
+        TableModel model = factory.getTableModel(tableDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "file"), "sql/create-foreignkey.ftl", "UTF-8", false);
         generator.generate(context);
@@ -143,7 +144,84 @@ public class GenerateForeignKeyTest {
      * @throws Exception
      */
     @Test
+    public void testCreate_referentialAction() throws Exception {
+        ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
+        foreignKeyDesc.addColumnName("FK1-1");
+        foreignKeyDesc.addColumnName("FK1-2");
+        foreignKeyDesc.setReferencedCatalogName("CCC");
+        foreignKeyDesc.setReferencedSchemaName("DDD");
+        foreignKeyDesc.setReferencedTableName("FOO");
+        foreignKeyDesc.setReferencedFullTableName("CCC.DDD.FOO");
+        foreignKeyDesc.addReferencedColumnName("REF1-1");
+        foreignKeyDesc.addReferencedColumnName("REF1-2");
+        foreignKeyDesc.setOnDelete(ReferentialActionType.CASCADE);
+        foreignKeyDesc.setOnUpdate(ReferentialActionType.RESTRICT);
+
+        ForeignKeyDesc foreignKeyDesc2 = new ForeignKeyDesc();
+        foreignKeyDesc2.addColumnName("FK2-1");
+        foreignKeyDesc2.addColumnName("FK2-2");
+        foreignKeyDesc2.setReferencedCatalogName("EEE");
+        foreignKeyDesc2.setReferencedSchemaName("FFF");
+        foreignKeyDesc2.setReferencedTableName("BAR");
+        foreignKeyDesc2.setReferencedFullTableName("EEE.FFF.BAR");
+        foreignKeyDesc2.addReferencedColumnName("REF2-1");
+        foreignKeyDesc2.addReferencedColumnName("REF2-2");
+        foreignKeyDesc2.setOnDelete(ReferentialActionType.NO_ACTION);
+        foreignKeyDesc2.setOnUpdate(ReferentialActionType.NO_ACTION);
+
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
+        tableDesc.addForeignKeyDesc(foreignKeyDesc);
+        tableDesc.addForeignKeyDesc(foreignKeyDesc2);
+
+        TableModel model = factory.getTableModel(tableDesc);
+
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "sql/create-foreignkey.ftl", "UTF-8", false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/")
+                + "_Create_referentialAction.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testDrop() throws Exception {
+        ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
+        foreignKeyDesc.addColumnName("FK1-1");
+        foreignKeyDesc.addColumnName("FK1-2");
+        foreignKeyDesc.setReferencedCatalogName("CCC");
+        foreignKeyDesc.setReferencedSchemaName("DDD");
+        foreignKeyDesc.setReferencedTableName("FOO");
+        foreignKeyDesc.setReferencedFullTableName("CCC.DDD.FOO");
+        foreignKeyDesc.addReferencedColumnName("REF1-1");
+        foreignKeyDesc.addReferencedColumnName("REF1-2");
+
+        ForeignKeyDesc foreignKeyDesc2 = new ForeignKeyDesc();
+        foreignKeyDesc2.addColumnName("FK2-1");
+        foreignKeyDesc2.addColumnName("FK2-2");
+        foreignKeyDesc2.setReferencedCatalogName("EEE");
+        foreignKeyDesc2.setReferencedSchemaName("FFF");
+        foreignKeyDesc2.setReferencedTableName("BAR");
+        foreignKeyDesc2.setReferencedFullTableName("EEE.FFF.BAR");
+        foreignKeyDesc2.addReferencedColumnName("REF2-1");
+        foreignKeyDesc2.addReferencedColumnName("REF2-2");
+
+        TableDesc tableDesc = new TableDesc();
+        tableDesc.setCatalogName("AAA");
+        tableDesc.setSchemaName("BBB");
+        tableDesc.setName("HOGE");
+        tableDesc.setCanonicalName("aaa.bbb.hoge");
+        tableDesc.addForeignKeyDesc(foreignKeyDesc);
+        tableDesc.addForeignKeyDesc(foreignKeyDesc2);
+
+        TableModel model = factory.getTableModel(tableDesc);
         GenerationContext context = new GenerationContextImpl(model, new File(
                 "file"), "sql/drop-foreignkey.ftl", "UTF-8", false);
         generator.generate(context);

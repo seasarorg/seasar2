@@ -245,6 +245,11 @@ public class OracleGenDialect extends StandardGenDialect {
         }
     }
 
+    @Override
+    public boolean supportsReferentialUpdateRule() {
+        return false;
+    }
+
     /**
      * Oracle用の{@link ColumnType}の実装クラスです。
      * 

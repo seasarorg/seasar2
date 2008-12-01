@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 
 import javax.sql.DataSource;
 
+import org.seasar.extension.jdbc.annotation.ReferentialActionType;
 import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.PrimaryKeyDesc;
@@ -205,9 +206,25 @@ public class TableModelFactoryImpl implements TableModelFactory {
                     .getReferencedColumnNameList()) {
                 fkModel.addReferencedColumnName(referencedColumnName);
             }
+            fkModel.setOnDelete(toActionName(fkDesc.getOnDelete()));
+            fkModel.setOnUpdate(toActionName(fkDesc.getOnUpdate()));
             tableModel.addForeignKeyModel(fkModel);
             index++;
         }
+    }
+
+    /**
+     * 参照動作の名前に変換します。
+     * 
+     * @param actionType
+     * @return 参照動作の名前
+     */
+    protected String toActionName(ReferentialActionType actionType) {
+        if (actionType == null || actionType == ReferentialActionType.NO_ACTION) {
+            return null;
+        }
+        String actionName = actionType.name().replace('_', ' ').toLowerCase();
+        return keyword(actionName);
     }
 
     /**

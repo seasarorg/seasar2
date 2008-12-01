@@ -18,7 +18,6 @@ package org.seasar.extension.jdbc.gen.internal.util;
 import javax.persistence.Column;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 
 import static org.junit.Assert.*;
 
@@ -66,5 +65,14 @@ public class AnnotationUtilTest {
     @Test
     public void testGetDefaultTableGenerator() throws Exception {
         assertNotNull(AnnotationUtil.getDefaultTableGenerator());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetDefaultReferentialConstraint() throws Exception {
+        assertNotNull(AnnotationUtil.getDefaultReferentialConstraint());
     }
 }

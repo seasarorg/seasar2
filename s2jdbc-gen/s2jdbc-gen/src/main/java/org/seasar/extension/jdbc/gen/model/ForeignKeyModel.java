@@ -41,6 +41,12 @@ public class ForeignKeyModel {
     /** 外部キーを削除する構文 */
     protected String dropForeignKeySyntax;
 
+    /** 削除規則の参照動作、削除規則がない場合{@code null} */
+    protected String onDelete;
+
+    /** 更新規則の参照動作、更新規則がない場合{@code null} */
+    protected String onUpdate;
+
     /**
      * 名前を返します。
      * 
@@ -134,6 +140,44 @@ public class ForeignKeyModel {
      */
     public void setDropForeignKeySyntax(String dropForeignKeySyntax) {
         this.dropForeignKeySyntax = dropForeignKeySyntax;
+    }
+
+    /**
+     * 削除規則の参照動作を返します。
+     * 
+     * @return 削除規則の参照動作、削除規則がない場合は{@code null}
+     */
+    public String getOnDelete() {
+        return onDelete;
+    }
+
+    /**
+     * 削除規則の参照動作を設定します。
+     * 
+     * @param onDelete
+     *            削除規則の参照動作、削除規則がない場合は{@code null}
+     */
+    public void setOnDelete(String onDelete) {
+        this.onDelete = onDelete;
+    }
+
+    /**
+     * 更新規則の参照動作を返します。
+     * 
+     * @return 更新規則の参照動作、更新規則がない場合は{@code null}
+     */
+    public String getOnUpdate() {
+        return onUpdate;
+    }
+
+    /**
+     * 更新規則の参照動作を設定します。
+     * 
+     * @param onUpdate
+     *            更新規則の参照動作、更新規則がない場合は{@code null}
+     */
+    public void setOnUpdate(String onUpdate) {
+        this.onUpdate = onUpdate;
     }
 
 }

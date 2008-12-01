@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.seasar.extension.jdbc.annotation.ReferentialActionType;
+
 /**
  * 外部キー記述です。
  * 
@@ -46,6 +48,12 @@ public class ForeignKeyDesc {
 
     /** 参照されるカラム名のリスト */
     protected List<String> referencedColumnNameList = new ArrayList<String>();
+
+    /** 削除規則の参照動作、削除規則がない場合{@code null} */
+    protected ReferentialActionType onDelete;
+
+    /** 更新規則の参照動作、更新規則がない場合{@code null} */
+    protected ReferentialActionType onUpdate;
 
     /**
      * カラム名のリストを返します。
@@ -164,6 +172,44 @@ public class ForeignKeyDesc {
      */
     public String getReferencedFullTableName() {
         return referencedFullTableName;
+    }
+
+    /**
+     * 削除規則の参照動作を返します。
+     * 
+     * @return 削除規則の参照動作、削除規則がない場合{@code null}
+     */
+    public ReferentialActionType getOnDelete() {
+        return onDelete;
+    }
+
+    /**
+     * 削除規則の参照動作を設定します。
+     * 
+     * @param onDelete
+     *            削除規則の参照動作、削除規則がない場合{@code null}
+     */
+    public void setOnDelete(ReferentialActionType onDelete) {
+        this.onDelete = onDelete;
+    }
+
+    /**
+     * 更新規則の参照動作を返します。
+     * 
+     * @return 更新規則の参照動作、更新規則がない場合{@code null}
+     */
+    public ReferentialActionType getOnUpdate() {
+        return onUpdate;
+    }
+
+    /**
+     * 更新規則の参照動作を設定します。
+     * 
+     * @param onUpdate
+     *            更新規則の参照動作、更新規則がない場合{@code null}
+     */
+    public void setOnUpdate(ReferentialActionType onUpdate) {
+        this.onUpdate = onUpdate;
     }
 
     @Override

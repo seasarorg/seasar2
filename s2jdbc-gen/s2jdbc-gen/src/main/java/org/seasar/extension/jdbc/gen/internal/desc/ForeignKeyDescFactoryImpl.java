@@ -24,6 +24,7 @@ import org.seasar.extension.jdbc.annotation.ReferentialConstraint;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDesc;
 import org.seasar.extension.jdbc.gen.desc.ForeignKeyDescFactory;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.util.AnnotationUtil;
 
 /**
  * {@link ForeignKeyDescFactory}の実装クラスです。
@@ -77,7 +78,7 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
                 return null;
             }
         } else {
-            if (!referentialConstraint.value()) {
+            if (!referentialConstraint.enable()) {
                 return null;
             }
         }
@@ -85,6 +86,7 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         ForeignKeyDesc foreignKeyDesc = new ForeignKeyDesc();
         doColumn(entityMeta, propertyMeta, foreignKeyDesc);
         doTable(entityMeta, propertyMeta, foreignKeyDesc);
+        doReferetialAction(entityMeta, propertyMeta, foreignKeyDesc);
         return foreignKeyDesc;
     }
 
@@ -126,6 +128,42 @@ public class ForeignKeyDescFactoryImpl implements ForeignKeyDescFactory {
         foreignKeyDesc.setReferencedSchemaName(tableMeta.getSchema());
         foreignKeyDesc.setReferencedTableName(tableMeta.getName());
         foreignKeyDesc.setReferencedFullTableName(tableMeta.getFullName());
+    }
+
+    /**
+     * 参照動作を処理します。
+     * 
+     * @param entityMeta
+     *            エンティティメタデータ
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param foreignKeyDesc
+     *            外部キー記述
+     */
+    protected void doReferetialAction(EntityMeta entityMeta,
+            PropertyMeta propertyMeta, ForeignKeyDesc foreignKeyDesc) {
+        ReferentialConstraint referentialConstraint = getReferentialConstraint(propertyMeta);
+        if (dialect.supportsReferentialDeleteRule()) {
+            foreignKeyDesc.setOnDelete(referentialConstraint.onDelete());
+        }
+        if (dialect.supportsReferentialUpdateRule()) {
+            foreignKeyDesc.setOnUpdate(referentialConstraint.onUpdate());
+        }
+    }
+
+    /**
+     * 参照整合制約を返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return 参照整合制約
+     */
+    protected ReferentialConstraint getReferentialConstraint(
+            PropertyMeta propertyMeta) {
+        ReferentialConstraint referentialConstraint = propertyMeta.getField()
+                .getAnnotation(ReferentialConstraint.class);
+        return referentialConstraint != null ? referentialConstraint
+                : AnnotationUtil.getDefaultReferentialConstraint();
     }
 
 }

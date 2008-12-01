@@ -20,6 +20,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.seasar.extension.jdbc.annotation.ReferentialConstraint;
 import org.seasar.framework.util.tiger.ReflectionUtil;
 
 /**
@@ -55,6 +56,13 @@ public class AnnotationUtil {
     protected static final TableGenerator DEFAULT_TABLE_GENERATOR = ReflectionUtil
             .getDeclaredField(AnnotationUtil.class, "DEFAULT_TABLE_GENERATOR")
             .getAnnotation(TableGenerator.class);
+
+    /** デフォルトの{@link ReferentialConstraint} */
+    @ReferentialConstraint
+    protected static final ReferentialConstraint DEFAULT_REFERENTIAL_CONSTRAINT = ReflectionUtil
+            .getDeclaredField(AnnotationUtil.class,
+                    "DEFAULT_REFERENTIAL_CONSTRAINT").getAnnotation(
+                    ReferentialConstraint.class);
 
     /**
      * 
@@ -96,5 +104,14 @@ public class AnnotationUtil {
      */
     public static TableGenerator getDefaultTableGenerator() {
         return DEFAULT_TABLE_GENERATOR;
+    }
+
+    /**
+     * デフォルトの{@link ReferentialConstraint}を返します。
+     * 
+     * @return デフォルトの{@link ReferentialConstraint}
+     */
+    public static ReferentialConstraint getDefaultReferentialConstraint() {
+        return DEFAULT_REFERENTIAL_CONSTRAINT;
     }
 }

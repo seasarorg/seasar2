@@ -294,16 +294,16 @@ public interface GenDialect {
     boolean supportsCommentOn();
 
     /**
-     * JDBCのコメント取得機能が利用できない場合{@code true}を返します。
+     * JDBCのコメント取得機能が利用できる場合{@code true}を返します。
      * <p>
-     * JDBCのコメント取得機能が利用できないとは、次のメソッドでREMARKSカラムの値が取得できないことを意味します。
+     * JDBCのコメント取得機能が利用できるとは、次のメソッドでREMARKSカラムの値が取得できることを意味します。
      * </p>
      * <ul>
      * <li>{@link DatabaseMetaData#getTables(String, String, String, String[])}</li>
      * <li>{@link DatabaseMetaData#getColumns(String, String, String, String)}</li>
      * </ul>
      * 
-     * @return JDBCのコメント取得機能が利用できない場合{@code true}
+     * @return JDBCのコメント取得機能が利用できる場合{@code true}
      */
     boolean isJdbcCommentAvailable();
 
@@ -352,6 +352,20 @@ public interface GenDialect {
     Map<String, String> getColumnCommentMap(Connection connection,
             String catalogName, String schemaName, String tableName)
             throws SQLException;
+
+    /**
+     * 参照整合制約の削除規則をサポートする場合{@code true}を返します。
+     * 
+     * @return 参照整合制約の削除規則をサポートする場合{@code true}
+     */
+    boolean supportsReferentialDeleteRule();
+
+    /**
+     * 参照整合制約の更新規則をサポートする場合{@code true}を返します。
+     * 
+     * @return 参照整合制約の更新規則をサポートする場合{@code true}
+     */
+    boolean supportsReferentialUpdateRule();
 
     /**
      * カラム型です。

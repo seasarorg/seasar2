@@ -243,7 +243,7 @@ public class ForeignKeyDescFactoryImplTest {
         public Integer bbbId;
 
         /** */
-        @ReferentialConstraint(false)
+        @ReferentialConstraint(enable = false)
         @ManyToOne
         public Bbb bbb;
     }

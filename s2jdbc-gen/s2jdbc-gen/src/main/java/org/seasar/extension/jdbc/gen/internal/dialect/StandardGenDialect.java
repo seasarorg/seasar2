@@ -298,6 +298,14 @@ public class StandardGenDialect implements GenDialect {
         throw new UnsupportedOperationException("getColumnCommentMap");
     }
 
+    public boolean supportsReferentialDeleteRule() {
+        return true;
+    }
+
+    public boolean supportsReferentialUpdateRule() {
+        return true;
+    }
+
     /**
      * 例外チェーンをたどって原因となった{@link SQLException#getSQLState() SQLステート}を返します。
      * <p>
