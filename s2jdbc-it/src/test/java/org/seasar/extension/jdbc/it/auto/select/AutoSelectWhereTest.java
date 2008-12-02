@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.it.auto.select;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,7 +274,7 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_in() throws Exception {
+    public void testWhere_in_array() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -286,7 +287,21 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_in_condition() throws Exception {
+    public void testWhere_in_list() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().in("employeeNo", Arrays.asList(
+                    7654,
+                    7900,
+                    7934))).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_in_condition_array() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -299,10 +314,37 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_in_names() throws Exception {
+    public void testWhere_in_condition_list() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new EmployeeCondition().employeeNo.in(Arrays.asList(
+                    7654,
+                    7900,
+                    7934))).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_in_names_array() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 in(employeeNo(), 7654, 7900, 7934)).getResultList();
+        assertEquals(3, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_in_names_list() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(in(employeeNo(), Arrays.asList(7654, 7900, 7934)))
+                .getResultList();
         assertEquals(3, list.size());
     }
 
@@ -549,7 +591,7 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_notIn() throws Exception {
+    public void testWhere_notIn_array() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -562,7 +604,21 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_notIn_condition() throws Exception {
+    public void testWhere_notIn_list() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new SimpleWhere().notIn("employeeNo", Arrays.asList(
+                    7654,
+                    7900,
+                    7934))).getResultList();
+        assertEquals(11, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn_condition_array() throws Exception {
         List<Employee> list =
             jdbcManager
                 .from(Employee.class)
@@ -576,10 +632,37 @@ public class AutoSelectWhereTest {
      * 
      * @throws Exception
      */
-    public void testWhere_notIn_names() throws Exception {
+    public void testWhere_notIn_condition_list() throws Exception {
+        List<Employee> list =
+            jdbcManager.from(Employee.class).where(
+                new EmployeeCondition().employeeNo.notIn(Arrays.asList(
+                    7654,
+                    7900,
+                    7934))).getResultList();
+        assertEquals(11, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn_names_array() throws Exception {
         List<Employee> list =
             jdbcManager.from(Employee.class).where(
                 notIn(employeeNo(), 7654, 7900, 7934)).getResultList();
+        assertEquals(11, list.size());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testWhere_notIn_names_list() throws Exception {
+        List<Employee> list =
+            jdbcManager
+                .from(Employee.class)
+                .where(notIn(employeeNo(), Arrays.asList(7654, 7900, 7934)))
+                .getResultList();
         assertEquals(11, list.size());
     }
 
