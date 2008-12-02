@@ -156,10 +156,10 @@ public class XADataSourceImpl implements XADataSource {
 
         Properties info = new Properties();
         info.putAll(properties);
-        if (!StringUtil.isEmpty(user)) {
+        if (StringUtil.isNotEmpty(user)) {
             info.put("user", user);
         }
-        if (!StringUtil.isEmpty(password)) {
+        if (StringUtil.isNotEmpty(password)) {
             info.put("password", password);
         }
         int currentLoginTimeout = DriverManager.getLoginTimeout();

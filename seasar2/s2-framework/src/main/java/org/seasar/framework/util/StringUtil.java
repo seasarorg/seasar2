@@ -39,14 +39,26 @@ public class StringUtil {
     }
 
     /**
-     * 空かどうかを返します。
+     * 文字列が<code>null</code>または空文字列なら<code>true</code>を返します。
      * 
      * @param text
      *            文字列
-     * @return 空かどうか
+     * @return 文字列が<code>null</code>または空文字列なら<code>true</code>
      */
     public static final boolean isEmpty(final String text) {
         return text == null || text.length() == 0;
+    }
+
+    /**
+     * 文字列が<code>null</code>でも空文字列でもなければ<code>true</code>を返します。
+     * 
+     * @param text
+     *            文字列
+     * @return 文字列が<code>null</code>でも空文字列でもなければ<code>true</code>
+     * @since 2.4.33
+     */
+    public static final boolean isNotEmpty(final String text) {
+        return !isEmpty(text);
     }
 
     /**

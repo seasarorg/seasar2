@@ -258,4 +258,23 @@ public class StringUtilTest extends TestCase {
         assertFalse(StringUtil.isNumber("01234abcdef"));
         assertFalse(StringUtil.isNumber("abcdef01234"));
     }
+
+    /**
+     * 
+     */
+    public void testIsEmpty() {
+        assertTrue(StringUtil.isEmpty(null));
+        assertTrue(StringUtil.isEmpty(""));
+        assertFalse(StringUtil.isEmpty(" "));
+    }
+
+    /**
+     * 
+     */
+    public void testIsNotEmpty() {
+        assertFalse(StringUtil.isNotEmpty(null));
+        assertFalse(StringUtil.isNotEmpty(""));
+        assertTrue(StringUtil.isNotEmpty(" "));
+    }
+
 }
