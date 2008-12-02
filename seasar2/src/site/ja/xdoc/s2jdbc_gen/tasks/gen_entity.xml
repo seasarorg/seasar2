@@ -22,7 +22,7 @@
 							</li>
 							<li>
 								<p>
-									<a href="#Javaの型とデータベースのデータ型の対応表">Javaの型とデータベースのデータ型の対応表</a>
+									<a href="#データベースのデータ型とJavaの型の対応表">データベースのデータ型とJavaの型の対応表</a>
 								</p>
 							</li>
 						</ul>
@@ -194,12 +194,14 @@ public class Department {
 					</ol>
 				</p>
 			</subsection>
-			<subsection name="Javaの型とデータベースのデータ型の対応表">
+			<subsection name="データベースのデータ型とJavaの型の対応表">
 				<p>
-					エンティティのプロパティのJavaの型は対応するカラムのデータ型により決まります。
+					生成されるエンティティのプロパティの型は、対応するカラムのデータ型により決まります。
 				</p>
 				<p>
-					以下に、代表的なデータベースについて、Javaの型とデータベースのデータ型の対応表を示します
+					以下の表では、代表的なデータベースについて、データベースのデータ型がJavaのどの型に対応するかを示しています。
+					例えば、SQL Server 2005のbigint型はJavaのLong型に対応します。
+					ハイフン（-）は対応するデータ型がないことを示します。
 				</p>
 				<table border="1" cellpadding="2" cellspacing="0">
 					<tr><th>Javaの型</th><th>Oracle Database</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>
