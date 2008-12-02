@@ -232,9 +232,11 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
                     .getAttributeClass(columnMeta.getLength(), columnMeta
                             .getLength(), columnMeta.getScale());
             attributeDesc.setAttributeClass(clazz);
+            String defaultValue = attributeDesc.getGenerationType() != null ? null
+                    : columnMeta.getDefaultValue();
             String definition = columnType.getColumnDefinition(columnMeta
                     .getLength(), columnMeta.getLength(),
-                    columnMeta.getScale(), columnMeta.getDefaultValue());
+                    columnMeta.getScale(), defaultValue);
             attributeDesc.setColumnDefinition(definition);
             attributeDesc.setLob(columnType.isLob());
             attributeDesc.setTemporalType(columnType.getTemporalType());
