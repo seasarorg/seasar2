@@ -7,7 +7,7 @@
 
   <!-- The Basics -->
   <artifactId>s2jdbc-gen</artifactId>
-  <version>0.9.4-SNAPSHOT</version>
+  <version>0.9.4</version>
   <packaging>jar</packaging>
   <parent>
     <groupId>org.seasar.container</groupId>

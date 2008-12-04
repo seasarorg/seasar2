@@ -7,13 +7,13 @@
 		<section name="ダウンロード">
 			<subsection name="Seasar2.4系">
 				<dl>
-				<dt><a href="/download/2008-10-30/S2.4.32.zip">S2Container 2.4.32</a></dt>
+				<dt><a href="/download/2008-12-04/S2.4.33.zip">S2Container 2.4.33</a></dt>
 				<dd>S2Container 本体 (S2Framework) と、JDBC コネクションプールや JTA などの拡張機能 (S2Extension)</dd>
-				<dt><a href="/download/2008-10-30/S2Tiger-2.4.32.zip">S2Tiger 2.4.32</a></dt>
+				<dt><a href="/download/2008-12-04/S2Tiger-2.4.33.zip">S2Tiger 2.4.33</a></dt>
 				<dd>Tiger (Java5) アノテーションを使用してコンポーネント定義を Java ソースに記述するためのアドオン</dd>
-				<dt><a href="/download/2008-10-29/S2JDBC-Gen-0.9.3.zip">S2JDBC-Gen 0.9.3</a></dt>
+				<dt><a href="/download/2008-10-29/S2JDBC-Gen-0.9.4.zip">S2JDBC-Gen 0.9.4</a></dt>
 				<dd>S2JDBC用のエンティティやDDLを自動生成するためのツール</dd>
-				<dt><a href="/download/2008-10-30/S2JDBC-Tutorial-2.4.32.zip">S2JDBC Tutorial 2.4.32</a></dt>
+				<dt><a href="/download/2008-12-04/S2JDBC-Tutorial-2.4.33.zip">S2JDBC Tutorial 2.4.33</a></dt>
 				<dd>S2JDBCのチュートリアル</dd>
 				</dl>
 			</subsection>
@@ -39,6 +39,12 @@
 				<table>
 				<thead><col span="3" width="200"/></thead>
 				<tbody>
+				<tr>
+				<td><a href="/download/2008-12-04/S2.4.33.zip">S2Container 2.4.33</a></td>
+				<td><a href="/download/2008-12-04/S2Tiger-2.4.33.zip">S2Tiger 2.4.33</a></td>
+				<td><a href="/download/2008-12-04/S2JDBC-Gen-0.9.4.zip">S2JDBC-Gen 0.9.4</a></td>
+				<td><a href="/download/2008-12-04/S2JDBC-Tutorial-2.4.33.zip">S2JDBC Tutorial 2.4.33</a></td>
+				</tr>
 				<tr>
 				<td><a href="/download/2008-10-30/S2.4.32.zip">S2Container 2.4.32</a></td>
 				<td><a href="/download/2008-10-30/S2Tiger-2.4.32.zip">S2Tiger 2.4.32</a></td>

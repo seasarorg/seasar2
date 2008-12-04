@@ -2,7 +2,7 @@
 	<tstamp>
 		<format property="releaseDate" pattern="yyyy-MM-dd" locale="ja,JP"/>
 	</tstamp>
-	<property name="newVersion" value="2.4.32" />
+	<property name="newVersion" value="2.4.33" />
 
 	<target name="update-pom">
 		<replaceregexp
@@ -10,6 +10,7 @@
 			replace="\1${newVersion}\2" encoding="UTF-8">
 			<fileset dir="." includes="**/pom.xml" />
 			<fileset dir="../s2-tiger" includes="**/pom.xml" />
+			<fileset dir="../s2jdbc-it" includes="**/pom.xml" />
 		</replaceregexp>
 	</target>
 
