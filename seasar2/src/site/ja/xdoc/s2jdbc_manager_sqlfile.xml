@@ -361,8 +361,8 @@ List<EmployeeDto> results = jdbcManager
 					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
 					ページングが行なわれます。
 				</p>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
+				<div class="caution">
+					<div>注意点</div>
 					<p>
 						limit,
 						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
@@ -450,8 +450,8 @@ EmployeeDto result = jdbcManager
 					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
 					ページングが行なわれます。
 				</p>
-				<div
-					style="background-color: red; font-weight: bold; font-size: larger;">
+				<div class="caution">
+					<div>注意点</div>
 					<p>
 						limit,
 						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
