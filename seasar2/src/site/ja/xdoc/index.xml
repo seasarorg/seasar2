@@ -50,7 +50,7 @@
 					<div>
 						Seasar2 2.4.33 をリリースしました．
 						(<a href="downloads.html">ダウンロード</a>)
-						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#ef6aa3b8">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#fc6ce87c">Change Log</a>)
 						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#tc5d61bc">移行ガイド</a>)
 					</div>
 					<div>
@@ -60,6 +60,7 @@
 						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#tb3f53e1">移行ガイド</a>)
 					</div>
 				</dd>
+				<dt>2008/10/30</dt>
 				<dd>
 					<div>
 						Seasar2 2.4.32 をリリースしました．
