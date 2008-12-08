@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN"
+	"http://www.seasar.org/dtd/components24.dtd">
+<components namespace="jta">
+	<description>
+		WebSphere Application Server (WAS) version 7 が提供する，
+		UOW API を使用するための設定ファイルです．
+
+		この設定ファイルでは，以下の全てのトランザクション属性がサポートされます．
+		・REQUIRED
+		・MANDATORY
+		・NEVER
+		・REQUIRES_NEW
+		・NOT_SUPPORTED
+	</description>
+
+	<!-- UserTransaction from JNDI -->
+	<component name="UserTransaction"
+			class="javax.transaction.UserTransaction">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/UserTransaction")
+	</component>
+
+	<!-- UOWManager from JNDI -->
+	<component name="UOWManager"
+			class="com.ibm.wsspi.uow.UOWManager">
+		@com.ibm.wsspi.uow.UOWManagerFactory@getUOWManager()
+	</component>
+
+	<!-- TransactionSynchronizationRegistry from JNDI -->
+	<component name="TransactionSynchronizationRegistry"
+			class="javax.transaction.TransactionSynchronizationRegistry">
+		@org.seasar.extension.j2ee.JndiResourceLocator@lookup("java:comp/TransactionSynchronizationRegistry")
+	</component>
+
+	<!-- WAS7 の UOWManager を利用する TransactionManagerAdapter -->
+	<component
+		class="org.seasar.extension.tx.adapter.WAS6TransactionManagerAdapter"/>
+
+	<!-- UserTransction と TransactionSynchronizationRegistry を利用する制限付き TransactionManager -->
+	<component name="TransactionManager"
+		class="org.seasar.extension.jta.RestrictedTransactionManagerImpl"/>
+</components>
