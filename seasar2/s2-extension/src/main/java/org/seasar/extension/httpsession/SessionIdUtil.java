@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.seasar.framework.util.StringUtil;
+
 /**
  * セッション識別子に関するユーティリティクラスです。
  * 
@@ -119,7 +121,8 @@ public class SessionIdUtil {
             return;
         }
         Cookie cookie = new Cookie(SESSION_ID_KEY, sessionId);
-        cookie.setPath(request.getContextPath());
+        String path = request.getContextPath();
+        cookie.setPath(StringUtil.isEmpty(path) ? "/" : path);
         response.addCookie(cookie);
     }
 }

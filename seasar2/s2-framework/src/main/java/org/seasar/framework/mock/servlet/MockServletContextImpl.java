@@ -35,6 +35,7 @@ import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.util.EnumerationAdapter;
 import org.seasar.framework.util.FileUtil;
 import org.seasar.framework.util.ResourceUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link MockServletContext}の実装クラスです。
@@ -75,8 +76,8 @@ public class MockServletContextImpl implements MockServletContext, Serializable 
      * @param path
      */
     public MockServletContextImpl(String path) {
-        if (path == null || path.charAt(0) != '/') {
-            path = "/";
+        if (StringUtil.isEmpty(path) || path.charAt(0) != '/') {
+            path = "";
         }
         this.servletContextName = path;
     }

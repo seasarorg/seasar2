@@ -16,11 +16,12 @@
 package org.seasar.extension.httpsession;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.httpsession.SessionIdUtil;
 import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
+import org.seasar.framework.mock.servlet.MockHttpServletResponseImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
@@ -31,7 +32,8 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromCookie(javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromCookie(javax.servlet.http.HttpServletRequest)}
+     * .
      */
     public void testGetSessionIdFromCookie() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -44,7 +46,8 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}
+     * .
      */
     public void testGetSessionIdFromURI() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -58,7 +61,8 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#getSessionIdFromURL(javax.servlet.http.HttpServletRequest)}
+     * .
      */
     public void testGetSessionIdFromURI2() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -69,7 +73,8 @@ public class SessionIdUtilTest extends TestCase {
 
     /**
      * Test method for
-     * {@link org.seasar.extension.httpsession.SessionIdUtil#rewriteURL(String, javax.servlet.http.HttpServletRequest)}.
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#rewriteURL(String, javax.servlet.http.HttpServletRequest)}
+     * .
      */
     public void testRewriteURL() {
         MockServletContextImpl context = new MockServletContextImpl("/example");
@@ -83,4 +88,43 @@ public class SessionIdUtilTest extends TestCase {
         System.out.println(url);
         assertTrue(url.indexOf(SessionIdUtil.SESSION_ID_KEY) < url.indexOf('?'));
     }
+
+    /**
+     * Test method for
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#writeCookie(HttpServletRequest)}
+     */
+    public void testWriteCookie() {
+        MockServletContextImpl context = new MockServletContextImpl("/example");
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
+                context, "hello.html");
+        MockHttpServletResponseImpl response = new MockHttpServletResponseImpl(
+                request);
+
+        SessionIdUtil.writeCookie(request, response, "hoge");
+        Cookie[] cookies = response.getCookies();
+        assertNotNull(cookies);
+        assertEquals(1, cookies.length);
+        Cookie cookie = cookies[0];
+        assertEquals("/example", cookie.getPath());
+    }
+
+    /**
+     * Test method for
+     * {@link org.seasar.extension.httpsession.SessionIdUtil#writeCookie(HttpServletRequest)}
+     */
+    public void testWriteCookie_RootContext() {
+        MockServletContextImpl context = new MockServletContextImpl("");
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
+                context, "hello.html");
+        MockHttpServletResponseImpl response = new MockHttpServletResponseImpl(
+                request);
+
+        SessionIdUtil.writeCookie(request, response, "hoge");
+        Cookie[] cookies = response.getCookies();
+        assertNotNull(cookies);
+        assertEquals(1, cookies.length);
+        Cookie cookie = cookies[0];
+        assertEquals("/", cookie.getPath());
+    }
+
 }
