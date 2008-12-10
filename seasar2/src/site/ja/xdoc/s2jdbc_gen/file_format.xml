@@ -125,7 +125,7 @@ end proc_resultset;
 		</section>
 		<section name="ダンプファイル">
 			<p>
-				データベースのデータは<a href="tasks/gen_ddl.html">Gen_Ddl</a>タスクや
+				データベースのデータは<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクや
 				<a href="tasks/dump_data.html">Dump-Data</a>タスクによりCSV形式でダンプされます。
 			</p>
 			<p>
@@ -164,7 +164,7 @@ end proc_resultset;
 				</p>
 				<p>
 					null以外のすべてのデータはダブルクォテーションで囲むことができます。
-					<a href="tasks/gen_ddl.html">Gen_Ddl</a>タスクや
+					<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクや
 					<a href="tasks/dump_data.html">Dump-Data</a>タスクは上記の例のように必ずすべてのデータをダブルクォテーションで囲んで出力します。
 				</p>
 				<p>
