@@ -110,15 +110,6 @@
       jdbcmanagername="${jdbcmanagername}"
       classpathref="classpath"
     />
-    <javac 
-      srcdir="${javafiledestdir}"
-      destdir="${classpathdir}"
-      encoding="${javafileencoding}"
-      fork="true"
-      debug="on"
-      classpathref="classpath">
-      <include name="${rootpackagename}/${entitypackagename}/**"/>
-    </javac>
     <gen-names
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
