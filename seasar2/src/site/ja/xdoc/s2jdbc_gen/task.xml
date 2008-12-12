@@ -59,7 +59,7 @@
 			</p>
 			<p>
 				以下の定義は、S2JDBC-Genの配布ファイルで提供しているサンプル用ビルドファイル（resources/s2jdbc-gen-build.xml）の内容です。
-				このビルドファイルでは、タスクを組み合わせ5つのターゲットを定義しています。
+				タスクを組み合わせ5つのターゲットを定義しています。
 			</p>
 			<source><![CDATA[<project name="example-s2jdbc-gen" default="gen-ddl" basedir=".">
 
@@ -173,15 +173,6 @@
       jdbcmanagername="${jdbcmanagername}"
       classpathref="classpath"
     />
-    <javac 
-      srcdir="${javafiledestdir}"
-      destdir="${classpathdir}"
-      encoding="${javafileencoding}"
-      fork="true"
-      debug="on"
-      classpathref="classpath">
-      <include name="${rootpackagename}/${entitypackagename}/**"/>
-    </javac>
     <gen-names
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -279,10 +270,6 @@
 
 </project>]]></source>
 			<p>
-				このビルドファイルは、エンティティクラスのJavaファイルのみをコンパイルします。
-				生成されたJavaファイルすべてをコンパイルするには、EclipseのようなIDEで行うか、ビルドファイルをカスタマイズして別途Javacタスクで実行してください。
-			</p>
-			<p>
 				各ターゲットの役割を説明します。
 			</p>
 			<table border="1" cellpadding="2" cellspacing="0">
@@ -294,11 +281,15 @@
 				<tr><td>dump</td><td>データベースのデータをCSV形式でダンプします。通常、ダンプはgen-ddlターゲットで行われますが、個別にダンプを実行したい場合にこのターゲットを使用します。デフォルトでは、ダンプファイルは最新バージョンのデータを管理するディレクトリに出力されます。migrateターゲットを実行することでロードできます。</td></tr>
 			</table>
 			<p>
-				このビルドファイルは、propertyやpathを環境に合わせてカスタマイズし、利用してください。
+				このビルドファイルを使用するにあたっては、propertyやpathの値を環境に合わせてカスタマイズし利用してください。
+			</p>
+			<p>
+				gen-entityターゲットでは、エンティティクラスのJavaファイルのみをコンパイルしています。
+				生成されたJavaファイルすべてをコンパイルするには、EclipseのようなIDEで行うか、ビルドファイルをカスタマイズして別途Javacタスクで実行してください。
 			</p>
 			<p>
 				<a href="setup.html#Doltengの利用">Doltengを使用する</a>場合は、このビルドファイルと同等のビルドファイルを自動生成できるので、そちらを利用してください。
-				Doltengが環境に応じたビルドファイルを生成するため、propertyやpathを修正する必要がありません。
+				Doltengが環境に応じたビルドファイルを生成するため、propertyやpathの値を修正する必要がありません。
 			</p>
 		</section>
 	</body>
