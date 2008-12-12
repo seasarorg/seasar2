@@ -41,25 +41,26 @@
 <td width="740" class="main"><!-- don't edit end -->
 <!-- document start -->
 <!-- 表題 -->
-<ul>
-<li><a href="#Reference">リファレンス</a></li>
+<h2>目次</h2>
 <ul>
 <li><a href="#S2UnitMake">S2Unitを使ったテストクラスの作成方法</a></li>
 <li><a href="#s2Unitfunction">S2Unitの機能</a></li>
 <li><a href="#s2unitexcel">Excelファイルの作成</a></li>
+<li><a href="#mock">モックインターセプタ</a>
+<ul>
+	<li><a href="#mockConfig">モックを作成するための設定</a></li>
+	<li><a href="#mockUse">モックの使用方法</a></li>
+	<li><a href="#mockExample">モックの使用例</a></li>
 </ul>
-</li>
 </li>
 </ul>
 <!--  テスト関連の概要  -->
-<!--  S2テストリファレンス  -->
-<h2><a name="Reference" id="Reference">リファレンス</a></h2>
 
 <!--  S2Unitを使ったテストクラスの作成方法  -->
-<h3><a name="S2UnitMake" id="S2UnitMake">S2Unitを使ったテストクラスの作成方法</a></h3>
+<h2><a name="S2UnitMake" id="S2UnitMake">S2Unitを使ったテストクラスの作成方法</a></h2>
 <p>テストクラスは、org.seasar.extension.unit.S2TestCaseを継承して作成します。またS2TestCaseはJUnitを拡張したクラスなので、テストメソッド等の使用方法はJUnitと同様です。</p>
 <!--  S2Unitの機能  -->
-<h3><a name="s2Unitfunction" id="s2Unitfunction">S2Unitの機能</a></h3>
+<h2><a name="s2Unitfunction" id="s2Unitfunction">S2Unitの機能</a></h2>
 <p><a href="DIContainer.html">S2Container</a>を使った開発のテストを簡単に行えるように以下の機能があります。</p>
 <dl>
 <dt style="text-indent:1em;"><b>・S2Containerの自動生成</b></dt>
@@ -114,7 +115,7 @@
 <dd>例えば、テーブルAの外部キーでテーブルBを参照している場合、テーブルAのデータしか使わない場合でも、テーブルB用にシート名だけのシートを用意する必要があります。シートの定義順は、テーブルA、テーブルBの順になります。</dd>
 </dl>
 <!--  データベースに対するテスト  -->
-<h3><a name="s2unitexcel" id="s2unitexcel">Excelファイルの作成</a></h3>
+<h2><a name="s2unitexcel" id="s2unitexcel">Excelファイルの作成</a></h2>
 <p>検証用のExcelファイルを作成するには、以下のように設定します。作成したExcelファイルはテストクラスと同じ場所に配置するのが一般的です。</p>
 <img src="images/testtech01.gif" alt="" />
 <dl>
@@ -180,6 +181,180 @@ N:1のマッピングもベースとなるシートに「カラム名_関連番�
 </dl>
 </dd>
 </dl>
+
+<h2><a name="mock">モックインターセプタ</a></h2>
+<h3><a name="mockConfig">モックを作成するための設定</a></h3>
+<p>インターフェースのモックを設定するには、org.seasar.framework.aop.interceptors.MockInterceptorを使用します。MockInterceptorは<a href="http://homepage3.nifty.com/seasar/aop.html">S2AOP</a>で提供されているInterceptorです。MockInterceptorの以下のメソッドを使用してインターフェースのモックの設定、インターフェースのメソッドの呼び出し、引数の確認が出来ます。</p>
+<dl>
+<dt style="text-indent:1em;">public void setReturnValue(String methodName, Object returnValue)</dt>
+<dd>概要：インターフェースのメソッドに戻り値をセットする場合に使用します。</dd>
+<dd>第1引数：インターフェースのメソッド名を指定します。</dd>
+<dd>第2引数：第1引数で指定したメソッドの返す値を指定します。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;">public void setReturnValue(Object returnValue)</dt>
+<dd>概要：インターフェースのすべてのメソッドに戻り値をセットする場合に使用します。</dd>
+<dd>第1引数：返す値を指定します。この場合、どんなメソッドが呼ばれてもその値を返します。通常、１つのメソッドしか呼び出さないことが分かっている場合に使います。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;">public boolean isInvoked(String methodName)</dt>
+<dd>概要：インターフェースのメソッドが呼ばれたかどうかチェックする場合に使用します。</dd>
+<dd>第1引数：呼び出されたどうか確認したいメソッド名を指定します。</dd>
+<dd>戻り値：booleanでメソッドが呼び出されたかどうかを返します。</dd>
+</dl>
+<dl>
+<dt style="text-indent:1em;">public Object[] getArgs(String methodName)</dt>
+<dd>概要：インターフェースのメソッドの引数の値を取得したい場合に使用します。</dd>
+<dd>第1引数：呼び出されたソッドの引数の値を知りたい場合のメソッド名を指定します。</dd>
+<dd>戻り値：Object[]で呼び出されたメソッドの引数の値を返します。</dd>
+</dl>
+
+<h3><a name="mockUse">モックの使用方法</a></h3>
+<p>インターフェースのモックを作成するには、設定したMockInterceptorをアスペクトして使用します。例えば以下のようなインターフェースがあったとします。</p>
+<pre>
+public interface Hello {
+    public String greeting();
+    public String echo(String str);
+}
+</pre>
+<p>このインターフェースのモックを作成する仕様として、greeting()メソッドが呼び出されたときは、&quot;Hello&quot;を返し、echo()メソッドが呼び出されたときは&quot;Hoge&quot;を返すこととする場合、以下のように作成します。</p>
+<pre>MockInterceptor mi = new MockInterceptor();
+mi.setReturnValue("greeting", "Hello");
+mi.setReturnValue("echo", "Hoge");
+Hello hello = mi.createProxy(Hello.class);
+</pre>
+<p>上記のコードをコンポーネント定義で書くと次のようになります。</p>
+<pre>&lt;component class=&quot;examples.aop.Hello&quot;&gt;
+    &lt;aspect&gt;
+        &lt;component class=&quot;org.seasar.framework.aop.interceptors.MockInterceptor&quot;&gt;
+            &lt;initMethod name=&quot;setReturnValue&quot;&gt;
+                &lt;arg&gt;&quot;greeting&quot;&lt;/arg&gt;
+                &lt;arg&gt;&quot;Hello&quot;&lt;/arg&gt;
+            &lt;/initMethod&gt;
+            &lt;initMethod name=&quot;setReturnValue&quot;&gt;
+                &lt;arg&gt;&quot;echo&quot;&lt;/arg&gt;
+                &lt;arg&gt;&quot;Hoge&quot;&lt;/arg&gt;
+            &lt;/initMethod&gt;
+        &lt;/component&gt;
+    &lt;/aspect&gt;
+&lt;/component&gt;
+</pre>
+
+<h3><a name="mockExample">モックの使用例</a></h3>
+<p>S2で用意されているMockInterceptorを使ってインターフェースのモックを作成して、メソッドと引数が正しく呼ばれていかS2Unitを使ってテストを作成しましょう。作成するファイルは以下のとおりです。</p>
+<ul>
+<li type="circle">インターフェース(Hello.java)</li>
+<li type="circle">インターフェースにモックの定義を行うdiconファイル(Hello.dicon)</li>
+<li type="circle">作成したインターフェースのテストを行うクラス(HelloTest.java)</li>
+</ul>
+<h5><b>インターフェースの作成</b></h5>
+<ul>
+<li type="circle">引数が無く、戻り値がStringのメソッド(greeting)を作成します。</li>
+<li type="circle">引数が1つで、戻り値がStringのメソッド(echo)を作成します。</li>
+</ul>
+Hello.java
+<pre>package examples.aop.mockinterceptor;
+
+public interface Hello {
+
+    public String greeting();
+
+    public String echo(String str);
+
+}</pre>
+<h5><b>diconファイルの作成</b></h5>
+<ul>
+<li type="circle">モックの仕様はgreeting()メソッドが呼び出されたときは、"Hello"を返し、echo()メソッドが呼び出されたときは"Hoge"を返すことにします。</li>
+<li type="circle">MockInterceptorをコンポーネントに定義します。name属性はhelloMockInterceptorとします。</li>
+<li type="circle">MockInterceptorのsetReturnValue()メソッドに対してメソッド・インジェクションを使ってモックの仕様どおりに引数を指定します。</li>
+<li type="circle">インターフェースをコンポーネントに定義します。aspectタグにコンポーネントに定義したMockInterceptorを指定します。</li>
+</ul>
+Hello.dicon
+<pre>&lt;?xml version=&quot;1.0&quot; encoding=&quot;Shift_JIS&quot;?&gt;
+&lt;!DOCTYPE components PUBLIC &quot;-//SEASAR//DTD S2Container//EN&quot;
+&quot;http://www.seasar.org/dtd/components.dtd&quot;&gt;
+&lt;components&gt;
+    &lt;component name=&quot;mockInterceptor&quot;
+               class=&quot;org.seasar.framework.aop.interceptors.MockInterceptor&quot;&gt;
+        &lt;initMethod name=&quot;setReturnValue&quot;&gt;
+            &lt;arg&gt;&quot;greeting&quot;&lt;/arg&gt;
+            &lt;arg&gt;&quot;Hello&quot;&lt;/arg&gt;
+        &lt;/initMethod&gt;
+        &lt;initMethod name=&quot;setReturnValue&quot;&gt;
+            &lt;arg&gt;&quot;echo&quot;&lt;/arg&gt;
+            &lt;arg&gt;&quot;Hoge&quot;&lt;/arg&gt;
+        &lt;/initMethod&gt;
+    &lt;/component&gt;
+    &lt;component class=&quot;examples.aop.mockinterceptor.Hello&quot;&gt;
+        &lt;aspect&gt;
+            mockInterceptor
+        &lt;/aspect&gt;
+    &lt;/component&gt;
+&lt;/components&gt;</pre>
+<br />
+<h5><b>テストクラスの作成</b></h5>
+<ul>
+<li type="circle">S2TestCaseを継承します。</li>
+<li type="circle">diconファイルに設定したexamples.aop.Helloとorg.seasar.framework.aop.interceptors.MockInterceptorを自動的にセットするように変数を宣言します。</li>
+<li type="circle">MockInterceptor#isInvoked(String methodName)を使ってメソッドが呼び出されたかどうか確認します。</li>
+<li type="circle">MockInterceptor#getArgs(String methodName)を使ってメソッドの引数の値が正しいか確認します。</li>
+</ul>
+HelloTest.java
+<pre>package examples.aop.mockinterceptor;
+
+import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.aop.interceptors.MockInterceptor;
+
+public class HelloTest extends S2TestCase{
+    //テストクラスと同じパッケージにあるのでパスが省略できる
+    private static String PATH = "Hello.dicon";
+
+    //変数の自動セット
+    private Hello hello ;
+
+    private MockInterceptor mi ;
+
+    public void testHello() throws Exception{
+
+	//diconファイルでインターフェースのモックが正しく行われているか
+	assertEquals("Hello", hello.greeting());
+	assertEquals("Hoge", hello.echo("test"));
+
+	hello.echo("Hello");
+	//echo()メソッドが呼ばれたかどうか
+	assertEquals(true, mi.isInvoked("echo"));
+
+	//echo()メソッドの引数の値が"Hello"かどうか
+	assertEquals("Hello", mi.getArgs("echo")[0]);
+
+    }
+
+    protected void setUp() throws Exception {
+          //S2Containerに対するinclude()メソッド
+	include(PATH);
+    }
+
+    protected void tearDown() throws Exception {
+    }
+
+    public HelloTest(String arg0) {
+	super(arg0);
+    }
+
+    public static void main(String[] args) {
+	junit.textui.TestRunner.run(HelloTest.class);
+    }
+
+}
+</pre>
+<p>コンポーネントの組み立てやコンポーネントの取り出しといった作業はS2TestCaseが自動的に行うので、テストメソッドは必要なことにだけに集中できます。</p>
+<h5><b>実行結果</b></h5>
+<p>"OK (テスト数 test)"と出ていればassertEquals()メソッドで予想した通り結果が得られています。</p>
+<pre>.
+Time: 1.643
+
+OK (1 test)
+</pre>
 <!-- document end -->
 <!-- don't edit start --></td>
 <td width="14"><img height="14" width="14" src="images/spacer.gif" alt="" /></td>
