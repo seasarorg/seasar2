@@ -48,7 +48,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
 
     /** {@link Doclet}が使用可能な場合{@code true} */
     protected static boolean docletAvailable;
-    {
+    static {
         try {
             Class.forName("com.sun.javadoc.Doclet"); // tools.jar
             docletAvailable = true;
