@@ -23,13 +23,6 @@
   <profiles>
     <profile>
       <id>standard</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>database</name>
-          <value>standard</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>org.apache.derby</groupId>
@@ -63,21 +56,9 @@
     </profile>
     <profile>
       <id>hsqldb</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>hsqldb</value>
-        </property>
-      </activation>
     </profile>
     <profile>
       <id>h2</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>h2</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>com.h2database</groupId>
@@ -90,12 +71,6 @@
     </profile>
     <profile>
       <id>postgre</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>postgre</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>postgresql</groupId>
@@ -108,12 +83,6 @@
     </profile>
     <profile>
       <id>mysql</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>mysql</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>mysql</groupId>
@@ -126,12 +95,6 @@
     </profile>
     <profile>
       <id>oracle</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>oracle</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>com.oracle</groupId>
@@ -144,12 +107,6 @@
     </profile>
     <profile>
       <id>db2</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>db2</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>com.ibm</groupId>
@@ -162,12 +119,6 @@
     </profile>
     <profile>
       <id>mssql2005</id>
-      <activation>
-        <property>
-          <name>database</name>
-          <value>mssql2005</value>
-        </property>
-      </activation>
       <dependencies>
         <dependency>
           <groupId>com.microsoft</groupId>
