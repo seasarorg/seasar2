@@ -16,6 +16,10 @@
 			<arg>"currentSchema"</arg>
 			<arg>"s2container_2_4_s2jdbc_it"</arg>
 		</initMethod>
+		<initMethod name="addProperty">
+			<arg>"currentFunctionPath"</arg>
+			<arg>"s2container_2_4_s2jdbc_it"</arg>
+		</initMethod>
 	</component>
 	<component class="org.seasar.extension.jdbc.dialect.Db2Dialect" />
 </components>
