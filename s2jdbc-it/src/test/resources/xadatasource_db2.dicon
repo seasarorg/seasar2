@@ -14,11 +14,11 @@
 		<property name="password">"seasar"</property>
 		<initMethod name="addProperty">
 			<arg>"currentSchema"</arg>
-			<arg>"s2container_2_4_s2jdbc_it"</arg>
+			<arg>"S2CONTAINER_2_4_S2JDBC_IT"</arg>
 		</initMethod>
 		<initMethod name="addProperty">
 			<arg>"currentFunctionPath"</arg>
-			<arg>"s2container_2_4_s2jdbc_it"</arg>
+			<arg>"S2CONTAINER_2_4_S2JDBC_IT"</arg>
 		</initMethod>
 	</component>
 	<component class="org.seasar.extension.jdbc.dialect.Db2Dialect" />
