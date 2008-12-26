@@ -22,6 +22,9 @@
 			<zipfileset prefix="s2jdbc-gen/libsrc" dir="target">
 				<include name="s2jdbc-gen-${ver}-sources.jar"/>
 			</zipfileset>
+			<zipfileset prefix="s2jdbc-gen/libsrc" dir="target">
+				<include name="s2jdbc-gen-${ver}-sources.jar"/>
+			</zipfileset>
 			<zipfileset prefix="s2jdbc-gen/resources" dir="src/main/resources/org/seasar/extension/jdbc/gen/internal/generator">
 				<include name="tempaltes/**"/>
 			</zipfileset>
