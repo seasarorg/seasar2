@@ -278,24 +278,6 @@
       <url>http://maven.seasar.org/maven2</url>
     </repository>
   </repositories>
-  <!-- 
-    maven-license-plugin がセントラルリポジトリに登録されれば
-    <pluginRepositories> の定義は不要になるはず．
-    http://jira.codehaus.org/browse/MAVENUPLOAD-2296
-   -->
-  <pluginRepositories>
-    <pluginRepository>
-      <id>mc-release</id>
-      <name>Local Maven repository of releases</name>
-      <url>http://mc-repo.googlecode.com/svn/maven2/releases</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-          <enabled>true</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
@@ -410,13 +392,13 @@
         <artifactId>maven-license-plugin</artifactId>
         <version>1.4.0</version>
         <configuration>
-          <header>https://www.seasar.org/svn/s2container/trunk/seasar2/src/header.txt</header>
+          <header>http://www.seasar.org/license/header.txt</header>
           <includes>
             <include>src/**/*.java</include>
           </includes>
           <encoding>UTF-8</encoding>
           <headerDefinitions>
-            <headerDefinition>https://www.seasar.org/svn/s2container/trunk/seasar2/src/header-definition.xml</headerDefinition>
+            <headerDefinition>http://www.seasar.org/license/header-definition.xml</headerDefinition>
           </headerDefinitions>
         </configuration>
       </plugin>
