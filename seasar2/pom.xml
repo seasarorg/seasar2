@@ -409,11 +409,6 @@
         <artifactId>wagon-webdav</artifactId>
         <version>1.0-beta-2</version>
       </extension>
-      <extension>
-        <groupId>com.google.code.xmltool</groupId>
-        <artifactId>xmltool</artifactId>
-        <version>1.4</version>
-      </extension>
     </extensions>
   </build>
 
