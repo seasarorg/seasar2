@@ -207,10 +207,10 @@ public class Department {
 					<tr><th>Javaの型</th><th>Oracle Database</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>
 					<tr><td>Boolean</td><td>-</td><td>bit</td><td>-</td><td>boolean<br />bool</td><td>boolean<br />bool<br />bit(0)</td></tr>
 					<tr><td>Byte</td><td>-</td><td>-</td><td>-</td><td>-</td><td>tinyint</td></tr>
-					<tr><td>Short</td><td>number<br />numeric<br />decimal<br />（※精度が5以下、スケールが0）</td><td>smallint<br />tinyint</td><td>smallint</td><td>int2<br />smallint</td><td>smallint<br />tinyint unsigned</td></tr>
-					<tr><td>Integer</td><td>number<br />numeric<br />decimal<br />（※精度が10以下、スケールが0)</td><td>int</td><td>integer</td><td>int4<br />integer<br />int<br />serial<br />serial4</td><td>int<br />integer<br />smallint unsigned</td></tr>
-					<tr><td>Long</td><td>number<br />numeric<br />decimal<br />（※精度が19以下、スケールが0）</td><td>bitint</td><td>bitint</td><td>int8<br />serial8<br />bitint<br />bigserial</td><td>bigint<br />integer unsigned</td></tr>
-					<tr><td>BigInteger</td><td>number<br />numeric<br />decimal<br />（※精度が20以上、スケールが0）</td><td>-</td><td>-</td><td>-</td><td>bigint unsigned</td></tr>
+					<tr><td>Short</td><td>number<br />numeric<br />decimal<br />（※精度が5未満、スケールが0）</td><td>smallint<br />tinyint</td><td>smallint</td><td>int2<br />smallint</td><td>smallint<br />tinyint unsigned</td></tr>
+					<tr><td>Integer</td><td>number<br />numeric<br />decimal<br />（※精度が10未満、スケールが0)</td><td>int</td><td>integer</td><td>int4<br />integer<br />int<br />serial<br />serial4</td><td>int<br />integer<br />smallint unsigned</td></tr>
+					<tr><td>Long</td><td>number<br />numeric<br />decimal<br />（※精度が19未満、スケールが0）</td><td>bitint</td><td>bitint</td><td>int8<br />serial8<br />bitint<br />bigserial</td><td>bigint<br />integer unsigned</td></tr>
+					<tr><td>BigInteger</td><td>number<br />numeric<br />decimal<br />（※精度が19以上、スケールが0）</td><td>-</td><td>-</td><td>-</td><td>bigint unsigned</td></tr>
 					<tr><td>BigDecimal</td><td>number<br />numeric<br />decimal<br />（※スケールが1以上）</td><td>smallmoney<br />money<br />decimal<br />numeric</td><td>decimal</td><td>decimal<br />numeric</td><td>numeric<br />decimal<br />dec</td></tr>
 					<tr><td>Float</td><td>float<br />binary_float</td><td>float<br />real</td><td>real</td><td>float4<br />real<br />money</td><td>-</td></tr>
 					<tr><td>Double</td><td>binary_double</td><td>double</td><td>double</td><td>float8<br />double precision</td><td>real</td></tr>
