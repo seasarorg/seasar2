@@ -17,6 +17,8 @@ package org.seasar.framework.beans.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Map;
 
 import org.seasar.framework.beans.ParameterizedClassDesc;
 import org.seasar.framework.beans.PropertyDesc;
@@ -42,6 +44,23 @@ public class ParameterizedClassDescFactory {
     protected static final Provider provider = createProvider();
 
     /**
+     * パラメータ化された型(クラスまたはインタフェース)が持つ型変数をキー、型引数を値とする{@link Map}を返します。
+     * <p>
+     * S2-Tigerが利用できない場合や、型がパラメタ化されていない場合は空の{@link Map}を返します。
+     * </p>
+     * 
+     * @param beanClass
+     *            パラメータ化された型(クラスまたはインタフェース)
+     * @return パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
+     */
+    public static Map getTypeVariables(Class beanClass) {
+        if (provider == null) {
+            return Collections.EMPTY_MAP;
+        }
+        return provider.getTypeVariables(beanClass);
+    }
+
+    /**
      * フィールドの型をを表現する{@link ParameterizedClassDesc}を作成して返します。
      * <p>
      * S2-Tigerが利用できない場合や、フィールドがパラメタ化されていない場合は<code>null</code>を返します。
@@ -49,14 +68,16 @@ public class ParameterizedClassDescFactory {
      * 
      * @param field
      *            フィールド
+     * @param map
+     *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
      * @return フィールドの型を表現する{@link ParameterizedClassDesc}
      */
     public static ParameterizedClassDesc createParameterizedClassDesc(
-            final Field field) {
+            final Field field, final Map map) {
         if (provider == null) {
             return null;
         }
-        return provider.createParameterizedClassDesc(field);
+        return provider.createParameterizedClassDesc(field, map);
     }
 
     /**
@@ -69,14 +90,16 @@ public class ParameterizedClassDescFactory {
      *            メソッド
      * @param index
      *            引数の位置
+     * @param map
+     *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
      * @return メソッドの引数型を表現する{@link ParameterizedClassDesc}
      */
     public static ParameterizedClassDesc createParameterizedClassDesc(
-            final Method method, final int index) {
+            final Method method, final int index, final Map map) {
         if (provider == null) {
             return null;
         }
-        return provider.createParameterizedClassDesc(method, index);
+        return provider.createParameterizedClassDesc(method, index, map);
     }
 
     /**
@@ -87,14 +110,16 @@ public class ParameterizedClassDescFactory {
      * 
      * @param method
      *            メソッド
+     * @param map
+     *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
      * @return メソッドの戻り値型を表現する{@link ParameterizedClassDesc}
      */
     public static ParameterizedClassDesc createParameterizedClassDesc(
-            final Method method) {
+            final Method method, final Map map) {
         if (provider == null) {
             return null;
         }
-        return provider.createParameterizedClassDesc(method);
+        return provider.createParameterizedClassDesc(method, map);
     }
 
     /**
@@ -126,13 +151,24 @@ public class ParameterizedClassDescFactory {
     public interface Provider {
 
         /**
+         * パラメータ化された型(クラスまたはインタフェース)が持つ型変数をキー、型引数を値とする{@link Map}を返します。
+         * 
+         * @param beanClass
+         *            パラメータ化された型(クラスまたはインタフェース)
+         * @return パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
+         */
+        Map getTypeVariables(Class beanClass);
+
+        /**
          * フィールドの型をを表現する{@link ParameterizedClassDesc}を作成して返します。
          * 
          * @param field
          *            フィールド
+         * @param map
+         *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
          * @return フィールドの型を表現する{@link ParameterizedClassDesc}
          */
-        ParameterizedClassDesc createParameterizedClassDesc(Field field);
+        ParameterizedClassDesc createParameterizedClassDesc(Field field, Map map);
 
         /**
          * メソッドの引数型を表現する{@link ParameterizedClassDesc}を作成して返します。
@@ -141,19 +177,24 @@ public class ParameterizedClassDescFactory {
          *            メソッド
          * @param index
          *            引数の位置
+         * @param map
+         *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
          * @return メソッドの引数型を表現する{@link ParameterizedClassDesc}
          */
         ParameterizedClassDesc createParameterizedClassDesc(Method method,
-                int index);
+                int index, Map map);
 
         /**
          * メソッドの戻り値型を表現する{@link ParameterizedClassDesc}を作成して返します。
          * 
          * @param method
          *            メソッド
+         * @param map
+         *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
          * @return メソッドの戻り値型を表現する{@link ParameterizedClassDesc}を作成して返します。
          */
-        ParameterizedClassDesc createParameterizedClassDesc(Method method);
+        ParameterizedClassDesc createParameterizedClassDesc(Method method,
+                Map map);
 
     }
 

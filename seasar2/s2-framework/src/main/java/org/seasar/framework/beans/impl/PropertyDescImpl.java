@@ -150,15 +150,16 @@ public class PropertyDescImpl implements PropertyDesc {
     }
 
     private void setUpParameterizedClassDesc() {
+        final Map typeVariables = ((BeanDescImpl) beanDesc).getTypeVariables();
         if (field != null) {
             parameterizedClassDesc = ParameterizedClassDescFactory
-                    .createParameterizedClassDesc(field);
+                    .createParameterizedClassDesc(field, typeVariables);
         } else if (readMethod != null) {
             parameterizedClassDesc = ParameterizedClassDescFactory
-                    .createParameterizedClassDesc(readMethod);
+                    .createParameterizedClassDesc(readMethod, typeVariables);
         } else if (writeMethod != null) {
             parameterizedClassDesc = ParameterizedClassDescFactory
-                    .createParameterizedClassDesc(writeMethod, 0);
+                    .createParameterizedClassDesc(writeMethod, 0, typeVariables);
         }
     }
 
@@ -336,21 +337,36 @@ public class PropertyDescImpl implements PropertyDesc {
                 || !isParameterized()) {
             return null;
         }
-        return parameterizedClassDesc.getArguments()[0].getRawClass();
+        final ParameterizedClassDesc pcd = parameterizedClassDesc
+                .getArguments()[0];
+        if (pcd == null) {
+            return null;
+        }
+        return pcd.getRawClass();
     }
 
     public Class getKeyClassOfMap() {
         if (!Map.class.isAssignableFrom(propertyType) || !isParameterized()) {
             return null;
         }
-        return parameterizedClassDesc.getArguments()[0].getRawClass();
+        final ParameterizedClassDesc pcd = parameterizedClassDesc
+                .getArguments()[0];
+        if (pcd == null) {
+            return null;
+        }
+        return pcd.getRawClass();
     }
 
     public Class getValueClassOfMap() {
         if (!Map.class.isAssignableFrom(propertyType) || !isParameterized()) {
             return null;
         }
-        return parameterizedClassDesc.getArguments()[1].getRawClass();
+        final ParameterizedClassDesc pcd = parameterizedClassDesc
+                .getArguments()[1];
+        if (pcd == null) {
+            return null;
+        }
+        return pcd.getRawClass();
     }
 
 }

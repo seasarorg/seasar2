@@ -43,6 +43,7 @@ import org.seasar.framework.beans.IllegalDiiguRuntimeException;
 import org.seasar.framework.beans.MethodNotFoundRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.PropertyNotFoundRuntimeException;
+import org.seasar.framework.beans.factory.ParameterizedClassDescFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ArrayMap;
@@ -81,6 +82,8 @@ public class BeanDescImpl implements BeanDesc {
 
     private Constructor[] constructors;
 
+    private Map typeVariables;
+
     private CaseInsensitiveMap propertyDescCache = new CaseInsensitiveMap();
 
     private Map methodsCache = new HashMap();
@@ -105,6 +108,8 @@ public class BeanDescImpl implements BeanDesc {
         }
         this.beanClass = beanClass;
         constructors = beanClass.getConstructors();
+        typeVariables = ParameterizedClassDescFactory
+                .getTypeVariables(beanClass);
         setupPropertyDescs();
         setupMethods();
         setupFields();
@@ -767,4 +772,9 @@ public class BeanDescImpl implements BeanDesc {
      * (Modifier.isStatic(fields[i].getModifiers())) {
      * fieldCache_.put(fields[i].getName(), fields[i]); } } }
      */
+
+    Map getTypeVariables() {
+        return typeVariables;
+    }
+
 }

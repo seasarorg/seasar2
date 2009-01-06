@@ -45,6 +45,25 @@ public class PropertyDescImplTigerTest extends TestCase {
         assertEquals(List.class, pcd.getRawClass());
         assertEquals(1, pcd.getArguments().length);
         assertEquals(String.class, pcd.getArguments()[0].getRawClass());
+
+        pd = bd.getPropertyDesc("hoge");
+        assertTrue(pd.isParameterized());
+        assertEquals(Object.class, pd.getElementClassOfCollection());
+
+        pcd = pd.getParameterizedClassDesc();
+        assertEquals(List.class, pcd.getRawClass());
+        assertEquals(1, pcd.getArguments().length);
+        assertEquals(Object.class, pcd.getArguments()[0].getRawClass());
+
+        bd = BeanDescFactory.getBeanDesc(Bar.class);
+        pd = bd.getPropertyDesc("list");
+        assertTrue(pd.isParameterized());
+        assertEquals(String.class, pd.getElementClassOfCollection());
+
+        pcd = pd.getParameterizedClassDesc();
+        assertEquals(List.class, pcd.getRawClass());
+        assertEquals(1, pcd.getArguments().length);
+        assertEquals(String.class, pcd.getArguments()[0].getRawClass());
     }
 
     /**
@@ -60,6 +79,15 @@ public class PropertyDescImplTigerTest extends TestCase {
         assertEquals(Set.class, pcd.getRawClass());
         assertEquals(1, pcd.getArguments().length);
         assertEquals(Integer.class, pcd.getArguments()[0].getRawClass());
+
+        pd = bd.getPropertyDesc("fuga");
+        assertTrue(pd.isParameterized());
+        assertEquals(Enum.class, pd.getElementClassOfCollection());
+
+        pcd = pd.getParameterizedClassDesc();
+        assertEquals(Set.class, pcd.getRawClass());
+        assertEquals(1, pcd.getArguments().length);
+        assertEquals(Enum.class, pcd.getArguments()[0].getRawClass());
     }
 
     /**
@@ -77,6 +105,17 @@ public class PropertyDescImplTigerTest extends TestCase {
         assertEquals(2, pcd.getArguments().length);
         assertEquals(String.class, pcd.getArguments()[0].getRawClass());
         assertEquals(Date.class, pcd.getArguments()[1].getRawClass());
+
+        pd = bd.getPropertyDesc("hege");
+        assertTrue(pd.isParameterized());
+        assertEquals(String.class, pd.getKeyClassOfMap());
+        assertEquals(Number.class, pd.getValueClassOfMap());
+
+        pcd = pd.getParameterizedClassDesc();
+        assertEquals(Map.class, pcd.getRawClass());
+        assertEquals(2, pcd.getArguments().length);
+        assertEquals(String.class, pcd.getArguments()[0].getRawClass());
+        assertEquals(Number.class, pcd.getArguments()[1].getRawClass());
     }
 
     /** */
@@ -95,10 +134,39 @@ public class PropertyDescImplTigerTest extends TestCase {
         /**
          * @param date
          */
-        public void setBaz(@SuppressWarnings("unused")
-        Map<String, Date> date) {
+        public void setBaz(@SuppressWarnings("unused") Map<String, Date> date) {
+        }
+
+        /** */
+        public List<?> hoge;
+
+        /**
+         * @return
+         */
+        public Set<? extends Enum<?>> getFuga() {
+            return null;
+        }
+
+        /**
+         * @param date
+         */
+        public void setHege(
+                @SuppressWarnings("unused") Map<? extends String, ? extends Number> date) {
         }
 
     }
 
+    /**
+     * @param <T>
+     */
+    public static class Foo<T> {
+
+        /** */
+        public List<T> list;
+
+    }
+
+    /** */
+    public static class Bar extends Foo<String> {
+    }
 }

@@ -17,6 +17,8 @@ package org.seasar.framework.beans.factory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,9 +36,12 @@ public class ParameterizedClassDescFactoryTest extends TestCase {
      * @throws Exception
      */
     public void testFieldType() throws Exception {
+        @SuppressWarnings("unchecked")
+        Map<TypeVariable<?>, Type> map = ParameterizedClassDescFactory
+                .getTypeVariables(Hoge.class);
         Field field = Hoge.class.getField("foo");
         ParameterizedClassDesc desc = ParameterizedClassDescFactory
-                .createParameterizedClassDesc(field);
+                .createParameterizedClassDesc(field, map);
         assertEquals(Map.class, desc.getRawClass());
 
         ParameterizedClassDesc[] args = desc.getArguments();
@@ -60,16 +65,19 @@ public class ParameterizedClassDescFactoryTest extends TestCase {
      * @throws Exception
      */
     public void testMethodParameterType() throws Exception {
+        @SuppressWarnings("unchecked")
+        Map<TypeVariable<?>, Type> map = ParameterizedClassDescFactory
+                .getTypeVariables(Hoge.class);
         Method method = Hoge.class.getMethod("foo", Set.class, Map.class);
         ParameterizedClassDesc desc = ParameterizedClassDescFactory
-                .createParameterizedClassDesc(method, 0);
+                .createParameterizedClassDesc(method, 0, map);
         assertEquals(Set.class, desc.getRawClass());
         ParameterizedClassDesc[] args = desc.getArguments();
         assertEquals(1, args.length);
         assertEquals(Integer.class, args[0].getRawClass());
 
         desc = ParameterizedClassDescFactory.createParameterizedClassDesc(
-                method, 1);
+                method, 1, map);
         assertEquals(Map.class, desc.getRawClass());
         args = desc.getArguments();
         assertEquals(2, args.length);
@@ -83,9 +91,12 @@ public class ParameterizedClassDescFactoryTest extends TestCase {
      * @throws Exception
      */
     public void testMethodReturnType() throws Exception {
+        @SuppressWarnings("unchecked")
+        Map<TypeVariable<?>, Type> map = ParameterizedClassDescFactory
+                .getTypeVariables(Hoge.class);
         Method method = Hoge.class.getMethod("foo", Set.class, Map.class);
         ParameterizedClassDesc desc = ParameterizedClassDescFactory
-                .createParameterizedClassDesc(method);
+                .createParameterizedClassDesc(method, map);
         assertEquals(List.class, desc.getRawClass());
         ParameterizedClassDesc[] args = desc.getArguments();
         assertEquals(1, args.length);

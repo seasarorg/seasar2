@@ -18,6 +18,8 @@ package org.seasar.framework.beans.factory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.Map;
 
 import org.seasar.framework.beans.ParameterizedClassDesc;
 import org.seasar.framework.beans.factory.ParameterizedClassDescFactory.Provider;
@@ -33,41 +35,28 @@ import static org.seasar.framework.util.tiger.GenericUtil.*;
  */
 public class ParameterizedClassDescFactoryProvider implements Provider {
 
-    /**
-     * フィールドの型をを表現する{@link ParameterizedClassDesc}を作成して返します。
-     * 
-     * @param field
-     *            フィールド
-     * @return フィールドの型を表現する{@link ParameterizedClassDesc}
-     */
-    public ParameterizedClassDesc createParameterizedClassDesc(final Field field) {
-        return createParameterizedClassDesc(field.getGenericType());
+    @SuppressWarnings("unchecked")
+    public Map<TypeVariable<?>, Type> getTypeVariables(Class beanClass) {
+        return getTypeVariableMap(beanClass);
     }
 
-    /**
-     * メソッドの引数型を表現する{@link ParameterizedClassDesc}を作成して返します。
-     * 
-     * @param method
-     *            メソッド
-     * @param index
-     *            引数の位置
-     * @return メソッドの引数型を表現する{@link ParameterizedClassDesc}
-     */
+    @SuppressWarnings("unchecked")
     public ParameterizedClassDesc createParameterizedClassDesc(
-            final Method method, final int index) {
-        return createParameterizedClassDesc(method.getGenericParameterTypes()[index]);
+            final Field field, final Map map) {
+        return createParameterizedClassDesc(field.getGenericType(), map);
     }
 
-    /**
-     * メソッドの戻り値型を表現する{@link ParameterizedClassDesc}を作成して返します。
-     * 
-     * @param method
-     *            メソッド
-     * @return メソッドの戻り値型を表現する{@link ParameterizedClassDesc}を作成して返します。
-     */
+    @SuppressWarnings("unchecked")
     public ParameterizedClassDesc createParameterizedClassDesc(
-            final Method method) {
-        return createParameterizedClassDesc(method.getGenericReturnType());
+            final Method method, final int index, Map map) {
+        return createParameterizedClassDesc(
+                method.getGenericParameterTypes()[index], map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public ParameterizedClassDesc createParameterizedClassDesc(
+            final Method method, Map map) {
+        return createParameterizedClassDesc(method.getGenericReturnType(), map);
     }
 
     /**
@@ -75,10 +64,13 @@ public class ParameterizedClassDescFactoryProvider implements Provider {
      * 
      * @param type
      *            型
+     * @param map
+     *            パラメータ化された型が持つ型変数をキー、型引数を値とする{@link Map}
      * @return 型を表現する{@link ParameterizedClassDesc}
      */
-    public ParameterizedClassDesc createParameterizedClassDesc(final Type type) {
-        final Class<?> rowClass = getRawClass(type);
+    public ParameterizedClassDesc createParameterizedClassDesc(final Type type,
+            final Map<TypeVariable<?>, Type> map) {
+        final Class<?> rowClass = getActualClass(type, map);
         if (rowClass == null) {
             return null;
         }
@@ -90,7 +82,8 @@ public class ParameterizedClassDescFactoryProvider implements Provider {
         }
         final ParameterizedClassDesc[] parameterDescs = new ParameterizedClassDesc[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; ++i) {
-            parameterDescs[i] = createParameterizedClassDesc(parameterTypes[i]);
+            parameterDescs[i] = createParameterizedClassDesc(parameterTypes[i],
+                    map);
         }
         desc.setArguments(parameterDescs);
         return desc;
