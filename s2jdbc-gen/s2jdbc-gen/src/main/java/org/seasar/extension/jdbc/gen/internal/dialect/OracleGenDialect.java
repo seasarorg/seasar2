@@ -79,8 +79,8 @@ public class OracleGenDialect extends StandardGenDialect {
         sqlTypeMap.put(Types.CLOB, new ClobType("clob"));
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("number($p,$s)"));
         sqlTypeMap.put(Types.DOUBLE, new DoubleType("double precision"));
-        sqlTypeMap.put(Types.INTEGER, new IntegerType("number(10,0)"));
-        sqlTypeMap.put(Types.SMALLINT, new SmallIntType("number(5,0)"));
+        sqlTypeMap.put(Types.INTEGER, new IntegerType("number($p,0)"));
+        sqlTypeMap.put(Types.SMALLINT, new SmallIntType("number($p,0)"));
         sqlTypeMap.put(Types.TIME, new TimeType("date"));
         sqlTypeMap.put(Types.VARCHAR, new VarcharType("varchar2($l)"));
 

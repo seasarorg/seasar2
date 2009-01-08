@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 
 import java.lang.reflect.Field;
 
+import javax.persistence.Column;
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 
@@ -140,7 +141,22 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
     protected String getDataType(PropertyMeta propertyMeta) {
         ValueType valueType = valueTypeProvider.provide(propertyMeta);
         int sqlType = valueType.getSqlType();
-        return dialect.getSqlType(sqlType).getDataType(0, 20, 0, false);
+        Column column = getColumn(propertyMeta);
+        return dialect.getSqlType(sqlType).getDataType(column.length(),
+                column.precision(), column.scale(), false);
+    }
+
+    /**
+     * カラムを返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @return カラム
+     */
+    protected Column getColumn(PropertyMeta propertyMeta) {
+        Field field = propertyMeta.getField();
+        Column column = field.getAnnotation(Column.class);
+        return column != null ? column : AnnotationUtil.getDefaultColumn();
     }
 
 }
