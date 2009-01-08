@@ -20,13 +20,15 @@ import java.util.Date;
 
 import javax.persistence.TemporalType;
 
+import org.seasar.extension.sql.SqlArgWrapper;
+
 /**
  * {@link Date}または{@link Calendar}型の値と{@link TemporalType}の組み合わせをラップするクラスです。
  * 
  * @author taedium
  * 
  */
-public class TemporalParameter {
+public class TemporalParameter implements SqlArgWrapper {
 
     /** 値 */
     protected Object value;

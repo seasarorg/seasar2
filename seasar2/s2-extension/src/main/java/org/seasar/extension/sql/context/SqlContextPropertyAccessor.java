@@ -20,6 +20,7 @@ import java.util.Map;
 import ognl.ObjectPropertyAccessor;
 import ognl.OgnlException;
 
+import org.seasar.extension.sql.SqlArgWrapper;
 import org.seasar.extension.sql.SqlContext;
 
 /**
@@ -41,7 +42,12 @@ public class SqlContextPropertyAccessor extends ObjectPropertyAccessor {
             return Boolean.valueOf(ctx.hasArg(argName.substring(HAS_PREFIX
                     .length())));
         }
-        return ctx.getArg(argName);
+        Object arg = ctx.getArg(argName);
+        if (arg instanceof SqlArgWrapper) {
+            SqlArgWrapper wrapper = (SqlArgWrapper) arg;
+            return wrapper.getValue();
+        }
+        return arg;
     }
 
 }

@@ -17,12 +17,15 @@ package org.seasar.extension.jdbc.parameter;
 
 import java.io.Serializable;
 
+import org.seasar.extension.sql.SqlArgWrapper;
+
 /**
- * <code>byte[]</code>や{@link Serializable}、<code>String</code>の値がラージオブジェクトであることを示すクラスです。
+ * <code>byte[]</code>や{@link Serializable}、<code>String</code>
+ * の値がラージオブジェクトであることを示すクラスです。
  * 
  * @author koichik
  */
-public class LobParameter {
+public class LobParameter implements SqlArgWrapper {
 
     /** 値 */
     protected Object value;
