@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.TemporalType;
+
 import org.seasar.extension.jdbc.gen.desc.AttributeDesc;
 import org.seasar.extension.jdbc.gen.model.AttributeModel;
 import org.seasar.extension.jdbc.gen.model.AttributeModelFactory;
@@ -41,8 +43,8 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
     /** 永続化層の命名規約 */
     protected PersistenceConvention persistenceConvention;
 
-    /** コメントを使用する場合{@code true} */
-    protected boolean useComment;
+    /** {@link TemporalType}を使用する場合{@code true} */
+    protected boolean useTemporalType;
 
     /**
      * インスタンスを構築します。
@@ -51,17 +53,20 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
      *            カラム名を表示する場合{@code true}
      * @param showColumnDefinition
      *            カラム定義を表示する場合{@code true}
+     * @param useTemporalType
+     *            {@link TemporalType}を使用する場合{@code true}
      * @param persistenceConvention
      *            永続化層の命名規約
      */
     public AttributeModelFactoryImpl(boolean showColumnName,
-            boolean showColumnDefinition,
+            boolean showColumnDefinition, boolean useTemporalType,
             PersistenceConvention persistenceConvention) {
         if (persistenceConvention == null) {
             throw new NullPointerException("persistenceConvention");
         }
         this.showColumnName = showColumnName;
         this.showColumnDefinition = showColumnDefinition;
+        this.useTemporalType = useTemporalType;
         this.persistenceConvention = persistenceConvention;
     }
 
@@ -77,10 +82,9 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
         attributeModel.setVersion(attributeDesc.isVersion());
         attributeModel.setNullable(attributeDesc.isNullable());
         attributeModel.setUnique(attributeDesc.isUnique());
-        attributeModel.setTemporalType(attributeDesc.getTemporalType());
-        attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
         attributeModel.setColumnTypeName(attributeDesc.getColumnTypeName());
         attributeModel.setComment(attributeDesc.getComment());
+        doAttributeClass(attributeModel, attributeDesc);
         doColumnName(attributeModel, attributeDesc);
         if (showColumnDefinition) {
             doColumnDefinition(attributeModel, attributeDesc);
@@ -90,6 +94,24 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
             doScale(attributeModel, attributeDesc);
         }
         return attributeModel;
+    }
+
+    /**
+     * 属性のクラスを処理します。
+     * 
+     * @param attributeModel
+     *            属性モデル
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doAttributeClass(AttributeModel attributeModel,
+            AttributeDesc attributeDesc) {
+        if (useTemporalType && attributeDesc.isTemporal()) {
+            attributeModel.setTemporalType(attributeDesc.getTemporalType());
+            attributeModel.setAttributeClass(Date.class);
+        } else {
+            attributeModel.setAttributeClass(attributeDesc.getAttributeClass());
+        }
     }
 
     /**

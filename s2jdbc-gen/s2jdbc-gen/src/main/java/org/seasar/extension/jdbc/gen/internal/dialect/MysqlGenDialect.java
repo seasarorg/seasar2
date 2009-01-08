@@ -17,12 +17,11 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
@@ -214,7 +213,7 @@ public class MysqlGenDialect extends StandardGenDialect {
                 byte[].class, true);
 
         private static MysqlColumnType DATETIME = new MysqlColumnType(
-                "datetime", Date.class, TemporalType.TIMESTAMP);
+                "datetime", Timestamp.class);
 
         private static MysqlColumnType DECIMAL = new MysqlColumnType(
                 "decimal($p,$s)", BigDecimal.class);
@@ -265,7 +264,7 @@ public class MysqlGenDialect extends StandardGenDialect {
                 String.class, true);
 
         private static MysqlColumnType YEAR = new MysqlColumnType("year",
-                Date.class, TemporalType.DATE);
+                java.sql.Date.class);
 
         /**
          * インスタンスを構築します。
@@ -294,20 +293,6 @@ public class MysqlGenDialect extends StandardGenDialect {
             super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public MysqlColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, temporalType);
-        }
     }
 
     /**

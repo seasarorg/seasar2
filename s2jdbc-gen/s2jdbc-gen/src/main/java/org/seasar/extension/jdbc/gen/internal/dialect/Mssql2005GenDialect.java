@@ -18,8 +18,6 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 import java.math.BigDecimal;
 import java.sql.Types;
 
-import javax.persistence.TemporalType;
-
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.ClobType;
 
@@ -85,19 +83,5 @@ public class Mssql2005GenDialect extends MssqlGenDialect {
             super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public MssqlColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, temporalType);
-        }
     }
 }

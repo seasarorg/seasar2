@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
@@ -248,20 +247,6 @@ public class Db2GenDialect extends StandardGenDialect {
             super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public Db2ColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, temporalType);
-        }
     }
 
     /**

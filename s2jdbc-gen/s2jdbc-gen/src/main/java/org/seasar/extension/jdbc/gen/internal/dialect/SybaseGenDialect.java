@@ -16,12 +16,11 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
@@ -112,7 +111,7 @@ public class SybaseGenDialect extends StandardGenDialect {
                 Boolean.class);
 
         private static SybaseColumnType DATETIME = new SybaseColumnType(
-                "datetime", Date.class, TemporalType.TIMESTAMP);
+                "datetime", Timestamp.class);
 
         private static SybaseColumnType DECIMAL = new SybaseColumnType(
                 "decimal($p,$s)", BigDecimal.class);
@@ -139,7 +138,7 @@ public class SybaseGenDialect extends StandardGenDialect {
                 "nvarchar($l)", String.class);
 
         private static SybaseColumnType SMALLDATETIME = new SybaseColumnType(
-                "smalldatetime", Date.class, TemporalType.TIMESTAMP);
+                "smalldatetime", Timestamp.class);
 
         private static SybaseColumnType SMALLMONEY = new SybaseColumnType(
                 "smallmoney", BigDecimal.class);
@@ -177,20 +176,6 @@ public class SybaseGenDialect extends StandardGenDialect {
             super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public SybaseColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, temporalType);
-        }
     }
 
     /**

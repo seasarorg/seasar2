@@ -16,13 +16,12 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
@@ -192,7 +191,7 @@ public class MssqlGenDialect extends StandardGenDialect {
                 Boolean.class);
 
         private static MssqlColumnType DATETIME = new MssqlColumnType(
-                "datetime", Date.class, TemporalType.TIMESTAMP);
+                "datetime", Timestamp.class);
 
         private static MssqlColumnType DECIMAL = new MssqlColumnType(
                 "decimal($p,$s)", BigDecimal.class);
@@ -219,7 +218,7 @@ public class MssqlGenDialect extends StandardGenDialect {
                 "nvarchar($l)", String.class);
 
         private static MssqlColumnType SMALLDATETIME = new MssqlColumnType(
-                "smalldatetime", Date.class, TemporalType.TIMESTAMP);
+                "smalldatetime", Timestamp.class);
 
         private static MssqlColumnType SMALLMONEY = new MssqlColumnType(
                 "smallmoney", BigDecimal.class);
@@ -257,20 +256,6 @@ public class MssqlGenDialect extends StandardGenDialect {
             super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public MssqlColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, temporalType);
-        }
     }
 
     /**

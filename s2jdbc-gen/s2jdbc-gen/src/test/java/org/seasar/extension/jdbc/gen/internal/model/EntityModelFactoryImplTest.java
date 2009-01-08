@@ -47,7 +47,7 @@ public class EntityModelFactoryImplTest {
 
     private EntityModelFactoryImpl factory = new EntityModelFactoryImpl(
             "aaa.bbb", Superclass.class, new AttributeModelFactoryImpl(true,
-                    true, new PersistenceConventionImpl()),
+                    true, true, new PersistenceConventionImpl()),
             new AssociationModelFactoryImpl(true),
             new CompositeUniqueConstraintModelFactoryImpl(), false, false,
             true, true, true);
@@ -75,8 +75,7 @@ public class EntityModelFactoryImplTest {
 
         AttributeDesc date = new AttributeDesc();
         date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
+        date.setAttributeClass(java.sql.Date.class);
 
         AttributeDesc temp = new AttributeDesc();
         temp.setName("temp");

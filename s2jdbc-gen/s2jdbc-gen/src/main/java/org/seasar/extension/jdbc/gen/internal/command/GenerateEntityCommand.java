@@ -19,6 +19,7 @@ import java.io.File;
 
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.desc.EntityDesc;
@@ -69,6 +70,9 @@ public class GenerateEntityCommand extends AbstractCommand {
 
     /** 単語を複数系に変換するための辞書ファイル */
     protected File pluralFormFile = null;
+
+    /** {@link TemporalType}を使用する場合{@code true} */
+    protected boolean useTemporalType = false;
 
     /** エンティティクラスでアクセサを使用する場合{@code true} */
     protected boolean useAccessor = false;
@@ -648,6 +652,25 @@ public class GenerateEntityCommand extends AbstractCommand {
         this.applyDbCommentToJava = applyDbCommentToJava;
     }
 
+    /**
+     * {@link TemporalType}を使用する場合{@code true}を返します。
+     * 
+     * @return {@link TemporalType}を使用する場合{@code true}
+     */
+    public boolean isUseTemporalType() {
+        return useTemporalType;
+    }
+
+    /**
+     * {@link TemporalType}を使用する場合{@code true}を設定します。
+     * 
+     * @param useTemporalType
+     *            {@link TemporalType}を使用する場合{@code true}
+     */
+    public void setUseTemporalType(boolean useTemporalType) {
+        this.useTemporalType = useTemporalType;
+    }
+
     @Override
     protected void doValidate() {
     }
@@ -723,10 +746,11 @@ public class GenerateEntityCommand extends AbstractCommand {
         Class<?> superClass = entitySuperclassName != null ? ClassUtil
                 .forName(entitySuperclassName) : null;
         return factory.createEntityModelFactory(this, ClassUtil.concatName(
-                rootPackageName, entityPackageName), superClass, useAccessor,
-                applyDbCommentToJava, showCatalogName, showSchemaName,
-                showTableName, showColumnName, showColumnDefinition,
-                showJoinColumn, jdbcManager.getPersistenceConvention());
+                rootPackageName, entityPackageName), superClass,
+                useTemporalType, useAccessor, applyDbCommentToJava,
+                showCatalogName, showSchemaName, showTableName, showColumnName,
+                showColumnDefinition, showJoinColumn, jdbcManager
+                        .getPersistenceConvention());
     }
 
     /**

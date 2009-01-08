@@ -1,0 +1,36 @@
+package hoge.entity;
+
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+/**
+ * Fooエンティティクラス
+ * 
+ * @author S2JDBC-Gen
+ */
+@Entity
+@Table(catalog = "AAA", schema = "BBB")
+public class Foo {
+
+    /** idプロパティ */
+    @Id
+    @Column(columnDefinition = "integer", nullable = false, unique = false)
+    public int id;
+
+    /** dateプロパティ */
+    @Column(columnDefinition = "date", nullable = true, unique = false)
+    public Date date;
+
+    /** timeプロパティ */
+    @Column(columnDefinition = "time", nullable = true, unique = false)
+    public Time time;
+
+    /** timestampプロパティ */
+    @Column(columnDefinition = "timestamp", nullable = true, unique = false)
+    public Timestamp timestamp;
+}

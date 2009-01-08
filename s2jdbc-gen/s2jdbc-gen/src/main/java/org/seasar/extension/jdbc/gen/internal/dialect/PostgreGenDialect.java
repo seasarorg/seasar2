@@ -16,11 +16,11 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.Date;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
@@ -256,10 +256,10 @@ public class PostgreGenDialect extends StandardGenDialect {
                 String.class, true);
 
         private static PostgreColumnType TIMETZ = new PostgreColumnType(
-                "timetz", Date.class, TemporalType.TIME);
+                "timetz", Time.class);
 
         private static PostgreColumnType TIMESTAMPTZ = new PostgreColumnType(
-                "timestamptz", Date.class, TemporalType.TIMESTAMP);
+                "timestamptz", Timestamp.class);
 
         private static PostgreColumnType VARBIT = new PostgreColumnType(
                 "varbit", byte[].class);
@@ -300,23 +300,9 @@ public class PostgreGenDialect extends StandardGenDialect {
          */
         public PostgreColumnType(String dataType, Class<?> attributeClass,
                 boolean lob) {
-            super(dataType, attributeClass, lob, null);
+            super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public PostgreColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, false, temporalType);
-        }
     }
 
     /**

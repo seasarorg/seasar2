@@ -19,6 +19,7 @@ import java.io.File;
 
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
@@ -344,6 +345,16 @@ public class GenerateEntityTask extends AbstractTask {
      */
     public void setApplyDbCommentToJava(boolean applyDbCommentToJava) {
         command.setApplyDbCommentToJava(applyDbCommentToJava);
+    }
+
+    /**
+     * {@link TemporalType}を使用する場合{@code true}を設定します。
+     * 
+     * @param useTemporalType
+     *            {@link TemporalType}を使用する場合{@code true}
+     */
+    public void setUseTemporalType(boolean useTemporalType) {
+        command.setUseTemporalType(useTemporalType);
     }
 
 }

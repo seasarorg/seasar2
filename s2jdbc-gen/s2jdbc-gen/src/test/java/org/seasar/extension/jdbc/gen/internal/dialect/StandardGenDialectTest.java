@@ -17,8 +17,6 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.sql.Types;
 
-import javax.persistence.TemporalType;
-
 import org.junit.Test;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.UnsupportedSqlTypeRuntimeException;
@@ -105,10 +103,10 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testGetTemporalType_time() throws Exception {
-        GenDialect.ColumnType columnType = dialect.getColumnType("time",
+    public void testGetAttributeClass_date() throws Exception {
+        GenDialect.ColumnType columnType = dialect.getColumnType("date",
                 Types.OTHER);
-        assertEquals(TemporalType.TIME, columnType.getTemporalType());
+        assertEquals(java.sql.Date.class, columnType.getAttributeClass(0, 0, 0));
     }
 
     /**
@@ -116,10 +114,22 @@ public class StandardGenDialectTest {
      * @throws Exception
      */
     @Test
-    public void testGetTemporalType_timestamp() throws Exception {
+    public void testGetAttributeClass_time() throws Exception {
+        GenDialect.ColumnType columnType = dialect.getColumnType("time",
+                Types.OTHER);
+        assertEquals(java.sql.Time.class, columnType.getAttributeClass(0, 0, 0));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetAttributeClass_timestamp() throws Exception {
         GenDialect.ColumnType columnType = dialect.getColumnType("timestamp",
                 Types.OTHER);
-        assertEquals(TemporalType.TIMESTAMP, columnType.getTemporalType());
+        assertEquals(java.sql.Timestamp.class, columnType.getAttributeClass(0,
+                0, 0));
     }
 
     /**

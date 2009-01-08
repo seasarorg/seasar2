@@ -18,15 +18,14 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
@@ -399,7 +398,7 @@ public class StandardGenDialect implements GenDialect {
                 String.class, true);
 
         private static StandardColumnType DATE = new StandardColumnType("date",
-                Date.class, TemporalType.DATE);
+                java.sql.Date.class);
 
         private static StandardColumnType DECIMAL = new StandardColumnType(
                 "decimal", BigDecimal.class);
@@ -429,10 +428,10 @@ public class StandardGenDialect implements GenDialect {
                 "smallint", Short.class);
 
         private static StandardColumnType TIME = new StandardColumnType("time",
-                Date.class, TemporalType.TIME);
+                java.sql.Time.class);
 
         private static StandardColumnType TIMESTAMP = new StandardColumnType(
-                "timestamp", Date.class, TemporalType.TIMESTAMP);
+                "timestamp", Timestamp.class);
 
         private static StandardColumnType TINYINT = new StandardColumnType(
                 "tinyint", Short.class);
@@ -452,9 +451,6 @@ public class StandardGenDialect implements GenDialect {
         /** LOBの場合{@code true} */
         protected boolean lob;
 
-        /** 時制型 */
-        protected TemporalType temporalType;
-
         /**
          * インスタンスを構築します。
          * 
@@ -464,7 +460,7 @@ public class StandardGenDialect implements GenDialect {
          *            属性のクラス
          */
         protected StandardColumnType(String dataType, Class<?> attributeClass) {
-            this(dataType, attributeClass, false, null);
+            this(dataType, attributeClass, false);
         }
 
         /**
@@ -479,42 +475,9 @@ public class StandardGenDialect implements GenDialect {
          */
         protected StandardColumnType(String dataType, Class<?> attributeClass,
                 boolean lob) {
-            this(dataType, attributeClass, lob, null);
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        protected StandardColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            this(dataType, attributeClass, false, temporalType);
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param lob
-         *            LOBの場合{@code true}
-         * @param temporalType
-         *            時制型
-         */
-        protected StandardColumnType(String dataType, Class<?> attributeClass,
-                boolean lob, TemporalType temporalType) {
             this.dataType = dataType;
             this.attributeClass = attributeClass;
             this.lob = lob;
-            this.temporalType = temporalType;
         }
 
         public String getColumnDefinition(int length, int precision, int scale,
@@ -547,10 +510,6 @@ public class StandardGenDialect implements GenDialect {
 
         public boolean isLob() {
             return lob;
-        }
-
-        public TemporalType getTemporalType() {
-            return temporalType;
         }
 
     }

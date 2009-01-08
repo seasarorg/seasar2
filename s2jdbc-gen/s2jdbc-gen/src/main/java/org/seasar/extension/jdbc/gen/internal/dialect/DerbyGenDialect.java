@@ -19,7 +19,6 @@ import java.math.BigDecimal;
 import java.sql.Types;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
@@ -149,21 +148,6 @@ public class DerbyGenDialect extends StandardGenDialect {
         public DerbyColumnType(String dataType, Class<?> attributeClass,
                 boolean lob) {
             super(dataType, attributeClass, lob);
-        }
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public DerbyColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, temporalType);
         }
 
     }

@@ -21,13 +21,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Map;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
@@ -326,7 +325,7 @@ public class OracleGenDialect extends StandardGenDialect {
                 byte[].class);
 
         private static OracleColumnType TIMESTAMP = new OracleColumnType(
-                "timestamp($s)", Date.class, TemporalType.TIMESTAMP);
+                "timestamp($s)", Timestamp.class);
 
         private static OracleColumnType VARCHAR2 = new OracleColumnType(
                 "varchar2($l)", String.class);
@@ -355,23 +354,9 @@ public class OracleGenDialect extends StandardGenDialect {
          */
         public OracleColumnType(String dataType, Class<?> attributeClass,
                 boolean lob) {
-            super(dataType, attributeClass, lob, null);
+            super(dataType, attributeClass, lob);
         }
 
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         * @param attributeClass
-         *            属性のクラス
-         * @param temporalType
-         *            時制型
-         */
-        public OracleColumnType(String dataType, Class<?> attributeClass,
-                TemporalType temporalType) {
-            super(dataType, attributeClass, false, temporalType);
-        }
     }
 
     /**

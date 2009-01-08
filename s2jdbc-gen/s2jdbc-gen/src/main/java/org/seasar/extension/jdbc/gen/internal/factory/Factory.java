@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+import javax.persistence.TemporalType;
 import javax.sql.DataSource;
 import javax.transaction.UserTransaction;
 
@@ -334,6 +335,8 @@ public interface Factory {
      *            パッケージ名、パッケージ名を指定しない場合は{@code null}
      * @param superclass
      *            エンティティのスーパークラス、スーパークラスを持たない場合は{@code null}
+     * @param useTemporalType
+     *            {@link TemporalType}を使用する場合{@code true}
      * @param useAccessor
      *            エンティティクラスでアクセサを使用する場合 {@code true}
      * @param useComment
@@ -356,8 +359,8 @@ public interface Factory {
      * @return {@link EntityModelFactory}の実装
      */
     EntityModelFactory createEntityModelFactory(Command command,
-            String packageName, Class<?> superclass, boolean useAccessor,
-            boolean useComment, boolean showCatalogName,
+            String packageName, Class<?> superclass, boolean useTemporalType,
+            boolean useAccessor, boolean useComment, boolean showCatalogName,
             boolean showSchemaName, boolean showTableName,
             boolean showColumnName, boolean showColumnDefinition,
             boolean showJoinColumn, PersistenceConvention persistenceConvention);

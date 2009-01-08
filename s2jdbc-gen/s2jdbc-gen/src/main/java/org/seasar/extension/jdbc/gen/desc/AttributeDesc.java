@@ -43,9 +43,6 @@ public class AttributeDesc {
     /** 識別子の割り当てサイズ */
     protected int allocationSize;
 
-    /** 時制の種別 */
-    protected TemporalType temporalType;
-
     /** バージョンの場合{@code true} */
     protected boolean version;
 
@@ -149,22 +146,30 @@ public class AttributeDesc {
     }
 
     /**
-     * 時制の種別を返します。
+     * 時制を表す場合{@code true}を返します。
      * 
-     * @return 時制の種別
+     * @return 時制を表す場合{@code true}
      */
-    public TemporalType getTemporalType() {
-        return temporalType;
+    public boolean isTemporal() {
+        return getTemporalType() != null;
     }
 
     /**
-     * 時制の種別を設定します。
+     * 時制の種別を返します。
      * 
-     * @param temporalType
-     *            時制の種別
+     * @return 時制の種別、対応する種別がない場合{@code null}
      */
-    public void setTemporalType(TemporalType temporalType) {
-        this.temporalType = temporalType;
+    public TemporalType getTemporalType() {
+        if (attributeClass == java.sql.Date.class) {
+            return TemporalType.DATE;
+        }
+        if (attributeClass == java.sql.Time.class) {
+            return TemporalType.TIME;
+        }
+        if (attributeClass == java.sql.Timestamp.class) {
+            return TemporalType.TIMESTAMP;
+        }
+        return null;
     }
 
     /**

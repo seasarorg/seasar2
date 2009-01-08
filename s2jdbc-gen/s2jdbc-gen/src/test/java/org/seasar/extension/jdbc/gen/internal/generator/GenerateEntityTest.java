@@ -19,7 +19,6 @@ import java.io.File;
 import java.math.BigDecimal;
 
 import javax.persistence.GenerationType;
-import javax.persistence.TemporalType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class GenerateEntityTest {
     @Before
     public void setUp() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", null,
-                new AttributeModelFactoryImpl(false, true,
+                new AttributeModelFactoryImpl(false, true, true,
                         new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), false, false,
@@ -111,8 +110,7 @@ public class GenerateEntityTest {
 
         AttributeDesc date = new AttributeDesc();
         date.setName("date");
-        date.setTemporalType(TemporalType.DATE);
-        date.setAttributeClass(java.util.Date.class);
+        date.setAttributeClass(java.sql.Date.class);
         date.setColumnName("DATE");
         date.setColumnDefinition("date");
         date.setNullable(true);
@@ -489,7 +487,7 @@ public class GenerateEntityTest {
     @Test
     public void testSuperclass() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", Eee.class,
-                new AttributeModelFactoryImpl(false, true,
+                new AttributeModelFactoryImpl(false, true, true,
                         new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), false, false,
@@ -547,7 +545,7 @@ public class GenerateEntityTest {
     @Test
     public void testAccessor() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", null,
-                new AttributeModelFactoryImpl(false, true,
+                new AttributeModelFactoryImpl(false, true, true,
                         new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), true, false,
@@ -596,7 +594,7 @@ public class GenerateEntityTest {
     @Test
     public void testComment() throws Exception {
         factory = new EntityModelFactoryImpl("hoge.entity", null,
-                new AttributeModelFactoryImpl(false, true,
+                new AttributeModelFactoryImpl(false, true, true,
                         new PersistenceConventionImpl()),
                 new AssociationModelFactoryImpl(false),
                 new CompositeUniqueConstraintModelFactoryImpl(), false, true,
@@ -640,4 +638,128 @@ public class GenerateEntityTest {
         String path = getClass().getName().replace(".", "/") + "_Comment.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testTemporal() throws Exception {
+        factory = new EntityModelFactoryImpl("hoge.entity", null,
+                new AttributeModelFactoryImpl(false, true, false,
+                        new PersistenceConventionImpl()),
+                new AssociationModelFactoryImpl(false),
+                new CompositeUniqueConstraintModelFactoryImpl(), false, true,
+                true, true, false);
+
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setAttributeClass(int.class);
+        id.setColumnName("ID");
+        id.setColumnDefinition("integer");
+        id.setNullable(false);
+
+        AttributeDesc date = new AttributeDesc();
+        date.setName("date");
+        date.setAttributeClass(java.sql.Date.class);
+        date.setColumnName("DATE");
+        date.setColumnDefinition("date");
+        date.setNullable(true);
+
+        AttributeDesc time = new AttributeDesc();
+        time.setName("time");
+        time.setAttributeClass(java.sql.Time.class);
+        time.setColumnName("TIME");
+        time.setColumnDefinition("time");
+        time.setNullable(true);
+
+        AttributeDesc timestamp = new AttributeDesc();
+        timestamp.setName("timestamp");
+        timestamp.setAttributeClass(java.sql.Timestamp.class);
+        timestamp.setColumnName("TIMESTAMP");
+        timestamp.setColumnDefinition("timestamp");
+        timestamp.setNullable(true);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+        entityDesc.addAttributeDesc(id);
+        entityDesc.addAttributeDesc(date);
+        entityDesc.addAttributeDesc(time);
+        entityDesc.addAttributeDesc(timestamp);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/") + "_Temporal.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testTemporal_useTemporalType() throws Exception {
+        factory = new EntityModelFactoryImpl("hoge.entity", null,
+                new AttributeModelFactoryImpl(false, true, true,
+                        new PersistenceConventionImpl()),
+                new AssociationModelFactoryImpl(false),
+                new CompositeUniqueConstraintModelFactoryImpl(), false, true,
+                true, true, false);
+
+        AttributeDesc id = new AttributeDesc();
+        id.setName("id");
+        id.setId(true);
+        id.setAttributeClass(int.class);
+        id.setColumnName("ID");
+        id.setColumnDefinition("integer");
+        id.setNullable(false);
+
+        AttributeDesc date = new AttributeDesc();
+        date.setName("date");
+        date.setAttributeClass(java.sql.Date.class);
+        date.setColumnName("DATE");
+        date.setColumnDefinition("date");
+        date.setNullable(true);
+
+        AttributeDesc time = new AttributeDesc();
+        time.setName("time");
+        time.setAttributeClass(java.sql.Time.class);
+        time.setColumnName("TIME");
+        time.setColumnDefinition("time");
+        time.setNullable(true);
+
+        AttributeDesc timestamp = new AttributeDesc();
+        timestamp.setName("timestamp");
+        timestamp.setAttributeClass(java.sql.Timestamp.class);
+        timestamp.setColumnName("TIMESTAMP");
+        timestamp.setColumnDefinition("timestamp");
+        timestamp.setNullable(true);
+
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+        entityDesc.addAttributeDesc(id);
+        entityDesc.addAttributeDesc(date);
+        entityDesc.addAttributeDesc(time);
+        entityDesc.addAttributeDesc(timestamp);
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/")
+                + "_Temporal_useTemporalType.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
 }
