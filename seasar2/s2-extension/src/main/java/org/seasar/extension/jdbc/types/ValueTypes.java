@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -245,6 +246,7 @@ public class ValueTypes {
         registerValueType(Float.class, FLOAT);
         registerValueType(double.class, DOUBLE);
         registerValueType(Double.class, DOUBLE);
+        registerValueType(BigInteger.class, BIGINTEGER);
         registerValueType(BigDecimal.class, BIGDECIMAL);
         registerValueType(java.sql.Date.class, SQLDATE);
         registerValueType(java.sql.Time.class, TIME);
