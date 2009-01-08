@@ -240,6 +240,7 @@ public class Department {
 					<tr><td>initialValue</td><td>識別子の初期値です。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>allocationSize</td><td>識別子の割り当てサイズです。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>pluralFormFile</td><td>@OneToManyの関連プロパティ名を複数形で作成する際に使用される辞書ファイルです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>useTemporalType</td><td>"true"の場合、日付型カラムに対応するプロパティの型を@Temporalつきのjava.util.Dateとします。"false"の場合、日付型カラムに対応するプロパティの型をjava.sql.Date、java.sql.Time、java.sql.Timestampのいずれかにします。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>useAccessor</td><td>"true"の場合、生成するエンティティにアクセサメソッドを付与します。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>applyDbCommentToJava</td><td>"true"の場合、データベースに対するコメントをエンティティのJavaDocコメントに適用します。テーブルへのコメントはクラスのJavaDocコメントに反映され、カラムへのコメントはプロパティのJavaDocコメントに反映されます。</td><td>"false"</td><td>NO</td></tr>
 					<tr><td>showCatalogName</td><td>"true"の場合、@Tableのcatalog属性にカタログ名を明記します。</td><td>"false"</td><td>NO</td></tr>
