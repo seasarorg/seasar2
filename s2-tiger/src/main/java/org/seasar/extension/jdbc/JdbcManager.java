@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.List;
 
 import org.seasar.extension.jdbc.annotation.InOut;
@@ -56,7 +57,7 @@ public interface JdbcManager {
      *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータの配列の要素が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQL検索
      * @see SqlSelect
@@ -79,7 +80,7 @@ public interface JdbcManager {
      *            パラメータの配列の要素が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータの配列の要素が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータの配列の要素が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLが返す結果セットの行数
      * @see DbmsDialect#convertGetCountSql(String)
@@ -122,7 +123,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLファイル検索
      * @see SqlFileSelect
@@ -167,7 +168,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLが返す結果セットの行数
      * @see DbmsDialect#convertGetCountSql(String)
@@ -290,7 +291,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLファイル更新
      * @see SqlFileUpdate
@@ -413,7 +414,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return 自動プロシージャ呼び出し
      * @see Parameter
@@ -458,7 +459,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLプロシージャ呼び出し
      */
@@ -506,7 +507,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @return SQLファイルプロシージャ呼び出し
      * @see Parameter
@@ -557,7 +558,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @param <T>
      *            ファンクションの戻り値の型。ファンクションの戻り値が結果セットの場合はリストの要素のクラス
@@ -611,7 +612,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @param <T>
      *            ファンクションの戻り値の型。ファンクションの戻り値が結果セットの場合はリストの要素のクラス
@@ -665,7 +666,7 @@ public interface JdbcManager {
      *            パラメータが1つで型が{@link Date}、{@link Calendar}のいずれか場合、{@link Parameter}に定義されたメソッドによりパラメータの時制を指定できます。
      *            </p>
      *            <p>
-     *            パラメータが1つで型が{@link String}、<code>ｂyte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
+     *            パラメータが1つで型が{@link String}、<code>byte[]</code>、{@link Serializable}のいずれかの場合、{@link Parameter}に定義されたメソッドによりパラメータをラージオブジェクトとして扱えます。
      *            </p>
      * @param <T>
      *            ファンクションの戻り値の型。ファンクションの戻り値が結果セットの場合はリストの要素のクラス
