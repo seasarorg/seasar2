@@ -331,9 +331,9 @@ public BigDecimal salary;]]></source>
 				<table>
 					<tr><th>Javaの型</th><th>Oracle Database</th><th>SQL Server 2005</th><th>DB2</th><th>PostgreSQL</th><th>MySQL</th></tr>
 					<tr><td>boolean/Boolean</td><td>number(1,0)</td><td>bit</td><td>smallint</td><td>bool</td><td>boolean</td></tr>
-					<tr><td>short/Short</td><td>number(5,0)</td><td>smallint</td><td>smallint</td><td>smallint</td><td>smallint</td></tr>
+					<tr><td>short/Short</td><td>number($p,0)</td><td>smallint</td><td>smallint</td><td>smallint</td><td>smallint</td></tr>
 					<tr><td>char/Character</td><td>char(1)</td><td>char(1)</td><td>char(1)</td><td>char(1)</td><td>char(1)</td></tr>
-					<tr><td>int/Integer</td><td>number(10,0)</td><td>int</td><td>integer</td><td>integer/serial</td><td>int</td></tr>
+					<tr><td>int/Integer</td><td>number($p,0)</td><td>int</td><td>integer</td><td>integer/serial</td><td>int</td></tr>
 					<tr><td>long/Long</td><td>number($p,0)</td><td>bigint</td><td>bigint</td><td>bigint/bigserial</td><td>bigint</td></tr>
 					<tr><td>float/Float</td><td>float</td><td>float</td><td>real</td><td>float4</td><td>float($p,$s)</td></tr>
 					<tr><td>double/Double</td><td>double precision</td><td>double</td><td>double</td><td>float8</td><td>double($p,$s)</td></tr>
