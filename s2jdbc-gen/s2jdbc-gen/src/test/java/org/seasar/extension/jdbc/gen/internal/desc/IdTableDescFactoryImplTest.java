@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
+@TableGenerator(name = "generator2", catalog = "FFF", schema = "GGG", table = "HHH", pkColumnName = "III", valueColumnName = "JJJ")
 public class IdTableDescFactoryImplTest {
 
     private PropertyMetaFactoryImpl propertyMetaFactory;
@@ -53,6 +54,11 @@ public class IdTableDescFactoryImplTest {
     @TableGenerator(name = "generator", catalog = "AAA", schema = "BBB", table = "CCC", pkColumnName = "DDD", valueColumnName = "EEE")
     @GeneratedValue(generator = "generator", strategy = GenerationType.TABLE)
     private Integer tableId;
+
+    @SuppressWarnings("unused")
+    @Id
+    @GeneratedValue(generator = "generator2", strategy = GenerationType.TABLE)
+    private Integer classAnnotatedTableId;
 
     @SuppressWarnings("unused")
     @Id
@@ -106,6 +112,39 @@ public class IdTableDescFactoryImplTest {
         assertEquals("varchar(255)", columnDesc.getDefinition());
         columnDesc = tableDesc.getColumnDescList().get(1);
         assertEquals("EEE", columnDesc.getName());
+        assertEquals("bigint", columnDesc.getDefinition());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetTableDesc_classAnnotatedTableId() throws Exception {
+        Field field = getClass().getDeclaredField("classAnnotatedTableId");
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setCatalog("HOGE");
+        tableMeta.setSchema("FOO");
+        tableMeta.setName("BAR");
+        EntityMeta entityMeta = new EntityMeta();
+        entityMeta.setTableMeta(tableMeta);
+        entityMeta.setEntityClass(getClass());
+        PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
+                field, entityMeta);
+        TableDesc tableDesc = idTableDescFactory.getTableDesc(entityMeta,
+                propertyMeta);
+
+        assertEquals("FFF", tableDesc.getCatalogName());
+        assertEquals("GGG", tableDesc.getSchemaName());
+        assertEquals("HHH", tableDesc.getName());
+        assertNotNull(tableDesc.getPrimaryKeyDesc());
+
+        assertEquals(2, tableDesc.getColumnDescList().size());
+        ColumnDesc columnDesc = tableDesc.getColumnDescList().get(0);
+        assertEquals("III", columnDesc.getName());
+        assertEquals("varchar(255)", columnDesc.getDefinition());
+        columnDesc = tableDesc.getColumnDescList().get(1);
+        assertEquals("JJJ", columnDesc.getName());
         assertEquals("bigint", columnDesc.getDefinition());
     }
 

@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.desc;
 import java.lang.reflect.Field;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.SequenceGenerator;
 
@@ -82,7 +83,8 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
                         GenerationType.SEQUENCE, entityMeta.getName(),
                         propertyMeta.getName());
             }
-            SequenceGenerator generator = getSequenceGenerator(propertyMeta);
+            SequenceGenerator generator = getSequenceGenerator(entityMeta,
+                    propertyMeta);
             SequenceDesc sequenceDesc = new SequenceDesc();
             String sequenceName = getSequenceName(entityMeta, propertyMeta,
                     generator);
@@ -98,16 +100,35 @@ public class SequenceDescFactoryImpl implements SequenceDescFactory {
     /**
      * シーケンスジェネレータを返します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @return シーケンスジェネレータ
      */
-    protected SequenceGenerator getSequenceGenerator(PropertyMeta propertyMeta) {
+    protected SequenceGenerator getSequenceGenerator(EntityMeta entityMeta,
+            PropertyMeta propertyMeta) {
         Field field = propertyMeta.getField();
+        GeneratedValue generatedValue = field
+                .getAnnotation(GeneratedValue.class);
+        if (generatedValue == null) {
+            throw new IllegalStateException("@GeneratedValue not found.");
+        }
+        String name = generatedValue.generator();
+        if (StringUtil.isEmpty(name)) {
+            return AnnotationUtil.getDefaultSequenceGenerator();
+        }
         SequenceGenerator sequenceGenerator = field
                 .getAnnotation(SequenceGenerator.class);
-        return sequenceGenerator != null ? sequenceGenerator : AnnotationUtil
-                .getDefaultSequenceGenerator();
+        if (sequenceGenerator != null && name.equals(sequenceGenerator.name())) {
+            return sequenceGenerator;
+        }
+        sequenceGenerator = entityMeta.getEntityClass().getAnnotation(
+                SequenceGenerator.class);
+        if (sequenceGenerator != null && name.equals(sequenceGenerator.name())) {
+            return sequenceGenerator;
+        }
+        throw new IllegalStateException("@SequenceGenerator not found.");
     }
 
     /**

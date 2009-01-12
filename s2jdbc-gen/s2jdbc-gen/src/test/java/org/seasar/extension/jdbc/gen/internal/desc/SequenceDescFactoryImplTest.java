@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
+@SequenceGenerator(name = "generator2", sequenceName = "bbb", initialValue = 10, allocationSize = 20)
 public class SequenceDescFactoryImplTest {
 
     private PropertyMetaFactoryImpl propertyMetaFactory;
@@ -53,6 +54,11 @@ public class SequenceDescFactoryImplTest {
     @SequenceGenerator(name = "generator", sequenceName = "aaa", initialValue = 10, allocationSize = 20)
     @GeneratedValue(generator = "generator", strategy = GenerationType.SEQUENCE)
     private Integer sequenceId;
+
+    @SuppressWarnings("unused")
+    @Id
+    @GeneratedValue(generator = "generator2", strategy = GenerationType.SEQUENCE)
+    private Integer classAnnotatedSequenceId;
 
     @SuppressWarnings("unused")
     @Id
@@ -107,11 +113,32 @@ public class SequenceDescFactoryImplTest {
      * @throws Exception
      */
     @Test
+    public void testGetSequenceDesc_classAnnotatedSequenceId() throws Exception {
+        Field field = getClass().getDeclaredField("classAnnotatedSequenceId");
+        EntityMeta entityMeta = new EntityMeta();
+        entityMeta.setEntityClass(getClass());
+        PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
+                field, entityMeta);
+        SequenceDesc sequenceDesc = sequenceDescFactoryImpl.getSequenceDesc(
+                entityMeta, propertyMeta);
+        assertNotNull(sequenceDesc);
+        assertEquals("bbb", sequenceDesc.getSequenceName());
+        assertEquals(10, sequenceDesc.getInitialValue());
+        assertEquals(20, sequenceDesc.getAllocationSize());
+        assertEquals("number(19,0)", sequenceDesc.getDataType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testGetSequenceDesc_autoId() throws Exception {
         Field field = getClass().getDeclaredField("autoId");
         TableMeta tableMeta = new TableMeta();
         tableMeta.setName("HOGE");
         EntityMeta entityMeta = new EntityMeta();
+        entityMeta.setEntityClass(getClass());
         entityMeta.setTableMeta(tableMeta);
         PropertyMeta propertyMeta = propertyMetaFactory.createPropertyMeta(
                 field, entityMeta);

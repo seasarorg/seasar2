@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.sql.Types;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
@@ -76,7 +77,8 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
             generationType = dialect.getDefaultGenerationType();
         }
         if (generationType == GenerationType.TABLE) {
-            TableGenerator generator = getTableGenerator(propertyMeta);
+            TableGenerator generator = getTableGenerator(entityMeta,
+                    propertyMeta);
             TableDesc tableDesc = new TableDesc();
             doName(entityMeta, tableDesc, generator);
             doPrimaryKeyColumn(entityMeta, tableDesc, generator);
@@ -219,16 +221,36 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
     /**
      * テーブルジェネレータを返します。
      * 
+     * @param entityMeta
+     *            エンティティメタデータ
      * @param propertyMeta
      *            プロパティメタデータ
      * @return テーブルジェネレータ
      */
-    protected TableGenerator getTableGenerator(PropertyMeta propertyMeta) {
+    protected TableGenerator getTableGenerator(EntityMeta entityMeta,
+            PropertyMeta propertyMeta) {
         Field field = propertyMeta.getField();
+        GeneratedValue generatedValue = field
+                .getAnnotation(GeneratedValue.class);
+        if (generatedValue == null) {
+            throw new IllegalStateException("@GeneratedValue not found.");
+        }
+        String name = generatedValue.generator();
+        if (StringUtil.isEmpty(name)) {
+            return AnnotationUtil.getDefaultTableGenerator();
+        }
         TableGenerator tableGenerator = field
                 .getAnnotation(TableGenerator.class);
-        return tableGenerator != null ? tableGenerator : AnnotationUtil
-                .getDefaultTableGenerator();
+        if (tableGenerator != null && name.equals(tableGenerator.name())) {
+            return tableGenerator;
+        }
+        tableGenerator = entityMeta.getEntityClass().getAnnotation(
+                TableGenerator.class);
+        if (tableGenerator != null && name.equals(tableGenerator.name())) {
+            return tableGenerator;
+        }
+        throw new IllegalStateException("@TableGenerator not found.");
+
     }
 
 }
