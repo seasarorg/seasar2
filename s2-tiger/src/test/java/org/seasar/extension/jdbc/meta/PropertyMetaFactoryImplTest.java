@@ -34,6 +34,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -209,8 +211,46 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testSequenceIdentityGeneratedValue_classAnnotated()
+            throws Exception {
+        EntityMeta entityMeta = new EntityMeta("SequenceGeneratedId");
+        entityMeta.setEntityClass(SequenceGeneratedId.class);
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setName("SEQUENCE_GENERATED_ID");
+        entityMeta.setTableMeta(tableMeta);
+        Field field = SequenceGeneratedId.class.getDeclaredField("id2");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertTrue(propertyMeta.isId());
+        assertTrue(propertyMeta.hasIdGenerator());
+        assertEquals(GenerationType.SEQUENCE, propertyMeta.getGenerationType());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testTableIdentityGeneratedValue() throws Exception {
         Field field = TableGeneratedId.class.getDeclaredField("id");
+        PropertyMeta propertyMeta = factory.createPropertyMeta(field,
+                entityMeta);
+        assertTrue(propertyMeta.isId());
+        assertTrue(propertyMeta.hasIdGenerator());
+        assertEquals(GenerationType.TABLE, propertyMeta.getGenerationType());
+        assertTrue(propertyMeta.getIdGenerator(entityMeta,
+                new StandardDialect()) instanceof TableIdGenerator);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testTableIdentityGeneratedValue_classAnnotated()
+            throws Exception {
+        EntityMeta entityMeta = new EntityMeta("TableGeneratedId");
+        entityMeta.setEntityClass(TableGeneratedId.class);
+        TableMeta tableMeta = new TableMeta();
+        tableMeta.setName("TABLE_GENERATED_ID");
+        entityMeta.setTableMeta(tableMeta);
+        Field field = TableGeneratedId.class.getDeclaredField("id2");
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertTrue(propertyMeta.isId());
@@ -1018,6 +1058,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         int id;
     }
 
+    @SequenceGenerator(name = "aaa")
     private static class SequenceGeneratedId {
 
         /**
@@ -1026,8 +1067,16 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
         int id;
+
+        /**
+         * 
+         */
+        @Id
+        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "aaa")
+        int id2;
     }
 
+    @TableGenerator(name = "aaa")
     private static class TableGeneratedId {
 
         /**
@@ -1036,6 +1085,13 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         @Id
         @GeneratedValue(strategy = GenerationType.TABLE)
         int id;
+
+        /**
+         * 
+         */
+        @Id
+        @GeneratedValue(strategy = GenerationType.TABLE, generator = "aaa")
+        int id2;
     }
 
 }

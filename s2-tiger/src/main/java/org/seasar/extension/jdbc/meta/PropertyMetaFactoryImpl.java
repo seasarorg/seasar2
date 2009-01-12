@@ -296,7 +296,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                 sequenceGenerator = entityMeta.getEntityClass().getAnnotation(
                         SequenceGenerator.class);
                 if (sequenceGenerator == null
-                        || name.equals(sequenceGenerator.name())) {
+                        || !name.equals(sequenceGenerator.name())) {
                     return false;
                 }
             }
@@ -331,7 +331,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
                 tableGenerator = entityMeta.getEntityClass().getAnnotation(
                         TableGenerator.class);
                 if (tableGenerator == null
-                        || name.equals(tableGenerator.name())) {
+                        || !name.equals(tableGenerator.name())) {
                     return false;
                 }
             }
