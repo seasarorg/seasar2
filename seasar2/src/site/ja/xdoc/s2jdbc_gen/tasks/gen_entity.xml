@@ -236,7 +236,7 @@ public class Department {
 					<tr><td>ignoreTableNamePattern</td><td>このタスクが対象としないテーブル名の正規表現です。</td><td>"(SCHEMA_INFO|.*\$.*)"</td><td>NO</td></tr>
 					<tr><td>versionColumnNamePattern</td><td>エンティティのプロパティに@Versionを付与するカラム名の正規表現です。大文字小文字の違いは考慮されません。</td><td>"VERSION([_]?NO)?"</td><td>NO</td></tr>
 					<tr><td>entitySuperclassName</td><td>エンティティクラスのスーパークラスの完全修飾名です。スーパークラスに@MappedSuperclassが指定されている場合スーパークラスに定義されたプロパティと同じ名前のプロパティはエンティティクラスに出力されません。スーパークラスはクラスパス上に存在する必要があります。</td><td>-</td><td>NO</td></tr>
-					<tr><td>idGeneration</td><td>識別子を生成する方法です。"auto", "identity", "sequence", "table", "assigned" のいずれかの値を指定できます。使用するRDBMSがサポートしていない場合、"identity"や"sequence"を指定するとエラーが発生します。</td><td>"assigned"</td><td>NO</td></tr>
+					<tr><td>idGeneration</td><td>識別子を生成する方法です。"auto", "identity", "sequence", "table", "assigned" のいずれかの値を指定できます。使用するRDBMSがサポートしていない場合、"identity"や"sequence"を指定するとエラーが発生します。この指定は、エンティティに対応するテーブルが単一の主キーを持つ場合にのみ有効です。複数の主キーがある場合は、"assigned"が適用されます。</td><td>"assigned"</td><td>NO</td></tr>
 					<tr><td>initialValue</td><td>識別子の初期値です。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>allocationSize</td><td>識別子の割り当てサイズです。シーケンスやテーブルを使って採番する場合にのみ使用されます。指定しない場合は、@SequenceGeneratorや@TableGeneratorのデフォルト値が使用されます。</td><td>-</td><td>NO</td></tr>
 					<tr><td>pluralFormFile</td><td>@OneToManyの関連プロパティ名を複数形で作成する際に使用される辞書ファイルです。</td><td>-</td><td>NO</td></tr>
