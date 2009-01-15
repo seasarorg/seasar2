@@ -9,6 +9,18 @@
 				<li>
 					<p>
 						<a href="#セットアップ">セットアップ</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#エンティティの生成">エンティティの生成</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#エンティティの修正">エンティティの修正</a>
+								</p>
+							</li>
+						</ul>
 					</p>
 				</li>
 				<li>
@@ -104,12 +116,56 @@
 		<section name="セットアップ">
 			<p>
 				S2JDBC-Tutorial-xxx.zipを解凍し、その中にあるs2jdbc-tutorialを
-				Eclipseにインポートしてください。これだけでセットアップは完了です。
+				Eclipseにインポートしてください。
 			</p>
-			このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、 起動など特に必要ありません。
-			データの追加や変更をしたい場合は、src/test/resources/data/test.script
-			を適当に変更してください。
-			<p></p>
+			<p>
+				この時点では、コンパイルエラーが発生しますが問題ありません。
+				下で説明するエンティティの生成と修正を行うことでコンパイルエラーが解消されます。
+			</p>
+			<p>
+				このチュートリアルのデータベースは、HSQLDBを組み込みモードで使用しているので、 起動など特に必要ありません。
+				データの追加や変更をしたい場合は、src/test/resources/data/test.script
+				を適当に変更してください。
+			</p>
+			<subsection name="エンティティの生成">
+				<p>
+					エンティティのソースコードは、<a href="s2jdbc_gen/index.html">S2JDBC-Gen</a>を使ってデータベース上のテーブル定義から自動生成します。
+					S2JDBC-Genの実行に必要なjarファイルとAntのビルドファイル（s2jdbc-gen-build.xml）はこのチュートリアルに含まれています。
+				</p>
+				<p>
+					プロジェクト直下にあるs2jdbc-gen-build.xmlに定義されたgen-entityターゲットを実行してください。
+					実行方法やその際の注意点については、<a href="s2jdbc_gen/setup.html#Antタスクの実行">Antタスクの実行</a>を参照してください。
+				</p>
+				<p>
+					実行後は、F5を押すなどしてプロジェクトをリフレッシュしてください。
+					src/main/java/examples/entityの下にエンティティのソースコードが生成されていることを確認できます。
+				</p>
+				<p>
+					エンティティ以外のソースコードも生成されますが、このチュートリアルでは特に言及しません。
+					詳細はS2JDBC-Genのドキュメントを参照してください。
+					自動生成されたコードは、JavaDocコメントに次の記述があるかどうかで見分けられます。
+				</p>
+<source><![CDATA[
+@author S2JDBC-Gen
+]]></source>
+			</subsection>
+			<subsection name="エンティティの修正">
+				<p>
+					エンティティクラスを生成してもまだコンパイルは成功しません。
+					次の修正を行ってください。
+				</p>
+				<p>
+					src/main/java/examples/entity/Employee.javaを開き、jobTypeプロパティの型をIntegerからJobTypeに変更します。
+					JobTypeのソースコードはsrc/main/java/examples/entity/JobType.javaにあらかじめ用意されています。
+				</p>
+<source><![CDATA[
+public JobType jobType;
+]]></source>
+				<p>
+					この修正を行うことでコンパイルが成功します。
+					以上でセットアップは完了です。
+				</p>
+			</subsection>
 		</section>
 
 		<section name="エンティティ">
@@ -124,6 +180,7 @@
 			<source><![CDATA[
 package examples.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -132,31 +189,52 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Version;
 
+/**
+ * Employeeエンティティクラス
+ * 
+ * @author S2JDBC-Gen
+ */
 @Entity
 public class Employee {
 
+    /** idプロパティ */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     public Integer id;
 
+    /** nameプロパティ */
+    @Column(length = 255, nullable = false, unique = false)
     public String name;
 
-    public JobType jobType;
+    /** jobTypeプロパティ */
+    @Column(nullable = false, unique = false)
+    public Integer jobType;
 
+    /** salaryプロパティ */
+    @Column(nullable = true, unique = false)
     public Integer salary;
 
+    /** departmentIdプロパティ */
+    @Column(nullable = true, unique = false)
     public Integer departmentId;
 
-    @ManyToOne
-    public Department department;
-
+    /** addressIdプロパティ */
+    @Column(nullable = true, unique = true)
     public Integer addressId;
 
+    /** versionプロパティ */
+    @Version
+    @Column(nullable = false, unique = false)
+    public Integer version;
+
+    /** address関連プロパティ */
     @OneToOne
     public Address address;
 
-    @Version
-    public Integer version;
+    /** department関連プロパティ */
+    @ManyToOne
+    public Department department;
 }
 ]]></source>
 			<p>
@@ -258,7 +336,7 @@ public Employee employee;
 		<section name="複数件検索">
 			<p>Seasar2の機能をいろいろ試してみるには、 S2TestCaseを継承したクラスを使うと便利です。</p>
 			<p>
-				src/test/java/examples/entity/GetResultListTest.java
+				src/test/java/examples/GetResultListTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -312,7 +390,7 @@ for (Employee e : results) {
 				getSingleResult()を呼び出します。
 			</p>
 			<p>
-				src/test/java/examples/entity/GetSingleResultTest.java
+				src/test/java/examples/GetSingleResultTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -348,7 +426,7 @@ where("id = ? or name = ?", 1, "SCOTT")
 			</p>
 			<p>このような場合は、エンティティ1件ごとにコールバックされるイテレーションを使うと効果的です。</p>
 			<p>
-				src/test/java/examples/entity/IterateTest.java を見てみましょう。
+				src/test/java/examples/IterateTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 public void testIterate() throws Exception {
@@ -415,7 +493,7 @@ public void testIterateExit() throws Exception {
 				getCount()を呼び出します。
 			</p>
 			<p>
-				src/test/java/examples/entity/GetCountTest.java
+				src/test/java/examples/GetCountTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -439,7 +517,7 @@ public void testGetCount() throws Exception {
 				<b>関連のプロパティ名</b>
 				を指定します。 エンティティ名ではないので注意してください。
 			</p>
-			<p>src/test/java/examples/entity/JoinTest.java を見てみましょう。</p>
+			<p>src/test/java/examples/JoinTest.java を見てみましょう。</p>
 			<source><![CDATA[
 List<Employee> results =
     jdbcManager
@@ -476,7 +554,7 @@ for (Employee e : results) {
 			</p>
 			<p>これらの面倒な処理を簡易に行えるようにしたのがSimpleWhereです。</p>
 			<p>
-				src/test/java/examples/entity/SimpleWhereTest.java
+				src/test/java/examples/SimpleWhereTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -513,7 +591,7 @@ for (Employee e : results) {
 				SQLとの違いは、カラム名のかわりにプロパティ名を指定することです。
 			</p>
 			<p>
-				src/test/java/examples/entity/OrderByTest.java を見てみましょう。
+				src/test/java/examples/OrderByTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 List<Employee> results =
@@ -541,7 +619,7 @@ for (Employee e : results) {
 				の指定も必要です。
 			</p>
 			<p>
-				src/test/java/examples/entity/PagingTest.java を見てみましょう。
+				src/test/java/examples/PagingTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 List<Employee> results =
@@ -565,7 +643,7 @@ for (Employee e : results) {
 		<section name="挿入">
 			<p>エンティティを挿入するには、 insert()とexecute()を組み合わせます。</p>
 			<p>
-				src/test/java/examples/entity/InsertTest.java を見てみましょう。
+				src/test/java/examples/InsertTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 public void testInsertTx() throws Exception {
@@ -592,7 +670,7 @@ public void testInsertTx() throws Exception {
 		<section name="更新">
 			<p>エンティティを更新するには、 update()とexecute()を組み合わせます。</p>
 			<p>
-				src/test/java/examples/entity/UpdateTest.java を見てみましょう。
+				src/test/java/examples/UpdateTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 Employee emp =
@@ -619,7 +697,7 @@ System.out.println(emp.version);
 		<section name="削除">
 			<p>エンティティを削除するには、 delete()とexecute()を組み合わせます。</p>
 			<p>
-				src/test/java/examples/entity/DeleteTest.java を見てみましょう。
+				src/test/java/examples/DeleteTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 Employee emp =
@@ -648,7 +726,7 @@ System.out.println(emp);
 				SQLを使って複数件検索するには、 selectBySql()とgetResultList()を組み合わせます。
 			</p>
 			<p>
-				src/test/java/examples/entity/SqlGetResultListTest.java
+				src/test/java/examples/SqlGetResultListTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -693,7 +771,7 @@ selectBySql(EmployeeDto.class, "... id = ? or name = ?", 1, "SCOTT")
 				変換したものです。
 			</p>
 			<p>
-				src/test/java/examples/entity/SqlMapTest.java を見てみましょう。
+				src/test/java/examples/SqlMapTest.java を見てみましょう。
 			</p>
 			<source><![CDATA[
 private static final String LABEL_VALUE =
@@ -718,7 +796,7 @@ for (RowMap m : results) {
 				selectBySql()とgetSingleResult()を組み合わせます。
 			</p>
 			<p>
-				src/test/java/examples/entity/SqlGetSingleResultTest.java
+				src/test/java/examples/SqlGetSingleResultTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
@@ -882,7 +960,7 @@ order by e.salary
 				selectBySqlFile()とgetResultList()を組み合わせます。
 			</p>
 			<p>
-				src/test/java/examples/entity/SqlFileTest.javaと
+				src/test/java/examples/SqlFileTest.javaと
 				src/main/java/examples/dto/SelectWithDepartmentDto.java
 				を見てみましょう。
 			</p>
@@ -968,7 +1046,7 @@ public enum JobType {
 ]]></source>
 			<p>全従業員のボーナスの合計を求めるロジックは次のようになります。</p>
 			<p>
-				src/test/java/examples/entity/TypeStrategyTest.java
+				src/test/java/examples/TypeStrategyTest.java
 				を見てみましょう。
 			</p>
 			<source><![CDATA[
