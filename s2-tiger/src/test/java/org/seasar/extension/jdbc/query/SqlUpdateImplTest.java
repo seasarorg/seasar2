@@ -31,6 +31,7 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.exception.IllegalParamSizeRuntimeException;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -212,6 +213,12 @@ public class SqlUpdateImplTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("update aaa set name = 'hoge' where id = 1", sqlLog
                 .getCompleteSql());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**

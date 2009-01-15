@@ -37,6 +37,7 @@ import org.seasar.extension.jdbc.entity.Fff;
 import org.seasar.extension.jdbc.entity.Identity;
 import org.seasar.extension.jdbc.entity.Sequence;
 import org.seasar.extension.jdbc.exception.IdentityGeneratorNotSupportedRuntimeException;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.exception.SequenceGeneratorNotSupportedRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
@@ -387,6 +388,12 @@ public class AutoBatchInsertTest extends TestCase {
         assertEquals(
                 "insert into EEE (ID, NAME, LONG_TEXT, FFF_ID, VERSION) values (3, 'baz', null, null, 1)",
                 sqlLog.getCompleteSql());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**

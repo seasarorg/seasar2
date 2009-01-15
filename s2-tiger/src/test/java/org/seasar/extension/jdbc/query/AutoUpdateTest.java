@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -560,6 +561,12 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(
                 "update EEE set NAME = 'hoge', LONG_TEXT = null, FFF_ID = null, VERSION = VERSION + 1 where ID = 100 and VERSION = 1",
                 sqlLog.getCompleteSql());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**

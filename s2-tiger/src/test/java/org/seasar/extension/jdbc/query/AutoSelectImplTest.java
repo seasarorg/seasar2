@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.query;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,11 +64,13 @@ import org.seasar.extension.jdbc.exception.IllegalIdPropertySizeRuntimeException
 import org.seasar.extension.jdbc.exception.JoinDuplicatedRuntimeException;
 import org.seasar.extension.jdbc.exception.NonEntityRuntimeException;
 import org.seasar.extension.jdbc.exception.PropertyNotFoundRuntimeException;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.exception.VersionPropertyNotExistsRuntimeException;
 import org.seasar.extension.jdbc.handler.BeanAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanIterationAutoResultSetHandler;
 import org.seasar.extension.jdbc.handler.BeanListAutoResultSetHandler;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.mapper.AbstractEntityMapper;
 import org.seasar.extension.jdbc.mapper.AbstractRelationshipEntityMapper;
 import org.seasar.extension.jdbc.mapper.ManyToOneEntityMapperImpl;
@@ -2504,6 +2507,89 @@ public class AutoSelectImplTest extends TestCase {
         assertEquals("T1_", query.convertEntityNameToTableAlias("Aaa"));
         assertEquals("T2_", query.convertEntityNameToTableAlias("bbb"));
         assertEquals("T3_", query.convertEntityNameToTableAlias("bbb.ddds"));
+    }
+
+    /**
+     * 
+     */
+    public void testCompleted_getResultList() {
+
+        AutoSelectImplDummy<Aaa> query = new AutoSelectImplDummy<Aaa>(manager,
+                Aaa.class);
+        query.getResultList();
+
+        try {
+            query.getResultList();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testCompleted_getSingleResult() {
+
+        AutoSelectImplDummy<Aaa> query = new AutoSelectImplDummy<Aaa>(manager,
+                Aaa.class);
+        query.getSingleResult();
+
+        try {
+            query.getSingleResult();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testCompleted_getCount() {
+
+        AutoSelectImplDummy<Aaa> query = new AutoSelectImplDummy<Aaa>(manager,
+                Aaa.class);
+        query.getCount();
+
+        try {
+            query.getCount();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
+    }
+
+    /**
+    *
+    */
+    class AutoSelectImplDummy<E> extends AutoSelectImpl<E> {
+
+        /**
+         * @param jdbcManager
+         * @param baseClass
+         */
+        public AutoSelectImplDummy(JdbcManagerImplementor jdbcManager,
+                Class baseClass) {
+            super(jdbcManager, baseClass);
+        }
+
+        @Override
+        protected List<E> getResultListInternal() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        protected E getSingleResultInternal() {
+            return null;
+        }
+
+        @Override
+        public long getCount() {
+            try {
+                return super.getCount();
+            } catch (NullPointerException e) {
+                return 0;
+            }
+        }
+
     }
 
     @Entity

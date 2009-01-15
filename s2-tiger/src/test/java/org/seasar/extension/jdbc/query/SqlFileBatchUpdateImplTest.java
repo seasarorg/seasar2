@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.parameter.LobParameter;
 import org.seasar.extension.jdbc.parameter.TemporalParameter;
@@ -202,6 +203,12 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
                 .get(0).getCompleteSql());
         assertEquals("update aaa set name = 'bar' where id = 1", sqlLogRegistry
                 .get(1).getCompleteSql());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**

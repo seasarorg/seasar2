@@ -32,6 +32,7 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.impl.SqlLogImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.parameter.LobParameter;
@@ -89,6 +90,11 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      * パラメータのリストです。
      */
     protected List<Param> paramList = new ArrayList<Param>();
+
+    /**
+     * Queryが完了している場合に<code>true</code>です。
+     */
+    protected boolean completed;
 
     /**
      * {@link AbstractQuery}を作成します。
@@ -181,6 +187,7 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      *            メソッド名
      */
     protected void prepareCallerClassAndMethodName(String methodName) {
+        assertNotCompleted(methodName);
         if (callerClass == null) {
             callerClass = getClass();
         }
@@ -461,6 +468,26 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
             result[i] = name == null ? null : name.toString();
         }
         return result;
+    }
+
+    /**
+     * このQueryが完了していないことをチェックします。
+     * 
+     * @param methodName
+     *            メソッド名
+     */
+    protected void assertNotCompleted(final String methodName) {
+        if (completed) {
+            throw new QueryTwiceExecutionRuntimeException(getClass(),
+                    methodName);
+        }
+    }
+
+    /**
+     * このQueryが完了しました。
+     */
+    protected void completed() {
+        completed = true;
     }
 
 }

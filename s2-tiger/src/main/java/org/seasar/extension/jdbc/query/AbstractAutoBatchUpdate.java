@@ -95,6 +95,8 @@ public abstract class AbstractAutoBatchUpdate<T, S extends BatchUpdate<S>>
                 throw new SEntityExistsException(executedSql, e);
             }
             throw e;
+        } finally {
+            completed();
         }
     }
 

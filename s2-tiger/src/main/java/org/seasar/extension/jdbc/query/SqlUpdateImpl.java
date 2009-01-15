@@ -84,6 +84,8 @@ public class SqlUpdateImpl extends AbstractQuery<SqlUpdate> implements
                 throw new SEntityExistsException(executedSql, e);
             }
             throw e;
+        } finally {
+            completed();
         }
     }
 

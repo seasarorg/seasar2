@@ -93,6 +93,8 @@ public abstract class AbstractAutoUpdate<T, S extends Update<S>> extends
                 throw new SEntityExistsException(entity, executedSql, e);
             }
             throw e;
+        } finally {
+            completed();
         }
     }
 

@@ -84,14 +84,22 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
         resultList = false;
         prepare("getSingleResult");
         logSql();
-        return getSingleResultInternal();
+        try {
+            return getSingleResultInternal();
+        } finally {
+            completed();
+        }
     }
 
     public List<T> getResultList() {
         resultList = true;
         prepare("getResultList");
         logSql();
-        return getResultListInternal();
+        try {
+            return getResultListInternal();
+        } finally {
+            completed();
+        }
     }
 
     /**
@@ -112,6 +120,7 @@ public abstract class AbstractFunctionCall<T, S extends FunctionCall<T, S>>
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
             }
+            completed();
         }
     }
 

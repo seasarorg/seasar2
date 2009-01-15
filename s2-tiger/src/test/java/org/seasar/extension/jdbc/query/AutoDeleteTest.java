@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.SqlLogRegistry;
 import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.EntityMetaFactoryImpl;
@@ -228,6 +229,12 @@ public class AutoDeleteTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("delete from EEE where ID = 100 and VERSION = 1", sqlLog
                 .getCompleteSql());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**

@@ -55,6 +55,7 @@ public abstract class AbstractProcedureCall<S extends ProcedureCall<S>> extends
             if (!jdbcContext.isTransactional()) {
                 jdbcContext.destroy();
             }
+            completed();
         }
     }
 

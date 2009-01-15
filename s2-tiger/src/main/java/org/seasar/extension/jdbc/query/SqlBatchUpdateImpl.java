@@ -91,6 +91,8 @@ public class SqlBatchUpdateImpl extends AbstractQuery<SqlBatchUpdate> implements
                 throw new SEntityExistsException(executedSql, e);
             }
             throw e;
+        } finally {
+            completed();
         }
     }
 

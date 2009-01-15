@@ -30,6 +30,7 @@ import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
@@ -216,6 +217,12 @@ public class SqlSelectImplTest extends TestCase {
         assertEquals("222", dto.aaaBbb);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("select foo2, aaa_bbb from hoge", sqlLog.getCompleteSql());
+
+        try {
+            query.getResultList();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**
@@ -414,6 +421,12 @@ public class SqlSelectImplTest extends TestCase {
         assertEquals("222", dto.aaaBbb);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("select foo2, aaa_bbb from hoge", sqlLog.getCompleteSql());
+
+        try {
+            query.getSingleResult();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**

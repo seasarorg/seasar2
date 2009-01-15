@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -378,6 +379,12 @@ public class SqlFileSelectImplTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("select * from aaa where id = 1 limit 10 offset 5", sqlLog
                 .getCompleteSql());
+
+        try {
+            query.getResultList();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**
@@ -426,6 +433,12 @@ public class SqlFileSelectImplTest extends TestCase {
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("select * from aaa where id = 1 limit 10 offset 5", sqlLog
                 .getCompleteSql());
+
+        try {
+            query.getSingleResult();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     private static class MyDto {

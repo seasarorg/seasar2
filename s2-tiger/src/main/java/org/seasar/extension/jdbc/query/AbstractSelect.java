@@ -168,19 +168,31 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
     public List<T> getResultList() {
         prepare("getResultList");
         logSql();
-        return getResultListInternal();
+        try {
+            return getResultListInternal();
+        } finally {
+            completed();
+        }
     }
 
     public T getSingleResult() throws SNonUniqueResultException {
         prepare("getSingleResult");
         logSql();
-        return getSingleResultInternal();
+        try {
+            return getSingleResultInternal();
+        } finally {
+            completed();
+        }
     }
 
     public <RESULT> RESULT iterate(IterationCallback<T, RESULT> callback) {
         prepare("iterate");
         logSql();
-        return iterateInternal(callback);
+        try {
+            return iterateInternal(callback);
+        } finally {
+            completed();
+        }
     }
 
     /**
@@ -192,7 +204,11 @@ public abstract class AbstractSelect<T, S extends Select<T, S>> extends
         count = true;
         prepare("getCount");
         logSql();
-        return Long.class.cast(getSingleResultInternal());
+        try {
+            return Long.class.cast(getSingleResultInternal());
+        } finally {
+            completed();
+        }
     }
 
     /**

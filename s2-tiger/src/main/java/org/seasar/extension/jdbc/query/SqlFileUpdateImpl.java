@@ -115,6 +115,8 @@ public class SqlFileUpdateImpl extends AbstractQuery<SqlFileUpdate> implements
                 throw new SEntityExistsException(executedSql, e);
             }
             throw e;
+        } finally {
+            completed();
         }
     }
 

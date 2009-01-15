@@ -104,6 +104,8 @@ public class SqlFileBatchUpdateImpl<T> extends
                 throw new SEntityExistsException(executedSql, e);
             }
             throw e;
+        } finally {
+            completed();
         }
     }
 

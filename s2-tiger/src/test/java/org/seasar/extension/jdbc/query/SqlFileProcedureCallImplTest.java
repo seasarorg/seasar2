@@ -33,6 +33,7 @@ import org.seasar.extension.jdbc.annotation.Out;
 import org.seasar.extension.jdbc.annotation.ResultSet;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
+import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -202,6 +203,12 @@ public class SqlFileProcedureCallImplTest extends TestCase {
         assertEquals("aaa2", dto.arg2);
         SqlLog sqlLog = SqlLogRegistryLocator.getInstance().getLast();
         assertEquals("{call hoge(null, 'aaa', 'bbb')}", sqlLog.getCompleteSql());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     private static final class MyDto {
