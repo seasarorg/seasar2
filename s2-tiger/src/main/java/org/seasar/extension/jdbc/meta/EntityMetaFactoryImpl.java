@@ -227,7 +227,7 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
      */
     protected Field[] getFields(Class<?> entityClass) {
         ArrayMap fields = new ArrayMap();
-        for (Field f : entityClass.getDeclaredFields()) {
+        for (Field f : ClassUtil.getDeclaredFields(entityClass)) {
             if (!ModifierUtil.isInstanceField(f)) {
                 continue;
             }
@@ -240,7 +240,7 @@ public class EntityMetaFactoryImpl implements EntityMetaFactory {
                 throw new UnsupportedInheritanceRuntimeException(entityClass);
             }
             if (clazz.isAnnotationPresent(MappedSuperclass.class)) {
-                for (Field f : clazz.getDeclaredFields()) {
+                for (Field f : ClassUtil.getDeclaredFields(clazz)) {
                     if (!ModifierUtil.isInstanceField(f)) {
                         continue;
                     }
