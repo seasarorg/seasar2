@@ -17,15 +17,14 @@ package org.seasar.framework.container.external.servlet;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.seasar.framework.container.external.AbstractUnmodifiableExternalContextMap;
+import org.seasar.framework.util.EnumerationIterator;
 
 /**
  * ServletRequestHeaderValuesに {@link Map}としてアクセスするためのクラスです。
@@ -40,8 +39,6 @@ public class ServletRequestHeaderValuesMap extends
 
     private final HttpServletRequest request;
 
-    private final Set headerNames = new HashSet();
-
     /**
      * {@link ServletRequestHeaderValuesMap}を作成します。
      * 
@@ -49,21 +46,14 @@ public class ServletRequestHeaderValuesMap extends
      */
     public ServletRequestHeaderValuesMap(final HttpServletRequest request) {
         this.request = request;
-        for (final Enumeration names = request.getHeaderNames(); names
-                .hasMoreElements();) {
-            headerNames.add(names.nextElement());
-        }
     }
 
     protected Object getAttribute(final String key) {
-        if (headerNames.contains(key)) {
-            return toStringArray(request.getHeaders(key));
-        }
-        return null;
+        return toStringArray(request.getHeaders(key));
     }
 
     protected Iterator getAttributeNames() {
-        return headerNames.iterator();
+        return new EnumerationIterator(request.getHeaderNames());
     }
 
     private String[] toStringArray(final Enumeration e) {

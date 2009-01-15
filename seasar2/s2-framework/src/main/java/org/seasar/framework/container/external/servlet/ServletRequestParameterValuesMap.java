@@ -15,8 +15,6 @@
  */
 package org.seasar.framework.container.external.servlet;
 
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -36,7 +34,7 @@ public class ServletRequestParameterValuesMap extends
 
     private final ServletRequest request;
 
-    private final Set parameterNames = new HashSet();
+    private final Set parameterNames;
 
     /**
      * {@link ServletRequestParameterValuesMap}を作成します。
@@ -45,10 +43,7 @@ public class ServletRequestParameterValuesMap extends
      */
     public ServletRequestParameterValuesMap(final ServletRequest request) {
         this.request = request;
-        for (final Enumeration names = request.getParameterNames(); names
-                .hasMoreElements();) {
-            parameterNames.add(names.nextElement());
-        }
+        parameterNames = request.getParameterMap().keySet();
     }
 
     protected Object getAttribute(final String key) {

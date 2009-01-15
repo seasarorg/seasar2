@@ -16,7 +16,6 @@
 package org.seasar.framework.container.external.servlet;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -37,6 +36,20 @@ public class HttpServletExternalContext implements ExternalContext {
 
     private ThreadLocal responses = new ThreadLocal();
 
+    private ThreadLocal requestMaps = new ThreadLocal();
+
+    private ThreadLocal requestHeaderMaps = new ThreadLocal();
+
+    private ThreadLocal requestHeaderValuesMaps = new ThreadLocal();
+
+    private ThreadLocal requestParameterMaps = new ThreadLocal();
+
+    private ThreadLocal requestParameterValuesMaps = new ThreadLocal();
+
+    private ThreadLocal requestCookieMaps = new ThreadLocal();
+
+    private ThreadLocal sessionMaps = new ThreadLocal();
+
     private ServletContext application;
 
     public Object getRequest() {
@@ -54,6 +67,25 @@ public class HttpServletExternalContext implements ExternalContext {
 
     public void setRequest(Object request) {
         requests.set(request);
+        if (request == null) {
+            requestMaps.set(Collections.EMPTY_MAP);
+            requestHeaderMaps.set(Collections.EMPTY_MAP);
+            requestHeaderValuesMaps.set(Collections.EMPTY_MAP);
+            requestParameterMaps.set(Collections.EMPTY_MAP);
+            requestParameterValuesMaps.set(Collections.EMPTY_MAP);
+            requestCookieMaps.set(Collections.EMPTY_MAP);
+            sessionMaps.set(Collections.EMPTY_MAP);
+        } else {
+            final HttpServletRequest req = (HttpServletRequest) request;
+            requestMaps.set(new ServletRequestMap(req));
+            requestHeaderMaps.set(new ServletRequestHeaderMap(req));
+            requestHeaderValuesMaps.set(new ServletRequestHeaderValuesMap(req));
+            requestParameterMaps.set(new ServletRequestParameterMap(req));
+            requestParameterValuesMaps
+                    .set(new ServletRequestParameterValuesMap(req));
+            requestCookieMaps.set(new CookieMap(req));
+            sessionMaps.set(null);
+        }
     }
 
     public Object getResponse() {
@@ -101,58 +133,36 @@ public class HttpServletExternalContext implements ExternalContext {
     }
 
     public Map getRequestCookieMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return Collections.EMPTY_MAP;
-        }
-        return new CookieMap(request);
+        return (Map) requestCookieMaps.get();
     }
 
     public Map getRequestHeaderMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return Collections.EMPTY_MAP;
-        }
-        return new ServletRequestHeaderMap(request);
+        return (Map) requestHeaderMaps.get();
     }
 
     public Map getRequestHeaderValuesMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return Collections.EMPTY_MAP;
-        }
-        return new ServletRequestHeaderValuesMap(request);
+        return (Map) requestHeaderValuesMaps.get();
     }
 
     public Map getRequestMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return new HashMap();
-        }
-        return new ServletRequestMap(request);
+        return (Map) requestMaps.get();
     }
 
     public Map getRequestParameterMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return Collections.EMPTY_MAP;
-        }
-        return new ServletRequestParameterMap(request);
+        return (Map) requestParameterMaps.get();
     }
 
     public Map getRequestParameterValuesMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return Collections.EMPTY_MAP;
-        }
-        return new ServletRequestParameterValuesMap(request);
+        return (Map) requestParameterValuesMaps.get();
     }
 
     public Map getSessionMap() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request == null) {
-            return new HashMap();
+        Map sessionMap = (Map) sessionMaps.get();
+        if (sessionMap != null) {
+            return sessionMap;
         }
-        return new HttpSessionMap(request);
+        sessionMap = new HttpSessionMap(getHttpServletRequest());
+        sessionMaps.set(sessionMap);
+        return sessionMap;
     }
 }
