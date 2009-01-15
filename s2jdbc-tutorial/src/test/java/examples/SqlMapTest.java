@@ -13,18 +13,22 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.beans.util.BeanMap;
 
 /**
  * @author higa
  * 
  */
-public class PagingTest extends S2TestCase {
+public class SqlMapTest extends S2TestCase {
+
+    private static final String LABEL_VALUE =
+        "select name as label, id as value from employee";
 
     private JdbcManager jdbcManager;
 
@@ -33,18 +37,14 @@ public class PagingTest extends S2TestCase {
     }
 
     /**
+     * 
      * @throws Exception
      */
-    public void testPaging() throws Exception {
-        List<Employee> results =
-            jdbcManager
-                .from(Employee.class)
-                .orderBy("id")
-                .limit(5)
-                .offset(4)
-                .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.id);
+    public void testSqlMap() throws Exception {
+        List<BeanMap> results =
+            jdbcManager.selectBySql(BeanMap.class, LABEL_VALUE).getResultList();
+        for (BeanMap m : results) {
+            System.out.println(m);
         }
     }
 }

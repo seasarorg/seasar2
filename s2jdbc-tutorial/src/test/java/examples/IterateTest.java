@@ -13,12 +13,14 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
+
+import examples.entity.Employee;
 
 /**
  * @author koichik

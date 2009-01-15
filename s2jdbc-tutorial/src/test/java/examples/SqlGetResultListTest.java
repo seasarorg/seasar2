@@ -13,22 +13,26 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
-import org.seasar.framework.beans.util.BeanMap;
+
+import examples.dto.EmployeeDto;
 
 /**
  * @author higa
  * 
  */
-public class SqlMapTest extends S2TestCase {
+public class SqlGetResultListTest extends S2TestCase {
 
-    private static final String LABEL_VALUE =
-        "select name as label, id as value from employee";
+    private static final String SELECT_EMPLOYEE_DTO =
+        "select e.*, d.name as department_name"
+            + " from employee e left outer join department d"
+            + " on e.department_id = d.id"
+            + " where d.id = ?";
 
     private JdbcManager jdbcManager;
 
@@ -37,14 +41,15 @@ public class SqlMapTest extends S2TestCase {
     }
 
     /**
-     * 
      * @throws Exception
      */
-    public void testSqlMap() throws Exception {
-        List<BeanMap> results =
-            jdbcManager.selectBySql(BeanMap.class, LABEL_VALUE).getResultList();
-        for (BeanMap m : results) {
-            System.out.println(m);
+    public void testSqlGetResultList() throws Exception {
+        List<EmployeeDto> results =
+            jdbcManager
+                .selectBySql(EmployeeDto.class, SELECT_EMPLOYEE_DTO, 1)
+                .getResultList();
+        for (EmployeeDto e : results) {
+            System.out.println(e.name + " " + e.departmentName);
         }
     }
 }

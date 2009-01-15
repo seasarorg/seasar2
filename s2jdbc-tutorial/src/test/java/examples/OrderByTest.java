@@ -13,16 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
+
+import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
+
+import examples.entity.Employee;
 
 /**
  * @author higa
  * 
  */
-public class DeleteTest extends S2TestCase {
+public class OrderByTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -33,18 +37,14 @@ public class DeleteTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testDeleteTx() throws Exception {
-        Employee emp =
+    public void testOrderBy() throws Exception {
+        List<Employee> results =
             jdbcManager
                 .from(Employee.class)
-                .where("id = ?", 1)
-                .getSingleResult();
-        jdbcManager.delete(emp).execute();
-        emp =
-            jdbcManager
-                .from(Employee.class)
-                .where("id = ?", 1)
-                .getSingleResult();
-        System.out.println(emp);
+                .orderBy("name desc")
+                .getResultList();
+        for (Employee e : results) {
+            System.out.println(e.name);
+        }
     }
 }

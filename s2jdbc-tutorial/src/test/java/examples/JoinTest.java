@@ -13,18 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
 
+import examples.entity.Employee;
+
 /**
  * @author higa
  * 
  */
-public class TypeStrategyTest extends S2TestCase {
+public class JoinTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -35,13 +37,19 @@ public class TypeStrategyTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testTypeStrategy() throws Exception {
+    public void testJoin() throws Exception {
         List<Employee> results =
-            jdbcManager.from(Employee.class).getResultList();
-        int totalBonus = 0;
+            jdbcManager
+                .from(Employee.class)
+                .leftOuterJoin("department")
+                .leftOuterJoin("address")
+                .getResultList();
         for (Employee e : results) {
-            totalBonus += e.jobType.calculateBonus(e.salary);
+            System.out.println(e.name
+                + ", "
+                + e.department.name
+                + ", "
+                + e.address.name);
         }
-        System.out.println("Total Bonus:" + totalBonus);
     }
 }

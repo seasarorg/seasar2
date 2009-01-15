@@ -13,16 +13,18 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
+
+import examples.entity.Employee;
 
 /**
  * @author higa
  * 
  */
-public class InsertTest extends S2TestCase {
+public class UpdateTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -33,12 +35,15 @@ public class InsertTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testInsertTx() throws Exception {
-        Employee emp = new Employee();
-        emp.name = "test";
-        emp.jobType = JobType.ANALYST;
-        emp.salary = 300;
-        jdbcManager.insert(emp).execute();
-        System.out.println(emp.id);
+    public void testUpdateTx() throws Exception {
+        Employee emp =
+            jdbcManager
+                .from(Employee.class)
+                .where("id = ?", 1)
+                .getSingleResult();
+        emp.name = "hoge";
+        System.out.println(emp.version);
+        jdbcManager.update(emp).execute();
+        System.out.println(emp.version);
     }
 }

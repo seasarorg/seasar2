@@ -13,45 +13,37 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
+import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.unit.S2TestCase;
+
+import examples.entity.Employee;
 
 /**
- * 部署です。
- * 
  * @author higa
  * 
  */
-@Entity
-public class Department {
+public class TypeStrategyTest extends S2TestCase {
+
+    private JdbcManager jdbcManager;
+
+    protected void setUp() throws Exception {
+        include("app.dicon");
+    }
 
     /**
-     * 識別子です。
+     * @throws Exception
      */
-    @Id
-    @GeneratedValue
-    public Integer id;
-
-    /**
-     * 名前です。
-     */
-    public String name;
-
-    /**
-     * 従業員のリストです。
-     */
-    @OneToMany(mappedBy = "department")
-    public List<Employee> employeeList;
-    /**
-     * バージョンです。
-     */
-    @Version
-    public Integer version;
+    public void testTypeStrategy() throws Exception {
+        List<Employee> results =
+            jdbcManager.from(Employee.class).getResultList();
+        int totalBonus = 0;
+        for (Employee e : results) {
+            totalBonus += e.jobType.calculateBonus(e.salary);
+        }
+        System.out.println("Total Bonus:" + totalBonus);
+    }
 }

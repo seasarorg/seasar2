@@ -12,7 +12,7 @@
 		</property>
 		<property name="URL">
 			"jdbc:hsqldb:file:"
-				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@examples.entity.Employee@class).getCanonicalPath()
+				+ @org.seasar.framework.util.ResourceUtil@getBuildDir('app.dicon').getCanonicalPath()
 				+ "/data/test"
 		</property>
 		<property name="user">"sa"</property>

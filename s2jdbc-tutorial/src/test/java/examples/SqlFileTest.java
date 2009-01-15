@@ -13,18 +13,24 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
+
+import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
+
+import examples.dto.EmployeeDto;
+import examples.dto.SelectWithDepartmentDto;
 
 /**
  * @author higa
  * 
  */
-public class SqlGetSingleResultTest extends S2TestCase {
+public class SqlFileTest extends S2TestCase {
 
-    private static final String SELECT_COUNT = "select count(*) from employee";
+    private static final String SQL_FILE =
+        "META-INF/sql/examples/entity/Employee/selectWithDepartment.sql";
 
     private JdbcManager jdbcManager;
 
@@ -35,11 +41,17 @@ public class SqlGetSingleResultTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testSqlGetSingleResult() throws Exception {
-        Integer result =
+    public void testSqlFile() throws Exception {
+        SelectWithDepartmentDto dto = new SelectWithDepartmentDto();
+        dto.salaryMin = 1200;
+        dto.salaryMax = 1800;
+        List<EmployeeDto> results =
             jdbcManager
-                .selectBySql(Integer.class, SELECT_COUNT)
-                .getSingleResult();
-        System.out.println(result);
+                .selectBySqlFile(EmployeeDto.class, SQL_FILE, dto)
+                .getResultList();
+        for (EmployeeDto e : results) {
+            System.out
+                .println(e.name + " " + e.salary + " " + e.departmentName);
+        }
     }
 }

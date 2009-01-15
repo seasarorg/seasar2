@@ -13,19 +13,20 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
+package examples;
 
 import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.where.SimpleWhere;
 import org.seasar.extension.unit.S2TestCase;
+
+import examples.entity.Employee;
 
 /**
  * @author higa
  * 
  */
-public class SimpleWhereTest extends S2TestCase {
+public class PagingTest extends S2TestCase {
 
     private JdbcManager jdbcManager;
 
@@ -36,18 +37,16 @@ public class SimpleWhereTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testSimpleWhere() throws Exception {
+    public void testPaging() throws Exception {
         List<Employee> results =
             jdbcManager
                 .from(Employee.class)
-                .leftOuterJoin("address")
-                .where(
-                    new SimpleWhere().starts("name", "A").ends(
-                        "address.name",
-                        "1"))
+                .orderBy("id")
+                .limit(5)
+                .offset(4)
                 .getResultList();
         for (Employee e : results) {
-            System.out.println(e.name + ", " + e.address.name);
+            System.out.println(e.id);
         }
     }
 }

@@ -13,9 +13,7 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package examples.entity;
-
-import java.util.List;
+package examples;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.unit.S2TestCase;
@@ -24,7 +22,9 @@ import org.seasar.extension.unit.S2TestCase;
  * @author higa
  * 
  */
-public class OrderByTest extends S2TestCase {
+public class SqlGetSingleResultTest extends S2TestCase {
+
+    private static final String SELECT_COUNT = "select count(*) from employee";
 
     private JdbcManager jdbcManager;
 
@@ -35,14 +35,11 @@ public class OrderByTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testOrderBy() throws Exception {
-        List<Employee> results =
+    public void testSqlGetSingleResult() throws Exception {
+        Integer result =
             jdbcManager
-                .from(Employee.class)
-                .orderBy("name desc")
-                .getResultList();
-        for (Employee e : results) {
-            System.out.println(e.name);
-        }
+                .selectBySql(Integer.class, SELECT_COUNT)
+                .getSingleResult();
+        System.out.println(result);
     }
 }
