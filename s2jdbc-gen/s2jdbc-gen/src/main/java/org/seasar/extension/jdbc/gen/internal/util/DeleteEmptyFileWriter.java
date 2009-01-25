@@ -37,7 +37,7 @@ public class DeleteEmptyFileWriter extends FilterWriter {
     /** 削除された場合{@code true} */
     protected boolean deleted;
 
-    /** 対象とするファイル */
+    /** 書き込み先のファイル */
     protected File file;
 
     /**
@@ -46,9 +46,13 @@ public class DeleteEmptyFileWriter extends FilterWriter {
      * @param writer
      *            ライタ
      * @param file
+     *            書き込み先のファイル
      */
     public DeleteEmptyFileWriter(Writer writer, File file) {
         super(writer);
+        if (file == null) {
+            throw new NullPointerException("file");
+        }
         this.file = file;
     }
 
