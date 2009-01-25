@@ -1,0 +1,2 @@
+select setval('AAA.BBB.HOGE_no1_seq', max(no1)) from AAA.BBB.HOGE;
+select setval('AAA.BBB.HOGE_no2_seq', max(no2)) from AAA.BBB.HOGE;

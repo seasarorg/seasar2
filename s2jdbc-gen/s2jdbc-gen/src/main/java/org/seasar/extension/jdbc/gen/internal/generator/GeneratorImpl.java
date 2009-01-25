@@ -28,6 +28,7 @@ import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.TemplateRuntimeException;
 import org.seasar.extension.jdbc.gen.internal.util.CloseableUtil;
+import org.seasar.extension.jdbc.gen.internal.util.DeleteEmptyFileWriter;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.FileOutputStreamUtil;
@@ -132,15 +133,21 @@ public class GeneratorImpl implements Generator {
         try {
             Template template = getTemplate(context.getTemplateName());
             process(template, context.getModel(), writer);
-            if (exists) {
-                logger.log("DS2JDBCGen0009", new Object[] { context.getFile()
-                        .getPath() });
-            } else {
-                logger.log("DS2JDBCGen0002", new Object[] { context.getFile()
-                        .getPath() });
-            }
         } finally {
             CloseableUtil.close(writer);
+        }
+
+        if (writer instanceof DeleteEmptyFileWriter) {
+            if (((DeleteEmptyFileWriter) writer).isDeleted()) {
+                return;
+            }
+        }
+        if (exists) {
+            logger.log("DS2JDBCGen0009", new Object[] { context.getFile()
+                    .getPath() });
+        } else {
+            logger.log("DS2JDBCGen0002", new Object[] { context.getFile()
+                    .getPath() });
         }
     }
 
@@ -176,7 +183,8 @@ public class GeneratorImpl implements Generator {
         Charset charset = Charset.forName(context.getEncoding());
         FileOutputStream fos = FileOutputStreamUtil.create(context.getFile());
         OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
-        return new BufferedWriter(osw);
+        BufferedWriter bw = new BufferedWriter(osw);
+        return new DeleteEmptyFileWriter(bw, context.getFile());
     }
 
     /**

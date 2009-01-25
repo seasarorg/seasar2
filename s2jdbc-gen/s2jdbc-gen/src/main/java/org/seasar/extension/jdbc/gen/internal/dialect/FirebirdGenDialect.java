@@ -31,6 +31,11 @@ public class FirebirdGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "firebird";
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.SEQUENCE;
     }

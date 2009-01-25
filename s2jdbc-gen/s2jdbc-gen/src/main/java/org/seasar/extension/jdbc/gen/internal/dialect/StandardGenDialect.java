@@ -140,6 +140,10 @@ public class StandardGenDialect implements GenDialect {
         fallbackColumnTypeMap.put(Types.VARCHAR, StandardColumnType.VARCHAR);
     }
 
+    public String getName() {
+        return null;
+    }
+
     public String getDefaultSchemaName(String userName) {
         return userName;
     }

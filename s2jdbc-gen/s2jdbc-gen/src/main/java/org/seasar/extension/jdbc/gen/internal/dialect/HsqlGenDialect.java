@@ -53,6 +53,11 @@ public class HsqlGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "hsql";
+    }
+
+    @Override
     public String getDefaultSchemaName(String userName) {
         return null;
     }

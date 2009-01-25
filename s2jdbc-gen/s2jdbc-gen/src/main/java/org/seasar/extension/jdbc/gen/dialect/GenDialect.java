@@ -36,6 +36,13 @@ import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 public interface GenDialect {
 
     /**
+     * 名前を返します。
+     * 
+     * @return 名前
+     */
+    String getName();
+
+    /**
      * デフォルトのスキーマ名を返します。
      * 
      * @param userName
@@ -75,7 +82,7 @@ public interface GenDialect {
      * @param columnTypeName
      *            カラムの型名
      * @param sqlType
-     *            TODO
+     *            JDBCのSQL型
      * @return カラム型、サポートされていないカラムの型名の場合{@code null}
      */
     ColumnType getColumnType(String columnTypeName, int sqlType);

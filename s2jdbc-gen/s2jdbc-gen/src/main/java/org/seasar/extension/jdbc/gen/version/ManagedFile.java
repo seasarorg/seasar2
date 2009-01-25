@@ -134,4 +134,11 @@ public interface ManagedFile {
      */
     ManagedFile createChild(String childName);
 
+    /**
+     * 子ディレクトリもしくは子ファイルを持っている場合{@code true}を返します。
+     * 
+     * @return 子ディレクトリもしくは子ファイルを持っている場合{@code true}、そうでない場合{@code false}
+     */
+    boolean hasChild();
+
 }

@@ -31,6 +31,11 @@ public class InterbaseGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "interbase";
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.SEQUENCE;
     }

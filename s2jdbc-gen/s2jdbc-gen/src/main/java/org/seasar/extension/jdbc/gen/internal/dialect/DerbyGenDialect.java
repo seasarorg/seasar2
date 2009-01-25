@@ -64,6 +64,11 @@ public class DerbyGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "derby";
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }

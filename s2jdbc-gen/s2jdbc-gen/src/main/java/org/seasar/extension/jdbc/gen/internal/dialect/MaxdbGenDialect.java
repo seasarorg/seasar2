@@ -28,4 +28,8 @@ public class MaxdbGenDialect extends StandardGenDialect {
     public MaxdbGenDialect() {
     }
 
+    @Override
+    public String getName() {
+        return "maxdb";
+    }
 }

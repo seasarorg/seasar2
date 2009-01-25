@@ -1,6 +1,6 @@
 #Mon Jan 05 15:21:51 JST 2009
 eclipse.preferences.version=1
-formatter_profile=_s2jdbc-it
+formatter_profile=_s2jdbc-gen
 formatter_settings_version=11
 internal.default.compliance=default
 org.eclipse.jdt.ui.exception.name=e

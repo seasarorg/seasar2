@@ -79,4 +79,13 @@ public class ManagedFileImplTest {
         assertEquals(2, list.size());
     }
 
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testHasChild() throws Exception {
+        assertTrue(managedFile.hasChild());
+    }
+
 }

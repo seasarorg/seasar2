@@ -99,6 +99,11 @@ public class OracleGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "oracle";
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.SEQUENCE;
     }

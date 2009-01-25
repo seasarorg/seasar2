@@ -54,6 +54,11 @@ public class H2GenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "h2";
+    }
+
+    @Override
     public String getDefaultSchemaName(String userName) {
         return null;
     }

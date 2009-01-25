@@ -525,4 +525,47 @@ public class GenerateDdlTask extends AbstractTask {
         command.setAutoGenerateForeignKey(autoGenerateForeignKey);
     }
 
+    /**
+     * 補助的オブジェクトを作成するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param createAuxiliaryDirName
+     *            補助的オブジェクトを作成するDDLを格納するディレクトリ名
+     */
+    public void setCreateAuxiliaryDirName(String createAuxiliaryDirName) {
+        command.setCreateAuxiliaryDirName(createAuxiliaryDirName);
+    }
+
+    /**
+     * 補助的オブジェクトを生成するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param createAuxiliaryTemplateFileName
+     *            補助的オブジェクトを生成するDDLのテンプレートファイル名
+     */
+    public void setCreateAuxiliaryTemplateFileName(
+            String createAuxiliaryTemplateFileName) {
+        command
+                .setCreateAuxiliaryTemplateFileName(createAuxiliaryTemplateFileName);
+    }
+
+    /**
+     * 補助的オブジェクトを削除するDDLを格納するディレクトリ名を設定します。
+     * 
+     * @param dropAuxiliaryDirName
+     *            補助的オブジェクトを削除するDDLを格納するディレクトリ名
+     */
+    public void setDropAuxiliaryDirName(String dropAuxiliaryDirName) {
+        command.setDropAuxiliaryDirName(dropAuxiliaryDirName);
+    }
+
+    /**
+     * 補助的オブジェクトを削除するDDLのテンプレートファイル名を設定します。
+     * 
+     * @param dropAuxiliaryTemplateFileName
+     *            補助的オブジェクトを削除するDDLのテンプレートファイル名
+     */
+    public void setDropAuxiliaryTemplateFileName(
+            String dropAuxiliaryTemplateFileName) {
+        command.setDropAuxiliaryTemplateFileName(dropAuxiliaryTemplateFileName);
+    }
+
 }

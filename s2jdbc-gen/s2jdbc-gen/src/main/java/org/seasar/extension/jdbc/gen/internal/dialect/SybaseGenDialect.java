@@ -73,6 +73,11 @@ public class SybaseGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "sybase";
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }

@@ -104,6 +104,11 @@ public class PostgreGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "postgre";
+    }
+
+    @Override
     public SqlType getSqlType(ValueTypeProvider valueTypeProvider,
             PropertyMeta propertyMeta) {
         if (propertyMeta.isLob()) {

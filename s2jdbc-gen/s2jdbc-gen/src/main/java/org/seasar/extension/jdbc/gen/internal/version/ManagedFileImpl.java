@@ -206,6 +206,11 @@ public class ManagedFileImpl implements ManagedFile {
                 });
     }
 
+    public boolean hasChild() {
+        String[] paths = getFile().list();
+        return paths != null && paths.length > 0;
+    }
+
     /**
      * ファイルを返します。
      * 

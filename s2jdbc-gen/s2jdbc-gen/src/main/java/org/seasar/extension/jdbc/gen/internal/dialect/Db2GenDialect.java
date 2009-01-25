@@ -70,6 +70,11 @@ public class Db2GenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "db2";
+    }
+
+    @Override
     public String getDefaultSchemaName(String userName) {
         return userName != null ? userName.toUpperCase() : null;
     }

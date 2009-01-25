@@ -216,6 +216,10 @@ public class ManagedFileWrapper implements ManagedFile {
         return list;
     }
 
+    public boolean hasChild() {
+        return getManagedFile().hasChild();
+    }
+
     /**
      * バージョン管理されたファイルを返します。
      * 

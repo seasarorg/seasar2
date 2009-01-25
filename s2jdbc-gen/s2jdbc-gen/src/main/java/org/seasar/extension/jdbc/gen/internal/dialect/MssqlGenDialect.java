@@ -82,6 +82,11 @@ public class MssqlGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "mssql";
+    }
+
+    @Override
     public String getDefaultSchemaName(String userName) {
         return "dbo";
     }

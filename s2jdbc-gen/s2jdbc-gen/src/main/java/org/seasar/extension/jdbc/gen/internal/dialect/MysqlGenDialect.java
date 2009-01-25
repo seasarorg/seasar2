@@ -111,6 +111,11 @@ public class MysqlGenDialect extends StandardGenDialect {
     }
 
     @Override
+    public String getName() {
+        return "mysql";
+    }
+
+    @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.IDENTITY;
     }
