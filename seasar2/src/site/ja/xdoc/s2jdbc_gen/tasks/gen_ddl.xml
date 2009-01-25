@@ -122,6 +122,9 @@
 						<li>
 							外部キー
 						</li>
+						<li>
+							補助的オブジェクト（データベース固有のオブジェクト。主に微調整のために使用される。）
+						</li>
 					</ul>
 				</p>
 				<p>
@@ -263,10 +266,12 @@
 					<tr><td>createUniqueKeyDirName</td><td>一意キーを作成するDDLを格納するディレクトリ名です。</td><td>"020-uniquekey"</td><td>NO</td></tr>
 					<tr><td>createSequenceDirName</td><td>シーケンスを作成するDDLを格納するディレクトリ名です。</td><td>"030-sequence"</td><td>NO</td></tr>
 					<tr><td>createForeignKeyDirName</td><td>外部キーを作成するDDLを格納するディレクトリ名です。</td><td>"050-foreignkey"</td><td>NO</td></tr>
+					<tr><td>createAuxiliaryDirName</td><td>補助的オブジェクトを作成するDDLを格納するディレクトリ名です。</td><td>"060-auxiliary"</td><td>NO</td></tr>
 					<tr><td>dropTableDirName</td><td>テーブルを削除するDDLファイル名です。</td><td>"040-table"</td><td>NO</td></tr>
 					<tr><td>dropUniqueKeyDirName</td><td>一意キーを削除するDDLファイル名です。</td><td>"030-uniquekey"</td><td>NO</td></tr>
 					<tr><td>dropSequenceDirName</td><td>シーケンスを削除するDDLファイル名です。</td><td>"020-sequence"</td><td>NO</td></tr>
 					<tr><td>dropForeignKeyDirName</td><td>外部キーを削除するDDLファイル名です。</td><td>"010-foreignkey"</td><td>NO</td></tr>
+					<tr><td>dropForeignKeyDirName</td><td>補助的オブジェクトを削除するDDLファイル名です。</td><td>"050-auxiliary"</td><td>NO</td></tr>
 					<tr><td>ddlFileEncoding</td><td>DDLファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>sqlKeywordCase</td><td>SQLのキーワードを大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。テンプレートに記述された文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
 					<tr><td>sqlIdentifierCase</td><td>SQLの識別子を大文字にするか小文字にするかを指定する列挙型の値です。大文字にするには"uppercase"、小文字にするには"lowercase"を指定します。エンティティに記述した文字をそのまま使用する場合は"originalcase"を指定します。</td><td>"originalcase"</td><td>NO</td></tr>
@@ -281,10 +286,12 @@
 					<tr><td>createUniqueKeyTemplateFileName</td><td>一意キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>createSequenceTemplateFileName</td><td>シーケンスを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-sequence.ftl"</td><td>NO</td></tr>
 					<tr><td>createForeignKeyTemplateFileName</td><td>外部キーを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-foreignkey.ftl"</td><td>NO</td></tr>
+					<tr><td>createAuxiliaryTemplateFileName</td><td>補助的オブジェクトを作成するDDLのテンプレートファイル名です。</td><td>"sql/create-auxiliary.ftl"</td><td>NO</td></tr>
 					<tr><td>dropTableTemplateFileName</td><td>テーブルを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-table.ftl"</td><td>NO</td></tr>
 					<tr><td>dropUniqueKeyTemplateFileName</td><td>一意キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-uniquekey.ftl"</td><td>NO</td></tr>
 					<tr><td>dropSequenceTemplateFileName</td><td>シーケンスを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-sequence.ftl"</td><td>NO</td></tr>
 					<tr><td>dropForeignKeyTemplateFileName</td><td>外部キーを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-foreignkey.ftl"</td><td>NO</td></tr>
+					<tr><td>dropAuxiliaryTemplateFileName</td><td>補助的オブジェクトを削除するDDLのテンプレートファイル名です。</td><td>"sql/drop-auxiliary.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>migrateDir</td><td>マイグレーション用のファイルを管理するディレクトリです。</td><td>"db/migrate"</td><td>NO</td></tr>
