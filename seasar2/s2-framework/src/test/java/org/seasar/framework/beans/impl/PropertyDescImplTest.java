@@ -88,6 +88,21 @@ public class PropertyDescImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testSetValue_invalidType() throws Exception {
+        MyBean myBean = new MyBean();
+        BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("url");
+        try {
+        propDesc.setValue(myBean, new Object());
+        fail();
+        } catch (IllegalPropertyRuntimeException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testGetValue_notReable() throws Exception {
         MyBean myBean = new MyBean();
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);

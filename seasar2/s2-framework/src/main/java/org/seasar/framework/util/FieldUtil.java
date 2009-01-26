@@ -164,11 +164,24 @@ public class FieldUtil {
             throw new IllegalAccessRuntimeException(field.getDeclaringClass(),
                     e);
         } catch (IllegalArgumentException e) {
-            throw new SIllegalArgumentException("ESSR0094", new Object[] {
-                    field.getDeclaringClass().getName(), field.getType(),
-                    field.getName(),
-                    value == null ? null : value.getClass().getName(), value,
-                    target == null ? null : target.getClass().getName() }, e);
+            Class clazz = field.getDeclaringClass();
+            Class fieldClass = field.getType();
+            Class valueClass = value == null ? null : value.getClass();
+            Class targetClass = target == null ? null : target.getClass();
+            throw new SIllegalArgumentException("ESSR0094",
+                    new Object[] {
+                            clazz.getName(),
+                            clazz.getClassLoader(),
+                            fieldClass.getName(),
+                            fieldClass.getClassLoader(),
+                            field.getName(),
+                            valueClass == null ? null : valueClass.getName(),
+                            valueClass == null ? null : valueClass
+                                    .getClassLoader(),
+                            value,
+                            targetClass == null ? null : targetClass.getName(),
+                            targetClass == null ? null : targetClass
+                                    .getClassLoader() }, e);
         }
 
     }
@@ -245,12 +258,14 @@ public class FieldUtil {
     }
 
     /**
-     * <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromFieldType()</code>の
-     * {@link Method}を返します。
+     * <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromFieldType()</code>
+     * の {@link Method}を返します。
      * 
      * @param type
      *            取得するメソッドが対象とする型名
-     * @return <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromFieldType()</code>の{@link Method}
+     * @return
+     *         <code>ReflectionUtil#getElementTypeOf<var>Xxx</var>FromFieldType()</code>
+     *         の{@link Method}
      */
     protected static Method getElementTypeFromFieldTypeMethod(final String type) {
         try {

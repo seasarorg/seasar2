@@ -29,6 +29,7 @@ import org.seasar.framework.beans.ParameterizedClassDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.ParameterizedClassDescFactory;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.exception.SIllegalArgumentException;
 import org.seasar.framework.util.BooleanConversionUtil;
 import org.seasar.framework.util.CalendarConversionUtil;
 import org.seasar.framework.util.ConstructorUtil;
@@ -244,7 +245,31 @@ public class PropertyDescImpl implements PropertyDesc {
                 throw new IllegalStateException(propertyName
                         + " is not writable.");
             } else if (hasWriteMethod()) {
-                MethodUtil.invoke(writeMethod, target, new Object[] { value });
+                try {
+                    MethodUtil.invoke(writeMethod, target,
+                            new Object[] { value });
+                } catch (Throwable t) {
+                    Class clazz = writeMethod.getDeclaringClass();
+                    Class valueClass = value == null ? null : value.getClass();
+                    Class targetClass = target == null ? null : target
+                            .getClass();
+                    throw new SIllegalArgumentException("ESSR0098",
+                            new Object[] {
+                                    clazz.getName(),
+                                    clazz.getClassLoader(),
+                                    propertyType.getName(),
+                                    propertyType.getClassLoader(),
+                                    propertyName,
+                                    valueClass == null ? null : valueClass
+                                            .getName(),
+                                    valueClass == null ? null : valueClass
+                                            .getClassLoader(),
+                                    value,
+                                    targetClass == null ? null : targetClass
+                                            .getName(),
+                                    targetClass == null ? null : targetClass
+                                            .getClassLoader() }).initCause(t);
+                }
             } else {
                 FieldUtil.set(field, target, value);
             }
