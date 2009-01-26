@@ -1733,6 +1733,14 @@ int count = jdbcManager.updateBatch(employees).excludes("version").execute();
 Employee before = ...;
 int count = jdbcManager.update(employee).changedFrom(before).execute();
 ]]></source>
+				<p>
+					<code>JdbcManager#update()</code>
+					に渡されたエンティティと，
+					<code>changedFrom()</code>
+					に渡されたエンティティまたはマップに相違がない場合、SQLは実行されず、
+					<code>execute()</code>
+					の戻り値の更新行数として0が返されます。
+				</p>
 			</subsection>
 
 			<subsection name="更新行数をチェックしない">
