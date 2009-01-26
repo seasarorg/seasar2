@@ -148,31 +148,36 @@
     │     ├─010-foreignkey
     │     ├─020-sequence
     │     ├─030-uniquekey
-    │     └─040-table
+    │     ├─040-table
+    │     └─050-auxiliary
     ├─0001
     │  ├─create
     │  │  ├─010-table
     │  │  ├─020-uniquekey
     │  │  ├─030-sequence
     │  │  ├─040-dump
-    │  │  └─050-foreignkey
+    │  │  ├─050-foreignkey
+    │  │  └─060-auxiliary
     │  └─drop
     │     ├─010-foreignkey
     │     ├─020-sequence
     │     ├─030-uniquekey
-    │     └─040-table
+    │     ├─040-table
+    │     └─050-auxiliary
     └─0002
         ├─create
         │  ├─010-table
         │  ├─020-uniquekey
         │  ├─030-sequence
         │  ├─040-dump
-        │  └─050-foreignkey
+        │  ├─050-foreignkey
+        │  └─060-auxiliary
         └─drop
            ├─010-foreignkey
            ├─020-sequence
            ├─030-uniquekey
-           └─040-table]]></source>
+           ├─040-table
+           └─050-auxiliary]]></source>
 				<p>
 					db/migrateディレクトリ以下の、0000、0001、0002はDDLのバージョンを表すディレクトリです。
 					バージョンを表すディレクトリは、Gen-Ddlタスクを実行するごとに新しく作成されます。
@@ -236,6 +241,7 @@
         │  ├─030-sequence
         │  ├─040-dump
         │  ├─050-foreignkey
+        │  ├─060-auxiliary
         │  ├─061-procedure
         │  └─062-view
         └─drop
@@ -244,7 +250,8 @@
            ├─010-foreignkey
            ├─020-sequence
            ├─030-uniquekey
-           └─040-table]]></source>
+           ├─040-table
+           └─050-auxiliary]]></source>
 				<p>
 					Gen-Ddlタスクを実行すると、これらはバージョン0003のcreateディレクトリやdropディレクトリ以下にそのままコピーされます。
 				</p>
