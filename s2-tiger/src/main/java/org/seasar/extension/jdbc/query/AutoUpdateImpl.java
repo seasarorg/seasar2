@@ -137,6 +137,14 @@ public class AutoUpdateImpl<T> extends AbstractAutoUpdate<T, AutoUpdate<T>>
         prepareSql();
     }
 
+    @Override
+    protected int executeInternal() {
+        if (targetProperties.isEmpty()) {
+            return 0;
+        }
+        return super.executeInternal();
+    }
+
     /**
      * set句に設定されるプロパティの準備をします。
      */

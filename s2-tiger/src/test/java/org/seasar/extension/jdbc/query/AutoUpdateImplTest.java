@@ -47,7 +47,7 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
 /**
  * @author koichik
  */
-public class AutoUpdateTest extends TestCase {
+public class AutoUpdateImplTest extends TestCase {
 
     private JdbcManagerImpl manager;
 
@@ -214,6 +214,28 @@ public class AutoUpdateTest extends TestCase {
     /**
      * 
      */
+    public void testChangedFrom_entity_same() {
+        Eee before = new Eee();
+        before.id = 100;
+        before.name = "hoge";
+        before.version = 1L;
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, before);
+        assertSame(query, query.changedFrom(before));
+        assertEquals(7, query.beforeStates.size());
+        assertEquals(new Integer(100), query.beforeStates.get("id"));
+        assertEquals("hoge", query.beforeStates.get("name"));
+        assertNull(query.beforeStates.get("longText"));
+        assertNull(query.beforeStates.get("bbbId"));
+        assertNull(query.beforeStates.get("bbb"));
+        assertEquals(new Long(1), query.beforeStates.get("version"));
+        assertNull(query.beforeStates.get("lastUpdate"));
+        assertTrue(query.targetProperties.isEmpty());
+        assertEquals(0, query.setClause.getLength());
+    }
+
+    /**
+     * 
+     */
     public void testChangedFrom_map() {
         Map<String, Object> before = CollectionsUtil.newHashMap();
         before.put("id", 100);
@@ -223,6 +245,25 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(2, query.beforeStates.size());
         assertEquals(new Integer(100), query.beforeStates.get("id"));
         assertEquals("hoge", query.beforeStates.get("name"));
+    }
+
+    /**
+     * 
+     */
+    public void testChangedFrom_map_same() {
+        Map<String, Object> before = CollectionsUtil.newHashMap();
+        before.put("id", 100);
+        before.put("name", "hoge");
+        Aaa aaa = new Aaa();
+        aaa.id = 100;
+        aaa.name = "hoge";
+        AutoUpdateImpl<Aaa> query = new AutoUpdateImpl<Aaa>(manager, aaa);
+        assertSame(query, query.changedFrom(before));
+        assertEquals(2, query.beforeStates.size());
+        assertEquals(new Integer(100), query.beforeStates.get("id"));
+        assertEquals("hoge", query.beforeStates.get("name"));
+        assertTrue(query.targetProperties.isEmpty());
+        assertEquals(0, query.setClause.getLength());
     }
 
     /**
@@ -631,6 +672,26 @@ public class AutoUpdateTest extends TestCase {
         assertEquals(
                 "update EEE set NAME = 'hoge', VERSION = VERSION + 1 where ID = 100 and VERSION = 1",
                 sqlLog.getCompleteSql());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testExecute_changedFrom_same() throws Exception {
+        Eee eee = new Eee();
+        eee.id = 100;
+        eee.name = "hoge";
+        eee.version = 1L;
+        AutoUpdateImpl<Eee> query = new AutoUpdateImpl<Eee>(manager, eee);
+        query.changedFrom(eee);
+        assertEquals(0, query.execute());
+        assertNull(SqlLogRegistryLocator.getInstance().getLast());
+
+        try {
+            query.execute();
+            fail();
+        } catch (QueryTwiceExecutionRuntimeException expected) {
+        }
     }
 
     /**
