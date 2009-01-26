@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
@@ -36,6 +37,7 @@ import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.entity.Aaa;
 import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -47,6 +49,7 @@ import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
 import org.seasar.framework.util.ArrayMap;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
@@ -294,6 +297,69 @@ public class SqlFileSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testPrepareParameter_map() {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("id", 1);
+        map.put("offset", 5);
+        map.put("limit", 10);
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, map);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals(1, query.getParam(0).value);
+        assertEquals(Integer.class, query.getParam(0).paramClass);
+        assertEquals(10, query.limit);
+        assertEquals(5, query.offset);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_map_clob() {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("largeName", Parameter.lob("hoge"));
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, map);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPrepareParameter_map_date() throws Exception {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("date", Parameter.time(new SimpleDateFormat("HH:mm:ss")
+                .parse("12:11:10")));
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, map);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("select * from aaa where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(1, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
+    }
+
+    /**
+     * 
+     */
     public void testPrepareSql_dto() {
         MyDto dto = new MyDto();
         dto.id = 1;
@@ -302,6 +368,25 @@ public class SqlFileSelectImplTest extends TestCase {
         manager.setDialect(new PostgreDialect());
         SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
                 Aaa.class, PATH, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        query.prepareSql();
+        assertEquals("select * from aaa where id = ? limit 10 offset 5",
+                query.executedSql);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareSql_map() {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("id", 1);
+        map.put("offset", 5);
+        map.put("limit", 10);
+        manager.setDialect(new PostgreDialect());
+        SqlFileSelectImpl<Aaa> query = new SqlFileSelectImpl<Aaa>(manager,
+                Aaa.class, PATH, map);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareNode();
         query.prepareParameter();

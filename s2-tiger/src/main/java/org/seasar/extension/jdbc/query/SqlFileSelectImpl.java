@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.query;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
 import org.seasar.extension.jdbc.SqlFileSelect;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.parameter.LobParameter;
@@ -143,6 +147,27 @@ public class SqlFileSelectImpl<T> extends
                     || TemporalParameter.class == clazz
                     || LobParameter.class == clazz) {
                 sqlContext.addArg("$1", parameter, clazz);
+            } else if (parameter instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<Object, Object> paramMap = (Map<Object, Object>) parameter;
+                Set<Entry<Object, Object>> entrySet = paramMap.entrySet();
+                for (Map.Entry<Object, Object> entry : entrySet) {
+                    Object value = entry.getValue();
+                    Object key = entry.getKey();
+                    if (key == null || !(key instanceof CharSequence)) {
+                        continue;
+                    }
+                    String name = ((CharSequence) key).toString();
+                    if (name.equals("limit")) {
+                        limit = IntegerConversionUtil.toPrimitiveInt(value);
+                    } else if (name.equals("offset")) {
+                        offset = IntegerConversionUtil.toPrimitiveInt(value);
+                    } else {
+                        sqlContext.addArg(name, value,
+                                (value == null ? String.class : value
+                                        .getClass()));
+                    }
+                }
             } else {
                 BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
                 for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {

@@ -332,8 +332,12 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 				<p>
 					SQLファイルのパラメータが複数の場合は、
 					<code>selectBySqlFile()</code>
-					の3番目の引数をJavaBeansにして、
-					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+					の3番目の引数をJavaBeansまたは
+					<code>Map&lt;String, Object&gt;</code>
+					にして、
+					パラメータの名前とJavaBeansのプロパティ名または
+					<code>Map</code>
+					のキーを一致させます。
 				</p>
 				<source><![CDATA[
 package examples.entity.Employee;
@@ -358,14 +362,99 @@ List<EmployeeDto> results = jdbcManager
     .getResultList();
 ]]></source>
 				<p>
-					パラメータ用のJavaBeansにlimit、offsetという名前のプロパティがあれば、
+					<code>Map</code>
+					で
+					<code>java.util.Date</code>
+					・
+					<code>java.util.Calendar</code>
+					型のパラメータを指定する場合は、時制を指定することができます。 時制の指定は
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>date(Date)</code>
+						または
+						<code>date(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のDATE型 (日付のみ) として扱います。</dd>
+					<dt>
+						<code>time(Date)</code>
+						または
+						<code>time(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIME型 (時刻のみ) として扱います。</dd>
+					<dt>
+						<code>timestamp(Date)</code>
+						または
+						<code>timestamp(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIMESTAMP型 (日付と時刻) として扱います。</dd>
+				</dl>
+				<source><![CDATA[
+select * from employee where
+heredate <= /*heredate*/'2000/04/01'
+]]></source>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+Map<String, Object param = new HashMap<String, Object>();
+param.put("heredate", date(heredate)); //heredateはjava.util.Date型
+List<EmployeeDto> results = jdbcManager
+    .selectBySqlFile(EmployeeDto.class,
+        "examples/sql/employee/selectAll.sql", param)
+    .getResultList();
+]]></source>
+				<p>
+					<code>Map</code>
+					で
+					<code>byte[]</code>
+					・
+					<code>String</code>
+					型のパラメータを指定する場合は、ラージオブジェクトであることを指定することができます。
+					ラージオブジェクトの指定は
+					<code>
+						org.seasar.extension.jdbc.parameter.Parameter
+					</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>lob(String)</code>
+					</dt>
+					<dd>パラメータをCLOBとして扱います。</dd>
+					<dt>
+						<code>lob(byte[])</code>
+						または
+						<code>lob(Serializable)</code>
+					</dt>
+					<dd>パラメータをBLOBとして扱います。</dd>
+				</dl>
+				<source><![CDATA[
+select * from employee where
+largeName <= /*largeName*/'hoge'
+]]></source>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+Map<String, Object param = new HashMap<String, Object>();
+param.put("largeName", lob(largeName));
+List<EmployeeDto> results = jdbcManager
+    .selectBySqlFile(EmployeeDto.class,
+        "examples/sql/employee/selectAll.sql", param)
+    .getResultList();
+]]></source>
+				<p>
+					パラメータ用のJavaBeansまたは
+					<code>Map</code>
+					にlimit、offsetという名前のプロパティまたはキーがあれば、
 					ページングが行なわれます。
 				</p>
 				<div class="caution">
 					<div>注意点</div>
 					<p>
 						limit,
-						offsetはパラメータ用のJavaBeansのプロパティの予約語なので注意してください。
+						offsetはパラメータの予約語なので注意してください。
 					</p>
 				</div>
 				<p>
