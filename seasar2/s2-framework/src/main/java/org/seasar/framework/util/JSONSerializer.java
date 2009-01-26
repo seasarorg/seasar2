@@ -31,6 +31,8 @@ import org.seasar.framework.beans.factory.BeanDescFactory;
  * JSON形式の文字列を解析します。 ObjectをJSON文字列へシリアライズ、JSON文字列をObjectへ評価します。
  * 
  * @author mopemope
+ * @deprecated このクラスの代わりに<a
+ *             href="http://jsonic.sourceforge.jp/">JSONIC</a>等を使用してください
  */
 public class JSONSerializer {
     private static final String COMMA = ",";
