@@ -51,8 +51,8 @@
 						Seasar2 2.4.34 をリリースしました
 						(このバージョンから S2JDBC-Gen も同じバージョンでのリリースとなります)．
 						(<a href="downloads.html">ダウンロード</a>)
-						(<a href="">Change Log</a>)
-						(<a href="">移行ガイド</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#x1a9146a">Change Log</a>)
+						(<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#g19dad5c">移行ガイド</a>)
 					</div>
 				</dd>
 				<dt>2008/12/04</dt>
