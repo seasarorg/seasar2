@@ -36,11 +36,6 @@
 					<ul>
 						<li><p>s2jdbc-tutorial/.classpath</p></li>
 					</ul>
-					以下のディレクトリから古い (SNAPSHOT) の Jar を削除
-					<ul>
-						<li><p>s2jdbc-tutorial/lib</p></li>
-						<li><p>s2jdbc-tutorial/lib/sources</p></li>
-					</ul>
 				</dd>
 			</dl>
 		</section>
