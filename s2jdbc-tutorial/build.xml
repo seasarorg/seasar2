@@ -1,4 +1,10 @@
 <project name="s2jdbc-tutorial" default="dist" basedir=".">
+	<target name="delete">
+		<delete>
+			<fileset dir="lib" includes="**/s2*.jar"/>
+		</delete>
+	</target>
+
 	<target name="copy">
 		<copy todir="lib" file="../seasar2/s2-framework/target/s2-framework-${ver}.jar"/>
 		<copy todir="lib" file="../seasar2/s2-extension/target/s2-extension-${ver}.jar"/>
@@ -10,7 +16,7 @@
 		<copy todir="lib/sources" file="../s2jdbc-gen/target/s2jdbc-gen-${ver}-sources.jar"/>		
 	</target>
 
-	<target name="dist" depends="copy">
+	<target name="dist" depends="delete, copy">
 		<mkdir dir="${zipDir}"/>
 		<zip zipfile="${zipDir}/S2JDBC-Tutorial-${ver}.zip">
 			<zipfileset prefix="s2jdbc-tutorial" dir=".">
