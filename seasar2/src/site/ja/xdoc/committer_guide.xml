@@ -56,6 +56,13 @@
 <kbd>mvn clean install</kbd>
 ]]></source>
 				</dd>
+				<dt>S2JDBC-Genのビルド (Java5)</dt>
+				<dd>
+					<source><![CDATA[
+<kbd>cd s2jdbc-gen</kbd>
+<kbd>mvn clean install</kbd>
+]]></source>
+				</dd>
 				<dt>Seasar2のデプロイ (J2SE1.4)</dt>
 				<dd>
 					<source><![CDATA[
@@ -70,6 +77,13 @@
 <kbd>mvn deploy</kbd>
 ]]></source>
 				</dd>
+				<dt>S2JDBC-Genのデプロイ (Java5)</dt>
+				<dd>
+					<source><![CDATA[
+<kbd>cd s2jdbc-gen</kbd>
+<kbd>mvn deploy</kbd>
+]]></source>
+				</dd>
 				<dt>Seasar2のサイトデプロイ (J2SE1.4)</dt>
 				<dd>
 					<source><![CDATA[
@@ -81,6 +95,13 @@
 				<dd>
 					<source><![CDATA[
 <kbd>cd s2-tiger</kbd>
+<kbd>mvn site-deploy</kbd>
+]]></source>
+				</dd>
+				<dt>S2JDBC-Genのサイトデプロイ (Java5)</dt>
+				<dd>
+					<source><![CDATA[
+<kbd>cd s2jdbc-gen</kbd>
 <kbd>mvn site-deploy</kbd>
 ]]></source>
 				</dd>
