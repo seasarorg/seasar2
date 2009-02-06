@@ -374,6 +374,27 @@ public interface GenDialect {
     boolean supportsReferentialUpdateRule();
 
     /**
+     * 列の値が自動的に増分される場合{@code true}を返します。
+     * 
+     * @param connection
+     *            コネクション
+     * @param catalogName
+     *            カタログ名
+     * @param schemaName
+     *            スキーマ名
+     * @param tableName
+     *            テーブル名
+     * @param columnName
+     *            カラム名
+     * @return 列が自動的に増分される場合{@code true}、そうでない場合{@code false}
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
+    boolean isAutoIncrement(Connection connection, String catalogName,
+            String schemaName, String tableName, String columnName)
+            throws SQLException;
+
+    /**
      * カラム型です。
      * <p>
      * データベースのメタデータが返すカラムの型名に対応します。

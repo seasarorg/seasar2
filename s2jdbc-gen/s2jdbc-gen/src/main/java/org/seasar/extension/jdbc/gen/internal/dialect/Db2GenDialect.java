@@ -16,6 +16,9 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -30,6 +33,9 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.BooleanType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.ClobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DecimalType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.FloatType;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.framework.util.ResultSetUtil;
+import org.seasar.framework.util.StatementUtil;
 
 /**
  * DB2の方言を扱うクラスです。
@@ -195,6 +201,34 @@ public class Db2GenDialect extends StandardGenDialect {
     @Override
     public boolean supportsCommentOn() {
         return true;
+    }
+
+    @Override
+    public boolean isAutoIncrement(Connection connection, String catalogName,
+            String schemaName, String tableName, String columnName)
+            throws SQLException {
+        String sql = "select generated from syscat.columns where tabschema = ? and tabname = ? and colname = ?";
+        logger.debug(String.format(sql.replace("?", "'%s'"), schemaName,
+                tableName, columnName));
+
+        PreparedStatement ps = ConnectionUtil.prepareStatement(connection, sql);
+        ps.setString(1, schemaName);
+        ps.setString(2, tableName);
+        ps.setString(3, columnName);
+        try {
+            ResultSet rs = ps.executeQuery();
+            try {
+                if (rs.next()) {
+                    String generated = rs.getString(1);
+                    return "A".equals(generated) || "D".equals(generated);
+                }
+                return false;
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+        } finally {
+            StatementUtil.close(ps);
+        }
     }
 
     /**

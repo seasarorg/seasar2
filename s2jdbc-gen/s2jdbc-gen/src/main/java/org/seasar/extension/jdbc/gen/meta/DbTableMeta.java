@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.seasar.framework.util.StringUtil;
+import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
 
 /**
  * データベースのテーブルメタデータです。
@@ -203,14 +203,7 @@ public class DbTableMeta {
      * @return 完全なテーブル名
      */
     public String getFullTableName() {
-        StringBuilder buf = new StringBuilder();
-        if (!StringUtil.isEmpty(catalogName)) {
-            buf.append(catalogName).append(".");
-        }
-        if (!StringUtil.isEmpty(schemaName)) {
-            buf.append(schemaName).append(".");
-        }
-        return buf.append(name).toString();
+        return TableUtil.buildFullTableName(catalogName, schemaName, name);
     }
 
     /**

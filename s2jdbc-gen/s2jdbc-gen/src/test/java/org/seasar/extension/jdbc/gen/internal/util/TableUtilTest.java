@@ -46,6 +46,21 @@ public class TableUtilTest {
      * @throws Exception
      */
     @Test
+    public void testFullTableName() throws Exception {
+        assertEquals("AAA.BBB.CCC", TableUtil.buildFullTableName("AAA", "BBB",
+                "CCC"));
+        assertEquals("BBB.CCC", TableUtil
+                .buildFullTableName(null, "BBB", "CCC"));
+        assertEquals("AAA.CCC", TableUtil
+                .buildFullTableName("AAA", null, "CCC"));
+        assertEquals("CCC", TableUtil.buildFullTableName(null, null, "CCC"));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testSplitCanonicalTableName() throws Exception {
         String[] elements = TableUtil.splitCanonicalTableName("aaa.bbb.ccc");
         assertEquals(3, elements.length);

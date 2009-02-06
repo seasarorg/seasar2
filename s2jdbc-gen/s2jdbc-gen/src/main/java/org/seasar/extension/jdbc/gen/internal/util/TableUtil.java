@@ -94,6 +94,29 @@ public class TableUtil {
     }
 
     /**
+     * 完全なテーブル名を組み立てます。
+     * 
+     * @param catalogName
+     *            カタログ名
+     * @param schemaName
+     *            スキーマ名
+     * @param tableName
+     *            テーブル名
+     * @return 完全なテーブル名
+     */
+    public static String buildFullTableName(String catalogName,
+            String schemaName, String tableName) {
+        StringBuilder buf = new StringBuilder();
+        if (!StringUtil.isEmpty(catalogName)) {
+            buf.append(catalogName).append(".");
+        }
+        if (!StringUtil.isEmpty(schemaName)) {
+            buf.append(schemaName).append(".");
+        }
+        return buf.append(tableName).toString();
+    }
+
+    /**
      * 標準のテーブル名を、カタログ名、スキーマ名、テーブル名の3つを要素とする文字列配列に分解します。
      * 
      * @param canonicalTableName

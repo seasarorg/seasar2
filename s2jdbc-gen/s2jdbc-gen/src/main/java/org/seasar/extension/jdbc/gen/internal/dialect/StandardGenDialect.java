@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -47,9 +50,14 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
 import org.seasar.extension.jdbc.gen.internal.util.ColumnUtil;
+import org.seasar.extension.jdbc.gen.internal.util.TableUtil;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
+import org.seasar.extension.jdbc.util.ConnectionUtil;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
+import org.seasar.framework.util.ResultSetUtil;
+import org.seasar.framework.util.StatementUtil;
 import org.seasar.framework.util.StringUtil;
 
 /**
@@ -58,6 +66,9 @@ import org.seasar.framework.util.StringUtil;
  * @author taedium
  */
 public class StandardGenDialect implements GenDialect {
+
+    /** ロガー */
+    protected static Logger logger = Logger.getLogger(StandardGenDialect.class);
 
     /** SQL型をキー、{@link SqlType}を値とするマップ */
     protected Map<Integer, SqlType> sqlTypeMap = new HashMap<Integer, SqlType>();
@@ -307,6 +318,29 @@ public class StandardGenDialect implements GenDialect {
 
     public boolean supportsReferentialUpdateRule() {
         return true;
+    }
+
+    public boolean isAutoIncrement(Connection connection, String catalogName,
+            String schemaName, String tableName, String columnName)
+            throws SQLException {
+        String fullTableName = TableUtil.buildFullTableName(catalogName,
+                schemaName, tableName);
+        String sql = "select " + columnName + " from " + fullTableName
+                + " where 1 = 0";
+        logger.debug(sql);
+
+        PreparedStatement ps = ConnectionUtil.prepareStatement(connection, sql);
+        try {
+            ResultSet rs = ps.executeQuery();
+            try {
+                ResultSetMetaData rsMetaData = rs.getMetaData();
+                return rsMetaData.isAutoIncrement(1);
+            } finally {
+                ResultSetUtil.close(rs);
+            }
+        } finally {
+            StatementUtil.close(ps);
+        }
     }
 
     /**

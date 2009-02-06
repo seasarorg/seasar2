@@ -41,7 +41,6 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
 import org.seasar.extension.jdbc.gen.internal.util.CharUtil;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
-import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.PreparedStatementUtil;
 import org.seasar.framework.util.ResultSetUtil;
@@ -54,9 +53,6 @@ import org.seasar.framework.util.StringUtil;
  * @author taedium
  */
 public class OracleGenDialect extends StandardGenDialect {
-
-    /** ロガー */
-    protected Logger logger = Logger.getLogger(OracleGenDialect.class);
 
     /** テーブルが見つからないことを示すエラーコード */
     protected static int TABLE_NOT_FOUND_ERROR_CODE = 942;
