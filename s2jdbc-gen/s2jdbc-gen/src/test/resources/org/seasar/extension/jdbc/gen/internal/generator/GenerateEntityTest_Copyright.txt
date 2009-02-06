@@ -3,6 +3,7 @@
  */
 package hoge.entity;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -13,5 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
-public class Foo {
+public class Foo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 }

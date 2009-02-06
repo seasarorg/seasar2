@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -258,6 +259,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
      */
     protected void doImportName(EntityModel model, EntityDesc entityDesc) {
         classModelSupport.addImportName(model, Entity.class);
+        classModelSupport.addImportName(model, Serializable.class);
         if (model.getCatalogName() != null || model.getSchemaName() != null
                 || model.getTableName() != null) {
             classModelSupport.addImportName(model, Table.class);

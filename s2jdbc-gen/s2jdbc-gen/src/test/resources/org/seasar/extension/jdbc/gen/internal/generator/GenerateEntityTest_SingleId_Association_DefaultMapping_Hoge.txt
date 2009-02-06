@@ -1,5 +1,6 @@
 package hoge.entity;
 
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -12,7 +13,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
-public class Hoge {
+public class Hoge implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** fooList関連プロパティ */
     @OneToMany(mappedBy = "hoge")

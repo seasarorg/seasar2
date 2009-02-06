@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
@@ -107,8 +108,9 @@ public class EntityModelFactoryImplTest {
         assertEquals("FOO", model.getTableName());
 
         Set<String> set = model.getImportNameSet();
-        assertEquals(13, set.size());
+        assertEquals(14, set.size());
         Iterator<String> iterator = set.iterator();
+        assertEquals(Serializable.class.getName(), iterator.next());
         assertEquals(Date.class.getName(), iterator.next());
         assertEquals(Column.class.getName(), iterator.next());
         assertEquals(Entity.class.getName(), iterator.next());

@@ -1,5 +1,6 @@
 package hoge.entity;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -11,5 +12,7 @@ import javax.persistence.UniqueConstraint;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB", uniqueConstraints = { @UniqueConstraint(columnNames = { "CCC", "DDD" }), @UniqueConstraint(columnNames = { "EEE", "FFF" }) })
-public class Foo {
+public class Foo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 }

@@ -1,5 +1,6 @@
 package hoge.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,9 @@ import org.seasar.extension.jdbc.gen.internal.generator.Eee;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
-public class Foo extends Eee {
+public class Foo extends Eee implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** idプロパティ */
     @Id

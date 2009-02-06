@@ -1,5 +1,6 @@
 package hoge.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
@@ -22,7 +23,9 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
-public class Foo {
+public class Foo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** idプロパティ */
     @Id

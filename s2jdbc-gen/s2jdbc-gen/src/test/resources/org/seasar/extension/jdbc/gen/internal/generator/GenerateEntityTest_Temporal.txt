@@ -1,5 +1,6 @@
 package hoge.entity;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -15,7 +16,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
-public class Foo {
+public class Foo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** idプロパティ */
     @Id

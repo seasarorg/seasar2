@@ -26,7 +26,9 @@ import static ${importName};
 <#if catalogName?? || schemaName?? || tableName?? || compositeUniqueConstraintModelList?size gt 0>
 @Table(<#if catalogName??>catalog = "${catalogName}"</#if><#if schemaName??><#if catalogName??>, </#if>schema = "${schemaName}"</#if><#if tableName??><#if catalogName?? || schemaName??>, </#if>name = "${tableName}"</#if><#if compositeUniqueConstraintModelList?size gt 0><#if catalogName?? || schemaName?? || tableName??>, </#if>uniqueConstraints = { <#list compositeUniqueConstraintModelList as uniqueConstraint>@UniqueConstraint(columnNames = { <#list uniqueConstraint.columnNameList as columnName>"${columnName}"<#if columnName_has_next>, </#if></#list> })<#if uniqueConstraint_has_next>, </#if></#list> }</#if>)
 </#if>
-public class ${shortClassName}<#if shortSuperclassName??> extends ${shortSuperclassName}</#if> {
+public class ${shortClassName}<#if shortSuperclassName??> extends ${shortSuperclassName}</#if> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 <#list attributeModelList as attr>
 
   <#if attr.unsupportedColumnType>
