@@ -491,7 +491,7 @@ public class LoadDataCommand extends AbstractCommand {
 
             public void execute(SqlExecutionContext context) {
                 for (File file : fileList) {
-                    if (loader.isTarget(file)) {
+                    if (loader.isTarget(databaseDesc, file)) {
                         loader.load(context, databaseDesc, file);
                     }
                 }

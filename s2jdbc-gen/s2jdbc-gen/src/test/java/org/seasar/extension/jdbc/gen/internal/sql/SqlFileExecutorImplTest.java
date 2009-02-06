@@ -9,17 +9,15 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, 
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen.internal.data;
+package org.seasar.extension.jdbc.gen.internal.sql;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.junit.Test;
-import org.seasar.extension.jdbc.gen.desc.ColumnDesc;
 import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.desc.TableDesc;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
@@ -30,32 +28,7 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class LoaderImplTest {
-
-    private LoaderImpl loader = new LoaderImpl(new StandardGenDialect(),
-            "UTF-8", 10, false);
-
-    /**
-     * 
-     */
-    @Test
-    public void testBuildSql() {
-        ColumnDesc columnDesc1 = new ColumnDesc();
-        columnDesc1.setName("foo");
-
-        ColumnDesc columnDesc2 = new ColumnDesc();
-        columnDesc2.setName("BAR");
-
-        TableDesc tableDesc = new TableDesc();
-        tableDesc.setCatalogName("AAA");
-        tableDesc.setSchemaName("BBB");
-        tableDesc.setName("HOGE");
-        tableDesc.addColumnDesc(columnDesc1);
-        tableDesc.addColumnDesc(columnDesc2);
-
-        String sql = loader.buildSql(tableDesc, Arrays.asList("FOO", "BAR"));
-        assertEquals("insert into AAA.BBB.HOGE (FOO, BAR) values (?, ?)", sql);
-    }
+public class SqlFileExecutorImplTest {
 
     /**
      * 
@@ -63,14 +36,21 @@ public class LoaderImplTest {
      */
     @Test
     public void testIsTarget() throws Exception {
+        SqlFileExecutorImpl executor = new SqlFileExecutorImpl(
+                new StandardGenDialect(), "UTF-8", ';', null);
         TableDesc tableDesc = new TableDesc();
         tableDesc.setCanonicalName("aaa.bbb.ccc");
         DatabaseDesc databaseDesc = new DatabaseDesc();
         databaseDesc.addTableDesc(tableDesc);
-        File match = new File("aaa.bbb.ccc.csv");
-        File unmatch = new File("xxx.csv");
+        File match = new File("aaa.bbb.ccc.sql");
+        File unmatch = new File("xxx.sql");
 
-        assertTrue(loader.isTarget(databaseDesc, match));
-        assertFalse(loader.isTarget(databaseDesc, unmatch));
+        assertTrue(executor.isTarget(databaseDesc, match));
+        assertTrue(executor.isTarget(databaseDesc, unmatch));
+
+        databaseDesc.setFiltered(true);
+
+        assertTrue(executor.isTarget(databaseDesc, match));
+        assertFalse(executor.isTarget(databaseDesc, unmatch));
     }
 }

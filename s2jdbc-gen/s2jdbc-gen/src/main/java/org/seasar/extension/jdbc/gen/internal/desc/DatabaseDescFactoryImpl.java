@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.jdbc.gen.internal.desc;
 
-import java.util.List;
-
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.EntityMetaFactory;
 import org.seasar.extension.jdbc.ValueType;
@@ -98,8 +96,8 @@ public class DatabaseDescFactoryImpl implements DatabaseDescFactory {
 
     public DatabaseDesc getDatabaseDesc() {
         DatabaseDesc databaseDesc = new DatabaseDesc();
-        List<EntityMeta> entityMetaList = entityMetaReader.read();
-        for (EntityMeta entityMeta : entityMetaList) {
+        databaseDesc.setFiltered(entityMetaReader.isFiltered());
+        for (EntityMeta entityMeta : entityMetaReader.read()) {
             TableDesc tableDesc = tableDescFactory.getTableDesc(entityMeta);
             databaseDesc.addTableDesc(tableDesc);
             for (TableDesc idTableDesc : tableDesc.getIdTableDescList()) {

@@ -93,8 +93,7 @@ public class LoaderImpl implements Loader {
 
     public void load(SqlExecutionContext sqlExecutionContext,
             DatabaseDesc databaseDesc, File dumpFile) {
-        String name = StringUtil.trimSuffix(dumpFile.getName(), extension);
-        TableDesc tableDesc = databaseDesc.getTableDesc(name);
+        TableDesc tableDesc = getTableDesc(databaseDesc, dumpFile);
         if (tableDesc == null) {
             return;
         }
@@ -134,8 +133,17 @@ public class LoaderImpl implements Loader {
         }
     }
 
-    public boolean isTarget(File file) {
-        return file != null && file.getName().endsWith(extension);
+    public boolean isTarget(DatabaseDesc databaseDesc, File file) {
+        if (databaseDesc == null || file == null) {
+            return false;
+        }
+        if (!file.getName().endsWith(extension)) {
+            return false;
+        }
+        if (getTableDesc(databaseDesc, file) == null) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -323,5 +331,19 @@ public class LoaderImpl implements Loader {
     protected DumpFileReader createDumpFileReader(File dumpFile) {
         return new DumpFileReader(dumpFile, dumpFileEncoding,
                 createDumpFileTokenizer());
+    }
+
+    /**
+     * テーブル記述を返します。
+     * 
+     * @param databaseDesc
+     *            データベース記述
+     * @param dumpFile
+     *            ダンプファイル
+     * @return テーブル記述、存在しない場合{@code null}
+     */
+    protected TableDesc getTableDesc(DatabaseDesc databaseDesc, File dumpFile) {
+        String name = StringUtil.trimSuffix(dumpFile.getName(), extension);
+        return databaseDesc.getTableDesc(name);
     }
 }

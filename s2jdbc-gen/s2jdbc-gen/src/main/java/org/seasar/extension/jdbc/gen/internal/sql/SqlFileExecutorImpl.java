@@ -18,11 +18,13 @@ package org.seasar.extension.jdbc.gen.internal.sql;
 import java.io.File;
 import java.sql.Statement;
 
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.exception.SqlFailedRuntimeException;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlFileExecutor;
 import org.seasar.framework.log.Logger;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link SqlFileExecutor}の実装クラスです。
@@ -94,12 +96,37 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
         logger.log("DS2JDBCGen0007", new Object[] { sqlFile.getPath() });
     }
 
-    public boolean isTarget(File file) {
-        if (file == null) {
+    public boolean isTarget(DatabaseDesc databaseDesc, File file) {
+        if (databaseDesc == null || file == null) {
             return false;
         }
-        String name = file.getName();
-        return name.endsWith(".sql") || name.endsWith(".ddl");
+        return isTarget(databaseDesc, file, ".sql")
+                || isTarget(databaseDesc, file, ".ddl");
+    }
+
+    /**
+     * 対象とするSQLファイルの場合{@code true}を返します。
+     * 
+     * @param databaseDesc
+     *            データベース記述
+     * @param file
+     *            ファイル
+     * @param extension
+     *            拡張子
+     * @return SQLファイルの場合{@code true}を返します。
+     */
+    protected boolean isTarget(DatabaseDesc databaseDesc, File file,
+            String extension) {
+        if (!file.getName().endsWith(extension)) {
+            return false;
+        }
+        if (databaseDesc.isFiltered()) {
+            String tableName = StringUtil.trimSuffix(file.getName(), extension);
+            if (databaseDesc.getTableDesc(tableName) == null) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

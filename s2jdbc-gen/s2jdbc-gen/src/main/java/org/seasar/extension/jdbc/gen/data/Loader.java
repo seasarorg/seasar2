@@ -47,9 +47,11 @@ public interface Loader {
     /**
      * ダンプファイルの場合{@code true}を返します。
      * 
+     * @param databaseDesc
+     *            データベース記述
      * @param file
      *            ファイル
      * @return ダンプファイルの場合{@code true}
      */
-    boolean isTarget(File file);
+    boolean isTarget(DatabaseDesc databaseDesc, File file);
 }

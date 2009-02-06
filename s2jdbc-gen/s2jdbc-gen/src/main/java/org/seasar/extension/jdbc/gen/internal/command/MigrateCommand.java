@@ -561,7 +561,7 @@ public class MigrateCommand extends AbstractCommand {
         migrater.migrate(new Migrater.Callback() {
 
             public void drop(SqlExecutionContext sqlExecutionContext, File file) {
-                if (sqlFileExecutor.isTarget(file)) {
+                if (sqlFileExecutor.isTarget(databaseDesc, file)) {
                     boolean haltOnError = sqlExecutionContext.isHaltOnError();
                     try {
                         sqlExecutionContext.setHaltOnError(false);
@@ -574,10 +574,10 @@ public class MigrateCommand extends AbstractCommand {
 
             public void create(SqlExecutionContext sqlExecutionContext,
                     File file) {
-                if (sqlFileExecutor.isTarget(file)) {
+                if (sqlFileExecutor.isTarget(databaseDesc, file)) {
                     sqlFileExecutor.execute(sqlExecutionContext, file);
                 }
-                if (loader.isTarget(file)) {
+                if (loader.isTarget(databaseDesc, file)) {
                     loader.load(sqlExecutionContext, databaseDesc, file);
                 }
             }

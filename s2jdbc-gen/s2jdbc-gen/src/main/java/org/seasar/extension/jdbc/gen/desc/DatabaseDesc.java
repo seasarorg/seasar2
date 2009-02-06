@@ -29,12 +29,34 @@ import org.seasar.framework.util.CaseInsensitiveMap;
  */
 public class DatabaseDesc {
 
+    /** このインスタンスで保持する{@link TableDesc}がフィルタされている場合{@code true} */
+    protected boolean filtered;
+
     /** テーブル記述のリスト */
     protected List<TableDesc> tableDescList = new ArrayList<TableDesc>();
 
     /** テーブルの標準名をキー、テーブル記述を値としたマップ */
     @SuppressWarnings("unchecked")
     protected Map<String, TableDesc> tableDescMap = new CaseInsensitiveMap();
+
+    /**
+     * このインスタンスで保持する{@link TableDesc}がフィルタされている場合{@code true}を返します。
+     * 
+     * @return フィルタされている場合{@code true}
+     */
+    public boolean isFiltered() {
+        return filtered;
+    }
+
+    /**
+     * このインスタンスで保持する{@link TableDesc}がフィルタされている場合{@code true}を設定します。
+     * 
+     * @param filtered
+     *            フィルタされている場合{@code true}
+     */
+    public void setFiltered(boolean filtered) {
+        this.filtered = filtered;
+    }
 
     /**
      * テーブル記述のリストを返します。

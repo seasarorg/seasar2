@@ -122,7 +122,7 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
             throw new NullPointerException("shortClassNamePattern");
         }
         if (ignoreShortClassNamePattern == null) {
-            throw new NullPointerException("setEntityClassNamePattern");
+            throw new NullPointerException("ignoreShortClassNamePattern");
         }
         if (readComment) {
             if (javaFileSrcDirList == null) {
@@ -131,9 +131,9 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
             if (javaFileSrcDirList.isEmpty()) {
                 throw new IllegalArgumentException("javaFileSrcDirList");
             }
-        }
-        if (readComment && javaFileEncoding == null) {
-            throw new NullPointerException("javaFileEncoding");
+            if (javaFileEncoding == null) {
+                throw new NullPointerException("javaFileEncoding");
+            }
         }
         this.classpathDir = classpathDir;
         this.packageName = packageName;
@@ -271,4 +271,10 @@ public class EntityMetaReaderImpl implements EntityMetaReader {
         }
         return args.toArray(new String[args.size()]);
     }
+
+    public boolean isFiltered() {
+        return !shortClassNamePattern.pattern().equals(".*")
+                || !ignoreShortClassNamePattern.pattern().equals("");
+    }
+
 }

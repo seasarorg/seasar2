@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.sql;
 
 import java.io.File;
 
+import org.seasar.extension.jdbc.gen.desc.DatabaseDesc;
+
 /**
  * SQLファイルを実行するインタフェースです。
  * 
@@ -35,11 +37,13 @@ public interface SqlFileExecutor {
     void execute(SqlExecutionContext context, File sqlFile);
 
     /**
-     * SQLファイルの場合{@code true}を返します。
+     * 対象とするSQLファイルの場合{@code true}を返します。
      * 
+     * @param databaseDesc
+     *            データベース記述
      * @param file
      *            ファイル
      * @return SQLファイルの場合{@code true}
      */
-    boolean isTarget(File file);
+    boolean isTarget(DatabaseDesc databaseDesc, File file);
 }

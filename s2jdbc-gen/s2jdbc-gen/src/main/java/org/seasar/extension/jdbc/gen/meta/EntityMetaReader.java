@@ -31,5 +31,12 @@ public interface EntityMetaReader {
      * 
      * @return エンティティメタデータ
      */
-    public List<EntityMeta> read();
+    List<EntityMeta> read();
+
+    /**
+     * エンティティメタデータの検索条件が設定されている場合{@code true}を返します。
+     * 
+     * @return 検索条件が設定されている場合{@code true}
+     */
+    boolean isFiltered();
 }
