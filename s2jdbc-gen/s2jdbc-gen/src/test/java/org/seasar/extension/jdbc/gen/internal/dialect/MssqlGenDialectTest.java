@@ -100,4 +100,26 @@ public class MssqlGenDialectTest {
         assertEquals("numeric(10,2)", type.getColumnDefinition(0, 10, 2, null));
         assertEquals(BigDecimal.class, type.getAttributeClass(0, 10, 2));
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_nchar() throws Exception {
+        ColumnType type = dialect.getColumnType("nchar", Types.OTHER);
+        assertEquals("nchar(10)", type.getColumnDefinition(10, 0, 0, null));
+        assertEquals(String.class, type.getAttributeClass(10, 0, 0));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_ntext() throws Exception {
+        ColumnType type = dialect.getColumnType("ntext", Types.OTHER);
+        assertEquals("ntext", type.getColumnDefinition(10, 0, 0, null));
+        assertEquals(String.class, type.getAttributeClass(10, 0, 0));
+    }
 }

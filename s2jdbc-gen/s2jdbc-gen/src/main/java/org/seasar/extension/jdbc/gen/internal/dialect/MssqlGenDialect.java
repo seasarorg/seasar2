@@ -211,10 +211,10 @@ public class MssqlGenDialect extends StandardGenDialect {
                 BigDecimal.class);
 
         private static MssqlColumnType NCHAR = new MssqlColumnType("nchar($l)",
-                BigDecimal.class);
+                String.class);
 
         private static MssqlColumnType NTEXT = new MssqlColumnType("ntext",
-                BigDecimal.class);
+                String.class);
 
         private static MssqlColumnType NUMERIC = new MssqlColumnType(
                 "numeric($p,$s)", BigDecimal.class);
