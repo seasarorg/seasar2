@@ -5,15 +5,14 @@
 	<component name="xaDataSource"
 		class="org.seasar.extension.dbcp.impl.XADataSourceImpl">
 		<property name="driverClassName">
-			"org.h2.Driver"
+			"com.mysql.jdbc.Driver"
 		</property>
 		<property name="URL">
-			"jdbc:h2:file:"
-				+ @org.seasar.framework.util.ResourceUtil@getBuildDir(@org.seasar.extension.jdbc.it.entity.Employee@class).getCanonicalPath()
-				+ "/data-h2/demo;DB_CLOSE_ON_EXIT=FALSE"
+			"jdbc:mysql://localhost:3306/s2container_2_4_s2jdbc_it"
+			+ (System.getProperty("jdk") == "JDK-1.5" ? "" : "_1")
 		</property>
-		<property name="user">"sa"</property>
-		<property name="password">""</property>
+		<property name="user">"s2container"</property>
+		<property name="password">"s2container"</property>
 	</component>
-	<component class="org.seasar.extension.jdbc.dialect.H2Dialect"/>
+	<component class="org.seasar.extension.jdbc.dialect.MysqlDialect"/>
 </components>

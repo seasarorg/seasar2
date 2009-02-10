@@ -155,7 +155,7 @@
             <phase>generate-test-resources</phase>
             <configuration>
               <tasks>
-                <echo message="${database}_${jdk}" file="src/test/resources/env_ut.txt"/>
+                <echo message="${database}" file="src/test/resources/env_ut.txt"/>
               </tasks>
             </configuration>
             <goals>

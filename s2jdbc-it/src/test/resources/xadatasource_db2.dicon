@@ -14,11 +14,17 @@
 		<property name="password">"seasar"</property>
 		<initMethod name="addProperty">
 			<arg>"currentSchema"</arg>
-			<arg>"S2CONTAINER_2_4_S2JDBC_IT"</arg>
+			<arg>
+				"S2CONTAINER_2_4_S2JDBC_IT"
+				+ (System.getProperty("jdk") == "JDK-1.5" ? "" : "_1")
+			</arg>
 		</initMethod>
 		<initMethod name="addProperty">
 			<arg>"currentFunctionPath"</arg>
-			<arg>"S2CONTAINER_2_4_S2JDBC_IT"</arg>
+			<arg>
+				"S2CONTAINER_2_4_S2JDBC_IT"
+				+ (System.getProperty("jdk") == "JDK-1.5" ? "" : "_1")
+			</arg>
 		</initMethod>
 	</component>
 	<component class="org.seasar.extension.jdbc.dialect.Db2Dialect" />
