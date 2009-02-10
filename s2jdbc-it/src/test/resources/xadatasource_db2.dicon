@@ -16,14 +16,14 @@
 			<arg>"currentSchema"</arg>
 			<arg>
 				"S2CONTAINER_2_4_S2JDBC_IT"
-				+ (System.getProperty("jdk") == "JDK-1.5" ? "" : "_1")
+				+ (@java.lang.System@getProperty("jdk") == "JDK-1.5" ? "" : "_1")
 			</arg>
 		</initMethod>
 		<initMethod name="addProperty">
 			<arg>"currentFunctionPath"</arg>
 			<arg>
 				"S2CONTAINER_2_4_S2JDBC_IT"
-				+ (System.getProperty("jdk") == "JDK-1.5" ? "" : "_1")
+				+ (@java.lang.System@getProperty("jdk") == "JDK-1.5" ? "" : "_1")
 			</arg>
 		</initMethod>
 	</component>

@@ -9,7 +9,7 @@
 		</property>
 		<property name="URL">
 			"jdbc:mysql://localhost:3306/s2container_2_4_s2jdbc_it"
-			+ (System.getProperty("jdk") == "JDK-1.5" ? "" : "_1")
+			+ (@java.lang.System@getProperty("jdk") == "JDK-1.5" ? "" : "_1")
 		</property>
 		<property name="user">"s2container"</property>
 		<property name="password">"s2container"</property>
