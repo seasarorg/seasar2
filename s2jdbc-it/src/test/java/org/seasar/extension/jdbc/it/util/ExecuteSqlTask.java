@@ -103,11 +103,11 @@ public class ExecuteSqlTask extends Task {
      * SQLを実行します。
      */
     protected void executeSql() {
-        String databaseName = getDatabaseName();
-        Dialect dialect = dialectMap.get(databaseName);
+        String env = Env.getValue();
+        Dialect dialect = dialectMap.get(env);
         if (dialect == null) {
-            throw new BuildException("Dialect not found for databaseName("
-                + databaseName + ").");
+            throw new BuildException("Dialect not found for env value(" + env
+                + ").");
         }
 
         SqlFileExecutor executor =
@@ -125,16 +125,4 @@ public class ExecuteSqlTask extends Task {
             context.destroy();
         }
     }
-
-    /**
-     * データベースの名前を返します。
-     * 
-     * @return データベースの名前
-     */
-    protected String getDatabaseName() {
-        String env = Env.getValue();
-        int pos = env.indexOf('_');
-        return pos > 0 ? env.substring(0, pos) : env;
-    }
-
 }
