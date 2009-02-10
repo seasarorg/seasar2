@@ -57,7 +57,7 @@
 		</section>
 		<section name="SQLファイル">
 			<p>
-				SQLファイルは<a href="tasks/gen_ddl.html">Gen_Ddl</a>タスクで生成されます。
+				SQLファイルは<a href="tasks/gen_ddl.html">Gen-Ddl</a>タスクで生成されます。
 			</p>
 			<p>
 				生成されたSQLファイルや独自に作成したSQLファイルは、
