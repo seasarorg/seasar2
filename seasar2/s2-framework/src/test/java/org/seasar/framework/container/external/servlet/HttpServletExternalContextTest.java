@@ -57,6 +57,11 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getRequestCookieMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        try {
+            map.put("a", "b");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+        }
     }
 
     /**
@@ -69,7 +74,6 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         HttpServletExternalContext context = new HttpServletExternalContext();
         context.setRequest(request);
         Map map = context.getSessionMap();
-        assertSame(map, context.getSessionMap());
         assertEquals("bbb", map.get("aaa"));
         assertEquals(1, map.size());
         map.remove("aaa");
@@ -87,6 +91,7 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getSessionMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        map.put("a", "b");
     }
 
     /**
@@ -209,6 +214,11 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getRequestHeaderMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        try {
+            map.put("a", "b");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+        }
     }
 
     /**
@@ -240,6 +250,11 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getRequestHeaderValuesMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        try {
+            map.put("a", "b");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+        }
     }
 
     /**
@@ -270,6 +285,7 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getRequestMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        map.put("a", "b");
     }
 
     /**
@@ -313,6 +329,11 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getRequestParameterMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        try {
+            map.put("a", "b");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+        }
     }
 
     /**
@@ -343,5 +364,10 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         Map map = context.getRequestParameterValuesMap();
         assertNotNull(map);
         assertEquals(0, map.size());
+        try {
+            map.put("a", "b");
+            fail();
+        } catch (UnsupportedOperationException expected) {
+        }
     }
 }

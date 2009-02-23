@@ -16,6 +16,7 @@
 package org.seasar.framework.container.external.servlet;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -32,23 +33,45 @@ import org.seasar.framework.container.ExternalContext;
  */
 public class HttpServletExternalContext implements ExternalContext {
 
+    /**
+     * 可変な空の{@link Map}を初期値とする{@link ThreadLocal}です。
+     */
+    private static class MutableMapThreadLocal extends ThreadLocal {
+
+        protected Object initialValue() {
+            return new HashMap();
+        }
+
+    }
+
+    /**
+     * 不変な空の{@link Map}を初期値とする{@link ThreadLocal}です。
+     */
+    private static class EmutableMapThreadLocal extends ThreadLocal {
+
+        protected Object initialValue() {
+            return Collections.EMPTY_MAP;
+        }
+
+    }
+
     private ThreadLocal requests = new ThreadLocal();
 
     private ThreadLocal responses = new ThreadLocal();
 
-    private ThreadLocal requestMaps = new ThreadLocal();
+    private ThreadLocal requestMaps = new MutableMapThreadLocal();
 
-    private ThreadLocal requestHeaderMaps = new ThreadLocal();
+    private ThreadLocal requestHeaderMaps = new EmutableMapThreadLocal();
 
-    private ThreadLocal requestHeaderValuesMaps = new ThreadLocal();
+    private ThreadLocal requestHeaderValuesMaps = new EmutableMapThreadLocal();
 
-    private ThreadLocal requestParameterMaps = new ThreadLocal();
+    private ThreadLocal requestParameterMaps = new EmutableMapThreadLocal();
 
-    private ThreadLocal requestParameterValuesMaps = new ThreadLocal();
+    private ThreadLocal requestParameterValuesMaps = new EmutableMapThreadLocal();
 
-    private ThreadLocal requestCookieMaps = new ThreadLocal();
+    private ThreadLocal requestCookieMaps = new EmutableMapThreadLocal();
 
-    private ThreadLocal sessionMaps = new ThreadLocal();
+    private ThreadLocal sessionMaps = new MutableMapThreadLocal();
 
     private ServletContext application;
 
@@ -68,13 +91,13 @@ public class HttpServletExternalContext implements ExternalContext {
     public void setRequest(Object request) {
         requests.set(request);
         if (request == null) {
-            requestMaps.set(Collections.EMPTY_MAP);
+            requestMaps.set(new HashMap());
             requestHeaderMaps.set(Collections.EMPTY_MAP);
             requestHeaderValuesMaps.set(Collections.EMPTY_MAP);
             requestParameterMaps.set(Collections.EMPTY_MAP);
             requestParameterValuesMaps.set(Collections.EMPTY_MAP);
             requestCookieMaps.set(Collections.EMPTY_MAP);
-            sessionMaps.set(Collections.EMPTY_MAP);
+            sessionMaps.set(new HashMap());
         } else {
             final HttpServletRequest req = (HttpServletRequest) request;
             requestMaps.set(new ServletRequestMap(req));
