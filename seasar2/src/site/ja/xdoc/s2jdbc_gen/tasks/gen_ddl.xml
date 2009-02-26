@@ -437,9 +437,9 @@
 			<subsection name="エンティティのJavaDocコメントをテーブル作成用のDDLファイルに反映させる">
 				<p>
 					エンティティのJavaDocコメントをDDLに反映させるには、applyJavaCommentToDdl属性に"true"を指定します。
-					javaFileSrcDirs属性については、カンマや空白区切りで複数の値を指定できることに注意してください。
 					また、必要に応じてjavaFileSrcDirs属性とjavaFileEncoding属性を使用します。
-				</p>				
+					javaFileSrcDirs属性については、カンマや空白区切りで複数の値を指定できることに注意してください。
+				</p>
 <source><![CDATA[<gen-ddl
     classpathDir="build/classes"
     rootPackageName="examples"

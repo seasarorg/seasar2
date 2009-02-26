@@ -218,9 +218,9 @@ public class Department {
 					<tr><td>@LobつきString</td><td>clob<br />nclob</td><td>varchar(max)<br />nvarchar(max)<br />text<br />ntext</td><td>clob</td><td>text</td><td>tinytext<br />text<br />mediumtext<br />longtext</td></tr>
 					<tr><td>byte[]</td><td>raw<br />long raw</td><td>binary<br />varbinary</td><td>char for bit data<br />varchar for bit data<br />long varchar for bit data</td><td>bit<br />bit varying<br />varbit<br />bytea</td><td>bit<br />tinyblob<br />blob<br />mediumblob<br />longblob</td></tr>
 					<tr><td>@Lobつきbyte[]</td><td>blob</td><td>binary<br />image<br />varbinary(max)</td><td>blob</td><td>oid</td><td>tinyblob<br />blob<br />mediumblob<br />longblob</td></tr>
-					<tr><td>@Temporal(TeporalType.TIME)つき<br />java.util.Date</td><td>-</td><td>-</td><td>time</td><td>time<br />timetz</td><td>time</td></tr>
-					<tr><td>@Temporal(TeporalType.DATE)つき<br />java.util.Date</td><td>date</td><td>-</td><td>date</td><td>date</td><td>date<br />year</td></tr>
-					<tr><td>@Temporal(TeporalType.TIMESTAMP)つき<br />java.util.Date</td><td>timestamp</td><td>smalldatetime<br />datetime</td><td>timestamp</td><td>timestamp<br />timestamptz</td><td>datetime<br />timestamp</td></tr>
+					<tr><td>java.sql.Time</td><td>-</td><td>-</td><td>time</td><td>time<br />timetz</td><td>time</td></tr>
+					<tr><td>java.sql.Date</td><td>date</td><td>-</td><td>date</td><td>date</td><td>date<br />year</td></tr>
+					<tr><td>java.sql.Timestamp</td><td>timestamp</td><td>smalldatetime<br />datetime</td><td>timestamp</td><td>timestamp<br />timestamptz</td><td>datetime<br />timestamp</td></tr>
 				</table>
 			</subsection>
 		</section>
