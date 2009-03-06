@@ -36,4 +36,14 @@ public class JarFileUtilTest extends TestCase {
                 JarFileUtil.toJarFilePath(url));
     }
 
+    /**
+     * @throws Exception
+     */
+    public void testRelativePath() throws Exception {
+        File f = new File("/Program Files/foo.jar");
+        URL url = new URL("jar:" + f.toURL() + "!/foo/bar/");
+        url = new URL(url, "..");
+        System.out.println(url.toExternalForm());
+    }
+
 }

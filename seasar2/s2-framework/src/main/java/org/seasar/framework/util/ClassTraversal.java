@@ -19,11 +19,17 @@ import java.io.File;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * クラスを横断して処理するためのハンドラです。
+ * <p>
+ * このクラスを直接使うより、{@link ResourcesUtil}を使用してください。
+ * </p>
  * 
  * @author koichik
+ * @see ResourcesUtil
  */
 public class ClassTraversal {
     private static final String CLASS_SUFFIX = ".class";
@@ -47,12 +53,6 @@ public class ClassTraversal {
     }
 
     /**
-     * インスタンスを構築します。
-     */
-    protected ClassTraversal() {
-    }
-
-    /**
      * rootディレクトリ配下を処理します。
      * 
      * @param rootDir
@@ -63,11 +63,14 @@ public class ClassTraversal {
     }
 
     /**
-     * rootディレクトリ配下でrootパッケージ名配下を処理します。
+     * ファイルシステムに含まれるクラスをトラバースします。
      * 
      * @param rootDir
+     *            ルートディレクトリ
      * @param rootPackage
+     *            ルートパッケージ
      * @param handler
+     *            クラスを処理するハンドラ
      */
     public static void forEach(final File rootDir, final String rootPackage,
             final ClassHandler handler) {
@@ -78,23 +81,53 @@ public class ClassTraversal {
     }
 
     /**
-     * 指定されたjarファイルを処理します。
+     * Jarファイルに含まれるクラスをトラバースします。
+     * <p>
+     * 指定されたJarファイルが拡張子<code>.war</code>を持つ場合は、 Jarファイル内のエントリのうち、 接頭辞
+     * <code>WEB-INF/classes</code>で始まるパスを持つエントリがトラバースの対象となります。
+     * クラスを処理するハンドラには、接頭辞を除くエントリ名が渡されます。 例えばJarファイル内に
+     * <code>/WEB-INF/classes/ccc/ddd/Eee.class</code>というクラスファイルが存在すると、 ハンドラには
+     * パッケージ名<code>ccc.ddd</code>およびクラス名<code>Eee</code>が渡されます。
+     * </p>
      * 
      * @param jarFile
+     *            Jarファイル
      * @param handler
+     *            クラスを処理するハンドラ
      */
     public static void forEach(final JarFile jarFile, final ClassHandler handler) {
-        final boolean hasWarExtension = jarFile.getName().endsWith(
-                WAR_FILE_EXTENSION);
+        if (jarFile.getName().toLowerCase().endsWith(WAR_FILE_EXTENSION)) {
+            forEach(jarFile, WEB_INF_CLASSES_PATH, handler);
+        } else {
+            forEach(jarFile, "", handler);
+        }
+    }
+
+    /**
+     * Jarファイルに含まれるクラスをトラバースします。
+     * <p>
+     * Jarファイル内のエントリのうち、接頭辞で始まるパスを持つエントリがトラバースの対象となります。
+     * クラスを処理するハンドラには、接頭辞を除くエントリ名が渡されます。 例えば接頭辞が <code>/aaa/bbb/</code>
+     * で、Jarファイル内に <code>/aaa/bbb/ccc/ddd/Eee.class</code>というクラスファイルが存在すると、
+     * ハンドラには パッケージ名<code>ccc.ddd</code>およびクラス名<code>Eee</code>が渡されます。
+     * </p>
+     * 
+     * @param jarFile
+     *            Jarファイル
+     * @param prefix
+     *            トラバースするリソースの名前が含む接頭辞。スラッシュ('/')で終了していなければなりません。
+     * @param handler
+     *            クラスを処理するハンドラ
+     */
+    public static void forEach(final JarFile jarFile, final String prefix,
+            final ClassHandler handler) {
+        final int startPos = prefix.length();
         final Enumeration enumeration = jarFile.entries();
         while (enumeration.hasMoreElements()) {
             final JarEntry entry = (JarEntry) enumeration.nextElement();
             final String entryName = entry.getName().replace('\\', '/');
-            if (entryName.endsWith(CLASS_SUFFIX)) {
-                final int startPos = hasWarExtension
-                        && entryName.startsWith(WEB_INF_CLASSES_PATH) ? WEB_INF_CLASSES_PATH
-                        .length()
-                        : 0;
+            if (entryName.startsWith(prefix)
+                    && entryName.endsWith(CLASS_SUFFIX)) {
                 final String className = entryName.substring(startPos,
                         entryName.length() - CLASS_SUFFIX.length()).replace(
                         '/', '.');
@@ -104,6 +137,62 @@ public class ClassTraversal {
                 final String shortClassName = (pos == -1) ? className
                         : className.substring(pos + 1);
                 handler.processClass(packageName, shortClassName);
+            }
+        }
+    }
+
+    /**
+     * ZIPファイル形式の入力ストリームに含まれるクラスをトラバースします。
+     * 
+     * @param zipInputStream
+     *            ZIPファイル形式の入力ストリーム
+     * @param prefix
+     *            トラバースするリソースの名前が含む接頭辞。スラッシュ('/')で終了していなければなりません。
+     * @param handler
+     *            クラスを処理するハンドラ
+     */
+    public static void forEach(final ZipInputStream zipInputStream,
+            final ClassHandler handler) {
+        forEach(zipInputStream, "", handler);
+    }
+
+    /**
+     * ZIPファイル形式の入力ストリームに含まれるクラスをトラバースします。
+     * <p>
+     * 入力ストリーム内のエントリのうち、接頭辞で始まるパスを持つエントリがトラバースの対象となります。
+     * クラスを処理するハンドラには、接頭辞を除くエントリ名が渡されます。 例えば接頭辞が <code>/aaa/bbb/</code>
+     * で、入力ストリーム内に <code>/aaa/bbb/ccc/ddd/Eee.class</code>というクラスファイルが存在すると、
+     * ハンドラには パッケージ名<code>ccc.ddd</code>およびクラス名<code>Eee</code>が渡されます。
+     * </p>
+     * 
+     * @param zipInputStream
+     *            ZIPファイル形式の入力ストリーム
+     * @param prefix
+     *            トラバースするリソースの名前が含む接頭辞。スラッシュ('/')で終了していなければなりません。
+     * @param handler
+     *            クラスを処理するハンドラ
+     */
+    public static void forEach(final ZipInputStream zipInputStream,
+            final String prefix, final ClassHandler handler) {
+        final int startPos = prefix.length();
+        ZipEntry entry = null;
+        while ((entry = ZipInputStreamUtil.getNextEntry(zipInputStream)) != null) {
+            try {
+                final String entryName = entry.getName().replace('\\', '/');
+                if (entryName.startsWith(prefix)
+                        && entryName.endsWith(CLASS_SUFFIX)) {
+                    final String className = entryName.substring(startPos,
+                            entryName.length() - CLASS_SUFFIX.length())
+                            .replace('/', '.');
+                    final int pos = className.lastIndexOf('.');
+                    final String packageName = (pos == -1) ? null : className
+                            .substring(0, pos);
+                    final String shortClassName = (pos == -1) ? className
+                            : className.substring(pos + 1);
+                    handler.processClass(packageName, shortClassName);
+                }
+            } finally {
+                ZipInputStreamUtil.closeEntry(zipInputStream);
             }
         }
     }

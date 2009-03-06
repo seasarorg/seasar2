@@ -31,12 +31,6 @@ import org.seasar.framework.exception.IORuntimeException;
 public class InputStreamUtil {
 
     /**
-     * インスタンスを構築します。
-     */
-    protected InputStreamUtil() {
-    }
-
-    /**
      * {@link InputStream}を閉じます。
      * 
      * @param is
@@ -120,4 +114,21 @@ public class InputStreamUtil {
             throw new IORuntimeException(e);
         }
     }
+
+    /**
+     * {@link InputStream}をリセットします。
+     * 
+     * @param is
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see InputStream#reset()
+     */
+    public static void reset(InputStream is) throws IORuntimeException {
+        try {
+            is.reset();
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
 }

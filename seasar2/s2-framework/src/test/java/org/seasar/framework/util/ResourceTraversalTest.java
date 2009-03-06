@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.util.zip.ZipInputStream;
 
 import junit.framework.TestCase;
 
@@ -78,6 +79,8 @@ public class ResourceTraversalTest extends TestCase {
                         System.out.println(path);
                     }
                     assertNotNull(path);
+                    assertTrue(path.equals("META-INF/MANIFEST.MF")
+                            || path.startsWith("junit"));
                     assertNotNull(is);
                     count++;
                 } finally {
@@ -85,6 +88,89 @@ public class ResourceTraversalTest extends TestCase {
                 }
             }
         });
+        assertTrue(count > 0);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testForEachJarFile_withPrefix() throws Exception {
+        final String classFilePath = TestCase.class.getName().replace('.', '/')
+                + ".class";
+        final URL classURL = ResourceUtil.getResource(classFilePath);
+        final JarURLConnection con = (JarURLConnection) classURL
+                .openConnection();
+        ResourceTraversal.forEach(con.getJarFile(), "junit/",
+                new ResourceHandler() {
+                    public void processResource(String path, InputStream is) {
+                        try {
+                            if (count < 10) {
+                                System.out.println(path);
+                            }
+                            assertFalse(path.startsWith("junit"));
+                            assertNotNull(path);
+                            assertNotNull(is);
+                            count++;
+                        } finally {
+                            InputStreamUtil.close(is);
+                        }
+                    }
+                });
+        assertTrue(count > 0);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testForEachZipInputStream() throws Exception {
+        final String classFilePath = TestCase.class.getName().replace('.', '/')
+                + ".class";
+        final URL classURL = ResourceUtil.getResource(classFilePath);
+        URL jarURL = new File(JarFileUtil.toJarFilePath(classURL)).toURL();
+        ResourceTraversal.forEach(new ZipInputStream(jarURL.openStream()),
+                new ResourceHandler() {
+                    public void processResource(String path, InputStream is) {
+                        try {
+                            if (count < 10) {
+                                System.out.println(path);
+                            }
+                            assertNotNull(path);
+                            assertTrue(path.equals("META-INF/MANIFEST.MF")
+                                    || path.startsWith("junit"));
+                            assertNotNull(is);
+                            count++;
+                        } finally {
+                            InputStreamUtil.close(is);
+                        }
+                    }
+                });
+        assertTrue(count > 0);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testForEachZipInputStream_withPrefix() throws Exception {
+        final String classFilePath = TestCase.class.getName().replace('.', '/')
+                + ".class";
+        final URL classURL = ResourceUtil.getResource(classFilePath);
+        URL jarURL = new File(JarFileUtil.toJarFilePath(classURL)).toURL();
+        ResourceTraversal.forEach(new ZipInputStream(jarURL.openStream()),
+                "junit/", new ResourceHandler() {
+                    public void processResource(String path, InputStream is) {
+                        try {
+                            if (count < 10) {
+                                System.out.println(path);
+                            }
+                            assertFalse(path.startsWith("junit"));
+                            assertNotNull(path);
+                            assertNotNull(is);
+                            count++;
+                        } finally {
+                            InputStreamUtil.close(is);
+                        }
+                    }
+                });
         assertTrue(count > 0);
     }
 

@@ -20,10 +20,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
@@ -31,8 +35,21 @@ import org.seasar.framework.util.ResourceTraversal.ResourceHandler;
 
 /**
  * ファイルシステム上やJarファイル中に展開されているリソースの集まりを扱うユーティリティクラスです。
+ * <p>
+ * 次のプロトコルをサポートしています。
+ * </p>
+ * <ul>
+ * <li><code>file</code></li>
+ * <li><code>jar</code></li>
+ * <li><code>wsjar</code>(WebShpere独自プロトコル、<code>jar</code>の別名)</li>
+ * <li><code>zip</code>(WebLogic独自プロトコル)</li>
+ * <li><code>code-source</code>(Oracle AS(OC4J)独自プロトコル)</li>
+ * <li><code>vfsfile</code>(JBossAS5独自プロトコル、<code>file</code>の別名)</li>
+ * <li><code>vfszip</code>(JBossAS5独自プロトコル)</li>
+ * </ul>
  * 
  * @author koichik
+ * @see URLUtil#toCanonicalProtocol(String)
  */
 public class ResourcesUtil {
 
@@ -69,6 +86,12 @@ public class ResourcesUtil {
                     final String rootDir) {
                 return new JarFileResources(URLUtil.create("jar:file:"
                         + url.getPath()), rootPackage, rootDir);
+            }
+        });
+        addResourcesFactory("vfszip", new ResourcesFactory() {
+            public Resources create(final URL url, final String rootPackage,
+                    final String rootDir) {
+                return new VfsZipResources(url, rootPackage, rootDir);
             }
         });
     }
@@ -438,6 +461,107 @@ public class ResourcesUtil {
 
         public void close() {
             JarFileUtil.close(jarFile);
+        }
+
+    }
+
+    /**
+     * JBossAS5のvfszipプロトコルで表されるリソースの集まりを扱うオブジェクトです。
+     * 
+     * @author koichik
+     */
+    public static class VfsZipResources implements Resources {
+
+        /** ルートパッケージです。 */
+        protected final String rootPackage;
+
+        /** ルートディレクトリです。 */
+        final protected String rootDir;
+
+        /** ZipのURLです。 */
+        protected final URL zipUrl;
+
+        /** Zip内のエントリ名の{@link Set}です。 */
+        final protected Set entryNames = new HashSet();
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param url
+         *            ルートを表すURL
+         * @param rootPackage
+         *            ルートパッケージ
+         * @param rootDir
+         *            ルートディレクトリ
+         */
+        public VfsZipResources(final URL url, final String rootPackage,
+                final String rootDir) {
+            this.rootPackage = rootPackage;
+            this.rootDir = rootDir;
+
+            URL zipUrl = url;
+            if (rootPackage != null) {
+                final String[] paths = rootPackage.split("\\.");
+                for (int i = 0; i < paths.length; ++i) {
+                    zipUrl = URLUtil.create(zipUrl, "..");
+                }
+            }
+            final ZipInputStream zis = new ZipInputStream(URLUtil
+                    .openStream(zipUrl));
+            try {
+                ZipEntry entry = null;
+                while ((entry = ZipInputStreamUtil.getNextEntry(zis)) != null) {
+                    entryNames.add(entry.getName());
+                    ZipInputStreamUtil.closeEntry(zis);
+                }
+            } finally {
+                InputStreamUtil.close(zis);
+            }
+            this.zipUrl = zipUrl;
+        }
+
+        public boolean isExistClass(final String className) {
+            final String entryName = toClassFile(ClassUtil.concatName(
+                    rootPackage, className));
+            return entryNames.contains(entryName);
+        }
+
+        public void forEach(final ClassHandler handler) {
+            final ZipInputStream zis = new ZipInputStream(URLUtil
+                    .openStream(zipUrl));
+            try {
+                ClassTraversal.forEach(zis, new ClassHandler() {
+                    public void processClass(String packageName,
+                            String shortClassName) {
+                        if (rootPackage == null
+                                || (packageName != null && packageName
+                                        .startsWith(rootPackage))) {
+                            handler.processClass(packageName, shortClassName);
+                        }
+                    }
+                });
+            } finally {
+                InputStreamUtil.close(zis);
+            }
+        }
+
+        public void forEach(final ResourceHandler handler) {
+            final ZipInputStream zis = new ZipInputStream(URLUtil
+                    .openStream(zipUrl));
+            try {
+                ResourceTraversal.forEach(zis, new ResourceHandler() {
+                    public void processResource(String path, InputStream is) {
+                        if (rootDir == null || path.startsWith(rootDir)) {
+                            handler.processResource(path, is);
+                        }
+                    }
+                });
+            } finally {
+                InputStreamUtil.close(zis);
+            }
+        }
+
+        public void close() {
         }
 
     }

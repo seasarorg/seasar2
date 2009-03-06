@@ -42,12 +42,7 @@ public class URLUtil {
     protected static final Map CANONICAL_PROTOCOLS = new HashMap();
     static {
         CANONICAL_PROTOCOLS.put("wsjar", "jar"); // WebSphereがJarファイルのために使用する固有のプロトコル
-    }
-
-    /**
-     * インスタンスを構築します。
-     */
-    protected URLUtil() {
+        CANONICAL_PROTOCOLS.put("vfsfile", "file"); // JBossAS5がファイルシステムのために使用する固有のプロトコル
     }
 
     /**
@@ -183,7 +178,9 @@ public class URLUtil {
     }
 
     /**
-     * <a href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4167874">このバグ</a>に対する対応です。
+     * <a
+     * href="http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4167874">このバグ<
+     * /a>に対する対応です。
      * 
      */
     public static void disableURLCaches() {
