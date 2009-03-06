@@ -60,7 +60,7 @@ public class OracleDialectTest extends TestCase {
      */
     public void testConvertLimitSql_offsetLimit() throws Exception {
         String sql = "select e.* from emp e order by id for update";
-        String expected = "select * from ( select temp_.*, rownum rownumber_ from ( select e.* from emp e order by id ) temp_ ) where rownumber_ <= 15 and rownumber_ > 5 for update";
+        String expected = "select * from ( select temp_.*, rownum rownumber_ from ( select e.* from emp e order by id ) temp_ ) where rownumber_ > 5 and rownumber_ <= 15 for update";
         assertEquals(expected, dialect.convertLimitSql(sql, 5, 10));
 
     }

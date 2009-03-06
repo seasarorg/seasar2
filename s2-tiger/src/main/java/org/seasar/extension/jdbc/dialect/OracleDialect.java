@@ -95,25 +95,20 @@ public class OracleDialect extends StandardDialect {
             sql = sql.substring(0, sql.length() - 11);
             isForUpdate = true;
         }
+        buf.append("select * from ( select temp_.*, rownum rownumber_ from ( ");
+        buf.append(sql);
+        buf.append(" ) temp_ ) where");
         boolean hasOffset = offset > 0;
         if (hasOffset) {
-            buf
-                    .append("select * from ( select temp_.*, rownum rownumber_ from ( ");
-            buf.append(sql);
-            buf.append(" ) temp_ ) where");
-            if (limit > 0) {
-                buf.append(" rownumber_ <= ");
-                buf.append(offset + limit);
-                buf.append(" and");
-            }
             buf.append(" rownumber_ > ");
             buf.append(offset);
-        } else {
-            buf
-                    .append("select * from ( select temp_.*, rownum rownumber_ from ( ");
-            buf.append(sql);
-            buf.append(" ) temp_ ) where rownumber_ <= ");
-            buf.append(limit);
+        }
+        if (limit > 0) {
+            if (hasOffset) {
+                buf.append(" and");
+            }
+            buf.append(" rownumber_ <= ");
+            buf.append(offset + limit);
         }
         if (isForUpdate) {
             buf.append(" for update");
