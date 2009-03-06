@@ -100,17 +100,19 @@ public class OracleDialect extends StandardDialect {
             buf
                     .append("select * from ( select temp_.*, rownum rownumber_ from ( ");
             buf.append(sql);
-            buf.append(" ) temp_");
+            buf.append(" ) temp_ ) where");
             if (limit > 0) {
-                buf.append(" where rownum <= ");
+                buf.append(" rownumber_ <= ");
                 buf.append(offset + limit);
+                buf.append(" and");
             }
-            buf.append(" ) where rownumber_ > ");
+            buf.append(" rownumber_ > ");
             buf.append(offset);
         } else {
-            buf.append("select * from ( ");
+            buf
+                    .append("select * from ( select temp_.*, rownum rownumber_ from ( ");
             buf.append(sql);
-            buf.append(" ) where rownum <= ");
+            buf.append(" ) temp_ ) where rownumber_ <= ");
             buf.append(limit);
         }
         if (isForUpdate) {
