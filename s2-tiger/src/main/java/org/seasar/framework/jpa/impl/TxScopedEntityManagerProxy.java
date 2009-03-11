@@ -40,7 +40,7 @@ import org.seasar.framework.log.Logger;
  * <li>コンテナ管理 (container-managed entity manager)</li>
  * <li>JTAトランザクション (JTA entity manager)</li>
  * <li>トランザクションスコープ (transaction-scoped persistence contexts)</li>
- * <ul>
+ * </ul>
  * </p>
  * 
  * @author koichik
