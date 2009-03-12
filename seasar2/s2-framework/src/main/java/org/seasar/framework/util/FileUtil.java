@@ -88,8 +88,7 @@ public class FileUtil {
      *            コピー先のファイル
      */
     public static void copy(File src, File dest) {
-        if (dest.canWrite() == false
-                || (dest.exists() && dest.canWrite() == false)) {
+        if (dest.exists() && !dest.canWrite()) {
             return;
         }
         BufferedInputStream in = null;

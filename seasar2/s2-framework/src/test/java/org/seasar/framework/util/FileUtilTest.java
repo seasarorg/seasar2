@@ -25,11 +25,26 @@ import junit.framework.TestCase;
  */
 public class FileUtilTest extends TestCase {
 
-    /*
-     * @see TestCase#setUp()
-     */
+    String root;
+
+    File src;
+
+    File dest;
+
     protected void setUp() throws Exception {
         super.setUp();
+        root = ResourceUtil.getBuildDir(getClass()).getCanonicalPath();
+        String srcTxt = root + "/org/seasar/framework/util/src.txt";
+        src = new File(srcTxt);
+        String destTxt = root + "/org/seasar/framework/util/dest.txt";
+        dest = new File(destTxt);
+    }
+
+    protected void tearDown() throws Exception {
+        if (dest.exists()) {
+            dest.delete();
+        }
+        super.tearDown();
     }
 
     /**
@@ -38,20 +53,27 @@ public class FileUtilTest extends TestCase {
      * 
      * @throws Exception
      */
-    public void testCopy() throws Exception {
-        String root = ResourceUtil.getBuildDir(getClass()).getCanonicalPath();
-        String srcTxt = root + "/org/seasar/framework/util/src.txt";
-        File src = new File(srcTxt);
+    public void testCopy_New() throws Exception {
         assertTrue(src.exists());
-
-        String destTxt = root + "/org/seasar/framework/util/dest.txt";
-        File dest = new File(destTxt);
         assertFalse(dest.exists());
+
+        FileUtil.copy(src, dest);
+        assertEquals(TextUtil.readText(src), TextUtil.readText(dest));
+    }
+
+    /**
+     * Test method for 'org.seasar.framework.util.FileUtil.copy(File, File,
+     * boolean)'
+     * 
+     * @throws Exception
+     */
+    public void testCopy_Exists() throws Exception {
+        assertTrue(src.exists());
+        assertFalse(dest.exists());
+
         dest.createNewFile();
         FileUtil.copy(src, dest);
-
         assertEquals(TextUtil.readText(src), TextUtil.readText(dest));
-        assertTrue(dest.delete());
     }
 
 }
