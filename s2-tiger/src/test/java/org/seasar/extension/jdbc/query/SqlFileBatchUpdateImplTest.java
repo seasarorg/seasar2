@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.Lob;
@@ -35,6 +36,7 @@ import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.parameter.LobParameter;
+import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
@@ -42,6 +44,7 @@ import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 import static java.util.Arrays.*;
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
@@ -428,6 +431,145 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
         dto2.name = date;
         SqlFileBatchUpdateImpl<MyDto3> query = new SqlFileBatchUpdateImpl<MyDto3>(
                 manager, PATH_DTO, asList(dto, dto2)) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(2, getParamSize());
+                assertEquals(ValueTypes.DATE_TIME, getParam(0).valueType);
+                assertEquals(ValueTypes.INTEGER, getParam(1).valueType);
+                super.resetParams();
+            }
+
+        };
+        query.execute();
+    }
+
+    /**
+     * 
+     */
+    public void testExecuteBatch_map() {
+        Map<String, Object> map1 = CollectionsUtil.newHashMap();
+        map1.put("id", 1);
+        map1.put("name", "foo");
+        Map<String, Object> map2 = CollectionsUtil.newHashMap();
+        map2.put("id", 2);
+        map2.put("name", "bar");
+        @SuppressWarnings("unchecked")
+        SqlFileBatchUpdateImpl<Map<String, Object>> query = new SqlFileBatchUpdateImpl<Map<String, Object>>(
+                manager, PATH_DTO, asList(map1, map2)) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public void addBatch() throws SQLException {
+                        ++addedBatch;
+                        super.addBatch();
+                    }
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        ++executedBatch;
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void prepareInParams(PreparedStatement ps) {
+                preparedBindVariables = true;
+                super.prepareInParams(ps);
+            }
+
+        };
+        int[] ret = query.execute();
+        assertEquals(2, ret.length);
+        assertEquals(1, executedBatch);
+        assertEquals(2, addedBatch);
+        assertTrue(preparedBindVariables);
+        assertEquals("update aaa set name = ? where id = ?", query.sqlContext
+                .getSql());
+        SqlLogRegistry sqlLogRegistry = SqlLogRegistryLocator.getInstance();
+        assertEquals(2, sqlLogRegistry.getSize());
+        assertEquals("update aaa set name = 'foo' where id = 1", sqlLogRegistry
+                .get(0).getCompleteSql());
+        assertEquals("update aaa set name = 'bar' where id = 2", sqlLogRegistry
+                .get(1).getCompleteSql());
+    }
+
+    /**
+     * 
+     */
+    public void testExecuteBatch_map_clob() {
+        Map<String, Object> map1 = CollectionsUtil.newHashMap();
+        map1.put("id", 1);
+        map1.put("name", Parameter.lob("foo"));
+        Map<String, Object> map2 = CollectionsUtil.newHashMap();
+        map2.put("id", 2);
+        map2.put("name", Parameter.lob("bar"));
+        @SuppressWarnings("unchecked")
+        SqlFileBatchUpdateImpl<Map<String, Object>> query = new SqlFileBatchUpdateImpl<Map<String, Object>>(
+                manager, PATH_DTO, asList(map1, map2)) {
+
+            @Override
+            protected PreparedStatement getPreparedStatement(
+                    JdbcContext jdbcContext) {
+                assertNotNull(executedSql);
+                MockPreparedStatement ps = new MockPreparedStatement(null, null) {
+
+                    @Override
+                    public int[] executeBatch() throws SQLException {
+                        return new int[] { 1, 1 };
+                    }
+                };
+                return ps;
+            }
+
+            @Override
+            protected void resetParams() {
+                assertEquals(2, getParamSize());
+                assertEquals(ValueTypes.CLOB, getParam(0).valueType);
+                assertEquals(ValueTypes.INTEGER, getParam(1).valueType);
+                super.resetParams();
+            }
+
+        };
+        query.execute();
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testExecuteBatch_map_date() throws Exception {
+        Date date = new SimpleDateFormat("HH:mm:dd").parse("12:11:10");
+        Map<String, Object> map1 = CollectionsUtil.newHashMap();
+        map1.put("id", 1);
+        map1.put("name", Parameter.time(date));
+        Map<String, Object> map2 = CollectionsUtil.newHashMap();
+        map2.put("id", 2);
+        map2.put("name", Parameter.time(date));
+        @SuppressWarnings("unchecked")
+        SqlFileBatchUpdateImpl<Map<String, Object>> query = new SqlFileBatchUpdateImpl<Map<String, Object>>(
+                manager, PATH_DTO, asList(map1, map2)) {
 
             @Override
             protected PreparedStatement getPreparedStatement(

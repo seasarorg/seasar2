@@ -19,6 +19,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.Lob;
@@ -34,6 +35,7 @@ import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.exception.QueryTwiceExecutionRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
+import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
@@ -41,6 +43,7 @@ import org.seasar.extension.sql.cache.NodeCache;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
+import org.seasar.framework.util.tiger.CollectionsUtil;
 
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
@@ -249,6 +252,73 @@ public class SqlFileUpdateImplTest extends TestCase {
         dto.id = 1;
         dto.name = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
         SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, dto);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(2, query.getParamSize());
+        assertEquals(new SimpleDateFormat("HH:mm:ss").parse("12:11:10"), query
+                .getParam(0).value);
+        assertEquals(1, query.getParam(1).value);
+        assertEquals(Date.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.DATE_TIME, query.getParam(0).valueType);
+        assertEquals(Integer.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(1).valueType);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_map() {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("id", 1);
+        map.put("name", "foo");
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, map);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(2, query.getParamSize());
+        assertEquals("foo", query.getParam(0).value);
+        assertEquals(1, query.getParam(1).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(Integer.class, query.getParam(1).paramClass);
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareParameter_map_clob() {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("id", 1);
+        map.put("name", Parameter.lob("hoge"));
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, map);
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareNode();
+        query.prepareParameter();
+        assertEquals("update aaa set name = ? where id = ?", query.sqlContext
+                .getSql());
+        assertEquals(2, query.getParamSize());
+        assertEquals("hoge", query.getParam(0).value);
+        assertEquals(1, query.getParam(1).value);
+        assertEquals(String.class, query.getParam(0).paramClass);
+        assertEquals(ValueTypes.CLOB, query.getParam(0).valueType);
+        assertEquals(Integer.class, query.getParam(1).paramClass);
+        assertEquals(ValueTypes.INTEGER, query.getParam(1).valueType);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testPrepareParameter_map_date() throws Exception {
+        Map<String, Object> map = CollectionsUtil.newHashMap();
+        map.put("id", 1);
+        map.put("name", Parameter.time(new SimpleDateFormat("HH:mm:ss")
+                .parse("12:11:10")));
+        SqlFileUpdateImpl query = new SqlFileUpdateImpl(manager, PATH_DTO, map);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareNode();
         query.prepareParameter();

@@ -271,7 +271,8 @@ select * from employee
 			<source><![CDATA[
 select * from employee order by /*$orderBy*/id
 ]]></source>
-			<p>ELSEコメントは、IFコメントとENDコメントの間に行コメントとして埋め込みます。</p>
+			<p>ELSEコメントは、IFコメントとENDコメントの間に行コメントとして埋め込みます。
+			</p>
 			<source><![CDATA[
 /*IF jobType != null*/
 jobType = /*jobType*/'CLERK'
@@ -282,9 +283,11 @@ jobType = /*jobType*/'CLERK'
 			<subsection name="SQLファイルのパス">
 				<p>
 					SQLファイルのパスは、
-					<code>examples/sql/employee/selectAll.sql</code>
+					<code>examples/sql/employee/selectAll.sql
+					</code>
 					のように指定します。 このパスに対するデフォルトの物理的なファイルは、 そのまま
-					<code>examples/sql/employee/selectAll.sql</code>
+					<code>examples/sql/employee/selectAll.sql
+					</code>
 					になります。 ただし、
 					<a href="s2jdbc_setup.html#ダイアレクト">ダイアレクト</a>
 					のサフィックスに対応するファイルがあれば、 そちらが優先されます。
@@ -312,7 +315,8 @@ jobType = /*jobType*/'CLERK'
 					<a href="#SQLファイルのパス">SQLファイルのパス</a>
 					です。
 				</p>
-				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
+				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。
+				</p>
 				<source><![CDATA[
 List<EmployeeDto> results = jdbcManager.selectBySqlFile(
     EmployeeDto.class, "examples/sql/employee/selectAll.sql")
@@ -339,6 +343,21 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 					<code>Map</code>
 					のキーを一致させます。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						PostgreSQLの場合、引数に
+						<code>Map</code>
+						を使用すると、
+						<code>String</code>
+						以外の型の値に
+						<code>null</code>
+						を指定することは出来ません。
+						パラメータに
+						<code>null</code>
+						を指定する必要がある場合はDtoを使用してください。
+					</p>
+				</div>
 				<source><![CDATA[
 package examples.entity.Employee;
 
@@ -750,9 +769,28 @@ int count = jdbcManager.updateBySqlFile(
 				<p>
 					上記以外の場合は、
 					<code>updateBySqlFile()</code>
-					の2番目の引数をJavaBeansにして、
-					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+					の2番目の引数をJavaBeansまたは
+					<code>Map&lt;String, Object&gt;</code>
+					にして、
+					パラメータの名前とJavaBeansのプロパティ名または
+					<code>Map</code>
+					のキーを一致させます。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						PostgreSQLの場合、引数に
+						<code>Map</code>
+						を使用すると、
+						<code>String</code>
+						以外の型の値に
+						<code>null</code>
+						を指定することは出来ません。
+						パラメータに
+						<code>null</code>
+						を指定する必要がある場合はDtoを使用してください。
+					</p>
+				</div>
 				<source><![CDATA[
 package examples.entity.Employee;
 
@@ -769,6 +807,87 @@ where id = /*id*/1
 UpdateParam param = new UpdateParam();
 param.salary = new BigDecimal(1200);
 param.id = 10;
+int count = jdbcManager.updateBySqlFile(
+    "examples/sql/employee/update.sql", param)
+    .execute();
+]]></source>
+				<p>
+					<code>Map</code>
+					で
+					<code>java.util.Date</code>
+					・
+					<code>java.util.Calendar</code>
+					型のパラメータを指定する場合は、時制を指定することができます。 時制の指定は
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>date(Date)</code>
+						または
+						<code>date(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のDATE型 (日付のみ) として扱います。</dd>
+					<dt>
+						<code>time(Date)</code>
+						または
+						<code>time(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIME型 (時刻のみ) として扱います。</dd>
+					<dt>
+						<code>timestamp(Date)</code>
+						または
+						<code>timestamp(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIMESTAMP型 (日付と時刻) として扱います。</dd>
+				</dl>
+				<source><![CDATA[
+update emp set salary = /*salary*/1000
+where heredate <= /*heredate*/'2000/04/01'
+]]></source>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+Map<String, Object param = new HashMap<String, Object>();
+param.put("heredate", date(heredate)); //heredateはjava.util.Date型
+int count = jdbcManager.updateBySqlFile(
+    "examples/sql/employee/update.sql", param)
+    .execute();
+]]></source>
+				<p>
+					<code>Map</code>
+					で
+					<code>byte[]</code>
+					・
+					<code>String</code>
+					型のパラメータを指定する場合は、ラージオブジェクトであることを指定することができます。
+					ラージオブジェクトの指定は
+					<code>
+						org.seasar.extension.jdbc.parameter.Parameter
+					</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>lob(String)</code>
+					</dt>
+					<dd>パラメータをCLOBとして扱います。</dd>
+					<dt>
+						<code>lob(byte[])</code>
+						または
+						<code>lob(Serializable)</code>
+					</dt>
+					<dd>パラメータをBLOBとして扱います。</dd>
+				</dl>
+				<source><![CDATA[
+update emp set salary = /*salary*/1000
+where largeName <= /*largeName*/'hoge'
+]]></source>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+Map<String, Object param = new HashMap<String, Object>();
+param.put("largeName", lob(largeName));
 int count = jdbcManager.updateBySqlFile(
     "examples/sql/employee/update.sql", param)
     .execute();
@@ -803,9 +922,28 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
 				<p>
 					上記以外の場合は、
 					<code>updateBatchBySqlFile()</code>
-					の2番目の引数を、 JavaBeansのリストあるいは配列(可変長引数)にして、
-					パラメータの名前とJavaBeansのプロパティ名を一致させます。
+					の2番目の引数をJavaBeansまたは
+					<code>Map&lt;String, Object&gt;</code>
+					のリストあるいは配列(可変長引数)にして、
+					パラメータの名前とJavaBeansのプロパティ名または
+					<code>Map</code>
+					のキーを一致させます。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						PostgreSQLの場合、引数に
+						<code>Map</code>
+						を使用すると、
+						<code>String</code>
+						以外の型の値に
+						<code>null</code>
+						を指定することは出来ません。
+						パラメータに
+						<code>null</code>
+						を指定する必要がある場合はDtoを使用してください。
+					</p>
+				</div>
 				<source><![CDATA[
 package examples.entity.Employee;
 
@@ -830,6 +968,61 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
 					<code>javax.persistence.EntityExistsException</code>
 					が発生します。
 				</p>
+				<p>
+					<code>Map</code>
+					で
+					<code>java.util.Date</code>
+					・
+					<code>java.util.Calendar</code>
+					型のパラメータを指定する場合は、時制を指定することができます。 時制の指定は
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>date(Date)</code>
+						または
+						<code>date(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のDATE型 (日付のみ) として扱います。</dd>
+					<dt>
+						<code>time(Date)</code>
+						または
+						<code>time(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIME型 (時刻のみ) として扱います。</dd>
+					<dt>
+						<code>timestamp(Date)</code>
+						または
+						<code>timestamp(Calendar)</code>
+					</dt>
+					<dd>パラメータをSQL標準のTIMESTAMP型 (日付と時刻) として扱います。</dd>
+				</dl>
+				<p>
+					<code>Map</code>
+					で
+					<code>byte[]</code>
+					・
+					<code>String</code>
+					型のパラメータを指定する場合は、ラージオブジェクトであることを指定することができます。
+					ラージオブジェクトの指定は
+					<code>
+						org.seasar.extension.jdbc.parameter.Parameter
+					</code>
+					のstaticメソッドを使います。
+				</p>
+				<dl>
+					<dt>
+						<code>lob(String)</code>
+					</dt>
+					<dd>パラメータをCLOBとして扱います。</dd>
+					<dt>
+						<code>lob(byte[])</code>
+						または
+						<code>lob(Serializable)</code>
+					</dt>
+					<dd>パラメータをBLOBとして扱います。</dd>
+				</dl>
 			</subsection>
 
 			<subsection name="バッチ更新のサイズを指定する">

@@ -17,6 +17,9 @@ package org.seasar.extension.jdbc.query;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.seasar.extension.jdbc.JdbcContext;
 import org.seasar.extension.jdbc.SqlFileBatchUpdate;
@@ -209,6 +212,20 @@ public class SqlFileBatchUpdateImpl<T> extends
                     || TemporalParameter.class == clazz
                     || LobParameter.class == clazz) {
                 sqlContext.addArg("$1", parameter, clazz);
+            } else if (parameter instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<Object, Object> paramMap = (Map<Object, Object>) parameter;
+                Set<Entry<Object, Object>> entrySet = paramMap.entrySet();
+                for (Map.Entry<Object, Object> entry : entrySet) {
+                    Object value = entry.getValue();
+                    Object key = entry.getKey();
+                    if (key == null || !(key instanceof CharSequence)) {
+                        continue;
+                    }
+                    String name = ((CharSequence) key).toString();
+                    sqlContext.addArg(name, value,
+                            (value == null ? String.class : value.getClass()));
+                }
             } else {
                 BeanDesc beanDesc = BeanDescFactory.getBeanDesc(clazz);
                 for (int i = 0; i < beanDesc.getPropertyDescSize(); i++) {
