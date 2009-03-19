@@ -54,6 +54,11 @@ public class HotdeployBehavior extends DefaultProvider {
 
     private ComponentCreator[] creators = new ComponentCreator[0];
 
+    /** keepプロパティのバインディングタイプアノテーションです。 */
+    public static final String keep_BINDING = "bindingType=may";
+
+    private boolean keep;
+
     /**
      * {@link NamingConvention}を返します。
      * 
@@ -91,15 +96,30 @@ public class HotdeployBehavior extends DefaultProvider {
     }
 
     /**
+     * {@link #start()}/{@link #stop()}の度にクラスローダをキープするかどうかを設定します。
+     * 
+     * @param keep
+     *            クラスローダをキープする場合<code>true</code>
+     */
+    public void setKeep(boolean keep) {
+        this.keep = keep;
+        if (hotdeployClassLoader != null) {
+            finish();
+        }
+    }
+
+    /**
      * HOT deployを開始します。
      */
     public void start() {
-        if (logger.isDebugEnabled()) {
-            logger.log("DSSR0108", null);
-        }
         originalClassLoader = Thread.currentThread().getContextClassLoader();
-        hotdeployClassLoader = new HotdeployClassLoader(originalClassLoader,
-                namingConvention);
+        if (!keep || hotdeployClassLoader == null) {
+            if (logger.isDebugEnabled()) {
+                logger.log("DSSR0108", null);
+            }
+            hotdeployClassLoader = new HotdeployClassLoader(
+                    originalClassLoader, namingConvention);
+        }
         Thread.currentThread().setContextClassLoader(hotdeployClassLoader);
         S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
                 .getContainer();
@@ -108,16 +128,29 @@ public class HotdeployBehavior extends DefaultProvider {
 
     /**
      * HOT deployを終了します。
+     * <p>
+     * {@link #keep}プロパティが<code>true</code>の場合、HOT deployクラスローダは破棄せず、 次の
+     * {@link #start()}～{@link #stop()}でも同じクラスローダが使用されます。
+     * </p>
      */
     public void stop() {
-        componentDefCache.clear();
-        DisposableUtil.dispose();
+        if (!keep) {
+            finish();
+        }
         S2ContainerImpl container = (S2ContainerImpl) SingletonS2ContainerFactory
                 .getContainer();
         container.setClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(originalClassLoader);
-        hotdeployClassLoader = null;
         originalClassLoader = null;
+    }
+
+    /**
+     * HOT deployクラスローダを破棄します。
+     */
+    public void finish() {
+        componentDefCache.clear();
+        hotdeployClassLoader = null;
+        DisposableUtil.dispose();
         if (logger.isDebugEnabled()) {
             logger.log("DSSR0109", null);
         }
