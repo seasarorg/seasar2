@@ -23,6 +23,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 
@@ -57,11 +58,18 @@ public class HotdeployFilter implements Filter {
                 synchronized (HotdeployFilter.class) {
                     HotdeployBehavior ondemand = (HotdeployBehavior) provider;
                     ondemand.start();
+                    HotdeployHttpServletRequest hotdeployRequest = new HotdeployHttpServletRequest(
+                            (HttpServletRequest) request);
                     try {
                         request.setAttribute(KEY, Thread.currentThread()
                                 .getContextClassLoader());
-                        chain.doFilter(request, response);
+                        chain.doFilter(hotdeployRequest, response);
                     } finally {
+                        HotdeployHttpSession session = (HotdeployHttpSession) hotdeployRequest
+                                .getSession(false);
+                        if (session != null) {
+                            session.flush();
+                        }
                         request.removeAttribute(KEY);
                         ondemand.stop();
                     }

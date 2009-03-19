@@ -20,7 +20,7 @@ import java.util.Iterator;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
-import org.seasar.framework.container.external.RebuildableExternalContextMap;
+import org.seasar.framework.container.external.AbstractExternalContextMap;
 import org.seasar.framework.util.AssertionUtil;
 import org.seasar.framework.util.EmptyIterator;
 import org.seasar.framework.util.EnumerationIterator;
@@ -30,7 +30,7 @@ import org.seasar.framework.util.EnumerationIterator;
  * 
  * @author <a href="mailto:shinsuke@yahoo.co.jp">Shinsuke Sugaya</a>
  */
-public class PortletSessionMap extends RebuildableExternalContextMap {
+public class PortletSessionMap extends AbstractExternalContextMap {
 
     private static final Iterator EMPTY_ITERATOR = new EmptyIterator();
 
