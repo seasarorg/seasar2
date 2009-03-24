@@ -397,6 +397,14 @@ public interface NamingConvention {
     boolean isTargetClassName(String className);
 
     /**
+     * HOT deployのターゲットのクラス名かどうかを返します。
+     * 
+     * @param className
+     * @return HOT deployのターゲットのクラス名かどうか
+     */
+    boolean isHotdeployTargetClassName(String className);
+
+    /**
      * 無視するクラス名かどうかを返します。
      * 
      * @param className

@@ -42,6 +42,7 @@ public class HotdeployClassLoaderTest extends TestCase {
         NamingConventionImpl convention = new NamingConventionImpl();
         convention.addRootPackageName(PACKAGE_NAME);
         convention.addRootPackageName("junit.framework");
+        convention.addRootPackageName("javassist", false);
         hotLoader = new HotdeployClassLoader(originalLoader, convention);
         Thread.currentThread().setContextClassLoader(hotLoader);
     }
@@ -54,6 +55,9 @@ public class HotdeployClassLoaderTest extends TestCase {
      * @throws Exception
      */
     public void testLoadClass() throws Exception {
+        assertTrue(hotLoader.isTargetClass("junit.framework.TestCase"));
+        assertFalse(hotLoader.isTargetClass("javassist.CtClass"));
+        
         assertSame(hotLoader.loadClass(AAA_NAME), hotLoader.loadClass(AAA_NAME));
 
         Class clazz = hotLoader.loadClass("junit.framework.TestCase");

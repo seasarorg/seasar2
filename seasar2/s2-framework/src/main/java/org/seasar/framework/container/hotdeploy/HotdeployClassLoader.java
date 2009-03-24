@@ -18,6 +18,7 @@ package org.seasar.framework.container.hotdeploy;
 import java.io.InputStream;
 
 import org.seasar.framework.convention.NamingConvention;
+import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassLoaderUtil;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.InputStreamUtil;
@@ -29,6 +30,9 @@ import org.seasar.framework.util.ResourceUtil;
  * @author higa
  */
 public class HotdeployClassLoader extends ClassLoader {
+
+    private static final Logger logger = Logger
+            .getLogger(HotdeployClassLoader.class);
 
     private NamingConvention namingConvention;
 
@@ -61,6 +65,7 @@ public class HotdeployClassLoader extends ClassLoader {
             }
             clazz = ClassLoaderUtil.findLoadedClass(getParent(), className);
             if (clazz != null) {
+                logger.log("WSSR0015", new Object[] { className });
                 return clazz;
             }
             clazz = defineClass(className, resolve);
@@ -120,6 +125,6 @@ public class HotdeployClassLoader extends ClassLoader {
      * @return HOT deployの対象のクラスかどうか
      */
     protected boolean isTargetClass(String className) {
-        return namingConvention.isTargetClassName(className);
+        return namingConvention.isHotdeployTargetClassName(className);
     }
 }

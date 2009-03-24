@@ -16,8 +16,10 @@
 package org.seasar.framework.convention.impl;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import org.seasar.framework.convention.NamingConvention;
@@ -81,6 +83,8 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
     private String entityPackageName = "entity";
 
     private String[] rootPackageNames = new String[0];
+
+    private Set hotdeployRootPackageNames = new HashSet();
 
     private String[] ignorePackageNames = new String[0];
 
@@ -400,10 +404,27 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
      * ルートパッケージ名を追加します。
      * 
      * @param rootPackageName
+     *            ルートパッケージ
      */
     public void addRootPackageName(final String rootPackageName) {
+        addRootPackageName(rootPackageName, true);
+    }
+
+    /**
+     * ルートパッケージ名を追加します。
+     * 
+     * @param rootPackageName
+     *            ルートパッケージ
+     * @param hotdeploy
+     *            HOT deployの対象なら<code>true</code>
+     */
+    public void addRootPackageName(final String rootPackageName,
+            final boolean hotdeploy) {
         rootPackageNames = (String[]) ArrayUtil.add(rootPackageNames,
                 rootPackageName);
+        if (hotdeploy) {
+            hotdeployRootPackageNames.add(rootPackageName);
+        }
         addExistChecker(rootPackageName);
     }
 
@@ -807,6 +828,18 @@ public class NamingConventionImpl implements NamingConvention, Disposable {
         for (int i = 0; i < rootPackageNames.length; ++i) {
             if (className.startsWith(rootPackageNames[i] + ".")) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isHotdeployTargetClassName(final String className) {
+        if (isIgnoreClassName(className)) {
+            return false;
+        }
+        for (int i = 0; i < rootPackageNames.length; ++i) {
+            if (className.startsWith(rootPackageNames[i] + ".")) {
+                return hotdeployRootPackageNames.contains(rootPackageNames[i]);
             }
         }
         return false;
