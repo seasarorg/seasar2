@@ -14,6 +14,7 @@
 				<exclude name="**/build/**"/>
 				<exclude name="**/target/**"/>
 				<exclude name="**/site/**"/>
+				<exclude name="**/META-INF/maven/org.seasar.container/s2jdbc-gen/pom.properties"/>
 				<exclude name="build.xml"/>
 			</zipfileset>
 			<zipfileset prefix="s2jdbc-gen/lib" dir="target">
