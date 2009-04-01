@@ -13,9 +13,12 @@
  * either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package org.seasar.extension.jdbc.gen;
+package org.seasar.extension.jdbc.gen.internal.model;
+
+import java.util.List;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.model.GeneratedModel;
 
 import static org.junit.Assert.*;
 
@@ -23,27 +26,27 @@ import static org.junit.Assert.*;
  * @author taedium
  * 
  */
-public class ProductInfoTest {
+public class GeneratedModelSupportTest {
 
     /**
      * 
      * @throws Exception
      */
     @Test
-    public void testGetInstance() throws Exception {
-        ProductInfo info = ProductInfo.getInstance();
-        assertEquals("S2JDBC-Gen", info.getName());
-        assertEquals("test-0.0.1", info.getVersion());
-        assertEquals("test-org.seasar.container", info.getGroupId());
-        assertEquals("test-s2jdbc-gen", info.getArtifactId());
+    public void testFillGeneratedInfo() throws Exception {
+        Factory factory = new Factory();
+        Model model = new Model();
+        GeneratedModelSupport support = new GeneratedModelSupport();
+        support.fillGeneratedInfo(factory, model);
+        List<String> infoList = model.getGeneratedInfoList();
+        assertEquals(2, infoList.size());
+        assertEquals("S2JDBC-Gen test-0.0.1", infoList.get(0));
+        assertEquals(Factory.class.getName(), infoList.get(1));
     }
 
-    /**
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testMain() throws Exception {
-        ProductInfo.main(new String[] {});
+    private static class Factory {
+    }
+
+    private static class Model extends GeneratedModel {
     }
 }

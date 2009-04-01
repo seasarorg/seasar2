@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.Locale;
 
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
@@ -39,7 +40,9 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
+import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModelException;
 
 /**
  * {@link Generator}の実装クラスです。
@@ -89,6 +92,7 @@ public class GeneratorImpl implements Generator {
         this.configuration = new Configuration();
         configuration.setObjectWrapper(new DefaultObjectWrapper());
         configuration.setSharedVariable("include", new IncludeDirective());
+        configuration.setSharedVariable("currentDate", new OnDemandDateModel());
         configuration.setEncoding(Locale.getDefault(), templateFileEncoding);
         configuration.setNumberFormat("0.#####");
         configuration
@@ -219,6 +223,22 @@ public class GeneratorImpl implements Generator {
             throw new IORuntimeException(e);
         } catch (TemplateException e) {
             throw new TemplateRuntimeException(e);
+        }
+    }
+
+    /**
+     * 必要とされるたびに{@link Date}を生成する{@link TemplateDateModel}です。
+     * 
+     * @author taedium
+     */
+    protected static class OnDemandDateModel implements TemplateDateModel {
+
+        public Date getAsDate() throws TemplateModelException {
+            return new Date();
+        }
+
+        public int getDateType() {
+            return UNKNOWN;
         }
     }
 

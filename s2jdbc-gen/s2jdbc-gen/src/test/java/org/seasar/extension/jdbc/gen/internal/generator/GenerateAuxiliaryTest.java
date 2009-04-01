@@ -41,10 +41,11 @@ public class GenerateAuxiliaryTest {
     private GeneratorImplStub generator;
 
     /**
+     * @throws Exception
      * 
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         generator = new GeneratorImplStub();
     }
 

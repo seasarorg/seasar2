@@ -55,10 +55,11 @@ public class GenerateTableTest {
     private DataSource dataSource;
 
     /**
+     * @throws Exception
      * 
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         generator = new GeneratorImplStub();
         dataSource = new MockDataSource() {
 

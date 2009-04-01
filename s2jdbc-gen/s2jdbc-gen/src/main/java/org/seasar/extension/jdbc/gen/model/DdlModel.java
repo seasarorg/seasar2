@@ -22,7 +22,7 @@ import org.seasar.extension.jdbc.gen.dialect.GenDialect;
  * 
  * @author taedium
  */
-public abstract class DdlModel {
+public abstract class DdlModel extends GeneratedModel {
 
     /** テーブル標準名 */
     protected String canonicalTableName;

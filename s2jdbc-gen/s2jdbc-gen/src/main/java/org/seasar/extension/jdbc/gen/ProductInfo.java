@@ -26,6 +26,9 @@ import java.util.Properties;
  */
 public class ProductInfo {
 
+    /** プロダクト名 */
+    protected final String PRODUCT_NAME = "S2JDBC-Gen";
+
     /** 不明な値 */
     protected final String UNKNOWN = "unknown";
 
@@ -49,6 +52,15 @@ public class ProductInfo {
         this.version = version != null ? version : UNKNOWN;
         this.groupId = groupId != null ? groupId : UNKNOWN;
         this.artifactId = artifactId != null ? artifactId : UNKNOWN;
+    }
+
+    /**
+     * 名前を返します。
+     * 
+     * @return
+     */
+    public String getName() {
+        return PRODUCT_NAME;
     }
 
     /**
@@ -94,6 +106,7 @@ public class ProductInfo {
      */
     public static void main(String[] args) {
         ProductInfo info = ProductInfoHolder.productInfo;
+        System.out.printf("s2jdbc-gen name : %s\n", info.getName());
         System.out.printf("s2jdbc-gen version : %s\n", info.getVersion());
         System.out.printf("s2jdbc-gen groupId : %s\n", info.getGroupId());
         System.out.printf("s2jdbc-gen artifactId : %s\n", info.getArtifactId());

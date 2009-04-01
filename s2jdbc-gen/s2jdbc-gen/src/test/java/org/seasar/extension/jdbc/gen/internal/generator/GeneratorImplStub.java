@@ -18,8 +18,14 @@ package org.seasar.extension.jdbc.gen.internal.generator;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
+
+import freemarker.template.TemplateDateModel;
+import freemarker.template.TemplateModelException;
 
 /**
  * @author taedium
@@ -31,7 +37,7 @@ public class GeneratorImplStub extends GeneratorImpl {
 
     /**
      * 
-     * @param templateFielEncoding
+     * @throws ParseException
      */
     public GeneratorImplStub() {
         this("UTF-8", null);
@@ -44,6 +50,29 @@ public class GeneratorImplStub extends GeneratorImpl {
      */
     public GeneratorImplStub(String templateFielEncoding, File templateDir) {
         super(templateFielEncoding, templateDir);
+        configuration.setSharedVariable("currentDate", new TemplateDateModel() {
+
+            public Date getAsDate() throws TemplateModelException {
+                return getDate();
+            }
+
+            public int getDateType() {
+                return UNKNOWN;
+            }
+        });
+    }
+
+    /**
+     * 
+     * @return
+     */
+    protected Date getDate() {
+        try {
+            return new SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
+                    .parse("2009/04/01 13:12:11");
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

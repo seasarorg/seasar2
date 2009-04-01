@@ -2,6 +2,7 @@ package hoge.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class Hoge implements Serializable {
 
     private static final long serialVersionUID = 1L;

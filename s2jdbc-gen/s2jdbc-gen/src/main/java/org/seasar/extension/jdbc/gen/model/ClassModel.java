@@ -24,7 +24,7 @@ import java.util.TreeSet;
  * 
  * @author taedium
  */
-public abstract class ClassModel {
+public abstract class ClassModel extends GeneratedModel {
 
     /** インポート名のソートされたセット */
     protected SortedSet<String> importNameSet = new TreeSet<String>();

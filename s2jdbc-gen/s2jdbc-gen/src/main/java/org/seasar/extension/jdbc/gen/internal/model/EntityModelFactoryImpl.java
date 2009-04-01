@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.gen.internal.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -97,6 +98,9 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築しますｌ
@@ -182,7 +186,21 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
         doAssociationModel(entityModel, entityDesc);
         doCompositeUniqueConstraintModel(entityModel, entityDesc);
         doImportName(entityModel, entityDesc);
+        doGeneratedInfo(entityModel, entityDesc);
         return entityModel;
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void doGeneratedInfo(EntityModel entityModel,
+            EntityDesc entityDesc) {
+        generatedModelSupport.fillGeneratedInfo(this, entityModel);
     }
 
     /**
@@ -260,6 +278,7 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     protected void doImportName(EntityModel model, EntityDesc entityDesc) {
         classModelSupport.addImportName(model, Entity.class);
         classModelSupport.addImportName(model, Serializable.class);
+        classModelSupport.addImportName(model, Generated.class);
         if (model.getCatalogName() != null || model.getSchemaName() != null
                 || model.getTableName() != null) {
             classModelSupport.addImportName(model, Table.class);

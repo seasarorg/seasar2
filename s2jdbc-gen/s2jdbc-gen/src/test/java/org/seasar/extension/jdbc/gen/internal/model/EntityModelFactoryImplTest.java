@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -108,10 +109,11 @@ public class EntityModelFactoryImplTest {
         assertEquals("FOO", model.getTableName());
 
         Set<String> set = model.getImportNameSet();
-        assertEquals(14, set.size());
+        assertEquals(15, set.size());
         Iterator<String> iterator = set.iterator();
         assertEquals(Serializable.class.getName(), iterator.next());
         assertEquals(Date.class.getName(), iterator.next());
+        assertEquals(Generated.class.getName(), iterator.next());
         assertEquals(Column.class.getName(), iterator.next());
         assertEquals(Entity.class.getName(), iterator.next());
         assertEquals(GeneratedValue.class.getName(), iterator.next());
