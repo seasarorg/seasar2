@@ -21,6 +21,7 @@ import static ${importName};
 <#if useS2junit4>
 @RunWith(Seasar2.class)
 </#if>
+@Generated(value = {<#list generatedInfoList as info>"${info}"<#if info_has_next>, </#if></#list>}, date = "${currentDate?datetime}")
 public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
 <#if useS2junit4>
 

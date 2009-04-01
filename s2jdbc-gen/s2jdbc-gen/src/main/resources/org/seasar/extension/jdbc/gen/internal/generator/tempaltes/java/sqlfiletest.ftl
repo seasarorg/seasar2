@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import javax.annotation.Generated;
 
 <#if useS2junit4>
 import org.junit.runner.RunWith;
@@ -40,6 +41,7 @@ import org.seasar.framework.util.StatementUtil;
 <#if useS2junit4>
 @RunWith(Seasar2.class)
 </#if>
+@Generated(value = {<#list generatedInfoList as info>"${info}"<#if info_has_next>, </#if></#list>}, date = "${currentDate?datetime}")
 public class ${shortClassName} <#if !useS2junit4>extends S2TestCase </#if>{
 <#if useS2junit4>
 

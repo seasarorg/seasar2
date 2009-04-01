@@ -1,6 +1,7 @@
 package org.seasar.extension.jdbc.gen.internal.generator;
 
 import java.math.BigDecimal;
+import javax.annotation.Generated;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.framework.unit.Seasar2;
@@ -12,6 +13,7 @@ import org.seasar.framework.unit.TestContext;
  * @author S2JDBC-Gen
  */
 @RunWith(Seasar2.class)
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class CccTest {
 
     private TestContext testContext;

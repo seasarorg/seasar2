@@ -1,6 +1,7 @@
 package hoge.condition;
 
 import java.util.Date;
+import javax.annotation.Generated;
 import org.seasar.extension.jdbc.where.ComplexWhere;
 import org.seasar.extension.jdbc.where.condition.AbstractEntityCondition;
 import org.seasar.extension.jdbc.where.condition.NotNullableCondition;
@@ -12,6 +13,7 @@ import org.seasar.extension.jdbc.where.condition.NullableCondition;
  * 
  * @author S2JDBC-Gen
  */
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class AaaCondition extends
         AbstractEntityCondition<AaaCondition> {
 

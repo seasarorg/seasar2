@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import javax.annotation.Generated;
+
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.ConditionAssociationModel;
@@ -47,6 +49,9 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -98,6 +103,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
             }
         }
         doImportName(conditionModel, entityMeta);
+        doGeneratedInfo(conditionModel, entityMeta);
         return conditionModel;
     }
 
@@ -141,6 +147,7 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
      */
     protected void doImportName(ConditionModel conditionModel,
             EntityMeta entityMeta) {
+        classModelSupport.addImportName(conditionModel, Generated.class);
         classModelSupport.addImportName(conditionModel, ComplexWhere.class);
         classModelSupport.addImportName(conditionModel,
                 AbstractEntityCondition.class);
@@ -151,6 +158,19 @@ public class ConditionModelFactoryImpl implements ConditionModelFactory {
             classModelSupport.addImportName(conditionModel, attributeModel
                     .getConditionClass());
         }
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param conditionModel
+     *            条件クラスのモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doGeneratedInfo(ConditionModel conditionModel,
+            EntityMeta entityMeta) {
+        generatedModelSupport.fillGeneratedInfo(this, conditionModel);
     }
 
 }

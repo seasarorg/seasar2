@@ -1,5 +1,6 @@
 package hoge.service;
 
+import javax.annotation.Generated;
 import org.seasar.extension.jdbc.service.S2AbstractService;
 
 /**
@@ -9,5 +10,6 @@ import org.seasar.extension.jdbc.service.S2AbstractService;
  * @param <ENTITY>
  *            エンティティの型 
  */
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.AbstServiceModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public abstract class AbstractService<ENTITY> extends S2AbstractService<ENTITY> {
 }

@@ -22,6 +22,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.annotation.Generated;
+
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -62,6 +64,9 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -118,6 +123,7 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         doAssociationName(entityTestModel, entityMeta);
         doNamesModel(entityTestModel, entityMeta);
         doImportName(entityTestModel, entityMeta);
+        doGeneratedInfo(entityTestModel, entityMeta);
         return entityTestModel;
     }
 
@@ -250,6 +256,7 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
     protected void doImportName(EntityTestModel entityTestModel,
             EntityMeta entityMeta) {
         classModelSupport.addImportName(entityTestModel, JdbcManager.class);
+        classModelSupport.addImportName(entityTestModel, Generated.class);
         if (useS2junit4) {
             classModelSupport.addImportName(entityTestModel, RunWith.class);
             classModelSupport.addImportName(entityTestModel, Seasar2.class);
@@ -268,5 +275,18 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
             classModelSupport.addImportName(entityTestModel, propertyMeta
                     .getPropertyClass());
         }
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param entityTestModel
+     *            テストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doGeneratedInfo(EntityTestModel entityTestModel,
+            EntityMeta entityMeta) {
+        generatedModelSupport.fillGeneratedInfo(this, entityTestModel);
     }
 }

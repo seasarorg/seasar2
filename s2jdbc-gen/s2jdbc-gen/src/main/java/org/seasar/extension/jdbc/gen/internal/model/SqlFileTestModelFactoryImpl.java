@@ -55,6 +55,9 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
     /** SQLファイルのパスのリスト */
     protected List<String> sqlFilePathList;
 
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
+
     /**
      * インスタンスを構築します。
      * 
@@ -174,6 +177,17 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         for (String sqlFilePath : sqlFilePathList) {
             model.addSqlFilePath(sqlFilePath);
         }
+        doGeneratedInfo(model);
         return model;
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param sqlFileTestModel
+     *            SQLファイルテストモデル
+     */
+    protected void doGeneratedInfo(SqlFileTestModel sqlFileTestModel) {
+        generatedModelSupport.fillGeneratedInfo(this, sqlFileTestModel);
     }
 }

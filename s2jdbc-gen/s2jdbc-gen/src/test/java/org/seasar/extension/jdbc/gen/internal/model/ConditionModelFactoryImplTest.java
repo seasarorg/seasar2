@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -96,9 +97,10 @@ public class ConditionModelFactoryImplTest {
         assertEquals(1, model.getConditionAssociationModelList().size());
 
         Set<String> set = model.getImportNameSet();
-        assertEquals(7, set.size());
+        assertEquals(8, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals("java.util.Date", iterator.next());
+        assertEquals(Date.class.getName(), iterator.next());
+        assertEquals(Generated.class.getName(), iterator.next());
         assertEquals(ComplexWhere.class.getName(), iterator.next());
         assertEquals(AbstractEntityCondition.class.getName(), iterator.next());
         assertEquals(NotNullableCondition.class.getName(), iterator.next());

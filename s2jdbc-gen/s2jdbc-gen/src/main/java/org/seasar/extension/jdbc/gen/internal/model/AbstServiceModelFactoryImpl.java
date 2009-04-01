@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import javax.annotation.Generated;
+
 import org.seasar.extension.jdbc.gen.model.AbstServiceModel;
 import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.service.S2AbstractService;
@@ -34,6 +36,9 @@ public class AbstServiceModelFactoryImpl implements AbstServiceModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -56,9 +61,30 @@ public class AbstServiceModelFactoryImpl implements AbstServiceModelFactory {
         AbstServiceModel abstServiceModel = new AbstServiceModel();
         abstServiceModel.setPackageName(packageName);
         abstServiceModel.setShortClassName("Abstract" + serviceClassNameSuffix);
-        classModelSupport.addImportName(abstServiceModel,
-                S2AbstractService.class);
+        doImportName(abstServiceModel);
+        doGeneratedInfo(abstServiceModel);
         return abstServiceModel;
     }
 
+    /**
+     * インポート名を処理します。
+     * 
+     * @param abstServiceModel
+     *            抽象サービスモデル
+     */
+    protected void doImportName(AbstServiceModel abstServiceModel) {
+        classModelSupport.addImportName(abstServiceModel,
+                S2AbstractService.class);
+        classModelSupport.addImportName(abstServiceModel, Generated.class);
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param abstServiceModel
+     *            抽象サービスモデル
+     */
+    protected void doGeneratedInfo(AbstServiceModel abstServiceModel) {
+        generatedModelSupport.fillGeneratedInfo(this, abstServiceModel);
+    }
 }

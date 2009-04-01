@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import java.util.List;
 
+import javax.annotation.Generated;
 import javax.annotation.Resource;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -58,6 +59,9 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -111,6 +115,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
         }
         doNamesModel(serviceModel, entityMeta);
         doImportName(serviceModel, entityMeta);
+        doGeneratedInfo(serviceModel, entityMeta);
         return serviceModel;
     }
 
@@ -140,6 +145,7 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
     protected void doImportName(ServiceModel serviceModel, EntityMeta entityMeta) {
         classModelSupport.addImportName(serviceModel, entityMeta
                 .getEntityClass());
+        classModelSupport.addImportName(serviceModel, Generated.class);
         for (PropertyMeta propertyMeta : serviceModel.getIdPropertyMetaList()) {
             classModelSupport.addImportName(serviceModel, propertyMeta
                     .getPropertyClass());
@@ -166,5 +172,18 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
                     TransactionAttributeType.class);
             classModelSupport.addImportName(serviceModel, JdbcManager.class);
         }
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param serviceModel
+     *            サービスモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doGeneratedInfo(ServiceModel serviceModel,
+            EntityMeta entityMeta) {
+        generatedModelSupport.fillGeneratedInfo(this, serviceModel);
     }
 }

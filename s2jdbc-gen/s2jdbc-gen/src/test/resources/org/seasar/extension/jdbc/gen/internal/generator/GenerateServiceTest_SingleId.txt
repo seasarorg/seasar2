@@ -1,6 +1,7 @@
 package hoge.service;
 
 import java.util.List;
+import javax.annotation.Generated;
 import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
 
 import static hoge.entity.AaaNames.*;
@@ -11,6 +12,7 @@ import static org.seasar.extension.jdbc.operation.Operations.*;
  * 
  * @author S2JDBC-Gen
  */
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class AaaService extends AbstractService<Aaa> {
 
     /**

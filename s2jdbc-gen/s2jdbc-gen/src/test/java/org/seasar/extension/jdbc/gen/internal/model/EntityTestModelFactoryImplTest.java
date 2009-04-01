@@ -65,7 +65,7 @@ public class EntityTestModelFactoryImplTest {
                 entityTestModel.getPackageName());
         assertEquals("FooTest", entityTestModel.getShortClassName());
         assertEquals("Foo", entityTestModel.getShortEntityClassName());
-        assertEquals(2, entityTestModel.getImportNameSet().size());
+        assertEquals(3, entityTestModel.getImportNameSet().size());
     }
 
     /**

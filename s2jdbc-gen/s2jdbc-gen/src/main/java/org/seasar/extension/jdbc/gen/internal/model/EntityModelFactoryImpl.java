@@ -191,19 +191,6 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
     }
 
     /**
-     * 生成情報を処理します。
-     * 
-     * @param entityModel
-     *            エンティティモデル
-     * @param entityDesc
-     *            エンティティ記述
-     */
-    protected void doGeneratedInfo(EntityModel entityModel,
-            EntityDesc entityDesc) {
-        generatedModelSupport.fillGeneratedInfo(this, entityModel);
-    }
-
-    /**
      * 属性モデルを処理します。
      * 
      * @param entityModel
@@ -339,5 +326,18 @@ public class EntityModelFactoryImpl implements EntityModelFactory {
             classModelSupport.addImportName(model, Table.class);
             classModelSupport.addImportName(model, UniqueConstraint.class);
         }
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param entityModel
+     *            エンティティモデル
+     * @param entityDesc
+     *            エンティティ記述
+     */
+    protected void doGeneratedInfo(EntityModel entityModel,
+            EntityDesc entityDesc) {
+        generatedModelSupport.fillGeneratedInfo(this, entityModel);
     }
 }

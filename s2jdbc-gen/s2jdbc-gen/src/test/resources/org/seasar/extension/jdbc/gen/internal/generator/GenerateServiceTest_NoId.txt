@@ -1,5 +1,6 @@
 package hoge.service;
 
+import javax.annotation.Generated;
 import org.seasar.extension.jdbc.gen.internal.generator.Ddd;
 
 /**
@@ -7,5 +8,6 @@ import org.seasar.extension.jdbc.gen.internal.generator.Ddd;
  * 
  * @author S2JDBC-Gen
  */
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class DddService extends AbstractService<Ddd> {
 }

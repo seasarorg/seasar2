@@ -18,6 +18,7 @@ import static ${importName};
  * 
  * @author S2JDBC-Gen
  */
+@Generated(value = {<#list generatedInfoList as info>"${info}"<#if info_has_next>, </#if></#list>}, date = "${currentDate?datetime}")
 public class ${shortClassName} {
 <#list namesAttributeModelList as attr>
 

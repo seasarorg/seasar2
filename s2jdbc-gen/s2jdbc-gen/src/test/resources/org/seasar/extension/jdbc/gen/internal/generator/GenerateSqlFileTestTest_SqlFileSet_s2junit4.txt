@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import javax.annotation.Generated;
 
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
@@ -28,6 +29,7 @@ import org.seasar.framework.util.StatementUtil;
  * @author S2JDBC-Gen
  */
 @RunWith(Seasar2.class)
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.SqlFileTestModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class SqlFileTest {
 
     private TestContext testContext;

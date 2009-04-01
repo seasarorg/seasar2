@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import javax.annotation.Generated;
+
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.EntityMeta;
@@ -47,6 +49,9 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -93,6 +98,7 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
                 + testClassNameSuffix);
         serviceTestModel.setUseS2junit4(useS2junit4);
         doImportName(serviceTestModel, entityMeta);
+        doGeneratedInfo(serviceTestModel, entityMeta);
         return serviceTestModel;
     }
 
@@ -106,12 +112,27 @@ public class ServiceTestModelFactoryImpl implements ServiceTestModelFactory {
      */
     protected void doImportName(ServiceTestModel serviceTestModel,
             EntityMeta entityMeta) {
+        classModelSupport.addImportName(serviceTestModel, Generated.class);
         if (useS2junit4) {
             classModelSupport.addImportName(serviceTestModel, RunWith.class);
             classModelSupport.addImportName(serviceTestModel, Seasar2.class);
-            classModelSupport.addStaticImportName(serviceTestModel, Assert.class);
+            classModelSupport.addStaticImportName(serviceTestModel,
+                    Assert.class);
         } else {
             classModelSupport.addImportName(serviceTestModel, S2TestCase.class);
         }
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param serviceTestModel
+     *            サービステストモデル
+     * @param entityMeta
+     *            エンティティメタデータ
+     */
+    protected void doGeneratedInfo(ServiceTestModel serviceTestModel,
+            EntityMeta entityMeta) {
+        generatedModelSupport.fillGeneratedInfo(this, serviceTestModel);
     }
 }

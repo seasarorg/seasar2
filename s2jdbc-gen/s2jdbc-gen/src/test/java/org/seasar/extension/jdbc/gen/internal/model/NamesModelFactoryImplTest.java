@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.gen.internal.model;
 
 import java.util.Iterator;
 
+import javax.annotation.Generated;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -101,9 +102,10 @@ public class NamesModelFactoryImplTest {
         assertEquals("aaa.bbb.BbbNames._BbbNames", associationModel
                 .getClassName());
 
-        assertEquals(3, namesModel.getImportNameSet().size());
+        assertEquals(4, namesModel.getImportNameSet().size());
         Iterator<String> iterator = namesModel.getImportNameSet().iterator();
         assertEquals("aaa.bbb.BbbNames._BbbNames", iterator.next());
+        assertEquals(Generated.class.getName(), iterator.next());
         assertEquals(Aaa.class.getName(), iterator.next());
         assertEquals(PropertyName.class.getName(), iterator.next());
     }

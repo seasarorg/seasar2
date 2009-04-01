@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.model;
 
+import javax.annotation.Generated;
+
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.gen.model.NamesAssociationModel;
@@ -42,6 +44,9 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
 
     /** クラスモデルのサポート */
     protected ClassModelSupport classModelSupport = new ClassModelSupport();
+
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
     /**
      * インスタンスを構築します。
@@ -79,6 +84,7 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
             }
         }
         doImportName(namesModel, entityMeta);
+        doGeneratedInfo(namesModel, entityMeta);
         return namesModel;
     }
 
@@ -139,6 +145,7 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
         classModelSupport
                 .addImportName(namesModel, entityMeta.getEntityClass());
         classModelSupport.addImportName(namesModel, PropertyName.class);
+        classModelSupport.addImportName(namesModel, Generated.class);
         for (NamesAttributeModel attributeModel : namesModel
                 .getNamesAttributeModelList()) {
             classModelSupport.addImportName(namesModel, attributeModel
@@ -149,5 +156,17 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
             classModelSupport.addImportName(namesModel, associationModel
                     .getClassName());
         }
+    }
+
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param namesModel
+     *            名前モデル
+     * @param entityMeta
+     *            エンティティメターデータ
+     */
+    protected void doGeneratedInfo(NamesModel namesModel, EntityMeta entityMeta) {
+        generatedModelSupport.fillGeneratedInfo(this, namesModel);
     }
 }

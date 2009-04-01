@@ -20,5 +20,6 @@ import static ${importName};
  * @param <ENTITY>
  *            エンティティの型 
  */
+@Generated(value = {<#list generatedInfoList as info>"${info}"<#if info_has_next>, </#if></#list>}, date = "${currentDate?datetime}")
 public abstract class ${shortClassName}<ENTITY> extends S2AbstractService<ENTITY> {
 }
