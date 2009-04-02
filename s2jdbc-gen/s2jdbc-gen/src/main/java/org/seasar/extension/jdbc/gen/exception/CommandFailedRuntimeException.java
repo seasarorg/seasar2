@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.gen.exception;
 
+import org.seasar.extension.jdbc.gen.ProductInfo;
 import org.seasar.framework.exception.SRuntimeException;
 
 /**
@@ -39,7 +40,9 @@ public class CommandFailedRuntimeException extends SRuntimeException {
      */
     public CommandFailedRuntimeException(Throwable cause,
             String commandClassName) {
-        super("ES2JDBCGen0005", new Object[] { commandClassName, cause }, cause);
+        super("ES2JDBCGen0005", new Object[] { commandClassName,
+                ProductInfo.getInstance().getName(),
+                ProductInfo.getInstance().getVersion(), cause }, cause);
         this.commandClassName = commandClassName;
     }
 

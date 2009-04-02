@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
 import org.seasar.extension.jdbc.JdbcManager;
+import org.seasar.extension.jdbc.gen.ProductInfo;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialectRegistry;
@@ -149,6 +150,9 @@ public abstract class AbstractCommand implements Command {
     }
 
     public final void execute() {
+        ProductInfo info = ProductInfo.getInstance();
+        getLogger().log("IS2JDBCGen0008",
+                new Object[] { info.getName(), info.getVersion() });
         String commandClassName = getClass().getName();
         getLogger().log("DS2JDBCGen0003", new Object[] { commandClassName });
         logWritableProperties();
