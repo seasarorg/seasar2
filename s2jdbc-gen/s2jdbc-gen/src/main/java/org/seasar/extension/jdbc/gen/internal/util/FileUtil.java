@@ -15,21 +15,16 @@
  */
 package org.seasar.extension.jdbc.gen.internal.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.Comparator;
 
 import org.seasar.framework.exception.IORuntimeException;
-import org.seasar.framework.util.InputStreamUtil;
-import org.seasar.framework.util.OutputStreamUtil;
 
 /**
  * {@link File}に関するユーティリティクラスです。
@@ -53,17 +48,17 @@ public class FileUtil {
      *            コピー先ファイル
      */
     public static void copy(File src, File dest) {
-        BufferedInputStream in = null;
-        BufferedOutputStream out = null;
+        FileInputStream in = null;
+        FileOutputStream out = null;
         try {
-            in = new BufferedInputStream(new FileInputStream(src));
-            out = new BufferedOutputStream(new FileOutputStream(dest));
+            in = new FileInputStream(src);
+            out = new FileOutputStream(dest);
             copyInternal(in, out);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         } finally {
-            InputStreamUtil.close(in);
-            OutputStreamUtil.close(out);
+            CloseableUtil.close(in);
+            CloseableUtil.close(out);
         }
     }
 
@@ -76,17 +71,17 @@ public class FileUtil {
      *            コピー先ファイル
      */
     public static void append(File src, File dest) {
-        BufferedInputStream in = null;
-        BufferedOutputStream out = null;
+        FileInputStream in = null;
+        FileOutputStream out = null;
         try {
-            in = new BufferedInputStream(new FileInputStream(src));
-            out = new BufferedOutputStream(new FileOutputStream(dest, true));
+            in = new FileInputStream(src);
+            out = new FileOutputStream(dest, true);
             copyInternal(in, out);
         } catch (IOException e) {
             throw new IORuntimeException(e);
         } finally {
-            InputStreamUtil.close(in);
-            OutputStreamUtil.close(out);
+            CloseableUtil.close(in);
+            CloseableUtil.close(out);
         }
     }
 
@@ -100,14 +95,11 @@ public class FileUtil {
      * @throws IOException
      *             IO例外が発生した場合
      */
-    protected static void copyInternal(InputStream in, OutputStream out)
+    protected static void copyInternal(FileInputStream in, FileOutputStream out)
             throws IOException {
-        byte[] buf = new byte[1024];
-        int length;
-        while (-1 < (length = in.read(buf))) {
-            out.write(buf, 0, length);
-            out.flush();
-        }
+        FileChannel src = in.getChannel();
+        FileChannel dest = out.getChannel();
+        src.transferTo(0, src.size(), dest);
     }
 
     /**
