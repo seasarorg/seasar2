@@ -79,6 +79,9 @@ public class TableModelFactoryImpl implements TableModelFactory {
     /** コメントを使用する場合{@code true} */
     protected boolean useComment;
 
+    /** 生成モデルのサポート */
+    protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
+
     /**
      * @param dialect
      *            方言
@@ -136,6 +139,7 @@ public class TableModelFactoryImpl implements TableModelFactory {
         doForeignKeyModel(tableModel, tableDesc);
         doSequenceModel(tableModel, tableDesc);
         doColumnModel(tableModel, tableDesc);
+        doGeneratedInfo(tableModel, tableDesc);
         return tableModel;
     }
 
@@ -358,4 +362,15 @@ public class TableModelFactoryImpl implements TableModelFactory {
         return comment.replace("'", "''");
     }
 
+    /**
+     * 生成情報を処理します。
+     * 
+     * @param tableModel
+     *            テーブルモデル
+     * @param tableDesc
+     *            テーブル記述
+     */
+    protected void doGeneratedInfo(TableModel tableModel, TableDesc tableDesc) {
+        generatedModelSupport.fillGeneratedInfo(this, tableModel);
+    }
 }
