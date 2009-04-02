@@ -9,7 +9,6 @@ import javax.persistence.UniqueConstraint;
 /**
  * Fooエンティティクラス
  * 
- * @author S2JDBC-Gen
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB", uniqueConstraints = { @UniqueConstraint(columnNames = { "CCC", "DDD" }), @UniqueConstraint(columnNames = { "EEE", "FFF" }) })

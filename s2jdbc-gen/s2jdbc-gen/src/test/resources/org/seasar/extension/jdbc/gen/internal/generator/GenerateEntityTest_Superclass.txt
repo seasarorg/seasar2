@@ -15,7 +15,6 @@ import org.seasar.extension.jdbc.gen.internal.generator.Eee;
 /**
  * Fooエンティティクラス
  * 
- * @author S2JDBC-Gen
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")

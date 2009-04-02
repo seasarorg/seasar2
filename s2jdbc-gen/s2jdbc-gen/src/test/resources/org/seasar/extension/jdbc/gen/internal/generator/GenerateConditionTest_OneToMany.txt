@@ -9,7 +9,6 @@ import org.seasar.extension.jdbc.where.condition.NullableStringCondition;
 /**
  * {@link Bbb}の条件クラスです。
  * 
- * @author S2JDBC-Gen
  */
 @Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class BbbCondition extends

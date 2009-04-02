@@ -20,7 +20,6 @@ import javax.persistence.Version;
 /**
  * Fooエンティティクラス
  * 
- * @author S2JDBC-Gen
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")

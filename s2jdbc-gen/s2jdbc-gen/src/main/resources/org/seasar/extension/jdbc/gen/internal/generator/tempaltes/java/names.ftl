@@ -1,4 +1,10 @@
+<#import "/lib.ftl" as lib>
+<#if lib.copyright??>
+${lib.copyright}
+</#if>
+<#if !lib.copyright??>
 <#include "/copyright.ftl">
+</#if>
 <#if packageName??>
 package ${packageName};
 </#if>
@@ -16,7 +22,9 @@ import static ${importName};
 /**
  * {@link ${shortEntityClassName}}のプロパティ名の集合です。
  * 
- * @author S2JDBC-Gen
+<#if lib.author??>
+ * @author ${lib.author}
+</#if>
  */
 @Generated(value = {<#list generatedInfoList as info>"${info}"<#if info_has_next>, </#if></#list>}, date = "${currentDate?datetime}")
 public class ${shortClassName} {

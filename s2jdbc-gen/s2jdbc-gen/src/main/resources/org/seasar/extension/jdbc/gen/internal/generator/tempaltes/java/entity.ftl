@@ -1,4 +1,10 @@
+<#import "/lib.ftl" as lib>
+<#if lib.copyright??>
+${lib.copyright}
+</#if>
+<#if !lib.copyright??>
 <#include "/copyright.ftl">
+</#if>
 <#if packageName??>
 package ${packageName};
 </#if>
@@ -20,7 +26,9 @@ import static ${importName};
  * ${shortClassName}エンティティクラス
 </#if>
  * 
- * @author S2JDBC-Gen
+<#if lib.author??>
+ * @author ${lib.author}
+</#if>
  */
 @Entity
 <#if catalogName?? || schemaName?? || tableName?? || compositeUniqueConstraintModelList?size gt 0>

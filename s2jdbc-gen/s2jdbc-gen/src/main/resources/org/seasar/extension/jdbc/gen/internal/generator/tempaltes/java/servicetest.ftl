@@ -1,4 +1,10 @@
+<#import "/lib.ftl" as lib>
+<#if lib.copyright??>
+${lib.copyright}
+</#if>
+<#if !lib.copyright??>
 <#include "/copyright.ftl">
+</#if>
 <#if packageName??>
 package ${packageName};
 </#if>
@@ -16,7 +22,9 @@ import static ${importName};
 /**
  * {@link ${shortServiceClassName}}のテストクラスです。
  * 
- * @author S2JDBC-Gen
+<#if lib.author??>
+ * @author ${lib.author}
+</#if>
  */
 <#if useS2junit4>
 @RunWith(Seasar2.class)

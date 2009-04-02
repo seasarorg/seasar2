@@ -253,6 +253,32 @@ public class GenerateEntityTest {
      * @throws Exception
      */
     @Test
+    public void testLib() throws Exception {
+        EntityDesc entityDesc = new EntityDesc();
+        entityDesc.setCatalogName("AAA");
+        entityDesc.setSchemaName("BBB");
+        entityDesc.setTableName("FOO");
+        entityDesc.setName("Foo");
+
+        EntityModel model = factory.getEntityModel(entityDesc);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/entity.ftl", "UTF-8", false);
+        String packageName = ClassUtil.getPackageName(getClass());
+        File dir = ResourceUtil
+                .getResourceAsFile(packageName.replace('.', '/'));
+        GeneratorImplStub generator = new GeneratorImplStub("UTF-8", new File(
+                dir, "lib"));
+        generator.generate(context);
+
+        String path = getClass().getName().replace(".", "/") + "_Lib.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testUnsupportedColumnType() throws Exception {
         AttributeDesc name = new AttributeDesc();
         name.setName("name");

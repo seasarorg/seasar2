@@ -9,7 +9,6 @@ import static hoge.entity.AaaNames.*;
 /**
  * {@link Aaa}のテストクラスです。
  * 
- * @author S2JDBC-Gen
  */
 @Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class AaaTest extends S2TestCase {

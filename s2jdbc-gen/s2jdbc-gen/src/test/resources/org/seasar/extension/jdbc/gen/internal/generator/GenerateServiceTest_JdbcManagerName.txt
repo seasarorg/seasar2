@@ -14,7 +14,6 @@ import static org.seasar.extension.jdbc.operation.Operations.*;
 /**
  * {@link Aaa}のサービスクラスです。
  * 
- * @author S2JDBC-Gen
  */
 @Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl"}, date = "2009/04/01 13:12:11")
 public class AaaService extends AbstractService<Aaa> {

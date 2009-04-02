@@ -13,7 +13,6 @@ import javax.persistence.Table;
 /**
  * Fooエンティティクラス
  * 
- * @author S2JDBC-Gen
  */
 @Entity
 @Table(catalog = "AAA", schema = "BBB")
