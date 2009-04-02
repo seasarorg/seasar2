@@ -143,11 +143,15 @@
 				<p>
 					エンティティ以外のソースコードも生成されますが、このチュートリアルでは特に言及しません。
 					詳細はS2JDBC-Genのドキュメントを参照してください。
-					自動生成されたコードは、JavaDocコメントに次の記述があるかどうかで見分けられます。
+					自動生成されたコードは、次のアノテーションが付与されているかどうかで見分けられます。
 				</p>
 <source><![CDATA[
-@author S2JDBC-Gen
+@Generated(value = {"S2JDBC-Gen 2.4.35", "org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl"}, 
+           date = "2009/04/02 14:21:20")
 ]]></source>
+				<p>
+					@Generated は自動生成されたことを示すアノテーションです。
+				</p>
 			</subsection>
 			<subsection name="エンティティの修正">
 				<p>
