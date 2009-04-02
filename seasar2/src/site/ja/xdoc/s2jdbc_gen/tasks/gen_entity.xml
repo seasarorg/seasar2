@@ -76,6 +76,11 @@
 							</li>
 							<li>
 								<p>
+									<a href="#生成するJavaファイルにauthorを指定する">生成するJavaファイルにauthorを指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
 									<a href="#データベース上のテーブルやカラムへのコメントをエンティティのJavaDocコメントに反映させる">データベース上のテーブルやカラムへのコメントをエンティティのJavaDocコメントに反映させる</a>
 								</p>
 							</li>
@@ -425,9 +430,33 @@ public class Department {
 			</subsection>
 			<subsection name="生成するJavaファイルに共通のヘッダーとしてコピーライトを含める">
 				<p>
-					copyright.ftlというファイルにコピーライトを記述し、これをtemplateFilePrimaryDir属性に指定するディレクトリに配置すると、
-					生成されるJavaファイルのヘッダーにコピーライトの記述が含まれるようになります。
-					mytempletes/copyright.ftlと配置する場合、タスクの定義は次のようになります。
+					lib.ftlというファイルを作成し、これをtemplateFilePrimaryDir属性に指定するディレクトリに配置します。
+					lib.ftlには次のようにcopyrightの定義をします。
+<source><![CDATA[<#assign copyright>
+/*
+ * Copyright 2008-2009 ...
+ * All rights reserved.
+ */
+</#assign>]]></source>
+					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
+				</p>
+<source><![CDATA[<gen-entity
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath"
+/>]]></source>
+				<p>
+					copyright.ftlにコピーライトを記述することもできます（過去バージョンとの互換機能として残されています）。
+					copyright.ftlを使う場合は、#assignタグを使わずコピーライトのみを指定してください。
+					lib.ftlと同様、copyright.ftlはtemplateFilePrimaryDir属性に指定するディレクトリに配置する必要があります。
+				</p>
+			</subsection>
+			<subsection name="生成するJavaファイルにauthorを指定する">
+				<p>
+					lib.ftlというファイルを作成し、これをtemplateFilePrimaryDir属性に指定するディレクトリに配置します。
+					lib.ftlには次のようにauthorの定義をします。
+<source><![CDATA[<#assign author="Nakamura">]]></source>
+					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-entity
     rootPackageName="examples"
