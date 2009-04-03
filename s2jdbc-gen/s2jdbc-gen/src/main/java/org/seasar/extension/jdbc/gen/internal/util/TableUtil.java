@@ -64,6 +64,8 @@ public class TableUtil {
     /**
      * 標準のテーブル名を組み立てます。
      * 
+     * @param dialect
+     *            方言
      * @param catalogName
      *            カタログ名
      * @param schemaName
@@ -72,24 +74,27 @@ public class TableUtil {
      *            テーブル名
      * @return 標準のテーブル名
      */
-    public static String buildCanonicalTableName(String catalogName,
-            String schemaName, String tableName) {
+    public static String buildCanonicalTableName(GenDialect dialect,
+            String catalogName, String schemaName, String tableName) {
+        if (dialect == null) {
+            throw new NullPointerException("dialect");
+        }
         if (tableName == null) {
             throw new NullPointerException("tableName");
         }
         StringBuilder buf = new StringBuilder();
         if (catalogName != null) {
-            buf.append(catalogName.toLowerCase());
+            buf.append(dialect.unquote(catalogName.toLowerCase()));
             buf.append(".");
             if (schemaName != null) {
-                buf.append(schemaName.toLowerCase());
+                buf.append(dialect.unquote(schemaName.toLowerCase()));
             }
             buf.append(".");
         } else if (schemaName != null) {
-            buf.append(schemaName.toLowerCase());
+            buf.append(dialect.unquote(schemaName.toLowerCase()));
             buf.append(".");
         }
-        buf.append(tableName.toLowerCase());
+        buf.append(dialect.unquote(tableName.toLowerCase()));
         return buf.toString();
     }
 

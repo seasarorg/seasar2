@@ -208,8 +208,8 @@ public class TableDescFactoryImpl implements TableDescFactory {
      * @return 標準名
      */
     protected String buildCanonicalName(TableMeta tableMeta) {
-        return TableUtil.buildCanonicalTableName(tableMeta.getCatalog(),
-                tableMeta.getSchema(), tableMeta.getName());
+        return TableUtil.buildCanonicalTableName(dialect, tableMeta
+                .getCatalog(), tableMeta.getSchema(), tableMeta.getName());
     }
 
     /**

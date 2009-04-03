@@ -16,6 +16,8 @@
 package org.seasar.extension.jdbc.gen.internal.util;
 
 import org.junit.Test;
+import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 
 import static org.junit.Assert.*;
 
@@ -31,14 +33,17 @@ public class TableUtilTest {
      */
     @Test
     public void testBuildCanonicalTableName() throws Exception {
-        assertEquals("aaa.bbb.ccc", TableUtil.buildCanonicalTableName("AAA",
-                "BBB", "CCC"));
-        assertEquals("bbb.ccc", TableUtil.buildCanonicalTableName(null, "BBB",
-                "CCC"));
-        assertEquals("aaa..ccc", TableUtil.buildCanonicalTableName("AAA", null,
-                "CCC"));
-        assertEquals("ccc", TableUtil
-                .buildCanonicalTableName(null, null, "CCC"));
+        GenDialect dialect = new StandardGenDialect();
+        assertEquals("aaa.bbb.ccc", TableUtil.buildCanonicalTableName(dialect,
+                "AAA", "BBB", "CCC"));
+        assertEquals("bbb.ccc", TableUtil.buildCanonicalTableName(dialect,
+                null, "BBB", "CCC"));
+        assertEquals("aaa..ccc", TableUtil.buildCanonicalTableName(dialect,
+                "AAA", null, "CCC"));
+        assertEquals("ccc", TableUtil.buildCanonicalTableName(dialect, null,
+                null, "CCC"));
+        assertEquals("aaa.bbb.ccc", TableUtil.buildCanonicalTableName(dialect,
+                "\"AAA\"", "\"BBB\"", "\"CCC\""));
     }
 
     /**

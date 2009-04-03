@@ -133,7 +133,8 @@ public class IdTableDescFactoryImpl implements IdTableDescFactory {
      */
     protected String buildCanonicalName(String catalog, String schema,
             String name) {
-        return TableUtil.buildCanonicalTableName(catalog, schema, name);
+        return TableUtil
+                .buildCanonicalTableName(dialect, catalog, schema, name);
     }
 
     /**
