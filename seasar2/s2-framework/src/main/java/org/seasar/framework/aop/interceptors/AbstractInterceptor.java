@@ -58,15 +58,7 @@ public abstract class AbstractInterceptor implements MethodInterceptor,
      * @return ターゲットクラス
      */
     protected Class getTargetClass(MethodInvocation invocation) {
-        if (invocation instanceof S2MethodInvocation) {
-            return ((S2MethodInvocation) invocation).getTargetClass();
-        }
-        Class thisClass = invocation.getThis().getClass();
-        Class superClass = thisClass.getSuperclass();
-        if (superClass == Object.class) {
-            return thisClass.getInterfaces()[0];
-        }
-        return superClass;
+        return ((S2MethodInvocation) invocation).getTargetClass();
     }
 
     /**
