@@ -90,6 +90,20 @@ public class AutoProcedureCallTest {
      * 
      * @throws Exception
      */
+    public void testParameter_dto_null() throws Exception {
+        MyDto dto = new MyDto();
+        dto.param1 = null;
+        dto.param2 = 5;
+        jdbcManager.call("PROC_DTO_PARAM", dto).execute();
+        assertNull(dto.param1);
+        assertNull(dto.param2);
+        assertNull(dto.param3);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
     public void testParameter_dto_time() throws Exception {
         Date date = new SimpleDateFormat("HH:mm:ss").parse("12:11:10");
         MyDto2 dto = new MyDto2();
