@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -125,7 +124,7 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
         valueTypes.put(BigInteger.class, ValueTypes.BIGINTEGER);
         valueTypes.put(java.sql.Date.class, ValueTypes.SQLDATE);
         valueTypes.put(java.sql.Time.class, ValueTypes.TIME);
-        valueTypes.put(Timestamp.class, ValueTypes.TIMESTAMP);
+        valueTypes.put(java.sql.Timestamp.class, ValueTypes.TIMESTAMP);
     }
 
     /**
@@ -548,19 +547,19 @@ public class PropertyMetaFactoryImpl implements PropertyMetaFactory {
             }
         }
 
+        final ValueType userDefinedValueType = ValueTypes
+                .createUserDefineValueType(propertyClass);
+        if (userDefinedValueType != null) {
+            propertyMeta.setValueType(userDefinedValueType);
+            return;
+        }
+
         if (Serializable.class.isAssignableFrom(propertyClass)) {
             if (propertyMeta.isLob()) {
                 propertyMeta.setValueType(ValueTypes.SERIALIZABLE_BLOB);
             } else {
                 propertyMeta.setValueType(ValueTypes.SERIALIZABLE_BYTE_ARRAY);
             }
-            return;
-        }
-
-        final ValueType userDefinedValueType = ValueTypes
-                .createUserDefineValueType(propertyClass);
-        if (userDefinedValueType != null) {
-            propertyMeta.setValueType(userDefinedValueType);
             return;
         }
 

@@ -496,6 +496,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
                 entityMeta);
         assertEquals(UserDefineType.class, propertyMeta.getValueType()
                 .getClass());
+
+        field = MyAaa.class.getDeclaredField("myInt");
+        propertyMeta = factory.createPropertyMeta(field, entityMeta);
+        assertEquals(UserDefineType.class, propertyMeta.getValueType()
+                .getClass());
     }
 
     /**
@@ -560,7 +565,7 @@ public class PropertyMetaFactoryImplTest extends TestCase {
     public void testSerializable() throws Exception {
         entityMeta.setName("MyAaa");
         entityMeta.setEntityClass(MyAaa.class);
-        Field field = MyAaa.class.getDeclaredField("myInt");
+        Field field = MyAaa.class.getDeclaredField("mySerializable");
         PropertyMeta propertyMeta = factory.createPropertyMeta(field,
                 entityMeta);
         assertSame(ValueTypes.SERIALIZABLE_BYTE_ARRAY, propertyMeta
@@ -834,6 +839,11 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         /**
          * 
          */
+        public MySerializable mySerializable;
+
+        /**
+         * 
+         */
         @Transient
         public String ignore;
 
@@ -1035,6 +1045,12 @@ public class PropertyMetaFactoryImplTest extends TestCase {
         /** */
         @Enumerated(javax.persistence.EnumType.STRING)
         public TemporalType stringType;
+
+    }
+
+    private static class MySerializable implements Serializable {
+
+        private static final long serialVersionUID = 1L;
 
     }
 
