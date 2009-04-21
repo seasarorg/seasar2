@@ -308,8 +308,8 @@ public class GenerateEntityTaskMojo extends AbstractS2JdbcGenMojo {
 			command.setGenDialectClassName(genDialectClassName);
 		if (idGeneration != null) {
 			final GenerationType generationType;
-			if (!IdGeneration.ASSIGNED.equals(idGeneration)) {
-				generationType = GenerationType.valueOf(idGeneration);
+			if (!idGeneration.equals("assigned")) {
+				generationType = GenerationType.valueOf(idGeneration.toUpperCase());
 			} else {
 				generationType = null;
 			}
