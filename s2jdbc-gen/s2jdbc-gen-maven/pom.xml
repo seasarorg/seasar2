@@ -87,12 +87,16 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- plugin.xmlの文字化けを防ぐため、2.5以降を使用 -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>2.5</version>
-				<!-- plugin.xmlの文字化けを防ぐため、2.5以降を使用 -->
+			</plugin>
+			<plugin>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>2.0</version>
 				<configuration>
-					<encoding>UTF-8</encoding>
+					<locales>ja</locales>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -152,4 +156,8 @@
 			<type>maven-plugin</type>
 		</dependency>
 	</dependencies>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 </project>
