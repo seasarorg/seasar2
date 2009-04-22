@@ -25,7 +25,7 @@ import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
-import org.seasar.extension.jdbc.gen.task.IdGeneration;
+import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
  * @goal gen-entity-task

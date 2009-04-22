@@ -19,6 +19,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -48,30 +50,41 @@ public abstract class AbstractS2JdbcGenMojo extends AbstractMojo {
 
 	protected abstract void doExecute();
 
+	protected List<File> getAdditionalClasspath() {
+		return new ArrayList<File>();
+	}
+
 	public AbstractS2JdbcGenMojo() {
 		super();
 	}
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		final URL[] urls;
+		final List<URL> urlList = new ArrayList<URL>();
+
 		if (diconDir != null) {
 			final File dicons = new File(diconDir);
 			getLog().info("dicon directory: " + dicons.getAbsolutePath());
 			try {
-				urls = new URL[] { dicons.toURI().toURL() };
+				urlList.add(dicons.toURI().toURL());
 			} catch (MalformedURLException e) {
-				throw new IllegalArgumentException(e);
+				new IllegalArgumentException(e);
 			}
-		} else {
-			urls = new URL[] {};
+		}
+
+		for (final File dir : getAdditionalClasspath()) {
+			try {
+				urlList.add(dir.toURI().toURL());
+			} catch (MalformedURLException e) {
+				new IllegalArgumentException(e);
+			}
 		}
 
 		if (commandInvokerClassName == null)
 			commandInvokerClassName = CommandInvokerImpl.class.getName();
 
-		// クラスパスに含まれていないdiconファイルを読み取るために、新しいクラスローダを追加して実行
+		// クラスパスに含まれていないdiconファイルやクラスファイル等を読み取るために、新しいクラスローダを追加して実行
 		final ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-		final URLClassLoader newLoader = new URLClassLoader(urls, oldLoader);
+		final URLClassLoader newLoader = new URLClassLoader(urlList.toArray(new URL[] {}), oldLoader);
 		try {
 			Thread.currentThread().setContextClassLoader(newLoader);
 			
