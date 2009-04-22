@@ -15,14 +15,10 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InvalidClassException;
 import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
 import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -34,7 +30,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
-import org.seasar.framework.exception.ClassNotFoundRuntimeException;
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.exception.SessionObjectNotSerializableRuntimeException;
 import org.seasar.framework.log.Logger;
@@ -70,8 +65,7 @@ public class HotdeployHttpSession implements HttpSession {
      * セッションオブジェクトを{@link HttpSession}に設定します。
      */
     public void flush() {
-        for (Iterator it = attributes.entrySet().iterator(); it
-                .hasNext();) {
+        for (Iterator it = attributes.entrySet().iterator(); it.hasNext();) {
             Entry entry = (Entry) it.next();
             try {
                 originalSession.setAttribute((String) entry.getKey(),
@@ -215,27 +209,13 @@ public class HotdeployHttpSession implements HttpSession {
          */
         public Object getDeserializedObject(final String name) {
             try {
-                final ByteArrayInputStream bais = new ByteArrayInputStream(
-                        bytes);
-                final ObjectInputStream ois = new ObjectInputStream(bais) {
-
-                    protected Class resolveClass(ObjectStreamClass desc)
-                            throws IOException, ClassNotFoundException {
-                        return Thread.currentThread().getContextClassLoader()
-                                .loadClass(desc.getName());
-                    }
-
-                };
-                return ois.readObject();
-            } catch (final InvalidClassException e) {
+                return HotdeployUtil.deserializeInternal(bytes);
+            } catch (final Exception e) {
                 logger.log("ISSR0008", new Object[] { name }, e);
                 return null;
-            } catch (final IOException e) {
-                throw new IORuntimeException(e);
-            } catch (final ClassNotFoundException e) {
-                throw new ClassNotFoundRuntimeException(e);
             }
         }
+
     }
 
 }

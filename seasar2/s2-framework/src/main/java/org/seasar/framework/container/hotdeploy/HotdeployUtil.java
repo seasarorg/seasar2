@@ -33,7 +33,10 @@ import org.seasar.framework.util.ClassUtil;
  */
 public class HotdeployUtil {
 
-    /** {@link org.seasar.framework.container.hotdeploy.HotdeployUtil.RrebuilderImpl}のクラス名です。 */
+    /**
+     * {@link org.seasar.framework.container.hotdeploy.HotdeployUtil.RrebuilderImpl}
+     * のクラス名です。
+     */
     public static final String REBUILDER_CLASS_NAME = "org.seasar.framework.container.hotdeploy.HotdeployUtil$RebuilderImpl";
 
     private static Boolean hotdeploy;
@@ -127,6 +130,27 @@ public class HotdeployUtil {
     }
 
     /**
+     * バイト列をデシリアライズするために内部的に呼び出されるメソッドです。
+     * 
+     * @param bytes
+     *            バイト列
+     * @return デシリアライズされたオブジェクト
+     * @throws Exception
+     *             デシリアライズで例外が発せした場合
+     */
+    protected static Object deserializeInternal(final byte[] bytes)
+            throws Exception {
+        if (bytes == null) {
+            return null;
+        }
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Class rebuilderClass = ClassLoaderUtil.loadClass(loader,
+                REBUILDER_CLASS_NAME);
+        Rebuilder rebuilder = (Rebuilder) ClassUtil.newInstance(rebuilderClass);
+        return rebuilder.deserialize(bytes);
+    }
+
+    /**
      * 値を再構成するためのインターフェースです。
      */
     public interface Rebuilder {
@@ -138,12 +162,24 @@ public class HotdeployUtil {
          * @return 再構成されたオブジェクト
          */
         Object rebuild(Object value);
+
+        /**
+         * バイト列をデシリアイラズします。
+         * 
+         * @param bytes
+         *            バイト列
+         * @return デシリアライズされたオブジェクト
+         * @throws Exception
+         *             デシリアライズで例外が発せした場合
+         */
+        Object deserialize(byte[] bytes) throws Exception;
     }
 
     /**
      * 値を再構成するための実装クラスです。
      * <p>
-     * このクラスは常に{@link HotdeployClassLoader}からロードされます。 これにより、 デシリアライズされたオブジェクトは{@link HotdeployClassLoader}からロードされたものになります。
+     * このクラスは常に{@link HotdeployClassLoader}からロードされます。 これにより、 デシリアライズされたオブジェクトは
+     * {@link HotdeployClassLoader}からロードされたものになります。
      * </p>
      */
     public static class RebuilderImpl implements Rebuilder {
@@ -163,6 +199,12 @@ public class HotdeployUtil {
             } catch (final Throwable t) {
                 return value;
             }
+        }
+
+        public Object deserialize(final byte[] bytes) throws Exception {
+            final ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            final ObjectInputStream ois = new ObjectInputStream(bais);
+            return ois.readObject();
         }
 
     }

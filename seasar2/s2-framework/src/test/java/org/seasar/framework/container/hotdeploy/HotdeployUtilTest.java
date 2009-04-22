@@ -15,6 +15,8 @@
  */
 package org.seasar.framework.container.hotdeploy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -246,6 +248,194 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
                 Thread.currentThread().setContextClassLoader(originalLoader);
             }
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_simpleType() throws Exception {
+        assertEquals("111", HotdeployUtil.deserializeInternal(serialize("111")));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_array() throws Exception {
+        String[] array = (String[]) HotdeployUtil
+                .deserializeInternal(serialize(new String[] { "aaa", "bbb" }));
+        assertEquals(2, array.length);
+        assertEquals("aaa", array[0]);
+        assertEquals("bbb", array[1]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_array_primitive() throws Exception {
+        int[] array = (int[]) HotdeployUtil
+                .deserializeInternal(serialize(new int[] { 1, 2 }));
+        assertEquals(2, array.length);
+        assertEquals(1, array[0]);
+        assertEquals(2, array[1]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_arrayList() throws Exception {
+        ArrayList src = new ArrayList();
+        src.add("aaa");
+        src.add("bbb");
+        ArrayList dest = (ArrayList) HotdeployUtil
+                .deserializeInternal(serialize(src));
+        assertEquals(2, dest.size());
+        assertEquals("aaa", dest.get(0));
+        assertEquals("bbb", dest.get(1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_collection() throws Exception {
+        LinkedList src = new LinkedList();
+        src.add("aaa");
+        src.add("bbb");
+        LinkedList dest = (LinkedList) HotdeployUtil
+                .deserializeInternal(serialize(src));
+        assertEquals(2, dest.size());
+        assertEquals("aaa", dest.get(0));
+        assertEquals("bbb", dest.get(1));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_map() throws Exception {
+        HashMap src = new HashMap();
+        src.put("aaa", "111");
+        HashMap dest = (HashMap) HotdeployUtil
+                .deserializeInternal(serialize(src));
+        assertEquals(1, dest.size());
+        assertEquals("111", dest.get("aaa"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_bean() throws Exception {
+        Hoge src = new Hoge();
+        src.setAaa("111");
+        Hoge hoge = new Hoge();
+        hoge.setAaa("222");
+        src.setHoge(hoge);
+        Hoge dest = (Hoge) HotdeployUtil.deserializeInternal(serialize(src));
+        assertNotSame(src, dest);
+        assertEquals("111", dest.getAaa());
+        assertNotNull(dest.getHoge());
+        assertEquals("222", dest.getHoge().getAaa());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_arrayListWithPrimitiveA() throws Exception {
+        boolean defaultDeployMode = isWarmDeploy();
+        setWarmDeploy(true);
+        try {
+            ArrayList list = new ArrayList();
+            list.add("aaa");
+            list.add("bbb");
+            list.add("ccc");
+            List value = (List) HotdeployUtil
+                    .deserializeInternal(serialize(list));
+            assertTrue(value.size() == 3);
+        } finally {
+            setWarmDeploy(defaultDeployMode);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_arrayListWithDto() throws Exception {
+        boolean defaultDeployMode = isWarmDeploy();
+        setWarmDeploy(true);
+        try {
+            ArrayList list = new ArrayList();
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("A");
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("B");
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("C");
+                list.add(hoge);
+            }
+            List value = (List) HotdeployUtil
+                    .deserializeInternal(serialize(list));
+            assertTrue(value.size() == 3);
+            Hoge h = (Hoge) value.get(0);
+            assertEquals("A", h.getAaa());
+        } finally {
+            setWarmDeploy(defaultDeployMode);
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testDeserialize_arrayListWithDto2() throws Exception {
+        boolean defaultDeployMode = isWarmDeploy();
+        setWarmDeploy(true);
+        try {
+            ArrayList list = new ArrayList();
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("A");
+                Foo f = new Foo();
+                f.setNum(1);
+                hoge.setFoo(f);
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("B");
+                Foo f = new Foo();
+                f.setNum(2);
+                hoge.setFoo(f);
+                list.add(hoge);
+            }
+            {
+                Hoge hoge = new Hoge();
+                hoge.setAaa("C");
+                Foo f = new Foo();
+                f.setNum(3);
+                hoge.setFoo(f);
+                list.add(hoge);
+            }
+            List value = (List) HotdeployUtil
+                    .deserializeInternal(serialize(list));
+            assertTrue(value.size() == 3);
+            Hoge h = (Hoge) value.get(0);
+            assertEquals("A", h.getAaa());
+            assertTrue(h.getFoo().getNum() == 1);
+        } finally {
+            setWarmDeploy(defaultDeployMode);
+        }
+    }
+
+    private byte[] serialize(Object o) throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(o);
+        oos.close();
+        return baos.toByteArray();
     }
 
     /**

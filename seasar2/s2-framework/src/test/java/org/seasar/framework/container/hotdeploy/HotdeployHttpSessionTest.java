@@ -98,7 +98,8 @@ public class HotdeployHttpSessionTest extends S2FrameworkTestCase {
 
         protected synchronized Class loadClass(String name, boolean resolve)
                 throws ClassNotFoundException {
-            if (!name.startsWith(HotdeployHttpSession.class.getName())) {
+            if (!name.startsWith(HotdeployHttpSession.class.getName())
+                    && !name.equals(HotdeployUtil.REBUILDER_CLASS_NAME)) {
                 return super.loadClass(name, resolve);
             }
 
