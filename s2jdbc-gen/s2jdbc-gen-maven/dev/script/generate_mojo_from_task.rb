@@ -1,9 +1,8 @@
-
 params = []
 
 def decapitalize(str)
   str_ary = str.split('')
-  str_ary[0] = str_ary[0].upcase if 0 < str_ary.size
+  str_ary[0] = str_ary[0].downcase if 0 < str_ary.size
   str_ary.join('')
 end
 
