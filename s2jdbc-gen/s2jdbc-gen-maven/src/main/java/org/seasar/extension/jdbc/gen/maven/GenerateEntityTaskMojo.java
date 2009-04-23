@@ -32,12 +32,8 @@ import org.seasar.extension.jdbc.gen.internal.factory.Factory;
  */
 public class GenerateEntityTaskMojo extends AbstractS2JdbcGenMojo {
 
-	private final GenerateEntityCommand command = new GenerateEntityCommand();
-
-	@Override
-	protected Command getCommand() {
-		return command;
-	}
+	/** コマンド */
+	protected final GenerateEntityCommand command = new GenerateEntityCommand();
 
 	/**
 	 * 設定ファイルのパスを設定します。
@@ -255,6 +251,11 @@ public class GenerateEntityTaskMojo extends AbstractS2JdbcGenMojo {
 	 * @parameter
 	 */
 	private Boolean useTemporalType;
+
+	@Override
+	protected Command getCommand() {
+		return command;
+	}
 
 	@Override
 	protected void doExecute() {

@@ -21,16 +21,16 @@ import java.util.List;
 
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.Command;
-import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityTestCommand;
+import org.seasar.extension.jdbc.gen.internal.command.GenerateNamesCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
- * @goal gen-entitytest-task
+ * @goal gen-names-task
  */
-public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
+public class GenerateNamesMojo extends AbstractS2JdbcGenMojo {
 
 	/** コマンド */
-	protected GenerateEntityTestCommand command = new GenerateEntityTestCommand();
+	protected GenerateNamesCommand command = new GenerateNamesCommand();
 
 	/**
 	 * 設定ファイルのパスを設定します。
@@ -68,32 +68,11 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private File classpathDir;
 
 	/**
-	 * エンティティのパッケージ名を設定します。
+	 * エンティティクラスのパッケージ名を設定します。
 	 * 
 	 * @parameter
 	 */
 	private String entityPackageName;
-
-	/**
-	 * テストクラス名のサフィックスを設定します。
-	 * 
-	 * @parameter
-	 */
-	private String testClassNameSuffix;
-
-	/**
-	 * テストクラスのテンプレート名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String templateFileName;
-
-	/**
-	 * Javaファイルのエンコーディングを設定します。
-	 * 
-	 * @parameter
-	 */
-	private String javaFileEncoding;
 
 	/**
 	 * 生成するJavaファイルの出力先ディレクトリを設定します。
@@ -103,6 +82,13 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private File javaFileDestDir;
 
 	/**
+	 * Javaファイルのエンコーディングを設定します。
+	 * 
+	 * @parameter
+	 */
+	private String javaFileEncoding;
+
+	/**
 	 * 上書きをする場合{@code true}、しない場合{@code false}を設定します。
 	 * 
 	 * @parameter
@@ -110,7 +96,7 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private Boolean overwrite;
 
 	/**
-	 * ルートパッケージ名を返します。
+	 * ルートパッケージ名を設定します。
 	 * 
 	 * @parameter
 	 */
@@ -124,7 +110,7 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private String templateFileEncoding;
 
 	/**
-	 * テンプレートファイルを格納するプライマリディレクトリを設定します。
+	 * テンプレートファイルを格納したプライマリディレクトリを設定します。
 	 * 
 	 * @parameter
 	 */
@@ -145,13 +131,6 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private String ignoreEntityClassNamePattern;
 
 	/**
-	 * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を設定します。
-	 * 
-	 * @parameter
-	 */
-	private Boolean useS2junit4;
-
-	/**
 	 * 名前クラス名のサフィックスを設定します。
 	 * 
 	 * @parameter
@@ -166,11 +145,11 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private String namesPackageName;
 
 	/**
-	 * 名前クラスを使用する場合{@code true}、しない場合{@code false}を設定します。
+	 * 名前クラスのテンプレート名を設定します。
 	 * 
 	 * @parameter
 	 */
-	private Boolean useNamesClass;
+	private String namesTemplateFileName;
 
 	@Override
 	protected Command getCommand() {
@@ -191,14 +170,10 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 			command.setClasspathDir(classpathDir);
 		if (entityPackageName != null)
 			command.setEntityPackageName(entityPackageName);
-		if (testClassNameSuffix != null)
-			command.setTestClassNameSuffix(testClassNameSuffix);
-		if (templateFileName != null)
-			command.setTemplateFileName(templateFileName);
-		if (javaFileEncoding != null)
-			command.setJavaFileEncoding(javaFileEncoding);
 		if (javaFileDestDir != null)
 			command.setJavaFileDestDir(javaFileDestDir);
+		if (javaFileEncoding != null)
+			command.setJavaFileEncoding(javaFileEncoding);
 		if (overwrite != null)
 			command.setOverwrite(overwrite);
 		if (rootPackageName != null)
@@ -211,14 +186,12 @@ public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {
 			command.setEntityClassNamePattern(entityClassNamePattern);
 		if (ignoreEntityClassNamePattern != null)
 			command.setIgnoreEntityClassNamePattern(ignoreEntityClassNamePattern);
-		if (useS2junit4 != null)
-			command.setUseS2junit4(useS2junit4);
 		if (namesClassNameSuffix != null)
 			command.setNamesClassNameSuffix(namesClassNameSuffix);
 		if (namesPackageName != null)
 			command.setNamesPackageName(namesPackageName);
-		if (useNamesClass != null)
-			command.setUseNamesClass(useNamesClass);
+		if (namesTemplateFileName != null)
+			command.setNamesTemplateFileName(namesTemplateFileName);
 	}
 
 	@Override
