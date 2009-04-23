@@ -27,7 +27,7 @@ import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 /**
  * @goal gen-names-task
  */
-public class GenerateNamesMojo extends AbstractS2JdbcGenMojo {
+public class GenerateNamesTaskMojo extends AbstractS2JdbcGenMojo {
 
 	/** コマンド */
 	protected GenerateNamesCommand command = new GenerateNamesCommand();
