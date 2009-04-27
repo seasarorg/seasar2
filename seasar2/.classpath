@@ -12,7 +12,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/javassist-3.4.ga.jar" sourcepath="lib/sources/javassist-3.4.ga-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.13.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/ognl-2.6.9-patch-20070908.jar" sourcepath="lib/sources/ognl-2.6.9-patch-20070908-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/ognl-2.6.9-patch-20090427.jar" sourcepath="lib/sources/ognl-2.6.9-patch-20090427-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/poi-3.0-FINAL.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/hsqldb-1.8.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/geronimo-j2ee_1.4_spec-1.0.jar"/>
