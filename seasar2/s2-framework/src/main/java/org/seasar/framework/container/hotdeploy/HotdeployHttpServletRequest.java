@@ -54,8 +54,15 @@ public class HotdeployHttpServletRequest extends HttpServletRequestWrapper {
         if (originalSession == null) {
             return originalSession;
         }
-        session = new HotdeployHttpSession(originalSession);
+        session = new HotdeployHttpSession(this, originalSession);
         return session;
+    }
+
+    /**
+     * {@link HttpSession}を破棄します。
+     */
+    protected void invalidateSession() {
+        session = null;
     }
 
 }

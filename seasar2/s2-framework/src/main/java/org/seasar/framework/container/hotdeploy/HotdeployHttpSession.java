@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
@@ -44,19 +45,29 @@ public class HotdeployHttpSession implements HttpSession {
     private static final Logger logger = Logger
             .getLogger(HotdeployHttpSession.class);
 
+    /** このインスタンスを所有する{@link HttpServletRequest}です。 */
+    protected final HotdeployHttpServletRequest request;
+
     /** オリジナルの{@link HttpSession}です。 */
     protected final HttpSession originalSession;
 
     /** セッションオブジェクトの{@link Map}です。 */
     protected final Map attributes;
 
+    /** このセッションオブジェクトが有効なら<code>true</code>です。 */
+    protected boolean active = true;
+
     /**
      * インスタンスを構築します。
      * 
+     * @param request
+     *            このインスタンスを所有する{@link HttpServletRequest}
      * @param originalSession
      *            オリジナルの{@link HttpSession}
      */
-    public HotdeployHttpSession(final HttpSession originalSession) {
+    public HotdeployHttpSession(final HotdeployHttpServletRequest request,
+            final HttpSession originalSession) {
+        this.request = request;
         this.originalSession = originalSession;
         this.attributes = new HashMap();
     }
@@ -65,18 +76,21 @@ public class HotdeployHttpSession implements HttpSession {
      * セッションオブジェクトを{@link HttpSession}に設定します。
      */
     public void flush() {
-        for (Iterator it = attributes.entrySet().iterator(); it.hasNext();) {
-            Entry entry = (Entry) it.next();
-            try {
-                originalSession.setAttribute((String) entry.getKey(),
-                        new SerializedObjectHolder(entry.getValue()));
-            } catch (final Exception e) {
-                logger.log("ESSR0017", new Object[] { e }, e);
+        if (active) {
+            for (Iterator it = attributes.entrySet().iterator(); it.hasNext();) {
+                Entry entry = (Entry) it.next();
+                try {
+                    originalSession.setAttribute((String) entry.getKey(),
+                            new SerializedObjectHolder(entry.getValue()));
+                } catch (final Exception e) {
+                    logger.log("ESSR0017", new Object[] { e }, e);
+                }
             }
         }
     }
 
     public Object getAttribute(final String name) {
+        assertActive();
         if (attributes.containsKey(name)) {
             return attributes.get(name);
         }
@@ -94,6 +108,7 @@ public class HotdeployHttpSession implements HttpSession {
     }
 
     public void setAttribute(final String name, final Object value) {
+        assertActive();
         if (value == null) {
             originalSession.setAttribute(name, value);
             return;
@@ -149,6 +164,8 @@ public class HotdeployHttpSession implements HttpSession {
 
     public void invalidate() {
         originalSession.invalidate();
+        request.invalidateSession();
+        active = false;
     }
 
     public boolean isNew() {
@@ -218,4 +235,15 @@ public class HotdeployHttpSession implements HttpSession {
 
     }
 
+    /**
+     * このセッションオブジェクトが有効であることをチェックします。
+     * 
+     * @throws IllegalStateException
+     *             このセッションが無効の場合
+     */
+    protected void assertActive() {
+        if (!active) {
+            throw new IllegalStateException("session invalidated");
+        }
+    }
 }

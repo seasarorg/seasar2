@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
+import javax.servlet.http.HttpSession;
+
 import org.seasar.framework.exception.IORuntimeException;
 import org.seasar.framework.exception.SessionObjectNotSerializableRuntimeException;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -53,8 +55,8 @@ public class HotdeployHttpSessionTest extends S2FrameworkTestCase {
         assertEquals(Foo.class.getName(), oldFoo.getClass().getName());
         assertEquals(oldCl, oldFoo.getClass().getClassLoader());
 
-        HotdeployHttpSession session = new HotdeployHttpSession(getRequest()
-                .getSession());
+        HotdeployHttpSession session = new HotdeployHttpSession(null,
+                getRequest().getSession());
         session.setAttribute("foo", oldFoo);
         assertSame(oldFoo, session.getAttribute("foo"));
         session.flush();
@@ -62,7 +64,7 @@ public class HotdeployHttpSessionTest extends S2FrameworkTestCase {
         ClassLoader newCl = new ChildFirstClassLoader(originalClassLoader);
         Thread.currentThread().setContextClassLoader(newCl);
 
-        session = new HotdeployHttpSession(getRequest().getSession());
+        session = new HotdeployHttpSession(null, getRequest().getSession());
         Object newFoo = session.getAttribute("foo");
         assertNotSame(oldFoo, newFoo);
         assertSame(newFoo, session.getAttribute("foo"));
@@ -74,14 +76,33 @@ public class HotdeployHttpSessionTest extends S2FrameworkTestCase {
      * @throws Exception
      */
     public void testNotSerializable() throws Exception {
-        HotdeployHttpSession session = new HotdeployHttpSession(getRequest()
-                .getSession());
+        HotdeployHttpSession session = new HotdeployHttpSession(null,
+                getRequest().getSession());
         try {
             session.setAttribute("bar", new Bar());
             fail();
         } catch (SessionObjectNotSerializableRuntimeException expected) {
             expected.printStackTrace();
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testInvalidate() throws Exception {
+        HotdeployHttpServletRequest request = new HotdeployHttpServletRequest(
+                getRequest());
+        HttpSession s1 = request.getSession();
+        s1.setAttribute("a", "1");
+        s1.invalidate();
+        try {
+            s1.getAttribute("a");
+            fail();
+        } catch (IllegalStateException expected) {
+        }
+
+        HttpSession s2 = request.getSession();
+        assertNotSame(s1, s2);
     }
 
     /**
