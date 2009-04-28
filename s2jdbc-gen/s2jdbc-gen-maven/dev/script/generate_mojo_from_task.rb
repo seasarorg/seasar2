@@ -27,7 +27,7 @@ $stdin.each do |line|
     in_method = false if line =~ /^\s*\}\s*$/
     next
   end
-  if line =~ /public void set(\w+)\((\w+) /
+  if line =~ /^\s*public void set(\w+)\((\w+) /
     name = $1
     type = $2
     
@@ -41,7 +41,7 @@ $stdin.each do |line|
     print line.sub(/@param.*$/) { '@parameter' }
     next
   end
-  if line =~ /protected void doExecute\(\)/
+  if line =~ /^\s*protected void doExecute\(\)/
     print line
     params.each do |param|
       puts "if (#{decapitalize(param)} != null)"
