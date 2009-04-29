@@ -472,6 +472,9 @@ public class ResourcesUtil {
      */
     public static class VfsZipResources implements Resources {
 
+        /** WAR内の.classファイルの接頭辞です。 */
+        protected static final String WAR_CLASSES_PREFIX = "/WEB-INF/CLASSES/";
+
         /** ルートパッケージです。 */
         protected final String rootPackage;
 
@@ -481,8 +484,11 @@ public class ResourcesUtil {
         /** ZipのURLです。 */
         protected final URL zipUrl;
 
+        /** Zip内のエントリの接頭辞です。 */
+        protected final String prefix;
+
         /** Zip内のエントリ名の{@link Set}です。 */
-        final protected Set entryNames = new HashSet();
+        protected final Set entryNames = new HashSet();
 
         /**
          * インスタンスを構築します。
@@ -496,16 +502,35 @@ public class ResourcesUtil {
          */
         public VfsZipResources(final URL url, final String rootPackage,
                 final String rootDir) {
-            this.rootPackage = rootPackage;
-            this.rootDir = rootDir;
-
             URL zipUrl = url;
+            String prefix = "";
             if (rootPackage != null) {
                 final String[] paths = rootPackage.split("\\.");
                 for (int i = 0; i < paths.length; ++i) {
                     zipUrl = URLUtil.create(zipUrl, "..");
                 }
             }
+            loadFromZip(zipUrl);
+            if (entryNames.isEmpty()) {
+                final String zipUrlString = zipUrl.toExternalForm();
+                if (zipUrlString.toUpperCase().endsWith(WAR_CLASSES_PREFIX)) {
+                    final URL warUrl = URLUtil.create(zipUrl, "../..");
+                    final String path = warUrl.getPath();
+                    zipUrl = FileUtil.toURL(new File(path.substring(0, path
+                            .length() - 1)));
+                    prefix = zipUrlString.substring(warUrl.toExternalForm()
+                            .length());
+                    loadFromZip(zipUrl);
+                }
+            }
+
+            this.rootPackage = rootPackage;
+            this.rootDir = rootDir;
+            this.zipUrl = zipUrl;
+            this.prefix = prefix;
+        }
+
+        private void loadFromZip(final URL zipUrl) {
             final ZipInputStream zis = new ZipInputStream(URLUtil
                     .openStream(zipUrl));
             try {
@@ -517,12 +542,11 @@ public class ResourcesUtil {
             } finally {
                 InputStreamUtil.close(zis);
             }
-            this.zipUrl = zipUrl;
         }
 
         public boolean isExistClass(final String className) {
-            final String entryName = toClassFile(ClassUtil.concatName(
-                    rootPackage, className));
+            final String entryName = prefix
+                    + toClassFile(ClassUtil.concatName(rootPackage, className));
             return entryNames.contains(entryName);
         }
 
@@ -530,7 +554,7 @@ public class ResourcesUtil {
             final ZipInputStream zis = new ZipInputStream(URLUtil
                     .openStream(zipUrl));
             try {
-                ClassTraversal.forEach(zis, new ClassHandler() {
+                ClassTraversal.forEach(zis, prefix, new ClassHandler() {
                     public void processClass(String packageName,
                             String shortClassName) {
                         if (rootPackage == null
@@ -549,7 +573,7 @@ public class ResourcesUtil {
             final ZipInputStream zis = new ZipInputStream(URLUtil
                     .openStream(zipUrl));
             try {
-                ResourceTraversal.forEach(zis, new ResourceHandler() {
+                ResourceTraversal.forEach(zis, prefix, new ResourceHandler() {
                     public void processResource(String path, InputStream is) {
                         if (rootDir == null || path.startsWith(rootDir)) {
                             handler.processResource(path, is);
