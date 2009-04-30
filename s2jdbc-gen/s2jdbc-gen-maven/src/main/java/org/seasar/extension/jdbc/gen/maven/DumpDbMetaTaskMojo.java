@@ -22,6 +22,11 @@ import org.seasar.extension.jdbc.gen.internal.command.DumpDbMetaCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * データベースのメタデータをダンプするゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see DumpDbMetaCommand
+ *
  * @goal dump-dbmeta-task
  */
 public class DumpDbMetaTaskMojo extends AbstractS2JdbcGenMojo {

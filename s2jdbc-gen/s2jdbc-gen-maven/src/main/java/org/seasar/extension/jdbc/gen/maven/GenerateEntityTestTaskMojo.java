@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityTestCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * エンティティに対するテストクラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateEntityTestCommand
+ *
  * @goal gen-entitytest-task
  */
 public class GenerateEntityTestTaskMojo extends AbstractS2JdbcGenMojo {

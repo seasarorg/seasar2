@@ -30,6 +30,9 @@ import org.seasar.extension.jdbc.gen.command.CommandInvoker;
 import org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl;
 import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 
+/**
+ * @author hakoda-te-kun
+ */
 public abstract class AbstractS2JdbcGenMojo extends AbstractMojo {
 
 	/**

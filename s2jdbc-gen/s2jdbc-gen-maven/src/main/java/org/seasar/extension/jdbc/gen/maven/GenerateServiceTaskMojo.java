@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * エンティティに対するサービスクラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateServiceCommand
+ *
  * @goal gen-service-task
  */
 public class GenerateServiceTaskMojo extends AbstractS2JdbcGenMojo {

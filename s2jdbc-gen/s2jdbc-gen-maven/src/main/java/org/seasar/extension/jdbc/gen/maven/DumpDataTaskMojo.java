@@ -26,6 +26,11 @@ import org.seasar.extension.jdbc.gen.internal.command.DumpDataCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * エンティティに対応するデータベースのデータをテキストファイルにダンプするゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see DumpDataCommand
+ *
  * @goal dump-data-task
  */
 public class DumpDataTaskMojo extends AbstractS2JdbcGenMojo {

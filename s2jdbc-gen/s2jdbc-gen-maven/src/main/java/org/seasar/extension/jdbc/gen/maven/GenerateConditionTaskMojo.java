@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateConditionCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * エンティティの条件クラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateConditionCommand
+ *
  * @goal gen-condition-task
  */
 public class GenerateConditionTaskMojo extends AbstractS2JdbcGenMojo {

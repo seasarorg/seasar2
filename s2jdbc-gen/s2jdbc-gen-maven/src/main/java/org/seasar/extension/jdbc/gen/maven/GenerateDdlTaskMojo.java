@@ -30,6 +30,11 @@ import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 
 /**
+ * DDLのSQLファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateDdlCommand
+ *
  * @goal gen-ddl-task
  */
 public class GenerateDdlTaskMojo extends AbstractS2JdbcGenMojo {

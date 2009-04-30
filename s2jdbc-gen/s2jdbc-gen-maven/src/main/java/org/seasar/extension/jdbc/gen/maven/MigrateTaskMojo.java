@@ -26,6 +26,11 @@ import org.seasar.extension.jdbc.gen.internal.command.MigrateCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * データベースのスキーマとデータを移行するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see MigrateCommand
+ * 
  * @goal migrate-task
  */
 public class MigrateTaskMojo extends AbstractS2JdbcGenMojo {

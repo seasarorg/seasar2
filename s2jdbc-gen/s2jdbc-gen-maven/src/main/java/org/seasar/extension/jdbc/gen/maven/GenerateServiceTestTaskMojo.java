@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceTestCommand
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * サービスに対するテストクラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateServiceTestCommand
+ *
  * @goal gen-servicetest-task
  */
 public class GenerateServiceTestTaskMojo extends AbstractS2JdbcGenMojo {

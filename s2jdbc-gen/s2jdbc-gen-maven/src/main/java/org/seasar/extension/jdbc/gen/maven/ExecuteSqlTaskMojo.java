@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.ExecuteSqlCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * SQLを実行するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see ExecuteSqlCommand
+ *
  * @goal exec-sql-task
  */
 public class ExecuteSqlTaskMojo extends AbstractS2JdbcGenMojo {

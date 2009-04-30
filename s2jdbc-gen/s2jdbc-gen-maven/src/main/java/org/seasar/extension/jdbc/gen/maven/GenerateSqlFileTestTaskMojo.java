@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateSqlFileTestCommand
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * SQLファイルに対するテストクラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateSqlFileTestCommand
+ *
  * @goal gen-sqlfiletest-task
  */
 public class GenerateSqlFileTestTaskMojo extends AbstractS2JdbcGenMojo {

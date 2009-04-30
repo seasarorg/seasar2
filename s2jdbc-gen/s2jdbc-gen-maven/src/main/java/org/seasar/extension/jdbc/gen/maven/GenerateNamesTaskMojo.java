@@ -25,6 +25,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateNamesCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * エンティティに対する名前クラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateNamesCommand
+ *
  * @goal gen-names-task
  */
 public class GenerateNamesTaskMojo extends AbstractS2JdbcGenMojo {

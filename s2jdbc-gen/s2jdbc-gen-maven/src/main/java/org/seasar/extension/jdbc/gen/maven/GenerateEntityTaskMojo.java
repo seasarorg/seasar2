@@ -28,6 +28,11 @@ import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * エンティティクラスのJavaファイルを生成するゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see GenerateEntityCommand
+ *
  * @goal gen-entity-task
  */
 public class GenerateEntityTaskMojo extends AbstractS2JdbcGenMojo {

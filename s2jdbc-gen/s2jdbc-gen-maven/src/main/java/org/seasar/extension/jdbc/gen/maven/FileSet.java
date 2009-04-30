@@ -24,6 +24,9 @@ import java.util.Set;
 
 import org.codehaus.plexus.util.FileUtils;
 
+/**
+ * @author hakoda-te-kun
+ */
 public class FileSet {
 	// ※注意
 	// Mojoに空リストをパラメータとして渡すことはできない。

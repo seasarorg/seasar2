@@ -26,6 +26,11 @@ import org.seasar.extension.jdbc.gen.internal.command.LoadDataCommand;
 import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
+ * ダンプファイルをロードするゴールです。
+ * 
+ * @author hakoda-te-kun
+ * @see LoadDataCommand
+ * 
  * @goal load-data-task
  */
 public class LoadDataTaskMojo extends AbstractS2JdbcGenMojo {
