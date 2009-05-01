@@ -44,9 +44,6 @@ import org.seasar.framework.util.ClassUtil;
  * <p>
  * テーブル1つにつき、1つのエンティティクラスのJavaファイルを生成します。
  * </p>
- * <p>
- * 主キーやカラムのNOT NULL制約は認識してJavaコードに反映しますが、一意キーや外部キーは反映しません。
- * </p>
  * 
  * @author taedium
  */
