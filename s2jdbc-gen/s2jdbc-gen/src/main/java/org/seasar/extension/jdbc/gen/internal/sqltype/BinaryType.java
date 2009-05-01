@@ -30,6 +30,9 @@ import org.seasar.framework.util.Base64Util;
  */
 public class BinaryType extends AbstractSqlType {
 
+    /** 空のバイト配列 */
+    protected static byte[] EMPTY_BYTES = new byte[] {};
+
     /**
      * インスタンスを構築します。
      */
@@ -51,6 +54,8 @@ public class BinaryType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.BINARY);
+        } else if (value.length() == 0) {
+            ps.setBytes(index, EMPTY_BYTES);
         } else {
             ps.setBytes(index, Base64Util.decode(value));
         }

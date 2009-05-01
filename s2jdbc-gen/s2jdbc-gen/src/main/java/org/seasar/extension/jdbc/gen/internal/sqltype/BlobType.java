@@ -56,6 +56,8 @@ public class BlobType extends AbstractSqlType {
             throws SQLException {
         if (value == null) {
             ps.setNull(index, Types.BLOB);
+        } else if (value.length() == 0) {
+            ps.setBinaryStream(index, new ByteArrayInputStream(EMPTY_BYTES), 0);
         } else {
             byte[] bytes = Base64Util.decode(value);
             ps.setBinaryStream(index, new ByteArrayInputStream(bytes),
