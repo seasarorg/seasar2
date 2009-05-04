@@ -99,7 +99,7 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
             final Class<?> interceptorClass) {
         final PropertyDefImpl propDef = new PropertyDefImpl(
                 EJB3InterceptorSupportInterType.getFieldName(interceptorClass));
-        propDef.setChildComponentDef(createInterceptorComonentDef(
+        propDef.setChildComponentDef(createInterceptorComponentDef(
                 annotationHandler, interceptorClass));
         return propDef;
     }
@@ -114,7 +114,7 @@ public class EJB3IntertypeDefBuilder implements IntertypeDefBuilder {
      *            {@link Interceptors}アノテーションで指定されたインターセプタクラス
      * @return {@link ComponentDef}
      */
-    protected ComponentDef createInterceptorComonentDef(
+    protected ComponentDef createInterceptorComponentDef(
             final AnnotationHandler annotationHandler,
             final Class<?> interceptorClass) {
         final ComponentDef interceptorCd = annotationHandler

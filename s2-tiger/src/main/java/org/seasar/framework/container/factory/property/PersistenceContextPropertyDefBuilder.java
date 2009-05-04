@@ -62,7 +62,7 @@ public class PersistenceContextPropertyDefBuilder extends
         if (!StringUtil.isEmpty(unitName)) {
             // specified 'unitName' element
             final ComponentDef emfComponentDef = PersistenceUnitPropertyDefBuilder
-                    .createPersistenceUnitCompoentDef(unitName);
+                    .createPersistenceUnitComponentDef(unitName);
             final ComponentDef emComponentDef = createComponentDef(TxScopedEntityManagerProxy.class);
             final PropertyDef emfPropertyDef = createPropertyDef("emf",
                     AccessTypeDefFactory.FIELD, emfComponentDef);

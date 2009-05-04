@@ -44,7 +44,7 @@ public class ClassUtil {
 
     private static Map primitiveToWrapperMap = new HashMap();
 
-    private static Map primitiveClsssNameMap = new HashMap();
+    private static Map primitiveClassNameMap = new HashMap();
 
     static {
         wrapperToPrimitiveMap.put(Character.class, Character.TYPE);
@@ -65,14 +65,14 @@ public class ClassUtil {
         primitiveToWrapperMap.put(Float.TYPE, Float.class);
         primitiveToWrapperMap.put(Boolean.TYPE, Boolean.class);
 
-        primitiveClsssNameMap.put(Character.TYPE.getName(), Character.TYPE);
-        primitiveClsssNameMap.put(Byte.TYPE.getName(), Byte.TYPE);
-        primitiveClsssNameMap.put(Short.TYPE.getName(), Short.TYPE);
-        primitiveClsssNameMap.put(Integer.TYPE.getName(), Integer.TYPE);
-        primitiveClsssNameMap.put(Long.TYPE.getName(), Long.TYPE);
-        primitiveClsssNameMap.put(Double.TYPE.getName(), Double.TYPE);
-        primitiveClsssNameMap.put(Float.TYPE.getName(), Float.TYPE);
-        primitiveClsssNameMap.put(Boolean.TYPE.getName(), Boolean.TYPE);
+        primitiveClassNameMap.put(Character.TYPE.getName(), Character.TYPE);
+        primitiveClassNameMap.put(Byte.TYPE.getName(), Byte.TYPE);
+        primitiveClassNameMap.put(Short.TYPE.getName(), Short.TYPE);
+        primitiveClassNameMap.put(Integer.TYPE.getName(), Integer.TYPE);
+        primitiveClassNameMap.put(Long.TYPE.getName(), Long.TYPE);
+        primitiveClassNameMap.put(Double.TYPE.getName(), Double.TYPE);
+        primitiveClassNameMap.put(Float.TYPE.getName(), Float.TYPE);
+        primitiveClassNameMap.put(Boolean.TYPE.getName(), Boolean.TYPE);
     }
 
     /**
@@ -112,7 +112,7 @@ public class ClassUtil {
      */
     public static Class convertClass(String className)
             throws ClassNotFoundRuntimeException {
-        Class clazz = (Class) primitiveClsssNameMap.get(className);
+        Class clazz = (Class) primitiveClassNameMap.get(className);
         if (clazz != null) {
             return clazz;
         }

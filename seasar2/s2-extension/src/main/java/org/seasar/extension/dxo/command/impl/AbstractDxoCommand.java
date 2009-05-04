@@ -155,7 +155,7 @@ public abstract class AbstractDxoCommand implements DxoCommand {
             if (destType.isArray()) {
                 return new ListToArrayConversionHelper();
             } else if (List.class.isAssignableFrom(destType)) {
-                return new ListToListConvertsionHelper();
+                return new ListToListConversionHelper();
             }
         } else {
             return new ScalarConversionHelper();
@@ -276,7 +276,7 @@ public abstract class AbstractDxoCommand implements DxoCommand {
     /**
      * {@link List}から{@link List}へ変換するヘルパです。
      */
-    public class ListToListConvertsionHelper implements ConversionHelper {
+    public class ListToListConversionHelper implements ConversionHelper {
         public Object convert(final Object[] args) {
             final List source = (List) args[0];
             final List dest = args.length == 1 ? new ArrayList()

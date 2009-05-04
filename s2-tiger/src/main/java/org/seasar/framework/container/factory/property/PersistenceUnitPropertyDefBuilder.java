@@ -65,7 +65,7 @@ public class PersistenceUnitPropertyDefBuilder extends
         }
 
         return createPropertyDef(propertyName, accessTypeDef,
-                createPersistenceUnitCompoentDef(unitName));
+                createPersistenceUnitComponentDef(unitName));
     }
 
     /**
@@ -75,7 +75,7 @@ public class PersistenceUnitPropertyDefBuilder extends
      *            永続ユニット名
      * @return {@link EntityManagerFactory 永続ユニット}を取得するための{@link ComponentDef}
      */
-    protected static ComponentDef createPersistenceUnitCompoentDef(
+    protected static ComponentDef createPersistenceUnitComponentDef(
             final String unitName) {
         final ComponentDef componentDef = new ComponentDefImpl(
                 EntityManagerFactory.class);

@@ -45,7 +45,7 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
 
     private int size;
 
-    private boolean commited;
+    private boolean committed;
 
     private Map valueMap = new HashMap();
 
@@ -135,11 +135,11 @@ public class MockPortletRenderResponseImpl implements MockPortletRenderResponse 
     }
 
     public boolean isCommitted() {
-        return commited;
+        return committed;
     }
 
     public void reset() {
-        commited = false;
+        committed = false;
     }
 
     public OutputStream getPortletOutputStream() throws IOException {

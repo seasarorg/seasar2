@@ -47,7 +47,7 @@ public class HttpServletExternalContext implements ExternalContext {
     /**
      * 不変な空の{@link Map}を初期値とする{@link ThreadLocal}です。
      */
-    private static class EmutableMapThreadLocal extends ThreadLocal {
+    private static class ImmutableMapThreadLocal extends ThreadLocal {
 
         protected Object initialValue() {
             return Collections.EMPTY_MAP;
@@ -61,15 +61,15 @@ public class HttpServletExternalContext implements ExternalContext {
 
     private ThreadLocal requestMaps = new MutableMapThreadLocal();
 
-    private ThreadLocal requestHeaderMaps = new EmutableMapThreadLocal();
+    private ThreadLocal requestHeaderMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestHeaderValuesMaps = new EmutableMapThreadLocal();
+    private ThreadLocal requestHeaderValuesMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestParameterMaps = new EmutableMapThreadLocal();
+    private ThreadLocal requestParameterMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestParameterValuesMaps = new EmutableMapThreadLocal();
+    private ThreadLocal requestParameterValuesMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestCookieMaps = new EmutableMapThreadLocal();
+    private ThreadLocal requestCookieMaps = new ImmutableMapThreadLocal();
 
     private ThreadLocal sessionMaps = new MutableMapThreadLocal();
 

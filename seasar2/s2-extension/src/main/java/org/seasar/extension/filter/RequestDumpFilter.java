@@ -136,7 +136,7 @@ public class RequestDumpFilter implements Filter {
         sb.append(LF);
         sb.append(LF);
         sb.append("** before *****************************************: ");
-        sb.append(gerServletPath(request));
+        sb.append(getServletPath(request));
         sb.append(LF);
         RequestDumpUtil.dumpRequestProperties(sb, request, LF, INDENT);
         RequestDumpUtil.dumpSessionProperties(sb, request, LF, INDENT);
@@ -167,7 +167,7 @@ public class RequestDumpFilter implements Filter {
         sb.append(LF);
         sb.append(LF);
         sb.append("** after *****************************************: ");
-        sb.append(gerServletPath(request));
+        sb.append(getServletPath(request));
         sb.append(LF);
         if (afterResponse) {
             RequestDumpUtil.dumpResponseProperties(sb, response, LF, INDENT);
@@ -194,7 +194,7 @@ public class RequestDumpFilter implements Filter {
         log.debug(sb.toString());
     }
 
-    private String gerServletPath(final ServletRequest request) {
+    private String getServletPath(final ServletRequest request) {
         if (request instanceof HttpServletRequest) {
             return ((HttpServletRequest) request).getServletPath();
         }

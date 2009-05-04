@@ -55,7 +55,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
     /**
      * 登録されたクラスを保持するためのセットです。
      */
-    protected Set registerdClasses = new HashSet();
+    protected Set registeredClasses = new HashSet();
 
     /**
      * {@link S2Container}を返します。
@@ -133,7 +133,7 @@ public class CoolComponentAutoRegister implements ClassHandler {
                 }
             }
         } finally {
-            registerdClasses.clear();
+            registeredClasses.clear();
         }
     }
 
@@ -157,11 +157,11 @@ public class CoolComponentAutoRegister implements ClassHandler {
         if (cd == null) {
             return;
         }
-        if (registerdClasses.contains(cd.getComponentClass())) {
+        if (registeredClasses.contains(cd.getComponentClass())) {
             return;
         }
         container.getRoot().register(cd);
-        registerdClasses.add(cd.getComponentClass());
+        registeredClasses.add(cd.getComponentClass());
         S2ContainerUtil.putRegisterLog(cd);
     }
 
