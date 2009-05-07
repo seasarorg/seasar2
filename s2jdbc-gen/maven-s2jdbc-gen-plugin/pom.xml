@@ -4,7 +4,7 @@
 	<groupId>org.seasar.container</groupId>
 	<artifactId>maven-s2jdbc-gen-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>S2JDBC-Gen Maven Plugin</name>
 	<url>http://s2container.seasar.org/</url>
 	<licenses>
