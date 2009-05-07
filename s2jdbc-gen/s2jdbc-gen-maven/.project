@@ -1,5 +1,5 @@
 <projectDescription>
-  <name>s2jdbc-gen-maven</name>
+  <name>maven-s2jdbc-gen-plugin</name>
   <comment/>
   <projects/>
   <buildSpec>
