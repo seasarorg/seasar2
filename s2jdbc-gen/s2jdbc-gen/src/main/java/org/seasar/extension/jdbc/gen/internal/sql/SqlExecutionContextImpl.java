@@ -28,8 +28,8 @@ import javax.sql.DataSource;
 import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.extension.jdbc.util.DataSourceUtil;
+import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.StatementUtil;
 
 /**
  * {@link SqlExecutionContext}の実装クラスです。
@@ -60,17 +60,32 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     /** 準備されたステートメント */
     protected PreparedStatement preparedStatement;
 
+    /** ローカルトランザクションの場合{@code true} */
+    protected boolean localTx;
+
+    /** SQLの実行に失敗した場合{@code true} */
+    protected boolean failed;
+
+    /** このコンテキストを開始した場合{@code true} */
+    protected boolean begun;
+
     /**
+     * インスタンスを構築します。
+     * 
      * @param dataSource
      *            データソース
+     * @param localTx
+     *            ローカルトランザクションの場合 {@code true}
      * @param haltOnError
      *            エラー発生時に処理を即座に中断する場合{@code true}、中断しない場合{@code false}
      */
-    public SqlExecutionContextImpl(DataSource dataSource, boolean haltOnError) {
+    public SqlExecutionContextImpl(DataSource dataSource, boolean localTx,
+            boolean haltOnError) {
         if (dataSource == null) {
             throw new NullPointerException("dataSource");
         }
         this.dataSource = dataSource;
+        this.localTx = localTx;
         this.haltOnError = haltOnError;
         openConnection();
     }
@@ -84,17 +99,15 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     }
 
     public Statement getStatement() {
-        if (statement != null) {
-            return statement;
-        }
+        assertBegun();
+        assertConnectionNotNull();
         statement = ConnectionUtil.createStatement(connection);
         return statement;
     }
 
     public PreparedStatement getPreparedStatement(String sql) {
-        if (connection != null && preparedStatement != null) {
-            StatementUtil.close(preparedStatement);
-        }
+        assertBegun();
+        assertConnectionNotNull();
         preparedStatement = ConnectionUtil.prepareStatement(connection, sql);
         return preparedStatement;
     }
@@ -104,29 +117,80 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     }
 
     public void addException(RuntimeException exception) {
-        closeStatements();
-        closeConnection();
+        assertBegun();
+        assertConnectionNotNull();
+        failed = true;
         if (haltOnError) {
             throw exception;
         }
         logger.log("DS2JDBCGen0020", new Object[] { exception });
         exceptionList.add(exception);
-        openConnection();
     }
 
     public void notifyException() {
-        closeStatements();
-        closeConnection();
-        openConnection();
+        assertBegun();
+        assertConnectionNotNull();
+        failed = true;
     }
 
     public void destroy() {
-        if (connection == null) {
-            return;
-        }
-        closeStatements();
-        closeConnection();
+        assertNotBegun();
         exceptionList.clear();
+        closeConnection();
+    }
+
+    public void begin() {
+        assertNotBegun();
+        begun = true;
+        assertConnectionNotNull();
+        if (localTx) {
+            try {
+                connection.setAutoCommit(false);
+            } catch (SQLException e) {
+                throw new SQLRuntimeException(e);
+            }
+        }
+    }
+
+    public void end() {
+        assertBegun();
+        begun = false;
+        assertConnectionNotNull();
+        closeStatements();
+        if (localTx) {
+            if (failed) {
+                try {
+                    if (!connection.isClosed()) {
+                        connection.rollback();
+                    }
+                } catch (SQLException e) {
+                    closeConnection();
+                    throw new SQLRuntimeException(e);
+                }
+            } else {
+                try {
+                    if (!connection.isClosed()) {
+                        connection.commit();
+                    }
+                } catch (SQLException e) {
+                    closeConnection();
+                    throw new SQLRuntimeException(e);
+                }
+            }
+            try {
+                if (!connection.isClosed()) {
+                    connection.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                closeConnection();
+                throw new SQLRuntimeException(e);
+            }
+        }
+        if (failed) {
+            closeConnection();
+            openConnection();
+        }
+        failed = false;
     }
 
     /**
@@ -171,4 +235,32 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
     protected void openConnection() {
         connection = DataSourceUtil.getConnection(dataSource);
     }
+
+    /**
+     * コネクションがnullでないことをアサートします。
+     */
+    protected void assertConnectionNotNull() {
+        if (connection == null) {
+            throw new AssertionError("connection must be opened.");
+        }
+    }
+
+    /**
+     * このコンテキストが開始されていることをアサートします。
+     */
+    protected void assertBegun() {
+        if (!begun) {
+            throw new AssertionError("this context must has been begun.");
+        }
+    }
+
+    /**
+     * このコンテキストが開始されていないことをアサートします。
+     */
+    protected void assertNotBegun() {
+        if (begun) {
+            throw new AssertionError("this context must not has been begun.");
+        }
+    }
+
 }

@@ -82,4 +82,14 @@ public interface SqlExecutionContext {
      */
     public void destroy();
 
+    /**
+     * 開始します。
+     */
+    public void begin();
+
+    /**
+     * 終了します。
+     */
+    public void end();
+
 }

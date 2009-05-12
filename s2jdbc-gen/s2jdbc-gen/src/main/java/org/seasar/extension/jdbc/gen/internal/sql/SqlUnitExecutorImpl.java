@@ -86,8 +86,7 @@ public class SqlUnitExecutorImpl implements SqlUnitExecutor {
      *            コールバック
      */
     protected void executeInternal(Callback callback) {
-        SqlExecutionContext context = new SqlExecutionContextImpl(dataSource,
-                haltOnError);
+        SqlExecutionContext context = createSqlExecutionContext();
         try {
             callback.execute(context);
         } finally {
@@ -166,6 +165,16 @@ public class SqlUnitExecutorImpl implements SqlUnitExecutor {
         } catch (Exception e) {
             throw new TransactionRuntimeException(e);
         }
+    }
+
+    /**
+     * {@link SqlExecutionContext}の実装クラスを作成します。
+     * 
+     * @return {@link SqlExecutionContext}の実装クラス
+     */
+    protected SqlExecutionContext createSqlExecutionContext() {
+        return new SqlExecutionContextImpl(dataSource, userTransaction == null,
+                haltOnError);
     }
 
 }

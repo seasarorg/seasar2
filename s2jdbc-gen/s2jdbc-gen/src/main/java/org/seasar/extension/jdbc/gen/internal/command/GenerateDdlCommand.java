@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.UserTransaction;
+
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
@@ -49,6 +51,7 @@ import org.seasar.extension.jdbc.gen.version.DdlVersionDirectory;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.extension.jdbc.gen.version.DdlVersionIncrementer;
 import org.seasar.extension.jdbc.gen.version.ManagedFile;
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -224,6 +227,12 @@ public class GenerateDdlCommand extends AbstractCommand {
     /** {@link GenDdlListener}の実装クラス名 */
     protected String genDdlListenerClassName = GenDdlListenerImpl.class
             .getName();
+
+    /** トランザクション内で実行する場合{@code true}、そうでない場合{@code false} */
+    protected boolean transactional = false;
+
+    /** ユーザトランザクション */
+    protected UserTransaction userTransaction;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -1137,11 +1146,34 @@ public class GenerateDdlCommand extends AbstractCommand {
         }
     }
 
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isTransactional() {
+        return transactional;
+    }
+
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param transactional
+     *            トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public void setTransactional(boolean transactional) {
+        this.transactional = transactional;
+    }
+
     @Override
     protected void doInit() {
         dialect = getGenDialect(genDialectClassName);
         genDdlListener = ReflectUtil.newInstance(GenDdlListener.class,
                 genDdlListenerClassName);
+        if (transactional) {
+            userTransaction = SingletonS2Container
+                    .getComponent(UserTransaction.class);
+        }
         valueTypeProvider = createValueTypeProvider();
         ddlVersionDirectoryTree = createDdlVersionDirectoryTree();
         ddlVersionIncrementer = createDdlVersionIncrementer();
@@ -1282,7 +1314,7 @@ public class GenerateDdlCommand extends AbstractCommand {
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
-                null, true);
+                userTransaction, true);
     }
 
     /**

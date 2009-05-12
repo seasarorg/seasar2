@@ -568,4 +568,14 @@ public class GenerateDdlTask extends AbstractTask {
         command.setDropAuxiliaryTemplateFileName(dropAuxiliaryTemplateFileName);
     }
 
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param transactional
+     *            トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public void setTransactional(boolean transactional) {
+        command.setTransactional(transactional);
+    }
+
 }

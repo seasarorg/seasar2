@@ -82,12 +82,19 @@ public class SqlFileExecutorImpl implements SqlFileExecutor {
             for (String sql = reader.readSql(); sql != null; sql = reader
                     .readSql()) {
                 logger.debug(sql);
-                Statement statement = context.getStatement();
+                context.begin();
                 try {
-                    statement.execute(sql);
-                } catch (Exception e) {
-                    context.addException(new SqlFailedRuntimeException(e,
-                            sqlFile.getPath(), reader.getLineNumber(), sql));
+                    Statement statement = context.getStatement();
+                    try {
+                        statement.execute(sql);
+                    } catch (Exception e) {
+                        context
+                                .addException(new SqlFailedRuntimeException(e,
+                                        sqlFile.getPath(), reader
+                                                .getLineNumber(), sql));
+                    }
+                } finally {
+                    context.end();
                 }
             }
         } finally {

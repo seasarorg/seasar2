@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
 
+import javax.transaction.UserTransaction;
+
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.data.Dumper;
@@ -30,6 +32,7 @@ import org.seasar.extension.jdbc.gen.sql.SqlExecutionContext;
 import org.seasar.extension.jdbc.gen.sql.SqlUnitExecutor;
 import org.seasar.extension.jdbc.gen.version.DdlVersionDirectoryTree;
 import org.seasar.extension.jdbc.gen.version.ManagedFile;
+import org.seasar.framework.container.SingletonS2Container;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
@@ -81,6 +84,12 @@ public class DumpDataCommand extends AbstractCommand {
 
     /** {@link GenDialect}の実装クラス名 */
     protected String genDialectClassName = null;
+
+    /** トランザクション内で実行する場合{@code true}、そうでない場合{@code false} */
+    protected boolean transactional = false;
+
+    /** ユーザトランザクション */
+    protected UserTransaction userTransaction;
 
     /** 方言 */
     protected GenDialect dialect;
@@ -357,6 +366,25 @@ public class DumpDataCommand extends AbstractCommand {
         this.applyEnvToVersion = applyEnvToVersion;
     }
 
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を返します。
+     * 
+     * @return トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public boolean isTransactional() {
+        return transactional;
+    }
+
+    /**
+     * トランザクション内で実行する場合{@code true}、そうでない場合{@code false}を設定します。
+     * 
+     * @param transactional
+     *            トランザクション内で実行する場合{@code true}、そうでない場合{@code false}
+     */
+    public void setTransactional(boolean transactional) {
+        this.transactional = transactional;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -367,6 +395,10 @@ public class DumpDataCommand extends AbstractCommand {
     @Override
     protected void doInit() {
         dialect = getGenDialect(genDialectClassName);
+        if (transactional) {
+            userTransaction = SingletonS2Container
+                    .getComponent(UserTransaction.class);
+        }
         valueTypeProvider = createValueTypeProvider();
         entityMetaReader = createEntityMetaReader();
         databaseDescFactory = createDatabaseDescFactory();
@@ -446,7 +478,7 @@ public class DumpDataCommand extends AbstractCommand {
      */
     protected SqlUnitExecutor createSqlUnitExecutor() {
         return factory.createSqlUnitExecutor(this, jdbcManager.getDataSource(),
-                null, true);
+                userTransaction, true);
     }
 
     /**

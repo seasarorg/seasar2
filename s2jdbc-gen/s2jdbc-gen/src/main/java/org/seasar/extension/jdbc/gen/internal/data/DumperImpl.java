@@ -109,8 +109,10 @@ public class DumperImpl implements Dumper {
             SqlExecutionContext sqlExecutionContext, TableDesc tableDesc,
             DumpFileWriter writer) {
         String sql = buildSqlWithSort(tableDesc);
+        sqlExecutionContext.begin();
         try {
-            dumpRows(sqlExecutionContext, writer, sql);
+            Statement statement = sqlExecutionContext.getStatement();
+            dumpRows(statement, writer, sql);
         } catch (Exception e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("DS2JDBCGen0012", new Object[] { tableDesc
@@ -125,6 +127,8 @@ public class DumperImpl implements Dumper {
                 sqlExecutionContext.addException(new SRuntimeException(
                         "ES2JDBCGen0021", new Object[] { e }, e));
             }
+        } finally {
+            sqlExecutionContext.end();
         }
         return false;
     }
@@ -142,8 +146,10 @@ public class DumperImpl implements Dumper {
     protected void dumpTable(SqlExecutionContext sqlExecutionContext,
             TableDesc tableDesc, DumpFileWriter writer) {
         String sql = buildSql(tableDesc);
+        sqlExecutionContext.begin();
         try {
-            dumpRows(sqlExecutionContext, writer, sql);
+            Statement statement = sqlExecutionContext.getStatement();
+            dumpRows(statement, writer, sql);
         } catch (Exception e) {
             if (dialect.isTableNotFound(e)) {
                 logger.log("DS2JDBCGen0012", new Object[] { tableDesc
@@ -154,14 +160,16 @@ public class DumperImpl implements Dumper {
                 sqlExecutionContext.addException(new SRuntimeException(
                         "ES2JDBCGen0021", new Object[] { e }, e));
             }
+        } finally {
+            sqlExecutionContext.end();
         }
     }
 
     /**
      * データをダンプします。
      * 
-     * @param sqlExecutionContext
-     *            SQL実行コンテキスト
+     * @param statement
+     *            SQLの文
      * @param writer
      *            ライタ
      * @param sql
@@ -169,10 +177,9 @@ public class DumperImpl implements Dumper {
      * @throws SQLException
      *             SQLに関する例外が発生した場合
      */
-    protected void dumpRows(SqlExecutionContext sqlExecutionContext,
-            DumpFileWriter writer, String sql) throws SQLException {
+    protected void dumpRows(Statement statement, DumpFileWriter writer,
+            String sql) throws SQLException {
         logger.debug(sql);
-        Statement statement = sqlExecutionContext.getStatement();
         ResultSet rs = statement.executeQuery(sql);
         try {
             writer.writeRows(rs);

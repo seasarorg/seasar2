@@ -108,6 +108,7 @@ public class LoaderImpl implements Loader {
             List<SqlType> sqlTypeList = getSqlTypeList(tableDesc,
                     columnNameList);
             String sql = buildSql(tableDesc, columnNameList);
+            sqlExecutionContext.begin();
             try {
                 if (delete) {
                     deleteData(sqlExecutionContext, tableDesc);
@@ -125,6 +126,8 @@ public class LoaderImpl implements Loader {
                             e, dumpFile.getPath(), reader.getLineNumber());
                     sqlExecutionContext.addException(ex);
                 }
+            } finally {
+                sqlExecutionContext.end();
             }
             logger.log("DS2JDBCGen0014", new Object[] { dumpFile.getPath(),
                     tableDesc.getFullName(), reader.getLineNumber() - 1 });
