@@ -57,7 +57,7 @@ public class GenerateDdlTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * クラスパスのディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.outputDirectory}"
 	 */
 	private File classpathDir;
 

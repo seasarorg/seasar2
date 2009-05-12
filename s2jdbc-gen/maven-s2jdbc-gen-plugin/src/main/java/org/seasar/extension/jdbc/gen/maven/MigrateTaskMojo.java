@@ -109,7 +109,7 @@ public class MigrateTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * クラスパスのディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.outputDirectory}"
 	 */
 	private File classpathDir;
 

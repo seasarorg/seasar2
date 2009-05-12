@@ -38,7 +38,7 @@ public class GenerateServiceTestTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * クラスパスのディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.outputDirectory}"
 	 */
 	private File classpathDir;
 
@@ -73,7 +73,7 @@ public class GenerateServiceTestTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * 生成するJavaファイルの出力先ディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.testSourceDirectory}"
 	 */
 	private File javaFileDestDir;
 

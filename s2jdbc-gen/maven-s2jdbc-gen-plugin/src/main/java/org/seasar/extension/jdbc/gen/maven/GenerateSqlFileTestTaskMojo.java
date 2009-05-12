@@ -17,6 +17,8 @@ package org.seasar.extension.jdbc.gen.maven;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.seasar.extension.jdbc.gen.internal.command.AbstractCommand;
@@ -38,9 +40,9 @@ public class GenerateSqlFileTestTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * クラスパスのディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.outputDirectory}"
 	 */
-	private File classpathDir;
+	private File classpathDir; // TODO デフォルト値はresourceディレクトリの方がよいかもしれないので検討
 
 	/**
 	 * エンティティのパッケージ名を設定します。
@@ -66,7 +68,7 @@ public class GenerateSqlFileTestTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * 生成するJavaファイルの出力先ディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.testSourceDirectory}"
 	 */
 	private File javaFileDestDir;
 
@@ -157,5 +159,13 @@ public class GenerateSqlFileTestTaskMojo extends AbstractS2JdbcGenMojo {
 				throw new IllegalArgumentException(e);
 			}
 		}
+	}
+
+	@Override
+	protected List<File> getAdditionalClasspath() {
+		final List<File> dirs = new ArrayList<File>();
+		if (classpathDir != null)
+			dirs.add(classpathDir);
+		return dirs;
 	}
 }

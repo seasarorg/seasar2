@@ -38,7 +38,7 @@ public class GenerateConditionTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * クラスパスのディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.outputDirectory}"
 	 */
 	private File classpathDir;
 
@@ -73,7 +73,7 @@ public class GenerateConditionTaskMojo extends AbstractS2JdbcGenMojo {
 	/**
 	 * 生成するJavaファイルの出力先ディレクトリを設定します。
 	 * 
-	 * @parameter
+	 * @parameter default-value="${project.build.sourceDirectory}"
 	 */
 	private File javaFileDestDir;
 
