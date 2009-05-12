@@ -19,51 +19,21 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.internal.command.AbstractCommand;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateServiceTestCommand;
-import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
  * サービスに対するテストクラスのJavaファイルを生成するゴールです。
  * 
  * @author hakoda-te-kun
  * @see GenerateServiceTestCommand
- *
+ * 
  * @goal gen-servicetest-task
  */
 public class GenerateServiceTestTaskMojo extends AbstractS2JdbcGenMojo {
 
 	/** コマンド */
 	protected GenerateServiceTestCommand command = new GenerateServiceTestCommand();
-
-	/**
-	 * 設定ファイルのパスを設定します。
-	 * 
-	 * @parameter
-	 */
-	private String configPath;
-
-	/**
-	 * 環境名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String env;
-
-	/**
-	 * {@link JdbcManager}のコンポーネント名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String jdbcManagerName;
-
-	/**
-	 * {@link Factory}の実装クラス名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String factoryClassName;
 
 	/**
 	 * クラスパスのディレクトリを設定します。
@@ -178,20 +148,12 @@ public class GenerateServiceTestTaskMojo extends AbstractS2JdbcGenMojo {
 	private Boolean useS2junit4;
 
 	@Override
-	protected Command getCommand() {
+	protected AbstractCommand getCommand() {
 		return command;
 	}
 
 	@Override
-	protected void doExecute() {
-		if (configPath != null)
-			command.setConfigPath(configPath);
-		if (env != null)
-			command.setEnv(env);
-		if (jdbcManagerName != null)
-			command.setJdbcManagerName(jdbcManagerName);
-		if (factoryClassName != null)
-			command.setFactoryClassName(factoryClassName);
+	protected void setCommandSpecificParameters() {
 		if (classpathDir != null)
 			command.setClasspathDir(classpathDir);
 		if (entityPackageName != null)

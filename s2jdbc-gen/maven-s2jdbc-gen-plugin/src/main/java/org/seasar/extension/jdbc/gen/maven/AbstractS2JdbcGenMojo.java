@@ -25,9 +25,11 @@ import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.gen.command.CommandInvoker;
+import org.seasar.extension.jdbc.gen.internal.command.AbstractCommand;
 import org.seasar.extension.jdbc.gen.internal.command.CommandInvokerImpl;
+import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 
 /**
@@ -41,7 +43,7 @@ public abstract class AbstractS2JdbcGenMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	private String commandInvokerClassName;
-	
+
 	/**
 	 * dicon（や、そのほかのリソースファイル）が含まれているディレクトリを指定します。
 	 * 
@@ -49,9 +51,37 @@ public abstract class AbstractS2JdbcGenMojo extends AbstractMojo {
 	 */
 	private String diconDir;
 
-	protected abstract Command getCommand();
+	/**
+	 * 環境名を設定します。
+	 * 
+	 * @parameter
+	 */
+	private String env;
 
-	protected abstract void doExecute();
+	/**
+	 * {@link Factory}の実装クラス名を設定します。
+	 * 
+	 * @parameter
+	 */
+	private String factoryClassName;
+
+	/**
+	 * {@link JdbcManager}のコンポーネント名を設定します。
+	 * 
+	 * @parameter
+	 */
+	private String jdbcManagerName;
+
+	/**
+	 * 設定ファイルのパスを設定します。
+	 * 
+	 * @parameter
+	 */
+	private String configPath;
+
+	protected abstract AbstractCommand getCommand();
+
+	protected abstract void setCommandSpecificParameters();
 
 	protected List<File> getAdditionalClasspath() {
 		return new ArrayList<File>();
@@ -87,17 +117,31 @@ public abstract class AbstractS2JdbcGenMojo extends AbstractMojo {
 
 		// クラスパスに含まれていないdiconファイルやクラスファイル等を読み取るために、新しいクラスローダを追加して実行
 		final ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-		final URLClassLoader newLoader = new URLClassLoader(urlList.toArray(new URL[] {}), oldLoader);
+		final URLClassLoader newLoader = new URLClassLoader(urlList.toArray(new URL[] {}),
+				oldLoader);
 		try {
 			Thread.currentThread().setContextClassLoader(newLoader);
-			
-			doExecute();
-			
+
+			setParameters();
+			setCommandSpecificParameters();
+
 			final CommandInvoker invoker = ReflectUtil.newInstance(CommandInvoker.class,
 					commandInvokerClassName);
 			invoker.invoke(getCommand());
 		} finally {
 			Thread.currentThread().setContextClassLoader(oldLoader);
 		}
+	}
+
+	private void setParameters() {
+		final AbstractCommand command = getCommand();
+		if (env != null)
+			command.setEnv(env);
+		if (factoryClassName != null)
+			command.setFactoryClassName(factoryClassName);
+		if (jdbcManagerName != null)
+			command.setJdbcManagerName(jdbcManagerName);
+		if (configPath != null)
+			command.setConfigPath(configPath);
 	}
 }

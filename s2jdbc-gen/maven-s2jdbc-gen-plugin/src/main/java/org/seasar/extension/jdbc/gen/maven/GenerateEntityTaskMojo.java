@@ -21,52 +21,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
 import javax.persistence.TemporalType;
 
-import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.internal.command.AbstractCommand;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateEntityCommand;
-import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
  * エンティティクラスのJavaファイルを生成するゴールです。
  * 
  * @author hakoda-te-kun
  * @see GenerateEntityCommand
- *
+ * 
  * @goal gen-entity-task
  */
 public class GenerateEntityTaskMojo extends AbstractS2JdbcGenMojo {
 
 	/** コマンド */
 	protected final GenerateEntityCommand command = new GenerateEntityCommand();
-
-	/**
-	 * 設定ファイルのパスを設定します。
-	 * 
-	 * @parameter
-	 */
-	private String configPath;
-
-	/**
-	 * 環境名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String env;
-
-	/**
-	 * {@link JdbcManager}のコンポーネント名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String jdbcManagerName;
-
-	/**
-	 * {@link Factory}の実装クラス名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String factoryClassName;
 
 	/**
 	 * エンティティクラスのパッケージ名を設定します。
@@ -258,20 +228,12 @@ public class GenerateEntityTaskMojo extends AbstractS2JdbcGenMojo {
 	private Boolean useTemporalType;
 
 	@Override
-	protected Command getCommand() {
+	protected AbstractCommand getCommand() {
 		return command;
 	}
 
 	@Override
-	protected void doExecute() {
-		if (configPath != null)
-			command.setConfigPath(configPath);
-		if (env != null)
-			command.setEnv(env);
-		if (jdbcManagerName != null)
-			command.setJdbcManagerName(jdbcManagerName);
-		if (factoryClassName != null)
-			command.setFactoryClassName(factoryClassName);
+	protected void setCommandSpecificParameters() {
 		if (entityPackageName != null)
 			command.setEntityPackageName(entityPackageName);
 		if (entityTemplateFileName != null)

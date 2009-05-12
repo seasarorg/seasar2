@@ -15,52 +15,22 @@
  */
 package org.seasar.extension.jdbc.gen.maven;
 
-import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
+import org.seasar.extension.jdbc.gen.internal.command.AbstractCommand;
 import org.seasar.extension.jdbc.gen.internal.command.DumpDbMetaCommand;
-import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 
 /**
  * データベースのメタデータをダンプするゴールです。
  * 
  * @author hakoda-te-kun
  * @see DumpDbMetaCommand
- *
+ * 
  * @goal dump-dbmeta-task
  */
 public class DumpDbMetaTaskMojo extends AbstractS2JdbcGenMojo {
 
 	/** コマンド */
 	protected DumpDbMetaCommand command = new DumpDbMetaCommand();
-
-	/**
-	 * 設定ファイルのパスを設定します。
-	 * 
-	 * @parameter
-	 */
-	private String configPath;
-
-	/**
-	 * 環境名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String env;
-
-	/**
-	 * {@link JdbcManager}のコンポーネント名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String jdbcManagerName;
-
-	/**
-	 * {@link Factory}の実装クラス名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String factoryClassName;
 
 	/**
 	 * スキーマ名を設定します。
@@ -91,20 +61,12 @@ public class DumpDbMetaTaskMojo extends AbstractS2JdbcGenMojo {
 	private String genDialectClassName;
 
 	@Override
-	protected Command getCommand() {
+	protected AbstractCommand getCommand() {
 		return command;
 	}
 
 	@Override
-	protected void doExecute() {
-		if (configPath != null)
-			command.setConfigPath(configPath);
-		if (env != null)
-			command.setEnv(env);
-		if (jdbcManagerName != null)
-			command.setJdbcManagerName(jdbcManagerName);
-		if (factoryClassName != null)
-			command.setFactoryClassName(factoryClassName);
+	protected void setCommandSpecificParameters() {
 		if (schemaName != null)
 			command.setSchemaName(schemaName);
 		if (tableNamePattern != null)

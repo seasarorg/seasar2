@@ -20,12 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.command.Command;
+import org.seasar.extension.jdbc.gen.internal.command.AbstractCommand;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect;
 import org.seasar.extension.jdbc.gen.event.GenDdlListener;
 import org.seasar.extension.jdbc.gen.internal.command.GenerateDdlCommand;
-import org.seasar.extension.jdbc.gen.internal.factory.Factory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
 
@@ -34,41 +32,13 @@ import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
  * 
  * @author hakoda-te-kun
  * @see GenerateDdlCommand
- *
+ * 
  * @goal gen-ddl-task
  */
 public class GenerateDdlTaskMojo extends AbstractS2JdbcGenMojo {
 
 	/** コマンド */
 	protected GenerateDdlCommand command = new GenerateDdlCommand();
-
-	/**
-	 * 設定ファイルのパスを設定します。
-	 * 
-	 * @parameter
-	 */
-	private String configPath;
-
-	/**
-	 * 環境名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String env;
-
-	/**
-	 * {@link JdbcManager}のコンポーネント名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String jdbcManagerName;
-
-	/**
-	 * {@link Factory}の実装クラス名を設定します。
-	 * 
-	 * @parameter
-	 */
-	private String factoryClassName;
 
 	/**
 	 * SQLのキーワードの大文字小文字を変換するかどうかを示す列挙型を設定します。
@@ -393,20 +363,12 @@ public class GenerateDdlTaskMojo extends AbstractS2JdbcGenMojo {
 	private String dropAuxiliaryTemplateFileName;
 
 	@Override
-	protected Command getCommand() {
+	protected AbstractCommand getCommand() {
 		return command;
 	}
 
 	@Override
-	protected void doExecute() {
-		if (configPath != null)
-			command.setConfigPath(configPath);
-		if (env != null)
-			command.setEnv(env);
-		if (jdbcManagerName != null)
-			command.setJdbcManagerName(jdbcManagerName);
-		if (factoryClassName != null)
-			command.setFactoryClassName(factoryClassName);
+	protected void setCommandSpecificParameters() {
 		if (sqlKeywordCase != null) {
 			final String value = sqlKeywordCase.toUpperCase();
 			command.setSqlKeywordCaseType(SqlKeywordCaseType.valueOf(value));
