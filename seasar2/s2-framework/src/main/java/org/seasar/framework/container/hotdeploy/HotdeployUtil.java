@@ -20,6 +20,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionAttributeListener;
+import javax.servlet.http.HttpSessionListener;
+
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.container.impl.S2ContainerBehavior.Provider;
 import org.seasar.framework.util.ClassLoaderUtil;
@@ -95,6 +99,24 @@ public class HotdeployUtil {
         if (isHotdeploy()) {
             ((HotdeployBehavior) S2ContainerBehavior.getProvider()).stop();
         }
+    }
+
+    /**
+     * HOT deploy対応の{@link HttpSession}を返します。
+     * <p>
+     * {@link HttpSessionListener}や{@link HttpSessionAttributeListener}等、 HOT
+     * deploy下でない環境で、HOT deploy環境で設定されたセッションの属性にアクセスする場合に使用してください。
+     * </p>
+     * 
+     * @param session
+     *            オリジナルの{@link HttpSession}
+     * @return HOT deploy対応の{@link HttpSession}
+     */
+    public static HttpSession getHotdeployAwareSession(final HttpSession session) {
+        if (!isHotdeploy()) {
+            return session;
+        }
+        return new HotdeployHttpSession(session);
     }
 
     /**

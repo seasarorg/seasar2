@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.seasar.framework.container.impl.S2ContainerBehavior;
 import org.seasar.framework.convention.impl.NamingConventionImpl;
 import org.seasar.framework.unit.S2FrameworkTestCase;
@@ -45,6 +47,19 @@ public class HotdeployUtilTest extends S2FrameworkTestCase {
         assertFalse(HotdeployUtil.isHotdeploy());
         S2ContainerBehavior.setProvider(new HotdeployBehavior());
         assertTrue(HotdeployUtil.isHotdeploy());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetHotdeployAwareSession() throws Exception {
+        HttpSession original = getRequest().getSession();
+        assertSame(original, HotdeployUtil.getHotdeployAwareSession(original));
+
+        S2ContainerBehavior.setProvider(new HotdeployBehavior());
+        HttpSession session = HotdeployUtil.getHotdeployAwareSession(original);
+        assertNotSame(original, session);
+        assertTrue(session instanceof HotdeployHttpSession);
     }
 
     /**

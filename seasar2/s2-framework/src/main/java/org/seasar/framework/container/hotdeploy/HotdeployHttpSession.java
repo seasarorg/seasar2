@@ -52,10 +52,22 @@ public class HotdeployHttpSession implements HttpSession {
     protected final HttpSession originalSession;
 
     /** セッションオブジェクトの{@link Map}です。 */
-    protected final Map attributes;
+    protected final Map attributes = new HashMap();
 
     /** このセッションオブジェクトが有効なら<code>true</code>です。 */
     protected boolean active = true;
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param request
+     *            このインスタンスを所有する{@link HttpServletRequest}
+     * @param originalSession
+     *            オリジナルの{@link HttpSession}
+     */
+    public HotdeployHttpSession(final HttpSession originalSession) {
+        this(null, originalSession);
+    }
 
     /**
      * インスタンスを構築します。
@@ -69,7 +81,6 @@ public class HotdeployHttpSession implements HttpSession {
             final HttpSession originalSession) {
         this.request = request;
         this.originalSession = originalSession;
-        this.attributes = new HashMap();
     }
 
     /**
@@ -164,7 +175,9 @@ public class HotdeployHttpSession implements HttpSession {
 
     public void invalidate() {
         originalSession.invalidate();
-        request.invalidateSession();
+        if (request != null) {
+            request.invalidateSession();
+        }
         active = false;
     }
 
