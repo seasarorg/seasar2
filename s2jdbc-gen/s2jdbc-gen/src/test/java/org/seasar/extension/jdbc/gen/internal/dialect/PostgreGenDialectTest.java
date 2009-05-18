@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Types;
 
 import javax.persistence.Lob;
@@ -31,6 +33,7 @@ import org.seasar.extension.jdbc.meta.ColumnMetaFactoryImpl;
 import org.seasar.extension.jdbc.meta.PropertyMetaFactoryImpl;
 import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
+import org.seasar.framework.mock.sql.MockConnection;
 
 import static org.junit.Assert.*;
 
@@ -99,6 +102,17 @@ public class PostgreGenDialectTest {
      * @throws Exception
      */
     @Test
+    public void testGetSqlType_blob() throws Exception {
+        SqlType type = dialect.getSqlType(Types.BLOB);
+        assertEquals("oid", type.getDataType(10, 0, 0, false));
+        assertEquals(PostgreGenDialect.PostgreBlobType.class, type.getClass());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testGetSqlTypeWithPropertyMeta() throws Exception {
         ValueTypeProviderImpl valueTypeProvider = new ValueTypeProviderImpl(
                 new PostgreDialect());
@@ -120,5 +134,19 @@ public class PostgreGenDialectTest {
         assertTrue(context.isInSqlBlock());
         context.addKeyword("$$");
         assertFalse(context.isInSqlBlock());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testPostgreBlobType_bindEmptyValue() throws Exception {
+        Connection conn = new MockConnection();
+        PreparedStatement ps = conn
+                .prepareStatement("select * from a where b = ?");
+        PostgreGenDialect.PostgreBlobType blobType = new PostgreGenDialect.PostgreBlobType(
+                "oid");
+        blobType.bindValue(ps, 1, "");
     }
 }

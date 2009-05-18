@@ -16,6 +16,10 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.sql.Types;
@@ -24,9 +28,10 @@ import javax.persistence.GenerationType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.dialect.PostgreDialect.BlobImpl;
+import org.seasar.extension.jdbc.gen.internal.sqltype.AbstractSqlType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
-import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BooleanType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DecimalType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.DoubleType;
@@ -35,6 +40,7 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
 import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
+import org.seasar.framework.util.Base64Util;
 
 /**
  * PostgreSQLの方言を扱うクラスです。
@@ -66,7 +72,7 @@ public class PostgreGenDialect extends StandardGenDialect {
         });
         sqlTypeMap.put(Types.BINARY, new BinaryType("bytea"));
         sqlTypeMap.put(Types.BOOLEAN, new BooleanType("bool"));
-        sqlTypeMap.put(Types.BLOB, new BlobType("oid"));
+        sqlTypeMap.put(Types.BLOB, new PostgreBlobType("oid"));
         sqlTypeMap.put(Types.CLOB, new VarcharType("text"));
         sqlTypeMap.put(Types.DECIMAL, new DecimalType("decimal($p,$s)"));
         sqlTypeMap.put(Types.DOUBLE, new DoubleType("float8"));
@@ -331,4 +337,52 @@ public class PostgreGenDialect extends StandardGenDialect {
         }
     }
 
+    /**
+     * PostgreSQLのBLOB型です。
+     * 
+     * @author taedium
+     */
+    public static class PostgreBlobType extends AbstractSqlType {
+
+        /** 空のバイト配列 */
+        protected static byte[] EMPTY_BYTES = new byte[] {};
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param dataType
+         *            データ型
+         */
+        public PostgreBlobType(String dataType) {
+            super(dataType);
+        }
+
+        public void bindValue(PreparedStatement ps, int index, String value)
+                throws SQLException {
+            if (value == null) {
+                ps.setNull(index, Types.BLOB);
+            } else if (value.length() == 0) {
+                ps.setBlob(index, new BlobImpl(EMPTY_BYTES));
+            } else {
+                byte[] bytes = Base64Util.decode(value);
+                ps.setBlob(index, new BlobImpl(bytes));
+            }
+        }
+
+        public String getValue(ResultSet resultSet, int index)
+                throws SQLException {
+            Blob blob = resultSet.getBlob(index);
+            if (blob == null) {
+                return null;
+            }
+            final long length = blob.length();
+            if (length == 0) {
+                return Base64Util.encode(EMPTY_BYTES);
+            }
+            if (length > Integer.MAX_VALUE) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+            return Base64Util.encode(blob.getBytes(1L, (int) length));
+        }
+    }
 }
