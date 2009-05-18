@@ -160,18 +160,14 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
         if (localTx) {
             if (failed) {
                 try {
-                    if (!connection.isClosed()) {
-                        connection.rollback();
-                    }
+                    rollbackLocalTxInternal();
                 } catch (SQLException e) {
                     closeConnection();
                     throw new SQLRuntimeException(e);
                 }
             } else {
                 try {
-                    if (!connection.isClosed()) {
-                        connection.commit();
-                    }
+                    commitLocalTxInternal();
                 } catch (SQLException e) {
                     closeConnection();
                     throw new SQLRuntimeException(e);
@@ -191,6 +187,38 @@ public class SqlExecutionContextImpl implements SqlExecutionContext {
             openConnection();
         }
         failed = false;
+    }
+
+    public void commitLocalTx() {
+        if (localTx) {
+            try {
+                commitLocalTxInternal();
+            } catch (SQLException e) {
+                throw new SQLRuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 内部的にローカルトランザクションをロールバックします。
+     * 
+     * @throws SQLException
+     */
+    protected void rollbackLocalTxInternal() throws SQLException {
+        if (!connection.isClosed()) {
+            connection.rollback();
+        }
+    }
+
+    /**
+     * 内部的にローカルトランザクションをコミットします。
+     * 
+     * @throws SQLException
+     */
+    protected void commitLocalTxInternal() throws SQLException {
+        if (!connection.isClosed()) {
+            connection.commit();
+        }
     }
 
     /**

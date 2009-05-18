@@ -214,6 +214,7 @@ public class LoaderImpl implements Loader {
             ps.addBatch();
             if (batchSize > 0 && (i + 1) % batchSize == 0) {
                 ps.executeBatch();
+                sqlExecutionContext.commitLocalTx();
                 remaining = false;
             } else {
                 remaining = true;

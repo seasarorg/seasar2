@@ -92,4 +92,9 @@ public interface SqlExecutionContext {
      */
     public void end();
 
+    /**
+     * ローカルトランザクションをコミットします。
+     */
+    public void commitLocalTx();
+
 }
