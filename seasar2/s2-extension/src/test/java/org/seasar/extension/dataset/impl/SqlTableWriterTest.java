@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.PrimaryKeyNotFoundRuntimeException;
 import org.seasar.extension.unit.S2TestCase;
 
 /**
@@ -73,6 +74,30 @@ public class SqlTableWriterTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    public void testModifiedNoPrimaryKeyTx() throws Exception {
+        SqlTableReader reader = new SqlTableReader(ds_);
+        String sql = "SELECT empno, ename, dname FROM emp, dept WHERE empno = 7788 AND emp.deptno = dept.deptno";
+        reader.setSql(sql, "emp");
+        DataTable table = reader.read();
+        DataRow row = table.getRow(0);
+        row.setValue("ename", "hoge");
+        row.setValue("dname", "aaa");
+        for (int i = 0; i < table.getColumnSize(); ++i) {
+            DataColumnImpl column = (DataColumnImpl) table.getColumn(i);
+            column.setPrimaryKey(false);
+        }
+        SqlTableWriter writer = new SqlTableWriter(ds_);
+        try {
+            writer.write(table);
+            fail();
+        } catch (PrimaryKeyNotFoundRuntimeException expected) {
+            expected.printStackTrace();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testRemovedTx() throws Exception {
         SqlTableReader reader = new SqlTableReader(ds_);
         String sql = "SELECT empno, ename, dname FROM emp, dept WHERE empno = 7788 AND emp.deptno = dept.deptno";
@@ -86,6 +111,29 @@ public class SqlTableWriterTest extends S2TestCase {
         reader2.setTable("emp", "empno = 7788");
         DataTable table2 = reader2.read();
         assertEquals("1", 0, table2.getRowSize());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testRemovedNoPrimaryKeyTx() throws Exception {
+        SqlTableReader reader = new SqlTableReader(ds_);
+        String sql = "SELECT empno, ename, dname FROM emp, dept WHERE empno = 7788 AND emp.deptno = dept.deptno";
+        reader.setSql(sql, "emp");
+        DataTable table = reader.read();
+        DataRow row = table.getRow(0);
+        row.remove();
+        for (int i = 0; i < table.getColumnSize(); ++i) {
+            DataColumnImpl column = (DataColumnImpl) table.getColumn(i);
+            column.setPrimaryKey(false);
+        }
+        SqlTableWriter writer = new SqlTableWriter(ds_);
+        try {
+            writer.write(table);
+            fail();
+        } catch (PrimaryKeyNotFoundRuntimeException expected) {
+            expected.printStackTrace();
+        }
     }
 
     public void setUp() {

@@ -21,6 +21,7 @@ import java.util.List;
 import org.seasar.extension.dataset.DataColumn;
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataTable;
+import org.seasar.extension.dataset.PrimaryKeyNotFoundRuntimeException;
 import org.seasar.extension.dataset.RowState;
 
 /**
@@ -43,14 +44,19 @@ public class RemovedState extends AbstractRowState {
         buf.append("DELETE FROM ");
         buf.append(table.getTableName());
         buf.append(" WHERE ");
+        boolean hasPrimaryKey = false;
         for (int i = 0; i < table.getColumnSize(); ++i) {
             DataColumn column = table.getColumn(i);
             if (column.isPrimaryKey()) {
+                hasPrimaryKey = true;
                 buf.append(column.getColumnName());
                 buf.append(" = ? AND ");
                 argList.add(row.getValue(i));
                 argTypeList.add(column.getColumnType().getType());
             }
+        }
+        if (!hasPrimaryKey) {
+            throw new PrimaryKeyNotFoundRuntimeException(table.getTableName());
         }
         buf.setLength(buf.length() - 5);
         return new SqlContext(buf.toString(), argList.toArray(),
