@@ -16,7 +16,6 @@
 package org.seasar.framework.beans.util;
 
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -571,14 +570,14 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      * @return コンバータ
      */
     protected Converter findDefaultConverter(Class<?> clazz) {
+        if (clazz == java.sql.Date.class) {
+            return DEFAULT_DATE_CONVERTER;
+        }
         if (clazz == Time.class) {
             return DEFAULT_TIME_CONVERTER;
         }
-        if (clazz == Timestamp.class) {
-            return DEFAULT_TIMESTAMP_CONVERTER;
-        }
         if (java.util.Date.class.isAssignableFrom(clazz)) {
-            return DEFAULT_DATE_CONVERTER;
+            return DEFAULT_TIMESTAMP_CONVERTER;
         }
         return null;
     }

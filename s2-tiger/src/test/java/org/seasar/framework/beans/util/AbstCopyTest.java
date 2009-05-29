@@ -790,7 +790,7 @@ public class AbstCopyTest extends TestCase {
                 .findDefaultConverter(Time.class));
         assertEquals(AbstractCopy.DEFAULT_TIMESTAMP_CONVERTER, new MyCopy()
                 .findDefaultConverter(Timestamp.class));
-        assertEquals(AbstractCopy.DEFAULT_DATE_CONVERTER, new MyCopy()
+        assertEquals(AbstractCopy.DEFAULT_TIMESTAMP_CONVERTER, new MyCopy()
                 .findDefaultConverter(java.util.Date.class));
         assertEquals(AbstractCopy.DEFAULT_DATE_CONVERTER, new MyCopy()
                 .findDefaultConverter(java.sql.Date.class));
