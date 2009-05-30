@@ -15,6 +15,8 @@
  */
 package org.seasar.extension.jdbc.where;
 
+import java.util.Collection;
+
 import org.seasar.extension.jdbc.Where;
 
 /**
@@ -36,6 +38,20 @@ public class CompositeWhere extends ComposableWhere {
      *            子供となる{@link Where 検索条件}
      */
     public CompositeWhere(final String operator, final Where... children) {
+        super(children);
+        this.operator = operator;
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param operator
+     *            ANDやORといった演算子
+     * @param children
+     *            子供となる{@link Where 検索条件}
+     */
+    public CompositeWhere(final String operator,
+            final Collection<Where> children) {
         super(children);
         this.operator = operator;
     }

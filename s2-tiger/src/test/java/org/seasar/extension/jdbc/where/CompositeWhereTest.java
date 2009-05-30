@@ -15,9 +15,11 @@
  */
 package org.seasar.extension.jdbc.where;
 
-import org.seasar.extension.jdbc.ConditionType;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
+
+import org.seasar.extension.jdbc.ConditionType;
 
 import static org.seasar.extension.jdbc.where.EmployeeNames.*;
 
@@ -29,11 +31,32 @@ public class CompositeWhereTest extends TestCase {
     /**
      * 
      */
-    public void test() {
+    public void testArray() {
         CompositeWhere w = new CompositeWhere("and", new SingleValueOperator(
                 ConditionType.EQ, name(), "111"), new SingleValueOperator(
                 ConditionType.EQ, id(), null), new SimpleWhere().eq("ccc",
                 "333"));
+        assertEquals("(name = ?) and (ccc = ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals("111", params[0]);
+        assertEquals("333", params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("name", names[0]);
+        assertEquals("ccc", names[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testCollection() {
+        CompositeWhere w = new CompositeWhere("and", Arrays.asList(
+                new SingleValueOperator(ConditionType.EQ, name(), "111"),
+                new SingleValueOperator(ConditionType.EQ, id(), null),
+                new SimpleWhere().eq("ccc", "333")));
         assertEquals("(name = ?) and (ccc = ?)", w.getCriteria());
 
         Object[] params = w.getParams();

@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.where;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.seasar.extension.jdbc.Where;
@@ -41,7 +42,17 @@ public abstract class ComposableWhere implements Where {
      *            子供の条件
      */
     public ComposableWhere(final Where... children) {
-        this.children.addAll(Arrays.asList(children));
+        this(Arrays.asList(children));
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param children
+     *            子供の条件
+     */
+    public ComposableWhere(final Collection<Where> children) {
+        this.children.addAll(children);
     }
 
     public String getCriteria() {
