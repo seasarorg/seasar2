@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.operation;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 
 import junit.framework.TestCase;
 
@@ -94,6 +95,26 @@ public class OperationsTest extends TestCase {
     /**
      * 
      */
+    public void testIn_Set() {
+        Where w = in(department().name(), new LinkedHashSet<String>(Arrays
+                .asList("aaa", "bbb", "   ")))
+                .excludesWhitespace();
+        assertEquals("department.name in (?, ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals("aaa", params[0]);
+        assertEquals("bbb", params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.name", names[0]);
+        assertEquals("department.name", names[1]);
+    }
+
+    /**
+     * 
+     */
     public void testNotIn() {
         Where w = notIn(department().id(), 111, 222);
         assertEquals("department.id not in (?, ?)", w.getCriteria());
@@ -125,6 +146,26 @@ public class OperationsTest extends TestCase {
         assertEquals(2, names.length);
         assertEquals("department.id", names[0]);
         assertEquals("department.id", names[1]);
+    }
+
+    /**
+     * 
+     */
+    public void testNotIn_Set() {
+        Where w = notIn(department().name(),
+                new LinkedHashSet<String>(Arrays.asList("aaa", "bbb", "   ")))
+                .excludesWhitespace();
+        assertEquals("department.name not in (?, ?)", w.getCriteria());
+
+        Object[] params = w.getParams();
+        assertEquals(2, params.length);
+        assertEquals("aaa", params[0]);
+        assertEquals("bbb", params[1]);
+
+        String[] names = w.getPropertyNames();
+        assertEquals(2, names.length);
+        assertEquals("department.name", names[0]);
+        assertEquals("department.name", names[1]);
     }
 
 }

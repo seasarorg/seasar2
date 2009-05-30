@@ -73,7 +73,7 @@ public class MultiValueOperator extends SingleValueOperator {
         if (!excludesWhitespace || value == null) {
             return value;
         }
-        final Collection<?> values = value instanceof Collection ? (List<?>) value
+        final Collection<?> values = value instanceof Collection ? (Collection<?>) value
                 : Arrays.asList((Object[]) value);
         final List<Object> list = CollectionsUtil.newArrayList(values.size());
         for (final Object element : values) {
