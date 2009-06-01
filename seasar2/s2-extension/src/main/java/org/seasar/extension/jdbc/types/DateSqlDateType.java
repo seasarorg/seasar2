@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.DateConversionUtil;
@@ -58,7 +59,8 @@ public class DateSqlDateType extends SqlDateType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
-        return DateConversionUtil.toDate(value);
+        return DateConversionUtil.toDate(value, DateConversionUtil
+                .getY4Pattern(Locale.getDefault()));
     }
 
     protected java.sql.Date toSqlDate(Object value) {

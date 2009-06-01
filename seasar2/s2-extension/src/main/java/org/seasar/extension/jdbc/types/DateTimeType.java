@@ -21,9 +21,11 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.DateConversionUtil;
+import org.seasar.framework.util.TimeConversionUtil;
 
 /**
  * {@link Time}と互換性をもつ{@link Date}用の{@link ValueType}です。
@@ -59,7 +61,8 @@ public class DateTimeType extends TimeType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
-        return DateConversionUtil.toDate(value);
+        return DateConversionUtil.toDate(value, TimeConversionUtil
+                .getPattern(Locale.getDefault()));
     }
 
     protected Time toTime(Object value) {

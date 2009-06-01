@@ -60,7 +60,7 @@ public class DateTimeTypeTest extends TestCase {
      * @throws Exception
      */
     public void testToTime_fromString() throws Exception {
-        Time time = dtType.toTime("2008/01/28");
+        Time time = dtType.toTime("12:34:56");
         assertNotNull(time);
     }
 

@@ -20,9 +20,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.DateConversionUtil;
+import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
  * {@link Timestamp}と互換性をもつ{@link Date}用の{@link ValueType}です。
@@ -58,6 +60,7 @@ public class DateTimestampType extends TimestampType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
-        return DateConversionUtil.toDate(value);
+        return DateConversionUtil.toDate(value, TimestampConversionUtil
+                .getPattern(Locale.getDefault()));
     }
 }
