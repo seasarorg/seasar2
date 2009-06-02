@@ -9,37 +9,147 @@
 	<body>
 		<section name="">
 			<ul>
-				<li><a href="#概要">概要</a>
+				<li>
+					<a href="#概要">概要</a>
 				</li>
-				<li><a href="#自動登録">自動登録</a>
+				<li>
+					<a href="#HOT_deployの仕組み">HOT deployの仕組み</a>
 				</li>
-				<li><a href="#クラスローダ">クラスローダ</a>
+				<li>
+					<a href="#自動登録">自動登録</a>
 				</li>
-				<li><a href="#パッケージ構成">パッケージ構成</a>
+				<li>
+					<a href="#パッケージ構成">パッケージ構成</a>
 				</li>
-				<li><a href="#セッション">セッション</a>
+				<li>
+					<a href="#継承">継承</a>
+				</li>
+				<li>
+					<a href="#セッション">セッション</a>
 				</li>
 			</ul>
 		</section>
 
 		<section name="概要">
+			<p>
+				このドキュメントでは，SMART deployの概要を説明し，
+				はまらないで使いこなすための指針を紹介します．
+			</p>
+
+			<subsection name="SMART deployとは">
+				<p>
+					SMART deployとは，規約に基づいてコンポーネントを自動登録するものです．
+				</p>
+			</subsection>
+
+			<subsection name="SMART deployの種類">
+				<p>
+					SMART deployには，以下の3種類のモードがあります．
+				</p>
+				<dl>
+					<dt>HOT deploy</dt>
+					<dd>
+						コンポーネントが必要とされたときに (on demandで) そのコンポーネントだけを自動登録するモードです．
+						<br />
+						コンポーネントのクラスをHOT deploy専用のクラスローダにロードすることで，
+						WEBコンテナの再起動や再デプロイをすることなく，クラスの変更が反映されます．
+						<br />
+						Webアプリケーションなど，
+						サーバとしてプロセスを起動したまま実行するプログラムの開発時に適したモードです．
+					</dd>
+					<dt>COOL deploy</dt>
+					<dd>
+						コンテナの初期化時に全てのコンポーネントを自動登録するモードです．
+						<br />
+						サーバアプリケーションの実行に適したモードです．
+					</dd>
+					<dt>WARM deploy</dt>
+					<dd>
+						コンポーネントが必要とされたときに (on demandで) そのコンポーネントだけを自動登録するモードです．
+						<br />
+						HOT
+						deployとは異なり，専用のクラスローダは使用しません．
+						一度ロードされたクラスは，.classファイルが変更されても反映されません．
+						<br />
+						クライアントアプリケーションやテストケースの実行に適したモードです．
+					</dd>
+				</dl>
+				<p>
+					SMART deployのモードを切り替える方法は
+					<a href="DIContainer.html#SMARTdeployS2ContainerDicon">SMART deployの切り替え</a>
+					を参照してください．
+				</p>
+			</subsection>
+		</section>
+
+		<section name="HOT deployの仕組み">
+			<p>
+			</p>
+
+			<subsection name="クラスローダ">
+				<p>
+					Javaのクラスはクラスローダにロードされます．
+					クラスローダに一度ロードされると，クラスファイルが変更されてもそれは反映されません．
+					HOT deployは，
+				</p>
+			</subsection>
 		</section>
 
 		<section name="自動登録">
-		</section>
-
-		<section name="クラスローダ">
-			<subsection name="HOT deploy非対象クラス">
+			<subsection name="HOTとCOOLの違い">
 			</subsection>
 		</section>
 
 		<section name="パッケージ構成">
+			<dl>
+				<dt>HOT deploy非対象クラスからHOT deploy対象クラスを参照しない</dt>
+				<dd>
+				</dd>
+			</dl>
+
+			<subsection name="インフラ層とアプリケーション層">
+			</subsection>
+
+			<h4>convention.dicon</h4>
+			<source><![CDATA[
+	<component class="org.seasar.framework.convention.impl.NamingConventionImpl">
+		<!-- HOT deploy 対象のルートパッケージ -->
+		<initMethod name="addRootPackageName">
+			<arg>"jp.co.xxx.yyy.app"</arg>
+		</initMethod>
+		<!-- HOT deploy 非対象のルートパッケージ -->
+		<initMethod name="addRootPackageName">
+			<arg>"jp.co.xxx.yyy.infra"</arg>
+			<arg>false</arg>
+		</initMethod>
+	</component>
+]]></source>
+
+
+			HOT deploy対象クラス(Xxx)が非対象クラスから参照されて通常のクラスローダにロードされています。
+
+
 		</section>
 
 		<section name="継承">
+			<dl>
+				<dt>具象クラスから継承しない</dt>
+				<dd>
+				</dd>
+			</dl>
 		</section>
 
 		<section name="セッション">
+			<dl>
+				<dt>セッションに登録するクラスはSerializableを実装する
+				</dt>
+				<dd>
+				</dd>
+			</dl>
+
+			HTTPセッションに設定するクラス({0})はシリアライズ可能でなくてはなりません。
+			HTTPセッションに設定するクラスはシリアライズ可能でなくてはなりません。
+			セッションオブジェクト({0})をデシリアライズできなかったため破棄します。
 		</section>
 	</body>
 </document>

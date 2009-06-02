@@ -24,6 +24,7 @@ import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.S2ContainerUtil;
 import org.seasar.framework.convention.NamingConvention;
 import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.ModifierUtil;
 import org.seasar.framework.util.ResourcesUtil;
 import org.seasar.framework.util.ClassTraversal.ClassHandler;
 import org.seasar.framework.util.ResourcesUtil.Resources;
@@ -151,7 +152,9 @@ public class CoolComponentAutoRegister implements ClassHandler {
             return;
         }
         if (container.getRoot().hasComponentDef(clazz)) {
-            return;
+            if (clazz.isInterface() || ModifierUtil.isAbstract(clazz)) {
+                return;
+            }
         }
         ComponentDef cd = createComponentDef(clazz);
         if (cd == null) {
