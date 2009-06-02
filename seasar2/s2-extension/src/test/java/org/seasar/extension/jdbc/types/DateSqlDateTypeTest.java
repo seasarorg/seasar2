@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.types;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -59,8 +60,10 @@ public class DateSqlDateTypeTest extends TestCase {
      * @throws Exception
      */
     public void testToSqlDate_fromString() throws Exception {
-        java.sql.Date date = ddType.toSqlDate("2008/01/28");
+        java.sql.Date date = ddType.toSqlDate("2008/01/28 12:34:56");
         assertNotNull(date);
+        assertEquals("2008/01/28 00:00:00", new SimpleDateFormat(
+                "yyyy/MM/dd HH:mm:ss").format(date));
     }
 
     /**

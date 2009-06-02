@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.DateConversionUtil;
+import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
  * {@link java.sql.Date}と互換性をもつ{@link Date}用の{@link ValueType}です。
@@ -59,8 +60,8 @@ public class DateSqlDateType extends SqlDateType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
-        return DateConversionUtil.toDate(value, DateConversionUtil
-                .getY4Pattern(Locale.getDefault()));
+        return DateConversionUtil.toDate(value, TimestampConversionUtil
+                .getPattern(Locale.getDefault()));
     }
 
     protected java.sql.Date toSqlDate(Object value) {

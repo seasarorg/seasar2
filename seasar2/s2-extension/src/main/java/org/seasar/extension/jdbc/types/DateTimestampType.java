@@ -63,4 +63,16 @@ public class DateTimestampType extends TimestampType {
         return DateConversionUtil.toDate(value, TimestampConversionUtil
                 .getPattern(Locale.getDefault()));
     }
+
+    /**
+     * {@link Timestamp}に変換します。
+     * 
+     * @param value
+     *            値
+     * @return {@link Timestamp}
+     */
+    protected Timestamp toTimestamp(Object value) {
+        return new Timestamp(toDate(value).getTime());
+    }
+
 }

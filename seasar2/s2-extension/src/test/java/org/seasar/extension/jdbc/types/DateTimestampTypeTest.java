@@ -17,6 +17,7 @@ package org.seasar.extension.jdbc.types;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 import junit.framework.TestCase;
 
@@ -27,6 +28,17 @@ import junit.framework.TestCase;
 public class DateTimestampTypeTest extends TestCase {
 
     private DateTimestampType dtType = new DateTimestampType();
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testToTimestamp_fromString() throws Exception {
+        Timestamp timestamp = dtType.toTimestamp("2001/02/03 12:34:56");
+        assertNotNull(timestamp);
+        assertEquals("2001/02/03 12:34:56", new SimpleDateFormat(
+                "yyyy/MM/dd HH:mm:ss").format(timestamp));
+    }
 
     /**
      * 

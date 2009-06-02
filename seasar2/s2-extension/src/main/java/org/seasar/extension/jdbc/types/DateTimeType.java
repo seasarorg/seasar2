@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.framework.util.DateConversionUtil;
-import org.seasar.framework.util.TimeConversionUtil;
+import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
  * {@link Time}と互換性をもつ{@link Date}用の{@link ValueType}です。
@@ -61,7 +61,7 @@ public class DateTimeType extends TimeType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
-        return DateConversionUtil.toDate(value, TimeConversionUtil
+        return DateConversionUtil.toDate(value, TimestampConversionUtil
                 .getPattern(Locale.getDefault()));
     }
 
