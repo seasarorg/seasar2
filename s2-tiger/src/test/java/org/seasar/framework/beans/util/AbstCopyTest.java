@@ -554,11 +554,11 @@ public class AbstCopyTest extends TestCase {
     public void testCopyMapToMap() throws Exception {
         Map<String, Object> src = new HashMap<String, Object>();
         src.put("aaa", "aaa");
-        src.put("bbb", "bbb");
+        src.put("bbb", new Date(0));
         Map<String, Object> dest = new HashMap<String, Object>();
         new MyCopy().copyMapToMap(src, dest);
         assertEquals("aaa", dest.get("aaa"));
-        assertEquals("bbb", dest.get("bbb"));
+        assertEquals(new Date(0), dest.get("bbb"));
     }
 
     /**

@@ -507,7 +507,6 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
      *            コピー先のプロパティクラス
      * @return 変換後の値
      */
-    @SuppressWarnings("unused")
     protected Object convertValue(Object value, String destPropertyName,
             Class<?> destPropertyClass) {
         if (value == null || value.getClass() != String.class
@@ -529,7 +528,7 @@ public abstract class AbstractCopy<S extends AbstractCopy<S>> {
                     break;
                 }
             }
-            if (converter == null) {
+            if (converter == null && destPropertyClass != null) {
                 converter = findDefaultConverter(targetClass);
             }
             if (converter == null) {
