@@ -202,4 +202,51 @@ public class AutoSelectIterationCallbackTest {
                 });
         assertTrue(new BigDecimal(29025).compareTo(sum) == 0);
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testManyToOne_innerJoin_emptyResult() throws Exception {
+        jdbcManager.updateBySql("delete from employee").execute();
+        assertEquals(0, jdbcManager.from(Employee.class).getCount());
+
+        Integer count =
+            jdbcManager.from(Employee.class).innerJoin("department").iterate(
+                new IterationCallback<Employee, Integer>() {
+
+                    int i;
+
+                    public Integer iterate(Employee entity,
+                            IterationContext context) {
+                        i++;
+                        return i;
+                    }
+                });
+        assertNull(count);
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testOneToMany_innerJoin_emptyResult() throws Exception {
+        jdbcManager.updateBySql("delete from employee").execute();
+        jdbcManager.updateBySql("delete from department").execute();
+        assertEquals(0, jdbcManager.from(Department.class).getCount());
+
+        Integer count =
+            jdbcManager.from(Department.class).innerJoin("employees").iterate(
+                new IterationCallback<Department, Integer>() {
+
+                    int i;
+
+                    public Integer iterate(Department entity,
+                            IterationContext context) {
+                        i++;
+                        return i;
+                    }
+                });
+        assertNull(count);
+    }
 }
