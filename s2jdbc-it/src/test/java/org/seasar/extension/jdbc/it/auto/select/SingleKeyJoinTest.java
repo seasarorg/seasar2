@@ -51,6 +51,7 @@ public class SingleKeyJoinTest {
                 .from(Department.class)
                 .leftOuterJoin("employees")
                 .leftOuterJoin("employees.address")
+                .orderBy("departmentId")
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);

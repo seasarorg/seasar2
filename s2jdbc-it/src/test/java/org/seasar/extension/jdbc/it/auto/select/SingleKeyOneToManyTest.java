@@ -43,6 +43,7 @@ public class SingleKeyOneToManyTest {
             jdbcManager
                 .from(Department.class)
                 .leftOuterJoin("employees")
+                .orderBy("departmentId")
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -61,6 +62,7 @@ public class SingleKeyOneToManyTest {
             jdbcManager
                 .from(Department.class)
                 .leftOuterJoin(employees())
+                .orderBy("departmentId")
                 .getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
@@ -79,6 +81,7 @@ public class SingleKeyOneToManyTest {
             jdbcManager
                 .from(Department.class)
                 .leftOuterJoin("employees", false)
+                .orderBy("departmentId")
                 .getResultList();
         assertEquals(4, list.size());
         assertNull(list.get(0).employees);
@@ -93,10 +96,8 @@ public class SingleKeyOneToManyTest {
      */
     public void testInnerJoin() throws Exception {
         List<Department> list =
-            jdbcManager
-                .from(Department.class)
-                .innerJoin("employees")
-                .getResultList();
+            jdbcManager.from(Department.class).innerJoin("employees").orderBy(
+                "departmentId").getResultList();
         assertEquals(3, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(1).employees);
@@ -112,6 +113,7 @@ public class SingleKeyOneToManyTest {
             jdbcManager
                 .from(Department.class)
                 .innerJoin("employees", false)
+                .orderBy("departmentId")
                 .getResultList();
         assertEquals(3, list.size());
         assertNull(list.get(0).employees);

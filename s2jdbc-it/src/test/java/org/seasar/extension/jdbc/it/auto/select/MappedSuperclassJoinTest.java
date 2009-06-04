@@ -43,7 +43,8 @@ public class MappedSuperclassJoinTest {
     public void testJoin_nest() throws Exception {
         List<ConcreteDepartment> list =
             jdbcManager.from(ConcreteDepartment.class).leftOuterJoin(
-                "employees").leftOuterJoin("employees.address").getResultList();
+                "employees").leftOuterJoin("employees.address").orderBy(
+                "departmentId").getResultList();
         assertEquals(4, list.size());
         assertNotNull(list.get(0).employees);
         assertNotNull(list.get(0).employees.get(0).address);
@@ -60,6 +61,7 @@ public class MappedSuperclassJoinTest {
                 .innerJoin("manager")
                 .leftOuterJoin("department")
                 .leftOuterJoin("address")
+                .orderBy("departmentId")
                 .getResultList();
         assertEquals(13, list.size());
         assertNotNull(list.get(0).department);
