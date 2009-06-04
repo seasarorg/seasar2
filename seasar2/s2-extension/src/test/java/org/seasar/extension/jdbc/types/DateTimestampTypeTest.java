@@ -34,7 +34,12 @@ public class DateTimestampTypeTest extends TestCase {
      * @throws Exception
      */
     public void testToTimestamp_fromString() throws Exception {
-        Timestamp timestamp = dtType.toTimestamp("2001/02/03 12:34:56");
+        Timestamp timestamp = dtType.toTimestamp("01/02/03");
+        assertNotNull(timestamp);
+        assertEquals("2001/02/03 00:00:00", new SimpleDateFormat(
+                "yyyy/MM/dd HH:mm:ss").format(timestamp));
+
+        timestamp = dtType.toTimestamp("2001/02/03 12:34:56");
         assertNotNull(timestamp);
         assertEquals("2001/02/03 12:34:56", new SimpleDateFormat(
                 "yyyy/MM/dd HH:mm:ss").format(timestamp));

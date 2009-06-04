@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.framework.exception.ParseRuntimeException;
 import org.seasar.framework.util.DateConversionUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
@@ -60,8 +61,12 @@ public class DateSqlDateType extends SqlDateType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
-        return DateConversionUtil.toDate(value, TimestampConversionUtil
-                .getPattern(Locale.getDefault()));
+        try {
+            return DateConversionUtil.toDate(value, TimestampConversionUtil
+                    .getPattern(Locale.getDefault()));
+        } catch (ParseRuntimeException e) {
+            return DateConversionUtil.toDate(value);
+        }
     }
 
     protected java.sql.Date toSqlDate(Object value) {

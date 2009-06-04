@@ -61,7 +61,12 @@ public class DateTimeTypeTest extends TestCase {
      * @throws Exception
      */
     public void testToTime_fromString() throws Exception {
-        Time time = dtType.toTime("2001/02/03 12:34:56");
+        Time time = dtType.toTime("01:02:03");
+        assertNotNull(time);
+        assertEquals("1970/01/01 01:02:03", new SimpleDateFormat(
+                "yyyy/MM/dd HH:mm:ss").format(time));
+
+        time = dtType.toTime("2001/02/03 12:34:56");
         assertNotNull(time);
         assertEquals("1970/01/01 12:34:56", new SimpleDateFormat(
                 "yyyy/MM/dd HH:mm:ss").format(time));

@@ -60,9 +60,14 @@ public class DateSqlDateTypeTest extends TestCase {
      * @throws Exception
      */
     public void testToSqlDate_fromString() throws Exception {
-        java.sql.Date date = ddType.toSqlDate("2008/01/28 12:34:56");
+        java.sql.Date date = ddType.toSqlDate("2008/01/28");
         assertNotNull(date);
         assertEquals("2008/01/28 00:00:00", new SimpleDateFormat(
+                "yyyy/MM/dd HH:mm:ss").format(date));
+
+        date = ddType.toSqlDate("2008/01/01 12:34:56");
+        assertNotNull(date);
+        assertEquals("2008/01/01 00:00:00", new SimpleDateFormat(
                 "yyyy/MM/dd HH:mm:ss").format(date));
     }
 
