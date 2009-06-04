@@ -208,7 +208,7 @@ public class AutoSelectIterationCallbackTest {
      * @throws Exception
      */
     public void testManyToOne_innerJoin_emptyResult() throws Exception {
-        jdbcManager.updateBySql("delete from employee").execute();
+        jdbcManager.updateBySql("DELETE FROM EMPLOYEE").execute();
         assertEquals(0, jdbcManager.from(Employee.class).getCount());
 
         Integer count =
@@ -231,8 +231,8 @@ public class AutoSelectIterationCallbackTest {
      * @throws Exception
      */
     public void testOneToMany_innerJoin_emptyResult() throws Exception {
-        jdbcManager.updateBySql("delete from employee").execute();
-        jdbcManager.updateBySql("delete from department").execute();
+        jdbcManager.updateBySql("DELETE FROM EMPLOYEE").execute();
+        jdbcManager.updateBySql("DELETE FROM DEPARTMENT").execute();
         assertEquals(0, jdbcManager.from(Department.class).getCount());
 
         Integer count =
