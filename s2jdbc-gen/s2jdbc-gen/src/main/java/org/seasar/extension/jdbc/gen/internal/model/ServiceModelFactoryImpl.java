@@ -103,6 +103,8 @@ public class ServiceModelFactoryImpl implements ServiceModelFactory {
                 + serviceClassNameSuffix);
         serviceModel.setShortEntityClassName(entityMeta.getEntityClass()
                 .getSimpleName());
+        serviceModel
+                .setShortSuperclassName("Abstract" + serviceClassNameSuffix);
         serviceModel.setJdbcManagerName(jdbcManagerName);
         serviceModel.setJdbcManagerSetterNecessary(!DEFAULT_JDBC_MANAGER_NAME
                 .equals(jdbcManagerName));

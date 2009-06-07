@@ -1,0 +1,49 @@
+package hoge.service;
+
+import java.util.List;
+import javax.annotation.Generated;
+import org.seasar.extension.jdbc.gen.internal.generator.Aaa;
+
+import static hoge.entity.AaaNames.*;
+import static org.seasar.extension.jdbc.operation.Operations.*;
+
+/**
+ * {@link Aaa}のサービスクラスです。
+ * 
+ */
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl"}, date = "2009/04/01 13:12:11")
+public class AaaDao extends AbstractDao<Aaa> {
+
+    /**
+     * 識別子でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @return エンティティ
+     */
+    public Aaa findById(Integer id) {
+        return select().id(id).getSingleResult();
+    }
+
+    /**
+     * 識別子とバージョン番号でエンティティを検索します。
+     * 
+     * @param id
+     *            識別子
+     * @param version
+     *            バージョン番号
+     * @return エンティティ
+     */
+    public Aaa findByIdVersion(Integer id, Integer version) {
+        return select().id(id).version(version).getSingleResult();
+    }
+
+    /**
+     * 識別子の昇順ですべてのエンティティを検索します。
+     * 
+     * @return エンティティのリスト
+     */
+    public List<Aaa> findAllOrderById() {
+        return select().orderBy(asc(id())).getResultList();
+    }
+}

@@ -27,7 +27,7 @@ import static ${importName};
 </#if>
  */
 @Generated(value = {<#list generatedInfoList as info>"${info}"<#if info_has_next>, </#if></#list>}, date = "${currentDate?datetime}")
-public class ${shortClassName} extends AbstractService<${shortEntityClassName}> {
+public class ${shortClassName} extends ${shortSuperclassName}<${shortEntityClassName}> {
 <#if jdbcManagerSetterNecessary>
 
     /**

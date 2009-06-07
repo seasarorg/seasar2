@@ -137,4 +137,23 @@ public class GenerateServiceTest {
                 + "_JdbcManagerName.txt";
         assertEquals(TextUtil.readUTF8(path), generator.getResult());
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testServiceClassNameSuffix() throws Exception {
+        EntityMeta entityMeta = entityMetaFactory.getEntityMeta(Aaa.class);
+        ServiceModelFactoryImpl serviceModelFactory = new ServiceModelFactoryImpl(
+                "hoge.service", "Dao", new NamesModelFactoryImpl("hoge.entity",
+                        "Names"), true, "jdbcManager");
+        ServiceModel model = serviceModelFactory.getServiceModel(entityMeta);
+        GenerationContext context = new GenerationContextImpl(model, new File(
+                "file"), "java/service.ftl", "UTF-8", false);
+        generator.generate(context);
+        String path = getClass().getName().replace(".", "/")
+                + "_ServiceClassNameSuffix.txt";
+        assertEquals(TextUtil.readUTF8(path), generator.getResult());
+    }
 }

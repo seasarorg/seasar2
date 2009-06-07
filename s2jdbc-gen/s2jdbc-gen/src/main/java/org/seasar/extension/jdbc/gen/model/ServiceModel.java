@@ -38,6 +38,9 @@ public class ServiceModel extends ClassModel {
     /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
 
+    /** スーパークラスの単純名 */
+    protected String shortSuperclassName;
+
     /** 名前モデル */
     protected NamesModel namesModel;
 
@@ -102,6 +105,25 @@ public class ServiceModel extends ClassModel {
      */
     public void setShortEntityClassName(String shortEntityClassName) {
         this.shortEntityClassName = shortEntityClassName;
+    }
+
+    /**
+     * スーパークラスの単純名を返します。
+     * 
+     * @return スーパークラスの単純名
+     */
+    public String getShortSuperclassName() {
+        return shortSuperclassName;
+    }
+
+    /**
+     * スーパークラスの単純名を設定します。
+     * 
+     * @param shortSuperclassName
+     *            スーパークラスの単純名
+     */
+    public void setShortSuperclassName(String shortSuperclassName) {
+        this.shortSuperclassName = shortSuperclassName;
     }
 
     /**
