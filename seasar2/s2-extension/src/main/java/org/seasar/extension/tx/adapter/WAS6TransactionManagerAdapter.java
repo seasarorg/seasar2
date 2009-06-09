@@ -17,6 +17,8 @@ package org.seasar.extension.tx.adapter;
 
 import java.lang.reflect.UndeclaredThrowableException;
 
+import javax.transaction.TransactionRolledbackException;
+
 import org.seasar.extension.tx.TransactionCallback;
 import org.seasar.extension.tx.TransactionManagerAdapter;
 import org.seasar.framework.exception.SIllegalStateException;
@@ -24,6 +26,8 @@ import org.seasar.framework.log.Logger;
 
 import com.ibm.websphere.uow.UOWSynchronizationRegistry;
 import com.ibm.wsspi.uow.UOWAction;
+import com.ibm.wsspi.uow.UOWActionException;
+import com.ibm.wsspi.uow.UOWException;
 import com.ibm.wsspi.uow.UOWManager;
 
 /**
@@ -124,11 +128,17 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
             return action.getResult();
         } catch (final UndeclaredThrowableException e) {
             throw e.getCause();
+        } catch (UOWActionException e) {
+            throw e.getCause();
+        } catch (UOWException e) {
+            throw new TransactionRolledbackException(e.getMessage())
+                    .initCause(e);
         }
     }
 
     /**
-     * 現在のスレッド上でトランザクションが開始されている場合は<code>true</code>を、それ以外の場合は<code>false</code>を返します。
+     * 現在のスレッド上でトランザクションが開始されている場合は<code>true</code>を、それ以外の場合は<code>false</code>
+     * を返します。
      * 
      * @return 現在のスレッド上でトランザクションが開始されている場合は<code>true</code>
      */
@@ -165,6 +175,8 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
         public void run() throws Exception {
             try {
                 result = callback.execute(WAS6TransactionManagerAdapter.this);
+            } catch (final UndeclaredThrowableException e) {
+                throw new UndeclaredThrowableException(e);
             } catch (final Exception e) {
                 throw e;
             } catch (final Error e) {
