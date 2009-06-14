@@ -2567,7 +2567,7 @@ public class AutoSelectImplTest extends TestCase {
          * @param baseClass
          */
         public AutoSelectImplDummy(JdbcManagerImplementor jdbcManager,
-                Class baseClass) {
+                Class<E> baseClass) {
             super(jdbcManager, baseClass);
         }
 

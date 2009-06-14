@@ -61,6 +61,13 @@ public class StringClobType extends AbstractValueType {
         return convertToString(cs.getClob(parameterName));
     }
 
+    /**
+     * 文字ストリームから読み込んだ文字列を返します。
+     * 
+     * @param reader
+     *            文字ストリーム
+     * @return 文字ストリームから読み込んだ文字列
+     */
     protected String convertToString(Reader reader) {
         if (reader == null) {
             return null;
@@ -68,6 +75,15 @@ public class StringClobType extends AbstractValueType {
         return ReaderUtil.readText(reader);
     }
 
+    /**
+     * CLOBから読み込んだ文字列を返します。
+     * 
+     * @param clob
+     *            CLOB
+     * @return CLOBから読み込んだ文字列
+     * @throws SQLException
+     *             SQL例外が発生した場合
+     */
     protected String convertToString(Clob clob) throws SQLException {
         if (clob == null) {
             return null;
