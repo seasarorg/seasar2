@@ -28,7 +28,6 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -602,12 +601,7 @@ public class ValueTypes {
         if (clazz == null) {
             throw new NullPointerException("clazz");
         }
-        return clazz == String.class || clazz.isPrimitive()
-                || clazz == Boolean.class || clazz == Character.class
-                || Number.class.isAssignableFrom(clazz)
-                || Date.class.isAssignableFrom(clazz)
-                || Calendar.class.isAssignableFrom(clazz)
-                || clazz == BYTE_ARRAY_CLASS || hasCachedValueType(clazz);
+        return types.containsKey(clazz) || hasCachedValueType(clazz);
     }
 
     private static class NullType implements ValueType {

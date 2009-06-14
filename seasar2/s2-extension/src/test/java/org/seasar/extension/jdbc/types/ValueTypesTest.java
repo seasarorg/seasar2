@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.types;
 
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.GregorianCalendar;
@@ -67,6 +68,8 @@ public class ValueTypesTest extends TestCase {
      */
     public void testIsSimpleType() throws Exception {
         assertFalse(ValueTypes.isSimpleType(HashMap.class));
+        assertTrue(ValueTypes.isSimpleType(byte[].class));
+        assertTrue(ValueTypes.isSimpleType(InputStream.class));
     }
 
     private static class MockResultSet extends ResultSetWrapper {
