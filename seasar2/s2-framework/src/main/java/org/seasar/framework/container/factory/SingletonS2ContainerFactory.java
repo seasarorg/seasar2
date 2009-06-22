@@ -15,17 +15,27 @@
  */
 package org.seasar.framework.container.factory;
 
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
+
 import org.seasar.framework.container.ExternalContext;
 import org.seasar.framework.container.ExternalContextComponentDefRegister;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.util.SmartDeployUtil;
 import org.seasar.framework.env.Env;
 import org.seasar.framework.exception.EmptyRuntimeException;
+import org.seasar.framework.exception.JarDuplicatedException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.DisposableUtil;
+import org.seasar.framework.util.InputStreamUtil;
 
 /**
- * 唯一の{@link org.seasar.framework.container.S2Container S2コンテナ}を提供するためのファクトリクラスです。
+ * 唯一の{@link org.seasar.framework.container.S2Container S2コンテナ}
+ * を提供するためのファクトリクラスです。
  * <p>
  * シングルトンS2コンテナファクトリは、設定ファイルに基づいてS2コンテナを生成・初期化し、それを保持します。
  * 保持されるS2コンテナは、このクラスをロードしたクラスローダで一意になります。
@@ -36,8 +46,10 @@ import org.seasar.framework.util.DisposableUtil;
  * <p>
  * シングルトンS2コンテナファクトリの標準的な利用方法としては、 アプリケーション開始時に{@link #init()}を呼び出して、
  * {@link #getContainer()}でS2コンテナを取得し、 アプリケーション終了時に{@link #destroy()}を呼び出します。
- * Webアプリケーションであれば{@link javax.servlet.Servlet#init(javax.servlet.ServletConfig)}で{@link #init()}を、
- * {@link javax.servlet.Servlet#destroy()}で{@link #destroy()}を呼び出します。
+ * Webアプリケーションであれば
+ * {@link javax.servlet.Servlet#init(javax.servlet.ServletConfig)}で
+ * {@link #init()}を、 {@link javax.servlet.Servlet#destroy()}で{@link #destroy()}
+ * を呼び出します。
  * </p>
  * 
  * @author koichik
@@ -98,7 +110,8 @@ public class SingletonS2ContainerFactory {
     }
 
     /**
-     * {@link org.seasar.framework.container.ExternalContextComponentDefRegister 外部コンテキストコンポーネント定義レジスタ}を返します。
+     * {@link org.seasar.framework.container.ExternalContextComponentDefRegister
+     * 外部コンテキストコンポーネント定義レジスタ}を返します。
      * 
      * @return 外部コンテキストコンポーネント定義レジスタ
      */
@@ -107,7 +120,8 @@ public class SingletonS2ContainerFactory {
     }
 
     /**
-     * {@link org.seasar.framework.container.ExternalContextComponentDefRegister 外部コンテキストコンポーネント定義レジスタ}を設定します。
+     * {@link org.seasar.framework.container.ExternalContextComponentDefRegister
+     * 外部コンテキストコンポーネント定義レジスタ}を設定します。
      * 
      * @param extCtxComponentDefRegister
      *            外部コンテキストコンポーネント定義レジスタ
@@ -132,6 +146,7 @@ public class SingletonS2ContainerFactory {
         if (container != null) {
             return;
         }
+        checkVersions();
         container = S2ContainerFactory.create(configPath);
         if (container.getExternalContext() == null) {
             if (externalContext != null) {
@@ -195,4 +210,44 @@ public class SingletonS2ContainerFactory {
     public static boolean hasContainer() {
         return container != null;
     }
+
+    private static void checkVersions() {
+        checkVersion("s2-framework");
+        checkVersion("s2-extension");
+        checkVersion("s2-tiger");
+    }
+
+    private static void checkVersion(final String artifactId) {
+        final List versions = getVersions(artifactId);
+        if (versions.isEmpty()) {
+            return;
+        } else if (versions.size() > 1) {
+            throw new JarDuplicatedException(artifactId, versions);
+        }
+        logger.log("ISSR0009", new Object[] { artifactId, versions.get(0) });
+    }
+
+    private static List getVersions(final String artifactId) {
+        final List versions = new ArrayList();
+        try {
+            final String name = "META-INF/maven/org.seasar.container/"
+                    + artifactId + "/pom.properties";
+            final Enumeration urls = Thread.currentThread()
+                    .getContextClassLoader().getResources(name);
+            while (urls.hasMoreElements()) {
+                URL url = (URL) urls.nextElement();
+                final InputStream is = url.openStream();
+                try {
+                    final Properties props = new Properties();
+                    props.load(is);
+                    versions.add(props.getProperty("version"));
+                } finally {
+                    InputStreamUtil.close(is);
+                }
+            }
+        } catch (final Exception ignore) {
+        }
+        return versions;
+    }
+
 }
