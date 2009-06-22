@@ -58,6 +58,7 @@ import org.seasar.extension.jdbc.entity.Bbb;
 import org.seasar.extension.jdbc.entity.Ccc;
 import org.seasar.extension.jdbc.entity.Ddd;
 import org.seasar.extension.jdbc.entity.Eee;
+import org.seasar.extension.jdbc.entity.Emp;
 import org.seasar.extension.jdbc.exception.BaseJoinNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.EntityColumnNotFoundRuntimeException;
 import org.seasar.extension.jdbc.exception.IllegalIdPropertySizeRuntimeException;
@@ -89,6 +90,8 @@ import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.util.DisposableUtil;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author higa
@@ -1329,6 +1332,20 @@ public class AutoSelectImplTest extends TestCase {
         assertSame(query, query.where(new SimpleWhere().eq("name", null)));
         assertNull(query.criteria);
         assertEquals(0, query.getParamSize());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testWhere_wrapper() throws Exception {
+        AutoSelectImpl<Emp> query = new AutoSelectImpl<Emp>(manager, Emp.class);
+        assertSame(query, query.where(new SimpleWhere().eq("hiredate",
+                timestamp(new Date(0)))));
+        query.prepare("getResultList");
+        assertEquals("hiredate = ?", query.criteria);
+        assertEquals(1, query.getParamSize());
+        assertEquals(new Date(0), query.getParam(0).value);
     }
 
     /**

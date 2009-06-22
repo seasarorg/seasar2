@@ -38,6 +38,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.parameter.LobParameter;
 import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
+import org.seasar.extension.sql.SqlArgWrapper;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ResultSetUtil;
@@ -380,6 +381,9 @@ public abstract class AbstractQuery<S extends Query<S>> implements Query<S>,
      */
     protected Param addParam(Object value, Class<?> paramClass,
             ValueType valueType) {
+        if (value instanceof SqlArgWrapper) {
+            value = ((SqlArgWrapper) value).getValue();
+        }
         Param param = new Param(value, paramClass);
         param.valueType = valueType;
         paramList.add(param);
