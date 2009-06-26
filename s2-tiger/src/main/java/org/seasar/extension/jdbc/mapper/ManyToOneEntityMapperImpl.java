@@ -60,11 +60,12 @@ public class ManyToOneEntityMapperImpl extends AbstractRelationshipEntityMapper 
                 if (list == null) {
                     list = new ArrayList();
                     FieldUtil.set(inverseField, entity, list);
-
                 }
-                list.add(target);
+                if (!contains(list, target)) {
+                    list.add(target);
+                }
             }
         }
-
     }
+
 }

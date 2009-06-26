@@ -20,6 +20,7 @@ import java.util.List;
 import org.junit.runner.RunWith;
 import org.seasar.extension.jdbc.JdbcManager;
 import org.seasar.extension.jdbc.it.entity.Department;
+import org.seasar.extension.jdbc.it.entity.Employee;
 import org.seasar.framework.unit.Seasar2;
 
 import static org.junit.Assert.*;
@@ -120,4 +121,26 @@ public class SingleKeyOneToManyTest {
         assertNull(list.get(1).employees);
         assertNull(list.get(2).employees);
     }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testInnerJoin_manyToOne_oneToMany() throws Exception {
+        Department d =
+            jdbcManager
+                .from(Department.class)
+                .innerJoin("employees")
+                .innerJoin("employees.department")
+                .id(1)
+                .getSingleResult();
+        assertNotNull(d);
+        List<Employee> employees = d.employees;
+        assertNotNull(employees);
+        assertEquals(3, employees.size());
+        Employee employee = employees.get(0);
+        assertNotNull(employee);
+        assertEquals(d, employee.department);
+    }
+
 }

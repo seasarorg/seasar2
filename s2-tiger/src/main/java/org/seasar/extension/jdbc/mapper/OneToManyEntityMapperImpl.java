@@ -57,14 +57,15 @@ public class OneToManyEntityMapperImpl extends AbstractRelationshipEntityMapper 
         if (list == null) {
             list = new ArrayList();
             FieldUtil.set(field, target, list);
-
         }
         if (entity != null) {
-            list.add(entity);
+            if (!contains(list, entity)) {
+                list.add(entity);
+            }
             if (inverseField != null) {
                 FieldUtil.set(inverseField, entity, target);
             }
         }
-
     }
+
 }

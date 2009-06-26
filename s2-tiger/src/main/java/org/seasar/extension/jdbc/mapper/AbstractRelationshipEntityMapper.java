@@ -16,6 +16,7 @@
 package org.seasar.extension.jdbc.mapper;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 import org.seasar.extension.jdbc.MappingContext;
 import org.seasar.extension.jdbc.PropertyMapper;
@@ -104,4 +105,26 @@ public abstract class AbstractRelationshipEntityMapper extends
     public Field getInverseField() {
         return inverseField;
     }
+
+    /**
+     * 関連の要素にターゲットが含まれていれば{@literal true}を返します。
+     * <p>
+     * 同値性ではなく同一性で判定します。
+     * </p>
+     * 
+     * @param relationship
+     *            関連
+     * @param target
+     *            ターゲット
+     * @return 関連の要素にターゲットが含まれていれば{@literal true}
+     */
+    protected boolean contains(Collection<?> relationship, Object target) {
+        for (Object e : relationship) {
+            if (e == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
