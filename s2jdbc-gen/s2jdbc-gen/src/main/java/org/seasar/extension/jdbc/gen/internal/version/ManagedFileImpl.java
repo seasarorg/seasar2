@@ -176,8 +176,28 @@ public class ManagedFileImpl implements ManagedFile {
             traverseDirectory(envNamedFileInfo, fileMap);
         }
         traverseDirectory(fileInfo, fileMap);
-        File[] files = fileMap.values().toArray(new File[fileMap.size()]);
-        return Arrays.asList(files);
+        return getFileList(fileMap);
+    }
+
+    /**
+     * ファイルのリストを返します。
+     * 
+     * @param fileMap
+     *            パスの文字列をキー、 {@link File}を値とするマップ
+     * @return ファイルのリストを
+     */
+    protected List<File> getFileList(Map<String, File> fileMap) {
+        if (envNamedFileInfo == null) {
+            File[] files = fileMap.values().toArray(new File[fileMap.size()]);
+            return Arrays.asList(files);
+        }
+        List<String> pathList = new ArrayList<String>(fileMap.keySet());
+        Collections.sort(pathList);
+        List<File> fileList = new ArrayList<File>(pathList.size());
+        for (String path : pathList) {
+            fileList.add(fileMap.get(path));
+        }
+        return fileList;
     }
 
     /**

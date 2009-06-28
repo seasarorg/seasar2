@@ -74,9 +74,18 @@ public class ManagedFileImplTest {
      * @throws Exception
      */
     @Test
-    public void testListFiles() throws Exception {
+    public void testListAllFiles() throws Exception {
         List<File> list = managedFile.listAllFiles();
-        assertEquals(2, list.size());
+        assertEquals(3, list.size());
+        File file = list.get(0);
+        assertEquals("_aaa.txt", file.getName());
+        assertEquals("v020", file.getParentFile().getParentFile().getName());
+        file = list.get(1);
+        assertEquals("aaa.txt", file.getName());
+        assertEquals("v020#ut", file.getParentFile().getParentFile().getName());
+        file = list.get(2);
+        assertEquals("bbb.txt", file.getName());
+        assertEquals("v020", file.getParentFile().getParentFile().getName());
     }
 
     /**

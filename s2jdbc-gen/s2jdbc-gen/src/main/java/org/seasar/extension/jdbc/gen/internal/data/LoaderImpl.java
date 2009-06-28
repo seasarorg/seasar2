@@ -117,6 +117,8 @@ public class LoaderImpl implements Loader {
                 loadData(sqlExecutionContext, reader, sqlTypeList, sql);
                 postLoadData(sqlExecutionContext, tableDesc);
             } catch (Exception e) {
+                logger.log("DS2JDBCGen0021",
+                        new Object[] { dumpFile.getPath() });
                 if (dialect.isTableNotFound(e)) {
                     logger.log("DS2JDBCGen0012", new Object[] { tableDesc
                             .getFullName() });
@@ -126,6 +128,7 @@ public class LoaderImpl implements Loader {
                             e, dumpFile.getPath(), reader.getLineNumber());
                     sqlExecutionContext.addException(ex);
                 }
+                return;
             } finally {
                 sqlExecutionContext.end();
             }
