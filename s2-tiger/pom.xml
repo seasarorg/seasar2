@@ -34,6 +34,71 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <encoding>UTF-8</encoding>
+          <docencoding>UTF-8</docencoding>
+          <charset>UTF-8</charset>
+          <links>
+            <link>http://java.sun.com/javaee/5/docs/api/</link>
+          	<link>http://java.sun.com/j2se/1.5.0/ja/docs/ja/api/</link>
+            <link>http://aopalliance.sourceforge.net/doc/</link>
+            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+            <link>http://www.csg.is.titech.ac.jp/~chiba/javassist/html/</link>
+            <link>http://www.ognl.org/2.6.9/Documentation/javadoc/</link>
+            <link>http://www.junit.org/junit/javadoc/4.4/</link>
+            <link>http://www.junit.org/junit/javadoc/3.8.1/</link>
+            <link>http://s2container.seasar.org/2.4/s2-framework/ja/apidocs/</link>
+            <link>http://s2container.seasar.org/2.4/s2-extension/ja/apidocs/</link>
+            <link>http://s2container.seasar.org/2.4/s2-tiger/ja/apidocs/</link>
+          </links>
+          <groups>
+            <group>
+              <title>S2Dxo</title>
+              <packages>org.seasar.extension.dxo*</packages>
+            </group>
+            <group>
+              <title>S2JDBC</title>
+              <packages>org.seasar.extension.jdbc*</packages>
+            </group>
+            <group>
+              <title>S2Tx</title>
+              <packages>org.seasar.extension.tx*</packages>
+            </group>
+            <group>
+              <title>S2AOP</title>
+              <packages>org.seasar.framework.aop*</packages>
+            </group>
+            <group>
+              <title>S2BeanUtils</title>
+              <packages>org.seasar.framework.beans*</packages>
+            </group>
+            <group>
+              <title>EJB</title>
+              <packages>org.seasar.framework.ejb*</packages>
+            </group>
+            <group>
+              <title>JPA</title>
+              <packages>org.seasar.framework.jpa*</packages>
+            </group>
+            <group>
+              <title>S2Unit</title>
+              <packages>org.seasar.framework.unit*</packages>
+            </group>
+          </groups>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>site</phase>
+            <goals>
+              <goal>javadoc</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
   </build>
 
   <!-- Dependency Settings -->
