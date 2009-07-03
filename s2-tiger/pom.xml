@@ -76,6 +76,10 @@
               <packages>org.seasar.framework.beans*</packages>
             </group>
             <group>
+              <title>S2Container</title>
+              <packages>org.seasar.framework.container*</packages>
+            </group>
+            <group>
               <title>EJB</title>
               <packages>org.seasar.framework.ejb*</packages>
             </group>
