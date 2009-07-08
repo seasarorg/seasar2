@@ -4,4 +4,6 @@
 <components>
 	<component name="txAttributeCustomizer"
 		class="org.seasar.framework.container.customizer.TxAttributeCustomizer"/>
+	<component name="dependencyLookupCustomizer"
+		class="org.seasar.framework.container.customizer.DependencyLookupCustomizer"/>
 </components>

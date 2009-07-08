@@ -1481,12 +1481,13 @@ S2Containerにはdefault-customizer.diconに定義されたデフォルトカス
 <tr><td>s2DxoCustomizer</td><td>dxo.interceptor</td><td>Dxoを利用するためのカスタマイザ</td></tr>
 <tr><td>s2DaoCustomizer</td><td>dao.interceptor</td><td>S2Daoを利用するためのカスタマイザ</td></tr>
 <tr><td>kuinaDaoCustomizer</td><td>kuinaDao.interceptor</td><td>Kuina-Daoを利用するためのカスタマイザ</td></tr>
+<tr><td>dependencyLookupCustomizer</td><td>aop.dependencyLookupInterceptor</td><td><code>@DependencyLookup</code>アノテーションの指定されたgetterメソッドがS2コンテナからルックアップしたコンポーネントを返すようにするためのカスタマイザ</tr>
 </table>
 <p>
 
 </p>
 <p>
-<code>txAttributeCustomizer</code>を除いて、これらのコンポーネントの実体は<code>org.seasar.framework.container.customizer.AspectCustomizer</code>です。
+<code>txAttributeCustomizer</code>と<code>dependencyLookupCustomizer</code>を除いて、これらのコンポーネントの実体は<code>org.seasar.framework.container.customizer.AspectCustomizer</code>です。
 <code>AspectCustomizer</code>はコンポーネント定義にアスペクト定義を登録するカスタマイザです。
 </p>
 <p>

@@ -56,6 +56,7 @@
 <li><a href="#ToStringInterceptor">ToStringInterceptor</a></li>
 <li><a href="#RemoveSessionInterceptor">RemoveSessionInterceptor</a></li>
 <li><a href="#InvalidateSessionInterceptor">InvalidateSessionInterceptor</a></li>
+<li><a href="#DependencyLookupInterceptor">DependencyLookupInterceptor</a></li>
 <li><a href="#InterceptorChain">InterceptorChain</a></li>
 <li><a href="#InterceptorLifecycleAdapter">InterceptorLifecycleAdapter</a></li>
 </ul>
@@ -170,6 +171,16 @@ public void hoge() {
 <pre>@InvalidateSession
 public void hoge() {
     ...
+}</pre>
+            <h4><a name="DependecnyLookupInterceptor" id="DependencyLookupInterceptor">DependencyLookupInterceptor</a></h4>
+<h5>クラス名</h5>
+<p>org.seasar.framework.aop.interceptors.DependencyLookupInterceptor</p>
+<h5>説明</h5>
+<p>getterメソッドに適用されて、 S2コンテナからルックアップしたコンポーネントを返すインターセプタです。</p>
+<p>次の例では、getMyService()メソッドを呼び出すとS2コンテナからルックアップされたMyServiceが返されます。</p>
+<pre>@DependencyLookup
+public MyService getMyService() {
+    return null;
 }</pre>
             <h4><a name="InterceptorChain" id="InterceptorChain">InterceptorChain</a></h4>
 <h5>クラス名</h5>
