@@ -20,8 +20,8 @@ import org.aopalliance.intercept.MethodInvocation;
 /**
  * トランザクションをサポートしないメソッドのためのインターセプタです。
  * <p>
- * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されている場合は、トランザクションが中断されます。 メソッドが終了
- * (例外をスローした場合も) した後、中断したトランザクションは再開されます。
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されている場合は、トランザクションが中断されます。
+ * 中断されたトランザクションは、メソッドが終了した後に再開されます。
  * </p>
  * 
  * @author taichi S.
@@ -36,8 +36,9 @@ public class NotSupportedInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionManagerAdapter.notSupported(new DefaultTransactionCallback(
-                invocation, txRules));
+        return transactionManagerAdapter
+                .notSupported(new DefaultTransactionCallback(invocation,
+                        txRules));
     }
 
 }

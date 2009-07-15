@@ -20,13 +20,22 @@ import org.aopalliance.intercept.MethodInvocation;
 /**
  * トランザクションを要求するメソッドのためのインターセプタです。
  * <p>
- * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されていない場合は、トランザクションが開始されます。 メソッドが終了
- * (例外をスローした場合も) した後、開始したトランザクションは完了 (コミットまたはロールバック) されます。<br>
- * メソッドが呼び出された際に、既にトランザクションが開始されていた場合は何もしません。
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されていない場合は、 トランザクションが開始されます。
+ * すでにトランザクションが開始されていた場合は、 そのトランザクションを引き継ぎます。
+ * </p>
+ * <p>
+ * トランザクションを開始した場合でも引き継いだ場合でも、このインターセプタが適用されたメソッドが例外をスローした場合は、
+ * 例外の種類に応じてトランザクションがロールバックされるようにマークします。デフォルトでは、全ての例外に対してロールバックされるようにマークします。
+ * この設定は {@link #addCommitRule(Class)} および {@link #addRollbackRule(Class)}
+ * によって変更することができます。
+ * </p>
+ * <p>
+ * トランザクションを開始した場合、 このインターセプタが適用されたメソッドが終了 (正常終了した場合および例外をスローした場合の両方)
+ * すると、開始したトランザクションを完了 (コミットまたはロールバック) します。
+ * トランザクションがロールバックするようにマークされていれば、トランザクションをロールバックします。 そうでなければ、トランザクションをコミットします。
  * </p>
  * 
  * @author higa
- * 
  */
 public class RequiredInterceptor extends AbstractTxInterceptor {
 
@@ -38,8 +47,8 @@ public class RequiredInterceptor extends AbstractTxInterceptor {
     }
 
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionManagerAdapter.required(new DefaultTransactionCallback(
-                invocation, txRules));
+        return transactionManagerAdapter
+                .required(new DefaultTransactionCallback(invocation, txRules));
     }
 
 }

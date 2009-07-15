@@ -52,7 +52,7 @@ public abstract class AbstractTxInterceptor implements MethodInterceptor {
     }
 
     /**
-     * 例外が発生した場合にトランザクションをコミットするルールを追加します。
+     * 指定の例外が発生した場合に、トランザクションをロールバックするようにマークしないルールを追加します。
      * 
      * @param exceptionClass
      *            例外クラス
@@ -62,7 +62,7 @@ public abstract class AbstractTxInterceptor implements MethodInterceptor {
     }
 
     /**
-     * 例外が発生した場合にトランザクションをロールバックするルールを追加します。
+     * 指定の例外が発生した場合に、トランザクションをロールバックするようにマークするルールを追加します。
      * 
      * @param exceptionClass
      *            例外クラス
