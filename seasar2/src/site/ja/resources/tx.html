@@ -47,6 +47,7 @@
 <li><a href="#TransAttribute">トランザクション属性</a></li>
 <li><a href="#Exception">例外発生時の動作</a>
 <li><a href="#EJBTx">EJB互換のAdvice</a></li>
+<li><a href="#EJB3Tx">EJB3互換のAdvice</a></li>
 <li><a href="#smartDeploy">SMART deployでの利用</a></li>
 </ul>
 </li>
@@ -73,52 +74,92 @@ j2ee.diconはs2-extension-x.x.x.jarに含まれているので、
 <th width="534">説明</th>
 </tr>
 <tr>
-<td>Required</td>
-<td><code>j2ee.requiredTx</code></td>
-<td>トランザクションが開始されていなければ、<br />
-自動的にトランザクションを開始します。<br />
-既にトランザクションが開始されていれば、<br />
-そのトランザクションを引き継ぎます。</td>
+<td rowspan="3">Required</td>
+<td rowspan="3"><code>j2ee.requiredTx</code></td>
+<td>
+トランザクションが開始されていなければ、自動的にトランザクションを開始します。<br />
+既にトランザクションが開始されていれば、そのトランザクションを引き継ぎます。
+</td>
 </tr>
 <tr>
-<td>RequiresNew</td>
-<td><code>j2ee.requiresNewTx</code></td>
-<td>常に新しいトランザクションを開始させます。<br />
-既存のトランザクションが開始されているなら、<br />
-既存のトランザクションを中断し、<br />
-自分自身のトランザクションの終了後、<br />
-中断したトランザクションを復帰させます。</td>
+<td>
+トランザクションを開始した場合でも引き継いだ場合でも、
+このインターセプタが適用されたメソッドが例外をスローした場合は、
+例外の種類に応じてトランザクションがロールバックされるようにマークします。<br />
+デフォルトでは、全ての例外に対してロールバックされるようにマークします。
+</td>
 </tr>
 <tr>
-<td>Mandatory</td>
-<td><code>j2ee.mandatoryTx</code></td>
+<td>
+トランザクションを開始した場合、 このインターセプタが適用されたメソッドが
+終了 (正常終了した場合および例外をスローした場合の両方) すると、
+開始したトランザクションを完了 (コミットまたはロールバック) します。<br />
+トランザクションがロールバックするようにマークされていれば、
+トランザクションをロールバックします。
+ そうでなければ、トランザクションをコミットします。
+</td>
+</tr>
+<tr>
+<td rowspan="3">RequiresNew</td>
+<td rowspan="3"><code>j2ee.requiresNewTx</code></td>
+<td>
+常に新しいトランザクションを開始させます。<br />
+既存のトランザクションが開始されているなら、既存のトランザクションを中断し、
+自分自身のトランザクションの終了後、中断したトランザクションを復帰させます。
+</td>
+</tr>
+<tr>
+<td>
+このインターセプタが適用されたメソッドが例外をスローした場合は、
+例外の種類に応じてトランザクションがロールバックされるようにマークします。<br />
+デフォルトでは、全ての例外に対してロールバックされるようにマークします。
+</td>
+</tr>
+<tr>
+<td>
+このインターセプタが適用されたメソッドが終了 (正常終了した場合および例外をスローした場合の両方) すると、
+開始したトランザクションを完了 (コミットまたはロールバック) します。<br />
+トランザクションがロールバックするようにマークされていれば、トランザクションをロールバックします。
+ そうでなければ、トランザクションをコミットします。
+</td>
+</tr>
+<tr>
+<td rowspan="2">Mandatory</td>
+<td rowspan="2"><code>j2ee.mandatoryTx</code></td>
 <td>トランザクションが既に開始されてなければエラーにします。</td>
+</tr>
+<tr>
+<td>
+このインターセプタが適用されたメソッドが例外をスローした場合は、
+例外の種類に応じてトランザクションがロールバックされるようにマークします。<br />
+デフォルトでは、全ての例外に対してロールバックされるようにマークします。
+</td>
+</tr>
+<tr>
 </tr>
 <tr>
 <td>NotSupported</td>
 <td><code>j2ee.notSupportedTx</code></td>
-<td>既存のトランザクションが開始されているなら、<br />
-既存のトランザクションを中断します。<br />
-コンポーネントのメソッドの終了後、<br />
-中断したトランザクションを復帰させます。</td>
+<td>既存のトランザクションが開始されているなら、既存のトランザクションを中断します。<br />
+コンポーネントのメソッドの終了後、中断したトランザクションを復帰させます。</td>
 </tr>
 </table>
 
 <h3><a name="Exception" id="Exception">例外発生時の動作</a></h3>
-<p>デフォルトだとコンポーネントが例外をスローした場合はトランザクションをロールバックしますが、
-発生した例外に応じてトランザクションをコミットするかロールバックするかを指定することもできます。</p>
+<p>デフォルトでは、コンポーネントが例外をスローした場合はトランザクションをロールバックするようにマークされますが、
+発生した例外に応じてトランザクションをロールバックするようにマークするかしないかを指定することもできます。</p>
 <ul>
 <li><code>addCommitRule(Class)</code>メソッドを使用すると、
-トランザクションをコミットする例外を指定することができます。</li>
+トランザクションをロールバックするようにマーク<strong>しない</strong>例外を指定することができます。</li>
 <li><code>addRollbackRule(Class)</code>メソッドを使用すると、
-トランザクションをロールバックする例外を指定することができます。</li>
+トランザクションをロールバックするようにマーク<strong>する</strong>例外を指定することができます。</li>
 </ul>
 <p>コンポーネントから例外がスローされると、
 <code>addCommitRule()/addRollbackRule()</code>が設定された順番にマッチするかチェックされます。
 スローされた例外が<code>addCommitRule()/addRollbackRule()</code>で指定された例外またはその派生例外であれば、
-その設定に従ってトランザクションをコミットまたはロールバックします。
+その設定に従ってトランザクションをロールバックするようにマークします。
 スローされた例外が<code>addCommitRule()/addRollbackRule()</code>で指定された例外とマッチしない場合、
-トランザクションはロールバックされます。</p>
+トランザクションはロールバックするようにマークされます。</p>
 
 <h3><a name="EJBTx" id="EJBTx">EJB互換のAdvice</a></h3>
 <p>Seasar2が標準で用意しているejbtx.diconには、
@@ -149,6 +190,39 @@ ejbtx.diconはs2-extension-x.x.x.jarに含まれているので、
 <td><code>ejbtx.notSupportedTx</code></td>
 </tr>
 </table>
+
+<h3><a name="EJB3Tx" id="EJB3Tx">EJB3互換のAdvice</a></h3>
+<p>Seasar2が標準で用意しているejb3tx.diconには、EJB3のコンテナ管理トランザクション (CMT) と同じように、
+<code>@javax.ejb.ApplicationException</code> アノテーションの
+<code>rollback</code> 要素で <code>true</code> が指定されたアプリケーション例外
+(<code>java.lang.Exception</code>) および、
+実行時例外 (<code>java.lang.RuntimeException</code>)、
+リモート例外 (<code>java.rmi.RemoteException</code>) とその派生例外が発生した場合はロールバックし、
+その他の例外が発生した場合はコミットする<a href="aop.html#Advice">Advice</a>が定義されています。
+ejb3tx.diconはs2-tiger-x.x.x.jarに含まれているので、開発者のほうで用意する必要はありません。</p>
+<table border="1">
+<tr bgcolor="#D1F3F4" align="center">
+<th width="72">属性</th>
+<th width="123">コンポーネント名</th>
+</tr>
+<tr>
+<td>Required</td>
+<td><code>ejb3tx.requiredTx</code></td>
+</tr>
+<tr>
+<td>RequiresNew</td>
+<td><code>ejb3tx.requiresNewTx</code></td>
+</tr>
+<tr>
+<td>Mandatory</td>
+<td><code>ejb3tx.mandatoryTx</code></td>
+</tr>
+<tr>
+<td>NotSupported</td>
+<td><code>ejb3tx.notSupportedTx</code></td>
+</tr>
+</table>
+
 <h3><a name="smartDeploy">SMART deployでの利用</a></h3>
 <p>
 SMART deploy環境でトランザクションの自動制御を利用する場合の設定については、
