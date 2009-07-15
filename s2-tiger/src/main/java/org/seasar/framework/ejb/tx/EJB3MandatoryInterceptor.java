@@ -20,13 +20,13 @@ import java.rmi.RemoteException;
 import javax.ejb.ApplicationException;
 
 import org.aopalliance.intercept.MethodInvocation;
-import org.seasar.extension.tx.RequiresNewInterceptor;
+import org.seasar.extension.tx.RequiredInterceptor;
 
 /**
- * 新しいトランザクションを要求するメソッドのためのインターセプタです。
+ * トランザクションが必須なメソッドのためのインターセプタです。
  * <p>
- * このインターセプタが適用されたメソッドが呼び出された際に、新しいトランザクションが開始されます。
- * 既にトランザクションが開始されていた場合、そのトランザクションは中断されます。 中断されたトランザクションは、メソッドが終了した後に再開されます。
+ * このインターセプタが適用されたメソッドが呼び出された際にトランザクションが開始されていない場合は、 例外
+ * {@link java.lang.IllegalStateException}がスローされます。
  * </p>
  * <p>
  * このインターセプタが適用されたメソッドが例外をスローした場合は、例外の種類に応じてトランザクションがロールバックされるようにマークします。
@@ -40,27 +40,22 @@ import org.seasar.extension.tx.RequiresNewInterceptor;
  * </ul>
  * </p> この設定は {@link #addCommitRule(Class)} および {@link #addRollbackRule(Class)}
  * によって変更することができます。 </p>
- * <p>
- * このインターセプタが適用されたメソッドがメソッドが終了 (正常終了した場合および例外をスローした場合の両方) すると、開始したトランザクションを完了
- * (コミットまたはロールバック) します。 トランザクションがロールバックするようにマークされていれば、トランザクションをロールバックします。
- * そうでなければ、トランザクションをコミットします。
- * </p>
  * 
  * @author koichik
  */
-public class EJB3RequiresNewInterceptor extends RequiresNewInterceptor {
+public class EJB3MandatoryInterceptor extends RequiredInterceptor {
 
     /**
      * インスタンスを構築します。
      * 
      */
-    public EJB3RequiresNewInterceptor() {
+    public EJB3MandatoryInterceptor() {
     }
 
     @Override
     public Object invoke(final MethodInvocation invocation) throws Throwable {
-        return transactionManagerAdapter
-                .requiresNew(new EJB3TransactionCallback(invocation, txRules));
+        return transactionManagerAdapter.mandatory(new EJB3TransactionCallback(
+                invocation, txRules));
     }
 
 }

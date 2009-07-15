@@ -39,7 +39,17 @@
 		</initMethod>
 	</component>
 	<component name="mandatoryTx"
-		class="org.seasar.extension.tx.MandatoryInterceptor"/>
+		class="org.seasar.extension.tx.MandatoryInterceptor">
+		<initMethod name="addRollbackRule">
+			<arg>@java.lang.RuntimeException@class</arg>
+		</initMethod>
+		<initMethod name="addRollbackRule">
+			<arg>@java.rmi.RemoteException@class</arg>
+		</initMethod>
+		<initMethod name="addCommitRule">
+			<arg>@java.lang.Exception@class</arg>
+		</initMethod>
+	</component>
 	<component name="notSupportedTx"
 		class="org.seasar.extension.tx.NotSupportedInterceptor"/>
 	<component name="neverTx"

@@ -8,7 +8,7 @@
 	<component name="requiresNewTx"
 		class="org.seasar.framework.ejb.tx.EJB3RequiresNewInterceptor"/>
 	<component name="mandatoryTx"
-		class="org.seasar.extension.tx.MandatoryInterceptor"/>
+		class="org.seasar.framework.ejb.tx.EJB3MandatoryInterceptor"/>
 	<component name="notSupportedTx"
 		class="org.seasar.extension.tx.NotSupportedInterceptor"/>
 	<component name="neverTx"
