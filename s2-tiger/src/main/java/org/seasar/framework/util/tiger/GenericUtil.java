@@ -258,6 +258,12 @@ public abstract class GenericUtil {
         final Map<TypeVariable<?>, Type> map = CollectionsUtil
                 .newLinkedHashMap();
 
+        final TypeVariable<?>[] typeParameters = clazz.getTypeParameters();
+        for (TypeVariable<?> typeParameter : typeParameters) {
+            map.put(typeParameter, getActualClass(typeParameter.getBounds()[0],
+                    map));
+        }
+
         final Class<?> superClass = clazz.getSuperclass();
         final Type superClassType = clazz.getGenericSuperclass();
         if (superClass != null) {
@@ -332,7 +338,8 @@ public abstract class GenericUtil {
      * <li><code>type</code>が<code>Class</code>の場合はそのまま返します。</li>
      * <li><code>type</code>がパラメータ化された型の場合はその原型を返します。</li>
      * <li><code>type</code>がワイルドカード型の場合は(最初の)上限境界を返します。</li>
-     * <li><code>type</code>が型変数の場合はその変数の実際の型引数を返します。</li>
+     * <li><code>type</code>が型変数で引数{@code map}のキーとして含まれている場合はその変数の実際の型引数を返します。</li>
+     * <li><code>type</code>が型変数で引数{@code map}のキーとして含まれていない場合は(最初の)上限境界を返します。</li>
      * <li><code>type</code>が配列の場合はその要素の実際の型の配列を返します。</li>
      * <li>その他の場合は<code>null</code>を返します。</li>
      * </ul>
@@ -357,7 +364,11 @@ public abstract class GenericUtil {
                     .getUpperBounds()[0], map);
         }
         if (TypeVariable.class.isInstance(type)) {
-            return getActualClass(map.get(TypeVariable.class.cast(type)), map);
+            final TypeVariable<?> typeVariable = TypeVariable.class.cast(type);
+            if (map.containsKey(typeVariable)) {
+                return getActualClass(map.get(typeVariable), map);
+            }
+            return getActualClass(typeVariable.getBounds()[0], map);
         }
         if (GenericArrayType.class.isInstance(type)) {
             final GenericArrayType genericArrayType = GenericArrayType.class

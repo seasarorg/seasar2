@@ -36,6 +36,28 @@ public class GenericUtilTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testClass() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil.getTypeVariableMap(Foo.class);
+        assertNotNull(map);
+        assertFalse(map.isEmpty());
+        assertEquals(Object.class, map.get(Foo.class.getTypeParameters()[0]));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGenericMethod() throws Exception {
+        Map<TypeVariable<?>, Type> map = GenericUtil.getTypeVariableMap(Fuga.class);
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+        Method m = Fuga.class.getMethod("getFuga");
+        Class<?> returnClass = GenericUtil.getActualClass(m.getGenericReturnType(), map);
+        assertEquals(Object.class, returnClass);
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testArray() throws Exception {
         Method m1 = ArrayType.class.getMethod("arrayOfStringClass");
         Type t1 = m1.getGenericReturnType();
@@ -347,6 +369,17 @@ public class GenericUtilTest extends TestCase {
      * 
      */
     public static abstract class Hoge implements Bar, Baz<String, Boolean> {
+    }
+
+    /**
+     *
+     */
+    public interface Fuga {
+        /**
+         * @param <T>
+         * @return
+         */
+        <T> T getFuga();
     }
 
 }
