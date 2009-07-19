@@ -34,9 +34,14 @@ public class ClassModelSupport {
      *            インポート対象のクラス
      */
     public void addImportName(ClassModel classModel, Class<?> importClass) {
-        String importedPackageName = ClassUtil.getPackageName(importClass);
+        String canonicalName = importClass.getCanonicalName();
+        if (canonicalName == null) {
+            return;
+        }
+        String importedPackageName = ClassUtil
+                .splitPackageAndShortClassName(canonicalName)[0];
         if (isImportTargetPackage(classModel, importedPackageName)) {
-            classModel.addImportName(importClass.getName());
+            classModel.addImportName(canonicalName);
         }
     }
 
@@ -88,9 +93,14 @@ public class ClassModelSupport {
      *            インポート対象のクラス
      */
     public void addStaticImportName(ClassModel classModel, Class<?> importClass) {
-        String importedPackageName = ClassUtil.getPackageName(importClass);
+        String canonicalName = importClass.getCanonicalName();
+        if (canonicalName == null) {
+            return;
+        }
+        String importedPackageName = ClassUtil
+                .splitPackageAndShortClassName(canonicalName)[0];
         if (isStaticImportTargetPackage(classModel, importedPackageName)) {
-            classModel.addStaticImportName(importClass.getName() + ".*");
+            classModel.addStaticImportName(canonicalName + ".*");
         }
     }
 

@@ -97,15 +97,16 @@ public class ServiceModelFactoryImplTest {
 
         assertEquals(3, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
-        assertEquals(List.class.getName(), iterator.next());
-        assertEquals(Generated.class.getName(), iterator.next());
-        assertEquals(Aaa.class.getName(), iterator.next());
+        assertEquals(List.class.getCanonicalName(), iterator.next());
+        assertEquals(Generated.class.getCanonicalName(), iterator.next());
+        assertEquals(Aaa.class.getCanonicalName(), iterator.next());
 
         assertEquals(2, serviceModel.getStaticImportNameSet().size());
         iterator = serviceModel.getStaticImportNameSet().iterator();
         assertEquals("aaa.ccc.ServiceModelFactoryImplTest$AaaNames.*", iterator
                 .next());
-        assertEquals(Operations.class.getName() + ".*", iterator.next());
+        assertEquals(Operations.class.getCanonicalName() + ".*", iterator
+                .next());
     }
 
     /**
@@ -129,16 +130,17 @@ public class ServiceModelFactoryImplTest {
 
         assertEquals(4, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
-        assertEquals(Date.class.getName(), iterator.next());
-        assertEquals(List.class.getName(), iterator.next());
-        assertEquals(Generated.class.getName(), iterator.next());
-        assertEquals(Bbb.class.getName(), iterator.next());
+        assertEquals(Date.class.getCanonicalName(), iterator.next());
+        assertEquals(List.class.getCanonicalName(), iterator.next());
+        assertEquals(Generated.class.getCanonicalName(), iterator.next());
+        assertEquals(Bbb.class.getCanonicalName(), iterator.next());
 
         assertEquals(2, serviceModel.getStaticImportNameSet().size());
         iterator = serviceModel.getStaticImportNameSet().iterator();
         assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames.*", iterator
                 .next());
-        assertEquals(Operations.class.getName() + ".*", iterator.next());
+        assertEquals(Operations.class.getCanonicalName() + ".*", iterator
+                .next());
     }
 
     /**
@@ -162,20 +164,23 @@ public class ServiceModelFactoryImplTest {
 
         assertEquals(8, serviceModel.getImportNameSet().size());
         Iterator<String> iterator = serviceModel.getImportNameSet().iterator();
-        assertEquals(Date.class.getName(), iterator.next());
-        assertEquals(List.class.getName(), iterator.next());
-        assertEquals(Generated.class.getName(), iterator.next());
-        assertEquals(Resource.class.getName(), iterator.next());
-        assertEquals(TransactionAttribute.class.getName(), iterator.next());
-        assertEquals(TransactionAttributeType.class.getName(), iterator.next());
-        assertEquals(JdbcManager.class.getName(), iterator.next());
-        assertEquals(Bbb.class.getName(), iterator.next());
+        assertEquals(Date.class.getCanonicalName(), iterator.next());
+        assertEquals(List.class.getCanonicalName(), iterator.next());
+        assertEquals(Generated.class.getCanonicalName(), iterator.next());
+        assertEquals(Resource.class.getCanonicalName(), iterator.next());
+        assertEquals(TransactionAttribute.class.getCanonicalName(), iterator
+                .next());
+        assertEquals(TransactionAttributeType.class.getCanonicalName(),
+                iterator.next());
+        assertEquals(JdbcManager.class.getCanonicalName(), iterator.next());
+        assertEquals(Bbb.class.getCanonicalName(), iterator.next());
 
         assertEquals(2, serviceModel.getStaticImportNameSet().size());
         iterator = serviceModel.getStaticImportNameSet().iterator();
         assertEquals("aaa.ccc.ServiceModelFactoryImplTest$BbbNames.*", iterator
                 .next());
-        assertEquals(Operations.class.getName() + ".*", iterator.next());
+        assertEquals(Operations.class.getCanonicalName() + ".*", iterator
+                .next());
     }
 
     /** */

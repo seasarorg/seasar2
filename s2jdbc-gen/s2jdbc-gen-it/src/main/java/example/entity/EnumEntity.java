@@ -26,4 +26,18 @@ public class EnumEntity {
 
     /** */
     public MyEnum enumProperty;
+
+    /**
+     * 
+     * @author taedium
+     * 
+     */
+    public enum MyEnum {
+
+        /** */
+        AAA,
+        /** */
+        BBB;
+    }
+
 }

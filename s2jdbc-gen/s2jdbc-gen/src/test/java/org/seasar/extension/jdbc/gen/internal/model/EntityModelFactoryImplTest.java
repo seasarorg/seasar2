@@ -111,21 +111,21 @@ public class EntityModelFactoryImplTest {
         Set<String> set = model.getImportNameSet();
         assertEquals(15, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals(Serializable.class.getName(), iterator.next());
-        assertEquals(Date.class.getName(), iterator.next());
-        assertEquals(Generated.class.getName(), iterator.next());
-        assertEquals(Column.class.getName(), iterator.next());
-        assertEquals(Entity.class.getName(), iterator.next());
-        assertEquals(GeneratedValue.class.getName(), iterator.next());
-        assertEquals(GenerationType.class.getName(), iterator.next());
-        assertEquals(Id.class.getName(), iterator.next());
-        assertEquals(Lob.class.getName(), iterator.next());
-        assertEquals(Table.class.getName(), iterator.next());
-        assertEquals(Temporal.class.getName(), iterator.next());
-        assertEquals(TemporalType.class.getName(), iterator.next());
-        assertEquals(Transient.class.getName(), iterator.next());
-        assertEquals(Version.class.getName(), iterator.next());
-        assertEquals(Superclass.class.getName(), iterator.next());
+        assertEquals(Serializable.class.getCanonicalName(), iterator.next());
+        assertEquals(Date.class.getCanonicalName(), iterator.next());
+        assertEquals(Generated.class.getCanonicalName(), iterator.next());
+        assertEquals(Column.class.getCanonicalName(), iterator.next());
+        assertEquals(Entity.class.getCanonicalName(), iterator.next());
+        assertEquals(GeneratedValue.class.getCanonicalName(), iterator.next());
+        assertEquals(GenerationType.class.getCanonicalName(), iterator.next());
+        assertEquals(Id.class.getCanonicalName(), iterator.next());
+        assertEquals(Lob.class.getCanonicalName(), iterator.next());
+        assertEquals(Table.class.getCanonicalName(), iterator.next());
+        assertEquals(Temporal.class.getCanonicalName(), iterator.next());
+        assertEquals(TemporalType.class.getCanonicalName(), iterator.next());
+        assertEquals(Transient.class.getCanonicalName(), iterator.next());
+        assertEquals(Version.class.getCanonicalName(), iterator.next());
+        assertEquals(Superclass.class.getCanonicalName(), iterator.next());
     }
 
     /** */

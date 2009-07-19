@@ -99,15 +99,19 @@ public class ConditionModelFactoryImplTest {
         Set<String> set = model.getImportNameSet();
         assertEquals(8, set.size());
         Iterator<String> iterator = set.iterator();
-        assertEquals(Date.class.getName(), iterator.next());
-        assertEquals(Generated.class.getName(), iterator.next());
-        assertEquals(ComplexWhere.class.getName(), iterator.next());
-        assertEquals(AbstractEntityCondition.class.getName(), iterator.next());
-        assertEquals(NotNullableCondition.class.getName(), iterator.next());
-        assertEquals(NotNullableStringCondition.class.getName(), iterator
+        assertEquals(Date.class.getCanonicalName(), iterator.next());
+        assertEquals(Generated.class.getCanonicalName(), iterator.next());
+        assertEquals(ComplexWhere.class.getCanonicalName(), iterator.next());
+        assertEquals(AbstractEntityCondition.class.getCanonicalName(), iterator
                 .next());
-        assertEquals(NullableCondition.class.getName(), iterator.next());
-        assertEquals(NullableStringCondition.class.getName(), iterator.next());
+        assertEquals(NotNullableCondition.class.getCanonicalName(), iterator
+                .next());
+        assertEquals(NotNullableStringCondition.class.getCanonicalName(),
+                iterator.next());
+        assertEquals(NullableCondition.class.getCanonicalName(), iterator
+                .next());
+        assertEquals(NullableStringCondition.class.getCanonicalName(), iterator
+                .next());
     }
 
     /** */

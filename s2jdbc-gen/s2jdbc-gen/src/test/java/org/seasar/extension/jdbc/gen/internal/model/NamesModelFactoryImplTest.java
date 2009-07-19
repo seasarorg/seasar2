@@ -105,9 +105,9 @@ public class NamesModelFactoryImplTest {
         assertEquals(4, namesModel.getImportNameSet().size());
         Iterator<String> iterator = namesModel.getImportNameSet().iterator();
         assertEquals("aaa.bbb.BbbNames._BbbNames", iterator.next());
-        assertEquals(Generated.class.getName(), iterator.next());
-        assertEquals(Aaa.class.getName(), iterator.next());
-        assertEquals(PropertyName.class.getName(), iterator.next());
+        assertEquals(Generated.class.getCanonicalName(), iterator.next());
+        assertEquals(Aaa.class.getCanonicalName(), iterator.next());
+        assertEquals(PropertyName.class.getCanonicalName(), iterator.next());
     }
 
     /** */
