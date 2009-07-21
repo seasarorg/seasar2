@@ -22,6 +22,13 @@
 						<li>seasar2/build.xmlのupdate-pomターゲットを実行．</li>
 					</ul>
 				</dd>
+				<dt>Wikiの修正</dt>
+				<dd>
+					<ul>
+						<li><a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar">Change Log</a></li>
+						<li><a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog">移行ガイド</a></li>
+					</ul>
+				</dd>
 				<dt>ドキュメントの修正・コミット</dt>
 				<dd>
 					<ul>
