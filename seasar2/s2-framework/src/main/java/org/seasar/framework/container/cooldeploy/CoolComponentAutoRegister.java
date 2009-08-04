@@ -155,6 +155,10 @@ public class CoolComponentAutoRegister implements ClassHandler {
             if (clazz.isInterface() || ModifierUtil.isAbstract(clazz)) {
                 return;
             }
+            final ComponentDef cd = container.getRoot().getComponentDef(clazz);
+            if (clazz == cd.getComponentClass()) {
+                return;
+            }
         }
         ComponentDef cd = createComponentDef(clazz);
         if (cd == null) {

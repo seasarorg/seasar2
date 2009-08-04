@@ -9,4 +9,7 @@
 	</component>
 	<component class="org.seasar.framework.container.creator.ActionCreator"/>
 	<component class="org.seasar.framework.container.cooldeploy.CoolComponentAutoRegister"/>
+	<component class="org.seasar.framework.container.cooldeploy.creator.web.ccc.FffAction">
+		<property name="name">"hoge"</property>
+	</component>
 </components>

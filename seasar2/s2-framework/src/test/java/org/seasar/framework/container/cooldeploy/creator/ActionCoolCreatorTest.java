@@ -17,6 +17,7 @@ package org.seasar.framework.container.cooldeploy.creator;
 
 import org.seasar.framework.container.cooldeploy.creator.web.ccc.CccAction;
 import org.seasar.framework.container.cooldeploy.creator.web.ccc.DddAction;
+import org.seasar.framework.container.cooldeploy.creator.web.ccc.FffAction;
 import org.seasar.framework.unit.S2FrameworkTestCase;
 
 /**
@@ -46,5 +47,8 @@ public class ActionCoolCreatorTest extends S2FrameworkTestCase {
 
         CccAction cccAction = (CccAction) getComponent(CccAction.class);
         assertEquals(DddAction.class, cccAction.ccc_dddAction.getClass());
+        
+        FffAction fffAction = (FffAction) getComponent(FffAction.class);
+        assertEquals("hoge", fffAction.name);
     }
 }
