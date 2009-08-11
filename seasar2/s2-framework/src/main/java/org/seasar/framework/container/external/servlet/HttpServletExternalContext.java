@@ -55,25 +55,25 @@ public class HttpServletExternalContext implements ExternalContext {
 
     }
 
-    private ThreadLocal requests = new ThreadLocal();
+    ThreadLocal requests = new ThreadLocal();
 
-    private ThreadLocal responses = new ThreadLocal();
+    ThreadLocal responses = new ThreadLocal();
 
-    private ThreadLocal requestMaps = new MutableMapThreadLocal();
+    ThreadLocal requestMaps = new MutableMapThreadLocal();
 
-    private ThreadLocal requestHeaderMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestHeaderMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestHeaderValuesMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestHeaderValuesMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestParameterMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestParameterMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestParameterValuesMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestParameterValuesMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal requestCookieMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestCookieMaps = new ImmutableMapThreadLocal();
 
-    private ThreadLocal sessionMaps = new MutableMapThreadLocal();
+    ThreadLocal sessionMaps = new MutableMapThreadLocal();
 
-    private ServletContext application;
+    ServletContext application;
 
     public Object getRequest() {
         return getHttpServletRequest();
@@ -94,20 +94,19 @@ public class HttpServletExternalContext implements ExternalContext {
             requestMaps.set(new HashMap());
             requestHeaderMaps.set(Collections.EMPTY_MAP);
             requestHeaderValuesMaps.set(Collections.EMPTY_MAP);
+            requestCookieMaps.set(Collections.EMPTY_MAP);
             requestParameterMaps.set(Collections.EMPTY_MAP);
             requestParameterValuesMaps.set(Collections.EMPTY_MAP);
-            requestCookieMaps.set(Collections.EMPTY_MAP);
             sessionMaps.set(new HashMap());
         } else {
             final HttpServletRequest req = (HttpServletRequest) request;
             requestMaps.set(new ServletRequestMap(req));
             requestHeaderMaps.set(new ServletRequestHeaderMap(req));
             requestHeaderValuesMaps.set(new ServletRequestHeaderValuesMap(req));
-            requestParameterMaps.set(new ServletRequestParameterMap(req));
-            requestParameterValuesMaps
-                    .set(new ServletRequestParameterValuesMap(req));
             requestCookieMaps.set(new CookieMap(req));
-            sessionMaps.set(null);
+            requestParameterMaps.set(null); // lazy initialize
+            requestParameterValuesMaps.set(null); // lazy initialize
+            sessionMaps.set(null); // lazy initialize
         }
     }
 
@@ -172,20 +171,31 @@ public class HttpServletExternalContext implements ExternalContext {
     }
 
     public Map getRequestParameterMap() {
-        return (Map) requestParameterMaps.get();
+        Map requestParameterMap = (Map) requestParameterMaps.get();
+        if (requestParameterMap == null) {
+            requestParameterMap = new ServletRequestParameterMap(
+                    getHttpServletRequest());
+            requestParameterMaps.set(requestParameterMap);
+        }
+        return requestParameterMap;
     }
 
     public Map getRequestParameterValuesMap() {
-        return (Map) requestParameterValuesMaps.get();
+        Map requestParameterValuesMap = (Map) requestParameterValuesMaps.get();
+        if (requestParameterValuesMap == null) {
+            requestParameterValuesMap = new ServletRequestParameterValuesMap(
+                    getHttpServletRequest());
+            requestParameterValuesMaps.set(requestParameterValuesMap);
+        }
+        return requestParameterValuesMap;
     }
 
     public Map getSessionMap() {
         Map sessionMap = (Map) sessionMaps.get();
-        if (sessionMap != null) {
-            return sessionMap;
+        if (sessionMap == null) {
+            sessionMap = new HttpSessionMap(getHttpServletRequest());
+            sessionMaps.set(sessionMap);
         }
-        sessionMap = new HttpSessionMap(getHttpServletRequest());
-        sessionMaps.set(sessionMap);
         return sessionMap;
     }
 }
