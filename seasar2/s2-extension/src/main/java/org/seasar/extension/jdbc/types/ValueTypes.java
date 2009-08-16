@@ -64,6 +64,11 @@ public class ValueTypes {
     public final static ValueType WAVE_DASH_STRING = new WaveDashStringType();
 
     /**
+     * WaveDashを変換する<code>CLOB</code>用の値タイプです。
+     */
+    public final static ValueType WAVE_DASH_CLOB = new WaveDashStringClobType();
+
+    /**
      * Character用の値タイプです。
      */
     public final static ValueType CHARACTER = new CharacterType();

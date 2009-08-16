@@ -87,6 +87,8 @@ public class OracleDialectTest extends TestCase {
                 List.class, false, null));
         assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect.getValueType(
                 ArrayList.class, false, null));
+        assertEquals(ValueTypes.WAVE_DASH_CLOB, dialect.getValueType(
+                String.class, true, null));
     }
 
     /**
@@ -107,6 +109,11 @@ public class OracleDialectTest extends TestCase {
 
         pm.setField(getClass().getField("arrayListField"));
         assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("stringField"));
+        pm.setLob(true);
+        pm.setValueType(ValueTypes.CLOB);
+        assertEquals(ValueTypes.WAVE_DASH_CLOB, dialect.getValueType(pm));
     }
 
     /**

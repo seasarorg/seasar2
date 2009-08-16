@@ -18,6 +18,7 @@ package org.seasar.extension.jdbc.dialect;
 import java.util.List;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SelectForUpdateType;
@@ -118,6 +119,13 @@ public class OracleDialect extends StandardDialect {
 
     @Override
     public ValueType getValueType(PropertyMeta propertyMeta) {
+        Class<?> clazz = propertyMeta.getPropertyClass();
+        if (clazz == String.class && supportsWaveDashToFullwidthTilde()) {
+            if (propertyMeta.isLob()) {
+                return ValueTypes.WAVE_DASH_CLOB;
+            }
+            return ValueTypes.WAVE_DASH_STRING;
+        }
         ValueType valueType = getValueTypeInternal(propertyMeta
                 .getPropertyClass());
         if (valueType != null) {
@@ -127,10 +135,20 @@ public class OracleDialect extends StandardDialect {
     }
 
     @Override
-    protected ValueType getValueTypeInternal(Class<?> clazz) {
+    public ValueType getValueType(Class<?> clazz, boolean lob,
+            TemporalType temporalType) {
         if (clazz == String.class && supportsWaveDashToFullwidthTilde()) {
+            if (lob) {
+                return ValueTypes.WAVE_DASH_CLOB;
+            }
             return ValueTypes.WAVE_DASH_STRING;
-        } else if ((clazz == Boolean.class || clazz == boolean.class)
+        }
+        return super.getValueType(clazz, lob, temporalType);
+    }
+
+    @Override
+    protected ValueType getValueTypeInternal(Class<?> clazz) {
+        if ((clazz == Boolean.class || clazz == boolean.class)
                 && supportsBooleanToInt()) {
             return ValueTypes.BOOLEAN_INTEGER;
         } else if (List.class.isAssignableFrom(clazz)) {
