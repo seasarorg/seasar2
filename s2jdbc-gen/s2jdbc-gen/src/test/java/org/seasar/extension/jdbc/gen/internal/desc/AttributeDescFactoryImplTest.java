@@ -68,10 +68,10 @@ public class AttributeDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testIsId() throws Exception {
+    public void testIsId_integer() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
-        columnMeta.setTypeName("varchar");
+        columnMeta.setTypeName("integer");
         columnMeta.setPrimaryKey(true);
         AttributeDesc attributeDesc = factory.getAttributeDesc(
                 new DbTableMeta(), columnMeta);
@@ -86,7 +86,40 @@ public class AttributeDescFactoryImplTest {
      * @throws Exception
      */
     @Test
-    public void testIsId_autoIncrement() throws Exception {
+    public void testIsId_varchar() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("hoge");
+        columnMeta.setTypeName("varchar");
+        columnMeta.setPrimaryKey(true);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
+        assertTrue(attributeDesc.isId());
+        assertNull(attributeDesc.getGenerationType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIsId_integer_autoIncrement() throws Exception {
+        DbColumnMeta columnMeta = new DbColumnMeta();
+        columnMeta.setName("hoge");
+        columnMeta.setTypeName("integer");
+        columnMeta.setPrimaryKey(true);
+        columnMeta.setAutoIncrement(true);
+        AttributeDesc attributeDesc = factory.getAttributeDesc(
+                new DbTableMeta(), columnMeta);
+        assertTrue(attributeDesc.isId());
+        assertEquals(GenerationType.IDENTITY, attributeDesc.getGenerationType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testIsId_varchar_autoIncrement() throws Exception {
         DbColumnMeta columnMeta = new DbColumnMeta();
         columnMeta.setName("hoge");
         columnMeta.setTypeName("varchar");
@@ -95,7 +128,7 @@ public class AttributeDescFactoryImplTest {
         AttributeDesc attributeDesc = factory.getAttributeDesc(
                 new DbTableMeta(), columnMeta);
         assertTrue(attributeDesc.isId());
-        assertEquals(GenerationType.IDENTITY, attributeDesc.getGenerationType());
+        assertNull(attributeDesc.getGenerationType());
     }
 
     /**

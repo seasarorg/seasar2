@@ -126,6 +126,7 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         doTransient(tableMeta, columnMeta, attributeDesc);
         doColumn(tableMeta, columnMeta, attributeDesc);
         doVersion(tableMeta, columnMeta, attributeDesc);
+        doGenerationType(tableMeta, columnMeta, attributeDesc);
         return attributeDesc;
     }
 
@@ -159,15 +160,6 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
             AttributeDesc attributeDesc) {
         if (columnMeta.isPrimaryKey()) {
             attributeDesc.setId(true);
-            if (!tableMeta.hasCompositePrimaryKey()) {
-                if (columnMeta.isAutoIncrement()) {
-                    attributeDesc.setGenerationType(GenerationType.IDENTITY);
-                } else {
-                    attributeDesc.setGenerationType(generationType);
-                    attributeDesc.setInitialValue(initialValue);
-                    attributeDesc.setAllocationSize(allocationSize);
-                }
-            }
         }
     }
 
@@ -232,8 +224,8 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
                     .getAttributeClass(columnMeta.getLength(), columnMeta
                             .getLength(), columnMeta.getScale());
             attributeDesc.setAttributeClass(clazz);
-            String defaultValue = attributeDesc.getGenerationType() != null ? null
-                    : columnMeta.getDefaultValue();
+            String defaultValue = attributeDesc.isId() ? null : columnMeta
+                    .getDefaultValue();
             String definition = columnType.getColumnDefinition(columnMeta
                     .getLength(), columnMeta.getLength(),
                     columnMeta.getScale(), defaultValue);
@@ -243,6 +235,33 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
             attributeDesc.setUnsupportedColumnType(true);
             attributeDesc.setAttributeClass(String.class);
             attributeDesc.setLob(false);
+        }
+    }
+
+    /**
+     * {@link GenerationType}を処理します。
+     * 
+     * @param tableMeta
+     *            テーブルメタデータ
+     * @param columnMeta
+     *            カラムメタデータ
+     * @param attributeDesc
+     *            属性記述
+     */
+    protected void doGenerationType(DbTableMeta tableMeta,
+            DbColumnMeta columnMeta, AttributeDesc attributeDesc) {
+        if (columnMeta.isPrimaryKey() && !tableMeta.hasCompositePrimaryKey()) {
+            Class<?> clazz = ClassUtil.getWrapperClassIfPrimitive(attributeDesc
+                    .getAttributeClass());
+            if (Number.class.isAssignableFrom(clazz)) {
+                if (columnMeta.isAutoIncrement()) {
+                    attributeDesc.setGenerationType(GenerationType.IDENTITY);
+                } else {
+                    attributeDesc.setGenerationType(generationType);
+                    attributeDesc.setInitialValue(initialValue);
+                    attributeDesc.setAllocationSize(allocationSize);
+                }
+            }
         }
     }
 
