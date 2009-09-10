@@ -15,7 +15,9 @@
  */
 package org.seasar.extension.dataset.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.net.URL;
 
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
@@ -23,6 +25,7 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.types.ColumnTypes;
 import org.seasar.extension.unit.S2TestCase;
 import org.seasar.framework.util.Base64Util;
+import org.seasar.framework.util.ResourceUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
@@ -111,6 +114,28 @@ public class XlsReaderTest extends S2TestCase {
      */
     public void testGetValueNoTrim() throws Exception {
         dataSet_ = new XlsReader(PATH, false).read();
+        DataTable table = dataSet_.getTable(2);
+        DataRow row = table.getRow(0);
+        assertEquals("1", TimestampConversionUtil.toTimestamp("20040322",
+                "yyyyMMdd"), row.getValue(0));
+        assertEquals("2", new BigDecimal(123), row.getValue(1));
+        assertEquals("3", "\u3042", row.getValue(2));
+        assertEquals("4", "YWJj", Base64Util.encode((byte[]) row.getValue(3)));
+        assertEquals("5", new BigDecimal("0.05"), row.getValue(4));
+        assertEquals("6", Boolean.TRUE, row.getValue(5));
+        assertEquals("7", "    ", row.getValue(6));
+        assertEquals("8", "a\"b", row.getValue(7));
+        assertEquals("8", "a\"b", row.getValue(7));
+        assertNull("9", row.getValue(8));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testGetValueNoTrim_File() throws Exception {
+        URL url = ResourceUtil.getResource(PATH);
+        File file = ResourceUtil.getFile(url);
+        dataSet_ = new XlsReader(file, false).read();
         DataTable table = dataSet_.getTable(2);
         DataRow row = table.getRow(0);
         assertEquals("1", TimestampConversionUtil.toTimestamp("20040322",

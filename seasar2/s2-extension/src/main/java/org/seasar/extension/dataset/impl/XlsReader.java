@@ -163,7 +163,7 @@ public class XlsReader implements DataReader, DataSetConstants {
      *            文字列をトリムするかどうか
      */
     public XlsReader(File file, boolean trimString) {
-        this(FileInputStreamUtil.create(file));
+        this(FileInputStreamUtil.create(file), trimString);
     }
 
     /**
