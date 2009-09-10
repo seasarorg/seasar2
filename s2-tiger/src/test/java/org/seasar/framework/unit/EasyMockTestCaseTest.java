@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.unit;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.seasar.framework.unit.annotation.EasyMock;
@@ -32,6 +33,9 @@ public class EasyMockTestCaseTest extends EasyMockTestCase {
 
     @EasyMock(EasyMockType.STRICT)
     private Map<String, String> map;
+
+    @EasyMock
+    private Date date;
 
     /**
      * 
@@ -63,6 +67,20 @@ public class EasyMockTestCaseTest extends EasyMockTestCase {
         expect(map.put("a", "A")).andReturn(null);
         expect(map.put("b", "B")).andReturn(null);
         expect(map.size()).andReturn(2);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testClass() throws Exception {
+        assertEquals(100L, date.getTime());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void recordClass() throws Exception {
+        expect(date.getTime()).andReturn(100L);
     }
 
     /**

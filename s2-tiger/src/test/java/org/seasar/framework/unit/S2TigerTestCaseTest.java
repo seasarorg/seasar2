@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.unit;
 
+import java.util.Date;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -43,6 +44,9 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
 
     @EasyMock(EasyMockType.STRICT)
     Map<String, String> map;
+
+    @EasyMock
+    Date date;
 
     @EasyMock(register = true)
     DataSource dataSource;
@@ -164,6 +168,20 @@ public class S2TigerTestCaseTest extends S2TigerTestCase {
         expect(map.put("a", "A")).andReturn(null);
         expect(map.put("b", "B")).andReturn(null);
         expect(map.size()).andReturn(2);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testClass() throws Exception {
+        assertEquals(100L, date.getTime());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void recordClass() throws Exception {
+        expect(date.getTime()).andReturn(100L);
     }
 
     /**

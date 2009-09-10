@@ -89,9 +89,13 @@ font-size : 10pt;
 <p>Seasar2のEasyMockサポートを使うとEasyMockを利用するための定型的なコードの記述を減少することができるため，モックを使ったテストがより簡単になります．</p>
 <h3><a name="requisite" id="requisite">前提条件</a></h3>
 <ul>
-<li>Seasar2ではEasyMock2.2をサポートしています．</li>
-<li>EasyMock Class Extensionはサポートしていません．</li>
-<li>EasyMock2.2はJava5で導入されたGenericsを使用しているため，J2SE1.4では利用できません．</li>
+<li>Seasar2ではEasyMock2.4およびEasyMock Class Extension2.4をサポートしています．
+<ul>
+<li>EasyMock単体でも利用できます．</li>
+<li>EasyMock Class Extensionを使用するにはCGLIBも必要です．</li>
+</ul>
+</li>
+<li>EasyMock2.4はJava5で導入されたGenericsを使用しているため，J2SE1.4では利用できません．</li>
 <li>Seasar2のEasyMockサポートを利用するにはS2-Tigerが必要です．</li>
 </ul>
 <h3><a name="story">EasyMockを使ったテストの流れ</a></h3>

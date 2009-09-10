@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
-import org.easymock.EasyMock;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.unit.annotation.EasyMockType;
 import org.seasar.framework.util.FieldUtil;
@@ -31,6 +30,10 @@ import org.seasar.framework.util.tiger.CollectionsUtil;
  * @author koichik
  */
 public class EasyMockSupport {
+
+    // class fields
+    /** EasyMockの実装に委譲するオブジェクト */
+    protected static final EasyMockDelegator easyMock = getEasyMockDelegator();
 
     // instance fields
     /** モックのリスト */
@@ -49,7 +52,7 @@ public class EasyMockSupport {
      * @return 作成されたモック
      */
     public <T> T createMock(final Class<T> clazz) {
-        final T mock = EasyMock.createMock(clazz);
+        final T mock = easyMock.createMock(clazz);
         mocks.add(mock);
         return mock;
     }
@@ -64,7 +67,7 @@ public class EasyMockSupport {
      * @return 作成されたモック
      */
     public <T> T createNiceMock(final Class<T> clazz) {
-        final T mock = EasyMock.createNiceMock(clazz);
+        final T mock = easyMock.createNiceMock(clazz);
         mocks.add(mock);
         return mock;
     }
@@ -79,7 +82,7 @@ public class EasyMockSupport {
      * @return 作成された
      */
     public <T> T createStrictMock(final Class<T> clazz) {
-        final T mock = EasyMock.createStrictMock(clazz);
+        final T mock = easyMock.createStrictMock(clazz);
         mocks.add(mock);
         return mock;
     }
@@ -89,7 +92,7 @@ public class EasyMockSupport {
      */
     public void replay() {
         for (final Object mock : mocks) {
-            EasyMock.replay(mock);
+            easyMock.replay(mock);
         }
     }
 
@@ -99,7 +102,7 @@ public class EasyMockSupport {
      */
     public void verify() {
         for (final Object mock : mocks) {
-            EasyMock.verify(mock);
+            easyMock.verify(mock);
         }
     }
 
@@ -108,7 +111,7 @@ public class EasyMockSupport {
      */
     public void reset() {
         for (final Object mock : mocks) {
-            EasyMock.reset(mock);
+            easyMock.reset(mock);
         }
     }
 
@@ -141,9 +144,10 @@ public class EasyMockSupport {
     /**
      * モックをフィールドにバインディングします。
      * <p>
-     * {@link org.seasar.framework.unit.annotation.EasyMock}が注釈されたフィールドがモックのバインディング対象です。
-     * {@link org.seasar.framework.unit.annotation.EasyMock#register()}に<code>true</code>が指定されている場合、
-     * 作成されたモックはS2コンテナに登録されます。
+     * {@link org.seasar.framework.unit.annotation.EasyMock}
+     * が注釈されたフィールドがモックのバインディング対象です。
+     * {@link org.seasar.framework.unit.annotation.EasyMock#register()}に
+     * <code>true</code>が指定されている場合、 作成されたモックはS2コンテナに登録されます。
      * </p>
      * 
      * @param field
@@ -198,6 +202,21 @@ public class EasyMockSupport {
             }
         }
         boundFields.clear();
+    }
+
+    /**
+     * {@link EasyMockDelegator}の実装クラスを返します。
+     * 
+     * @return {@link EasyMockDelegator}の実装クラス
+     */
+    protected static EasyMockDelegator getEasyMockDelegator() {
+        try {
+            Class.forName("org.easymock.classextension.EasyMock");
+            Class.forName("net.sf.cglib.proxy.Enhancer");
+            return new ClassExtensionEacyMockDelegator();
+        } catch (final Throwable t) {
+        }
+        return new DefaultEacyMockDelegator();
     }
 
 }
