@@ -85,4 +85,20 @@ public class PropertyName<T> implements CharSequence {
         return name;
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj instanceof CharSequence) {
+            return name.equals(obj.toString());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
 }

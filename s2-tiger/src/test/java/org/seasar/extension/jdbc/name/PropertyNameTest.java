@@ -15,6 +15,10 @@
  */
 package org.seasar.extension.jdbc.name;
 
+import java.util.Map;
+
+import org.seasar.framework.util.tiger.CollectionsUtil;
+
 import junit.framework.TestCase;
 
 /**
@@ -62,8 +66,24 @@ public class PropertyNameTest extends TestCase {
      * @throws Exception
      */
     public void testNestRelationshipProperty() throws Exception {
-        assertEquals("bbb.ccc.ccc1", new Aaa().bbb().ccc().ccc1()
-                .toString());
+        assertEquals("bbb.ccc.ccc1", new Aaa().bbb().ccc().ccc1().toString());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testEquals() throws Exception {
+        assertTrue(new Aaa().aaa1().equals(new Aaa().aaa1()));
+        assertTrue(new Aaa().aaa1().equals("aaa1"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testHashcode() throws Exception {
+        Map<CharSequence, String> map = CollectionsUtil.newHashMap();
+        map.put(new Aaa().aaa1(), "hoge");
+        assertEquals("hoge", map.get(new Aaa().aaa1()));
     }
 
     /**
