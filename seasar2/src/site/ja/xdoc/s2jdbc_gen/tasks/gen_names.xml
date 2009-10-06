@@ -59,6 +59,11 @@
 									<a href="#生成するJavaファイルにauthorを指定する">生成するJavaファイルにauthorを指定する</a>
 								</p>
 							</li>
+							<li>
+								<p>
+									<a href="#名前集約クラスを利用する">名前集約クラスを利用する</a>
+								</p>
+							</li>
 						</ul>
 					</p>
 				</li>
@@ -207,6 +212,9 @@ public class AddressNames {
 					<tr><td>namesPackageName</td><td>名前クラスのパッケージ名です。名前クラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されます。</td><td>"entity"</td><td>NO</td></tr>
 					<tr><td>namesClassNameSuffix</td><td>名前クラス名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
 					<tr><td>namesTemplateFileName</td><td>名前クラスのテンプレートファイル名です。</td><td>"java/names.ftl"</td><td>NO</td></tr>
+					<tr><td>generateNamesAggregateClass</td><td>"true"の場合、名前集約クラスを生成します。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>namesAggregateClassSimpleName</td><td>名前集約クラスの単純名です。</td><td>"Names"</td><td>NO</td></tr>
+					<tr><td>namesAggregateTemplateFileName</td><td>名前集約クラスのテンプレートファイル名です。</td><td>"java/names-aggregate.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
 					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
@@ -310,6 +318,24 @@ public class AddressNames {
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"
 />]]></source>
+			</subsection>
+			<subsection name="名前集約クラスを利用する">
+				<p>
+					名前集約クラスをstatic importすると、個々の名前クラスを選択的にstatic importする手間が省けます。
+					名前集約クラスは名前クラスをstaticなメソッドで提供するためです。
+					名前集約クラスは、名前クラスが生成されるパッケージと同じパッケージに自動で生成されます。
+					クラスのデフォルトの単純名は「Names」です。この名前はnamesAggregateClassSimpleName属性で変更できます。
+				</p>
+					名前集約クラスを利用すると、<a href="#概要">概要</a>の例は次のようになります。
+				<p>
+<source><![CDATA[List<Address> list = jdbcManager
+    .from(Address.class)
+    .innerJoin(address().employee())
+    .where(eq(address().city(), "TOKYO"))
+    .getResultList();
+]]></source>
+					address()が名前集約クラスのstaticなメソッドです。
+				</p>
 			</subsection>
 		</section>
 	</body>

@@ -44,6 +44,7 @@ import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.NamesAggregateModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
@@ -460,6 +461,20 @@ public interface Factory {
      */
     NamesModelFactory createNamesModelFactory(Command command,
             String packageName, String namesClassNameSuffix);
+
+    /**
+     * {@link NamesAggregateModelFactory}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param packageName
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
+     * @param shortClassName
+     *            名前集約クラスの単純名
+     * @return {@link NamesAggregateModelFactory}の実装
+     */
+    NamesAggregateModelFactory createNamesAggregateModelFactory(
+            Command command, String packageName, String shortClassName);
 
     /**
      * {@link SchemaInfoTable}の実装を作成します。

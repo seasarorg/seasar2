@@ -205,6 +205,40 @@ public class GenerateNamesTask extends AbstractTask {
         command.setNamesTemplateFileName(namesTemplateFileName);
     }
 
+    /**
+     * 名前集約クラスを生成する場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param generateNamesAggregateClass
+     *            名前集約クラスを生成する場合{@code true}、しない場合{@code false}
+     */
+    public void setGenerateNamesAggregateClass(
+            boolean generateNamesAggregateClass) {
+        command.setGenerateNamesAggregateClass(generateNamesAggregateClass);
+    }
+
+    /**
+     * 名前集約クラスの単純名を設定します。
+     * 
+     * @param namesAggregateClassSimpleName
+     *            名前集約クラスの単純名
+     */
+    public void setNamesAggregateClassSimpleName(
+            String namesAggregateClassSimpleName) {
+        command.setNamesAggregateClassSimpleName(namesAggregateClassSimpleName);
+    }
+
+    /**
+     * 名前集約クラスのテンプレート名を設定します。
+     * 
+     * @param namesAggregateTemplateFileName
+     *            名前集約クラスのテンプレート名
+     */
+    public void setNamesAggregateTemplateFileName(
+            String namesAggregateTemplateFileName) {
+        command
+                .setNamesAggregateTemplateFileName(namesAggregateTemplateFileName);
+    }
+
     @Override
     protected Command getCommand() {
         return command;

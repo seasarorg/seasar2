@@ -16,6 +16,8 @@
 package org.seasar.extension.jdbc.gen.internal.command;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.seasar.extension.jdbc.EntityMeta;
 import org.seasar.extension.jdbc.gen.command.Command;
@@ -25,6 +27,8 @@ import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRunt
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.meta.EntityMetaReader;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
+import org.seasar.extension.jdbc.gen.model.NamesAggregateModel;
+import org.seasar.extension.jdbc.gen.model.NamesAggregateModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModel;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.framework.log.Logger;
@@ -88,11 +92,23 @@ public class GenerateNamesCommand extends AbstractCommand {
     /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = true;
 
+    /** 名前集約クラスを生成する場合{@code true}、しない場合{@code false} */
+    protected boolean generateNamesAggregateClass = true;
+
+    /** 名前集約クラスの単純名 */
+    protected String namesAggregateClassSimpleName = "Names";
+
+    /** 名前集約クラスのテンプレート名 */
+    protected String namesAggregateTemplateFileName = "java/names-aggregate.ftl";
+
     /** エンティティメタデータのリーダ */
     protected EntityMetaReader entityMetaReader;
 
     /** 名前モデルのファクトリ */
     protected NamesModelFactory namesModelFactory;
+
+    /** 名前集約モデルのファクトリ */
+    protected NamesAggregateModelFactory namesAggregateModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
@@ -351,6 +367,66 @@ public class GenerateNamesCommand extends AbstractCommand {
         this.templateFilePrimaryDir = templateFilePrimaryDir;
     }
 
+    /**
+     * 名前集約クラスを生成する場合{@code true}、しない場合{@code false}を返します。
+     * 
+     * @return 名前集約クラスを生成する場合{@code true}、しない場合{@code false}
+     */
+    public boolean isGenerateNamesAggregateClass() {
+        return generateNamesAggregateClass;
+    }
+
+    /**
+     * 名前集約クラスを生成する場合{@code true}、しない場合{@code false}を設定します。
+     * 
+     * @param generateNamesAggregateClass
+     *            名前集約クラスを生成する場合{@code true}、しない場合{@code false}
+     */
+    public void setGenerateNamesAggregateClass(
+            boolean generateNamesAggregateClass) {
+        this.generateNamesAggregateClass = generateNamesAggregateClass;
+    }
+
+    /**
+     * 名前集約クラスの単純名を返します。
+     * 
+     * @return 名前集約クラスの単純名
+     */
+    public String getNamesAggregateClassSimpleName() {
+        return namesAggregateClassSimpleName;
+    }
+
+    /**
+     * 名前集約クラスの単純名を設定します。
+     * 
+     * @param namesAggregateClassSimpleName
+     *            名前集約クラスの単純名
+     */
+    public void setNamesAggregateClassSimpleName(
+            String namesAggregateClassSimpleName) {
+        this.namesAggregateClassSimpleName = namesAggregateClassSimpleName;
+    }
+
+    /**
+     * 名前集約クラスのテンプレート名を返します。
+     * 
+     * @return 名前集約クラスのテンプレート名
+     */
+    public String getNamesAggregateTemplateFileName() {
+        return namesAggregateTemplateFileName;
+    }
+
+    /**
+     * 名前集約クラスのテンプレート名を設定します。
+     * 
+     * @param namesAggregateTemplateFileName
+     *            名前集約クラスのテンプレート名
+     */
+    public void setNamesAggregateTemplateFileName(
+            String namesAggregateTemplateFileName) {
+        this.namesAggregateTemplateFileName = namesAggregateTemplateFileName;
+    }
+
     @Override
     protected void doValidate() {
         if (classpathDir == null) {
@@ -362,13 +438,24 @@ public class GenerateNamesCommand extends AbstractCommand {
     protected void doInit() {
         entityMetaReader = createEntityMetaReader();
         namesModelFactory = createNamesModelFactory();
+        namesAggregateModelFactory = createNamesAggregateModelFactory();
         generator = createGenerator();
     }
 
     @Override
     protected void doExecute() {
+        List<NamesModel> namesModelList = new ArrayList<NamesModel>();
         for (EntityMeta entityMeta : entityMetaReader.read()) {
-            generateNames(entityMeta);
+            NamesModel namesModel = namesModelFactory.getNamesModel(entityMeta);
+            generateNames(namesModel);
+            if (generateNamesAggregateClass) {
+                namesModelList.add(namesModel);
+            }
+        }
+        if (namesModelList.size() > 0) {
+            NamesAggregateModel namesAggregateModel = namesAggregateModelFactory
+                    .getNamesAggregateModel(namesModelList);
+            generateNamesAggregate(namesAggregateModel);
         }
     }
 
@@ -379,13 +466,25 @@ public class GenerateNamesCommand extends AbstractCommand {
     /**
      * 名前クラスのJavaファイルを生成します。
      * 
-     * @param entityMeta
-     *            エンティティメタデータ
+     * @param namesModel
+     *            名前モデル
      */
-    protected void generateNames(EntityMeta entityMeta) {
-        NamesModel model = namesModelFactory.getNamesModel(entityMeta);
-        GenerationContext context = createGenerationContext(model,
+    protected void generateNames(NamesModel namesModel) {
+        GenerationContext context = createGenerationContext(namesModel,
                 namesTemplateFileName);
+        generator.generate(context);
+    }
+
+    /**
+     * 名前集約クラスのJavaファイルを生成します。
+     * 
+     * @param namesAggregateModel
+     *            名前集約モデル
+     */
+    protected void generateNamesAggregate(
+            NamesAggregateModel namesAggregateModel) {
+        GenerationContext context = createGenerationContext(
+                namesAggregateModel, namesAggregateTemplateFileName);
         generator.generate(context);
     }
 
@@ -426,6 +525,17 @@ public class GenerateNamesCommand extends AbstractCommand {
     protected NamesModelFactory createNamesModelFactory() {
         return factory.createNamesModelFactory(this, ClassUtil.concatName(
                 rootPackageName, namesPackageName), namesClassNameSuffix);
+    }
+
+    /**
+     * {@link NamesAggregateModelFactory}の実装を作成します。
+     * 
+     * @return {@link NamesAggregateModelFactory}の実装
+     */
+    protected NamesAggregateModelFactory createNamesAggregateModelFactory() {
+        return factory.createNamesAggregateModelFactory(this, ClassUtil
+                .concatName(rootPackageName, namesPackageName),
+                namesAggregateClassSimpleName);
     }
 
     /**

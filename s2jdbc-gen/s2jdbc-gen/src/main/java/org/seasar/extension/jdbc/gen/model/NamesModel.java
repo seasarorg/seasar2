@@ -27,6 +27,9 @@ import java.util.List;
 public class NamesModel extends ClassModel {
 
     /** エンティティクラスの単純名 */
+    protected String entityClassName;
+
+    /** エンティティクラスの単純名 */
     protected String shortEntityClassName;
 
     /** 内部クラスの単純名 */
@@ -37,6 +40,25 @@ public class NamesModel extends ClassModel {
 
     /** 名前の関連モデルのリスト */
     protected List<NamesAssociationModel> namesAssociationModelList = new ArrayList<NamesAssociationModel>();
+
+    /**
+     * エンティティクラス名を返します。
+     * 
+     * @return エンティティクラス名
+     */
+    public String getEntityClassName() {
+        return entityClassName;
+    }
+
+    /**
+     * エンティティクラス名を設定します。
+     * 
+     * @param entityClassName
+     *            エンティティクラス名
+     */
+    public void setEntityClassName(String entityClassName) {
+        this.entityClassName = entityClassName;
+    }
 
     /**
      * エンティティクラスの単純名を返します。

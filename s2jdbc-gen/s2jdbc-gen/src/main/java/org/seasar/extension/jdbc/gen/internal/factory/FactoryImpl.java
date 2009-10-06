@@ -51,6 +51,7 @@ import org.seasar.extension.jdbc.gen.internal.model.ConditionAttributeModelFacto
 import org.seasar.extension.jdbc.gen.internal.model.ConditionModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.EntityTestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.NamesAggregateModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceTestModelFactoryImpl;
@@ -69,6 +70,7 @@ import org.seasar.extension.jdbc.gen.model.AbstServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ConditionModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityModelFactory;
 import org.seasar.extension.jdbc.gen.model.EntityTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.NamesAggregateModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
@@ -256,6 +258,12 @@ public class FactoryImpl implements Factory {
             String packageName, String namesClassNameSuffix) {
 
         return new NamesModelFactoryImpl(packageName, namesClassNameSuffix);
+    }
+
+    public NamesAggregateModelFactory createNamesAggregateModelFactory(
+            Command command, String packageName, String shortClassName) {
+
+        return new NamesAggregateModelFactoryImpl(packageName, shortClassName);
     }
 
     public SchemaInfoTable createSchemaInfoTable(Command command,

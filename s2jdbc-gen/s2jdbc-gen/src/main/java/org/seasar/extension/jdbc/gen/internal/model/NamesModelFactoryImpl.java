@@ -71,6 +71,7 @@ public class NamesModelFactoryImpl implements NamesModelFactory {
         namesModel.setShortClassName(shortClassName);
         namesModel.setShortInnerClassName(INNER_CLASS_NAME_PREFIX
                 + shortClassName);
+        namesModel.setEntityClassName(entityMeta.getEntityClass().getName());
         namesModel.setShortEntityClassName(entityMeta.getEntityClass()
                 .getSimpleName());
         for (PropertyMeta propertyMeta : entityMeta.getAllPropertyMeta()) {
