@@ -23,23 +23,26 @@ import org.seasar.extension.jdbc.gen.command.Command;
 import org.seasar.extension.jdbc.gen.generator.GenerationContext;
 import org.seasar.extension.jdbc.gen.generator.Generator;
 import org.seasar.extension.jdbc.gen.internal.exception.RequiredPropertyNullRuntimeException;
+import org.seasar.extension.jdbc.gen.internal.model.SqlFileConstantNamingRuleImpl;
 import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
+import org.seasar.extension.jdbc.gen.internal.util.ReflectUtil;
 import org.seasar.extension.jdbc.gen.model.ClassModel;
-import org.seasar.extension.jdbc.gen.model.SqlFileTestModel;
-import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantNamingRule;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantsModel;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantsModelFactory;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.ClassUtil;
 
 /**
- * SQLファイルに対するテストクラスのJavaファイルを生成する{@link Command}の実装です。
+ * SQLファイルの定数クラスのJavaファイルを生成する{@link Command}の実装です。
  * 
  * @author taedium
  */
-public class GenerateSqlFileTestCommand extends AbstractCommand {
+public class GenerateSqlFileConstantsCommand extends AbstractCommand {
 
     /** ロガー */
     protected static Logger logger = Logger
-            .getLogger(GenerateSqlFileTestCommand.class);
+            .getLogger(GenerateSqlFileConstantsCommand.class);
 
     /** クラスパスのディレクトリ */
     protected File classpathDir;
@@ -50,17 +53,14 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
-    /** エンティティパッケージ名 */
-    protected String entityPackageName = "entity";
+    /** サブパッケージ名 */
+    protected String subPackageName = "";
 
-    /** 生成するテストクラスの単純名 */
-    protected String shortClassName = "SqlFileTest";
-
-    /** テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false} */
-    protected boolean useS2junit4;
+    /** 生成する定数クラスの単純名 */
+    protected String shortClassName = "SqlFiles";
 
     /** テストクラスのテンプレート名 */
-    protected String templateFileName = "java/sqlfiletest.ftl";
+    protected String templateFileName = "java/sqlfileconstants.ftl";
 
     /** テンプレートファイルのエンコーディング */
     protected String templateFileEncoding = "UTF-8";
@@ -69,7 +69,7 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     protected File templateFilePrimaryDir = null;
 
     /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaFileDestDir = new File(new File("src", "main"), "java");
+    protected File javaFileDestDir = new File(new File("src", "test"), "java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
@@ -77,29 +77,36 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     /** 上書きをする場合{@code true}、しない場合{@code false} */
     protected boolean overwrite = true;
 
-    /** SQLファイルテストのモデルのファクトリ */
-    protected SqlFileTestModelFactory sqlFileTestModelFactory;
+    /** {@link SqlFileConstantNamingRule}の実装クラス名 */
+    protected String sqlFileConstantNamingRuleClassName = SqlFileConstantNamingRuleImpl.class
+            .getName();
+
+    /** SQLファイルのパスを表す定数の名前付けルール */
+    protected SqlFileConstantNamingRule sqlFileConstantNamingRule;
+
+    /** SQLファイル定数モデルのファクトリ */
+    protected SqlFileConstantsModelFactory sqlFileConstantsModelFactory;
 
     /** ジェネレータ */
     protected Generator generator;
 
     /**
-     * エンティティのパッケージ名を返します。
+     *サブパッケージ名を返します。
      * 
-     * @return エンティティのパッケージ名
+     * @return サブパッケージ名
      */
-    public String getEntityPackageName() {
-        return entityPackageName;
+    public String getSubPackageName() {
+        return subPackageName;
     }
 
     /**
-     * エンティティのパッケージ名を設定します。
+     * サブパッケージ名を設定します。
      * 
-     * @param entityPackageName
-     *            エンティティのパッケージ名
+     * @param subPackageName
+     *            サブパッケージ名
      */
-    public void setEntityPackageName(String entityPackageName) {
-        this.entityPackageName = entityPackageName;
+    public void setSubPackageName(String subPackageName) {
+        this.subPackageName = subPackageName;
     }
 
     /**
@@ -274,41 +281,42 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     }
 
     /**
-     * 生成するテストクラスの単純名を返します。
+     * 生成する定数クラスの単純名を返します。
      * 
-     * @return 生成するテストクラスの単純名
+     * @return 生成する定数クラスの単純名
      */
     public String getShortClassName() {
         return shortClassName;
     }
 
     /**
-     * 生成するテストクラスの単純名を設定します。
+     * 生成する定数クラスの単純名を設定します。
      * 
      * @param shortClassName
-     *            生成するテストクラスの単純名
+     *            生成する定数クラスの単純名
      */
     public void setShortClassName(String shortClassName) {
         this.shortClassName = shortClassName;
     }
 
     /**
-     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を返します。
+     * {@link SqlFileConstantNamingRule}の実装クラス名を返します。
      * 
-     * @return テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     * @return {@link SqlFileConstantNamingRule}の実装クラス名
      */
-    public boolean isUseS2junit4() {
-        return useS2junit4;
+    public String getSqlFileConstantNamingRuleClassName() {
+        return sqlFileConstantNamingRuleClassName;
     }
 
     /**
-     * テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}を設定します。
+     * {@link SqlFileConstantNamingRule}の実装クラス名を設定します。
      * 
-     * @param useS2junit4
-     *            テストクラスでS2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     * @param sqlFileConstantNamingRuleClassName
+     *            {@link SqlFileConstantNamingRule}の実装クラス名
      */
-    public void setUseS2junit4(boolean useS2junit4) {
-        this.useS2junit4 = useS2junit4;
+    public void setSqlFileConstantNamingRuleClassName(
+            String sqlFileConstantNamingRuleClassName) {
+        this.sqlFileConstantNamingRuleClassName = sqlFileConstantNamingRuleClassName;
     }
 
     @Override
@@ -323,13 +331,17 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
      */
     @Override
     protected void doInit() {
-        sqlFileTestModelFactory = createSqlFileTestModelFactory();
+        sqlFileConstantNamingRule = ReflectUtil.newInstance(
+                SqlFileConstantNamingRule.class,
+                sqlFileConstantNamingRuleClassName);
+        sqlFileConstantsModelFactory = createSqlFileConstantsModelFactory();
         generator = createGenerator();
     }
 
     @Override
     protected void doExecute() {
-        SqlFileTestModel model = sqlFileTestModelFactory.getSqlFileTestModel();
+        SqlFileConstantsModel model = sqlFileConstantsModelFactory
+                .getSqlFileConstantsModel();
         GenerationContext context = createGenerationContext(model,
                 templateFileName);
         generator.generate(context);
@@ -340,15 +352,14 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     }
 
     /**
-     * {@link SqlFileTestModelFactory}の実装を作成します。
+     * {@link SqlFileConstantsModelFactory}の実装を作成します。
      * 
-     * @return {@link SqlFileTestModelFactory}の実装
+     * @return {@link SqlFileConstantsModelFactory}の実装
      */
-    protected SqlFileTestModelFactory createSqlFileTestModelFactory() {
-        return factory.createSqlFileTestModelFactory(this, classpathDir,
-                sqlFileSet, configPath, jdbcManagerName, ClassUtil.concatName(
-                        rootPackageName, entityPackageName), shortClassName,
-                useS2junit4);
+    protected SqlFileConstantsModelFactory createSqlFileConstantsModelFactory() {
+        return factory.createSqlFileConstantsModelFactory(this, classpathDir,
+                sqlFileSet, sqlFileConstantNamingRule, ClassUtil.concatName(
+                        rootPackageName, subPackageName), shortClassName);
     }
 
     /**

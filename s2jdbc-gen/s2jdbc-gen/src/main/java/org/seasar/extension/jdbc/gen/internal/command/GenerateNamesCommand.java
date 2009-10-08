@@ -96,7 +96,7 @@ public class GenerateNamesCommand extends AbstractCommand {
     protected boolean generateNamesAggregateClass = true;
 
     /** 名前集約クラスの単純名 */
-    protected String namesAggregateClassSimpleName = "Names";
+    protected String namesAggregateShortClassName = "Names";
 
     /** 名前集約クラスのテンプレート名 */
     protected String namesAggregateTemplateFileName = "java/names-aggregate.ftl";
@@ -392,19 +392,19 @@ public class GenerateNamesCommand extends AbstractCommand {
      * 
      * @return 名前集約クラスの単純名
      */
-    public String getNamesAggregateClassSimpleName() {
-        return namesAggregateClassSimpleName;
+    public String getNamesAggregateShortClassName() {
+        return namesAggregateShortClassName;
     }
 
     /**
      * 名前集約クラスの単純名を設定します。
      * 
-     * @param namesAggregateClassSimpleName
+     * @param namesAggregateShortClassName
      *            名前集約クラスの単純名
      */
-    public void setNamesAggregateClassSimpleName(
-            String namesAggregateClassSimpleName) {
-        this.namesAggregateClassSimpleName = namesAggregateClassSimpleName;
+    public void setNamesAggregateShortClassName(
+            String namesAggregateShortClassName) {
+        this.namesAggregateShortClassName = namesAggregateShortClassName;
     }
 
     /**
@@ -535,7 +535,7 @@ public class GenerateNamesCommand extends AbstractCommand {
     protected NamesAggregateModelFactory createNamesAggregateModelFactory() {
         return factory.createNamesAggregateModelFactory(this, ClassUtil
                 .concatName(rootPackageName, namesPackageName),
-                namesAggregateClassSimpleName);
+                namesAggregateShortClassName);
     }
 
     /**

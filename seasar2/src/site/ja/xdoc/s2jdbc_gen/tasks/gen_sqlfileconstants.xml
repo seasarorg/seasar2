@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<document>
+	<properties>
+		<title>S2JDBC-Gen - Gen-SqlFileConstants</title>
+	</properties>
+	<body>
+		<section name="Gen-SqlFileConstants">
+			<ul>
+				<li>
+					<p>
+						<a href="#説明">説明</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#概要">概要</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#パラメータ">パラメータ</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#トップレベルのパラメータ">トップレベルのパラメータ</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#ネストした要素として指定されるパラメータ">ネストした要素として指定されるパラメータ</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+				<li>
+					<p>
+						<a href="#例">例</a>
+						<ul>
+							<li>
+								<p>
+									<a href="#SQLファイルを指定する">SQLファイルを指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#独自のテンプレートファイルを使用する">独自のテンプレートファイルを使用する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#生成するJavaファイルに共通のヘッダーとしてコピーライトを含める">生成するJavaファイルに共通のヘッダーとしてコピーライトを含める</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#生成するJavaファイルにauthorを指定する">生成するJavaファイルにauthorを指定する</a>
+								</p>
+							</li>
+							<li>
+								<p>
+									<a href="#定数の名前付けルールを変更する">定数の名前付けルールを変更する</a>
+								</p>
+							</li>
+						</ul>
+					</p>
+				</li>
+			</ul>
+		</section>
+		<section name="説明">
+			<subsection name="概要">
+				<p>
+					SQLファイルの定数クラスを作成します。
+					ここでのSQLファイルとは、JdbcManagerの<a href="../../s2jdbc_manager_sqlfile.html">SQLファイルによる操作</a>で使用されるSQLファイルを指します。
+				</p>
+				<p>
+					例えば、次のようなコードを生成できます。
+				</p>
+<source><![CDATA[/**
+ * SQLファイルの定数クラスです。
+ *
+ */
+public final class SqlFiles {
+
+    /**
+     * {@code META-INF/sql/Address/getStreet.sql}の定数です。
+     */
+    public static final String ADDRESS_GET_STREET = "META-INF/sql/Address/getStreet.sql";
+
+    /**
+     * {@code META-INF/sql/Employee/updateEmployeeName.sql}の定数です。
+     */
+    public static final String EMPLOYEE_UPDATE_EMPLOYEE_NAME = "META-INF/sql/Employee/updateEmployeeName.sql";
+}]]></source>
+				<p>
+					定数クラスを使用することで、
+					JdbcManagerの<a href="../../s2jdbc_manager_sqlfile.html">SQLファイルによる操作</a>において存在しないパスを指定してしまうなどのミスを防げます。
+				</p>
+				<p>
+					定数クラスは次のように使用できます。
+				</p>
+<source><![CDATA[int count = jdbcManager.updateBySqlFile(
+    SqlFiles.EMPLOYEE_UPDATE_EMPLOYEE_NAME, param)
+    .execute();
+]]></source>
+			</subsection>
+		</section>
+		<section name="パラメータ">
+			<p>
+				Antタスクへのパラメータを以下に示します。
+			</p>
+			<subsection name="トップレベルのパラメータ">
+				<table border="1" cellpadding="2" cellspacing="0">
+					<tr><th>属性</th><th>説明</th><th>デフォルト値</th><th>必須</th></tr>
+					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
+					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
+					<tr><td>subPackageName</td><td>定数クラスのサブパッケージ名です。定数クラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。この値が空文字の場合は、定数クラスは、rootPackageNameで表されるパッケージに配置されているとみなされます。</td><td>""</td><td>NO</td></tr>
+					<tr><td>shortClassName</td><td>定数クラス名です。</td><td>"SqlFiles"</td><td>NO</td></tr>
+					<tr><td>sqlFileConstantNamingRuleClassName</td><td>SQLファイルの定数の名前付けルールを表すクラスの名前です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.model.SqlFileConstantNamingRuleインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.model.SqlFileConstantNamingRuleImpl"</td><td>NO</td></tr>
+					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/sqlfileconstants.ftl"</td><td>NO</td></tr>
+					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>
+					<tr><td>javaFileDestDir</td><td>Javaファイルの出力先ディレクトリです。</td><td>"src/main/java"</td><td>NO</td></tr>
+					<tr><td>javaFileEncoding</td><td>Javaファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
+					<tr><td>overwrite</td><td>"true"の場合、テストクラスのJavaファイルを上書きします。</td><td>"true"</td><td>NO</td></tr>
+					<tr><td>configPath</td><td>JdbcManagerのコンポーネント定義を含む設定ファイルです。このタスクの実行に使用されます。また、テストコードではこの設定ファイルがincludeされます。</td><td>"s2jdbc.dicon"</td><td>NO</td></tr>
+					<tr><td>env</td><td>環境名です。</td><td>"ut"</td><td>NO</td></tr>
+					<tr><td>jdbcManagerName</td><td>JdbcManagerのコンポーネント名です。接続先のデータベースはJdbcManagerのコンポーネント名によって決まります。</td><td>"jdbcManager"</td><td>NO</td></tr>
+					<tr><td>factoryClassName</td><td>S2JDBC-Genの公開されたインタフェースの実装を作成するファクトリのクラス名です。S2JDBC-Genをカスタマイズする場合に独自のファクトリクラスを指定できます。ここに指定するクラスはorg.seasar.extension.jdbc.gen.internal.factory.Factoryインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.factory.FactoryImpl"</td><td>NO</td></tr>
+					<tr><td>commandInvokerClassName</td><td>S2JDBC-Genのコマンドを呼び出すクラスの名前です。コマンドの呼び出し前後で任意の処理を実行したい場合に指定します。ここに指定するクラスはorg.seasar.extension.jdbc.gen.command.CommandInvokerインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen<br />.internal.command.CommandInvokerImpl"</td><td>NO</td></tr>
+					<tr><td>classpath</td><td>このタスクを実行する際のクラスパスです。</td><td>-</td><td>classpathrefが指定されていない場合YES</td></tr>
+					<tr><td>classpathref</td><td>このタスクを実行する際のクラスパスの参照です。</td><td>-</td><td>classpathが指定されていない場合YES</td></tr>
+				</table>
+			</subsection>
+			<subsection name="ネストした要素として指定されるパラメータ">
+				<h4>
+					SqlFileSet
+				</h4>
+				<p>
+					SQLファイルを指定するためには、&lt;SqlFileSet&gt;要素を使用します。
+					&lt;SqlFileSet&gt;はAntの&lt;FileSet&gt;と同じです。
+					使用可能な属性やネストした要素についてはAntのドキュメントを参照してください。
+				</p>
+				<h4>
+					jvmArg
+				</h4>
+				<p>
+					このタスクの大部分の処理は別VMで行われます。VMに引数を渡す場合は&lt;jvmarg&gt;要素を使用します。
+					これはAntのJavaタスクで使用できる&lt;jvmarg&gt;と同じです。
+					使用可能な属性やネストした要素についてはAntのドキュメントを参照してください。
+				</p>
+			</subsection>
+		</section>
+		<section name="例">
+			<subsection name="SQLファイルを指定する">
+				<p>
+					SQLファイルを指定するには、&lt;SqlFileSet&gt;を使用します。
+					SQLファイルはclasspathDir属性に指定されるディレクトリ以下に存在している必要があります。
+				</p>
+<source><![CDATA[<gen-sqlfileconstants
+    classpathDir="build/classes"
+    rootpackagename="examples"
+    classpathref="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfileconstants>]]></source>
+				<p>
+					上記の定義を利用すると、META-INF/sqlディレクトリ以下の「.sql」という拡張子を持つファイルが対象になります。
+				</p>
+			</subsection>
+			<subsection name="独自のテンプレートファイルを使用する">
+				<p>
+					任意のディレクトリに独自のテンプレートファイルを置き、templateFilePrimaryDir属性にそのディレクトリを指定することで、
+					独自のテンプレートファイルを使用できます。
+				</p>
+				<p>
+					S2JDBC-Genのテンプレートは、配布ファイルのresources/tempaltesディレクトリ以下にあります。
+					SQLファイルのテストクラスのテンプレートはjava/sqlfileconstants.ftlになります。
+					これをコピーして、修正を加えるのが良いでしょう。
+					テンプレートの記述方法については<a href="http://freemarker.sourceforge.net/">FreeMarker</a>のドキュメントを参照してください。
+				</p>
+				<p>
+					テンプレートファイルを格納するディレクトリをmytempletesとする場合、
+					修正した独自テンプレートを使用するにはテンプレートをmytempletes/java/sqlfileconstants.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
+				</p>
+<source><![CDATA[<gen-sqlfileconstants
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfileconstants>]]></source>
+				<p>
+					mytempletes/my-sqlfileconstants.ftlのように、テンプレートファイルを任意の名前で配置したい場合は、
+					templateFilePrimaryDir属性に加え、templateFileName属性も指定します。
+				</p>
+<source><![CDATA[<gen-sqlfileconstants
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    templateFileName="my-sqlfileconstants.ftl"
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfileconstants>]]></source>
+			</subsection>
+			<subsection name="生成するJavaファイルに共通のヘッダーとしてコピーライトを含める">
+				<p>
+					lib.ftlというファイルを作成し、これをtemplateFilePrimaryDir属性に指定するディレクトリに配置します。
+					lib.ftlには次のようにcopyrightの定義をします。
+<source><![CDATA[<#assign copyright>
+/*
+ * Copyright 2008-2009 ...
+ * All rights reserved.
+ */
+</#assign>]]></source>
+					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
+				</p>
+<source><![CDATA[<gen-sqlfileconstants
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfileconstants>]]></source>
+				<p>
+					copyright.ftlにコピーライトを記述することもできます（過去バージョンとの互換機能として残されています）。
+					copyright.ftlを使う場合は、#assignタグを使わずコピーライトのみを指定してください。
+					lib.ftlと同様、copyright.ftlはtemplateFilePrimaryDir属性に指定するディレクトリに配置する必要があります。
+				</p>
+			</subsection>
+			<subsection name="生成するJavaファイルにauthorを指定する">
+				<p>
+					lib.ftlというファイルを作成し、これをtemplateFilePrimaryDir属性に指定するディレクトリに配置します。
+					lib.ftlには次のようにauthorの定義をします。
+<source><![CDATA[<#assign author="Nakamura">]]></source>
+					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
+				</p>
+<source><![CDATA[<gen-sqlfileconstants
+    rootPackageName="examples"
+    templateFilePrimaryDir="mytempletes"
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfileconstants>]]></source>
+			</subsection>
+			<subsection name="定数の名前付けルールを変更する">
+				<p>
+					デフォルトの名前付けルールは、SQLファイルのディレクトリ名とファイル名をキャメルケースから大文字のアンダースコア（_）区切りに変換し、
+					両者をアンダースコア（_）で連結したものを定数名とします。
+				</p>
+				<p>
+					この名前付けルールを変更するには、org.seasar.extension.jdbc.gen.model.SqlFileConstantNamingRuleインタフェースを実装したクラスを作成し、
+					クラス名をsqlFileConstantNamingRuleClassName属性に指定します。
+				</p>
+				<p>
+					example.MySqlFileConstantNamingRuleというクラスを作成した場合、次のように指定します。
+				</p>
+<source><![CDATA[<gen-sqlfileconstants
+    rootPackageName="examples"
+    sqlFileConstantNamingRuleClassName="example.MySqlFileConstantNamingRule"
+    classpathRef="classpath">
+    <sqlfileset dir="build/classes">
+        <include name="META-INF/sql/**/*.sql" />
+    </sqlfileset>
+</gen-sqlfileconstants>]]></source>
+			</subsection>
+		</section>
+	</body>
+</document>

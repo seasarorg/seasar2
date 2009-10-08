@@ -87,11 +87,11 @@ public class SqlFileTestModel extends TestClassModel {
     /**
      * SQLファイルのパスを追加します。
      * 
-     * @param SqlFilePath
+     * @param sqlFilePath
      *            SQLファイルのパス
      */
-    public void addSqlFilePath(String SqlFilePath) {
-        sqlFilePathList.add(SqlFilePath);
+    public void addSqlFilePath(String sqlFilePath) {
+        sqlFilePathList.add(sqlFilePath);
     }
 
 }

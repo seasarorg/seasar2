@@ -37,6 +37,7 @@
 					<tr><td><a href="tasks/gen_names.html">Gen-Names</a></td><td>エンティティクラスから名前クラス（Namesクラス）のJavaコードを生成するクラスです。名前クラスはエンティティのプロパティ名に対応するメソッドをもつクラスです。JdbcManagerを使った問い合わせで名前クラスを使用することで、結合条件や検索条件をタイプセーフに指定できます。</td></tr>
 					<tr><td><a href="tasks/gen_service.html">Gen-Service</a></td><td>エンティティクラスからサービスクラス（Serviceクラス）のJavaコードを生成するクラスです。サービスクラスはエンティティの問い合わせを簡略化するメソッドを提供します。</td></tr>
 					<tr><td><a href="tasks/gen_condition.html">Gen-Condition</a></td><td>エンティティクラスから条件クラス（Conditionクラス）のJavaコードを生成するタスクです。条件クラスを使用すると、S2JDBCを使った検索条件をタイプセーフに指定できます。条件クラスよりも名前クラスを使用することを推奨します。</td></tr>
+					<tr><td><a href="tasks/gen_sqlfileconstants.html">Gen-SqlFileConstants</a></td><td>SQLファイルの定数クラスのJavaコードを生成するクラスです。定数クラスでは、SQLファイルのパスを定数フィールドとして持ちます。</td></tr>
 					<tr><td><a href="tasks/gen_entitytest.html">Gen-EntityTest</a></td><td>エンティティクラスのテスト用Javaコードを生成するタスクです。テストクラスではエンティティを使って実際にデータベースアクセスを行います。</td></tr>
 					<tr><td><a href="tasks/gen_servicetest.html">Gen-ServiceTest</a></td><td>サービスクラスのテスト用Javaコードを生成するクラスです。</td></tr>
 					<tr><td><a href="tasks/gen_sqlfiletest.html">Gen-SqlFileTest</a></td><td>SQLファイルのテスト用Javaコードを生成するクラスです。テストクラスではSQLファイルを使って実際にデータベースアクセスを行います。</td></tr>
@@ -128,6 +129,18 @@
       jdbcmanagername="${jdbcmanagername}"
       classpathref="classpath"
     />
+    <gen-sqlfileconstants
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath">
+        <sqlfileset dir="${classpathdir}">
+          <include name="${sqlfilepattern}" />
+        </sqlfileset>
+    </gen-sqlfileconstants>
     <gen-entitytest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -193,6 +206,18 @@
       jdbcmanagername="${jdbcmanagername}"
       classpathref="classpath"
     />
+    <gen-sqlfileconstants
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath">
+        <sqlfileset dir="${classpathdir}">
+          <include name="${sqlfilepattern}" />
+        </sqlfileset>
+    </gen-sqlfileconstants>
     <gen-entitytest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"

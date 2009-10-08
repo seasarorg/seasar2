@@ -16,19 +16,12 @@
 package org.seasar.extension.jdbc.gen.internal.model;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.JdbcManager;
-import org.seasar.extension.jdbc.gen.internal.util.FileUtil;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModel;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
-import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 
 /**
  * {@link SqlFileTestModelFactory}の実装クラスです。
@@ -55,6 +48,9 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
     /** SQLファイルのパスのリスト */
     protected List<String> sqlFilePathList;
 
+    /** SQLファイルのサポート */
+    protected SqlFileSupport sqlFileSupport;
+
     /** 生成モデルのサポート */
     protected GeneratedModelSupport generatedModelSupport = new GeneratedModelSupport();
 
@@ -79,6 +75,34 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
     public SqlFileTestModelFactoryImpl(File classpathDir, Set<File> sqlFileSet,
             String configPath, String jdbcManagerName, String packageName,
             String shortClassName, boolean useS2junit4) {
+        this(classpathDir, sqlFileSet, configPath, jdbcManagerName,
+                packageName, shortClassName, useS2junit4, new SqlFileSupport());
+    }
+
+    /**
+     * インスタンスを構築します。
+     * 
+     * @param classpathDir
+     *            クラスパスのディレクトリ
+     * @param sqlFileSet
+     *            SQLファイルのセット
+     * @param configPath
+     *            設定ファイルのパス
+     * @param jdbcManagerName
+     *            {@link JdbcManager}のコンポーネント名
+     * @param packageName
+     *            パッケージ名
+     * @param shortClassName
+     *            テストクラスの単純名
+     * @param useS2junit4
+     *            S2JUnit4を使用する場合{@code true}、S2Unitを使用する場合{@code false}
+     * @param sqlFileSupport
+     *            SQLファイルのサポート
+     */
+    protected SqlFileTestModelFactoryImpl(File classpathDir,
+            Set<File> sqlFileSet, String configPath, String jdbcManagerName,
+            String packageName, String shortClassName, boolean useS2junit4,
+            SqlFileSupport sqlFileSupport) {
         if (classpathDir == null) {
             throw new NullPointerException("classpathDir");
         }
@@ -94,11 +118,15 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
         if (shortClassName == null) {
             throw new NullPointerException("shortClassName");
         }
+        if (sqlFileSupport == null) {
+            throw new NullPointerException("sqlFileSupport");
+        }
         this.configPath = configPath;
         this.jdbcManagerName = jdbcManagerName;
         this.packageName = packageName;
         this.shortClassName = shortClassName;
         this.useS2junit4 = useS2junit4;
+        this.sqlFileSupport = sqlFileSupport;
         this.sqlFilePathList = createSqlFilePathList(classpathDir, sqlFileSet);
     }
 
@@ -113,58 +141,7 @@ public class SqlFileTestModelFactoryImpl implements SqlFileTestModelFactory {
      */
     protected List<String> createSqlFilePathList(File classpathDir,
             Set<File> sqlFileSet) {
-        List<String> sqlFilePathList = new ArrayList<String>();
-        Set<String> dbmsNameSet = getDbmsNameSet();
-        String basePath = FileUtil.getCanonicalPath(classpathDir)
-                + File.separator;
-
-        for (File sqlFile : sqlFileSet) {
-            String path = FileUtil.getCanonicalPath(sqlFile);
-            if (!path.startsWith(basePath)) {
-                continue;
-            }
-            path = path.substring(basePath.length());
-            if (path.endsWith(".sql")) {
-                path = path.substring(0, path.length() - 4);
-            }
-            for (String dbmsName : dbmsNameSet) {
-                if (path.endsWith("_" + dbmsName)) {
-                    path = path.substring(0, path.length() - dbmsName.length()
-                            - 1);
-                    break;
-                }
-            }
-            String resourcePath = path.replace(File.separator, "/") + ".sql";
-            if (sqlFilePathList.contains(resourcePath)) {
-                continue;
-            }
-            sqlFilePathList.add(resourcePath);
-        }
-
-        Collections.sort(sqlFilePathList);
-        return sqlFilePathList;
-    }
-
-    /**
-     * コンテナに登録されているすべての{@link DbmsDialect}について名前のセットを返します。
-     * 
-     * @return {@link DbmsDialect}の名前のセット
-     */
-    protected Set<String> getDbmsNameSet() {
-        if (!SingletonS2ContainerFactory.hasContainer()) {
-            return Collections.emptySet();
-        }
-        Set<String> dbmsNameSet = new HashSet<String>();
-        S2Container container = SingletonS2ContainerFactory.getContainer();
-        DbmsDialect[] dialects = (DbmsDialect[]) container
-                .findAllComponents(DbmsDialect.class);
-        for (DbmsDialect dialect : dialects) {
-            String name = dialect.getName();
-            if (name != null) {
-                dbmsNameSet.add(name);
-            }
-        }
-        return dbmsNameSet;
+        return sqlFileSupport.createSqlFilePathList(classpathDir, sqlFileSet);
     }
 
     public SqlFileTestModel getSqlFileTestModel() {

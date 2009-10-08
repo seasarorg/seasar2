@@ -55,6 +55,7 @@ import org.seasar.extension.jdbc.gen.internal.model.NamesAggregateModelFactoryIm
 import org.seasar.extension.jdbc.gen.internal.model.NamesModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.ServiceTestModelFactoryImpl;
+import org.seasar.extension.jdbc.gen.internal.model.SqlFileConstantsModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.SqlFileTestModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.model.TableModelFactoryImpl;
 import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
@@ -74,6 +75,8 @@ import org.seasar.extension.jdbc.gen.model.NamesAggregateModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantNamingRule;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantsModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -311,6 +314,15 @@ public class FactoryImpl implements Factory {
         return new SqlFileTestModelFactoryImpl(classpathDir, sqlFileSet,
                 configPath, jdbcManagerName, packageName, shortClassName,
                 useS2junit4);
+    }
+
+    public SqlFileConstantsModelFactory createSqlFileConstantsModelFactory(
+            Command command, File classpathDir, Set<File> sqlFileSet,
+            SqlFileConstantNamingRule sqlFileConstantNamingRule,
+            String packageName, String shortClassName) {
+
+        return new SqlFileConstantsModelFactoryImpl(classpathDir, sqlFileSet,
+                sqlFileConstantNamingRule, packageName, shortClassName);
     }
 
 }

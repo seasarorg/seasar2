@@ -48,6 +48,8 @@ import org.seasar.extension.jdbc.gen.model.NamesAggregateModelFactory;
 import org.seasar.extension.jdbc.gen.model.NamesModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceModelFactory;
 import org.seasar.extension.jdbc.gen.model.ServiceTestModelFactory;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantNamingRule;
+import org.seasar.extension.jdbc.gen.model.SqlFileConstantsModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlFileTestModelFactory;
 import org.seasar.extension.jdbc.gen.model.SqlIdentifierCaseType;
 import org.seasar.extension.jdbc.gen.model.SqlKeywordCaseType;
@@ -593,4 +595,26 @@ public interface Factory {
             File classpathDir, Set<File> sqlFileSet, String configPath,
             String jdbcManagerName, String packageName, String shortClassName,
             boolean useS2junit4);
+
+    /**
+     * {@link SqlFileTestModelFactory}の実装を作成します。
+     * 
+     * @param command
+     *            呼び出し元のコマンド
+     * @param classpathDir
+     *            クラスパスのディレクトリ
+     * @param sqlFileSet
+     *            SQLファイルのセット
+     * @param sqlFileConstantNamingRule
+     *            SQLファイルのパスを表す定数の名前付けルール
+     * @param packageName
+     *            パッケージ名、デフォルトパッケージの場合は{@code null}
+     * @param shortClassName
+     *            テストクラスの単純名
+     * @return {@link SqlFileTestModelFactory}の実装
+     */
+    SqlFileConstantsModelFactory createSqlFileConstantsModelFactory(
+            Command command, File classpathDir, Set<File> sqlFileSet,
+            SqlFileConstantNamingRule sqlFileConstantNamingRule,
+            String packageName, String shortClassName);
 }

@@ -1,0 +1,21 @@
+package hoge;
+
+import javax.annotation.Generated;
+
+/**
+ * SQLファイルの定数クラスです。
+ * 
+ */
+@Generated(value = {"S2JDBC-Gen test-0.0.1", "org.seasar.extension.jdbc.gen.internal.model.SqlFileConstantsModelFactoryImpl"}, date = "2009/04/01 13:12:11")
+public final class SqlFileTest {
+
+    /**
+     * {@code org/seasar/extension/jdbc/gen/internal/generator/aaa.sql}の定数です。
+     */
+    public static final String GENERATOR_AAA = "org/seasar/extension/jdbc/gen/internal/generator/aaa.sql";
+
+    /**
+     * {@code org/seasar/extension/jdbc/gen/internal/generator/bbb.sql}の定数です。
+     */
+    public static final String GENERATOR_BBB = "org/seasar/extension/jdbc/gen/internal/generator/bbb.sql";
+}

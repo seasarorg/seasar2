@@ -65,6 +65,18 @@
       jdbcmanagername="${jdbcmanagername}"
       classpathref="classpath"
     />
+    <gen-sqlfileconstants
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath">
+        <sqlfileset dir="${classpathdir}">
+          <include name="${sqlfilepattern}" />
+        </sqlfileset>
+    </gen-sqlfileconstants>
     <gen-entitytest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -130,6 +142,18 @@
       jdbcmanagername="${jdbcmanagername}"
       classpathref="classpath"
     />
+    <gen-sqlfileconstants
+      classpathdir="${classpathdir}"
+      rootpackagename="${rootpackagename}"
+      javafiledestdir="${testjavafiledestdir}"
+      javafileencoding="${javafileencoding}"
+      env="${env}"
+      jdbcmanagername="${jdbcmanagername}"
+      classpathref="classpath">
+        <sqlfileset dir="${classpathdir}">
+          <include name="${sqlfilepattern}" />
+        </sqlfileset>
+    </gen-sqlfileconstants>
     <gen-entitytest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"

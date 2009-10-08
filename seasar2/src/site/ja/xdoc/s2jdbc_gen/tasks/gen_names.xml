@@ -213,7 +213,7 @@ public class AddressNames {
 					<tr><td>namesClassNameSuffix</td><td>名前クラス名のサフィックスです。</td><td>"Names"</td><td>NO</td></tr>
 					<tr><td>namesTemplateFileName</td><td>名前クラスのテンプレートファイル名です。</td><td>"java/names.ftl"</td><td>NO</td></tr>
 					<tr><td>generateNamesAggregateClass</td><td>"true"の場合、名前集約クラスを生成します。</td><td>"true"</td><td>NO</td></tr>
-					<tr><td>namesAggregateClassSimpleName</td><td>名前集約クラスの単純名です。</td><td>"Names"</td><td>NO</td></tr>
+					<tr><td>namesAggregateShortClassName</td><td>名前集約クラスの単純名です。</td><td>"Names"</td><td>NO</td></tr>
 					<tr><td>namesAggregateTemplateFileName</td><td>名前集約クラスのテンプレートファイル名です。</td><td>"java/names-aggregate.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>
 					<tr><td>templateFilePrimaryDir</td><td>テンプレートファイルを検索する際の優先ディレクトリです。</td><td>-</td><td>NO</td></tr>

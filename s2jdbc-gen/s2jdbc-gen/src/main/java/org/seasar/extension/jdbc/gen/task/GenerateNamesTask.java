@@ -219,12 +219,12 @@ public class GenerateNamesTask extends AbstractTask {
     /**
      * 名前集約クラスの単純名を設定します。
      * 
-     * @param namesAggregateClassSimpleName
+     * @param namesAggregateShortClassName
      *            名前集約クラスの単純名
      */
-    public void setNamesAggregateClassSimpleName(
-            String namesAggregateClassSimpleName) {
-        command.setNamesAggregateClassSimpleName(namesAggregateClassSimpleName);
+    public void setNamesAggregateShortClassName(
+            String namesAggregateShortClassName) {
+        command.setNamesAggregateShortClassName(namesAggregateShortClassName);
     }
 
     /**

@@ -49,17 +49,18 @@ public class SqlFileTestModelFactoryImplTest {
                 "bbb_oracle.sql"));
         sqlFileSet.add(new File(ResourceUtil.getResourceAsFile(basePath),
                 "aaa_oracle.sql"));
+
         SqlFileTestModelFactoryImpl factory = new SqlFileTestModelFactoryImpl(
                 classpathDir, sqlFileSet, "s2jdbc.dicon", "jdbcManager",
-                "hoge", "SqlFileTest", false) {
+                "hoge", "SqlFileTest", false, new SqlFileSupport() {
 
-            @Override
-            protected Set<String> getDbmsNameSet() {
-                Set<String> set = new HashSet<String>();
-                set.add("oracle");
-                return set;
-            }
-        };
+                    @Override
+                    protected Set<String> getDbmsNameSet() {
+                        Set<String> set = new HashSet<String>();
+                        set.add("oracle");
+                        return set;
+                    }
+                });
 
         SqlFileTestModel model = factory.getSqlFileTestModel();
         assertEquals("s2jdbc.dicon", model.getConfigPath());

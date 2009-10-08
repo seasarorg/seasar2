@@ -73,6 +73,7 @@
           <item name="Gen-Names" href="s2jdbc_gen/tasks/gen_names.html"/>
           <item name="Gen-Service" href="s2jdbc_gen/tasks/gen_service.html"/>
           <item name="Gen-Condition" href="s2jdbc_gen/tasks/gen_condition.html"/>
+          <item name="Gen-SqlFileConstants" href="s2jdbc_gen/tasks/gen_sqlfileconstants.html"/>
           <item name="Gen-EntityTest" href="s2jdbc_gen/tasks/gen_entitytest.html"/>
           <item name="Gen-ServiceTest" href="s2jdbc_gen/tasks/gen_servicetest.html"/>
           <item name="Gen-SqlFileTest" href="s2jdbc_gen/tasks/gen_sqlfiletest.html"/>
