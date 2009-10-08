@@ -49,6 +49,9 @@
 									<li>
 										<a href="#Windows上でEclipse3.4を利用する場合">Windows上でEclipse3.4を利用する場合</a>
 									</li>
+									<li>
+										<a href="#Windows上でEclipse3.5を利用する場合">Windows上でEclipse3.5を利用する場合</a>
+									</li>
 								</ul>
 							</li>
 						</ul>
@@ -204,12 +207,12 @@ ant -f s2jdbc-gen-build.xml ターゲット名
 ]]></source>
 			</subsection>
 			<subsection name="Eclipseからの実行">
-				<p>
-					AntをEclipse上で起動する場合は、s2jdbc-gen-build.xmlをAntエディタで開き、実行してください。
-				</p>
 				<h4><a name="Windows上でEclipse3.4を利用する場合"></a>Windows上でEclipse3.4を利用する場合</h4>
-				<p>	
-					Windows上でEclipse3.4を利用している場合、Antは、Console EncodingにMS932を指定して実行する必要があります。
+				<p>
+					s2jdbc-gen-build.xmlをAntエディタで開いて実行するか、s2jdbc-gen-build.xmlをAntビューに登録して実行してください。
+				</p>
+				<p>
+					ただし、Antは、Console EncodingにMS932を指定して実行する必要があります。
 					MS932を指定しない場合、ログがコンソールに正しく出力されません。
 				</p>
 				<p>
@@ -225,6 +228,19 @@ ant -f s2jdbc-gen-build.xml ターゲット名
 				<img src="../images/s2jdbc_gen_console_enc.png" />
 				<p>
 					この設定は、ビルドファイルに含まれるターゲットごとに行う必要があります。
+				</p>
+				<h4><a name="Windows上でEclipse3.5を利用する場合"></a>Windows上でEclipse3.5を利用する場合</h4>
+				<p>
+					Eclipse3.5上のAntにはエンコーディングの問題があり、日本語を正しく処理できません（実行するAntタスクが日本語をログ出力していると、コンソールに何も出力されません）。
+					<a href="http://www.pragmatic.kr/pages/2077012">Open External</a>などのEcipseプラグインでs2jdbc-gen-build.xmlをコマンドプロンプトで開き、
+					コマンドプロンプトからAntを実行してください。
+				</p>
+				<p>
+					Open Externalの更新サイトは、<a href="http://update2.pragmatic.kr/">http://update2.pragmatic.kr/</a>です。
+					プラグインのインストール画面では、「Group items by category」のチェックボックスを外してください。
+				</p>
+				<p>
+					コマンドプロンプトからAntを実行するには、<a href="#コマンドラインからの実行">コマンドラインからの実行</a>を参照してください。
 				</p>
 			</subsection>
 		</section>
