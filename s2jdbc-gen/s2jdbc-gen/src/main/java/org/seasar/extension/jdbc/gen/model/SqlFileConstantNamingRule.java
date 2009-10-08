@@ -27,8 +27,8 @@ public interface SqlFileConstantNamingRule {
      * SQLファイルのパスから定数名に変換します。
      * 
      * @param path
-     *            SQLファイルのパス。ディレクトリの区切りはスラッシュで表されます。たとえば次のような {@code
-     *            aaa/bbb/ccc.sql}のような文字列になります。
+     *            SQLファイルのパス。ディレクトリの区切りはスラッシュで表されます。たとえば{@code aaa/bbb/ccc.sql}
+     *            のような文字列になります。
      * @return 定数名
      */
     String fromPathToConstantName(String path);
