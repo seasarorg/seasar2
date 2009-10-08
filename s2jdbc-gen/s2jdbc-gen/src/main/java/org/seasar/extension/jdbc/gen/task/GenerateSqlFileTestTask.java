@@ -90,13 +90,13 @@ public class GenerateSqlFileTestTask extends AbstractTask {
     }
 
     /**
-     * エンティティのパッケージ名を設定します。
+     * サブパッケージ名を設定します。
      * 
-     * @param entityPackageName
-     *            エンティティのパッケージ名
+     * @param subPackageName
+     *            サブパッケージ名
      */
-    public void setEntityPackageName(String entityPackageName) {
-        command.setEntityPackageName(entityPackageName);
+    public void setSubPackageName(String subPackageName) {
+        command.setSubPackageName(subPackageName);
     }
 
     /**

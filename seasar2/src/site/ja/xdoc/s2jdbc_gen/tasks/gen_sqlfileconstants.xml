@@ -117,7 +117,7 @@ public final class SqlFiles {
 					<tr><td>classpathDir</td><td>エンティティクラスを含むクラスパスのディレクトリです。このディレクトリはタスクの実行時のクラスパスに含まれている必要があります。</td><td>-</td><td>YES</td></tr>
 					<tr><td>rootPackageName</td><td>ルートパッケージ名です。</td><td>""</td><td>NO</td></tr>
 					<tr><td>subPackageName</td><td>定数クラスのサブパッケージ名です。定数クラスは、rootPackageNameとこの値をピリオドで連結したパッケージに配置されているとみなされます。この値が空文字の場合は、定数クラスは、rootPackageNameで表されるパッケージに配置されているとみなされます。</td><td>""</td><td>NO</td></tr>
-					<tr><td>shortClassName</td><td>定数クラス名です。</td><td>"SqlFiles"</td><td>NO</td></tr>
+					<tr><td>shortClassName</td><td>定数クラスの単純名です。</td><td>"SqlFiles"</td><td>NO</td></tr>
 					<tr><td>sqlFileConstantNamingRuleClassName</td><td>SQLファイルの定数の名前付けルールを表すクラスの名前です。ここに指定するクラスはorg.seasar.extension.jdbc.gen.model.SqlFileConstantNamingRuleインタフェースを実装している必要があります。</td><td>"org.seasar.extension.jdbc.gen.internal.model.SqlFileConstantNamingRuleImpl"</td><td>NO</td></tr>
 					<tr><td>templateFileName</td><td>テストクラスのテンプレートファイル名です。</td><td>"java/sqlfileconstants.ftl"</td><td>NO</td></tr>
 					<tr><td>templateFileEncoding</td><td>テンプレートファイルのエンコーディングです。</td><td>"UTF-8"</td><td>NO</td></tr>

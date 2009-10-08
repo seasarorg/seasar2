@@ -37,6 +37,8 @@
 		<antcall target="testFromDbToEntity"/>
 		<antcall target="testFromEntityToDb"/>
 		<antcall target="testGenerateEntityTest"/>
+		<antcall target="testGenerateSqlFileConstants"/>
+		<antcall target="testGenerateSqlFileTest"/>
 		<antcall target="testMigrate"/>
 		<antcall target="testDumpDbMeta"/>
 		<antcall target="testDumpData"/>
@@ -285,6 +287,31 @@
 			usenamesclass="false"
 			classpathref="classpath"
 		/>
+		<javac 
+			srcdir="${src}"
+			destdir="${build}"
+			encoding="UTF-8"
+			fork="true"
+			debug="on"
+			classpathref="classpath"
+		/>
+		<!-- tearDown -->
+		<refresh projectname="s2jdbc-gen-it"/>
+	</target>
+
+	<target name="testGenerateSqlFileConstants" depends="showRdbmsName, clean">
+		<!-- setUp -->
+		<!-- test -->
+		<gen-sqlfileconstants
+			classpathDir="${build}"
+			rootpackagename="${rootpackagename}"
+			javafiledestdir="${src}"
+			classpathref="classpath"
+		>
+			<sqlfileset dir="${build}">
+				<include name="META-INF/sql/**/*.sql" />
+			</sqlfileset>
+		</gen-sqlfileconstants>
 		<javac 
 			srcdir="${src}"
 			destdir="${build}"

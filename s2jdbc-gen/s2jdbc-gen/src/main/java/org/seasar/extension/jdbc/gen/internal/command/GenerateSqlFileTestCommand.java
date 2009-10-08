@@ -50,8 +50,8 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     /** ルートパッケージ名 */
     protected String rootPackageName = "";
 
-    /** エンティティパッケージ名 */
-    protected String entityPackageName = "entity";
+    /** サブパッケージ名 */
+    protected String subPackageName = "";
 
     /** 生成するテストクラスの単純名 */
     protected String shortClassName = "SqlFileTest";
@@ -84,22 +84,22 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     protected Generator generator;
 
     /**
-     * エンティティのパッケージ名を返します。
+     * サブパッケージ名を返します。
      * 
-     * @return エンティティのパッケージ名
+     * @return サブパッケージ名
      */
-    public String getEntityPackageName() {
-        return entityPackageName;
+    public String getSubPackageName() {
+        return subPackageName;
     }
 
     /**
-     * エンティティのパッケージ名を設定します。
+     * サブパッケージ名を設定します。
      * 
-     * @param entityPackageName
-     *            エンティティのパッケージ名
+     * @param subPackageName
+     *            サブパッケージ名
      */
-    public void setEntityPackageName(String entityPackageName) {
-        this.entityPackageName = entityPackageName;
+    public void setSubPackageName(String subPackageName) {
+        this.subPackageName = subPackageName;
     }
 
     /**
@@ -347,7 +347,7 @@ public class GenerateSqlFileTestCommand extends AbstractCommand {
     protected SqlFileTestModelFactory createSqlFileTestModelFactory() {
         return factory.createSqlFileTestModelFactory(this, classpathDir,
                 sqlFileSet, configPath, jdbcManagerName, ClassUtil.concatName(
-                        rootPackageName, entityPackageName), shortClassName,
+                        rootPackageName, subPackageName), shortClassName,
                 useS2junit4);
     }
 
