@@ -132,7 +132,7 @@
     <gen-sqlfileconstants
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
-      javafiledestdir="${testjavafiledestdir}"
+      javafiledestdir="${javafiledestdir}"
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
@@ -209,7 +209,7 @@
     <gen-sqlfileconstants
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
-      javafiledestdir="${testjavafiledestdir}"
+      javafiledestdir="${javafiledestdir}"
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
