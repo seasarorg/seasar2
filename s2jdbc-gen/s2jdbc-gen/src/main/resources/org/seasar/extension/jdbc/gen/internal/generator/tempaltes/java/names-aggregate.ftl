@@ -35,7 +35,7 @@ public class ${shortClassName} {
      * 
      * @return ${namesModel.shortEntityClassName}の名前クラス
      */
-    public ${namesModel.shortInnerClassName} ${namesModel.shortEntityClassName?uncap_first}() {
+    public static ${namesModel.shortInnerClassName} ${namesModel.shortEntityClassName?uncap_first}() {
         return new ${namesModel.shortInnerClassName}();
     }
 </#list>

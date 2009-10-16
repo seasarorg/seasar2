@@ -18,7 +18,7 @@ public class Names {
      * 
      * @return Employeeの名前クラス
      */
-    public _EmployeeNames employee() {
+    public static _EmployeeNames employee() {
         return new _EmployeeNames();
     }
 
@@ -27,7 +27,7 @@ public class Names {
      * 
      * @return Departmentの名前クラス
      */
-    public _Department department() {
+    public static _Department department() {
         return new _Department();
     }
 }
