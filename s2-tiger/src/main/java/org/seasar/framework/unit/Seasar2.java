@@ -30,6 +30,7 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.S2ContainerFactory;
+import org.seasar.framework.env.Env;
 import org.seasar.framework.util.ResourceUtil;
 
 /**
@@ -56,6 +57,12 @@ public class Seasar2 extends Runner implements Filterable, Sortable {
 
     /** S2JUnit4の振る舞いを設定するためのコンフィグレーションファイルのパス */
     public static final String S2JUNIT4_CONFIG_PATH = "s2junit4config.dicon";
+
+    /** このランナーで使用する環境名設定ファイルのパス */
+    public static final String ENV_PATH = "env_ut.txt";
+
+    /** 環境名設定ファイルのパスにファイルが存在しない場合の環境名 */
+    public static final String ENV_VALUE = "ut";
 
     /** コンフィグレーションファイルから構築されたコンフィグレーションS2コンテナ */
     protected static S2Container configurationContainer;
@@ -129,6 +136,9 @@ public class Seasar2 extends Runner implements Filterable, Sortable {
      *            設定ファイルのパス
      */
     public static void configure(final String configFile) {
+        Env.setFilePath(ENV_PATH);
+        Env.setValueIfAbsent(ENV_VALUE);
+
         if (provider == null) {
             provider = new DefaultProvider();
         }
@@ -156,6 +166,7 @@ public class Seasar2 extends Runner implements Filterable, Sortable {
             configurationContainer.destroy();
         }
         configurationContainer = null;
+        Env.initialize();
     }
 
     @Override
@@ -254,7 +265,8 @@ public class Seasar2 extends Runner implements Filterable, Sortable {
          * 
          * @param clazz
          *            テストクラス
-         * @return <code>Parameters</code>が注釈されたメソッドが存在する場合<code>true</code>、そうでない場合<code>false</code>
+         * @return <code>Parameters</code>が注釈されたメソッドが存在する場合<code>true</code>
+         *         、そうでない場合<code>false</code>
          */
         protected boolean hasParameterAnnotation(final Class<?> clazz) {
             for (Method each : clazz.getMethods()) {

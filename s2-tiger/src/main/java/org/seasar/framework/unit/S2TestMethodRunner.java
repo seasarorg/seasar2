@@ -64,12 +64,6 @@ public class S2TestMethodRunner {
     /** S2JUnit4のデフォルトの設定ファイルのパス */
     protected static final String DEFAULT_S2JUNIT4_PATH = "s2junit4.dicon";
 
-    /** このランナーで使用する環境名設定ファイルのパス */
-    protected static final String ENV_PATH = "env_ut.txt";
-
-    /** 環境名設定ファイルのパスにファイルが存在しない場合の環境名 */
-    protected static final String ENV_VALUE = "ut";
-
     /** S2JUnit4の設定ファイルのパス */
     protected static String s2junit4Path = DEFAULT_S2JUNIT4_PATH;
 
@@ -157,8 +151,8 @@ public class S2TestMethodRunner {
      */
     public void run() {
         try {
-            Env.setFilePath(ENV_PATH);
-            Env.setValueIfAbsent(ENV_VALUE);
+            Env.setFilePath(Seasar2.ENV_PATH);
+            Env.setValueIfAbsent(Seasar2.ENV_VALUE);
             if (isIgnored() || !isFulfilled()) {
                 notifier.fireTestIgnored(description);
                 return;
