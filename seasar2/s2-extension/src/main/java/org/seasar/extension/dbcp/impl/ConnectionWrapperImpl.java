@@ -25,6 +25,8 @@ import java.sql.Savepoint;
 import java.sql.Statement;
 import java.util.Map;
 
+import javax.sql.ConnectionEvent;
+import javax.sql.ConnectionEventListener;
 import javax.sql.XAConnection;
 import javax.transaction.Transaction;
 import javax.transaction.xa.XAResource;
@@ -41,7 +43,8 @@ import org.seasar.framework.log.Logger;
  * @author higa
  * 
  */
-public class ConnectionWrapperImpl implements ConnectionWrapper {
+public class ConnectionWrapperImpl implements ConnectionWrapper,
+        ConnectionEventListener {
 
     private static final Logger logger_ = Logger
             .getLogger(ConnectionWrapperImpl.class);
@@ -82,6 +85,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
                 this);
         connectionPool_ = connectionPool;
         tx_ = tx;
+        xaConnection_.addConnectionEventListener(this);
     }
 
     public Connection getPhysicalConnection() {
@@ -102,6 +106,7 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
     }
 
     public void cleanup() {
+        xaConnection_.removeConnectionEventListener(this);
         closed_ = true;
         xaConnection_ = null;
         physicalConnection_ = null;
@@ -154,7 +159,19 @@ public class ConnectionWrapperImpl implements ConnectionWrapper {
     }
 
     public void release() throws SQLException {
-        connectionPool_.release(this);
+        if (!closed_) {
+            connectionPool_.release(this);
+        }
+    }
+
+    public void connectionClosed(final ConnectionEvent event) {
+    }
+
+    public void connectionErrorOccurred(final ConnectionEvent event) {
+        try {
+            release();
+        } catch (final SQLException ignore) {
+        }
     }
 
     public Statement createStatement() throws SQLException {

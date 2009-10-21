@@ -17,6 +17,8 @@ package org.seasar.extension.dbcp.impl;
 
 import java.sql.SQLException;
 
+import javax.sql.ConnectionEvent;
+import javax.sql.ConnectionEventListener;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
@@ -52,8 +54,8 @@ public class ConnectionWrapperImplTest extends S2TestCase {
      */
     public void testCloseReallyWithTransaction() throws Exception {
         MockXAConnection xaCon = new MockXAConnection();
-        ConnectionWrapperImpl wrapper = new ConnectionWrapperImpl(xaCon,xaCon.getConnection(),
-                dummyPool_, null);
+        ConnectionWrapperImpl wrapper = new ConnectionWrapperImpl(xaCon, xaCon
+                .getConnection(), dummyPool_, null);
         MockConnection con = (MockConnection) wrapper.getPhysicalConnection();
         wrapper.setAutoCommit(false);
         wrapper.closeReally();
@@ -168,6 +170,20 @@ public class ConnectionWrapperImplTest extends S2TestCase {
             con_.cleanup();
             assertTrue("7", con_.isClosed());
             con_.init(null);
+        } finally {
+            con_.closeReally();
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testConnectionErrorOccurred() throws Exception {
+        try {
+            ((ConnectionEventListener) con_)
+                    .connectionErrorOccurred(new ConnectionEvent(con_
+                            .getXAConnection()));
+            assertTrue(dummyPool_.isReleased());
         } finally {
             con_.closeReally();
         }
