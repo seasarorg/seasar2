@@ -93,6 +93,8 @@ public class HotdeployHttpSession implements HttpSession {
                 try {
                     originalSession.setAttribute((String) entry.getKey(),
                             new SerializedObjectHolder(entry.getValue()));
+                } catch (final IllegalStateException e) {
+                    return;
                 } catch (final Exception e) {
                     logger.log("ESSR0017", new Object[] { e }, e);
                 }
