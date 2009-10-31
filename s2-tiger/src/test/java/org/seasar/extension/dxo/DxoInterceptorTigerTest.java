@@ -361,6 +361,13 @@ public class DxoInterceptorTigerTest extends S2TestCase {
         foo = beanDxo.convert(bar);
         assertEquals(Color.RED.ordinal(), foo.getOrdinal());
         assertEquals(Color.GREEN.name(), foo.getName());
+
+        // [CONTAINER-400]
+        Bar src = new Bar(Color.RED, Color.GREEN);
+        Bar dest = new Bar();
+        beanDxo.convert(src, dest);
+        assertEquals(Color.RED, dest.getOrdinal());
+        assertEquals(Color.GREEN, dest.getName());
     }
 
     /**
@@ -538,6 +545,12 @@ public class DxoInterceptorTigerTest extends S2TestCase {
          * @return
          */
         Bbb convert(Aaa aaa);
+
+        /**
+         * @param src
+         * @param dest
+         */
+        void convert(Bar src, Bar dest);
     }
 
     /**

@@ -38,6 +38,9 @@ public class EnumConverter extends AbstractConverter {
         if (source == null) {
             return null;
         }
+        if (source.getClass() == destClass) {
+            return source;
+        }
         if (source instanceof Number) {
             final int ordinal = Number.class.cast(source).intValue();
             return destClass.getEnumConstants()[ordinal];

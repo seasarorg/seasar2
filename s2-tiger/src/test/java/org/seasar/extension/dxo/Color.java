@@ -31,5 +31,10 @@ public enum Color {
     /**
      * 
      */
-    BLUE
+    BLUE;
+
+    @Override
+    public String toString() {
+        return "<<<" + name().toLowerCase() + ">>>";
+    }
 }
