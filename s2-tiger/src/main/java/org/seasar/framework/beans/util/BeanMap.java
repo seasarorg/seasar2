@@ -15,7 +15,7 @@
  */
 package org.seasar.framework.beans.util;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 /**
  * Stringがキーで、存在しないキーにアクセスする(get)と例外を投げるマップです。
@@ -23,7 +23,7 @@ import java.util.HashMap;
  * @author higa
  * 
  */
-public class BeanMap extends HashMap<String, Object> {
+public class BeanMap extends LinkedHashMap<String, Object> {
 
     private static final long serialVersionUID = 1;
 
