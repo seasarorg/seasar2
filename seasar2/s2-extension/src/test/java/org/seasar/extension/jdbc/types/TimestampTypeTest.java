@@ -16,7 +16,6 @@
 package org.seasar.extension.jdbc.types;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import junit.framework.TestCase;
 
