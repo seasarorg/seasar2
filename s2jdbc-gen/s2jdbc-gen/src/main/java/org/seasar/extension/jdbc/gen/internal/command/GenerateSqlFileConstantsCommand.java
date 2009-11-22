@@ -69,7 +69,7 @@ public class GenerateSqlFileConstantsCommand extends AbstractCommand {
     protected File templateFilePrimaryDir = null;
 
     /** 生成するJavaファイルの出力先ディレクトリ */
-    protected File javaFileDestDir = new File(new File("src", "test"), "java");
+    protected File javaFileDestDir = new File(new File("src", "main"), "java");
 
     /** Javaファイルのエンコーディング */
     protected String javaFileEncoding = "UTF-8";
