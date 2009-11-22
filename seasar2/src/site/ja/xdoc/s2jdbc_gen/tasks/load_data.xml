@@ -122,6 +122,7 @@
 					バッチサイズを変更してタスクを実行します。
 				</p>
 <source><![CDATA[<load-data
+    classpathDir="build/classes"
     rootPackageName="examples"
     loadBatchSize="20"
     classpathRef="classpath"
@@ -132,6 +133,7 @@
 					ロード前に既存データを削除するには、delete属性に"true"を指定します。
 				</p>
 <source><![CDATA[<load-data
+    classpathDir="build/classes"
     rootPackageName="examples"
     delete="true"
     classpathRef="classpath"
@@ -146,6 +148,7 @@
 					設定例は次の通りです。
 				</p>
 <source><![CDATA[<load-data
+    classpathDir="build/classes"
     rootPackageName="examples"
     applyEnvToVersion="true"
     env="ut"

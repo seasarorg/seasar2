@@ -166,6 +166,7 @@ public class AddressService extends AbstractService<Address> {
 					サービスクラスのデフォルトのパッケージ名は"service"ですが、servicePackageName属性に任意のパッケージ名を指定できます。 次の例では"myservice"を指定しています。 
 				</p>
 <source><![CDATA[<gen-service
+    classpathDir="build/classes"
     rootPackageName="examples"
     servicePackageName="myservice"
     classpathRef="classpath"
@@ -187,6 +188,7 @@ public class AddressService extends AbstractService<Address> {
 					修正した独自テンプレートを使用するにはテンプレートをmytempletes/java/service.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
 				</p>
 <source><![CDATA[<gen-service
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"
@@ -196,6 +198,7 @@ public class AddressService extends AbstractService<Address> {
 					templateFilePrimaryDir属性に加え、serviceTemplateFileName属性も指定します。
 				</p>
 <source><![CDATA[<gen-service
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     serviceTemplateFileName="my-service.ftl"
@@ -215,6 +218,7 @@ public class AddressService extends AbstractService<Address> {
 					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-service
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"
@@ -233,6 +237,7 @@ public class AddressService extends AbstractService<Address> {
 					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-service
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"

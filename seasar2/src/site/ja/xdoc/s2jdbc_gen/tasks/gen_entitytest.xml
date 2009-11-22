@@ -176,6 +176,7 @@ public class DepartmentTest extends S2TestCase {
 					ルートパッケージに"examples"を設定してタスクを実行します。
 				</p>
 <source><![CDATA[<gen-entitytest
+    classpathDir="build/classes"
     rootPackageName="examples"
     classpathRef="classpath"
 />]]></source>
@@ -196,6 +197,7 @@ public class DepartmentTest extends S2TestCase {
 					修正した独自テンプレートを使用するにはテンプレートをmytempletes/java/entitytest.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
 				</p>
 <source><![CDATA[<gen-entitytest
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"
@@ -205,6 +207,7 @@ public class DepartmentTest extends S2TestCase {
 					templateFilePrimaryDir属性に加え、templateFileName属性も指定します。
 				</p>
 <source><![CDATA[<gen-entitytest
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     templateFileName="my-entitytest.ftl"
@@ -224,6 +227,7 @@ public class DepartmentTest extends S2TestCase {
 					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-entitytest
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"
@@ -242,6 +246,7 @@ public class DepartmentTest extends S2TestCase {
 					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-entitytest
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath"

@@ -255,6 +255,7 @@
 					次の例では、マイグレーション先のバージョン番号に15を指定しています。
 				</p>
 <source><![CDATA[<migrate
+    classpathDir="build/classes"
     rootPackageName="examples"
     version="15"
     classpathRef="classpath"
@@ -270,6 +271,7 @@
 					マイグレーションに失敗した場合は、ロールバックにより変更が元に戻ります（ただし、RDBMSがトランザクション内でのDDL実行をサポートしていなければいけません）。
 				</p>
 <source><![CDATA[<migrate
+    classpathDir="build/classes"
     rootPackageName="examples"
     transactional="true"
     classpathRef="classpath"
@@ -281,6 +283,7 @@
 					設定例は次の通りです。
 				</p>
 <source><![CDATA[<migrate
+    classpathDir="build/classes"
     rootPackageName="examples"
     applyEnvToVersion="true"
     env="ut"

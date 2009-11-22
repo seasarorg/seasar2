@@ -187,6 +187,7 @@ public final class SqlFiles {
 					修正した独自テンプレートを使用するにはテンプレートをmytempletes/java/sqlfileconstants.ftlと配置し、templateFilePrimaryDir属性にmytempletesを指定します。
 				</p>
 <source><![CDATA[<gen-sqlfileconstants
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath">
@@ -199,6 +200,7 @@ public final class SqlFiles {
 					templateFilePrimaryDir属性に加え、templateFileName属性も指定します。
 				</p>
 <source><![CDATA[<gen-sqlfileconstants
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     templateFileName="my-sqlfileconstants.ftl"
@@ -221,6 +223,7 @@ public final class SqlFiles {
 					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-sqlfileconstants
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath">
@@ -242,6 +245,7 @@ public final class SqlFiles {
 					mytempletes/lib.ftlと配置する場合、タスクの定義は次のようになります。
 				</p>
 <source><![CDATA[<gen-sqlfileconstants
+    classpathDir="build/classes"
     rootPackageName="examples"
     templateFilePrimaryDir="mytempletes"
     classpathRef="classpath">
@@ -263,6 +267,7 @@ public final class SqlFiles {
 					example.MySqlFileConstantNamingRuleというクラスを作成した場合、次のように指定します。
 				</p>
 <source><![CDATA[<gen-sqlfileconstants
+    classpathDir="build/classes"
     rootPackageName="examples"
     sqlFileConstantNamingRuleClassName="example.MySqlFileConstantNamingRule"
     classpathRef="classpath">
