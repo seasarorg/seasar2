@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
+import org.seasar.framework.convention.PersistenceConvention;
 
 /**
  * Beanを返す {@link ResultSetHandler}です。
@@ -37,12 +38,14 @@ public class BeanResultSetHandler extends AbstractBeanResultSetHandler {
      *            Beanクラス
      * @param dialect
      *            データベースの方言
+     * @param persistenceConvention
+     *            永続化層の規約
      * @param sql
      *            SQL
      */
     public BeanResultSetHandler(Class<?> beanClass, DbmsDialect dialect,
-            String sql) {
-        super(beanClass, dialect, sql);
+            PersistenceConvention persistenceConvention, String sql) {
+        super(beanClass, dialect, persistenceConvention, sql);
     }
 
     public Object handle(ResultSet rs) throws SQLException,

@@ -24,6 +24,7 @@ import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
@@ -46,7 +47,8 @@ public class BeanIterationResultSetHandlerTest extends TestCase {
     @SuppressWarnings("unchecked")
     public void testHandle() throws Exception {
         BeanIterationResultSetHandler handler = new BeanIterationResultSetHandler(
-                AaaDto.class, new StandardDialect(), "select * from aaa", 0,
+                AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl(), "select * from aaa", 0,
                 new IterationCallback<AaaDto, Integer>() {
 
                     public Integer iterate(AaaDto entity,
@@ -85,7 +87,8 @@ public class BeanIterationResultSetHandlerTest extends TestCase {
     @SuppressWarnings("unchecked")
     public void testHandle_WithLimit() throws Exception {
         BeanIterationResultSetHandler handler = new BeanIterationResultSetHandler(
-                AaaDto.class, new StandardDialect(), "select * from aaa", 2,
+                AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl(), "select * from aaa", 2,
                 new IterationCallback<AaaDto, Integer>() {
 
                     public Integer iterate(AaaDto entity,
@@ -116,7 +119,8 @@ public class BeanIterationResultSetHandlerTest extends TestCase {
     @SuppressWarnings("unchecked")
     public void testHandle_WithExit() throws Exception {
         BeanIterationResultSetHandler handler = new BeanIterationResultSetHandler(
-                AaaDto.class, new StandardDialect(), "select * from aaa", 0,
+                AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl(), "select * from aaa", 0,
                 new IterationCallback<AaaDto, Integer>() {
 
                     public Integer iterate(AaaDto entity,

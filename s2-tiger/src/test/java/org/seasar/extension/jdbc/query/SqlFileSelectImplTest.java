@@ -42,6 +42,7 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
 import org.seasar.extension.sql.cache.NodeCache;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
@@ -71,7 +72,7 @@ public class SqlFileSelectImplTest extends TestCase {
                 new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
-
+        manager.setPersistenceConvention(new PersistenceConventionImpl());
     }
 
     @Override

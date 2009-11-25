@@ -33,6 +33,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jdbc.parameter.Parameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
@@ -57,7 +58,7 @@ public class AbsQueryTest extends TestCase {
         manager = new JdbcManagerImpl();
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
-
+        manager.setPersistenceConvention(new PersistenceConventionImpl());
     }
 
     @Override
@@ -295,7 +296,8 @@ public class AbsQueryTest extends TestCase {
         data.put("NAME", "222");
         rs.addRowData(data);
         BeanResultSetHandler handler = new BeanResultSetHandler(Aaa.class,
-                manager.getDialect(), "select * from aaa");
+                manager.getDialect(), manager.getPersistenceConvention(),
+                "select * from aaa");
         Object ret = query.handleResultSet(handler, rs);
         assertTrue(rs.isClosed());
         assertNotNull(ret);

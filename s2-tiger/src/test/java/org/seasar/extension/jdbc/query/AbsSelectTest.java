@@ -47,6 +47,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
@@ -80,6 +81,7 @@ public class AbsSelectTest extends TestCase {
                 new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
+        manager.setPersistenceConvention(new PersistenceConventionImpl());
 
     }
 
@@ -384,8 +386,8 @@ public class AbsSelectTest extends TestCase {
             @Override
             protected ResultSetHandler createResultListResultSetHandler() {
                 DbmsDialect dialect = jdbcManager.getDialect();
-                return new BeanListResultSetHandler(baseClass, dialect,
-                        "select * from aaa");
+                return new BeanListResultSetHandler(baseClass, dialect, manager
+                        .getPersistenceConvention(), "select * from aaa");
             }
 
             @Override
@@ -429,8 +431,8 @@ public class AbsSelectTest extends TestCase {
             @Override
             protected ResultSetHandler createResultListResultSetHandler() {
                 DbmsDialect dialect = jdbcManager.getDialect();
-                return new BeanListResultSetHandler(baseClass, dialect,
-                        "select * from aaa");
+                return new BeanListResultSetHandler(baseClass, dialect, manager
+                        .getPersistenceConvention(), "select * from aaa");
             }
 
             @Override
@@ -466,8 +468,8 @@ public class AbsSelectTest extends TestCase {
             @Override
             protected ResultSetHandler createResultListResultSetHandler() {
                 DbmsDialect dialect = jdbcManager.getDialect();
-                return new BeanListResultSetHandler(baseClass, dialect,
-                        "select * from aaa");
+                return new BeanListResultSetHandler(baseClass, dialect, manager
+                        .getPersistenceConvention(), "select * from aaa");
             }
 
             @Override
@@ -505,8 +507,8 @@ public class AbsSelectTest extends TestCase {
             @Override
             protected ResultSetHandler createSingleResultResultSetHandler() {
                 DbmsDialect dialect = jdbcManager.getDialect();
-                return new BeanResultSetHandler(baseClass, dialect,
-                        "select * from aaa");
+                return new BeanResultSetHandler(baseClass, dialect, manager
+                        .getPersistenceConvention(), "select * from aaa");
             }
 
             @Override
@@ -547,8 +549,8 @@ public class AbsSelectTest extends TestCase {
             @Override
             protected ResultSetHandler createSingleResultResultSetHandler() {
                 DbmsDialect dialect = jdbcManager.getDialect();
-                return new BeanResultSetHandler(baseClass, dialect,
-                        "select * from aaa");
+                return new BeanResultSetHandler(baseClass, dialect, manager
+                        .getPersistenceConvention(), "select * from aaa");
             }
 
             @Override
@@ -583,8 +585,8 @@ public class AbsSelectTest extends TestCase {
             @Override
             protected ResultSetHandler createSingleResultResultSetHandler() {
                 DbmsDialect dialect = jdbcManager.getDialect();
-                return new BeanResultSetHandler(baseClass, dialect,
-                        "select * from aaa");
+                return new BeanResultSetHandler(baseClass, dialect, manager
+                        .getPersistenceConvention(), "select * from aaa");
             }
 
             @Override
@@ -626,6 +628,7 @@ public class AbsSelectTest extends TestCase {
                     IterationCallback callback) {
                 DbmsDialect dialect = jdbcManager.getDialect();
                 return new BeanIterationResultSetHandler(baseClass, dialect,
+                        manager.getPersistenceConvention(),
                         "select * from aaa", 0, callback);
             }
 
@@ -679,6 +682,7 @@ public class AbsSelectTest extends TestCase {
                     IterationCallback callback) {
                 DbmsDialect dialect = jdbcManager.getDialect();
                 return new BeanIterationResultSetHandler(baseClass, dialect,
+                        manager.getPersistenceConvention(),
                         "select * from aaa", 0, callback);
             }
 

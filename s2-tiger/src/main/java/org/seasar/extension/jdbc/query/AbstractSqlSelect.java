@@ -77,8 +77,8 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
                     (Class<? extends Map>) baseClass, dialect,
                     persistenceConvention, executedSql, limit);
         }
-        return new BeanListResultSetHandler(baseClass, dialect, executedSql,
-                limit);
+        return new BeanListResultSetHandler(baseClass, dialect,
+                persistenceConvention, executedSql, limit);
     }
 
     @SuppressWarnings("unchecked")
@@ -96,7 +96,8 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
             return new MapResultSetHandler((Class<? extends Map>) baseClass,
                     dialect, persistenceConvention, executedSql);
         }
-        return new BeanResultSetHandler(baseClass, dialect, executedSql);
+        return new BeanResultSetHandler(baseClass, dialect,
+                persistenceConvention, executedSql);
     }
 
     @SuppressWarnings("unchecked")
@@ -119,7 +120,7 @@ public abstract class AbstractSqlSelect<T, S extends Select<T, S>> extends
                     persistenceConvention, executedSql, limit, callback);
         }
         return new BeanIterationResultSetHandler(baseClass, dialect,
-                executedSql, limit, callback);
+                persistenceConvention, executedSql, limit, callback);
     }
 
     /**

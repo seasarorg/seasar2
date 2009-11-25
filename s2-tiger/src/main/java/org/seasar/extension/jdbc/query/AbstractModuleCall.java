@@ -357,7 +357,7 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
                     .getValueType(resultClass), null);
         } else {
             handler = new BeanResultSetHandler(resultClass, jdbcManager
-                    .getDialect(), null);
+                    .getDialect(), jdbcManager.getPersistenceConvention(), null);
         }
         return handleResultSet(handler, rs);
     }
@@ -379,7 +379,7 @@ public abstract class AbstractModuleCall<S extends ModuleCall<S>> extends
                     .getValueType(elementClass));
         } else {
             handler = new BeanListResultSetHandler(elementClass, jdbcManager
-                    .getDialect(), null);
+                    .getDialect(), jdbcManager.getPersistenceConvention(), null);
         }
         return handleResultSet(handler, rs);
     }

@@ -23,6 +23,7 @@ import java.util.List;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ResultSetHandler;
+import org.seasar.framework.convention.PersistenceConvention;
 
 /**
  * Beanのリストを返す {@link ResultSetHandler}です。
@@ -43,12 +44,14 @@ public class BeanListResultSetHandler extends AbstractBeanResultSetHandler {
      *            Beanクラス
      * @param dialect
      *            データベースの方言
+     * @param persistenceConvention
+     *            永続化層の規約
      * @param sql
      *            SQL
      */
     public BeanListResultSetHandler(Class<?> beanClass, DbmsDialect dialect,
-            String sql) {
-        this(beanClass, dialect, sql, 0);
+            PersistenceConvention persistenceConvention, String sql) {
+        this(beanClass, dialect, persistenceConvention, sql, 0);
     }
 
     /**
@@ -58,14 +61,16 @@ public class BeanListResultSetHandler extends AbstractBeanResultSetHandler {
      *            Beanクラス
      * @param dialect
      *            データベースの方言
+     * @param persistenceConvention
+     *            永続化層の規約
      * @param sql
      *            SQL
      * @param limit
      *            リミット
      */
     public BeanListResultSetHandler(Class<?> beanClass, DbmsDialect dialect,
-            String sql, int limit) {
-        super(beanClass, dialect, sql);
+            PersistenceConvention persistenceConvention, String sql, int limit) {
+        super(beanClass, dialect, persistenceConvention, sql);
         this.limit = limit;
     }
 

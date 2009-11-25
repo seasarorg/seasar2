@@ -23,6 +23,7 @@ import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.IterationContext;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
+import org.seasar.framework.convention.PersistenceConvention;
 
 /**
  * 問い合わせ結果をBeanにして反復する{@link ResultSetHandler}です。
@@ -45,6 +46,8 @@ public class BeanIterationResultSetHandler extends AbstractBeanResultSetHandler 
      *            Beanクラス
      * @param dialect
      *            データベースの方言
+     * @param persistenceConvention
+     *            永続化層の規約
      * @param sql
      *            SQL
      * @param limit
@@ -53,9 +56,10 @@ public class BeanIterationResultSetHandler extends AbstractBeanResultSetHandler 
      *            反復コールバック
      */
     public BeanIterationResultSetHandler(final Class<?> beanClass,
-            final DbmsDialect dialect, final String sql, final int limit,
-            final IterationCallback callback) {
-        super(beanClass, dialect, sql);
+            final DbmsDialect dialect,
+            final PersistenceConvention persistenceConvention,
+            final String sql, final int limit, final IterationCallback callback) {
+        super(beanClass, dialect, persistenceConvention, sql);
         this.limit = limit;
         this.callback = callback;
     }

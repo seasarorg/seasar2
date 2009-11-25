@@ -36,6 +36,7 @@ import org.seasar.extension.jdbc.manager.JdbcManagerImpl;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.exception.SQLRuntimeException;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockDataSource;
@@ -60,7 +61,7 @@ public class SqlSelectImplTest extends TestCase {
                 new TransactionManagerImpl()));
         manager.setDataSource(new MockDataSource());
         manager.setDialect(new StandardDialect());
-
+        manager.setPersistenceConvention(new PersistenceConventionImpl());
     }
 
     @Override

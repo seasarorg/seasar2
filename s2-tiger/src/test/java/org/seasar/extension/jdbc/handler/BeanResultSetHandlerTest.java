@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
-import org.seasar.extension.jdbc.handler.BeanResultSetHandler;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
@@ -32,57 +32,58 @@ import org.seasar.framework.util.ArrayMap;
  */
 public class BeanResultSetHandlerTest extends TestCase {
 
-	/**
-	 * @throws Exception
-	 * 
-	 */
-	public void testHandle() throws Exception {
-		BeanResultSetHandler handler = new BeanResultSetHandler(AaaDto.class,
-				new StandardDialect(), "select * from aaa");
-		MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-		MockColumnMetaData columnMeta = new MockColumnMetaData();
-		columnMeta.setColumnLabel("FOO2");
-		rsMeta.addColumnMetaData(columnMeta);
-		columnMeta = new MockColumnMetaData();
-		columnMeta.setColumnLabel("AAA_BBB");
-		rsMeta.addColumnMetaData(columnMeta);
-		MockResultSet rs = new MockResultSet(rsMeta);
-		ArrayMap data = new ArrayMap();
-		data.put("FOO2", "111");
-		data.put("AAA_BBB", "222");
-		rs.addRowData(data);
-		AaaDto dto = (AaaDto) handler.handle(rs);
-		assertNotNull(dto);
-		assertEquals("111", dto.foo);
-		assertEquals("222", dto.aaaBbb);
-	}
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testHandle() throws Exception {
+        BeanResultSetHandler handler = new BeanResultSetHandler(AaaDto.class,
+                new StandardDialect(), new PersistenceConventionImpl(),
+                "select * from aaa");
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("FOO2");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("AAA_BBB");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("FOO2", "111");
+        data.put("AAA_BBB", "222");
+        rs.addRowData(data);
+        AaaDto dto = (AaaDto) handler.handle(rs);
+        assertNotNull(dto);
+        assertEquals("111", dto.foo);
+        assertEquals("222", dto.aaaBbb);
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public void testHandle_nonUniqueResult() throws Exception {
-		String sql = "select * from aaa";
-		BeanResultSetHandler handler = new BeanResultSetHandler(AaaDto.class,
-				new StandardDialect(), sql);
-		MockResultSetMetaData rsMeta = new MockResultSetMetaData();
-		MockColumnMetaData columnMeta = new MockColumnMetaData();
-		columnMeta.setColumnLabel("FOO2");
-		rsMeta.addColumnMetaData(columnMeta);
-		columnMeta = new MockColumnMetaData();
-		columnMeta.setColumnLabel("AAA_BBB");
-		rsMeta.addColumnMetaData(columnMeta);
-		MockResultSet rs = new MockResultSet(rsMeta);
-		ArrayMap data = new ArrayMap();
-		data.put("FOO2", "111");
-		data.put("AAA_BBB", "222");
-		rs.addRowData(data);
-		rs.addRowData(data);
-		try {
-			handler.handle(rs);
-			fail();
-		} catch (SNonUniqueResultException e) {
-			System.out.println(e.getMessage());
-			assertEquals(sql, e.getSql());
-		}
-	}
+    /**
+     * @throws Exception
+     */
+    public void testHandle_nonUniqueResult() throws Exception {
+        String sql = "select * from aaa";
+        BeanResultSetHandler handler = new BeanResultSetHandler(AaaDto.class,
+                new StandardDialect(), new PersistenceConventionImpl(), sql);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("FOO2");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("AAA_BBB");
+        rsMeta.addColumnMetaData(columnMeta);
+        MockResultSet rs = new MockResultSet(rsMeta);
+        ArrayMap data = new ArrayMap();
+        data.put("FOO2", "111");
+        data.put("AAA_BBB", "222");
+        rs.addRowData(data);
+        rs.addRowData(data);
+        try {
+            handler.handle(rs);
+            fail();
+        } catch (SNonUniqueResultException e) {
+            System.out.println(e.getMessage());
+            assertEquals(sql, e.getSql());
+        }
+    }
 }

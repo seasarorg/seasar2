@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 
 import org.seasar.extension.jdbc.dialect.StandardDialect;
 import org.seasar.extension.jdbc.dto.AaaDto;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
@@ -39,7 +40,8 @@ public class BeanListResultSetHandlerTest extends TestCase {
     @SuppressWarnings("unchecked")
     public void testHandle() throws Exception {
         BeanListResultSetHandler handler = new BeanListResultSetHandler(
-                AaaDto.class, new StandardDialect(), "select * from aaa");
+                AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl(), "select * from aaa");
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("FOO2");
@@ -66,7 +68,8 @@ public class BeanListResultSetHandlerTest extends TestCase {
     @SuppressWarnings("unchecked")
     public void testHandleWithLimit() throws Exception {
         BeanListResultSetHandler handler = new BeanListResultSetHandler(
-                AaaDto.class, new StandardDialect(), "select * from aaa", 1);
+                AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl(), "select * from aaa", 1);
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("FOO2");

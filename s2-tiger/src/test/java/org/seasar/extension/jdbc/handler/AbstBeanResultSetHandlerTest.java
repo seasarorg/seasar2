@@ -34,6 +34,8 @@ import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.convention.PersistenceConvention;
+import org.seasar.framework.convention.impl.PersistenceConventionImpl;
 import org.seasar.framework.mock.sql.MockColumnMetaData;
 import org.seasar.framework.mock.sql.MockResultSet;
 import org.seasar.framework.mock.sql.MockResultSetMetaData;
@@ -50,7 +52,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreatePropertyDescMapWithColumn_publicfield() {
-        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         CaseInsensitiveMap map = handler.createPropertyDescMapWithColumn();
         assertNotNull(map.get("foo2"));
     }
@@ -59,7 +62,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreatePropertyDescMapWithColumn_property() {
-        MyHandler handler = new MyHandler(Aaa2Dto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(Aaa2Dto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         CaseInsensitiveMap map = handler.createPropertyDescMapWithColumn();
         assertNotNull(map.get("foo2"));
     }
@@ -68,7 +72,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreatePropertyDescMapWithColumn_nothing() {
-        MyHandler handler = new MyHandler(Aaa3Dto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(Aaa3Dto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         CaseInsensitiveMap map = handler.createPropertyDescMapWithColumn();
         assertEquals(0, map.size());
     }
@@ -77,7 +82,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreatePropertyDescMapWithColumn_emptyName() {
-        MyHandler handler = new MyHandler(Aaa4Dto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(Aaa4Dto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         CaseInsensitiveMap map = handler.createPropertyDescMapWithColumn();
         assertEquals(0, map.size());
     }
@@ -87,7 +93,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreatePropertyTypes() throws Exception {
-        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("FOO2");
@@ -107,8 +114,37 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testCreatePropertyTypes_noNameConversion() throws Exception {
+        PersistenceConventionImpl persistenceConvention = new PersistenceConventionImpl();
+        persistenceConvention.setNoNameConversion(true);
+        MyHandler handler = new MyHandler(Aaa7Dto.class, new StandardDialect(),
+                persistenceConvention);
+        MockResultSetMetaData rsMeta = new MockResultSetMetaData();
+        MockColumnMetaData columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("AAA_BBB");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("CCC_DDD");
+        rsMeta.addColumnMetaData(columnMeta);
+        columnMeta = new MockColumnMetaData();
+        columnMeta.setColumnLabel("EEE_FFF");
+        rsMeta.addColumnMetaData(columnMeta);
+        PropertyType[] ptypes = handler.createPropertyTypes(rsMeta);
+        assertEquals(3, ptypes.length);
+        assertEquals("AAA_BBB", ptypes[0].getColumnName());
+        assertEquals("AAA_BBB", ptypes[0].getPropertyName());
+        assertEquals("CCC_DDD", ptypes[1].getColumnName());
+        assertEquals("cccDdd", ptypes[1].getPropertyName());
+        assertNull(ptypes[2]);
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testCreatePropertyTypes_propertyNotExists() throws Exception {
-        MyHandler handler = new MyHandler(Aaa5Dto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(Aaa5Dto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("FOO2");
@@ -128,7 +164,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreateRow() throws Exception {
-        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("FOO2");
@@ -153,7 +190,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * 
      */
     public void testCreateRow_propertyNotExists() throws Exception {
-        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(AaaDto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         MockResultSetMetaData rsMeta = new MockResultSetMetaData();
         MockColumnMetaData columnMeta = new MockColumnMetaData();
         columnMeta.setColumnLabel("FOO2");
@@ -181,7 +219,8 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType() throws Exception {
-        MyHandler handler = new MyHandler(Aaa6Dto.class, new StandardDialect());
+        MyHandler handler = new MyHandler(Aaa6Dto.class, new StandardDialect(),
+                new PersistenceConventionImpl());
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(Aaa6Dto.class);
         PropertyDesc propertyDesc = beanDesc.getPropertyDesc("aaa");
         assertEquals(ValueTypes.STRING, handler.getValueType(propertyDesc));
@@ -196,9 +235,12 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
         /**
          * @param beanClass
          * @param dialect
+         * @param persistenceConvention
          */
-        public MyHandler(Class<?> beanClass, DbmsDialect dialect) {
-            super(beanClass, dialect, "select * from aaa");
+        public MyHandler(Class<?> beanClass, DbmsDialect dialect,
+                PersistenceConvention persistenceConvention) {
+            super(beanClass, dialect, persistenceConvention,
+                    "select * from aaa");
         }
 
         public Object handle(ResultSet resultSet) throws SQLException {
@@ -275,4 +317,24 @@ public class AbstBeanResultSetHandlerTest extends TestCase {
         @Temporal(TemporalType.TIME)
         public Date ccc;
     }
+
+    private static class Aaa7Dto {
+
+        /**
+         * 
+         */
+        public String AAA_BBB;
+
+        /**
+         * 
+         */
+        @Column(name = "CCC_DDD")
+        public String cccDdd;
+
+        /**
+         * 
+         */
+        public String eeeFff;
+    }
+
 }

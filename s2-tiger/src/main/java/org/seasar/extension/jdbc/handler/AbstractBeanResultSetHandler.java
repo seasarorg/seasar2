@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.impl.PropertyTypeImpl;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+import org.seasar.framework.convention.PersistenceConvention;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.ClassUtil;
 import org.seasar.framework.util.StringUtil;
@@ -62,6 +63,11 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
     protected DbmsDialect dialect;
 
     /**
+     * 永続化層の規約です。
+     */
+    protected PersistenceConvention persistenceConvention;
+
+    /**
      * SQLです。
      */
     protected String sql;
@@ -73,14 +79,18 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
      *            Beanクラス
      * @param dialect
      *            データベースの方言です。
+     * @param persistenceConvention
+     *            永続化層の規約
      * @param sql
      *            SQL
      */
     public AbstractBeanResultSetHandler(Class<?> beanClass,
-            DbmsDialect dialect, String sql) {
+            DbmsDialect dialect, PersistenceConvention persistenceConvention,
+            String sql) {
         this.beanClass = beanClass;
         beanDesc = BeanDescFactory.getBeanDesc(beanClass);
         this.dialect = dialect;
+        this.persistenceConvention = persistenceConvention;
         this.sql = sql;
     }
 
@@ -104,7 +114,8 @@ public abstract class AbstractBeanResultSetHandler implements ResultSetHandler {
             PropertyDesc propertyDesc = (PropertyDesc) pdWithColumn
                     .get(columnName);
             if (propertyDesc == null) {
-                String propertyName = StringUtil.replace(columnName, "_", "");
+                String propertyName = persistenceConvention
+                        .fromColumnNameToPropertyName(columnName);
                 if (!beanDesc.hasPropertyDesc(propertyName)) {
                     continue;
                 }
