@@ -58,9 +58,9 @@
 インメモリデータベースなどを使うことを推奨します。
 </p>
 <h3>dbsession.dicon</h3>
-<p>s2-xxx.zipのresources/dbsession.diconをクラスパスに通します。
+<p>Seasar2の配布ファイル (S2.4.xx.zip) のresources/dbsession.diconをクラスパスに通します。
 dbsession.diconのDbSessionStateManagerImplのdataSourceプロパティを適切に設定します。
-dbsession.diconは、app.diconでincludeします。
+dbsession.diconを、app.diconでincludeします。
 </p>
 <p>
 セッション情報の値はバイトストリームとしてバッチ更新によりデータベースに書き込まれますが、
@@ -119,7 +119,7 @@ DbSessionFilterはfilterの中で最初に記述してください。
 <pre>
 &lt;filter&gt;
     &lt;filter-name&gt;dbSessionFilter&lt;/filter-name&gt;
-    &lt;filter-class&gt;org.seasar.extension.dbsession.DbSessionFilter&lt;/filter-class&gt;
+    &lt;filter-class&gt;org.seasar.extension.httpsession.SessionFilter&lt;/filter-class&gt;
 &lt;/filter&gt;
 
 &lt;filter-mapping&gt;
