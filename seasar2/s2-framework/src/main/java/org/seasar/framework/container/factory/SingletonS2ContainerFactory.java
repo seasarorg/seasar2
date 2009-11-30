@@ -19,7 +19,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.seasar.framework.container.ExternalContext;
@@ -218,17 +220,25 @@ public class SingletonS2ContainerFactory {
     }
 
     private static void checkVersion(final String artifactId) {
-        final List versions = getVersions(artifactId);
+        final Map versions = getVersions(artifactId);
         if (versions.isEmpty()) {
             return;
-        } else if (versions.size() > 1) {
+        }
+        if (versions.size() > 1) {
             throw new JarDuplicatedException(artifactId, versions);
         }
-        logger.log("ISSR0009", new Object[] { artifactId, versions.get(0) });
+        final String version = (String) versions.keySet().iterator().next();
+        final List urlList = (List) versions.values().iterator().next();
+        if (urlList.size() > 1) {
+            logger.log("WSSR0016",
+                    new Object[] { artifactId, version, urlList });
+            return;
+        }
+        logger.log("ISSR0009", new Object[] { artifactId, version });
     }
 
-    private static List getVersions(final String artifactId) {
-        final List versions = new ArrayList();
+    private static Map getVersions(final String artifactId) {
+        final Map versions = new HashMap();
         try {
             final String name = "META-INF/maven/org.seasar.container/"
                     + artifactId + "/pom.properties";
@@ -240,7 +250,15 @@ public class SingletonS2ContainerFactory {
                 try {
                     final Properties props = new Properties();
                     props.load(is);
-                    versions.add(props.getProperty("version"));
+                    String version = props.getProperty("version");
+                    final List urlList;
+                    if (versions.containsKey(version)) {
+                        urlList = (List) versions.get(version);
+                    } else {
+                        urlList = new ArrayList();
+                        versions.put(version, urlList);
+                    }
+                    urlList.add(url.toExternalForm());
                 } finally {
                     InputStreamUtil.close(is);
                 }
