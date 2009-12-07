@@ -29,6 +29,7 @@ import org.seasar.extension.jdbc.SqlLogger;
 import org.seasar.extension.jdbc.exception.IdGenerationFailedRuntimeException;
 import org.seasar.extension.jdbc.manager.JdbcManagerImplementor;
 import org.seasar.framework.util.PreparedStatementUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * {@link GenerationType#IDENTITY}方式で識別子の値を自動生成するIDジェネレータです。
@@ -108,7 +109,8 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
     protected long getGeneratedId(final JdbcManagerImplementor jdbcManager,
             final SqlLogger sqlLogger) {
         final String sql = jdbcManager.getDialect().getIdentitySelectString(
-                entityMeta.getTableMeta().getName(),
+                toQualifiedName(entityMeta.getTableMeta().getSchema(),
+                        entityMeta.getTableMeta().getName()),
                 propertyMeta.getColumnMeta().getName());
         sqlLogger.logSql(sql);
         final JdbcContext jdbcContext = jdbcManager.getJdbcContext();
@@ -121,6 +123,22 @@ public class IdentityIdGenerator extends AbstractIdGenerator {
                 jdbcContext.destroy();
             }
         }
+    }
+
+    /**
+     * スキーマ名が指定された場合は修飾された名前を返します。
+     * 
+     * @param schema
+     *            スキーマ名
+     * @param tableName
+     *            テーブル名
+     * @return 修飾された名前
+     */
+    protected String toQualifiedName(String schema, String tableName) {
+        if (StringUtil.isEmpty(schema)) {
+            return tableName;
+        }
+        return schema + "." + tableName;
     }
 
 }
