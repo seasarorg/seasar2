@@ -32,7 +32,8 @@ import org.seasar.framework.util.StringUtil;
  * <li>変換元のオブジェクトが{@link java.sql.Timestamp}なら、変換元をそのまま変換先とします。</li>
  * <li>変換元のオブジェクトが{@link Date}なら、同じ時刻を持つ{@link java.sql.Timestamp}を変換先とします。</li>
  * <li>変換元のオブジェクトが{@link Calendar}なら、同じ時刻を持つ{@link java.sql.Timestamp}を変換先とします。</li>
- * <li>変換元のオブジェクトが{@link Number 数}なら、その<code>long</code>値を時刻とする{@link java.sql.Timestamp}を変換先とします。</li>
+ * <li>変換元のオブジェクトが{@link Number 数}なら、その<code>long</code>値を時刻とする
+ * {@link java.sql.Timestamp}を変換先とします。</li>
  * <li>それ以外の場合は、その文字列表現をフォーマットに従って{@link java.sql.Timestamp}に変換した結果を変換先とします。</li>
  * </ul>
  * 
@@ -83,7 +84,11 @@ public class SqlTimestampConverter extends AbstractConverter {
      * @return 変換した結果の{@link java.sql.Timestamp}
      */
     protected java.sql.Timestamp toTimestamp(final Date date) {
-        return new java.sql.Timestamp(date.getTime());
+        java.sql.Timestamp result = new java.sql.Timestamp(date.getTime());
+        if (date instanceof java.sql.Timestamp) {
+            result.setNanos(((java.sql.Timestamp) date).getNanos());
+        }
+        return result;
     }
 
     /**
