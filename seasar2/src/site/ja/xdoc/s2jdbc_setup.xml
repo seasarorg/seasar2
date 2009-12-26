@@ -171,6 +171,11 @@
 						<td>_postgre</td>
 					</tr>
 					<tr>
+						<td>sqliteDialect</td>
+						<td>SQLite</td>
+						<td>_sqlite</td>
+					</tr>
+					<tr>
 						<td>standardDialect</td>
 						<td>どれにも当てはまらないときに選ぶ標準的なダイアレクト</td>
 						<td>

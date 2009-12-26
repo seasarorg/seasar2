@@ -24,6 +24,7 @@
 		<property name="dialect">mysqlDialect</property>
 		<property name="dialect">oracleDialect</property>
 		<property name="dialect">postgreDialect</property>
+		<property name="dialect">sqliteDialect</property>
 		<property name="dialect">standardDialect</property>
 		<property name="dialect">sybaseDialect</property>
 		-->

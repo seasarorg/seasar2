@@ -34,6 +34,7 @@ import org.seasar.extension.jdbc.dialect.MysqlDialect;
 import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.dialect.Postgre81Dialect;
 import org.seasar.extension.jdbc.dialect.PostgreDialect;
+import org.seasar.extension.jdbc.dialect.SqliteDialect;
 import org.seasar.extension.jdbc.dialect.SybaseDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.Db2390GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.Db2400GenDialect;
@@ -50,6 +51,7 @@ import org.seasar.extension.jdbc.gen.internal.dialect.MysqlGenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.OracleGenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.Postgre81GenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.PostgreGenDialect;
+import org.seasar.extension.jdbc.gen.internal.dialect.SqliteGenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.StandardGenDialect;
 import org.seasar.extension.jdbc.gen.internal.dialect.SybaseGenDialect;
 
@@ -105,6 +107,9 @@ public class GenDialectRegistry {
     /** PostgreSQL 8.1の方言 */
     protected static Postgre81GenDialect POSTGRE81 = new Postgre81GenDialect();
 
+    /** Sqliteの方言 */
+    protected static SqliteGenDialect SQLITE = new SqliteGenDialect();
+
     /** Sybaseの方言 */
     protected static SybaseGenDialect SYBASE = new SybaseGenDialect();
 
@@ -129,6 +134,7 @@ public class GenDialectRegistry {
         dialectMap.put(OracleDialect.class.getName(), ORACLE);
         dialectMap.put(PostgreDialect.class.getName(), POSTGRE);
         dialectMap.put(Postgre81Dialect.class.getName(), POSTGRE81);
+        dialectMap.put(SqliteDialect.class.getName(), SQLITE);
         dialectMap.put(SybaseDialect.class.getName(), SYBASE);
     }
 
