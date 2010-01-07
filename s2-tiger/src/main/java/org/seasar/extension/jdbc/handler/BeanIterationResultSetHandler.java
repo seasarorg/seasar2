@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import org.seasar.extension.jdbc.DbmsDialect;
 import org.seasar.extension.jdbc.IterationCallback;
 import org.seasar.extension.jdbc.IterationContext;
+import org.seasar.extension.jdbc.PropertyType;
 import org.seasar.extension.jdbc.ResultSetHandler;
 import org.seasar.extension.jdbc.exception.SNonUniqueResultException;
 import org.seasar.framework.convention.PersistenceConvention;
@@ -66,11 +67,12 @@ public class BeanIterationResultSetHandler extends AbstractBeanResultSetHandler 
 
     public Object handle(final ResultSet rs) throws SQLException,
             SNonUniqueResultException {
+        final PropertyType[] propertyTypes = createPropertyTypes(rs
+                .getMetaData());
         final IterationContext iterationContext = new IterationContext();
         Object result = null;
         for (int i = 0; (limit <= 0 || i < limit) && rs.next(); i++) {
-            final Object entity = createRow(rs, createPropertyTypes(rs
-                    .getMetaData()));
+            final Object entity = createRow(rs, propertyTypes);
             result = callback.iterate(entity, iterationContext);
             if (iterationContext.isExit()) {
                 return result;
