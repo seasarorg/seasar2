@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
@@ -86,6 +88,9 @@ public class TimestampType extends AbstractValueType {
      * @return {@link Timestamp}
      */
     protected Timestamp toTimestamp(Object value) {
+        if (value instanceof Date || value instanceof Calendar) {
+            return TimestampConversionUtil.toTimestamp(value);
+        }
         return TimestampConversionUtil.toTimestamp(value,
                 TimestampConversionUtil.getPattern(Locale.getDefault()));
     }

@@ -63,6 +63,9 @@ public class DateTimeType extends TimeType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
+        if (value instanceof Time || value instanceof Calendar) {
+            return TimeConversionUtil.toTime(value);
+        }
         try {
             return DateConversionUtil.toDate(value, TimestampConversionUtil
                     .getPattern(Locale.getDefault()));

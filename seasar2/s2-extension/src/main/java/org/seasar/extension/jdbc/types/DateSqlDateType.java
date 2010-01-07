@@ -61,6 +61,9 @@ public class DateSqlDateType extends SqlDateType {
      * @return {@link Date}
      */
     protected Date toDate(Object value) {
+        if (value instanceof Date || value instanceof Calendar) {
+            return DateConversionUtil.toDate(value);
+        }
         try {
             return DateConversionUtil.toDate(value, TimestampConversionUtil
                     .getPattern(Locale.getDefault()));
