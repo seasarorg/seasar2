@@ -251,8 +251,8 @@ salary <= ?
 ]]></source>
 			<p>
 				また、salaryMinとsalaryMaxがnullの場合は、
-				BEGINコメントとENDコメントで囲まれた部分に1つも条件に一致するものがないので、
-				BEGINコメントとENDコメントで囲まれた部分がカットされて次のようになります。
+				BEGINコメントとENDコメントで囲まれた部分に有効なIFコメントが一つもないため、
+				BEGINコメントとENDコメントで囲まれた全体がカットされて次のようになります。
 			</p>
 			<source><![CDATA[
 select * from employee
@@ -318,9 +318,12 @@ jobType = /*jobType*/'CLERK'
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。
 				</p>
 				<source><![CDATA[
-List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/sql/employee/selectAll.sql")
-    .getResultList();
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class, 
+            "examples/sql/employee/selectAll.sql")
+        .getResultList();
 ]]></source>
 				<p>
 					SQLファイルのパラメータが1つの場合は、
@@ -329,9 +332,12 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 					SQLファイルの中では/*$1*/のようにパラメータを指定してください。
 				</p>
 				<source><![CDATA[
-List<EmployeeDto> results = jdbcManager.selectBySqlFile(
-    EmployeeDto.class, "examples/sql/employee/selectAll.sql", 10)
-    .getResultList();
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class, 
+            "examples/sql/employee/selectAll.sql", 10)
+        .getResultList();
 ]]></source>
 				<p>
 					SQLファイルのパラメータが複数の場合は、
@@ -343,21 +349,6 @@ List<EmployeeDto> results = jdbcManager.selectBySqlFile(
 					<code>Map</code>
 					のキーを一致させます。
 				</p>
-				<div class="caution">
-					<div>注意点</div>
-					<p>
-						PostgreSQLの場合、引数に
-						<code>Map</code>
-						を使用すると、
-						<code>String</code>
-						以外の型の値に
-						<code>null</code>
-						を指定することは出来ません。
-						パラメータに
-						<code>null</code>
-						を指定する必要がある場合はDtoを使用してください。
-					</p>
-				</div>
 				<source><![CDATA[
 package examples.entity.Employee;
 
@@ -375,10 +366,58 @@ and salary >= /*salaryMax*/2000
 SelectAllParam param = new SelectAllParam();
 param.salaryMin = new BigDecimal(1200);
 param.salaryMax = new BigDecimal(1800);
-List<EmployeeDto> results = jdbcManager
-    .selectBySqlFile(EmployeeDto.class,
-        "examples/sql/employee/selectAll.sql", param)
-    .getResultList();
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectAll.sql", 
+            param)
+        .getResultList();
+]]></source>
+				<p>Mapを使うと次のようになります。</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						PostgreSQLの場合、引数に
+						<code>Map</code>
+						を使用すると、
+						<code>String</code>
+						以外の型の値に
+						<code>null</code>
+						を指定することは出来ません。
+						パラメータに
+						<code>null</code>
+						を指定する必要がある場合はDtoを使用してください。
+					</p>
+				</div>
+				<source><![CDATA[
+Map<String, Object> param = new HashMap<String, Object>();
+param.put("salaryMin", new BigDecimal(1200));
+param.put("salaryMax", new BigDecimal(1800));
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectAll.sql", 
+            param)
+        .getResultList();
+]]></source>
+				<p>
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
+					のstaticメソッドを使うと、流れるようなインタフェースでMapを組み立てることも出来ます。
+				</p>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectAll.sql", 
+            params("salaryMin", new BigDecimal(1200))
+                .$("salaryMax", new BigDecimal(1800))
+                .$())
+        .getResultList();
 ]]></source>
 				<p>
 					<code>Map</code>
@@ -417,12 +456,14 @@ heredate <= /*heredate*/'2000/04/01'
 				<source><![CDATA[
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
-Map<String, Object param = new HashMap<String, Object>();
-param.put("heredate", date(heredate)); //heredateはjava.util.Date型
-List<EmployeeDto> results = jdbcManager
-    .selectBySqlFile(EmployeeDto.class,
-        "examples/sql/employee/selectAll.sql", param)
-    .getResultList();
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectAll.sql", 
+            params("heredate", date(heredate)) //heredateはjava.util.Date型
+                .$()))
+        .getResultList();
 ]]></source>
 				<p>
 					<code>Map</code>
@@ -456,12 +497,14 @@ largeName <= /*largeName*/'hoge'
 				<source><![CDATA[
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
-Map<String, Object param = new HashMap<String, Object>();
-param.put("largeName", lob(largeName));
-List<EmployeeDto> results = jdbcManager
-    .selectBySqlFile(EmployeeDto.class,
-        "examples/sql/employee/selectAll.sql", param)
-    .getResultList();
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectAll.sql", 
+            params("largeName", lob(largeName)) //largeNameはCLOB型
+                .$())
+        .getResultList();
 ]]></source>
 				<p>
 					パラメータ用のJavaBeansまたは
@@ -482,10 +525,12 @@ List<EmployeeDto> results = jdbcManager
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-List<BeanMap> results = jdbcManager
-    .selectBySqlFile(BeanMap.class,
-        "examples/sql/employee/selectAll.sql")
-    .getResultList();
+List<BeanMap> results = 
+    jdbcManager
+        .selectBySqlFile(
+            BeanMap.class,
+            "examples/sql/employee/selectAll.sql")
+        .getResultList();
 ]]></source>
 				<p>
 					BeanMapはMap&lt;String, Object&gt;なクラスで、
@@ -510,11 +555,13 @@ List<BeanMap> results = jdbcManager
 					が発生します。
 				</p>
 				<source><![CDATA[
-List<BeanMap> results = jdbcManager
-    .selectBySqlFile(BeanMap.class,
-        "examples/sql/employee/selectAll.sql")
-    .disallowNoResult()
-    .getResultList();
+List<BeanMap> results = 
+    jdbcManager
+        .selectBySqlFile(
+            BeanMap.class,
+            "examples/sql/employee/selectAll.sql")
+        .disallowNoResult()
+        .getResultList();
 ]]></source>
 			</subsection>
 
@@ -532,10 +579,12 @@ List<BeanMap> results = jdbcManager
 				</p>
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
-EmployeeDto result = jdbcManager
-    .selectBySqlFile(EmployeeDto.class,
-        "examples/sql/employee/selectSingle.sql")
-    .getSingleResult();
+EmployeeDto result = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectSingle.sql")
+        .getSingleResult();
 ]]></source>
 				<p>
 					SQLファイルのパラメータが1つの場合は、
@@ -543,10 +592,13 @@ EmployeeDto result = jdbcManager
 					の3番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-EmployeeDto result = jdbcManager
-    .selectBySqlFile(EmployeeDto.class,
-        "examples/sql/employee/selectSingle.sql", 10)
-    .getSingleResult();
+EmployeeDto result = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectSingle.sql", 
+            10)
+        .getSingleResult();
 ]]></source>
 				<p>
 					SQLファイルのパラメータが複数の場合は、
@@ -571,10 +623,12 @@ EmployeeDto result = jdbcManager
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-BeanMap result = jdbcManager
-    .selectBySqlFile(BeanMap.class,
-        "examples/sql/employee/selectSingle.sql")
-    .getSingleResult();
+BeanMap result = 
+    jdbcManager
+        .selectBySqlFile(
+            BeanMap.class,
+            "examples/sql/employee/selectSingle.sql")
+        .getSingleResult();
 ]]></source>
 				<p>
 					BeanMapはMap&lt;String, Object&gt;なクラスで、
@@ -599,11 +653,13 @@ BeanMap result = jdbcManager
 					が発生します。
 				</p>
 				<source><![CDATA[
-BeanMap result = jdbcManager
-    .selectBySqlFile(BeanMap.class,
-        "examples/sql/employee/selectSingle.sql")
-    .disallowNoResult()
-    .getSingleResult();
+BeanMap result = 
+    jdbcManager
+        .selectBySqlFile(
+            BeanMap.class,
+            "examples/sql/employee/selectSingle.sql")
+        .disallowNoResult()
+        .getSingleResult();
 ]]></source>
 			</subsection>
 
@@ -616,18 +672,21 @@ BeanMap result = jdbcManager
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = results = jdbcManager
-    .selectBySqlFile(EmployeeDto.class,
-        "examples/sql/employee/selectAll.sql")
-    .iterate(new IterationCallback<EmployeeDto, Integer>() {
-        int count;
-        public Integer iterate(EmployeeDto dto, IterationContext context) {
-            if (...) {
-                ++count;
-            }
-            return count;
-        }
-    });
+int results = 
+    jdbcManager
+        .selectBySqlFile(
+            EmployeeDto.class,
+            "examples/sql/employee/selectAll.sql")
+        .iterate(
+            new IterationCallback<EmployeeDto, Integer>() {
+                int count;
+                public Integer iterate(EmployeeDto dto, IterationContext context) {
+                    if (...) {
+                        ++count;
+                    }
+                    return count;
+                }
+            });
 ]]></source>
 				<p>
 					<code>iterate(IterationCallback)</code>
@@ -693,7 +752,9 @@ int count = results = jdbcManager
 					～による検索結果の行数を取得する場合は、getCountBySqlFile()を使います。
 				</p>
 				<source><![CDATA[
-long count = jdbcManager.getCountBySqlFile(examples/sql/employee/selectAll.sql);
+long count = 
+    jdbcManager
+        .getCountBySqlFile(examples/sql/employee/selectAll.sql);
 ]]></source>
 				<p>
 					このメソッドは通常、
@@ -729,8 +790,10 @@ long count = jdbcManager.getCountBySqlFile(examples/sql/employee/selectAll.sql);
 select id, name, ... from employee order by name
 ]]></source>
 				<source><![CDATA[
-jdbcManager.selectBySqlFile(EmployeeDto.class,
-    "examples/sql/employee/selectAll.sql")
+jdbcManager
+    .selectBySqlFile(
+        EmployeeDto.class,
+        "examples/sql/employee/selectAll.sql")
     .limit(100)
     .offset(10)
     .getResultList();
@@ -750,9 +813,10 @@ jdbcManager.selectBySqlFile(EmployeeDto.class,
 				</p>
 				<p>SQLファイルにパラメータがない場合は、次のようにして呼び出します。</p>
 				<source><![CDATA[
-int count = jdbcManager.updateBySqlFile(
-    "examples/sql/employee/update.sql")
-    .execute();
+int count = 
+    jdbcManager
+        .updateBySqlFile("examples/sql/employee/update.sql")
+        .execute();
 ]]></source>
 				<p>
 					SQLファイルのパラメータが1つで値が
@@ -762,9 +826,12 @@ int count = jdbcManager.updateBySqlFile(
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.updateBySqlFile(
-    "examples/sql/employee/update.sql", 10)
-    .execute();
+int count = 
+    jdbcManager
+        .updateBySqlFile(
+            "examples/sql/employee/update.sql", 
+            10)
+        .execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -776,21 +843,6 @@ int count = jdbcManager.updateBySqlFile(
 					<code>Map</code>
 					のキーを一致させます。
 				</p>
-				<div class="caution">
-					<div>注意点</div>
-					<p>
-						PostgreSQLの場合、引数に
-						<code>Map</code>
-						を使用すると、
-						<code>String</code>
-						以外の型の値に
-						<code>null</code>
-						を指定することは出来ません。
-						パラメータに
-						<code>null</code>
-						を指定する必要がある場合はDtoを使用してください。
-					</p>
-				</div>
 				<source><![CDATA[
 package examples.entity.Employee;
 
@@ -807,9 +859,54 @@ where id = /*id*/1
 UpdateParam param = new UpdateParam();
 param.salary = new BigDecimal(1200);
 param.id = 10;
-int count = jdbcManager.updateBySqlFile(
-    "examples/sql/employee/update.sql", param)
-    .execute();
+int count = 
+    jdbcManager
+        .updateBySqlFile(
+            "examples/sql/employee/update.sql", 
+            param)
+        .execute();
+]]></source>
+				<p>Mapを使うと次のようになります。</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						PostgreSQLの場合、引数に
+						<code>Map</code>
+						を使用すると、
+						<code>String</code>
+						以外の型の値に
+						<code>null</code>
+						を指定することは出来ません。
+						パラメータに
+						<code>null</code>
+						を指定する必要がある場合はDtoを使用してください。
+					</p>
+				</div>
+				<source><![CDATA[
+Map<String, Object> param = new HashMap<String, Object>();
+param.put("salary", new BigDecimal(1200));
+param.id = 10;
+int count = 
+    jdbcManager
+        .updateBySqlFile(
+            "examples/sql/employee/update.sql", 
+            param)
+        .execute();
+]]></source>
+				<p>
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
+					のstaticメソッドを使うと、流れるようなインタフェースでMapを組み立てることも出来ます。
+				</p>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+int count = 
+    jdbcManager
+        .updateBySqlFile(
+            "examples/sql/employee/update.sql", 
+            params("salary", new BigDecimal(1200)
+                .$());
+        .execute();
 ]]></source>
 				<p>
 					<code>Map</code>
@@ -848,11 +945,13 @@ where heredate <= /*heredate*/'2000/04/01'
 				<source><![CDATA[
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
-Map<String, Object param = new HashMap<String, Object>();
-param.put("heredate", date(heredate)); //heredateはjava.util.Date型
-int count = jdbcManager.updateBySqlFile(
-    "examples/sql/employee/update.sql", param)
-    .execute();
+int count = 
+    jdbcManager
+        .updateBySqlFile(
+            "examples/sql/employee/update.sql", 
+            params("heredate", date(heredate)) //heredateはjava.util.Date型
+                .$())
+        .execute();
 ]]></source>
 				<p>
 					<code>Map</code>
@@ -886,11 +985,13 @@ where largeName <= /*largeName*/'hoge'
 				<source><![CDATA[
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
-Map<String, Object param = new HashMap<String, Object>();
-param.put("largeName", lob(largeName));
-int count = jdbcManager.updateBySqlFile(
-    "examples/sql/employee/update.sql", param)
-    .execute();
+int count = 
+    jdbcManager
+        .updateBySqlFile(
+            "examples/sql/employee/update.sql", 
+            params("largeName", lob(largeName)) //largeNameはCLOB型
+                .$())
+        .execute();
 ]]></source>
 			</subsection>
 		</section>
@@ -915,9 +1016,12 @@ int count = jdbcManager.updateBySqlFile(
 				<source><![CDATA[
 List<Integer> paramList = new ArrayList<Integer>();
 ...
-int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples/sql/employee/update.sql", paramList)
-    .execute();
+int[] countArray = 
+    jdbcManager
+        .updateBatchBySqlFile(
+            "examples/sql/employee/update.sql", 
+            paramList)
+        .execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -959,9 +1063,12 @@ where id = /*id*/1
 				<source><![CDATA[
 List<UpdateParam> paramList = new ArrayList<UpdateParam>();
 ...
-int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples/sql/employee/update.sql", paramList)
-    .execute();
+int[] countArray = 
+    jdbcManager
+        .updateBatchBySqlFile(
+            "examples/sql/employee/update.sql", 
+            paramList)
+        .execute();
 ]]></source>
 				<p>
 					一意制約違反によりエンティティを挿入ができなかった場合は、
@@ -1034,10 +1141,13 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
 				<source><![CDATA[
 List<UpdateParam> paramList = new ArrayList<UpdateParam>();
 ...
-int[] countArray = jdbcManager.updateBatchBySqlFile(
-    "examples/entity/Employee/update.sql", paramList)
-    .batchSize(50)
-    .execute();
+int[] countArray = 
+    jdbcManager
+        .updateBatchBySqlFile(
+            "examples/entity/Employee/update.sql", 
+            paramList)
+        .batchSize(50)
+        .execute();
 ]]></source>
 				<p>
 					一意制約違反によりエンティティを挿入ができなかった場合は、
@@ -1062,7 +1172,9 @@ int[] countArray = jdbcManager.updateBatchBySqlFile(
 				</p>
 				<p>最初の例は、パラメータのない場合です。</p>
 				<source><![CDATA[
-jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql").execute();
+jdbcManager
+    .callBySqlFile("examples/sql/employee/callMyProc.sql")
+    .execute();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -1072,7 +1184,11 @@ jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql").execute();
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", "hoge").execute();
+jdbcManager
+    .callBySqlFile(
+        "examples/sql/employee/callMyProc.sql", 
+        "hoge")
+    .execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -1158,7 +1274,11 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", dto).execute();
+jdbcManager
+    .callBySqlFile(
+        "examples/sql/employee/callMyProc.sql", 
+        dto)
+    .execute();
 System.out.println(dto.arg2);
 System.out.println(dto.arg3);
 System.out.println(dto.result);
@@ -1178,7 +1298,11 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.callBySqlFile("examples/sql/employee/callMyProc.sql", dto).execute();
+jdbcManager
+    .callBySqlFile(
+        "examples/sql/employee/callMyProc.sql", 
+        dto)
+    .execute();
 System.out.println(dto.result);
 ]]></source>
 				<p>
@@ -1201,7 +1325,11 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.callBySql("examples/sql/employee/callMyProc.sql", dto).execute();
+jdbcManager
+    .callBySql(
+        "examples/sql/employee/callMyProc.sql", 
+        dto)
+    .execute();
 System.out.println(dto.result);
 ]]></source>
 			</subsection>
@@ -1224,7 +1352,9 @@ System.out.println(dto.result);
 				<source><![CDATA[
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql")
+        .callBySqlFile(
+            String.class, 
+            "examples/sql/employee/callMyFunc.sql")
         .getSingleResult();
 ]]></source>
 				<p>
@@ -1242,7 +1372,9 @@ String result =
 				<source><![CDATA[
 List<String> result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql")
+        .callBySqlFile(
+            String.class, 
+            "examples/sql/employee/callMyFunc.sql")
         .getResultList();
 ]]></source>
 				<p>
@@ -1253,7 +1385,9 @@ List<String> result =
 				<source><![CDATA[
 List<MyDto> result =
     jdbcManager
-        .callBySqlFile(MyDto.class, "examples/sql/employee/callMyFunc.sql")
+        .callBySqlFile(
+            MyDto.class, 
+            "examples/sql/employee/callMyFunc.sql")
         .getResultList();
 ]]></source>
 				<p>
@@ -1266,7 +1400,10 @@ List<MyDto> result =
 				<source><![CDATA[
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", "hoge")
+        .callBySqlFile(
+            String.class, 
+            "examples/sql/employee/callMyFunc.sql", 
+            "hoge")
         .getSingleResult();
 ]]></source>
 				<p>
@@ -1355,7 +1492,10 @@ dto.arg1 = "hoge";
 dto.arg3 = 2;
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", dto)
+        .callBySqlFile(
+            String.class, 
+            "examples/sql/employee/callMyFunc.sql", 
+            dto)
         .getSingleResult();
 System.out.println(result);
 System.out.println(dto.arg1);
@@ -1379,7 +1519,10 @@ MyDto dto = new MyDto();
 dto.arg1 = 1;
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", dto)
+        .callBySqlFile(
+            String.class, 
+            "examples/sql/employee/callMyFunc.sql", 
+            dto)
         .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
@@ -1406,7 +1549,10 @@ MyDto dto = new MyDto();
 dto.arg1 = 1;
 String result = 
     jdbcManager
-        .callBySqlFile(String.class, "examples/sql/employee/callMyFunc.sql", dto)
+        .callBySqlFile(
+            String.class, 
+            "examples/sql/employee/callMyFunc.sql", 
+            dto)
         .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);

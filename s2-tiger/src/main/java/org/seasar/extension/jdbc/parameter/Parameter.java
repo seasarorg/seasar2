@@ -19,12 +19,14 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.util.tiger.Maps;
 
 /**
  * 値をラップし特別な意味を持たせるクラスです。
@@ -170,4 +172,33 @@ public class Parameter {
         }
         return value;
     }
+
+    /**
+     * 流れるようなインタフェースでSQLファイルやストアドに渡す{@link Map}型のパラメータを組み立てます。
+     * <p>
+     * 以下のように利用します。
+     * </p>
+     * <code>
+     * jdbcManager
+     *   .selectBySqlFile(Employee.class, PATH, 
+     *     <strong>params("name", name).$("job", job).$("limit", 10).$()</strong>)
+     *   .getResultList();
+     * </code>
+     * <p>
+     * 最初に{@link #params(String, Object)}を呼び出し、 続けて
+     * {@link Maps#$(String, Object)}でパラメータを追加し、 最後に
+     * {@link Maps#$()}を呼び出すことで{@link Map}になります。
+     * </p>
+     * 
+     * @param name
+     *            パラメータの名前
+     * @param param
+     *            パラメータの値
+     * @return 指定されたパラメータを持つ{@link Map}を構築するための{@link Maps}
+     */
+    public static Maps<String, Object> params(final String name,
+            final Object param) {
+        return Maps.map(name, param);
+    }
+
 }

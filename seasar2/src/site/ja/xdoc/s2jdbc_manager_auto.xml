@@ -210,7 +210,10 @@
 					を使います。
 				</p>
 				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class).getResultList();
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .getResultList();
 ]]></source>
 				<p>
 					検索するエンティティは、
@@ -228,9 +231,11 @@ List<Employee> results = jdbcManager.from(Employee.class).getResultList();
 					が発生します。
 				</p>
 				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class)
-                                    .disallowNoResult()
-                                    .getResultList();
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .disallowNoResult()
+        .getResultList();
 ]]></source>
 			</subsection>
 
@@ -241,7 +246,10 @@ List<Employee> results = jdbcManager.from(Employee.class)
 					を使います。
 				</p>
 				<source><![CDATA[
-Employee result = jdbcManager.from(Employee.class).getSingleResult();
+Employee result = 
+    jdbcManager
+        .from(Employee.class)
+        .getSingleResult();
 ]]></source>
 				<p>
 					結果が複数件になる場合は、
@@ -251,9 +259,11 @@ Employee result = jdbcManager.from(Employee.class).getSingleResult();
 					が発生します。
 				</p>
 				<source><![CDATA[
-Employee result = jdbcManager.from(Employee.class)
-                             .where("id = ?", id)
-                             .getSingleResult();
+Employee result = 
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", id)
+        .getSingleResult();
 ]]></source>
 				<p>
 					デフォルトでは、結果がなかった場合は、
@@ -266,10 +276,12 @@ Employee result = jdbcManager.from(Employee.class)
 					が発生します。
 				</p>
 				<source><![CDATA[
-Employee result = jdbcManager.from(Employee.class)
-                             .where("id = ?", id)
-                             .disallowNoResult()
-                             .getSingleResult();
+Employee result = 
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", id)
+        .disallowNoResult()
+        .getSingleResult();
 ]]></source>
 			</subsection>
 
@@ -282,17 +294,19 @@ Employee result = jdbcManager.from(Employee.class)
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = results = jdbcManager
-    .from(Employee.class)
-    .iterate(new IterationCallback<BeanMap, Integer>() {
-        int count;
-        public Integer iterate(BeanMap map, IterationContext context) {
-            if (...) {
-                ++count;
-            }
-            return count;
-        }
-    });
+int results = 
+    jdbcManager
+        .from(Employee.class)
+        .iterate(
+            new IterationCallback<BeanMap, Integer>() {
+                int count;
+                public Integer iterate(BeanMap map, IterationContext context) {
+                    if (...) {
+                        ++count;
+                    }
+                    return count;
+                }
+            });
 ]]></source>
 				<p>
 					<code>iterate(IterationCallback)</code>
@@ -422,7 +436,10 @@ int count = results = jdbcManager
 					を使います。
 				</p>
 				<source><![CDATA[
-long count = jdbcManager.from(Employee.class).getCount();
+long count = 
+    jdbcManager
+        .from(Employee.class)
+        .getCount();
 ]]></source>
 				<div class="caution">
 					<div>注意点</div>
@@ -470,20 +487,28 @@ long count = jdbcManager.from(Employee.class).getCount();
 				</ul>
 				<p>第1引数は、結合したいエンティティのプロパティ名です。</p>
 				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class)
-                                    .innerJoin("department").getResultList();
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .innerJoin("department")
+        .getResultList();
 ]]></source>
 				<p>次のように外部結合にすることもできます。</p>
 				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class)
-                                    .leftOuterJoin("department").getResultList();
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .leftOuterJoin("department")
+        .getResultList();
 ]]></source>
 				<p>検索条件には含めたいけど、検索結果には含めたくない場合、 2番名の引数をfalseにします。</p>
 				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class)
-                                    .innerJoin("department", false)
-                                    .where("department.name = 'RESEARCH'")
-                                    .getResultList();
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .innerJoin("department", false)
+        .where("department.name = 'RESEARCH'")
+        .getResultList();
 ]]></source>
 				<h4>
 					<a name="結合条件の追加">結合条件の追加</a>
@@ -527,9 +552,14 @@ List<Employee> results = jdbcManager.from(Employee.class)
 					プロパティ名になります。
 				</p>
 				<source><![CDATA[
-List<Department> results = jdbcManager.from(Department.class)
-                                    .leftOuterJoin("employee", "employee.salary > ?", 1000)
-                                    .getResultList();
+List<Department> results = 
+    jdbcManager
+        .from(Department.class)
+        .leftOuterJoin(
+            "employee", 
+            "employee.salary > ?", 
+            1000)
+        .getResultList();
 ]]></source>
 				<p>
 					指定方法の詳細は「
@@ -567,10 +597,13 @@ List<Department> results = jdbcManager.from(Department.class)
 					</li>
 				</ul>
 				<source><![CDATA[
-List<Department> results = jdbcManager.from(Department.class)
-                                    .leftOuterJoin("employee", 
-                                        new SimpleWhere().gt("employee.salary", 1000))
-                                    .getResultList();
+List<Department> results = 
+    jdbcManager
+        .from(Department.class)
+        .leftOuterJoin(
+            "employee", 
+            new SimpleWhere().gt("employee.salary", 1000))
+        .getResultList();
 ]]></source>
 				<p>
 					指定方法の詳細は「
@@ -587,10 +620,12 @@ List<Department> results = jdbcManager.from(Department.class)
 					employee.addressの場合、employeeがベースとなる結合です。
 				</p>
 				<source><![CDATA[
-List<Department> results = jdbcManager.from(Department.class)
-                                    .leftOuterJoin("employee")
-                                    .leftOuterJoin("employee.address")
-                                    .getResultList();
+List<Department> results = 
+    jdbcManager
+        .from(Department.class)
+        .leftOuterJoin("employee")
+        .leftOuterJoin("employee.address")
+        .getResultList();
 ]]></source>
 				<p>結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、 いくつでもネストすることが可能です。</p>
 			</subsection>
@@ -605,7 +640,8 @@ List<Department> results = jdbcManager.from(Department.class)
 					を使います。 引数はエンティティに定義されたIDプロパティと同じ数・同じ並びで指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Department.class)
+jdbcManager
+    .from(Department.class)
     .id(100)
     .getSingleResult();
 ]]></source>
@@ -615,8 +651,10 @@ jdbcManager.from(Department.class)
 					を使います。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Department.class)
-    .id(100).version(10)
+jdbcManager
+    .from(Department.class)
+    .id(100)
+    .version(10)
     .getSingleResult();
 ]]></source>
 				<p>IDを指定しないでバージョンだけを指定することはできません。</p>
@@ -636,7 +674,8 @@ jdbcManager.from(Department.class)
 					で指定した名前.プロパティ名になります。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Department.class)
+jdbcManager
+    .from(Department.class)
     .leftOuterJoin("employeeList")
     .leftOuterJoin("employeeList.address")
     .where("employeeList.salary between ? and ? and employeeList.address.street like ?", ...)
@@ -673,7 +712,8 @@ jdbcManager.from(Department.class)
 				<source><![CDATA[
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .where("heredate = ?", date(heredate))
     .getResultList();
 ]]></source>
@@ -703,7 +743,8 @@ jdbcManager.from(Employee.class)
 				<source><![CDATA[
 import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .where("largeName = ?", lob(largeName))
     .getResultList();
 ]]></source>
@@ -763,7 +804,10 @@ if (salaryMax != null) {
     values.add(salaryMax);
     found = true;
 }
-jdbcManager.from(Employee.class).where(sb.toString(), values.toArray()).getResultList();
+jdbcManager
+    .from(Employee.class)
+    .where(sb.toString(), values.toArray())
+    .getResultList();
 ]]></source>
 				<p>SimpleWhereを使って組み立てれば、こんなに簡単になります。</p>
 				<source><![CDATA[
@@ -772,12 +816,14 @@ public String[] jobTypes = new String[0];
 public BigDecimal salaryMax;
 public BigDecimal salaryMin;
 ...
-jdbcManager.from(Employee.class)
-    .where(new SimpleWhere()
-        .eq("department.name", departmentName)
-        .in("jobType", jobTypes)
-        .ge("salary", salaryMin)
-        .le("salary", salaryMax))
+jdbcManager
+    .from(Employee.class)
+    .where(
+        new SimpleWhere()
+            .eq("department.name", departmentName)
+            .in("jobType", jobTypes)
+            .ge("salary", salaryMin)
+            .le("salary", salaryMax))
     .getResultList();
 ]]></source>
 				<p>SimpleWhereには次のメソッドがあります。</p>
@@ -1049,7 +1095,27 @@ w.put("department.name", departmentName);
 w.put("jobType_IN", jobTypes);
 w.put("salary_LE", salaryMax);
 w.put("salary_GE", salaryMin);
-jdbcManager.from(Employee.class).where(w).getResultList();
+jdbcManager
+    .from(Employee.class)
+    .where(w)
+    .getResultList();
+]]></source>
+				<p>
+					<code>org.seasar.extension.jdbc.parameter.Parameter</code>
+					のstaticメソッドを使うと、流れるようなインタフェースでMapを組み立てることも出来ます。
+				</p>
+				<source><![CDATA[
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
+
+jdbcManager
+    .from(Employee.class)
+    .where(
+        params("department.name", departmentName)
+            .$("jobType_IN", jobTypes)
+            .$("salary_LE", salaryMax)
+            .$("salary_GE", salaryMin)
+            .$())
+   .getResultList();
 ]]></source>
 				<p>
 					マップのキーにプロパティ名_サフィックスを指定します。 サフィックスがない場合は、
@@ -1264,8 +1330,13 @@ public String[] where_jobType_IN = new String[0];
 public BigDecimal where_salary_LE;
 public BigDecimal where_salary_GE;
 ...
-jdbcManager.from(Employee.class)
-    .where(Beans.createAndCopy(BeanMap.class, this).prefix("where_").execute())
+jdbcManager
+    .from(Employee.class)
+    .where(
+        Beans
+            .createAndCopy(BeanMap.class, this)
+            .prefix("where_")
+            .execute())
     .getResultList();
 ]]></source>
 				<!--
@@ -1286,7 +1357,8 @@ jdbcManager.from(Employee.class)
 					で指定した名前.プロパティ名になります。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .leftOuterJoin("department")
     .orderBy("name, department.name")
     .getResultList();
@@ -1304,9 +1376,12 @@ jdbcManager.from(Employee.class)
 					を使って次のように指定することができます。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .leftOuterJoin("department")
-    .orderBy(asc("name"), desc("department.name"))
+    .orderBy(
+        asc("name"), 
+        desc("department.name"))
     .getResultList();
 ]]></source>
 			</subsection>
@@ -1364,7 +1439,8 @@ jdbcManager.from(Employee.class)
 					ロック対象のプロパティが明示されていないので、両テーブルのロックが取得されます。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .leftOuterJoin("department")
     .where("department.name = ?", deptName)
     .forUpdate()
@@ -1375,7 +1451,8 @@ jdbcManager.from(Employee.class)
 					指定されたプロパティを持つ<code>Employee</code>のロックのみが取得されます。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .leftOuterJoin("department")
     .where("department.name = ?", deptName)
     .forUpdate("id")
@@ -1395,9 +1472,11 @@ jdbcManager.from(Employee.class)
 					で指定した名前.プロパティ名になります。
 				</p>
 				<source><![CDATA[
-List<Employee> results = jdbcManager.from(Employee.class)
-                                    .eager("largeDto")
-                                    .getResultList();
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .eager("largeDto")
+        .getResultList();
 ]]></source>
 			</subsection>
 
@@ -1415,7 +1494,8 @@ List<Employee> results = jdbcManager.from(Employee.class)
 					の指定も必要です。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .orderBy("name")
     .limit(100)
     .offset(10)
@@ -1449,7 +1529,8 @@ jdbcManager.from(Employee.class)
 					を使います。 最大行数を超える行は、通知なしに除外されます。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .maxRows(1000)
     .getResultList();
 ]]></source>
@@ -1462,7 +1543,8 @@ jdbcManager.from(Employee.class)
 					を使います。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .fetchSize(100)
     .getResultList();
 ]]></source>
@@ -1475,7 +1557,8 @@ jdbcManager.from(Employee.class)
 					を使います。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .queryTimeout(10)
     .getResultList();
 ]]></source>
@@ -1488,7 +1571,8 @@ jdbcManager.from(Employee.class)
 					を使います。
 				</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .hint("INDEX(Employee IDX1)")
     .getResultList();
 ]]></source>
@@ -1502,7 +1586,8 @@ jdbcManager.from(Employee.class)
 ]]></source>
 				<p>ヒント中の関連プロパティ名も別名に置換されます。</p>
 				<source><![CDATA[
-jdbcManager.from(Employee.class)
+jdbcManager
+    .from(Employee.class)
     .leftOuterJoin("department")
     .hint("INDEX(department IDX2)")
     .getResultList();
@@ -1529,7 +1614,10 @@ jdbcManager.from(Employee.class)
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.insert(employee).execute();
+int count = 
+    jdbcManager
+        .insert(employee)
+        .execute();
 ]]></source>
 				<p>
 					引数はエンティティで、戻り値は、更新した行数です。 挿入するときに、識別子を自動設定することができます。
@@ -1553,7 +1641,10 @@ int count = jdbcManager.insert(employee).execute();
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager.insertBatch(employees).execute();
+int[] countArray = 
+    jdbcManager
+        .insertBatch(employees)
+        .execute();
 ]]></source>
 				<p>
 					引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
@@ -1580,7 +1671,11 @@ int[] countArray = jdbcManager.insertBatch(employees).execute();
 					の項目が同じだとは限らないからです。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.insert(employee).excludesNull().execute();
+int count = 
+    jdbcManager
+        .insert(employee)
+        .excludesNull()
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1591,7 +1686,11 @@ int count = jdbcManager.insert(employee).excludesNull().execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.insert(employee).includes("id", "name").execute();
+int count = 
+    jdbcManager
+        .insert(employee)
+        .includes("id", "name")
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1602,7 +1701,11 @@ int count = jdbcManager.insert(employee).includes("id", "name").execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.insert(employee).excludes("version").execute();
+int count = 
+    jdbcManager
+        .insert(employee)
+        .excludes("version")
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1613,7 +1716,11 @@ int count = jdbcManager.insert(employee).excludes("version").execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager.insertBatch(employees).batchSize(50).execute();
+int[] countArray = 
+    jdbcManager
+        .insertBatch(employees)
+        .batchSize(50)
+        .execute();
 ]]></source>
 			</subsection>
 		</section>
@@ -1628,7 +1735,10 @@ int[] countArray = jdbcManager.insertBatch(employees).batchSize(50).execute();
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.update(employee).execute();
+int count = 
+    jdbcManager
+        .update(employee)
+        .execute();
 ]]></source>
 				<p>
 					引数はエンティティで、戻り値は、更新した行数です。
@@ -1654,7 +1764,10 @@ int count = jdbcManager.update(employee).execute();
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager.updateBatch(employees).execute();
+int[] countArray = 
+    jdbcManager
+        .updateBatch(employees)
+        .execute();
 ]]></source>
 				<p>
 					引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
@@ -1678,7 +1791,11 @@ int[] countArray = jdbcManager.updateBatch(employees).execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.update(employee).includesVersion().execute();
+int count = 
+    jdbcManager
+        .update(employee)
+        .includesVersion()
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1694,7 +1811,11 @@ int count = jdbcManager.update(employee).includesVersion().execute();
 					の項目が同じだとは限らないからです。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.update(employee).excludesNull().execute();
+int count = 
+    jdbcManager
+        .update(employee)
+        .excludesNull()
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1705,7 +1826,11 @@ int count = jdbcManager.update(employee).excludesNull().execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.update(employee).includes("id", "name").execute();
+int count = 
+    jdbcManager
+        .update(employee)
+        .includes("id", "name")
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1716,7 +1841,11 @@ int count = jdbcManager.update(employee).includes("id", "name").execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.updateBatch(employees).excludes("version").execute();
+int count = 
+    jdbcManager
+        .updateBatch(employees)
+        .excludes("version")
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1731,7 +1860,11 @@ int count = jdbcManager.updateBatch(employees).excludes("version").execute();
 				</p>
 				<source><![CDATA[
 Employee before = ...;
-int count = jdbcManager.update(employee).changedFrom(before).execute();
+int count = 
+    jdbcManager
+        .update(employee)
+        .changedFrom(before)
+        .execute();
 ]]></source>
 				<p>
 					<code>JdbcManager#update()</code>
@@ -1754,10 +1887,11 @@ int count = jdbcManager.update(employee).changedFrom(before).execute();
 					を呼び出すことで、更新できた行数のチェックを行わなくなります。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager
-    .updateBatch(employees)
-    .suppresOptimisticLockException()
-    .execute();
+int[] countArray = 
+    jdbcManager
+        .updateBatch(employees)
+        .suppresOptimisticLockException()
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1768,7 +1902,11 @@ int[] countArray = jdbcManager
 					を使います。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager.updateBatch(employees).batchSize(50).execute();
+int[] countArray = 
+    jdbcManager
+        .updateBatch(employees)
+        .batchSize(50)
+        .execute();
 ]]></source>
 			</subsection>
 		</section>
@@ -1783,7 +1921,10 @@ int[] countArray = jdbcManager.updateBatch(employees).batchSize(50).execute();
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.delete(employee).execute();
+int count = 
+    jdbcManager
+        .delete(employee)
+        .execute();
 ]]></source>
 				<p>
 					引数はエンティティで、戻り値は、更新した行数です。
@@ -1809,7 +1950,10 @@ int count = jdbcManager.delete(employee).execute();
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager.deleteBatch(employees).execute();
+int[] countArray = 
+    jdbcManager
+        .deleteBatch(employees)
+        .execute();
 ]]></source>
 				<p>
 					引数はエンティティのリストあるいは配列(可変長引数)で、戻り値は、更新した行数の配列です。
@@ -1833,7 +1977,11 @@ int[] countArray = jdbcManager.deleteBatch(employees).execute();
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.delete(employee).ignoreVersion().execute();
+int count = 
+    jdbcManager
+        .delete(employee)
+        .ignoreVersion()
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1848,10 +1996,11 @@ int count = jdbcManager.delete(employee).ignoreVersion().execute();
 					を呼び出すことで、更新できた行数のチェックを行わなくなります。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager
-    .deleteBatch(employees)
-    .suppresOptimisticLockException()
-    .execute();
+int[] countArray = 
+    jdbcManager
+        .deleteBatch(employees)
+        .suppresOptimisticLockException()
+        .execute();
 ]]></source>
 			</subsection>
 
@@ -1862,7 +2011,11 @@ int[] countArray = jdbcManager
 					を使います。
 				</p>
 				<source><![CDATA[
-int[] countArray = jdbcManager.updateDelete(employees).batchSize(50).execute();
+int[] countArray = 
+    jdbcManager
+        .updateDelete(employees)
+        .batchSize(50)
+        .execute();
 ]]></source>
 			</subsection>
 		</section>
@@ -1880,7 +2033,9 @@ int[] countArray = jdbcManager.updateDelete(employees).batchSize(50).execute();
 				</p>
 				<p>最初の例は、パラメータのない場合です。</p>
 				<source><![CDATA[
-jdbcManager.call("myproc").execute();
+jdbcManager
+    .call("myproc")
+    .execute();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -1890,7 +2045,9 @@ jdbcManager.call("myproc").execute();
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.call("myproc", "hoge").execute();
+jdbcManager
+    .call("myproc", "hoge")
+    .execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -1966,7 +2123,9 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-jdbcManager.call("myproc", dto).execute();
+jdbcManager
+    .call("myproc", dto)
+    .execute();
 System.out.println(dto.arg2);
 System.out.println(dto.arg3);
 System.out.println(dto.result);
@@ -1988,7 +2147,9 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.call("myproc", dto).execute();
+jdbcManager
+    .call("myproc", dto)
+    .execute();
 System.out.println(dto.result);
 ]]></source>
 				<p>
@@ -2010,7 +2171,9 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.call("myproc", dto).execute();
+jdbcManager
+    .call("myproc", dto)
+    .execute();
 System.out.println(dto.result);
 ]]></source>
 			</subsection>
@@ -2029,8 +2192,10 @@ System.out.println(dto.result);
 					2番目の引数でストアドファンクションの名前を指定します。
 				</p>
 				<source><![CDATA[
-String result = jdbcManager.call(String.class, "myfunc")
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .call(String.class, "myfunc")
+        .getSingleResult();
 ]]></source>
 				<p>
 					OracleやPostgreSQLのように、
@@ -2045,8 +2210,10 @@ String result = jdbcManager.call(String.class, "myfunc")
 					の要素の型を指定します。
 				</p>
 				<source><![CDATA[
-List<String> result = jdbcManager.call(String.class, "myfunc")
-                                 .getResultList();
+List<String> result = 
+    jdbcManager
+        .call(String.class, "myfunc")
+        .getResultList();
 ]]></source>
 				<p>
 					結果セットの行が複数のカラムを持つ場合は
@@ -2054,8 +2221,10 @@ List<String> result = jdbcManager.call(String.class, "myfunc")
 					の要素をJavaBeansにします。
 				</p>
 				<source><![CDATA[
-List<MyDto> result = jdbcManager.call(MyDto.class, "myfunc")
-                                .getResultList();
+List<MyDto> result = 
+    jdbcManager
+        .call(MyDto.class, "myfunc")
+        .getResultList();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -2065,8 +2234,10 @@ List<MyDto> result = jdbcManager.call(MyDto.class, "myfunc")
 					の3番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-String result = jdbcManager.call(String.class, "myfunc", "hoge")
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .call(String.class, "myfunc", "hoge")
+        .getSingleResult();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -2152,8 +2323,10 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-String result = jdbcManager.call(String.class, "myproc", dto)
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .call(String.class, "myproc", dto)
+        .getSingleResult();
 System.out.println(result);
 System.out.println(dto.arg1);
 System.out.println(dto.arg3);
@@ -2176,8 +2349,10 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-String result = jdbcManager.call(String.class, "myfunc", dto)
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .call(String.class, "myfunc", dto)
+        .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
 ]]></source>
@@ -2200,8 +2375,10 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-String result = jdbcManager.call(String.class, "myfunc", dto)
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .call(String.class, "myfunc", dto)
+        .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
 ]]></source>

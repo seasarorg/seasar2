@@ -96,9 +96,13 @@
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-List<EmployeeDto> results = jdbcManager
-    .selectBySql(EmployeeDto.class, "select ... where department_id = ?", 10)
-    .getResultList();
+List<EmployeeDto> results = 
+    jdbcManager
+        .selectBySql(
+            EmployeeDto.class, 
+            "select ... where department_id = ?", 
+            10)
+        .getResultList();
 ]]></source>
 				<p>
 					結果を
@@ -106,9 +110,12 @@ List<EmployeeDto> results = jdbcManager
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-List<BeanMap> results = jdbcManager
-    .selectBySql(BeanMap.class, "select ...")
-    .getResultList();
+List<BeanMap> results = 
+    jdbcManager
+        .selectBySql(
+            BeanMap.class, 
+            "select ...")
+        .getResultList();
 ]]></source>
 				<p>
 					BeanMapはMap&lt;String, Object&gt;なクラスで、
@@ -133,10 +140,13 @@ List<BeanMap> results = jdbcManager
 					が発生します。
 				</p>
 				<source><![CDATA[
-List<BeanMap> results = jdbcManager
-    .selectBySql(BeanMap.class, "select ...")
-    .disallowNoResult()
-    .getResultList();
+List<BeanMap> results = 
+    jdbcManager
+        .selectBySql(
+            BeanMap.class, 
+            "select ...")
+        .disallowNoResult()
+        .getResultList();
 ]]></source>
 			</subsection>
 
@@ -149,9 +159,12 @@ List<BeanMap> results = jdbcManager
 					を組み合わせます。
 				</p>
 				<source><![CDATA[
-Integer count = jdbcManager
-    .selectBySql(Integer.class, "select count(*) from emp")
-    .getSingleResult();
+Integer count = 
+    jdbcManager
+        .selectBySql(
+            Integer.class, 
+            "select count(*) from emp")
+        .getSingleResult();
 ]]></source>
 				<p>
 					結果を
@@ -159,9 +172,12 @@ Integer count = jdbcManager
 					で受け取ることもできます。
 				</p>
 				<source><![CDATA[
-BeanMap result = jdbcManager
-    .selectBySql(BeanMap.class, "select ...")
-    .getSingleResult();
+BeanMap result = 
+    jdbcManager
+        .selectBySql(
+            BeanMap.class, 
+            "select ...")
+        .getSingleResult();
 ]]></source>
 				<p>
 					BeanMapはMap&lt;String, Object&gt;なクラスで、
@@ -186,10 +202,13 @@ BeanMap result = jdbcManager
 					が発生します。
 				</p>
 				<source><![CDATA[
-BeanMap result = jdbcManager
-    .selectBySql(BeanMap.class, "select ...")
-    .disallowNoResult()
-    .getSingleResult();
+BeanMap result = 
+    jdbcManager
+        .selectBySql(
+            BeanMap.class, 
+            "select ...")
+        .disallowNoResult()
+        .getSingleResult();
 ]]></source>
 			</subsection>
 
@@ -202,17 +221,21 @@ BeanMap result = jdbcManager
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = results = jdbcManager
-    .selectBySql(BeanMap.class, "select ...")
-    .iterate(new IterationCallback<BeanMap, Integer>() {
-        int count;
-        public Integer iterate(BeanMap map, IterationContext context) {
-            if (...) {
-                ++count;
-            }
-            return count;
-        }
-    });
+int results = 
+    jdbcManager
+        .selectBySql(
+            BeanMap.class, 
+            "select ...")
+        .iterate(
+            new IterationCallback<BeanMap, Integer>() {
+                int count;
+                public Integer iterate(BeanMap map, IterationContext context) {
+                    if (...) {
+                        ++count;
+                    }
+                    return count;
+                }
+            });
 ]]></source>
 				<p>
 					<code>iterate(IterationCallback)</code>
@@ -276,7 +299,9 @@ int count = results = jdbcManager
 					～による検索結果の行数を取得する場合は、getCountBySql()を使います。
 				</p>
 				<source><![CDATA[
-long count = jdbcManager.getCountBySql("select ...");
+long count = 
+    jdbcManager
+        .getCountBySql("select ...");
 ]]></source>
 				<p>
 					このメソッドは通常、
@@ -303,8 +328,10 @@ long count = jdbcManager.getCountBySql("select ...");
 					句が必要です。 order by句で指定するカラムは、selectリストにも含めるようにしてください。
 				</p>
 				<source><![CDATA[
-jdbcManager.selectBySql(EmployeeDto.class,
-    "select id, name from employee order by name")
+jdbcManager
+    .selectBySql(
+        EmployeeDto.class,
+        "select id, name from employee order by name")
     .limit(100)
     .offset(10)
     .getResultList();
@@ -328,10 +355,14 @@ jdbcManager.selectBySql(EmployeeDto.class,
 					を使います。
 				</p>
 				<source><![CDATA[
-int count = jdbcManager.updateBySql(
-    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class)
-    .params(null, 1)
-    .execute();
+int count = 
+    jdbcManager
+        .updateBySql(
+            "update employee set salary = ? where id = ?", 
+            BigDecimal.class, 
+            Integer.class)
+        .params(null, 1)
+        .execute();
 ]]></source>
 				<p>
 					一意制約違反によりエンティティを挿入ができなかった場合は、
@@ -357,12 +388,18 @@ int count = jdbcManager.updateBySql(
 				<source><![CDATA[
 List<EmployeeDto> dtoList = ...;
 ...
-SqlBatchUpdate batchUpdate = jdbcManager.updateBatchBySql(
-    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class);
+SqlBatchUpdate batchUpdate = 
+    jdbcManager
+        .updateBatchBySql(
+            "update employee set salary = ? where id = ?", 
+            BigDecimal.class, 
+            Integer.class);
 for (EmployeeDto dto : dtoList) {
     batchUpdate.params(dto.salary, dto.id);
 }
-int[] countArray = batchUpdate.execute();
+int[] countArray = 
+    batchUpdate
+        .execute();
 ]]></source>
 				<p>
 					一意制約違反によりエンティティを挿入ができなかった場合は、
@@ -380,12 +417,19 @@ int[] countArray = batchUpdate.execute();
 				<source><![CDATA[
 List<EmployeeDto> dtoList = ...;
 ...
-SqlBatchUpdate batchUpdate = jdbcManager.updateBatchBySql(
-    "update employee set salary = ? where id = ?", BigDecimal.class, Integer.class);
+SqlBatchUpdate batchUpdate = 
+    jdbcManager
+        .updateBatchBySql(
+            "update employee set salary = ? where id = ?", 
+            BigDecimal.class, 
+            Integer.class);
 for (EmployeeDto dto : dtoList) {
     batchUpdate.params(dto.salary, dto.id);
 }
-int[] countArray = batchUpdate.batchSize(50).execute();
+int[] countArray = 
+    batchUpdate
+        .batchSize(50)
+        .execute();
 ]]></source>
 			</subsection>
 		</section>
@@ -403,7 +447,9 @@ int[] countArray = batchUpdate.batchSize(50).execute();
 				</p>
 				<p>最初の例は、パラメータのない場合です。</p>
 				<source><![CDATA[
-jdbcManager.callBySql("{call myproc}").execute();
+jdbcManager
+    .callBySql("{call myproc}")
+    .execute();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -413,7 +459,11 @@ jdbcManager.callBySql("{call myproc}").execute();
 					の2番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-jdbcManager.callBySql("{call myproc(?)}", "hoge").execute();
+jdbcManager
+    .callBySql(
+        "{call myproc(?)}", 
+        "hoge")
+    .execute();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -499,7 +549,11 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-jdbcManager.callBySql("{call myproc(?, ?, ?)}", dto).execute();
+jdbcManager
+    .callBySql(
+        "{call myproc(?, ?, ?)}", 
+        dto)
+    .execute();
 System.out.println(dto.arg2);
 System.out.println(dto.arg3);
 System.out.println(dto.result);
@@ -519,7 +573,11 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.callBySql("{call myproc(?)}", dto).execute();
+jdbcManager
+    .callBySql(
+        "{call myproc(?)}", 
+        dto)
+    .execute();
 System.out.println(dto.result);
 ]]></source>
 				<p>
@@ -542,7 +600,11 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-jdbcManager.callBySql("{call myproc(?, ?)}", dto).execute();
+jdbcManager
+    .callBySql(
+        "{call myproc(?, ?)}", 
+        dto)
+    .execute();
 System.out.println(dto.result);
 ]]></source>
 			</subsection>
@@ -562,8 +624,12 @@ System.out.println(dto.result);
 				</p>
 				<p>最初の例はパラメータがなく、 戻り値が結果セットでない場合です。</p>
 				<source><![CDATA[
-String result = jdbcManager.callBySql(String.class, "{? = call myfunc}")
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .callBySql(
+            String.class, 
+            "{? = call myfunc}")
+        .getSingleResult();
 ]]></source>
 				<p>
 					OracleやPostgreSQLのように、
@@ -578,8 +644,12 @@ String result = jdbcManager.callBySql(String.class, "{? = call myfunc}")
 					の要素の型を指定します。
 				</p>
 				<source><![CDATA[
-List<String> result = jdbcManager.callBySql(String.class, "{? = call myfunc}")
-                                 .getResultList();
+List<String> result = 
+    jdbcManager
+        .callBySql(
+            String.class, 
+            "{? = call myfunc}")
+        .getResultList();
 ]]></source>
 				<p>
 					結果セットの行が複数のカラムを持つ場合は
@@ -587,8 +657,12 @@ List<String> result = jdbcManager.callBySql(String.class, "{? = call myfunc}")
 					の要素をJavaBeansにします。
 				</p>
 				<source><![CDATA[
-List<MyDto> result = jdbcManager.callBySql(MyDto.class, "{? = call myfunc}")
-                                .getResultList();
+List<MyDto> result = 
+    jdbcManager
+        .callBySql(
+            MyDto.class, 
+            "{? = call myfunc}")
+        .getResultList();
 ]]></source>
 				<p>
 					INのパラメータが1つだけで、そのパラメータが
@@ -598,8 +672,13 @@ List<MyDto> result = jdbcManager.callBySql(MyDto.class, "{? = call myfunc}")
 					の3番目の引数で値を直接指定します。
 				</p>
 				<source><![CDATA[
-String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?)}", "hoge")
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .callBySql(
+            String.class, 
+            "{? = call myfunc(?)}", 
+            "hoge")
+        .getSingleResult();
 ]]></source>
 				<p>
 					上記以外の場合は、
@@ -685,8 +764,13 @@ public class MyDto {
 MyDto dto = new MyDto();
 dto.arg1 = "hoge";
 dto.arg3 = 2;
-String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?, ?, ?)}", dto)
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .callBySql(
+            String.class, 
+            "{? = call myfunc(?, ?, ?)}", 
+            dto)
+        .getSingleResult();
 System.out.println(result);
 System.out.println(dto.arg1);
 System.out.println(dto.arg3);
@@ -707,8 +791,13 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?)}", dto)
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .callBySql(
+            String.class, 
+            "{? = call myfunc(?)}", 
+            dto)
+        .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
 ]]></source>
@@ -732,8 +821,13 @@ public class MyDto {
 				<source><![CDATA[
 MyDto dto = new MyDto();
 dto.arg1 = 1;
-String result = jdbcManager.callBySql(String.class, "{? = call myfunc(?, ?)}", dto)
-                           .getSingleResult();
+String result = 
+    jdbcManager
+        .callBySql(
+            String.class, 
+            "{? = call myfunc(?, ?)}", 
+            dto)
+        .getSingleResult();
 System.out.println(result);
 System.out.println(dto.result);
 ]]></source>

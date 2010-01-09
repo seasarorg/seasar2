@@ -15,8 +15,10 @@
  */
 package org.seasar.extension.jdbc.parameter;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
@@ -27,6 +29,8 @@ import junit.framework.TestCase;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.PropertyDesc;
 import org.seasar.framework.beans.factory.BeanDescFactory;
+
+import static org.seasar.extension.jdbc.parameter.Parameter.*;
 
 /**
  * @author taedium
@@ -46,20 +50,32 @@ public class ParameterTest extends TestCase {
         BeanDesc beanDesc = BeanDescFactory.getBeanDesc(MyDto.class);
 
         PropertyDesc pd = beanDesc.getPropertyDesc("aaa");
-        Object value = Parameter.wrapIfNecessary(pd, pd.getValue(dto));
+        Object value = wrapIfNecessary(pd, pd.getValue(dto));
         assertEquals(String.class, value.getClass());
 
         pd = beanDesc.getPropertyDesc("bbb");
-        value = Parameter.wrapIfNecessary(pd, pd.getValue(dto));
+        value = wrapIfNecessary(pd, pd.getValue(dto));
         assertEquals(LobParameter.class, value.getClass());
 
         pd = beanDesc.getPropertyDesc("ccc");
-        value = Parameter.wrapIfNecessary(pd, pd.getValue(dto));
+        value = wrapIfNecessary(pd, pd.getValue(dto));
         assertEquals(TemporalParameter.class, value.getClass());
 
         pd = beanDesc.getPropertyDesc("ddd");
-        value = Parameter.wrapIfNecessary(pd, pd.getValue(dto));
+        value = wrapIfNecessary(pd, pd.getValue(dto));
         assertEquals(String.class, value.getClass());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testParams() throws Exception {
+        Map<String, Object> map = params("a", 1).$("b", new BigDecimal("2")).$(
+                "c", "3").$();
+        assertEquals(3, map.size());
+        assertEquals(new Integer(1), map.get("a"));
+        assertEquals(new BigDecimal("2"), map.get("b"));
+        assertEquals("3", map.get("c"));
     }
 
     /**
