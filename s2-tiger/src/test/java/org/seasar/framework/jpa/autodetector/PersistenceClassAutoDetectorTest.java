@@ -54,7 +54,7 @@ public class PersistenceClassAutoDetectorTest extends S2TestCase {
                 classes.add(clazz);
             }
         });
-        assertTrue(classes.size() >= 3);
+        assertTrue(classes.size() == 3);
         assertTrue(classes.contains(Hoge.class));
         assertTrue(classes.contains(Foo.class));
         assertTrue(classes.contains(RunWith.class));

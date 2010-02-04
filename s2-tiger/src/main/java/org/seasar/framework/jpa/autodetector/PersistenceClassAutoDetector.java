@@ -125,15 +125,16 @@ public class PersistenceClassAutoDetector extends AbstractClassAutoDetector {
     @SuppressWarnings("unchecked")
     public void detect(final ClassHandler handler) {
         for (int i = 0; i < getTargetPackageNameSize(); i++) {
-            final String packageName = getTargetPackageName(i);
+            final String targetPackageName = getTargetPackageName(i);
             for (final Resources resources : ResourcesUtil
-                    .getResourcesTypes(packageName)) {
+                    .getResourcesTypes(targetPackageName)) {
                 try {
                     resources.forEach(new ClassHandler() {
 
                         public void processClass(final String packageName,
                                 final String shortClassName) {
-                            if (packageName.startsWith(packageName)
+                            if ((packageName.equals(targetPackageName) || packageName
+                                    .startsWith(targetPackageName + "."))
                                     && isEntity(packageName, shortClassName)) {
                                 handler.processClass(packageName,
                                         shortClassName);
