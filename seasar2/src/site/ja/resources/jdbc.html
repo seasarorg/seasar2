@@ -42,15 +42,15 @@
 <td width="752" class="main"><!-- don't edit end -->
 <!-- document start -->
 <ul>
-<li><a href="#setup">セットアップ</a>
+<li><a href="#S2DBCP">S2DBCP</a>
 <ul>
-<li><a href="#S2DBCP">S2DBCP</a></li>
-<li><a href="#GenericApplicationServer">一般的なアプリケーションサーバ</a></li>
-<li><a href="#DataSourceDynamicSwiching">データソースの動的な切り替え</a></li>
+<li><a href="#WebContainerDataSource">Webコンテナ定義のDataSourceを使う</a></li>
 </ul>
 </li>
+<li><a href="#GenericApplicationServer">APサーバのコネクションプールを使う</a></li>
+<li><a href="#DataSourceDynamicSwiching">データソースの動的な切り替え</a></li>
 </ul>
-<h2><a name="setup">セットアップ</a></h2>
+<h2>概要</h2>
 <p>Javaでデータベースにアクセスするには、データソースを経由したコネクションプールを使うのが一般的です。
 コネクションプールは通常、アプリケーションサーバが実装しますが、
 Tomcatのようなトランザクションと連動するコネクションプールの実装のないアプリケーションサーバ用に
@@ -62,7 +62,7 @@ jdbc.diconはクラスパスの通っているディレクトリ、
 通常はWEB-INF/classesにおきます。
 </p>
 
-<h3><a name="S2DBCP">S2DBCP</a></h2>
+<h2><a name="S2DBCP">S2DBCP</a></h2>
 <p>XADataSource、ConnectionPoolの設定をおこないます。
 JDBC DriverがXADataSourceの機能を提供している場合は、 それをそのまま使えますが、
 提供されていない場合、S2で用意しているXADataSourceImplを使って、XAの機能をエミュレートします。</p>
@@ -203,7 +203,41 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 &lt;/components&gt;
 </pre>
 
-<h3><a name="GenericApplicationServer">一般的なアプリケーションサーバ</a></h3>
+<p>
+JDBCドライバが提供するXADataSourceを使う場合はXADataSourceImplの代わりに次のように定義します。
+</p>
+<pre>
+    &lt;component name="xaDataSource"
+            class="<var>XADataSource実装クラス名</var>"&gt;
+        <var>実装固有のプロパティの設定</var>
+    &lt;/component&gt;
+</pre>
+
+<h3><a name="WebContainerDataSource">Webコンテナ定義のDataSourceを使う</a></h3>
+<p>
+jdbc.dicon ファイルにデータベースの接続情報を記述したくない場合は、WebコンテナにXADataSourceまたはDataSourceを定義して使うことが出来ます。
+</p>
+<p>
+Webコンテナで定義したXADataSourceを使う場合はXADataSourceImplの代わりに次のように定義します。
+</p>
+<pre>
+    &lt;component name="xaDataSource"
+            class="javax.sql.XADataSource"&gt;
+        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("<var>JNDI名</var>")
+    &lt;/component&gt;
+</pre>
+
+<p>
+Webコンテナで定義したDataSourceを使ってXAの機能をエミュレートする場合は、XADataSourceImplの代わりにDataSourceXADataSourceを使って次のように定義します。
+</p>
+<pre>
+    &lt;component name="xaDataSource"
+            class="org.seasar.extension.dbcp.impl.DataSourceXADataSource"&gt;
+        &lt;property name="dataSourceName"&gt;"<var>JNDI名</var>"&lt;/property&gt;
+    &lt;/component&gt;
+</pre>
+
+<h2><a name="GenericApplicationServer">APサーバのコネクションプールを使う</a></h2>
 <p>一般的なアプリケーションサーバでは、JNDI経由(JndiResourceLocator)でデータソースを取得します。
 </p>
 <h4>jdbc.dicon</h4>
@@ -228,12 +262,12 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 
     &lt;component name="dataSource"
             class="javax.sql.DataSource"&gt;
-        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("JNDI名")
+        @org.seasar.extension.j2ee.JndiResourceLocator@lookup("<var>JNDI名</var>")
     &lt;/component&gt;
 &lt;/components&gt;
 </pre>
 
-<h3><a name="DataSourceDynamicSwiching">データソースの動的な切り替え</a></h3>
+<h2><a name="DataSourceDynamicSwiching">データソースの動的な切り替え</a></h2>
 <p>
 ユーザーの種類などにより動的にデータソースを切り替えたい場合は、<code>SelectableDataSourceProxy</code>と<code>DataSourceFactory</code>を利用します。
 以下に、これらを利用するための設定とプログラムについて例を示します。
