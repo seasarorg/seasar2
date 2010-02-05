@@ -180,6 +180,7 @@ public class PropertyDescImpl implements PropertyDesc {
         this.readMethod = readMethod;
         if (readMethod != null) {
             readable = true;
+            readMethod.setAccessible(true);
         }
     }
 
@@ -195,6 +196,7 @@ public class PropertyDescImpl implements PropertyDesc {
         this.writeMethod = writeMethod;
         if (writeMethod != null) {
             writable = true;
+            writeMethod.setAccessible(true);
         }
     }
 

@@ -26,6 +26,8 @@ import junit.framework.TestCase;
 import org.seasar.framework.beans.BeanDesc;
 import org.seasar.framework.beans.IllegalPropertyRuntimeException;
 import org.seasar.framework.beans.PropertyDesc;
+import org.seasar.framework.beans.impl.sub.MogeBean;
+import org.seasar.framework.beans.impl.sub.MogeBeanFactory;
 
 /**
  * @author higa
@@ -219,6 +221,17 @@ public class PropertyDescImplTest extends TestCase {
         BeanDesc beanDesc = new BeanDescImpl(MyBean.class);
         PropertyDesc propDesc = beanDesc.getPropertyDesc("URL");
         assertNotNull(propDesc.getBeanDesc());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testPackagePrivateBean() throws Exception {
+        MogeBean moge = MogeBeanFactory.create("moge");
+        BeanDesc beanDesc = new BeanDescImpl(moge.getClass());
+        PropertyDesc propDesc = beanDesc.getPropertyDesc("name");
+        assertNotNull(propDesc);
+        assertEquals("moge", propDesc.getValue(moge));
     }
 
     /**
