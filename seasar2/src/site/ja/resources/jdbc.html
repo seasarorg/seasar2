@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
 <!-- don't edit start -->
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>JDBCの設定</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link href="seasar_b.css" type="text/css" rel="stylesheet" media="screen" />
@@ -48,8 +48,13 @@
 </ul>
 </li>
 <li><a href="#GenericApplicationServer">APサーバのコネクションプールを使う</a></li>
-<li><a href="#DataSourceDynamicSwiching">データソースの動的な切り替え</a></li>
-</ul>
+              <li><a href="#MultipleDataSource">複数のデータソースを利用する</a>
+              <ul>
+                <li><a href="#DataSourceStaticSwitching">異なった種類のデータソースを使い分ける</a>
+                <li><a href="#DataSourceDynamicSwiching">同じ種類のデータソースを動的に切り替える</a>
+              </ul>
+              </li>
+            </ul>
 <h2>概要</h2>
 <p>Javaでデータベースにアクセスするには、データソースを経由したコネクションプールを使うのが一般的です。
 コネクションプールは通常、アプリケーションサーバが実装しますが、
@@ -160,16 +165,16 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 <p>コンポーネントの設定は以下のようになります。環境に合わせて書き換えてください。</p>
 <h4>jdbc.dicon</h4>
 <pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
+	"http://www.seasar.org/dtd/components24.dtd"&gt;
 &lt;components namespace="jdbc"&gt;
     &lt;include path="jta.dicon"/&gt;
     &lt;include path="jdbc-extension.dicon"/&gt;
     
     &lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
     &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
-        &lt;arg>
+        &lt;arg&gt;
             &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
         &lt;/arg&gt;
         &lt;property name="fetchSize"&gt;100&lt;/property&gt;
@@ -242,16 +247,16 @@ Webコンテナで定義したDataSourceを使ってXAの機能をエミュレ�
 </p>
 <h4>jdbc.dicon</h4>
 <pre>
-&lt;?xml version="1.0" encoding="UTF-8"?&gt
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;!DOCTYPE components PUBLIC "-//SEASAR//DTD S2Container 2.4//EN" 
-	"http://www.seasar.org/dtd/components24.dtd"&gt
+	"http://www.seasar.org/dtd/components24.dtd"&gt;
 &lt;components namespace="jdbc"&gt;
     &lt;include path="jta.dicon"/&gt;
     &lt;include path="jdbc-extension.dicon"/&gt;
     
     &lt;component class="org.seasar.extension.jdbc.impl.BasicResultSetFactory"/&gt;
     &lt;component class="org.seasar.extension.jdbc.impl.ConfigurableStatementFactory"&gt;
-        &lt;arg>
+        &lt;arg&gt;
             &lt;component class="org.seasar.extension.jdbc.impl.BasicStatementFactory"/&gt;
         &lt;/arg&gt;
         &lt;property name="fetchSize"&gt;100&lt;/property&gt;
@@ -266,57 +271,73 @@ Webコンテナで定義したDataSourceを使ってXAの機能をエミュレ�
     &lt;/component&gt;
 &lt;/components&gt;
 </pre>
-
-<h2><a name="DataSourceDynamicSwiching">データソースの動的な切り替え</a></h2>
-<p>
-ユーザーの種類などにより動的にデータソースを切り替えたい場合は、<code>SelectableDataSourceProxy</code>と<code>DataSourceFactory</code>を利用します。
+            <h2><a name="MultipleDataSource">複数のデータソースを使用する</a></h2>
+            <h3><a name="DataSourceStaticSwitching">異なった種類のデータソースを使い分ける</a></h3>
+            <p>顧客DBと商品DBのように、異なった種類のDBに接続する複数のデータソースを使い分ける場合は、それぞれのデータソースごとに<code>jdbc.dicon</code>をコピーして、<code>customer-jdbc.dicon</code>と<code>product-jdbc.dicon</code>のように個別のdiconファイルを作成します。<code>customer-jdbc.dicon</code>と<code>product-jdbc.dicon</code>のそれぞれのデータソースには、異なったコンポーネント名を設定します。そして<code>jdbc.dicon</code>でそれぞれのdiconをインクルードします。</p>
+            <h4>customer-jdbc.dicon</h4>
+            <pre>&lt;components&gt;
+    ...
+    &lt;component name=&quot;<strong>customerDataSource</strong>&quot;
+        class=&quot;org.seasar.extension.dbcp.impl.DataSourceImpl&quot;/&gt;
+&lt;/components&gt;</pre>
+            <h4>product-jdbc.dicon</h4>
+            <pre>&lt;components&gt;
+    ...
+    &lt;component name=&quot;<strong>productDataSource</strong>&quot;
+        class=&quot;org.seasar.extension.dbcp.impl.DataSourceImpl&quot;/&gt;
+&lt;/components&gt;</pre>
+            <h4>jdbc.dicon</h4>
+            <pre>&lt;components namespace=&quot;jdbc&quot;&gt;
+    &lt;include path=&quot;customerJdbc.dicon&quot;/&gt;
+    &lt;include path=&quot;productJdbc.dicon&quot;/&gt;
+&lt;/components&gt;</pre>
+            <p>それぞれのデータソースを利用するS2JDBCやS2Daoなどの設定ファイルでは、<code>jdbc.dicon</code>ではなく、それぞれが必要とするdiconファイルをインクルードします。</p>
+            <h4>customer-s2jdbc.dicon</h4>
+            <pre>&lt;components&gt;
+    &lt;include path=&quot;<strong>customer-jdbc.dicon</strong>&quot;/&gt;
+    ...
+&lt;/components&gt;</pre>
+            <h4>product-s2jdbc.dicon</h4>
+            <pre>&lt;components&gt;
+    &lt;include path=&quot;<strong>product-jdbc.dicon</strong>&quot;/&gt;
+    ...
+&lt;/components&gt;</pre>
+            <h3><a name="DataSourceDynamicSwiching">同じ種類のデータソースを動的に切り替える</a></h3>
+            <p>顧客DBが複数のDBに分割されているなど、同じ種類のDB (DBMSの種類やスキーマ内の構成が同じ) に接続するデータソースを、クライアントの属性などにより動的に切り替えたい場合は、<code>SelectableDataSourceProxy</code>と<code>DataSourceFactory</code>を利用します。
 以下に、これらを利用するための設定とプログラムについて例を示します。
 </p>
-<p>
-まず、データソースごとにjdbc.diconをコピーし、新しいdiconファイルを作成します。ここでは、jdbc-hoge.diconとjdbc-foo.diconという名前で作成します。
-</p>
+<p>まず、データソースごとに<code>jdbc.dicon</code>をコピーし、新しいdiconファイルを作成します。ここでは、<code>customer1-jdbc.dicon</code>と<code>customer2-jdbc.dicon</code>という名前で作成します。</p>
 
-<h4>jdbc-hoge.dicon</h4>
-<pre>
-&lt;components namespace="jdbc"&gt;
-    &lt;include path="jta.dicon"/&gt;
-    &lt;include path="jdbc-extension.dicon"/&gt;
-    
+<h4>customer1-jdbc.dicon</h4>
+<pre>&lt;components&gt;
     ...
-    
-    &lt;component name="<b>hogeDataSource</b>"
+    &lt;component name=&quot;<b>customer1DataSource</b>"
        class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
 &lt;/components&gt;
 </pre>
-<h4>jdbc-foo.dicon</h4>
-<pre>
-&lt;components namespace="jdbc"&gt;
-    &lt;include path="jta.dicon"/&gt;
-    &lt;include path="jdbc-extension.dicon"/&gt;
-    
+<h4>customer2-jdbc.dicon</h4>
+<pre>&lt;components&gt;
     ...
-    
-    &lt;component name="<b>fooDataSource</b>"
+    &lt;component name=&quot;<b>customer2DataSource</b>"
        class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
 &lt;/components&gt;
 </pre>
 
 <p>
-<code>DataSource</code>のコンポーネントにはデータソースごとに異なる名前をつけてください。そのとき、名前は「<i>任意のプレフィックス</i> + DataSource」としてください。
+<code>DataSource</code>のコンポーネントにはそれぞれ異なるコンポーネント名を設定してください。そのとき、名前は「<i>任意のプレフィックス</i> + DataSource」としてください。
 </p>
 <p />
-<p>
-次に、新規作成したdiconファイルをjdbc.diconでインクルードし、さらにjdbc.diconに<code>SelectableDataSourceProxy</code>のコンポーネントを定義します。
-</p>
+<p>次に、新規作成したdiconファイルを<code>jdbc.dicon</code>でインクルードし、さらに<code>jdbc.dicon</code>に<code>SelectableDataSourceProxy</code>と<code>org.seasar.extension.datasource.impl.DataSourceFactoryImpl</code>のコンポーネントを定義します。</p>
 <h4>jdbc.dicon</h4>
-<pre>
-&lt;components namespace="jdbc"&gt;
-    &lt;include path="jdbc-hoge.dicon"/&gt;
-    &lt;include path="jdbc-foo.dicon"/&gt;
-    
-    &lt;component name="dataSource" class="org.seasar.extension.datasource.impl.SelectableDataSourceProxy"/&gt;
-&lt;/components&gt;
-</pre>
+<pre>&lt;components namespace=&quot;jdbc&quot;&gt;
+    &lt;include path=&quot;customer1-jdbc.dicon&quot;/&gt;
+    &lt;include path=&quot;customer2-jdbc.dicon&quot;/&gt;
+
+    &lt;component name=&quot;dataSource&quot;
+        class=&quot;org.seasar.extension.datasource.impl.SelectableDataSourceProxy&quot;/&gt;
+    &lt;component  name=&quot;dataSourceFactory
+        class=&quot;org.seasar.extension.datasource.impl.DataSourceFactoryImpl&quot;/&gt;
+&lt;/components&gt;</pre>
 <p>
 以上で、diconファイルの設定は完了です。
 </p>
@@ -328,32 +349,26 @@ Webコンテナで定義したDataSourceを使ってXAの機能をエミュレ�
 </p>
 
 <h4>サンプルコード</h4>
-<pre>
-public class SelectDataSourceInterceptor implements MethodInterceptor {
-  private DataSourceFactory dataSourceFactory;
-  public void setDataSourceFactory(DataSourceFactory dataSourceFactory) {
-    this.dataSourceFactory = dataSourceFactory;
-  }
+<pre>public class SelectDataSourceInterceptor implements MethodInterceptor {
+    <strong>public DataSourceFactory dataSourceFactory;</strong>
 
-  public Object invoke(MethodInvocation invocation) throws Throwable {
-    String currentName = dataSourceFactory.getSelectableDataSourceName();
-    try {
-      String dataSourceName = getDataSourceName();
-      <b>dataSourceFactory.setSelectableDataSourceName(dataSourceName)</b>;
-      return invocation.proceed();
-    } finally {
-      dataSourceFactory.setSelectableDataSourceName(currentName);
-  }
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        String currentName = dataSourceFactory.getSelectableDataSourceName();
+        try {
+            String dataSourceName = getDataSourceName();
+            <b>dataSourceFactory.setSelectableDataSourceName(dataSourceName)</b>;
+            return invocation.proceed();
+        } finally {
+            dataSourceFactory.setSelectableDataSourceName(currentName);
+        }
+    }
 
-  public String getDataSourceName() {
-    //ユーザの種類に応じた<b>データソース名のプレフィックス</b>を返す。
-  }
-}
-</pre>
+    public String getDataSourceName() {
+        //ユーザの種類に応じた<b>データソース名のプレフィックス</b>を返す。
+    }
+}</pre>
 <p>
-<code>DataSourceFactory</code>クラスの<code>setSelectableDataSourceName</code>メソッドにはデータソース名のプレフィックスを渡してください。
-この例では、hoge や foo がデータソース名のプレフィックスになります。
-</p>
+<code>DataSourceFactory</code>クラスの<code>setSelectableDataSourceName</code>メソッドにはデータソース名のプレフィックスを渡してください。 この例では、<code>&quot;customer1&quot;</code> や <code>&quot;customer2&quot;</code> がデータソース名のプレフィックスになります。</p>
 <p>
 データソースを実際に利用する箇所では、単一のデータソースを扱う場合と変わらない方法でデータソースを利用できます。
 </p>
