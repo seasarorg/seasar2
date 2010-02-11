@@ -296,7 +296,8 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         request.setParameter("a", "A");
         HttpServletExternalContext extContext = new HttpServletExternalContext();
         extContext.setRequest(request);
-        assertNull(extContext.requestParameterMaps.get());
+        assertSame(HttpServletExternalContext.LAZY_MARK,
+                extContext.requestParameterMaps.get());
         Map map = extContext.getRequestParameterMap();
         assertSame(map, extContext.getRequestParameterMap());
         assertEquals("A", map.get("a"));
@@ -346,7 +347,8 @@ public class HttpServletExternalContextTest extends S2FrameworkTestCase {
         request.setParameter("a", new String[] { "A", "B" });
         HttpServletExternalContext extContext = new HttpServletExternalContext();
         extContext.setRequest(request);
-        assertNull(extContext.requestParameterValuesMaps.get());
+        assertSame(HttpServletExternalContext.LAZY_MARK,
+                extContext.requestParameterValuesMaps.get());
         Map map = extContext.getRequestParameterValuesMap();
         assertSame(map, extContext.getRequestParameterValuesMap());
         Object o = map.get("a");

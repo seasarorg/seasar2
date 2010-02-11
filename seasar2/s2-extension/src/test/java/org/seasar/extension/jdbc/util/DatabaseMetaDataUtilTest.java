@@ -26,11 +26,11 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.seasar.extension.unit.S2TestCase;
-import org.seasar.framework.exception.ClassNotFoundRuntimeException;
+import org.seasar.framework.util.DriverManagerUtil;
 
 /**
  * @author higa
- *
+ * 
  */
 public class DatabaseMetaDataUtilTest extends S2TestCase {
 
@@ -110,11 +110,7 @@ public class DatabaseMetaDataUtilTest extends S2TestCase {
         private String password_;
 
         public Connection getConnection() throws SQLException {
-            try {
-                Class.forName(driverClassName_);
-            } catch (ClassNotFoundException e) {
-                throw new ClassNotFoundRuntimeException(e);
-            }
+            DriverManagerUtil.registerDriver(driverClassName_);
             return DriverManager.getConnection(url_, user_, password_);
         }
 

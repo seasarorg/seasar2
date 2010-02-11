@@ -78,6 +78,28 @@ public class TimeoutManager implements Runnable {
     }
 
     /**
+     * スレッドに割り込みを行い、終了するまで待機します。
+     * 
+     * @param timeoutMillis
+     *            待機する時間(ミリ秒単位)
+     * @return スレッドが終了した場合は<code>true</code>
+     * @throws InterruptedException
+     *             待機中に割り込まれた場合
+     */
+    public boolean stop(long timeoutMillis) throws InterruptedException {
+        Thread thread = this.thread;
+        synchronized (this) {
+            if (thread == null) {
+                return true;
+            }
+            this.thread = null;
+        }
+        thread.interrupt();
+        thread.join(timeoutMillis);
+        return !thread.isAlive();
+    }
+
+    /**
      * 管理している {@link TimeoutTask}をクリアします。
      */
     public synchronized void clear() {
@@ -114,6 +136,7 @@ public class TimeoutManager implements Runnable {
     }
 
     public void run() {
+        boolean interrupted = false;
         for (;;) {
             final List expiredTask = getExpiredTask();
             for (final Iterator it = expiredTask.iterator(); it.hasNext();) {
@@ -123,12 +146,13 @@ public class TimeoutManager implements Runnable {
                     task.restart();
                 }
             }
-            if (stopIfLeisure()) {
+            if (interrupted || thread.isInterrupted() || stopIfLeisure()) {
                 return;
             }
             try {
                 Thread.sleep(1000);
-            } catch (final InterruptedException ignore) {
+            } catch (final InterruptedException e) {
+                interrupted = true;
             }
         }
     }

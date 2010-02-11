@@ -33,45 +33,26 @@ import org.seasar.framework.container.ExternalContext;
  */
 public class HttpServletExternalContext implements ExternalContext {
 
-    /**
-     * 可変な空の{@link Map}を初期値とする{@link ThreadLocal}です。
-     */
-    private static class MutableMapThreadLocal extends ThreadLocal {
-
-        protected Object initialValue() {
-            return new HashMap();
-        }
-
-    }
-
-    /**
-     * 不変な空の{@link Map}を初期値とする{@link ThreadLocal}です。
-     */
-    private static class ImmutableMapThreadLocal extends ThreadLocal {
-
-        protected Object initialValue() {
-            return Collections.EMPTY_MAP;
-        }
-
-    }
+    /** 遅延ロードするためのマーク */
+    static final Map LAZY_MARK = new HashMap();
 
     ThreadLocal requests = new ThreadLocal();
 
     ThreadLocal responses = new ThreadLocal();
 
-    ThreadLocal requestMaps = new MutableMapThreadLocal();
+    ThreadLocal requestMaps = new ThreadLocal();
 
-    ThreadLocal requestHeaderMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestHeaderMaps = new ThreadLocal();
 
-    ThreadLocal requestHeaderValuesMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestHeaderValuesMaps = new ThreadLocal();
 
-    ThreadLocal requestParameterMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestParameterMaps = new ThreadLocal();
 
-    ThreadLocal requestParameterValuesMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestParameterValuesMaps = new ThreadLocal();
 
-    ThreadLocal requestCookieMaps = new ImmutableMapThreadLocal();
+    ThreadLocal requestCookieMaps = new ThreadLocal();
 
-    ThreadLocal sessionMaps = new MutableMapThreadLocal();
+    ThreadLocal sessionMaps = new ThreadLocal();
 
     ServletContext application;
 
@@ -104,9 +85,9 @@ public class HttpServletExternalContext implements ExternalContext {
             requestHeaderMaps.set(new ServletRequestHeaderMap(req));
             requestHeaderValuesMaps.set(new ServletRequestHeaderValuesMap(req));
             requestCookieMaps.set(new CookieMap(req));
-            requestParameterMaps.set(null); // lazy initialize
-            requestParameterValuesMaps.set(null); // lazy initialize
-            sessionMaps.set(null); // lazy initialize
+            requestParameterMaps.set(LAZY_MARK); // lazy initialize
+            requestParameterValuesMaps.set(LAZY_MARK); // lazy initialize
+            sessionMaps.set(LAZY_MARK); // lazy initialize
         }
     }
 
@@ -155,24 +136,47 @@ public class HttpServletExternalContext implements ExternalContext {
     }
 
     public Map getRequestCookieMap() {
-        return (Map) requestCookieMaps.get();
+        Map requestCookieMap = (Map) requestCookieMaps.get();
+        if (requestCookieMap == null) {
+            requestCookieMap = Collections.EMPTY_MAP;
+            requestCookieMaps.set(requestCookieMap);
+        }
+        return requestCookieMap;
     }
 
     public Map getRequestHeaderMap() {
-        return (Map) requestHeaderMaps.get();
+        Map requestHeaderMap = (Map) requestHeaderMaps.get();
+        if (requestHeaderMap == null) {
+            requestHeaderMap = Collections.EMPTY_MAP;
+            requestCookieMaps.set(requestHeaderMap);
+        }
+        return requestHeaderMap;
     }
 
     public Map getRequestHeaderValuesMap() {
-        return (Map) requestHeaderValuesMaps.get();
+        Map requestHeaderMap = (Map) requestHeaderValuesMaps.get();
+        if (requestHeaderMap == null) {
+            requestHeaderMap = Collections.EMPTY_MAP;
+            requestHeaderMaps.set(requestHeaderMap);
+        }
+        return requestHeaderMap;
     }
 
     public Map getRequestMap() {
-        return (Map) requestMaps.get();
+        Map requestMap = (Map) requestMaps.get();
+        if (requestMap == null) {
+            requestMap = new HashMap();
+            requestMaps.set(requestMap);
+        }
+        return requestMap;
     }
 
     public Map getRequestParameterMap() {
         Map requestParameterMap = (Map) requestParameterMaps.get();
         if (requestParameterMap == null) {
+            requestParameterMap = Collections.EMPTY_MAP;
+            requestParameterMaps.set(requestParameterMap);
+        } else if (requestParameterMap == LAZY_MARK) {
             requestParameterMap = new ServletRequestParameterMap(
                     getHttpServletRequest());
             requestParameterMaps.set(requestParameterMap);
@@ -183,6 +187,9 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getRequestParameterValuesMap() {
         Map requestParameterValuesMap = (Map) requestParameterValuesMaps.get();
         if (requestParameterValuesMap == null) {
+            requestParameterValuesMap = Collections.EMPTY_MAP;
+            requestParameterValuesMaps.set(requestParameterValuesMap);
+        } else if (requestParameterValuesMap == LAZY_MARK) {
             requestParameterValuesMap = new ServletRequestParameterValuesMap(
                     getHttpServletRequest());
             requestParameterValuesMaps.set(requestParameterValuesMap);
@@ -193,6 +200,9 @@ public class HttpServletExternalContext implements ExternalContext {
     public Map getSessionMap() {
         Map sessionMap = (Map) sessionMaps.get();
         if (sessionMap == null) {
+            sessionMap = new HashMap();
+            sessionMaps.set(sessionMap);
+        } else if (sessionMap == LAZY_MARK) {
             sessionMap = new HttpSessionMap(getHttpServletRequest());
             sessionMaps.set(sessionMap);
         }

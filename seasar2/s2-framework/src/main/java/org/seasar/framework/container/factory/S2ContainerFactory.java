@@ -107,11 +107,7 @@ public class S2ContainerFactory {
     /**
      * S2コンテナの構築中に処理中の、 設定ファイルパスを表します。
      */
-    protected static ThreadLocal processingPaths = new ThreadLocal() {
-        protected Object initialValue() {
-            return new LinkedHashSet();
-        }
-    };
+    protected static ThreadLocal processingPaths = new ThreadLocal();
 
     private static final Logger logger = Logger
             .getLogger(S2ContainerFactory.class);
@@ -324,7 +320,7 @@ public class S2ContainerFactory {
      *            処理中の設定ファイルパス
      */
     protected static void enter(final String path) {
-        final Set paths = (Set) processingPaths.get();
+        final Set paths = getProcessingPaths();
         if (paths.contains(path)) {
             throw new CircularIncludeRuntimeException(path, paths);
         }
@@ -338,8 +334,22 @@ public class S2ContainerFactory {
      *            取り除く設定ファイルのパス
      */
     protected static void leave(final String path) {
-        final Set paths = (Set) processingPaths.get();
+        final Set paths = getProcessingPaths();
         paths.remove(path);
+    }
+
+    /**
+     * S2コンテナの構築中に処理中の、 設定ファイルパスを返します。
+     * 
+     * @return S2コンテナの構築中に処理中の、 設定ファイルパス
+     */
+    protected static Set getProcessingPaths() {
+        Set paths = (Set) processingPaths.get();
+        if (paths == null) {
+            paths = new LinkedHashSet();
+            processingPaths.set(paths);
+        }
+        return paths;
     }
 
     /**
