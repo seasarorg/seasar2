@@ -207,17 +207,9 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
        class="org.seasar.extension.dbcp.impl.DataSourceImpl"/&gt;
 &lt;/components&gt;
 </pre>
-<p>
-SMART deployを使用していない環境では、<code>jdbc-extension.dicon</code>をインクルードする代わりに以下のコンポーネントを<code>jdbc.dicon</code>の<strong>先頭</strong>のコンポーネントとして記述してください。
-</p>
-<pre>
-    &lt;component class="org.seasar.extension.dbcp.impl.S2DbcpCleaner"&gt;
-        &lt;destroyMethod name="cleanup"/&gt;
-    &lt;component&gt;
-</pre>
 
 <p>
-JDBCドライバが提供するXADataSourceを使う場合は、XADataSourceImplの代わりに次のように定義します。
+JDBCドライバが提供するXADataSourceを使う場合はXADataSourceImplの代わりに次のように定義します。
 </p>
 <pre>
     &lt;component name="xaDataSource"

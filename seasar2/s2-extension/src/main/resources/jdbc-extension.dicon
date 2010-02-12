@@ -6,7 +6,4 @@
 
 	<component class="org.seasar.extension.dao.helper.impl.DaoHelperImpl"/>
 	<component class="org.seasar.extension.datasource.impl.DataSourceFactoryImpl"/>
-	<component class="org.seasar.extension.dbcp.impl.S2DbcpCleaner">
-		<destroyMethod name="cleanup"/>
-	</component>
 </components>

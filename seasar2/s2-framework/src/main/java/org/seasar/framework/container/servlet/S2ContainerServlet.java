@@ -18,6 +18,7 @@ package org.seasar.framework.container.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -39,6 +40,7 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.container.impl.ArgDefImpl;
 import org.seasar.framework.container.util.SmartDeployUtil;
 import org.seasar.framework.env.Env;
+import org.seasar.framework.util.DriverManagerUtil;
 import org.seasar.framework.util.StringUtil;
 import org.seasar.framework.util.URLUtil;
 
@@ -141,6 +143,17 @@ public class S2ContainerServlet extends HttpServlet {
 
     public void destroy() {
         SingletonS2ContainerFactory.destroy();
+        DriverManagerUtil.deregisterAllDrivers();
+        try {
+            final Class clazz = Class
+                    .forName("org.seasar.extension.timer.TimeoutManager");
+            final Method getInstance = clazz.getMethod("getInstance", null);
+            final Object instance = getInstance.invoke(null, null);
+            final Method stop = clazz.getMethod("stop",
+                    new Class[] { long.class });
+            stop.invoke(instance, new Object[] { new Integer(1000) });
+        } catch (final Throwable ignore) {
+        }
     }
 
     /**
