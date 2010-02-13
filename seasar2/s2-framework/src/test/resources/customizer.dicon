@@ -4,6 +4,45 @@
 <components>
 	<include path="default-customizer.dicon"/>
 
+  <!--
+    コンポーネントに AOP (インターセプタ) を適用するには AspectCustomizer を使用します．
+    CustomizerChain には複数の AspectCustomizer を設定することができます．
+    AspectCustomizer の主なプロパティを以下に示します．
+
+      ・interceptorName (String 型，必須)
+        適用するインターセプタのコンポーネント名です．
+        addInterceptorName() メソッドで複数登録することもできます． 
+
+      ・pointcut (String 型，任意)
+        インターセプタを適用するメソッドを選択するポイントカットを正規表現で指定します．
+        正規表現はカンマ区切りで複数指定することができます．
+        targetInterface とどちらも省略すると，対象のコンポーネントが実装している
+        インタフェースに定義されたメソッドがポイントカットとなります．
+        すべての public メソッドを対象とするには ".*" を指定します．
+
+      ・targetInterface (Class 型，任意)
+        指定したインタフェースに定義されたメソッドをポイントカットとします．
+        pointcut プロパティを省略した場合だけ有効です．
+
+      ・useLookupAdapter (boolean 型，任意，デフォルトは false)
+        request・session スコープの Dto や，HttpServletRequest・HttpSession を
+        使用するインターセプタの場合は true を設定します．
+
+    AspectCustomizer の記述例を以下に示します．
+
+    <component name="xxxCustomizer" class="org.seasar.framework.container.customizer.CustomizerChain">
+      <initMethod name="addCustomizer">
+        <arg>
+          <component class="org.seasar.framework.container.customizer.AspectCustomizer">
+            <property name="interceptorName">"xxxInterceptor"</property>
+            <property name="pointcut">".*"</property>
+            <property name="useLookupAdapter">false</property>
+          </component>
+        </arg>
+      </initMethod>
+    </component>
+  -->
+
 	<!--
 		Teeda-Extension の Page・Action のカスタマイズは以下のコメントを参考にしてください．
 		アスペクトを設定する場合はポイントカットの指定を忘れないようにしてください．
@@ -22,11 +61,9 @@
 		Dao のカスタマイズは以下のコメントを参考にしてください．
 		追加するカスタマイザ名は使用する Dao に合わせて変更してください．
 			S2Dao     : s2DaoCustomizer
-			Uuji      : uujiCustomizer
 			Kuina-Dao : kuinaDaoCustomizer
 		app.dicon で各 Dao で必要な dicon をインクルードしてください．
 			S2Dao     : dao.dicon
-			Uuji      : uuji.dicon
 			Kuina-Dao : kuina-dao.dicon
 	-->
 	<!--
