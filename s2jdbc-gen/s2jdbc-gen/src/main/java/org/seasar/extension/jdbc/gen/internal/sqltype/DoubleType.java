@@ -58,7 +58,7 @@ public class DoubleType extends AbstractSqlType {
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
-        Double value = resultSet.getDouble(index);
+        Object value = resultSet.getObject(index);
         return value != null ? StringConversionUtil.toString(value) : null;
     }
 

@@ -58,7 +58,7 @@ public class IntegerType extends AbstractSqlType {
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
-        Integer value = resultSet.getInt(index);
+        Object value = resultSet.getObject(index);
         return value != null ? StringConversionUtil.toString(value) : null;
     }
 

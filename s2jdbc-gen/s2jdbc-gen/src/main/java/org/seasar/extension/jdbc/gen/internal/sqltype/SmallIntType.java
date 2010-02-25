@@ -58,7 +58,7 @@ public class SmallIntType extends AbstractSqlType {
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
-        Short value = resultSet.getShort(index);
+        Object value = resultSet.getObject(index);
         return value != null ? StringConversionUtil.toString(value) : null;
     }
 

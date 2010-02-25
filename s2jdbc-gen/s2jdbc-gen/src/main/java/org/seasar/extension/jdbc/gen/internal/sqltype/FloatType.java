@@ -58,7 +58,7 @@ public class FloatType extends AbstractSqlType {
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
-        Float value = resultSet.getFloat(index);
+        Object value = resultSet.getObject(index);
         return value != null ? StringConversionUtil.toString(value) : null;
     }
 
