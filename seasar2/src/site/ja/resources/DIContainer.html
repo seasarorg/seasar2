@@ -1301,6 +1301,20 @@ utのときにはWARM deploy、ctのときはHOT deploy、それ以外はCOOL de
     &lt;/initMethod&gt;
 &lt;/component&gt;
 </pre>
+<p>
+<code>addRootPackage()</code>メソッドの第2引数に<code>false</code>を指定することで、
+ルートパッケージはHOT deploy非対象になります。
+この場合、SMART deployによるコンポーネントの自動登録は行われますが，
+HOT deployモードでコンポーネントがクラスローダにロードされた後にクラスを変更しても反映されません。
+</p>
+<pre>
+&lt;component class="org.seasar.framework.convention.impl.NamingConventionImpl"&gt;
+    &lt;initMethod name="addRootPackageName"&gt;
+        &lt;arg&gt;"examples.aaa"&lt;/arg&gt;
+        &lt;arg&gt;false&lt;/arg&gt;
+    &lt;/initMethod&gt;
+&lt;/component&gt;
+</pre>
 <p>examples.aaa.web.xxx、examples.aaa.web.yyyを<a name="subApplicationPackage"><b>サブアプリケーションパッケージ</b></a>と呼びます。
 xxx、yyyがサブアプリケーション名になります。
 サブアプリケーションはユースケースと置き換えても良いでしょう。
