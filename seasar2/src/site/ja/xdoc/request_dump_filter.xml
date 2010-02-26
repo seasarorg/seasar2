@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document
+	PUBLIC "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+	"http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+	<properties>
+		<title>RequestDumpFilter</title>
+	</properties>
+	<body>
+		<section name="RequestDumpFilter">
+			<p>
+				HTTP リクエストを処理する前後で HttpServletRequest の内容をログ出力するためのフィルターが
+				RequestDumpFilter です．
+				RequestDumpFilter は，s2-extension の Jar
+				ファイルに含まれています．
+			</p>
+			<p>
+				RequestDumpFilter を使うには
+				<code>web.xml</code>
+				で設定します．
+			</p>
+			<source><![CDATA[
+<filter>
+    <filter-name>requestDumpFilter</filter-name>
+    <filter-class>org.seasar.extension.filter.RequestDumpFilter</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>requestDumpFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+</filter-mapping>
+]]></source>
+			<p>
+				EncodingFilterや，マルチパートフォームを処理するFilter，
+				HotdeployFilter，S2Filter
+				を使っている場合，RequestDumpFilterの
+				<code>&lt;filter-mapping&gt;</code>
+				要素はそれらより後に記述してください．
+			</p>
+			<p>
+				<code>&lt;filter-mapping&gt;</code>
+				要素の
+				<code>&lt;url-pattern&gt;</code>
+				要素はWebアプリケーションに応じて適切に設定してください．
+			</p>
+			<p>
+				<code>HttpServletRequest</code>
+				の内容は，
+				<code>org.seasar.extension.filter.RequestDumpFilter</code>
+				カテゴリの DEBUG レベルのログメッセージとして出力されます．
+				Log4J の設定などでログの出力を制御することが出来ます．
+			</p>
+			<p>
+				以下は HTTP リクエストを処理する前に出力されるログの例です．
+			</p>
+			<source><![CDATA[
+** before *****************************************: /view/start/index.html
+  Request class=org.seasar.framework.container.hotdeploy.HotdeployHttpServletRequest, instance=org.seasar.framework.container.hotdeploy.HotdeployHttpServletRequest@1fe6f88
+  RequestedSessionId=11EDA4ACEFB1749DB63B275E6EF0A3D3
+  REQUEST_URI=/teeda-html-example/view/start/index.html, SERVLET_PATH=/view/start/index.html
+  CharacterEncoding=UTF-8, ContentLength=-1, ContentType=null, Locale=ja, Locales=ja, en, Scheme=http, isSecure=false
+  SERVER_PROTOCOL=HTTP/1.1, REMOTE_ADDR=127.0.0.1, REMOTE_HOST=127.0.0.1, SERVER_NAME=localhost, SERVER_PORT=8080
+  ContextPath=/teeda-html-example, REQUEST_METHOD=GET, QUERY_STRING=null, PathInfo=null, RemoteUser=null
+  Session SessionId=11EDA4ACEFB1749DB63B275E6EF0A3D3
+  Session :: CreationTime=1267172099078, LastAccessedTime=1267172099093, MaxInactiveInterval=1800
+  [request]org.seasar.framework.container.hotdeploy.HotdeployFilter=org.seasar.framework.container.hotdeploy.HotdeployClassLoader@fc912
+  [request]org.seasar.teeda.extension.filter.MultipartFormDataFilter.doFilterCalled=true
+  [cookie]JSESSIONID=11EDA4ACEFB1749DB63B275E6EF0A3D3
+  [header]accept=text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1
+  [header]accept-charset=iso-8859-1, utf-8, utf-16, *;q=0.1
+  [header]accept-encoding=deflate, gzip, x-gzip, identity, *;q=0
+  [header]accept-language=ja,en;q=0.9
+  [header]connection=Keep-Alive, TE
+  [header]cookie=JSESSIONID=11EDA4ACEFB1749DB63B275E6EF0A3D3
+  [header]cookie2=$Version=1
+  [header]host=localhost:8080
+  [header]te=deflate, gzip, chunked, identity, trailers
+  [header]user-agent=Opera/9.80 (Windows NT 5.1; U; ja) Presto/2.2.15 Version/10.10
+  [context]javax.servlet.context.tempdir=D:\koichik\workspaces\seasar\teeda-html-example\work
+  [context]org.apache.AnnotationProcessor=org.apache.catalina.util.DefaultAnnotationProcessor@9e0fbe
+  [context]org.apache.catalina.WELCOME_FILES=[Ljava.lang.String;@11bbdbb
+  [context]org.apache.catalina.jsp_classpath=...
+  [context]org.apache.catalina.resources=org.apache.naming.resources.ProxyDirContext@4574df
+  [context]org.apache.jasper.runtime.JspApplicationContextImpl=org.apache.jasper.runtime.JspApplicationContextImpl@1fc049e
+  [context]org.seasar.teeda.core.config.webapp.element.WebappConfig=org.seasar.teeda.core.config.webapp.element.impl.WebappConfigImpl@933ab5
+]]></source>
+			<p>
+				以下は HTTP リクエストを処理した後に出力されるログの例です．
+			</p>
+			<source><![CDATA[
+** after *****************************************: /view/start/index.html
+  Response class=org.apache.catalina.connector.ResponseFacade, instance=org.apache.catalina.connector.ResponseFacade@13eadd5
+  [request]facesContext=org.seasar.teeda.core.context.servlet.ServletFacesContextImpl@69435
+  [request]javax.faces.webapp.GLOBAL_ID_VIEW={}
+  [request]javax.servlet.jsp.jstl.fmt.locale.request=ja
+  [request]layout_headerPage=examples.teeda.web.layout.HeaderPage@1ec28b7
+  [request]layout_menuPage=examples.teeda.web.layout.MenuPage@1652209
+  [request]org.seasar.framework.container.hotdeploy.HotdeployFilter=org.seasar.framework.container.hotdeploy.HotdeployClassLoader@fc912
+  [request]org.seasar.teeda.extension.Condition=[startForm]
+  [request]org.seasar.teeda.extension.filter.MultipartFormDataFilter.doFilterCalled=true
+  [request]org.seasar.teeda.extension.html.impl.HtmlComponentInvokerImpl={layout_headerPage=true, layout_menuPage=true}
+  [request]org.seasar.teeda.extension.render.html.THtmlHeadRenderer.CSS_KEY=[]
+  [request]org.seasar.teeda.extension.render.html.THtmlHeadRenderer.INLINE_CSS_KEY={}
+  [request]org.seasar.teeda.extension.render.html.THtmlHeadRenderer.INLINE_JS_KEY={}
+  [request]org.seasar.teeda.extension.render.html.THtmlHeadRenderer.JS_KEY=[]
+  [request]org.seasar.teeda.extension.util.LayoutBuilder=[org.seasar.teeda.extension.render.IncludedBody@9d8f06]
+  [request]org.seasar.teeda.extension.util.LayoutBuilder.INDEX=-1
+  [request]postback=false
+  [cookie]JSESSIONID=11EDA4ACEFB1749DB63B275E6EF0A3D3
+  [session]javax.faces.internal.scope.PageScope={null={}}
+  [session]javax.faces.internal.scope.RedirectScope={}
+  [session]javax.faces.internal.scope.SubApplicationScope={}
+  [session]javax.faces.request.charset=UTF-8
+  [session]org.seasar.teeda.core.lifecycle.impl.RestoreViewPhase.VIEW_ID_LRU={null=/view/start/index.html}
+  [context]javax.servlet.context.tempdir=D:\koichik\workspaces\seasar\teeda-html-example\work
+  [context]org.apache.AnnotationProcessor=org.apache.catalina.util.DefaultAnnotationProcessor@9e0fbe
+  [context]org.apache.catalina.WELCOME_FILES=[Ljava.lang.String;@11bbdbb
+  [context]org.apache.catalina.jsp_classpath=...
+  [context]org.apache.catalina.resources=org.apache.naming.resources.ProxyDirContext@4574df
+  [context]org.apache.jasper.runtime.JspApplicationContextImpl=org.apache.jasper.runtime.JspApplicationContextImpl@1fc049e
+  [context]org.seasar.teeda.core.config.webapp.element.WebappConfig=org.seasar.teeda.core.config.webapp.element.impl.WebappConfigImpl@18f61b
+]]></source>
+		</section>
+	</body>
+</document>
