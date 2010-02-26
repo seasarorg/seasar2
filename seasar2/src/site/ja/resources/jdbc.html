@@ -271,17 +271,42 @@ Webコンテナで定義したDataSourceを使ってXAの機能をエミュレ�
     &lt;/component&gt;
 &lt;/components&gt;
 </pre>
-            <h2><a name="MultipleDataSource">複数のデータソースを使用する</a></h2>
-            <h3><a name="DataSourceStaticSwitching">異なった種類のデータソースを使い分ける</a></h3>
-            <p>顧客DBと商品DBのように、異なった種類のDBに接続する複数のデータソースを使い分ける場合は、それぞれのデータソースごとに<code>jdbc.dicon</code>をコピーして、<code>customer-jdbc.dicon</code>と<code>product-jdbc.dicon</code>のように個別のdiconファイルを作成します。<code>customer-jdbc.dicon</code>と<code>product-jdbc.dicon</code>のそれぞれのデータソースには、異なったコンポーネント名を設定します。そして<code>jdbc.dicon</code>でそれぞれのdiconをインクルードします。</p>
-            <h4>customer-jdbc.dicon</h4>
-            <pre>&lt;components&gt;
+<h2><a name="MultipleDataSource">複数のデータソースを使用する</a></h2>
+<p>
+複数のデータソースを使う方法は、大別して次の二つの方法があります。
+</p>
+<dl>
+<dt>異なった種類のデータソースを複数使う</dt>
+<dd>
+それぞれのデータソースで接続するDBに含まれるテーブルの名前や構造が異なっている場合です。
+このケースでは、あるDaoやJdbcManagerは一つのデータソースを使用します。<br/>
+例えば、FooDaoやBarDaoはDataSource1を使用し、HogeDaoやMogeDaoはDataSource2を使用します。
+DataSource1が接続するDBにはFooテーブルやBarテーブルが、DataSource2が接続するDBにはHogeテーブルやMogeテーブルが存在します。
+</dd>
+<dt>同じ種類のデータソースを複数使う</dt>
+<dd>
+それぞれのデータソースが接続するDBに含まれるテーブルの名前や構造が同じ場合です。
+このケースでは、あるDaoやJdbcManagerが複数のデータソースを使用します。<br />
+例えば、FooDaoやBarDaoがあるリクエストの場合はDataSource1を使用し、別のリクエストの場合はDataSource2を使用します。
+DataSource1が接続するDBにも，DataSource2が接続するDBにも，FooテーブルやBarテーブルが存在します。
+</dd>
+</dl>
+<p>
+これら二つの方法を組み合わせることも可能です。
+例えば、FooDaoやBarDaoはDataSource1とDataSource2を使用し、HogeDaoやMogeDaoはDataSourc2とDataSource3を使うような構成になります。
+この場合、DataSource1とDataSource2は同じ種類のデータソース、DataSource3とDataSource4も同じ種類のデータソースとして構成します．
+その上で、DataSource1とDataSource2を使い分けるSelectableDataSourceProxyと、DataSource3とDataSource4を使い分けるSelectableDataSourceProxyは、異なった種類のデータソースとして構成します。
+</p>
+<h3><a name="DataSourceStaticSwitching">異なった種類のデータソースを使い分ける</a></h3>
+<p>異なった種類のDBに接続する複数のデータソースを使い分ける場合は、それぞれのデータソースごとに<code>jdbc.dicon</code>をコピーして、<code>customer-jdbc.dicon</code>と<code>product-jdbc.dicon</code>のように個別のdiconファイルを作成します。<code>customer-jdbc.dicon</code>と<code>product-jdbc.dicon</code>のそれぞれのデータソースには、異なったコンポーネント名を設定します。そして<code>jdbc.dicon</code>でそれぞれのdiconをインクルードします。</p>
+<h4>customer-jdbc.dicon</h4>
+<pre>&lt;components&gt;
     ...
     &lt;component name=&quot;<strong>customerDataSource</strong>&quot;
         class=&quot;org.seasar.extension.dbcp.impl.DataSourceImpl&quot;/&gt;
 &lt;/components&gt;</pre>
-            <h4>product-jdbc.dicon</h4>
-            <pre>&lt;components&gt;
+<h4>product-jdbc.dicon</h4>
+<pre>&lt;components&gt;
     ...
     &lt;component name=&quot;<strong>productDataSource</strong>&quot;
         class=&quot;org.seasar.extension.dbcp.impl.DataSourceImpl&quot;/&gt;
@@ -291,19 +316,19 @@ Webコンテナで定義したDataSourceを使ってXAの機能をエミュレ�
     &lt;include path=&quot;customerJdbc.dicon&quot;/&gt;
     &lt;include path=&quot;productJdbc.dicon&quot;/&gt;
 &lt;/components&gt;</pre>
-            <p>それぞれのデータソースを利用するS2JDBCやS2Daoなどの設定ファイルでは、<code>jdbc.dicon</code>ではなく、それぞれが必要とするdiconファイルをインクルードします。</p>
-            <h4>customer-s2jdbc.dicon</h4>
-            <pre>&lt;components&gt;
+<p>それぞれのデータソースを利用するS2JDBCやS2Daoなどの設定ファイルでは、<code>jdbc.dicon</code>ではなく、それぞれが必要とするdiconファイルをインクルードします。</p>
+<h4>customer-s2jdbc.dicon</h4>
+<pre>&lt;components&gt;
     &lt;include path=&quot;<strong>customer-jdbc.dicon</strong>&quot;/&gt;
     ...
 &lt;/components&gt;</pre>
-            <h4>product-s2jdbc.dicon</h4>
-            <pre>&lt;components&gt;
+<h4>product-s2jdbc.dicon</h4>
+<pre>&lt;components&gt;
     &lt;include path=&quot;<strong>product-jdbc.dicon</strong>&quot;/&gt;
     ...
 &lt;/components&gt;</pre>
-            <h3><a name="DataSourceDynamicSwiching">同じ種類のデータソースを動的に切り替える</a></h3>
-            <p>顧客DBが複数のDBに分割されているなど、同じ種類のDB (DBMSの種類やスキーマ内の構成が同じ) に接続するデータソースを、クライアントの属性などにより動的に切り替えたい場合は、<code>SelectableDataSourceProxy</code>と<code>DataSourceFactory</code>を利用します。
+<h3><a name="DataSourceDynamicSwiching">同じ種類のデータソースを動的に切り替える</a></h3>
+<p>同じ種類のDB (DBMSの種類やスキーマ内の構成が同じ) に接続するデータソースを、クライアントの属性などにより動的に切り替えたい場合は、<code>SelectableDataSourceProxy</code>と<code>DataSourceFactory</code>を利用します。
 以下に、これらを利用するための設定とプログラムについて例を示します。
 </p>
 <p>まず、データソースごとに<code>jdbc.dicon</code>をコピーし、新しいdiconファイルを作成します。ここでは、<code>customer1-jdbc.dicon</code>と<code>customer2-jdbc.dicon</code>という名前で作成します。</p>
