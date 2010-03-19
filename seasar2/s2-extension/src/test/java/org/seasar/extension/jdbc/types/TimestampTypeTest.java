@@ -31,10 +31,12 @@ public class TimestampTypeTest extends TestCase {
      * @throws Exception
      */
     public void testToText() throws Exception {
-        Timestamp timestamp = Timestamp
-                .valueOf("2007-11-29 13:14:15");
+        Timestamp timestamp = Timestamp.valueOf("2007-11-29 13:14:15");
         assertEquals(timestamp, timestampType
                 .toTimestamp("2007/11/29 13:14:15"));
+        
+        timestamp = Timestamp.valueOf("2010-03-19 00:00:00");
+        assertEquals(timestamp, timestampType.toTimestamp("2010/03/19"));
     }
 
 }

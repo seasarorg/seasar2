@@ -27,6 +27,8 @@ import java.util.Locale;
 
 import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.util.BindVariableUtil;
+import org.seasar.framework.exception.ParseRuntimeException;
+import org.seasar.framework.util.DateConversionUtil;
 import org.seasar.framework.util.TimestampConversionUtil;
 
 /**
@@ -91,8 +93,13 @@ public class TimestampType extends AbstractValueType {
         if (value instanceof Date || value instanceof Calendar) {
             return TimestampConversionUtil.toTimestamp(value);
         }
+        try {
         return TimestampConversionUtil.toTimestamp(value,
                 TimestampConversionUtil.getPattern(Locale.getDefault()));
+        } catch (ParseRuntimeException e) {
+            return TimestampConversionUtil.toTimestamp(value,
+                    DateConversionUtil.getPattern(Locale.getDefault()));
+        }
     }
 
     public String toText(Object value) {
