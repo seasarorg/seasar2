@@ -232,6 +232,8 @@ public class ResourceUtil {
             return props;
         } catch (IOException ex) {
             throw new IORuntimeException(ex);
+        } finally {
+            InputStreamUtil.closeSilently(is);
         }
     }
 

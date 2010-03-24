@@ -50,6 +50,24 @@ public class InputStreamUtil {
     }
 
     /**
+     * {@link InputStream}を閉じます。
+     * 
+     * @param is
+     * @throws IORuntimeException
+     *             {@link IOException}が発生した場合
+     * @see InputStream#close()
+     */
+    public static void closeSilently(InputStream is) throws IORuntimeException {
+        if (is == null) {
+            return;
+        }
+        try {
+            is.close();
+        } catch (IOException e) {
+        }
+    }
+
+    /**
      * {@link InputStream}からbyteの配列を取得します。
      * 
      * @param is
