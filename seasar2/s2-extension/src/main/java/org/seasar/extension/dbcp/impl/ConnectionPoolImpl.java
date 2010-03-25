@@ -78,7 +78,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     private int maxPoolSize = 10;
 
-    private int maxWait = -1;
+    private long maxWait = -1;
 
     private boolean allowLocalTx = true;
 
@@ -181,21 +181,24 @@ public class ConnectionPoolImpl implements ConnectionPool {
     }
 
     /**
-     * 空きコネクションを待機する上限を秒単位で設定します。
+     * 空きコネクションを待機する上限をミリ秒単位で返します。
      * 
-     * @return 空きコネクションを待機する上限(秒単位)
+     * @return 空きコネクションを待機する上限(ミリ秒単位)
      */
-    public int getMaxWait() {
+    public long getMaxWait() {
         return maxWait;
     }
 
     /**
-     * 空きコネクションを待機する上限を秒単位で返します。
+     * 空きコネクションを待機する上限をミリ秒単位で設定します。
+     * <p>
+     * <code>-1</code> (デフォルト) だと無制限に待機します。 <code>0</code> だと待機しません。
+     * </p>
      * 
-     * @param 空きコネクションを待機する上限
-     *            (秒単位)
+     * @param maxWait
+     *            空きコネクションを待機する上限 (ミリ秒単位)
      */
-    public void setMaxWait(int maxWait) {
+    public void setMaxWait(long maxWait) {
         this.maxWait = maxWait;
     }
 
@@ -325,20 +328,20 @@ public class ConnectionPoolImpl implements ConnectionPool {
             }
             return con;
         }
-        long wait = maxWait * 1000L;
+        long wait = maxWait;
         while (getMaxPoolSize() > 0
                 && getActivePoolSize() + getTxActivePoolSize() >= getMaxPoolSize()) {
-            if (wait == 0) {
+            if (wait == 0L) {
                 throw new SSQLException("ESSR0104", null);
             }
             final long startTime = System.currentTimeMillis();
             try {
-                wait((maxWait == -1) ? 0L : wait);
+                wait((maxWait == -1L) ? 0L : wait);
             } catch (InterruptedException e) {
                 throw new SSQLException("ESSR0104", null, e);
             }
             final long elapseTime = System.currentTimeMillis() - startTime;
-            if (wait > 0) {
+            if (wait > 0L) {
                 wait -= Math.min(wait, elapseTime);
             }
         }

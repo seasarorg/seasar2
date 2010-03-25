@@ -409,7 +409,7 @@ public class ConnectionPoolImplTest extends S2TestCase {
      */
     public void testMaxIdle() throws Exception {
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(1);
-        ((ConnectionPoolImpl) pool_).setMaxWait(0);
+        ((ConnectionPoolImpl) pool_).setMaxWait(0L);
         Connection con = pool_.checkOut();
         try {
             pool_.checkOut();
@@ -418,7 +418,7 @@ public class ConnectionPoolImplTest extends S2TestCase {
             System.out.println(e);
         }
 
-        ((ConnectionPoolImpl) pool_).setMaxWait(1);
+        ((ConnectionPoolImpl) pool_).setMaxWait(1000L);
         final Thread currentThread = Thread.currentThread();
         Thread otherThread = new Thread() {
             public void run() {
@@ -443,7 +443,7 @@ public class ConnectionPoolImplTest extends S2TestCase {
         System.out.println(t2 - t1);
         assertTrue(t2 - t1 >= 1000);
 
-        ((ConnectionPoolImpl) pool_).setMaxWait(-1);
+        ((ConnectionPoolImpl) pool_).setMaxWait(-1L);
         otherThread = new Thread() {
             public void run() {
                 try {
