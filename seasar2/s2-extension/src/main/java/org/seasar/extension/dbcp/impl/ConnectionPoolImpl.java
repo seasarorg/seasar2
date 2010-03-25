@@ -38,6 +38,7 @@ import org.seasar.extension.timer.TimeoutTarget;
 import org.seasar.extension.timer.TimeoutTask;
 import org.seasar.framework.exception.SIllegalStateException;
 import org.seasar.framework.exception.SQLRuntimeException;
+import org.seasar.framework.exception.SSQLException;
 import org.seasar.framework.log.Logger;
 import org.seasar.framework.util.SLinkedList;
 import org.seasar.framework.util.StringUtil;
@@ -76,6 +77,8 @@ public class ConnectionPoolImpl implements ConnectionPool {
     private int timeout = 600;
 
     private int maxPoolSize = 10;
+
+    private int maxWait = -1;
 
     private boolean allowLocalTx = true;
 
@@ -145,19 +148,19 @@ public class ConnectionPoolImpl implements ConnectionPool {
     }
 
     /**
-     * タイムアウトを返します。
+     * 空きコネクションをクローズするまでのタイムアウトを秒単位で返します。
      * 
-     * @return タイムアウト
+     * @return 空きコネクションをクローズするまでのタイムアウト(秒単位)
      */
     public int getTimeout() {
         return timeout;
     }
 
     /**
-     * タイムアウトを設定します。
+     * * 空きコネクションをクローズするまでのタイムアウトを秒単位で設定します。
      * 
      * @param timeout
-     *            タイムアウト
+     *            * 空きコネクションをクローズするまでのタイムアウト(秒単位)
      */
     public void setTimeout(int timeout) {
         this.timeout = timeout;
@@ -175,6 +178,25 @@ public class ConnectionPoolImpl implements ConnectionPool {
      */
     public void setMaxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
+    }
+
+    /**
+     * 空きコネクションを待機する上限を秒単位で設定します。
+     * 
+     * @return 空きコネクションを待機する上限(秒単位)
+     */
+    public int getMaxWait() {
+        return maxWait;
+    }
+
+    /**
+     * 空きコネクションを待機する上限を秒単位で返します。
+     * 
+     * @param 空きコネクションを待機する上限
+     *            (秒単位)
+     */
+    public void setMaxWait(int maxWait) {
+        this.maxWait = maxWait;
     }
 
     /**
@@ -303,11 +325,21 @@ public class ConnectionPoolImpl implements ConnectionPool {
             }
             return con;
         }
+        long wait = maxWait * 1000L;
         while (getMaxPoolSize() > 0
                 && getActivePoolSize() + getTxActivePoolSize() >= getMaxPoolSize()) {
+            if (wait == 0) {
+                throw new SSQLException("ESSR0104", null);
+            }
+            final long startTime = System.currentTimeMillis();
             try {
-                wait();
-            } catch (InterruptedException ignore) {
+                wait((maxWait == -1) ? 0L : wait);
+            } catch (InterruptedException e) {
+                throw new SSQLException("ESSR0104", null, e);
+            }
+            final long elapseTime = System.currentTimeMillis() - startTime;
+            if (wait > 0) {
+                wait -= Math.min(wait, elapseTime);
             }
         }
         con = checkOutFreePool(tx);
