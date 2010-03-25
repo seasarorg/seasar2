@@ -407,7 +407,7 @@ public class ConnectionPoolImplTest extends S2TestCase {
      * 
      * @throws Exception
      */
-    public void testMaxIdle() throws Exception {
+    public void testMaxWait() throws Exception {
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(1);
         ((ConnectionPoolImpl) pool_).setMaxWait(0L);
         Connection con = pool_.checkOut();
