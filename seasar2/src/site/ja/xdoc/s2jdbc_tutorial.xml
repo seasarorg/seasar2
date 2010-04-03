@@ -724,7 +724,7 @@ System.out.println(emp);
 			</p>
 		</section>
 
-		<section name="SQLによる複数件取得">
+		<section name="SQLによる複数件検索">
 			<p>
 				SQLの自動生成は便利な機能ですが、 SQLを自分で書きたいこともあるでしょう。
 				SQLを使って複数件検索するには、 selectBySql()とgetResultList()を組み合わせます。
@@ -794,7 +794,7 @@ for (RowMap m : results) {
 			</p>
 		</section>
 
-		<section name="SQLによる1件取得">
+		<section name="SQLによる1件検索">
 			<p>
 				SQLを使って1件検索するには、
 				selectBySql()とgetSingleResult()を組み合わせます。
