@@ -32,9 +32,6 @@
 				Seasar2を利用していて疑問に思ったことや困ったこと、要望などはこちらへ。</dd>
 				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-dev">seasar-dev</a></dt>
 				<dd>Seasar2および関連プロダクト開発者のためのメーリングリストです。</dd>
-				<dt><a href="https://www.seasar.org/mailman/listinfo/seasar-javadoc">seasar-javadoc</a>
-					<a href="http://www.seasar.org/wiki/index.php?SeasarJavadocProject">(協力者募集中)</a></dt>
-				<dd>Seasar2および関連プロダクトにJavadocを記述するプロジェクトのためのメーリングリストです。</dd>
 			</dl>
 		</section>
 		<section name="トラッキング">
@@ -45,6 +42,16 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2010/04/19</dt>
+				<dd>
+					<div>
+					竹添直樹著「
+					<a href="http://www.seshop.com/detail.asp?pid=12039">
+						Seasar2徹底入門 SAStruts/S2JDBC 対応
+					</a>
+					」(翔泳社) が発売されました．
+					</div>
+				</dd>
 				<dt>2010/02/27</dt>
 				<dd>
 					<div>

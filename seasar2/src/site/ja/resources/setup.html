@@ -53,88 +53,44 @@
               </li>
 </ul>
 <h2><a name="dolteng">Doltengを使う場合</a></h2>
-<p>Seasar2を最も簡単に試すには、Eclipseを使うのがお勧めです。
-次のソフトウェアをインストールしておきます。</p>
-<ul>
-<li>JDK5.0</li>
-<li>Eclipse3.2</li>
-<li>Tomcat5.5</li>
-<li>Tomcat Launcher3.2.1</li>
-<li><b>Dolteng</b></li>
-<li>DbLauncher</li>
-<li>日本語でプロパティファイルを入力するためのプラグイン (任意)</li>
-</ul>
 <p>
-JDK5.0を<a href="http://java.sun.com/j2se/1.5.0/ja/download.html">このリンク</a>から指示に従ってインストールします。
-既にインストール済みの場合はその必要はありません。
-次にJDK1.5がPCのデフォルトのJavaになっているのか確認します。
-コマンドプロンプトからjava –versionを実行してください。</p>
-<pre>
-D:\USER\workspace2\teeda&lt;java -version
-java version "1.5.0_07"
-Java(TM) 2 Runtime Environment, Standard Edition (build 1.5.0_07-b03)
-Java HotSpot(TM) Client VM (build 1.5.0_07-b03, mixed mode, sharing)
-</pre>
+Seasar2を簡単に試すには、Eclipseプラグイン「<a href="http://dolteng.sandbox.seasar.org/">Dolteng</a>」を使うのがお勧めです。
+</p>
 <p>
-上記のようにバージョンが1.5.0_xxxのように表示されればOKです。
-もし、OKでない場合は、環境変数のJAVA_HOMEとPATHを確認してください。</p>
-<p>Eclipseのバージョン3.2を<a href="http://archive.eclipse.org/eclipse/downloads/drops/R-3.2.2-200702121330/index.php">このリンク</a>から指示に従ってインストールします。
-既にインストール済みの場合はその必要はありません。
-標準のJDKのバージョンが1.5系でない場合、Eclipseの起動引数に</p>
-<pre>
-eclipse.exe -vm "C:\Program Files\Java\jdk1.5.0_07\bin\javaw.exe"
-</pre>
-<p>のように1.5系のjavaw.exeを指定する必要があります。</p>
-<p>Tomcat5.5.xを<a href="http://tomcat.apache.org/download-55.cgi">このリンク</a>から指示に従ってインストールします。
-既にインストール済みの場合はその必要はありません。</p>
-<p>DoltengとDbLauncherは、Seasarプロジェクトで開発されているEclipse用のPluginです。 Tomcat LauncherはSysdeo社が開発しているPluginですが、Seasarプロジェクトの更新サイトからインストールすることが出来ます。Eclipseのメニューから[Help]
--&gt; [Software Updates] -&gt; [Find and Install…]を選択し、 Install/Updateのダイアログを表示させます。
-[Search for new features to install]のラジオボタンをチェックして[Next]ボタンをクリックします。 [New
-Remote site]ボタンをクリックして[Name]を[Seasar Plugin3.2]、 [URL]に[http://eclipse.seasar.org/updates/3.2/]を入力して[OK]をクリックします。
-[Finish]ボタンをクリックするとインストールする候補として、 DoltengとDbLauncher、Tomcat Launcherが出てくるので、これらをチェックしてインストールしましょう。
-既にインストール済みの場合はその必要はありません。</p>
-<p>インストールが終わったら、Tomcat Launcherの設定を行います。 メニューの[Window] -&gt; [Preferences…]
--&gt; [Tomcat]を選択してください。 Tomcatバージョンにバージョン5.xを選択し、Tomcatホームにインストールしたディレクトリを指定します。
-コンテキスト宣言モードにコンテキストファイルを選び、[OK]をクリックします。</p>
-<p>これで、Tomcat Launcherの設定は完了しました。 早速、Tomcatを起動してみましょう。メニューから[Tomcat] -&gt;
-[Tomcat起動]を選択して、Tomcatを起動します。 エラーなしに無事に起動したのを確認して、一旦、Tomcatを停止させましょう。 メニューから[Tomcat]
--&gt; [Tomcat停止]を選択します。</p>
-<p>日本語でプロパティファイルを入力するためのプラグインとしてプロパティエディタを
-<a href="http://propedit.sourceforge.jp/">このリンク</a>から指示に従ってインストールします (必須ではありません)。
-既にインストール済みの場合は、その必要はありません。</p>
-<p>すべてのインストールがうまく行ったかどうかを確認するために、Hello Worldと表示する単純な画面を作ってみましょう。
-Eclipseのメニューから[File] -&gt; [New] -&gt; [Project]を選びます。
-図1のようなダイアログが表示されるので、[Chura Project]を選択します。</p><br />
-<img src="images/setup1.jpg"/><br /><br />
-<p>[Next]のボタンをクリックしてください。
-図2のように、[Project name]に[chura-tutorial]、
-[Root Package Name]に[tutorial.chura]と入力し、
-JREコンテナーが[Use Default JRE(1.5)]になっていることを確認します。</p><br />
-<img src="images/setup2.jpg"/><br /><br />
-<p>[Project type]に[Super Agile(Teeda + S2Dao)]を選択し、
-[Finish]ボタンをクリックしてください。chura-tutorialのプロジェクトが作成されます。</p>
-<p>プロジェクトを右クリックして、[Tomcatプロジェクト] -&gt; [Tomcatのコンテキストを更新]を選択します。
-これで開発を始めるための必要な設定は完了しました。
-メニューから[Tomcat] -&gt; [Tomcat起動]を選択して、Tomcatを立ち上げます。
-HOT deployで開発するので、アプリケーションサーバを起動したままで開発することが可能です。</p>
-<p>プロジェクトのツリーを開き、src/main/webapp/viewを右クリックして[New] -&gt; [File]を選びます。</p>
-<p>[Enter or select the parent folder]に[chura-tutorial/src/main/webapp/view/hello]と入力し、
-[File name]に[hello.html]と入力して、[Finish]ボタンをクリックします。</p>
-<p>ファイルが作成されたので、Package Exploreからhello.htmlを右クリックして[Open With] -&gt; [Text Editor]を選びます。
-次のようにHTMLを入力してください。 </p>
-<pre>
-&lt;html&gt;
-&lt;body&gt;
-Hello World
-&lt;/body&gt;
-&lt;/html&gt;
-</pre>
-<p>入力が終わったら、hello.html を右クリックして、[Dolteng] -&gt; [View on Server]を選びましょう。
-http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスするはずです。
-無事にHello Worldと表示されたらプロジェクトの設定はうまくいっています。</p>
+Doltengを利用する場合のセットアップおよび使い方は、組み合わせるプレゼンテーション層および永続化層のフレームワークのドキュメントを参照してください。
+</p>
+<table border="1">
+<thead>
+<tr>
+<th>プレゼンテーション層</th>
+<th>永続化層</th>
+<th>ドキュメント</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="http://sastruts.seasar.org/">SAStruts</a></td>
+<td><a href="http://s2container.seasar.org/2.4/ja/s2jdbc.html">S2JDBC</a></td>
+<td>
+「<a href="http://sastruts.seasar.org/setup.html">セットアップ</a>」
+「<a href="http://sastruts.seasar.org/tutorial.html">チュートリアル</a>」
+</td>
+</tr>
+<tr>
+<td><a href="http://teeda.seasar.org/ja/">Teeda</a></td>
+<td><a href="http://s2dao.seasar.org/ja/">S2Dao</a></td>
+<td>
+「<a href="http://teeda.seasar.org/ja/setup.html">開発環境のセットアップ</a>」
+「<a href="http://teeda.seasar.org/ja/extension/firststep/index.html">ファーストステップ</a>」
+「<a href="http://teeda.seasar.org/ja/extension/tutorial/index.html">チュートリアル</a>」
+</td>
+</tr>
+</tbody>
+</table>
+
 <h2><a name="notdolteng">Doltengを使わない場合</a></h2>
 <p>Doltengを使わないSeasar2の設定方法は次のようになります。</p>
-<h2><a name="s2framework">S2-Framework</a></h2>
+<h3><a name="s2framework">S2-Framework</a></h3>
 <p>Seasar2の基本機能(S2Container, S2AOP)を利用する場合には、S2.4.x.zipを解凍してできたseasar2ディレクトリの以下のファイルをCLASSPATHに含める必要があります。</p>
 <ul>
               <li>lib/s2-framework-2.4.x.jar
@@ -150,7 +106,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
 <li>resources/creator.dicon (オプション、「<a href="DIContainer.html#SMARTdeploy">SMART deploy</a>」を使う場合)</li>
 <li>resources/customizer.dicon (オプション、「<a href="DIContainer.html#SMARTdeploy">SMART deploy</a>」を使う場合)</li>
 </ul>
-            <h2><a name="s2extension">S2-Extension</a></h2>
+            <h3><a name="s2extension">S2-Extension</a></h3>
             <p>Seasar2の拡張機能(S2JTA, S2DBCP, S2JDBC, S2Unit, S2Tx, S2DataSet)を利用する場合には以下のファイルを追加でCLASSPATHに含める必要があります。</p>
 <ul>
               <li>lib/s2-extension-2.4.x.jar
@@ -162,7 +118,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
               <li>resources/jdbc.dicon</li>
 </ul>
 <p>アプリケーションの実行環境により、J2EE関連Jarファイルのいずれが必要になるかが異なります。</p>
-            <h3><a name="s2jta">S2JTAまたはS2Txを使う場合</a></h3>
+            <h4><a name="s2jta">S2JTAまたはS2Txを使う場合</a></h4>
             <p>アプリケーションの実行環境により、geronimo-jta_1.1_spec-1.0.jarまたはgeronimo-jta_1.1_spec-1.0-tsr.jarが必要になります。</p>
             <table border="1">
               <col span="3" align="center">
@@ -193,7 +149,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
                   <td>-</td>
                 </tr>
 </table>
-            <h3><a name="ejb">S2TxでEJB互換機能を使う場合</a></h3>
+            <h4><a name="ejb">S2TxでEJB互換機能を使う場合</a></h4>
             <p>アプリケーションの実行環境により、geronimo-ejb_2.1_spec-1.0.jarが必要になります。</p>
             <p>※<a href="#ejb3">S2-TigerでEJB3を使う</a>場合は必要ありません．</p>
             <table border="1">
@@ -223,7 +179,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
 </tbody>
             </table>
 <p><a href="http://www.seasar.org/updates.html">S2Container用のプラグインKijimuna</a>も是非ご利用ください。</p>
-            <h2><a name="s2tiger">S2-Tiger</a></h2>
+            <h3><a name="s2tiger">S2-Tiger</a></h3>
             <p>Java5対応機能を使いたい場合は､S2Tiger-2.4.x.zipを解凍してできたs2-tigerディレクトリの以下のファイルをCLASSPATHに含める必要があります。</p>
 <ul>
 <li>lib/s2-tiger-2.4.x.jar</li>
@@ -234,7 +190,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
               <li></li>
             </ul>
             <p>オプションのJarファイルは、S2JDBCやEJB3、JPAのサポート機能をJavaEE5対応でない環境で使う場合に必要となります。詳細は以下の表を参照してください。</p>
-<h3><a name="resource">@Resourceを使う場合</a></h3>
+<h4><a name="resource">@Resourceを使う場合</a></h4>
             <p>アプリケーションの実行環境により、geronimo-annotation_1.0_spec-1.0.jarが必要になります。</p>
             <table border="1">
               <col span="4" align="center">
@@ -268,7 +224,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
                 </tr>
               </tbody>
             </table>
-<h3><a name="s2jdbc">S2JDBC拡張機能またはJPAを使う場合</a></h3>
+<h4><a name="s2jdbc">S2JDBC拡張機能またはJPAを使う場合</a></h4>
             <p>アプリケーションの実行環境により、gegeronimo-jpa _3.0_spec-1.0.jarが必要になります。</p>
             <table border="1">
               <col span="2" align="center">
@@ -296,7 +252,7 @@ http://localhost:8080/chura-tutorial/view/hello/hello.htmlにアクセスする�
                 </tr>
               </tbody>
             </table>
-<h3><a name="ejb3">EJB3を使う場合</a></h3>
+<h4><a name="ejb3">EJB3を使う場合</a></h4>
             <p>アプリケーションの実行環境により、geronimo-ejb_3.0_spec-1.0.jar、geronimo-interceptor_3.0_spec-1.0.jarが必要になります。</p>
             <table border="1">
               <col span="4" align="center">
