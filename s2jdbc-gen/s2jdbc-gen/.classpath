@@ -14,6 +14,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/s2-tiger"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/seasar2"/>
 	<classpathentry kind="lib" path="lib/freemarker-2.3.13.jar" sourcepath="libsrc/freemarker-2.3.13-sources.jar"/>
-	<classpathentry kind="lib" path="lib/svnkit-1.2.0.4949.jar" sourcepath="libsrc/svnkit-1.2.0.4949-sources.zip"/>
+	<classpathentry kind="lib" path="lib/svnkit-1.3.2-1.jar" sourcepath="libsrc/svnkit-1.3.2-1-sources.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

@@ -87,6 +87,15 @@
 						</code>
 					</td>
 				</tr>
+				<tr>
+					<td>1.6.x</td>
+					<td>1.3.x</td>
+					<td>
+						<code>
+							org.seasar.extension.jdbc.gen.extension.svn.GenDdlSvn16Processor
+						</code>
+					</td>
+				</tr>
 			</table>
 			<p>
 				以下はSubversion 1.4形式のワーキングコピーフォーマットを使う場合の設定例です．
