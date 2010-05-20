@@ -91,6 +91,22 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
      * 内部結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param conditions
+     *            付加的な結合条件の配列
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #Join(CharSequence, JoinType)
+     */
+    AutoSelect<T> innerJoin(CharSequence name, Where... conditions);
+
+    /**
+     * 内部結合するプロパティを指定します。
      * 
      * @param name
      *            内部結合する関連のプロパティ名
@@ -140,6 +156,20 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @see #Join(CharSequence, JoinType, boolean)
      */
     AutoSelect<T> innerJoin(CharSequence name, boolean fetch, Where condition);
+
+    /**
+     * 内部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            内部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param conditions
+     *            付加的な結合条件の配列
+     * @return このインスタンス自身
+     * @see #Join(CharSequence, JoinType, boolean)
+     */
+    AutoSelect<T> innerJoin(CharSequence name, boolean fetch, Where... conditions);
 
     /**
      * 左外部結合するプロパティを指定します。
@@ -201,6 +231,22 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
      * 左外部結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param conditions
+     *            付加的な結合条件の配列
+     * @return このインスタンス自身
+     * @see JoinMeta
+     * @see #Join(CharSequence, JoinType)
+     */
+    AutoSelect<T> leftOuterJoin(CharSequence name, Where... conditions);
+
+    /**
+     * 左外部結合するプロパティを指定します。
      * 
      * @param name
      *            左外部結合する関連のプロパティ名
@@ -251,6 +297,21 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      */
     AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch,
             Where condition);
+
+    /**
+     * 左外部結合するプロパティを指定します。
+     * 
+     * @param name
+     *            左外部結合する関連のプロパティ名
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param conditions
+     *            付加的な結合条件の配列
+     * @return このインスタンス自身
+     * @see #Join(CharSequence, JoinType, boolean)
+     */
+    AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch,
+            Where... conditions);
 
     /**
      * 結合するプロパティを指定します。
@@ -312,6 +373,23 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      * @see #Join(CharSequence, JoinType, boolean)
      */
     AutoSelect<T> join(CharSequence name, JoinType joinType, Where condition);
+
+    /**
+     * 結合するプロパティを指定します。
+     * <p>
+     * 指定したエンティティはフェッチされます。
+     * </p>
+     * 
+     * @param name
+     *            結合するプロパティ名
+     * @param joinType
+     *            結合タイプ
+     * @param conditions
+     *            付加的な結合条件の配列
+     * @return このインスタンス自身
+     * @see #Join(CharSequence, JoinType, boolean)
+     */
+    AutoSelect<T> join(CharSequence name, JoinType joinType, Where... conditions);
 
     /**
      * 結合するプロパティを指定します。
@@ -395,6 +473,31 @@ public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
      */
     AutoSelect<T> join(CharSequence name, JoinType joinType, boolean fetch,
             Where condition);
+
+    /**
+     * 結合するプロパティを指定します。
+     * 
+     * @param name
+     *            <p>
+     *            結合するプロパティ名。
+     *            </p>
+     *            <p>
+     *            ネストしている場合は、<code>aaa.bbb</code>のように.で区切ります。
+     *            </p>
+     *            <p>
+     *            <code>aaa.bbb</code>を指定する場合は、先にベースの結合(<code>aaa</code>
+     *            )を指定する必要があります。
+     *            </p>
+     * @param joinType
+     *            結合タイプ
+     * @param fetch
+     *            関連するエンティティをフェッチするかどうか。
+     * @param conditions
+     *            付加的な結合条件の配列
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> join(CharSequence name, JoinType joinType, boolean fetch,
+            Where... conditions);
 
     /**
      * where句の条件にIdプロパティ(主キー)を指定します。

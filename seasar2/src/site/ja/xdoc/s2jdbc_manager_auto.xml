@@ -579,8 +579,19 @@ List<Department> results =
 					</li>
 					<li>
 						<code>
+							innerJoin(CharSequence name, Where... conditions)
+						</code>
+					</li>
+					<li>
+						<code>
 							innerJoin(CharSequence name, boolean fetch,
 							Where condition)
+						</code>
+					</li>
+					<li>
+						<code>
+							innerJoin(CharSequence name, boolean fetch,
+							Where... conditions)
 						</code>
 					</li>
 					<li>
@@ -591,8 +602,20 @@ List<Department> results =
 					</li>
 					<li>
 						<code>
+							leftOuterJoin(CharSequence name, Where...
+							conditions)
+						</code>
+					</li>
+					<li>
+						<code>
 							leftOuterJoin(CharSequence name, boolean
 							fetch, Where condition)
+						</code>
+					</li>
+					<li>
+						<code>
+							leftOuterJoin(CharSequence name, boolean
+							fetch, Where... conditions)
 						</code>
 					</li>
 				</ul>

@@ -40,6 +40,7 @@
       <item name="ホーム" href="index.html"/>
       <item name="ライセンス" href="license.html"/>
       <item name="ダウンロード" href="downloads.html"/>
+      <item name="課題追跡" href="https://www.seasar.org/issues/browse/CONTAINER"/>
       <item name="ChangeLog" href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar"/>
       <item name="移行ガイド" href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog"/>
     </menu>

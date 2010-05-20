@@ -250,6 +250,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return join(name, JoinType.INNER, condition);
     }
 
+    public AutoSelect<T> innerJoin(CharSequence name, Where... conditions) {
+        return join(name, JoinType.INNER, conditions);
+    }
+
     public AutoSelect<T> innerJoin(CharSequence name, boolean fetch) {
         return join(name, JoinType.INNER, fetch);
     }
@@ -264,6 +268,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return join(name, JoinType.INNER, fetch, condition);
     }
 
+    public AutoSelect<T> innerJoin(CharSequence name, boolean fetch,
+            Where... conditions) {
+        return join(name, JoinType.INNER, fetch, conditions);
+    }
+
     public AutoSelect<T> leftOuterJoin(CharSequence name) {
         return join(name, JoinType.LEFT_OUTER);
     }
@@ -275,6 +284,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
 
     public AutoSelect<T> leftOuterJoin(CharSequence name, Where condition) {
         return join(name, JoinType.LEFT_OUTER, condition);
+    }
+
+    public AutoSelect<T> leftOuterJoin(CharSequence name, Where... conditions) {
+        return join(name, JoinType.LEFT_OUTER, conditions);
     }
 
     public AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch) {
@@ -291,6 +304,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         return join(name, JoinType.LEFT_OUTER, fetch, condition);
     }
 
+    public AutoSelect<T> leftOuterJoin(CharSequence name, boolean fetch,
+            Where... conditions) {
+        return join(name, JoinType.LEFT_OUTER, fetch, conditions);
+    }
+
     public AutoSelect<T> join(CharSequence name, JoinType joinType) {
         return join(name, joinType, true);
     }
@@ -303,6 +321,11 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     public AutoSelect<T> join(CharSequence name, JoinType joinType,
             Where condition) {
         return join(name, joinType, true, condition);
+    }
+
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            Where... conditions) {
+        return join(name, joinType, true, conditions);
     }
 
     public AutoSelect<T> join(CharSequence name, JoinType joinType,
@@ -323,6 +346,26 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         joinMetaList.add(new JoinMeta(name.toString(), joinType, fetch,
                 condition.getCriteria(), condition.getParams(), condition
                         .getPropertyNames()));
+        return this;
+    }
+
+    public AutoSelect<T> join(CharSequence name, JoinType joinType,
+            boolean fetch, Where... conditions) {
+        if (conditions == null) {
+            throw new NullPointerException("conditions");
+        }
+        if (conditions.length > 0) {
+            final ComplexWhere where = new ComplexWhere();
+            for (final Where w : conditions) {
+                where.and(w);
+            }
+            String criteria = where.getCriteria().trim();
+            if (StringUtil.isEmpty(criteria)) {
+                return this;
+            }
+            joinMetaList.add(new JoinMeta(name.toString(), joinType, fetch,
+                    criteria, where.getParams(), where.getPropertyNames()));
+        }
         return this;
     }
 
