@@ -40,7 +40,7 @@ public class XlsReaderTest extends S2TestCase {
 
     private static final String MAX_PATH = "org/seasar/extension/dataset/impl/XlsReaderImplMaxTest.xls";
 
-    private static final String EMPTY_PATH = "org/seasar/extension/dataset/impl/XlsReaderImplEmptyTest.xls";
+    private static final String EMPTY_PATH = "org/seasar/extension/dataset/impl/XlsReaderImplEmptyColumnTest.xls";
 
     private DataSet dataSet_;
 
@@ -191,7 +191,7 @@ public class XlsReaderTest extends S2TestCase {
     /**
      * @throws Exception
      */
-    public void testEmpty() throws Exception {
+    public void testEmptyColumn() throws Exception {
         dataSet_ = new XlsReader(EMPTY_PATH).read();
         DataTable table = dataSet_.getTable("TEST");
         DataColumn column = table.getColumn("end_date");
