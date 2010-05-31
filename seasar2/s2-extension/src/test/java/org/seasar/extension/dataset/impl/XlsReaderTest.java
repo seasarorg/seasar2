@@ -18,7 +18,9 @@ package org.seasar.extension.dataset.impl;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Timestamp;
 
+import org.seasar.extension.dataset.DataColumn;
 import org.seasar.extension.dataset.DataRow;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
@@ -37,6 +39,8 @@ public class XlsReaderTest extends S2TestCase {
     private static final String PATH = "org/seasar/extension/dataset/impl/XlsReaderImplTest.xls";
 
     private static final String MAX_PATH = "org/seasar/extension/dataset/impl/XlsReaderImplMaxTest.xls";
+
+    private static final String EMPTY_PATH = "org/seasar/extension/dataset/impl/XlsReaderImplEmptyTest.xls";
 
     private DataSet dataSet_;
 
@@ -182,6 +186,16 @@ public class XlsReaderTest extends S2TestCase {
         DataSet dataSet = new XlsReader(MAX_PATH).read();
         DataTable table = dataSet.getTable("MAX");
         assertEquals(65535, table.getRowSize());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testEmpty() throws Exception {
+        dataSet_ = new XlsReader(EMPTY_PATH).read();
+        DataTable table = dataSet_.getTable("TEST");
+        DataColumn column = table.getColumn("end_date");
+        assertEquals(Timestamp.class, column.getColumnType().getType());
     }
 
     protected void setUp() throws Exception {

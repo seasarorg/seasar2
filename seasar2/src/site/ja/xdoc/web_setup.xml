@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE document
+	PUBLIC "-//Apache Software Foundation//DTD XDOC 1.0//EN"
+	"http://maven.apache.org/dtd/xdoc_1_0.dtd">
+<document>
+	<properties>
+		<title>Webアプリケーションの設定</title>
+	</properties>
+	<body>
+		<section name="Webアプリケーションの設定">
+			<ul>
+				<li>
+					<p>
+						<a href="#概要">概要</a>
+					</p>
+				</li>
+			</ul>
+		</section>
+
+
+		<section name="概要">
+			<p>
+			</p>
+		</section>
+
+		<section name="Servlet">
+			<p>
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>パラメータ名</th>
+						<th>デフォルト</th>
+						<th>説明</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>configPath</code>
+						</td>
+						<td>
+							<code>"app.dicon"</code>
+						</td>
+						<td>
+							S2コンテナの起点として読み込まれる設定ファイルのパスを指定します．
+							このパスはクラスパスに含まれるディレクトリからの相対パス，またはJarファイル内のエントリ名です．
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>debug</code>
+						</td>
+						<td>
+							<code>false</code>
+						</td>
+						<td>
+							デバッグモードを有効にする場合は
+							<code>"true"</code>
+							を指定します (大文字・小文字は区別されません)．
+							デバッグモードを有効にすると，
+							<a href="#S2Containerの内容表示">S2Containerの内容表示</a>
+							機能を使うことが出来ます．
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<subsection name="S2Containerの内容表示">
+			</subsection>
+		</section>
+
+		<section name="Listener">
+			<p>
+			</p>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>パラメータ名</th>
+						<th>デフォルト</th>
+						<th>説明</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code>org.seasar.framework.container.configPath</code>
+						</td>
+						<td>
+							<code>"app.dicon"</code>
+						</td>
+						<td>
+							S2コンテナの起点として読み込まれる設定ファイルのパスを指定します．
+							このパスはクラスパスに含まれるディレクトリからの相対パス，またはJarファイル内のエントリ名です．
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+
+		<section name="Filter">
+			<p>
+			</p>
+
+			<table border="1">
+				<thead>
+					<tr>
+						<th>Seasar2のFilter</th>
+						<th>TeedaのFilter</th>
+						<th>SAStrutsのFilter</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>ExtensionFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>EncodingFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>SessionFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>MultipartFormDataFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>HotdeployFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>S2ContainerFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code>RequestDumpFilter</code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code></code>
+						</td>
+						<td>
+							<code>RoutingFilter</code>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<subsection name="EncodingFilter">
+				<table border="1">
+					<tr>
+						<th>クラス名</th>
+						<td>
+							<code>org.seasar.extension.filter.EncodingFilter
+							</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="SessionFilter">
+				<table border="1">
+					<tr>
+						<th>クラス名</th>
+						<td>
+							<code>org.seasar.extension.httpsession.SessionFilter
+							</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="HotdeployFilter">
+				<table border="1">
+					<tr>
+						<th>クラス名</th>
+						<td>
+							<code>org.seasar.framework.container.hotdeploy.HotdeployFilter
+							</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="S2ContainerFilter">
+				<table border="1">
+					<tr>
+						<th>クラス名</th>
+						<td>
+							<code>org.seasar.framework.container.filter.S2ContainerFilter
+							</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+
+			<subsection name="RequestDumpFilter">
+				<table border="1">
+					<tr>
+						<th>クラス名</th>
+						<td>
+							<code>org.seasar.teeda.core.filter.RequestDumpFilter
+							</code>
+						</td>
+					</tr>
+				</table>
+			</subsection>
+		</section>
+
+	</body>
+</document>

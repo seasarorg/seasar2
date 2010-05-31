@@ -247,7 +247,8 @@ public class XlsReader implements DataReader, DataSetConstants {
             if (valueRow != null) {
                 for (int j = 1; j <= sheet.getLastRowNum(); j++) {
                     valueCell = sheet.getRow(j).getCell((short) i);
-                    if (valueCell != null) {
+                    if (valueCell != null
+                            && !StringUtil.isEmpty(valueCell.toString())) {
                         break;
                     }
                 }
