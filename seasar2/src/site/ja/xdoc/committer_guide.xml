@@ -112,6 +112,12 @@
 <kbd>mvn site-deploy</kbd>
 ]]></source>
 				</dd>
+				<dt>S2JDBC Tutorial の修正・コミット</dt>
+				<dd>
+					<ul>
+						<li><p>s2jdbc-tutorial/lib 以下をリフレッシュ</p></li>
+					</ul>
+				</dd>
 			</dl>
 		</section>
 	</body>
