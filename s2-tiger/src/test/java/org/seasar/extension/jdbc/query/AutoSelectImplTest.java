@@ -707,7 +707,7 @@ public class AutoSelectImplTest extends TestCase {
         String tableAlias = query.prepareTableAlias(null);
         query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
                 idIndexList);
-        assertEquals("count(T1_.ID)", query.selectClause.toSql());
+        assertEquals("count(*)", query.selectClause.toSql());
         ValueType[] valueTypes = query.getValueTypes();
         assertEquals(1, valueTypes.length);
         assertEquals(ValueTypes.LONG, valueTypes[0]);

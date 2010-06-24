@@ -97,6 +97,15 @@ public interface DbmsDialect {
     String convertGetCountSql(String sql);
 
     /**
+     * 件数取得用SQLのSELECTリストを返します。
+     * 
+     * @param idPropertyMeta
+     *            IDプロパティのメタデータ
+     * @return 件数取得用SQLのSELECTリスト
+     */
+    String getCountSqlSelectList(List<PropertyMeta> idPropertyMeta);
+
+    /**
      * 値タイプを返します。
      * 
      * @param propertyMeta

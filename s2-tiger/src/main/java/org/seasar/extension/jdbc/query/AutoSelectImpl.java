@@ -448,12 +448,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
             String tableAlias, List<PropertyMapper> propertyMapperList,
             List<Integer> idIndexList) {
         if (count) {
-            List<PropertyMeta> propertyMetaList = em.getIdPropertyMetaList();
-            String selectItem = propertyMetaList.isEmpty() ? "count(*)"
-                    : "count(" + tableAlias + "."
-                            + propertyMetaList.get(0).getColumnMeta().getName()
-                            + ")";
-            selectClause.addSql(selectItem);
+            final String selectList = jdbcManager.getDialect()
+                    .getCountSqlSelectList(
+                    idPropertyMetaList);
+            selectClause.addSql(selectList);
             valueTypeList.add(jdbcManager.getDialect().getValueType(Long.class,
                     false, null));
         } else {
