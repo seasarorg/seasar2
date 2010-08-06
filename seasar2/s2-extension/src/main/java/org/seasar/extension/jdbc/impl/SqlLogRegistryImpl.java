@@ -31,11 +31,7 @@ public class SqlLogRegistryImpl implements SqlLogRegistry {
 
     private int limitSize;
 
-    private ThreadLocal threadList = new ThreadLocal() {
-        protected Object initialValue() {
-            return new LinkedList();
-        }
-    };
+    private ThreadLocal threadList = new ThreadLocal();
 
     /**
      * デフォルトの上限サイズを使用してインスタンスを構築します。
@@ -91,6 +87,11 @@ public class SqlLogRegistryImpl implements SqlLogRegistry {
     }
 
     private LinkedList getSqlLogList() {
-        return (LinkedList) threadList.get();
+        LinkedList list = (LinkedList) threadList.get();
+        if (list == null) {
+            list = new LinkedList();
+            threadList.set(list);
+        }
+        return list;
     }
 }

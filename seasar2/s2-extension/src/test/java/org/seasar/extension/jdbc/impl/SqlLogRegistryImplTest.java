@@ -16,7 +16,9 @@
 package org.seasar.extension.jdbc.impl;
 
 import org.seasar.extension.jdbc.SqlLog;
+import org.seasar.extension.jdbc.SqlLogRegistryLocator;
 import org.seasar.extension.unit.S2TestCase;
+import org.seasar.framework.container.servlet.S2ContainerDestroyer;
 
 /**
  * @author taedium
@@ -92,6 +94,18 @@ public class SqlLogRegistryImplTest extends S2TestCase {
         SqlLogRegistryImpl registry = new SqlLogRegistryImpl(3);
         registry.add(sqlLog);
         registry.clear();
+        assertTrue(registry.isEmpty());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    public void testClearWithLocator() throws Exception {
+        SqlLogRegistryImpl registry = new SqlLogRegistryImpl(3);
+        registry.add(sqlLog);
+        SqlLogRegistryLocator.setInstance(registry);
+        S2ContainerDestroyer.destroy();
         assertTrue(registry.isEmpty());
     }
 }

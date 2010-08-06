@@ -15,16 +15,12 @@
  */
 package org.seasar.framework.container.servlet;
 
-import java.lang.reflect.Method;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.seasar.framework.container.S2Container;
-import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
 import org.seasar.framework.log.Logger;
-import org.seasar.framework.util.DriverManagerUtil;
 
 /**
  * {@link S2Container}用の {@link ServletContextListener}です。
@@ -66,18 +62,7 @@ public class S2ContainerListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent event) {
-        SingletonS2ContainerFactory.destroy();
-        DriverManagerUtil.deregisterAllDrivers();
-        try {
-            final Class clazz = Class
-                    .forName("org.seasar.extension.timer.TimeoutManager");
-            final Method getInstance = clazz.getMethod("getInstance", null);
-            final Object instance = getInstance.invoke(null, null);
-            final Method stop = clazz.getMethod("stop",
-                    new Class[] { long.class });
-            stop.invoke(instance, new Object[] { new Integer(1000) });
-        } catch (final Throwable ignore) {
-        }
+        S2ContainerDestroyer.destroy();
     }
 
 }
