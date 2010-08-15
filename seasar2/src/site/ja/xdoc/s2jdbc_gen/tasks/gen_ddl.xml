@@ -332,14 +332,14 @@
 		<section name="例">
 			<subsection name="SQLのキーワードと識別子の大文字小文字を指定する">
 				<p>
-					sqlKeywordCaseType属性とsqlIdentifierCaseType属性に"uppercase"や"lowercase"といった値を指定することで、SQLのキーワード（CREATEやALTERなど）やSQLの識別子（テーブル名やカラム名）の大文字小文字を指定できます。
+					sqlKeywordCase属性とsqlIdentifierCase属性に"uppercase"や"lowercase"といった値を指定することで、SQLのキーワード（CREATEやALTERなど）やSQLの識別子（テーブル名やカラム名）の大文字小文字を指定できます。
 					たとえば、次のように指定できます。
 				</p>
 <source><![CDATA[<gen-ddl
     classpathDir="build/classes"
     rootPackageName="examples"
-    sqlKeywordCaseType="lowercase"
-    sqlIdentifierCaseType="uppercase"
+    sqlKeywordCase="lowercase"
+    sqlIdentifierCase="uppercase"
     classpathRef="classpath"
 />]]></source>
 				<p>
