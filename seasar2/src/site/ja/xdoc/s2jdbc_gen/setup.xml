@@ -52,6 +52,9 @@
 									<li>
 										<a href="#Windows上でEclipse3.5を利用する場合">Windows上でEclipse3.5を利用する場合</a>
 									</li>
+									<li>
+										<a href="#Windows上でEclipse3.6を利用する場合">Windows上でEclipse3.6を利用する場合</a>
+									</li>
 								</ul>
 							</li>
 						</ul>
@@ -231,16 +234,13 @@ ant -f s2jdbc-gen-build.xml ターゲット名
 				</p>
 				<h4><a name="Windows上でEclipse3.5を利用する場合"></a>Windows上でEclipse3.5を利用する場合</h4>
 				<p>
-					Eclipse3.5上のAntにはエンコーディングの問題があり、日本語を正しく処理できません（実行するAntタスクが日本語をログ出力していると、コンソールに何も出力されません）。
-					<a href="http://www.pragmatic.kr/pages/2077012">Open External</a>などのEcipseプラグインでs2jdbc-gen-build.xmlをコマンドプロンプトで開き、
-					コマンドプロンプトからAntを実行してください。
+					S2JDBC-Genが配布するs2jdbc-gen-build.xmlやDoltengの0.41.0以上のバージョンから生成されるs2jdbc-gen-build.xmlを修正し、vmarg.encodingプロパティに適切な値が設定されるように調整してください。
+					具体的な方法については、<a href="http://d.hatena.ne.jp/miya2000/20100825/p0">Eclipse 3.6 + Ant + S2JDBC-Gen 文字化け、コンソール停止</a>が参考になります。
 				</p>
+				<h4><a name="Windows上でEclipse3.6を利用する場合"></a>Windows上でEclipse3.6を利用する場合</h4>
 				<p>
-					Open Externalの更新サイトは、<a href="http://update2.pragmatic.kr/">http://update2.pragmatic.kr/</a>です。
-					プラグインのインストール画面では、「Group items by category」のチェックボックスを外してください。
-				</p>
-				<p>
-					コマンドプロンプトからAntを実行するには、<a href="#コマンドラインからの実行">コマンドラインからの実行</a>を参照してください。
+					特別な設定は不要です。
+					ただし、S2JDBC-Genが配布するs2jdbc-gen-build.xmlやDoltengの0.41.0以上のバージョンから生成されるs2jdbc-gen-build.xmlを利用してください。
 				</p>
 			</subsection>
 		</section>
