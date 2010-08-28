@@ -13,6 +13,9 @@
   <property name="uses2junit4" value="false"/>
   <property name="env" value="ut"/>
   <property name="jdbcmanagername" value="jdbcManager"/>
+  <condition property="vmarg.encoding" value="-Dfile.encoding=UTF-8" else="">
+    <isset property="eclipse.pdebuild.home"/>
+  </condition>
 
   <path id="classpath">
     <pathelement location="${classpathdir}"/>
@@ -34,8 +37,9 @@
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-entity>
     <javac 
       srcdir="${javafiledestdir}"
       destdir="${classpathdir}"
@@ -53,8 +57,9 @@
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-names>
     <gen-service
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -63,8 +68,9 @@
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-service>
     <gen-sqlfileconstants
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -76,6 +82,7 @@
         <sqlfileset dir="${classpathdir}">
           <include name="${sqlfilepattern}" />
         </sqlfileset>
+        <jvmarg value="${vmarg.encoding}"/>
     </gen-sqlfileconstants>
     <gen-entitytest
       classpathdir="${classpathdir}"
@@ -86,8 +93,9 @@
       uses2junit4="${uses2junit4}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-entitytest>
     <gen-servicetest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -96,8 +104,9 @@
       uses2junit4="${uses2junit4}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-servicetest>
     <gen-sqlfiletest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -110,6 +119,7 @@
         <sqlfileset dir="${classpathdir}">
           <include name="${sqlfilepattern}" />
         </sqlfileset>
+        <jvmarg value="${vmarg.encoding}"/>
     </gen-sqlfiletest>
   </target>
 
@@ -120,8 +130,9 @@
       entitypackagename="${entitypackagename}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-ddl>
     <gen-names
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -130,8 +141,9 @@
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-names>
     <gen-service
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -140,8 +152,9 @@
       javafileencoding="${javafileencoding}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-service>
     <gen-sqlfileconstants
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -153,6 +166,7 @@
         <sqlfileset dir="${classpathdir}">
           <include name="${sqlfilepattern}" />
         </sqlfileset>
+        <jvmarg value="${vmarg.encoding}"/>
     </gen-sqlfileconstants>
     <gen-entitytest
       classpathdir="${classpathdir}"
@@ -163,8 +177,9 @@
       uses2junit4="${uses2junit4}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-entitytest>
     <gen-servicetest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -173,8 +188,9 @@
       uses2junit4="${uses2junit4}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </gen-servicetest>
     <gen-sqlfiletest
       classpathdir="${classpathdir}"
       rootpackagename="${rootpackagename}"
@@ -187,6 +203,7 @@
         <sqlfileset dir="${classpathdir}">
           <include name="${sqlfilepattern}" />
         </sqlfileset>
+        <jvmarg value="${vmarg.encoding}"/>
     </gen-sqlfiletest>
   </target>
 
@@ -199,8 +216,9 @@
       version="${version}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </migrate>
     <refresh projectName="${projectname}"/>
   </target>
 
@@ -213,8 +231,9 @@
       version="previous"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </migrate>
   </target>
 
   <target name="dump">
@@ -225,8 +244,9 @@
       entitypackagename="${entitypackagename}"
       env="${env}"
       jdbcmanagername="${jdbcmanagername}"
-      classpathref="classpath"
-    />
+      classpathref="classpath">
+        <jvmarg value="${vmarg.encoding}"/>
+    </dump-data>
   </target>
 
 </project>
