@@ -27,6 +27,8 @@ import org.seasar.framework.util.InputStreamReaderUtil;
 import org.seasar.framework.util.ReaderUtil;
 import org.seasar.framework.util.ResourceUtil;
 
+import static org.seasar.framework.util.tiger.CollectionsUtil.*;
+
 /**
  * @author higa
  * 
@@ -35,8 +37,7 @@ public class NodeCache {
 
     private static volatile boolean initialized;
 
-    private static ConcurrentHashMap<String, Node> nodeCache = new ConcurrentHashMap<String, Node>(
-            200);
+    private static ConcurrentHashMap<String, Node> nodeCache = newConcurrentHashMap(200);
 
     static {
         initialize();
@@ -52,39 +53,57 @@ public class NodeCache {
      * @return キャッシュしているノード
      */
     public static Node getNode(String path, String dbmsName) {
+        return getNode(path, dbmsName, true);
+    }
+
+    /**
+     * キャッシュしているノードを返します。 まだ、解析していないときにはファイルからSQLを取得して解析し、 結果をキャッシュします。
+     * 
+     * @param path
+     *            パス。examples/dao/EmployeeDao_selectXxx.sqlのような'/'区切りのパスです。
+     * @param dbmsName
+     *            DBMS名
+     * @param allowVariableSql
+     *            可変なSQLを許可する場合は<code>true</code>
+     * @return キャッシュしているノード
+     */
+    public static Node getNode(String path, String dbmsName,
+            boolean allowVariableSql) {
         if (!initialized) {
             initialize();
         }
         if (path.endsWith(".sql")) {
             path = path.substring(0, path.length() - 4);
         }
-        String s = null;
+        String key = path;
+        if (!allowVariableSql) {
+            key = key + "_disallowVariableSql";
+        }
         Node node = null;
         if (dbmsName != null) {
-            s = path + "_" + dbmsName;
-            node = nodeCache.get(s);
+            String dbmsSpecificKey = key + "_" + dbmsName;
+            node = nodeCache.get(dbmsSpecificKey);
             if (node != null) {
                 return node;
             }
-            node = createNode(s);
+            String dbmsSpecificPath = path + "_" + dbmsName;
+            node = createNode(dbmsSpecificPath, allowVariableSql);
             if (node != null) {
-                Node current = nodeCache.putIfAbsent(s, node);
-                return current != null ? current : node;
+                return putIfAbsent(nodeCache, dbmsSpecificKey, node);
             }
         }
-        node = nodeCache.get(path);
+        node = nodeCache.get(key);
         if (node != null) {
             return node;
         }
-        node = createNode(path);
+        node = createNode(path, allowVariableSql);
         if (node != null) {
-            Node current = nodeCache.putIfAbsent(s != null ? s : path, node);
-            return current != null ? current : node;
+            return putIfAbsent(nodeCache, key, node);
         }
         return null;
     }
 
-    private static Node createNode(String path) {
+    private static Node createNode(String path, boolean allowVariableSql) {
         InputStream is = ResourceUtil.getResourceAsStreamNoException(path,
                 "sql");
         if (is == null) {
@@ -95,7 +114,7 @@ public class NodeCache {
         if (sql.length() > 0 && sql.charAt(0) == '\uFEFF') {
             sql = sql.substring(1);
         }
-        return new SqlParserImpl(sql).parse();
+        return new SqlParserImpl(sql, allowVariableSql).parse();
     }
 
     /**

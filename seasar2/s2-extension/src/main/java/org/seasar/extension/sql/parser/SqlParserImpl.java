@@ -22,6 +22,7 @@ import org.seasar.extension.sql.IfConditionNotFoundRuntimeException;
 import org.seasar.extension.sql.Node;
 import org.seasar.extension.sql.SqlParser;
 import org.seasar.extension.sql.SqlTokenizer;
+import org.seasar.extension.sql.VariableSqlNotAllowedRuntimeException;
 import org.seasar.extension.sql.node.BeginNode;
 import org.seasar.extension.sql.node.BindVariableNode;
 import org.seasar.extension.sql.node.ContainerNode;
@@ -45,17 +46,32 @@ public class SqlParserImpl implements SqlParser {
 
     private Stack nodeStack = new Stack();
 
+    private boolean allowVariableSql = true;
+
     /**
      * {@link SqlParserImpl}を作成します。
      * 
      * @param sql
      */
     public SqlParserImpl(String sql) {
+        this(sql, true);
+    }
+
+    /**
+     * {@link SqlParserImpl}を作成します。
+     * 
+     * @param sql
+     *            SQL
+     * @param allowVariableSql
+     *            可変なSQLを許可する場合は<code>true</code>
+     */
+    public SqlParserImpl(String sql, boolean allowVariableSql) {
         sql = sql.trim();
         if (sql.endsWith(";")) {
             sql = sql.substring(0, sql.length() - 1);
         }
         tokenizer = new SqlTokenizerImpl(sql);
+        this.allowVariableSql = allowVariableSql;
     }
 
     public Node parse() {
@@ -126,6 +142,10 @@ public class SqlParserImpl implements SqlParser {
         String comment = tokenizer.getToken();
         if (isTargetComment(comment)) {
             if (isIfComment(comment)) {
+                if (!allowVariableSql) {
+                    throw new VariableSqlNotAllowedRuntimeException(tokenizer
+                            .getSql());
+                }
                 parseIf();
             } else if (isBeginComment(comment)) {
                 parseBegin();
@@ -201,6 +221,10 @@ public class SqlParserImpl implements SqlParser {
         if (s.startsWith("(") && s.endsWith(")")) {
             peek().addChild(new ParenBindVariableNode(expr));
         } else if (expr.startsWith("$")) {
+            if (!allowVariableSql) {
+                throw new VariableSqlNotAllowedRuntimeException(tokenizer
+                        .getSql());
+            }
             peek().addChild(new EmbeddedValueNode(expr.substring(1)));
         } else if (expr.equals("orderBy")) {
             peek().addChild(new EmbeddedValueNode(expr));
@@ -243,6 +267,16 @@ public class SqlParserImpl implements SqlParser {
      */
     protected void push(Node node) {
         nodeStack.push(node);
+    }
+
+    /**
+     * 可変なSQLを許可する場合は<code>true</code>を設定します。
+     * 
+     * @param allowVariableSql
+     *            可変なSQLを許可する場合は<code>true</code>
+     */
+    public void setAllowVariableSql(boolean allowVariableSql) {
+        this.allowVariableSql = allowVariableSql;
     }
 
     /**

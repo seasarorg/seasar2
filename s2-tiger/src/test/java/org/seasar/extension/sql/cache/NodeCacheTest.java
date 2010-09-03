@@ -62,6 +62,26 @@ public class NodeCacheTest extends TestCase {
     /**
      * 
      */
+    public void testGetNode_disallowVariableSql() {
+        Node variableNode = NodeCache.getNode(getPath(), null);
+        assertNotNull(variableNode);
+        assertSame(variableNode, NodeCache.getNode(getPath(), null));
+
+        Node notVariableNode = NodeCache.getNode(getPath(), null, false);
+        assertNotSame(variableNode, notVariableNode);
+        assertSame(notVariableNode, NodeCache.getNode(getPath(), null, false));
+
+        Node notVariableNodeWithDbms = NodeCache.getNode(getPath(), "oracle",
+                false);
+        assertNotSame(variableNode, notVariableNodeWithDbms);
+        assertNotSame(notVariableNode, notVariableNodeWithDbms);
+        assertSame(notVariableNodeWithDbms, NodeCache.getNode(getPath(),
+                "oracle", false));
+    }
+
+    /**
+     * 
+     */
     public void testGetNode_dbmsName_notFound() {
         Node node = NodeCache.getNode(getPath(), "xxx");
         assertNotNull(node);

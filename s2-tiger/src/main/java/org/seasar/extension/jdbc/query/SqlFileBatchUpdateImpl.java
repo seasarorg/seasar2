@@ -190,7 +190,8 @@ public class SqlFileBatchUpdateImpl<T> extends
      * 
      */
     protected void prepareNode() throws ResourceNotFoundRuntimeException {
-        node = NodeCache.getNode(path, jdbcManager.getDialect().getName());
+        node = NodeCache.getNode(path, jdbcManager.getDialect().getName(),
+                jdbcManager.isAllowVariableSqlForBatchUpdate());
         if (node == null) {
             logger.log("ESSR0709", new Object[] { callerClass.getName(),
                     callerMethodName });

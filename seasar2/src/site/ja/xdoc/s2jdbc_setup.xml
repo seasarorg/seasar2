@@ -54,17 +54,29 @@
         <property name="fetchSize">0</property>
         <property name="queryTimeout">0</property>
         <property name="dialect">hsqlDialect</property>
+        <property name="allowVariableSqlForBatchUpdate">true</property>
     </component>
 </components>
 ]]></source>
 			<p>
 				<code>maxRows, fetchSize, queryTimeout</code>
 				は、JdbcManagerのデフォルト値になります。個別のクエリの呼び出し時に上書きすることもできます。
-				<a href="s2jdbc_manager.html#最大行数">最大行数</a>
+				<a href="s2jdbc_manager_auto.html#最大行数">最大行数</a>
 				、
-				<a href="s2jdbc_manager.html#フェッチサイズ">フェッチサイズ</a>
+				<a href="s2jdbc_manager_auto.html#フェッチサイズ">フェッチサイズ</a>
 				、
-				<a href="s2jdbc_manager.html#クエリタイムアウト">クエリタイムアウト</a>
+				<a href="s2jdbc_manager_auto.html#クエリタイムアウト">クエリタイムアウト</a>
+				を参照してください。
+			</p>
+			<p>
+				<code>allowVariableSqlForBatchUpdate
+				</code>
+				は、
+				<a href="s2jdbc_manager_sqlfile.html#S2Dao譲りのSQLファイル">SQLファイル</a>
+				を使った
+				<a href="s2jdbc_manager_sqlfile#バッチ挿入・更新・削除">バッチ挿入・更新・削除</a>
+				でIFコメントや埋め込み変数コメントの使用を許可するかどうかを指定します。詳細は
+				<a href="s2jdbc_manager_sqlfile.html#バッチ挿入・更新・削除">バッチ挿入・更新・削除</a>
 				を参照してください。
 			</p>
 			<p>
@@ -216,15 +228,18 @@
 				<li>
 					<p>
 						左のペインのツリーで[Function Calls]を選択し、[Line wrapping
-						policy]で[Wrap all elements, every element on a
-						new line]を、[Indentation policy]で[Indent by
+						policy]で[Wrap all
+						elements, every element on a
+						new line]を、[Indentation
+						policy]で[Indent by
 						one]を選択します。
 					</p>
 				</li>
 				<li>
 					<p>
 						ツリーで[Expressions]を選択し、[Line wrapping
-						policy]で[Wrap all elements, every element on a
+						policy]で[Wrap all elements,
+						every element on a
 						new line]を、[Indentation policy]で[Indent by
 						one]を選択します。
 					</p>

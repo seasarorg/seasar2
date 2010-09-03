@@ -41,6 +41,7 @@ import org.seasar.extension.jdbc.parameter.TemporalParameter;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.extension.jta.TransactionManagerImpl;
 import org.seasar.extension.jta.TransactionSynchronizationRegistryImpl;
+import org.seasar.extension.sql.VariableSqlNotAllowedRuntimeException;
 import org.seasar.framework.exception.ResourceNotFoundRuntimeException;
 import org.seasar.framework.mock.sql.MockDataSource;
 import org.seasar.framework.mock.sql.MockPreparedStatement;
@@ -55,13 +56,17 @@ import static org.seasar.extension.jdbc.parameter.Parameter.*;
  */
 public class SqlFileBatchUpdateImplTest extends TestCase {
 
-    private static final String PATH_SIMPLE = SqlFileUpdateImplTest.class
+    private static final String PATH_SIMPLE = SqlFileBatchUpdateImplTest.class
             .getName()
             + "_update_simpleType";
 
-    private static final String PATH_DTO = SqlFileUpdateImplTest.class
+    private static final String PATH_DTO = SqlFileBatchUpdateImplTest.class
             .getName()
             + "_update_dto";
+
+    private static final String PATH_VARIABLE = SqlFileBatchUpdateImplTest.class
+            .getName()
+            + "_update_variable";
 
     private JdbcManagerImpl manager;
 
@@ -155,6 +160,22 @@ public class SqlFileBatchUpdateImplTest extends TestCase {
         } catch (ResourceNotFoundRuntimeException e) {
             System.out.println(e);
             assertEquals("xxx", e.getPath());
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareNode_disallowVariableSqlForBatch() {
+        manager.setAllowVariableSqlForBatchUpdate(false);
+        SqlFileBatchUpdateImpl<String> query = new SqlFileBatchUpdateImpl<String>(
+                manager, PATH_VARIABLE, asList("foo", "bar"));
+        query.prepareCallerClassAndMethodName("execute");
+        try {
+            query.prepareNode();
+            fail();
+        } catch (VariableSqlNotAllowedRuntimeException expected) {
+            expected.printStackTrace();
         }
     }
 

@@ -799,6 +799,7 @@ jdbcManager
     .getResultList();
 ]]></source>
 			</subsection>
+		</section>
 
 		<section name="挿入・更新・削除">
 			<subsection name="1件挿入・更新・削除">
@@ -994,7 +995,6 @@ int count =
         .execute();
 ]]></source>
 			</subsection>
-		</section>
 
 			<subsection name="バッチ挿入・更新・削除">
 				<p>
@@ -1033,6 +1033,35 @@ int[] countArray =
 					<code>Map</code>
 					のキーを一致させます。
 				</p>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						バッチ更新で使用するSQLファイルでIFコメントや埋め込み変数コメントを使用する場合、
+						IFコメントや埋め込み変数コメントはリストまたは配列(可変長引数)の最初の要素だけで評価されます。
+						2番目以降の要素は、最初の要素で作成されたSQL文のバインド変数に適用されるだけで、
+						IFコメントや埋め込み変数コメントの評価には使われません。
+					</p>
+					<p>
+						リストや配列の要素ごとに異なったSQL文が使われるようにする必要がある場合は、
+						バッチ更新ではなく1件ずつの更新を使用してください。
+					</p>
+					<p>
+						IFコメントや埋め込み変数コメントを含むSQLファイルを間違ってバッチ更新で使ってしまった場合に
+						速やかに検出するには、
+						<code>s2jdbc.dicon</code>
+						で、
+						<code>JdbcManager</code>
+						の
+						<code>allowVariableSqlForBatchUpdate</code>
+						プロパティを
+						<code>false</code>
+						に設定します。
+						<code>s2jdbc.dicon</code>
+						については「
+						<a href="s2jdbc_setup.html#概要">セットアップ－概要</a>
+						」を参照してください。
+					</p>
+				</div>
 				<div class="caution">
 					<div>注意点</div>
 					<p>

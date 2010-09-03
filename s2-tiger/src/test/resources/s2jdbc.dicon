@@ -30,6 +30,12 @@
 		-->
 
 		<!--
+			バッチ更新で IF コメントや埋め込み変数コメントを使用した可変な SQL を
+			許可しない場合は，以下のプロパティの値を false にしてください．
+		-->
+		<property name="allowVariableSqlForBatchUpdate">true</property>
+
+		<!--
 			Seasar2.4.27 から，Enum 型のプロパティは序数 (Enum#ordinal()の戻り値) で扱われます．
 			Seasar2.4.26 以前と同様に，Enum 型のプロパティを名前 (Enum#name()の戻り値) で
 			扱う場合は以下のコメントを解除してください．

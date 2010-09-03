@@ -130,6 +130,11 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
      */
     protected int queryTimeout = 0;
 
+    /**
+     * バッチ更新で可変のSQLを許可する場合は<code>true</code>です。
+     */
+    protected boolean allowVariableSqlForBatchUpdate = true;
+
     public <T> AutoSelect<T> from(Class<T> baseClass) {
         return new AutoSelectImpl<T>(this, baseClass).maxRows(maxRows)
                 .fetchSize(fetchSize).queryTimeout(queryTimeout);
@@ -567,6 +572,21 @@ public class JdbcManagerImpl implements JdbcManager, JdbcManagerImplementor {
      */
     public void setQueryTimeout(int queryTimeout) {
         this.queryTimeout = queryTimeout;
+    }
+
+    public boolean isAllowVariableSqlForBatchUpdate() {
+        return allowVariableSqlForBatchUpdate;
+    }
+
+    /**
+     * バッチ更新で可変のSQLを許可する場合は<code>true</code>、しない場合は<code>false</code>を設定します。
+     * 
+     * @param allowVariableSqlForBatchUpdate
+     *            バッチ更新で可変のSQLを許可する場合は<code>true</code>、しない場合は<code>false</code>
+     */
+    public void setAllowVariableSqlForBatchUpdate(
+            boolean allowVariableSqlForBatchUpdate) {
+        this.allowVariableSqlForBatchUpdate = allowVariableSqlForBatchUpdate;
     }
 
     /**

@@ -71,4 +71,12 @@ public interface JdbcManagerImplementor {
      * @return 永続化層の規約
      */
     PersistenceConvention getPersistenceConvention();
+
+    /**
+     * バッチ更新で可変のSQLを許可する場合は<code>true</code>、しない場合は<code>false</code>を返します。
+     * 
+     * @return バッチ更新で可変のSQLを許可する場合は<code>true</code>、しない場合は<code>false</code>
+     */
+    boolean isAllowVariableSqlForBatchUpdate();
+
 }

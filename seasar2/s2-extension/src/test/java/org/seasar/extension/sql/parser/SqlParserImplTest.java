@@ -26,6 +26,7 @@ import org.seasar.extension.sql.SemicolonNotAllowedRuntimeException;
 import org.seasar.extension.sql.SqlContext;
 import org.seasar.extension.sql.SqlParser;
 import org.seasar.extension.sql.TokenNotClosedRuntimeException;
+import org.seasar.extension.sql.VariableSqlNotAllowedRuntimeException;
 import org.seasar.extension.sql.context.SqlContextImpl;
 import org.seasar.extension.sql.node.BindVariableNode;
 import org.seasar.extension.sql.node.IfNode;
@@ -321,6 +322,19 @@ public class SqlParserImplTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testParseIf_NotAllowed() throws Exception {
+        String sql = "SELECT * FROM emp/*IF job != null*/ WHERE job = /*job*/'CLERK'/*END*/";
+        SqlParser parser = new SqlParserImpl(sql, false);
+        try {
+            parser.parse();
+            fail();
+        } catch (VariableSqlNotAllowedRuntimeException expected) {
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testParseElse() throws Exception {
         String sql = "SELECT * FROM emp WHERE /*IF job != null*/job = /*job*/'CLERK'-- ELSE job is null/*END*/";
         String sql2 = "SELECT * FROM emp WHERE job = ?";
@@ -606,4 +620,18 @@ public class SqlParserImplTest extends TestCase {
         System.out.println(ctx.getSql());
         assertEquals("id desc", ctx.getSql());
     }
+
+    /**
+     * @throws Exception
+     */
+    public void testEmbeddedValue_NotAllowed() throws Exception {
+        String sql = "/*$aaa*/";
+        SqlParser parser = new SqlParserImpl(sql, false);
+        try {
+            parser.parse();
+            fail();
+        } catch (VariableSqlNotAllowedRuntimeException expected) {
+        }
+    }
+
 }
