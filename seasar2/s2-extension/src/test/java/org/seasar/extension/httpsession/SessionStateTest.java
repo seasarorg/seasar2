@@ -74,6 +74,18 @@ public class SessionStateTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testGetLastAccessedTime() throws Exception {
+        byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
+        Map binaryData = new HashMap();
+        binaryData.put("aaa", binary);
+        long time = System.currentTimeMillis();
+        SessionState state = new SessionState(binaryData, time);
+        assertEquals(time, state.getLastAccessedTime());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testNeedInsert() throws Exception {
         byte[] binary = SerializeUtil.fromObjectToBinary("hoge");
         Map binaryData = new HashMap();

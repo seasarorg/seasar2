@@ -19,9 +19,6 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
-import org.seasar.extension.httpsession.S2HttpSession;
-import org.seasar.extension.httpsession.SessionState;
-import org.seasar.extension.httpsession.SessionStateManager;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
@@ -35,11 +32,12 @@ public class S2HttpSessionTest extends TestCase {
      * {@link org.seasar.extension.httpsession.S2HttpSession#getSessionState()}.
      */
     public void testGetSessionState() {
+        final long time = System.currentTimeMillis();
         MockServletContextImpl servletContext = new MockServletContextImpl(
                 "hoge");
         SessionStateManager sessionStateManager = new SessionStateManager() {
             public SessionState loadState(String sessionId) {
-                return new SessionState(new HashMap());
+                return new SessionState(new HashMap(), time);
             }
 
             public void updateState(String sessionId,
@@ -54,6 +52,9 @@ public class S2HttpSessionTest extends TestCase {
         assertNull(sessionWrapper.getSessionState());
         sessionWrapper.getAttribute("hoge");
         assertNotNull(sessionWrapper.getSessionState());
+        assertEquals(time, sessionWrapper.getLastAccessedTime());
+        sessionWrapper.setAttribute("hoge", "moge");
+        assertEquals(time, sessionWrapper.getLastAccessedTime());
     }
 
 }

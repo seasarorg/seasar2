@@ -35,6 +35,8 @@ public class SessionState {
 
     private Map binaryData;
 
+    private long lastAccessedTime;
+
     private Map accessedData;
 
     private Map persistedData;
@@ -46,7 +48,21 @@ public class SessionState {
      *            バイナリデータ
      */
     public SessionState(Map binaryData) {
+        this(binaryData, System.currentTimeMillis());
+    }
+
+    /**
+     * {@link SessionState}を作成します。
+     * 
+     * @param binaryData
+     *            バイナリデータ
+     * @param lastAccessedTime
+     *            最後にアクセスされた時刻
+     * @since 2.4.43
+     */
+    public SessionState(Map binaryData, long lastAccessedTime) {
         this.binaryData = binaryData;
+        this.lastAccessedTime = lastAccessedTime;
         int size = Math.max(binaryData.size(), 20);
         accessedData = new HashMap(size);
         persistedData = new HashMap(size);
@@ -112,6 +128,16 @@ public class SessionState {
      */
     public void setAttribute(String name, Object value) {
         accessedData.put(name, value);
+    }
+
+    /**
+     * 最後にアクセスされた時刻を返します。
+     * 
+     * @return 最後にアクセスされた時刻
+     * @since 2.4.43
+     */
+    public long getLastAccessedTime() {
+        return lastAccessedTime;
     }
 
     /**

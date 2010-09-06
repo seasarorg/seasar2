@@ -43,8 +43,6 @@ public class S2HttpSession implements HttpSession {
 
     private long creationTime = new Date().getTime();
 
-    private long lastAccessedTime = creationTime;
-
     private int maxInactiveInterval = Integer.MAX_VALUE;
 
     /**
@@ -103,7 +101,8 @@ public class S2HttpSession implements HttpSession {
     }
 
     public long getLastAccessedTime() {
-        return lastAccessedTime;
+        setupSessionState();
+        return sessionState.getLastAccessedTime();
     }
 
     public int getMaxInactiveInterval() {
@@ -155,7 +154,6 @@ public class S2HttpSession implements HttpSession {
     public void setAttribute(String name, Object value) {
         setupSessionState();
         sessionState.setAttribute(name, value);
-        lastAccessedTime = new Date().getTime();
     }
 
     public void setMaxInactiveInterval(int interval) {

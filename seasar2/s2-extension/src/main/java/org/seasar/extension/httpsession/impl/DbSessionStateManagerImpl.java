@@ -42,7 +42,7 @@ import org.seasar.framework.util.SerializeUtil;
  */
 public class DbSessionStateManagerImpl implements SessionStateManager {
 
-    private static final String SELECT_SQL = "select name, value from s2session where session_id = ?";
+    private static final String SELECT_SQL = "select name, value, last_access from s2session where session_id = ?";
 
     private static final String INSERT_SQL = "insert into s2session values(?, ?, ?, ?)";
 
@@ -97,11 +97,16 @@ public class DbSessionStateManagerImpl implements SessionStateManager {
                 SELECT_SQL, new MapListResultSetHandler());
         List result = (List) handler.execute(new String[] { sessionId });
         Map binaryData = new HashMap(result.size());
+        long lastAccessedTime = System.currentTimeMillis();
         for (int i = 0; i < result.size(); i++) {
             Map m = (Map) result.get(i);
             binaryData.put(m.get("name"), m.get("value"));
+            final Timestamp lastAccess = (Timestamp) m.get("lastAccess");
+            if (lastAccess != null) {
+                lastAccessedTime = lastAccess.getTime();
+            }
         }
-        return new SessionState(binaryData);
+        return new SessionState(binaryData, lastAccessedTime);
     }
 
     public void removeState(String sessionId) {
