@@ -42,6 +42,8 @@
 				<dd>
 					<ul>
 						<li><p>s2jdbc-tutorial/.classpath</p></li>
+						<li><p>s2jdbc-tutorial/lib/s2-*.jarを削除</p></li>
+						<li><p>s2jdbc-tutorial/lib/sources/s2-*.jarを削除</p></li>
 					</ul>
 				</dd>
 			</dl>
