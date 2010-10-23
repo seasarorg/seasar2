@@ -15,8 +15,6 @@
  */
 package org.seasar.extension.tx.adapter;
 
-import java.lang.reflect.UndeclaredThrowableException;
-
 import javax.transaction.TransactionRolledbackException;
 
 import org.seasar.extension.tx.TransactionCallback;
@@ -126,11 +124,13 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
             final UOWActionImpl action = new UOWActionImpl(callback);
             uowManager.runUnderUOW(transactionType, joinTransaction, action);
             return action.getResult();
-        } catch (final UndeclaredThrowableException e) {
-            throw e.getCause();
-        } catch (UOWActionException e) {
-            throw e.getCause();
-        } catch (UOWException e) {
+        } catch (final UOWActionException e) {
+            final Throwable cause = e.getCause();
+            if (cause instanceof WrappedException) {
+                throw cause.getCause();
+            }
+            throw cause;
+        } catch (final UOWException e) {
             throw new TransactionRolledbackException(e.getMessage())
                     .initCause(e);
         }
@@ -175,14 +175,8 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
         public void run() throws Exception {
             try {
                 result = callback.execute(WAS6TransactionManagerAdapter.this);
-            } catch (final UndeclaredThrowableException e) {
-                throw new UndeclaredThrowableException(e);
-            } catch (final Exception e) {
-                throw e;
-            } catch (final Error e) {
-                throw e;
             } catch (final Throwable e) {
-                throw new UndeclaredThrowableException(e);
+                throw new WrappedException(e);
             }
         }
 
@@ -193,6 +187,32 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
          */
         public Object getResult() {
             return result;
+        }
+
+    }
+
+    /**
+     * トランザクションコールバックからスローされた例外をラップする例外です。
+     * <p>
+     * <code>UOWAction</code>からチェックされない例外をスローするとトランザクションがロールバックされてしまうので、
+     * トランザクションコールバックで発生した例外は全てこの例外でラップします。 トランザクションの制御 (コミットするかロールバックするかの判定)
+     * はトランザクションコールバックで完了しています。
+     * </p>
+     * 
+     * @author koichik
+     */
+    public static class WrappedException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param cause
+         *            原因となった例外
+         */
+        public WrappedException(final Throwable cause) {
+            super(cause);
         }
 
     }
