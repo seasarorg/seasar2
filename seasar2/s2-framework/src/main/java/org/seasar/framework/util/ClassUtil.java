@@ -358,7 +358,10 @@ public class ClassUtil {
     public static Field[] getDeclaredFields(final Class clazz) {
         final ClassPool pool = ClassPoolUtil.getClassPool(clazz);
         final CtClass ctClass = ClassPoolUtil.toCtClass(pool, clazz);
-        final CtField[] ctFields = ctClass.getDeclaredFields();
+        final CtField[] ctFields;
+        synchronized (ctClass) {
+            ctFields = ctClass.getDeclaredFields();
+        }
         final int size = ctFields.length;
         final Field[] fields = new Field[size];
         for (int i = 0; i < size; ++i) {
