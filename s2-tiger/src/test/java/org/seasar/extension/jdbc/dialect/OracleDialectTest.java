@@ -120,7 +120,7 @@ public class OracleDialectTest extends TestCase {
                 dialect.getValueType(Calendar.class, false, TemporalType.DATE));
         assertEquals(ValueTypes.CALENDAR_TIME,
                 dialect.getValueType(Calendar.class, false, TemporalType.TIME));
-        assertEquals(OracleDialect.ORACLE_DATE_TYPE, dialect.getValueType(
+        assertEquals(OracleDialect.ORACLE_DATE_CALENDAR_TYPE, dialect.getValueType(
                 Calendar.class, false, TemporalType.TIMESTAMP));
 
         assertEquals(ValueTypes.SQLDATE,
@@ -183,7 +183,7 @@ public class OracleDialectTest extends TestCase {
         pm.setField(getClass().getField("utilCalendarField"));
         pm.setTemporalType(TemporalType.TIMESTAMP);
         pm.setValueType(ValueTypes.TIMESTAMP);
-        assertEquals(OracleDialect.ORACLE_DATE_TYPE, dialect.getValueType(pm));
+        assertEquals(OracleDialect.ORACLE_DATE_CALENDAR_TYPE, dialect.getValueType(pm));
 
         pm.setField(getClass().getField("sqlDateField"));
         pm.setTemporalType(null);

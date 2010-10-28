@@ -18,18 +18,19 @@ package org.seasar.extension.jdbc.types;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.Calendar;
 
 import oracle.sql.DATE;
 
 import org.seasar.extension.jdbc.ValueType;
 
+
 /**
- * {@link Date}型をOracle固有の{@literal DATE}型として扱う{@link ValueType}です。
+ * {@link Calendar}型をOracle固有の{@literal DATE}型として扱う{@link ValueType}です。
  * 
  * @author koichik
  */
-public class OracleDateType extends DateTimestampType {
+public class OracleDateCalendarType extends CalendarTimestampType {
 
     @Override
     public void bindValue(final PreparedStatement ps, final int index,

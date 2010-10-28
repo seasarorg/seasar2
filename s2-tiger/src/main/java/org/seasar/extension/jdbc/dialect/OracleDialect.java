@@ -37,8 +37,11 @@ import org.seasar.framework.util.tiger.Pair;
  */
 public class OracleDialect extends StandardDialect {
 
-    /** Oracle固有の{@literal DATE}型用の{@link ValueType} */
+    /** {@link Date}型をOracle固有の{@literal DATE}型として扱う{@link ValueType} */
     public static final ValueType ORACLE_DATE_TYPE = new OracleDateType();
+
+    /** {@link Calendar}型をOracle固有の{@literal DATE}型として扱う{@link ValueType} */
+    public static final ValueType ORACLE_DATE_CALENDAR_TYPE = new OracleDateType();
 
     /**
      * 一意制約違反を表す例外コード
@@ -135,9 +138,14 @@ public class OracleDialect extends StandardDialect {
             }
             return ValueTypes.WAVE_DASH_STRING;
         }
-        if (useOracleDate && (clazz == Date.class || clazz == Calendar.class)
+        if (useOracleDate
                 && propertyMeta.getTemporalType() == TemporalType.TIMESTAMP) {
-            return ORACLE_DATE_TYPE;
+            if (clazz == Date.class) {
+                return ORACLE_DATE_TYPE;
+            }
+            if (clazz == Calendar.class) {
+                return ORACLE_DATE_CALENDAR_TYPE;
+            }
         }
         ValueType valueType = getValueTypeInternal(propertyMeta
                 .getPropertyClass());
@@ -156,9 +164,13 @@ public class OracleDialect extends StandardDialect {
             }
             return ValueTypes.WAVE_DASH_STRING;
         }
-        if (useOracleDate && (clazz == Date.class || clazz == Calendar.class)
-                && temporalType == TemporalType.TIMESTAMP) {
-            return ORACLE_DATE_TYPE;
+        if (useOracleDate && temporalType == TemporalType.TIMESTAMP) {
+            if (clazz == Date.class) {
+                return ORACLE_DATE_TYPE;
+            }
+            if (clazz == Calendar.class) {
+                return ORACLE_DATE_CALENDAR_TYPE;
+            }
         }
         return super.getValueType(clazz, lob, temporalType);
     }
@@ -248,8 +260,8 @@ public class OracleDialect extends StandardDialect {
         if (aliases.length > 0) {
             buf.append(" of ");
             for (final Pair<String, String> alias : aliases) {
-                buf.append(alias.getFirst()).append('.')
-                        .append(alias.getSecond()).append(", ");
+                buf.append(alias.getFirst()).append('.').append(
+                        alias.getSecond()).append(", ");
             }
             buf.setLength(buf.length() - 2);
         }
