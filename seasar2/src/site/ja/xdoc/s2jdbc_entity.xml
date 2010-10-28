@@ -774,6 +774,47 @@ public JobType jobType; //名前で扱われます
 @Temporal(TemporalType.DATE)
 public Date date;
 ]]></source>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						Seasar2.4.44 以降と Oracle の組み合わせの場合、デフォルトでは
+						<code>@Temporal(TemporalType.TIMESTAMP)</code>
+						で注釈された
+						<code>java.util.Date</code>
+						型および
+						<code>java.util.Calendar</code>
+						型のプロパティは、Oracle固有の
+						<code>DATE</code>
+						型として扱われます。<br />
+						Seasar2.4.43 以前と同様に
+						<code>@Temporal(TemporalType.TIMESTAMP)</code>
+						で注釈された
+						<code>java.util.Date</code>
+						型および
+						<code>java.util.Calendar</code>
+						型のプロパティをOracleの
+						<code>TIMESTAMP</code>
+						型として扱いたい場合は、
+						<code>s2jdbc.dicon</code>
+						で
+						<code>OracleDialect</code>
+						の
+						<code>useOracleDate</code>
+						プロパティに
+						<code>false</code>
+						を設定してください。
+					</p>
+				</div>
+				<source><![CDATA[
+    <component name="jdbcManager"
+      class="org.seasar.extension.jdbc.manager.JdbcManagerImpl">
+        <property name="dialect">
+            <component class="org.seasar.extension.jdbc.dialect.OracleDialect">
+                <property name="useOracleDate">false</property>
+            </component>
+        </property>
+    ...
+]]></source>
 			</subsection>
 
 			<subsection name="ラージオブジェクト定義">

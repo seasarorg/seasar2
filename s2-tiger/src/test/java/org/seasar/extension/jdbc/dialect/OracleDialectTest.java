@@ -16,8 +16,8 @@
 package org.seasar.extension.jdbc.dialect;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -50,10 +50,19 @@ public class OracleDialectTest extends TestCase {
     public ArrayList<?> arrayListField;
 
     /** */
-    public Date utilDateTimestampField;
+    public Date utilDateField;
 
     /** */
-    public Timestamp timestampField;
+    public Calendar utilCalendarField;
+
+    /** */
+    public java.sql.Date sqlDateField;
+
+    /** */
+    public java.sql.Time sqlTimeField;
+
+    /** */
+    public java.sql.Timestamp sqlTimestampField;
 
     /**
      * @throws Exception
@@ -99,10 +108,27 @@ public class OracleDialectTest extends TestCase {
                 dialect.getValueType(ArrayList.class, false, null));
         assertEquals(ValueTypes.WAVE_DASH_CLOB,
                 dialect.getValueType(String.class, true, null));
+
+        assertEquals(ValueTypes.DATE_SQLDATE,
+                dialect.getValueType(Date.class, false, TemporalType.DATE));
+        assertEquals(ValueTypes.DATE_TIME,
+                dialect.getValueType(Date.class, false, TemporalType.TIME));
         assertEquals(OracleDialect.ORACLE_DATE_TYPE,
                 dialect.getValueType(Date.class, false, TemporalType.TIMESTAMP));
+
+        assertEquals(ValueTypes.CALENDAR_SQLDATE,
+                dialect.getValueType(Calendar.class, false, TemporalType.DATE));
+        assertEquals(ValueTypes.CALENDAR_TIME,
+                dialect.getValueType(Calendar.class, false, TemporalType.TIME));
+        assertEquals(OracleDialect.ORACLE_DATE_TYPE, dialect.getValueType(
+                Calendar.class, false, TemporalType.TIMESTAMP));
+
+        assertEquals(ValueTypes.SQLDATE,
+                dialect.getValueType(java.sql.Date.class, false, null));
+        assertEquals(ValueTypes.TIME,
+                dialect.getValueType(java.sql.Time.class, false, null));
         assertEquals(ValueTypes.TIMESTAMP,
-                dialect.getValueType(Timestamp.class, false, null));
+                dialect.getValueType(java.sql.Timestamp.class, false, null));
     }
 
     /**
@@ -129,12 +155,48 @@ public class OracleDialectTest extends TestCase {
         pm.setValueType(ValueTypes.CLOB);
         assertEquals(ValueTypes.WAVE_DASH_CLOB, dialect.getValueType(pm));
 
-        pm.setField(getClass().getField("utilDateTimestampField"));
+        pm.setField(getClass().getField("utilDateField"));
+        pm.setTemporalType(TemporalType.DATE);
+        pm.setValueType(ValueTypes.SQLDATE);
+        assertEquals(ValueTypes.SQLDATE, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("utilDateField"));
+        pm.setTemporalType(TemporalType.TIME);
+        pm.setValueType(ValueTypes.TIME);
+        assertEquals(ValueTypes.TIME, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("utilDateField"));
         pm.setTemporalType(TemporalType.TIMESTAMP);
         pm.setValueType(ValueTypes.TIMESTAMP);
         assertEquals(OracleDialect.ORACLE_DATE_TYPE, dialect.getValueType(pm));
 
-        pm.setField(getClass().getField("timestampField"));
+        pm.setField(getClass().getField("utilCalendarField"));
+        pm.setTemporalType(TemporalType.DATE);
+        pm.setValueType(ValueTypes.SQLDATE);
+        assertEquals(ValueTypes.SQLDATE, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("utilCalendarField"));
+        pm.setTemporalType(TemporalType.TIME);
+        pm.setValueType(ValueTypes.TIME);
+        assertEquals(ValueTypes.TIME, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("utilCalendarField"));
+        pm.setTemporalType(TemporalType.TIMESTAMP);
+        pm.setValueType(ValueTypes.TIMESTAMP);
+        assertEquals(OracleDialect.ORACLE_DATE_TYPE, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("sqlDateField"));
+        pm.setTemporalType(null);
+        pm.setValueType(ValueTypes.SQLDATE);
+        assertEquals(ValueTypes.SQLDATE, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("sqlTimeField"));
+        pm.setTemporalType(null);
+        pm.setValueType(ValueTypes.TIME);
+        assertEquals(ValueTypes.TIME, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("sqlTimestampField"));
+        pm.setTemporalType(null);
         pm.setValueType(ValueTypes.TIMESTAMP);
         assertEquals(ValueTypes.TIMESTAMP, dialect.getValueType(pm));
     }

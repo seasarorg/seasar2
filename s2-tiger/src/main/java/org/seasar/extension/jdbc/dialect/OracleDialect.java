@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -134,7 +135,7 @@ public class OracleDialect extends StandardDialect {
             }
             return ValueTypes.WAVE_DASH_STRING;
         }
-        if (useOracleDate && clazz == Date.class
+        if (useOracleDate && (clazz == Date.class || clazz == Calendar.class)
                 && propertyMeta.getTemporalType() == TemporalType.TIMESTAMP) {
             return ORACLE_DATE_TYPE;
         }
@@ -155,7 +156,7 @@ public class OracleDialect extends StandardDialect {
             }
             return ValueTypes.WAVE_DASH_STRING;
         }
-        if (useOracleDate && clazz == Date.class
+        if (useOracleDate && (clazz == Date.class || clazz == Calendar.class)
                 && temporalType == TemporalType.TIMESTAMP) {
             return ORACLE_DATE_TYPE;
         }
