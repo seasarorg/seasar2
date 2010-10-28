@@ -15,6 +15,7 @@
  */
 package org.seasar.extension.jdbc.dialect;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.GenerationType;
@@ -23,6 +24,7 @@ import javax.persistence.TemporalType;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.types.OracleDateType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.util.tiger.Pair;
 
@@ -34,6 +36,9 @@ import org.seasar.framework.util.tiger.Pair;
  */
 public class OracleDialect extends StandardDialect {
 
+    /** Oracle固有の{@literal DATE}型用の{@link ValueType} */
+    public static final ValueType ORACLE_DATE_TYPE = new OracleDateType();
+
     /**
      * 一意制約違反を表す例外コード
      */
@@ -42,6 +47,9 @@ public class OracleDialect extends StandardDialect {
     private boolean supportsBooleanToInt = true;
 
     private boolean supportsWaveDashToFullwidthTilde = true;
+
+    /** Oracle固有の{@literal DATE}型を使用する場合は{@literal true} */
+    protected boolean useOracleDate = true;
 
     @Override
     public String getName() {
@@ -126,6 +134,10 @@ public class OracleDialect extends StandardDialect {
             }
             return ValueTypes.WAVE_DASH_STRING;
         }
+        if (useOracleDate && clazz == Date.class
+                && propertyMeta.getTemporalType() == TemporalType.TIMESTAMP) {
+            return ORACLE_DATE_TYPE;
+        }
         ValueType valueType = getValueTypeInternal(propertyMeta
                 .getPropertyClass());
         if (valueType != null) {
@@ -142,6 +154,10 @@ public class OracleDialect extends StandardDialect {
                 return ValueTypes.WAVE_DASH_CLOB;
             }
             return ValueTypes.WAVE_DASH_STRING;
+        }
+        if (useOracleDate && clazz == Date.class
+                && temporalType == TemporalType.TIMESTAMP) {
+            return ORACLE_DATE_TYPE;
         }
         return super.getValueType(clazz, lob, temporalType);
     }
@@ -178,6 +194,25 @@ public class OracleDialect extends StandardDialect {
         this.supportsWaveDashToFullwidthTilde = supportsWaveDashToFullwidthTilde;
     }
 
+    /**
+     * Oracle固有の{@literal DATE}型を使用する場合は{@literal true}を返します。
+     * 
+     * @return Oracle固有の{@literal DATE}型を使用する場合は{@literal true}
+     */
+    public boolean isUseOracleDate() {
+        return useOracleDate;
+    }
+
+    /**
+     * Oracle固有の{@literal DATE}型を使用する場合は{@literal true}を設定します。
+     * 
+     * @param useOracleDate
+     *            Oracle固有の{@literal DATE}型を使用する場合は{@literal true}
+     */
+    public void setUseOracleDate(boolean useOracleDate) {
+        this.useOracleDate = useOracleDate;
+    }
+
     @Override
     public GenerationType getDefaultGenerationType() {
         return GenerationType.SEQUENCE;
@@ -212,8 +247,8 @@ public class OracleDialect extends StandardDialect {
         if (aliases.length > 0) {
             buf.append(" of ");
             for (final Pair<String, String> alias : aliases) {
-                buf.append(alias.getFirst()).append('.').append(
-                        alias.getSecond()).append(", ");
+                buf.append(alias.getFirst()).append('.')
+                        .append(alias.getSecond()).append(", ");
             }
             buf.setLength(buf.length() - 2);
         }

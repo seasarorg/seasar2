@@ -16,8 +16,12 @@
 package org.seasar.extension.jdbc.dialect;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.TemporalType;
 
 import junit.framework.TestCase;
 
@@ -44,6 +48,12 @@ public class OracleDialectTest extends TestCase {
 
     /** */
     public ArrayList<?> arrayListField;
+
+    /** */
+    public Date utilDateTimestampField;
+
+    /** */
+    public Timestamp timestampField;
 
     /**
      * @throws Exception
@@ -79,16 +89,20 @@ public class OracleDialectTest extends TestCase {
      * @throws Exception
      */
     public void testGetValueType() throws Exception {
-        assertEquals(ValueTypes.WAVE_DASH_STRING, dialect.getValueType(
-                String.class, false, null));
-        assertEquals(ValueTypes.BOOLEAN_INTEGER, dialect.getValueType(
-                boolean.class, false, null));
-        assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect.getValueType(
-                List.class, false, null));
-        assertEquals(ValueTypes.ORACLE_RESULT_SET, dialect.getValueType(
-                ArrayList.class, false, null));
-        assertEquals(ValueTypes.WAVE_DASH_CLOB, dialect.getValueType(
-                String.class, true, null));
+        assertEquals(ValueTypes.WAVE_DASH_STRING,
+                dialect.getValueType(String.class, false, null));
+        assertEquals(ValueTypes.BOOLEAN_INTEGER,
+                dialect.getValueType(boolean.class, false, null));
+        assertEquals(ValueTypes.ORACLE_RESULT_SET,
+                dialect.getValueType(List.class, false, null));
+        assertEquals(ValueTypes.ORACLE_RESULT_SET,
+                dialect.getValueType(ArrayList.class, false, null));
+        assertEquals(ValueTypes.WAVE_DASH_CLOB,
+                dialect.getValueType(String.class, true, null));
+        assertEquals(OracleDialect.ORACLE_DATE_TYPE,
+                dialect.getValueType(Date.class, false, TemporalType.TIMESTAMP));
+        assertEquals(ValueTypes.TIMESTAMP,
+                dialect.getValueType(Timestamp.class, false, null));
     }
 
     /**
@@ -114,6 +128,15 @@ public class OracleDialectTest extends TestCase {
         pm.setLob(true);
         pm.setValueType(ValueTypes.CLOB);
         assertEquals(ValueTypes.WAVE_DASH_CLOB, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("utilDateTimestampField"));
+        pm.setTemporalType(TemporalType.TIMESTAMP);
+        pm.setValueType(ValueTypes.TIMESTAMP);
+        assertEquals(OracleDialect.ORACLE_DATE_TYPE, dialect.getValueType(pm));
+
+        pm.setField(getClass().getField("timestampField"));
+        pm.setValueType(ValueTypes.TIMESTAMP);
+        assertEquals(ValueTypes.TIMESTAMP, dialect.getValueType(pm));
     }
 
     /**
@@ -127,9 +150,9 @@ public class OracleDialectTest extends TestCase {
      * @throws Exception
      */
     public void testIsUniqueConstraintViolation() throws Exception {
-        assertTrue(dialect.isUniqueConstraintViolation(new Exception(
-                new SQLRuntimeException(
-                        SQLException.class
+        assertTrue(dialect
+                .isUniqueConstraintViolation(new Exception(
+                        new SQLRuntimeException(SQLException.class
                                 .cast(new SQLException("foo", "XXX")
                                         .initCause(new SQLException("bar",
                                                 "23000", 1)))))));
