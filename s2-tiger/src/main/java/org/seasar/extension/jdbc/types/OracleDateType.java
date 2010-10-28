@@ -33,13 +33,21 @@ public class OracleDateType extends TimestampType {
     @Override
     public void bindValue(final PreparedStatement ps, final int index,
             final Object value) throws SQLException {
-        ps.setObject(index, toOracleDate(value));
+        if (value == null) {
+            setNull(ps, index);
+        } else {
+            ps.setObject(index, toOracleDate(value));
+        }
     }
 
     @Override
     public void bindValue(final CallableStatement cs,
             final String parameterName, final Object value) throws SQLException {
-        cs.setObject(parameterName, toOracleDate(value));
+        if (value == null) {
+            setNull(cs, parameterName);
+        } else {
+            cs.setObject(parameterName, toOracleDate(value));
+        }
     }
 
     /**
