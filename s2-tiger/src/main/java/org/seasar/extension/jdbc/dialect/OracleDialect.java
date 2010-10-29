@@ -25,6 +25,7 @@ import javax.persistence.TemporalType;
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.SelectForUpdateType;
 import org.seasar.extension.jdbc.ValueType;
+import org.seasar.extension.jdbc.types.OracleDateCalendarType;
 import org.seasar.extension.jdbc.types.OracleDateType;
 import org.seasar.extension.jdbc.types.ValueTypes;
 import org.seasar.framework.util.tiger.Pair;
@@ -41,7 +42,7 @@ public class OracleDialect extends StandardDialect {
     public static final ValueType ORACLE_DATE_TYPE = new OracleDateType();
 
     /** {@link Calendar}型をOracle固有の{@literal DATE}型として扱う{@link ValueType} */
-    public static final ValueType ORACLE_DATE_CALENDAR_TYPE = new OracleDateType();
+    public static final ValueType ORACLE_DATE_CALENDAR_TYPE = new OracleDateCalendarType();
 
     /**
      * 一意制約違反を表す例外コード
