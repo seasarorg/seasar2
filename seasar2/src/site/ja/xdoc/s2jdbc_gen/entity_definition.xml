@@ -345,9 +345,12 @@ public BigDecimal salary;]]></source>
 					<tr><td>@Lobつきbyte[]</td><td>blob</td><td>varbinary(max)</td><td>blob($l)</td><td>oid</td><td>tinyblob/blob/mediumblob/longblob</td></tr>
 					<tr><td>Serializable</td><td>raw</td><td>varbinary($l)</td><td>varchar($l) for bit data</td><td>bytea</td><td>binary($l)</td></tr>
 					<tr><td>@LobつきSerializable</td><td>blob</td><td>varbinary(max)</td><td>blob($l)</td><td>oid</td><td>tinyblob/blob/mediumblob/longblob</td></tr>
-					<tr><td>java.sql.Time, <br />@Temporal(TeporalType.TIME)つきjava.util.Date, <br />@Temporal(TeporalType.TIME)つきCalendar</td><td>date</td><td>datetime</td><td>time</td><td>time</td><td>time</td></tr>
-					<tr><td>java.sql.Date, <br />@Temporal(TeporalType.DATE)つきjava.util.Date, <br />@Temporal(TeporalType.DATE)つきCalendar</td><td>date</td><td>datetime</td><td>date</td><td>date</td><td>date</td></tr>
-					<tr><td>java.sql.Timestamp, <br />@Temporal(TeporalType.TIMESTAMP)つきjava.util.Date, <br />@Temporal(TeporalType.TIMESTAMP)つきCalendar</td><td>timestamp</td><td>datetime</td><td>timestamp</td><td>timestamp</td><td>timestamp</td></tr>
+					<tr><td>java.sql.Time</td><td>date</td><td>datetime</td><td>time</td><td>time</td><td>time</td></tr>
+					<tr><td>java.sql.Date</td><td>date</td><td>datetime</td><td>date</td><td>date</td><td>date</td></tr>
+					<tr><td>java.sql.Timestamp</td><td>timestamp</td><td>datetime</td><td>timestamp</td><td>timestamp</td><td>timestamp</td></tr>
+					<tr><td>@Temporal(TeporalType.TIME)つきjava.util.Date, <br />@Temporal(TeporalType.TIME)つきCalendar</td><td>date</td><td>datetime</td><td>time</td><td>time</td><td>time</td></tr>
+					<tr><td>@Temporal(TeporalType.DATE)つきjava.util.Date, <br />@Temporal(TeporalType.DATE)つきCalendar</td><td>date</td><td>datetime</td><td>date</td><td>date</td><td>date</td></tr>
+					<tr><td>@Temporal(TeporalType.TIMESTAMP)つきjava.util.Date, <br />@Temporal(TeporalType.TIMESTAMP)つきCalendar</td><td>date</td><td>datetime</td><td>timestamp</td><td>timestamp</td><td>timestamp</td></tr>
 					<tr><td>Enum型, @Enumerated(EnumType.ORDINAL)つきEnum型</td><td>number($p,0)</td><td>int</td><td>integer</td><td>integer</td><td>int</td></tr>
 					<tr><td>@Enumerated(EnumType.STRING)つきEnum型</td><td>varchar2($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>varchar($l)</td><td>int/varchar($l)</td></tr>
 				</table>
