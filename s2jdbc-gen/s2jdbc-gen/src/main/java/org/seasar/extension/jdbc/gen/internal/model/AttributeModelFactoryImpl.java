@@ -106,7 +106,12 @@ public class AttributeModelFactoryImpl implements AttributeModelFactory {
      */
     protected void doAttributeClass(AttributeModel attributeModel,
             AttributeDesc attributeDesc) {
-        if (useTemporalType && attributeDesc.isTemporal()) {
+        TemporalType primaryTemporalType = attributeDesc
+                .getPrimaryTemporalType();
+        if (primaryTemporalType != null) {
+            attributeModel.setTemporalType(primaryTemporalType);
+            attributeModel.setAttributeClass(Date.class);
+        } else if (useTemporalType && attributeDesc.isTemporal()) {
             attributeModel.setTemporalType(attributeDesc.getTemporalType());
             attributeModel.setAttributeClass(Date.class);
         } else {

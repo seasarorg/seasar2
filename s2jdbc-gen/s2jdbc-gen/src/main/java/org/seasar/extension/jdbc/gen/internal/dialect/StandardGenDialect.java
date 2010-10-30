@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
@@ -489,6 +490,9 @@ public class StandardGenDialect implements GenDialect {
         /** LOBの場合{@code true} */
         protected boolean lob;
 
+        /** 時制の種別 */
+        protected TemporalType temporalType;
+
         /**
          * インスタンスを構築します。
          * 
@@ -513,9 +517,27 @@ public class StandardGenDialect implements GenDialect {
          */
         protected StandardColumnType(String dataType, Class<?> attributeClass,
                 boolean lob) {
+            this(dataType, attributeClass, lob, null);
+        }
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param dataType
+         *            カラム定義
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         * @param temporalType
+         *            時制の種別
+         */
+        protected StandardColumnType(String dataType, Class<?> attributeClass,
+                boolean lob, TemporalType temporalType) {
             this.dataType = dataType;
             this.attributeClass = attributeClass;
             this.lob = lob;
+            this.temporalType = temporalType;
         }
 
         public String getColumnDefinition(int length, int precision, int scale,
@@ -548,6 +570,10 @@ public class StandardGenDialect implements GenDialect {
 
         public boolean isLob() {
             return lob;
+        }
+
+        public TemporalType getTemporalType() {
+            return temporalType;
         }
 
     }

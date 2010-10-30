@@ -16,13 +16,22 @@
 package org.seasar.extension.jdbc.gen.internal.dialect;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.sql.Types;
 
+import javax.persistence.TemporalType;
+
 import org.junit.Test;
+import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.dialect.OracleDialect;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.ColumnType;
 import org.seasar.extension.jdbc.gen.dialect.GenDialect.SqlBlockContext;
+import org.seasar.extension.jdbc.gen.internal.provider.ValueTypeProviderImpl;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
 import org.seasar.extension.jdbc.gen.sqltype.SqlType;
+import org.seasar.extension.jdbc.types.ValueTypes;
+import org.seasar.framework.util.tiger.ReflectionUtil;
 
 import static org.junit.Assert.*;
 
@@ -33,6 +42,9 @@ import static org.junit.Assert.*;
 public class OracleGenDialectTest {
 
     private OracleGenDialect dialect = new OracleGenDialect();
+
+    @SuppressWarnings("unused")
+    private java.util.Date utilDate;
 
     /**
      * 
@@ -74,6 +86,31 @@ public class OracleGenDialectTest {
      * @throws Exception
      */
     @Test
+    public void testGetColumnType_oracleDate() throws Exception {
+        ColumnType type = dialect.getColumnType("date", Types.OTHER);
+        assertEquals("date", type.getColumnDefinition(0, 0, 0, null));
+        assertEquals(Timestamp.class, type.getAttributeClass(0, 0, 0));
+        assertEquals(TemporalType.TIMESTAMP, type.getTemporalType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetColumnType_date() throws Exception {
+        dialect.setUseOracleDate(false);
+        ColumnType type = dialect.getColumnType("date", Types.OTHER);
+        assertEquals("date", type.getColumnDefinition(0, 0, 0, null));
+        assertEquals(Date.class, type.getAttributeClass(0, 0, 0));
+        assertNull(type.getTemporalType());
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
     public void testGetSqlType_binary() throws Exception {
         SqlType type = dialect.getSqlType(Types.BINARY);
         assertEquals("raw(2000)", type.getDataType(2000, 0, 0, false));
@@ -97,6 +134,39 @@ public class OracleGenDialectTest {
     public void testGetSqlType_bigint() throws Exception {
         SqlType type = dialect.getSqlType(Types.BIGINT);
         assertEquals("number(10,0)", type.getDataType(0, 10, 0, false));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetSqlType_oracleDate() throws Exception {
+        ValueTypeProvider valueTypeProvider = new ValueTypeProviderImpl(
+                new OracleDialect());
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setField(ReflectionUtil.getDeclaredField(getClass(),
+                "utilDate"));
+        propertyMeta.setValueType(OracleDialect.ORACLE_DATE_TYPE);
+        SqlType type = dialect.getSqlType(valueTypeProvider, propertyMeta);
+        assertEquals("date", type.getDataType(0, 0, 0, false));
+    }
+
+    /**
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testGetSqlType_date() throws Exception {
+        dialect.setUseOracleDate(false);
+        ValueTypeProvider valueTypeProvider = new ValueTypeProviderImpl(
+                new OracleDialect());
+        PropertyMeta propertyMeta = new PropertyMeta();
+        propertyMeta.setField(ReflectionUtil.getDeclaredField(getClass(),
+                "utilDate"));
+        propertyMeta.setValueType(ValueTypes.TIMESTAMP);
+        SqlType type = dialect.getSqlType(valueTypeProvider, propertyMeta);
+        assertEquals("timestamp", type.getDataType(0, 0, 0, false));
     }
 
     /**

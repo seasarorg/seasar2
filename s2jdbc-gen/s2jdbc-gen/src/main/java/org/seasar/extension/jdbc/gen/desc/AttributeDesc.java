@@ -82,6 +82,9 @@ public class AttributeDesc {
     /** コメント */
     protected String comment;
 
+    /** 優先する時制の種別 */
+    protected TemporalType primaryTemporalType;
+
     /**
      * インスタンスを構築します。
      */
@@ -474,6 +477,25 @@ public class AttributeDesc {
      */
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    /**
+     * 優先する時制の種別を返します。
+     * 
+     * @return 優先する時制の種別、存在しない場合は{@code null}
+     */
+    public TemporalType getPrimaryTemporalType() {
+        return primaryTemporalType;
+    }
+
+    /**
+     * 優先する時制の種別を設定します。
+     * 
+     * @param primaryTemporalType
+     *            優先する時制の種別
+     */
+    public void setPrimaryTemporalType(TemporalType primaryTemporalType) {
+        this.primaryTemporalType = primaryTemporalType;
     }
 
 }

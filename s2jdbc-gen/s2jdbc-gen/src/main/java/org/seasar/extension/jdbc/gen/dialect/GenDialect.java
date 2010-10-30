@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Map;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
 import org.seasar.extension.jdbc.PropertyMeta;
 import org.seasar.extension.jdbc.ValueType;
@@ -442,6 +443,13 @@ public interface GenDialect {
          * @return LOBの場合{@code true}
          */
         boolean isLob();
+
+        /**
+         * 時制の種別を返します。
+         * 
+         * @return 時制の種別、存在しない場合は{@code null}
+         */
+        TemporalType getTemporalType();
 
     }
 

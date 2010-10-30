@@ -27,7 +27,10 @@ import java.util.Arrays;
 import java.util.Map;
 
 import javax.persistence.GenerationType;
+import javax.persistence.TemporalType;
 
+import org.seasar.extension.jdbc.PropertyMeta;
+import org.seasar.extension.jdbc.ValueType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BigIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BinaryType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.BlobType;
@@ -38,8 +41,11 @@ import org.seasar.extension.jdbc.gen.internal.sqltype.DoubleType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.IntegerType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.SmallIntType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.TimeType;
+import org.seasar.extension.jdbc.gen.internal.sqltype.TimestampType;
 import org.seasar.extension.jdbc.gen.internal.sqltype.VarcharType;
 import org.seasar.extension.jdbc.gen.internal.util.CharUtil;
+import org.seasar.extension.jdbc.gen.provider.ValueTypeProvider;
+import org.seasar.extension.jdbc.gen.sqltype.SqlType;
 import org.seasar.extension.jdbc.util.ConnectionUtil;
 import org.seasar.framework.util.CaseInsensitiveMap;
 import org.seasar.framework.util.PreparedStatementUtil;
@@ -62,6 +68,9 @@ public class OracleGenDialect extends StandardGenDialect {
 
     /** シーケンスが見つからないことを示すエラーコード */
     protected static int SEQUENCE_NOT_FOUND_ERROR_CODE = 2289;
+
+    /** Oracle固有の{@literal DATE}型を使用する場合は{@literal true} */
+    protected boolean useOracleDate = true;
 
     /**
      * インスタンスを構築します。
@@ -92,6 +101,25 @@ public class OracleGenDialect extends StandardGenDialect {
         columnTypeMap.put("raw", OracleColumnType.RAW);
         columnTypeMap.put("timestamp", OracleColumnType.TIMESTAMP);
         columnTypeMap.put("varchar2", OracleColumnType.VARCHAR2);
+    }
+
+    /**
+     * Oracle固有の{@literal DATE}型を使用する場合は{@literal true}を返します。
+     * 
+     * @return Oracle固有の{@literal DATE}型を使用する場合は{@literal true}
+     */
+    public boolean isUseOracleDate() {
+        return useOracleDate;
+    }
+
+    /**
+     * Oracle固有の{@literal DATE}型を使用する場合は{@literal true}を設定します。
+     * 
+     * @param useOracleDate
+     *            Oracle固有の{@literal DATE}型を使用する場合は{@literal true}
+     */
+    public void setUseOracleDate(boolean useOracleDate) {
+        this.useOracleDate = useOracleDate;
     }
 
     @Override
@@ -157,6 +185,9 @@ public class OracleGenDialect extends StandardGenDialect {
 
     @Override
     public ColumnType getColumnType(String typeName, int sqlType) {
+        if (useOracleDate && "date".equals(typeName)) {
+            return OracleColumnType.DATE;
+        }
         ColumnType columnType = columnTypeMap.get(typeName);
         if (columnType != null) {
             return columnType;
@@ -250,6 +281,19 @@ public class OracleGenDialect extends StandardGenDialect {
         return false;
     }
 
+    @Override
+    public SqlType getSqlType(ValueTypeProvider valueTypeProvider,
+            PropertyMeta propertyMeta) {
+        if (useOracleDate) {
+            ValueType valueType = valueTypeProvider.provide(propertyMeta);
+            if (valueType instanceof org.seasar.extension.jdbc.types.OracleDateType
+                    || valueType instanceof org.seasar.extension.jdbc.types.OracleDateCalendarType) {
+                return new OracleDateType();
+            }
+        }
+        return super.getSqlType(valueTypeProvider, propertyMeta);
+    }
+
     /**
      * Oracle用の{@link ColumnType}の実装クラスです。
      * 
@@ -268,6 +312,9 @@ public class OracleGenDialect extends StandardGenDialect {
 
         private static OracleColumnType CLOB = new OracleColumnType("clob",
                 String.class, true);
+
+        private static OracleColumnType DATE = new OracleColumnType("date",
+                Timestamp.class, false, TemporalType.TIMESTAMP);
 
         private static OracleColumnType LONG_RAW = new OracleColumnType(
                 "long raw", byte[].class);
@@ -358,6 +405,22 @@ public class OracleGenDialect extends StandardGenDialect {
             super(dataType, attributeClass, lob);
         }
 
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param dataType
+         *            データ型
+         * @param attributeClass
+         *            属性のクラス
+         * @param lob
+         *            LOBの場合{@code true}
+         * @param temporalType
+         *            時制の種別
+         */
+        public OracleColumnType(String dataType, Class<?> attributeClass,
+                boolean lob, TemporalType temporalType) {
+            super(dataType, attributeClass, lob, temporalType);
+        }
     }
 
     /**
@@ -382,6 +445,25 @@ public class OracleGenDialect extends StandardGenDialect {
             sqlBlockStartKeywordsList.add(Arrays.asList("create", "trigger"));
             sqlBlockStartKeywordsList.add(Arrays.asList("declare"));
             sqlBlockStartKeywordsList.add(Arrays.asList("begin"));
+        }
+    }
+
+    /**
+     * Oracle用のDATE型に対応する{@link SqlType}です。
+     * 
+     * @author taedium
+     * 
+     */
+    public static class OracleDateType extends TimestampType {
+
+        /**
+         * インスタンスを構築します。
+         * 
+         * @param dataType
+         *            データ型
+         */
+        public OracleDateType() {
+            super("date");
         }
     }
 }

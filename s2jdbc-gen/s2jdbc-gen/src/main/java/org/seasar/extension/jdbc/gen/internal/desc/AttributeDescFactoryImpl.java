@@ -217,20 +217,21 @@ public class AttributeDescFactoryImpl implements AttributeDescFactory {
         attributeDesc.setNullable(columnMeta.isNullable());
         attributeDesc.setUnique(columnMeta.isUnique());
         attributeDesc.setComment(columnMeta.getComment());
-        GenDialect.ColumnType columnType = dialect.getColumnType(columnMeta
-                .getTypeName(), columnMeta.getSqlType());
+        GenDialect.ColumnType columnType = dialect.getColumnType(
+                columnMeta.getTypeName(), columnMeta.getSqlType());
         if (columnType != null) {
-            Class<?> clazz = columnType
-                    .getAttributeClass(columnMeta.getLength(), columnMeta
-                            .getLength(), columnMeta.getScale());
+            Class<?> clazz = columnType.getAttributeClass(
+                    columnMeta.getLength(), columnMeta.getLength(),
+                    columnMeta.getScale());
             attributeDesc.setAttributeClass(clazz);
             String defaultValue = attributeDesc.isId() ? null : columnMeta
                     .getDefaultValue();
-            String definition = columnType.getColumnDefinition(columnMeta
-                    .getLength(), columnMeta.getLength(),
+            String definition = columnType.getColumnDefinition(
+                    columnMeta.getLength(), columnMeta.getLength(),
                     columnMeta.getScale(), defaultValue);
             attributeDesc.setColumnDefinition(definition);
             attributeDesc.setLob(columnType.isLob());
+            attributeDesc.setPrimaryTemporalType(columnType.getTemporalType());
         } else {
             attributeDesc.setUnsupportedColumnType(true);
             attributeDesc.setAttributeClass(String.class);
