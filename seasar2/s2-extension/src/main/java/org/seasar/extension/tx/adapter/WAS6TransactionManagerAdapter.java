@@ -131,8 +131,10 @@ public class WAS6TransactionManagerAdapter implements TransactionManagerAdapter 
             }
             throw cause;
         } catch (final UOWException e) {
-            throw new TransactionRolledbackException(e.getMessage())
-                    .initCause(e);
+            final TransactionRolledbackException ex = new TransactionRolledbackException(
+                    e.getMessage());
+            ex.detail = e;
+            throw ex;
         }
     }
 
