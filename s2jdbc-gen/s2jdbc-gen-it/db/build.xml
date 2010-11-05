@@ -18,8 +18,6 @@
 	<path id="classpath">
 		<pathelement location="${build}"/>
 		<pathelement location="../../s2jdbc-gen/build/classes"/>
-		<pathelement location="../../seasar2/build/classes"/>
-		<pathelement location="../../s2-tiger/build/classes"/>
 		<pathelement location="${java.home}/../lib/tools.jar"/>
 		<fileset dir="../lib"/>
 		<fileset dir="../../s2jdbc-gen/lib"/>
