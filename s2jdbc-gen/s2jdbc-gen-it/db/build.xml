@@ -16,13 +16,15 @@
 	<property name="transactional" value="false"/>
 	
 	<path id="classpath">
-		<pathelement location="${build}"/>
-		<pathelement location="../../s2jdbc-gen/build/classes"/>
-		<pathelement location="${java.home}/../lib/tools.jar"/>
 		<fileset dir="../lib"/>
 		<fileset dir="../../s2jdbc-gen/lib"/>
 		<fileset dir="../../seasar2/lib" excludes="**/*-sources.jar"/>
 		<fileset dir="../../s2-tiger/lib" excludes="**/*-sources.jar"/>
+		<pathelement location="${build}"/>
+		<pathelement location="../../seasar2/build/classes"/>
+		<pathelement location="../../s2-tiger/build/classes"/>
+		<pathelement location="../../s2jdbc-gen/build/classes"/>
+		<pathelement location="${java.home}/../lib/tools.jar"/>
 	</path>
 
 	<taskdef resource="s2jdbc-gen-task.properties" classpathref="classpath"/>
