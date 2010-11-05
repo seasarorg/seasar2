@@ -185,7 +185,7 @@ public class OracleGenDialect extends StandardGenDialect {
 
     @Override
     public ColumnType getColumnType(String typeName, int sqlType) {
-        if (useOracleDate && "date".equals(typeName)) {
+        if (useOracleDate && StringUtil.equalsIgnoreCase(typeName, "date")) {
             return OracleColumnType.DATE;
         }
         ColumnType columnType = columnTypeMap.get(typeName);
@@ -288,7 +288,7 @@ public class OracleGenDialect extends StandardGenDialect {
             ValueType valueType = valueTypeProvider.provide(propertyMeta);
             if (valueType instanceof org.seasar.extension.jdbc.types.OracleDateType
                     || valueType instanceof org.seasar.extension.jdbc.types.OracleDateCalendarType) {
-                return new OracleDateType();
+                return new TimestampType("date");
             }
         }
         return super.getSqlType(valueTypeProvider, propertyMeta);
@@ -448,22 +448,4 @@ public class OracleGenDialect extends StandardGenDialect {
         }
     }
 
-    /**
-     * Oracle用のDATE型に対応する{@link SqlType}です。
-     * 
-     * @author taedium
-     * 
-     */
-    public static class OracleDateType extends TimestampType {
-
-        /**
-         * インスタンスを構築します。
-         * 
-         * @param dataType
-         *            データ型
-         */
-        public OracleDateType() {
-            super("date");
-        }
-    }
 }
