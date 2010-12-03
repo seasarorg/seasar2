@@ -68,49 +68,98 @@ public class BindVariableUtil {
      *            値タイプの配列
      * @return バインド変数をSQLの中にリテラルで埋め込んだ完全なSQL
      */
-    public static String getCompleteSql(String sql, Object[] args,
-            ValueType[] valueTypes) {
+    public static String getCompleteSql(final String sql, final Object[] args,
+            final ValueType[] valueTypes) {
         if (args == null || args.length == 0) {
             return sql;
         }
-        StringBuffer buf = new StringBuffer(sql.length() + args.length * 15);
-        int pos = 0;
-        int pos2 = 0;
-        int pos3 = 0;
-        int pos4 = 0;
-        int pos5 = 0;
-        int pos6 = 0;
-        int index = 0;
-        while (true) {
-            pos = sql.indexOf('?', pos2);
-            pos3 = sql.indexOf('\'', pos2);
-            pos4 = sql.indexOf('\'', pos3 + 1);
-            pos5 = sql.indexOf("/*", pos2);
-            pos6 = sql.indexOf("*/", pos5 + 1);
-            if (pos > 0) {
-                if (pos3 >= 0 && pos3 < pos && pos < pos4) {
-                    buf.append(sql.substring(pos2, pos4 + 1));
-                    pos2 = pos4 + 1;
-                } else if (pos5 >= 0 && pos5 < pos && pos < pos6) {
-                    buf.append(sql.substring(pos2, pos6 + 1));
-                    pos2 = pos6 + 1;
-                } else {
-                    if (args.length <= index) {
-                        throw new IllegalBindArgSizeRuntimeException(sql,
-                                args.length);
-                    }
-                    buf.append(sql.substring(pos2, pos));
-                    buf.append(getBindVariableText(args[index],
-                            valueTypes[index]));
-                    pos2 = pos + 1;
-                    index++;
-                }
-            } else {
-                buf.append(sql.substring(pos2));
+        final StringBuffer buf = new StringBuffer(sql.length() + args.length
+                * 15);
+        int bindVar = 0;
+        int current = 0;
+        int len = sql.length();
+        int question = indexOf(sql, '?', 0);
+        int quote = indexOf(sql, '\'', 0);
+        int lineComment = indexOf(sql, "--", 0);
+        int blockComment = indexOf(sql, "/*", 0);
+        while (current < len) {
+            if (question == len) {
                 break;
+            } else if (question < quote && question < lineComment
+                    && question < blockComment) {
+                if (args.length <= bindVar) {
+                    throw new IllegalBindArgSizeRuntimeException(sql,
+                            args.length);
+                }
+                buf.append(sql.substring(current, question))
+                        .append(getBindVariableText(args[bindVar],
+                                valueTypes[bindVar]));
+                ++bindVar;
+                current = question + 1;
+            } else if (quote < lineComment && quote < blockComment) {
+                final int next = indexOf(sql, '\'', quote + 1) + 1;
+                buf.append(sql.substring(current, Math.min(next, len)));
+                current = next;
+            } else if (lineComment < blockComment) {
+                final int next = indexOf(sql, '\n', lineComment + 2) + 1;
+                buf.append(sql.substring(current, Math.min(next, len)));
+                current = next;
+            } else {
+                final int next = indexOf(sql, "*/", blockComment + 2) + 2;
+                buf.append(sql.substring(current, Math.min(next, len)));
+                current = next;
             }
+            question = question < current ? indexOf(sql, '?', current)
+                    : question;
+            quote = quote < current ? indexOf(sql, '\'', current) : quote;
+            lineComment = lineComment < current ? indexOf(sql, "--", current)
+                    : lineComment;
+            blockComment = blockComment < current ? indexOf(sql, "/*", current)
+                    : blockComment;
         }
-        return buf.toString();
+        if (current < len) {
+            buf.append(sql.substring(current));
+        }
+        return new String(buf);
+    }
+
+    /**
+     * 文字列<code>s</code>に含まれる最初の文字<code>ch</code>の位置を返します。
+     * 
+     * @param sql
+     *            文字列
+     * @param ch
+     *            文字
+     * @param from
+     *            文字を探す最初の位置
+     * @return 文字が見つかったインデックス。見つからなかった場合は文字列<code>s</code>の長さ
+     */
+    protected static int indexOf(final String sql, final char ch, final int from) {
+        final int pos = sql.indexOf(ch, from);
+        if (pos == -1) {
+            return sql.length();
+        }
+        return pos;
+    }
+
+    /**
+     * 文字列<code>sql</code>に含まれる最初の部分文字列<code>s</code>の位置を返します。
+     * 
+     * @param sql
+     *            文字列
+     * @param s
+     *            部分文字列
+     * @param from
+     *            文字列を探す最初の位置
+     * @return 文字列が見つかったインデックス。見つからなかった場合は文字列<code>s</code>の長さ
+     */
+    protected static int indexOf(final String sql, final String s,
+            final int from) {
+        final int pos = sql.indexOf(s, from);
+        if (pos == -1) {
+            return sql.length();
+        }
+        return pos;
     }
 
     /**

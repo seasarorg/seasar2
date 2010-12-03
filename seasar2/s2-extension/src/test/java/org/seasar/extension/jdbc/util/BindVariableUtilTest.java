@@ -79,6 +79,18 @@ public class BindVariableUtilTest extends TestCase {
     /**
      * @throws Exception
      */
+    public void testGetCompleteSql5() throws Exception {
+        final String sql = "/*?*/select --?\n 'dummy' from dual where '?' = '?' and '1' = ?";
+        assertEquals(
+                "/*?*/select --?\n 'dummy' from dual where '?' = '?' and '1' = 'hoge'",
+                BindVariableUtil.getCompleteSql(sql, new Object[] { "hoge", },
+                        new ValueType[] { ValueTypes.STRING,
+                                ValueTypes.BIGDECIMAL, ValueTypes.STRING }));
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testGetCompleteSql_exception() throws Exception {
         final String sql = "update emp set ename = ?, comm = ? where empno = ?";
         try {
