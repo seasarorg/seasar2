@@ -301,6 +301,22 @@ public class ConnectionPoolImplTest extends S2TestCase {
     /**
      * @throws Exception
      */
+    public void testMinPoolSize() throws Exception {
+        ((ConnectionPoolImpl) pool_).setMaxPoolSize(2);
+        ((ConnectionPoolImpl) pool_).setMinPoolSize(1);
+        ((ConnectionPoolImpl) pool_).setTimeout(1);
+        ConnectionWrapper con1 = pool_.checkOut();
+        ConnectionWrapper con2 = pool_.checkOut();
+        pool_.checkIn(con1);
+        pool_.checkIn(con2);
+        assertEquals(2, pool_.getFreePoolSize());
+        Thread.sleep(2000);
+        assertEquals(1, pool_.getFreePoolSize());
+    }
+
+    /**
+     * @throws Exception
+     */
     public void testCheckInTxNotify() throws Exception {
         tm_.begin();
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(1);

@@ -140,6 +140,13 @@ XADataSourceのインスタンスを設定します。S2Containerで設定する
 <td><code>10</code></td>
 </tr>
 <tr>
+<td><code>minPoolSize</code></td>
+<td>コネクションプールに保持する最小のコネクション数を指定します。
+プールに戻されたコネクションが <code>timeout</code>で指定された時間を経過した場合でも、プールされたコネクションがこの数を下回る場合はクローズされません。<br />
+デフォルトは0です。</td>
+<td><code>10</code></td>
+</tr>
+<tr>
 <td><code>maxWait</code></td>
 <td><code>maxPoolSize</code>で指定された数のコネクションが既に使われている場合、コネクションが空くまでここで指定された時間 (<strong>ミリ秒</strong>単位) 待機します。
 指定された時間待機してもコネクションが空かなかった場合は<code>SQLException</code>がスローされます。

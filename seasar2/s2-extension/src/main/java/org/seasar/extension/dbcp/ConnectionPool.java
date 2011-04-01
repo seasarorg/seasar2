@@ -87,9 +87,16 @@ public interface ConnectionPool {
     int getFreePoolSize();
 
     /**
-     * プーリング可能な上限を返します。
+     * コネクションをプールする上限を返します。
      * 
-     * @return プーリング可能な上限
+     * @return コネクションをプールする上限
      */
     int getMaxPoolSize();
+
+    /**
+     * コネクションをプールする下限を返します。
+     * 
+     * @return コネクションをプールする下限
+     */
+    int getMinPoolSize();
 }

@@ -78,6 +78,8 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
     private int maxPoolSize = 10;
 
+    private int minPoolSize = 0;
+
     private long maxWait = -1;
 
     private boolean allowLocalTx = true;
@@ -171,13 +173,27 @@ public class ConnectionPoolImpl implements ConnectionPool {
     }
 
     /**
-     * プーリング可能な上限を設定します。
+     * コネクションをプールする上限を設定します。
      * 
      * @param maxPoolSize
-     *            プーリング可能な上限
+     *            コネクションをプールする上限
      */
     public void setMaxPoolSize(int maxPoolSize) {
         this.maxPoolSize = maxPoolSize;
+    }
+
+    public int getMinPoolSize() {
+        return minPoolSize;
+    }
+
+    /**
+     * コネクションをプールする下限を設定します。
+     * 
+     * @param minPoolSize
+     *            コネクションをプールする下限
+     */
+    public void setMinPoolSize(int minPoolSize) {
+        this.minPoolSize = minPoolSize;
     }
 
     /**
@@ -550,7 +566,9 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
         public void expired() {
             synchronized (ConnectionPoolImpl.this) {
-                freePool.remove(this);
+                if (freePool.size() > minPoolSize) {
+                    freePool.remove(this);
+                }
             }
             synchronized (this) {
                 if (timeoutTask_ != null) {
