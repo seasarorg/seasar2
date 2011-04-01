@@ -19,6 +19,7 @@ import java.util.HashMap;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.mock.servlet.MockHttpServletRequestImpl;
 import org.seasar.framework.mock.servlet.MockServletContextImpl;
 
 /**
@@ -26,6 +27,8 @@ import org.seasar.framework.mock.servlet.MockServletContextImpl;
  * 
  */
 public class S2HttpSessionTest extends TestCase {
+
+    private boolean invalidateSessionCalled;
 
     /**
      * Test method for
@@ -40,14 +43,13 @@ public class S2HttpSessionTest extends TestCase {
                 return new SessionState(new HashMap(), time);
             }
 
-            public void updateState(String sessionId,
-                    SessionState sessionState) {
+            public void updateState(String sessionId, SessionState sessionState) {
             }
 
             public void removeState(String sessionId) {
             }
         };
-        S2HttpSession sessionWrapper = new S2HttpSession("myid",
+        S2HttpSession sessionWrapper = new S2HttpSession(null, "myid",
                 sessionStateManager, servletContext, true);
         assertNull(sessionWrapper.getSessionState());
         sessionWrapper.getAttribute("hoge");
@@ -57,4 +59,35 @@ public class S2HttpSessionTest extends TestCase {
         assertEquals(time, sessionWrapper.getLastAccessedTime());
     }
 
+    /**
+     * 
+     */
+    public void testInvalidate() {
+        SessionStateManager sessionStateManager = new SessionStateManager() {
+            public SessionState loadState(String sessionId) {
+                return new SessionState(new HashMap(),
+                        System.currentTimeMillis());
+            }
+
+            public void updateState(String sessionId, SessionState sessionState) {
+            }
+
+            public void removeState(String sessionId) {
+                assertEquals("myid", sessionId);
+            }
+        };
+        MockServletContextImpl servletContext = new MockServletContextImpl(
+                "hoge");
+        S2HttpServletRequestWrapper request = new S2HttpServletRequestWrapper(
+                new MockHttpServletRequestImpl(servletContext, "/"),
+                sessionStateManager) {
+            protected void invalidateSession() {
+                invalidateSessionCalled = true;
+            }
+        };
+        S2HttpSession sessionWrapper = new S2HttpSession(request, "myid",
+                sessionStateManager, servletContext, true);
+        sessionWrapper.invalidate();
+        assertTrue(invalidateSessionCalled);
+    }
 }

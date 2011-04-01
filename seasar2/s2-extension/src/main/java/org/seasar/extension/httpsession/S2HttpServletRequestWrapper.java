@@ -73,6 +73,16 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
         }
     }
 
+    /**
+     * HTTPセッションを破棄します。
+     */
+    protected void invalidateSession() {
+        session = null;
+        requestedSessionIdFromCookie = null;
+        requestedSessionIdFromURL = null;
+        createdSessionId = UUID.create();
+    }
+
     public HttpSession getSession() {
         return getSession(true);
     }
@@ -90,7 +100,7 @@ public class S2HttpServletRequestWrapper extends HttpServletRequestWrapper {
             sessionId = createdSessionId;
             isNew = true;
         }
-        session = new S2HttpSession(sessionId, sessionStateManager,
+        session = new S2HttpSession(this, sessionId, sessionStateManager,
                 S2ContainerServlet.getInstance().getServletContext(), isNew);
         return session;
     }

@@ -44,8 +44,7 @@ public class S2HttpServletRequestWrapperTest extends S2FrameworkTestCase {
                 return null;
             }
 
-            public void updateState(String sessionId,
-                    SessionState sessionState) {
+            public void updateState(String sessionId, SessionState sessionState) {
             }
 
             public void removeState(String sessionId) {
@@ -59,5 +58,38 @@ public class S2HttpServletRequestWrapperTest extends S2FrameworkTestCase {
         assertSame(session, requestWrapper.getSession());
         System.out.println(session.getId());
         assertNotNull(session.getId());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testInvalidateSession() throws Exception {
+        MockServletContextImpl servletContext = new MockServletContextImpl(
+                "hoge");
+        MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
+                servletContext, "foo");
+        SessionStateManager sessionStateManager = new SessionStateManager() {
+            public SessionState loadState(String sessionId) {
+                return null;
+            }
+
+            public void updateState(String sessionId, SessionState sessionState) {
+            }
+
+            public void removeState(String sessionId) {
+            }
+        };
+        S2HttpServletRequestWrapper requestWrapper = new S2HttpServletRequestWrapper(
+                request, sessionStateManager);
+        HttpSession session = requestWrapper.getSession();
+        assertNotNull(session);
+
+        session.invalidate();
+        assertNull(request.getSession(false));
+        assertNull(request.getRequestedSessionId());
+        
+        HttpSession session2 = requestWrapper.getSession();
+        assertNotSame(session, session2);
+        assertFalse(session.getId().equals(session2.getId()));
     }
 }

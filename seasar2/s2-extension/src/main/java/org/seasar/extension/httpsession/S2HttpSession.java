@@ -31,6 +31,8 @@ import javax.servlet.http.HttpSession;
  */
 public class S2HttpSession implements HttpSession {
 
+    private S2HttpServletRequestWrapper request;
+
     private String id;
 
     private SessionStateManager sessionStateManager;
@@ -48,6 +50,8 @@ public class S2HttpSession implements HttpSession {
     /**
      * {@link S2HttpSession}を作成します。
      * 
+     * @param request
+     *            HTTPリクエスト
      * @param id
      *            識別子
      * @param sessionStateManager
@@ -57,8 +61,10 @@ public class S2HttpSession implements HttpSession {
      * @param isNew
      *            新規かどうか
      */
-    public S2HttpSession(String id, SessionStateManager sessionStateManager,
+    public S2HttpSession(S2HttpServletRequestWrapper request, String id,
+            SessionStateManager sessionStateManager,
             ServletContext servletContext, boolean isNew) {
+        this.request = request;
         this.id = id;
         this.sessionStateManager = sessionStateManager;
         this.isNew = isNew;
@@ -133,6 +139,8 @@ public class S2HttpSession implements HttpSession {
     }
 
     public void invalidate() {
+        sessionStateManager.removeState(id);
+        request.invalidateSession();
     }
 
     public boolean isNew() {
