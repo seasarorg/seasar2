@@ -483,8 +483,8 @@ public class ConnectionPoolImpl implements ConnectionPool {
             try {
                 final Connection pc = con.getPhysicalConnection();
                 pc.setAutoCommit(true);
-                final ConnectionWrapper newCon = new ConnectionWrapperImpl(con
-                        .getXAConnection(), pc, this, null);
+                final ConnectionWrapper newCon = new ConnectionWrapperImpl(
+                        con.getXAConnection(), pc, this, null);
                 con.cleanup();
                 freePool.addLast(new FreeItem(newCon));
                 notify();
@@ -575,7 +575,7 @@ public class ConnectionPoolImpl implements ConnectionPool {
                     timeoutTask_.cancel();
                     timeoutTask_ = null;
                 }
-                if (connectionWrapper_ != null) {
+                if (freePool.size() > minPoolSize && connectionWrapper_ != null) {
                     connectionWrapper_.closeReally();
                     connectionWrapper_ = null;
                 }

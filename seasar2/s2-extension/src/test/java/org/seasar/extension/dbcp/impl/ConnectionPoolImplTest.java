@@ -312,6 +312,9 @@ public class ConnectionPoolImplTest extends S2TestCase {
         assertEquals(2, pool_.getFreePoolSize());
         Thread.sleep(2000);
         assertEquals(1, pool_.getFreePoolSize());
+        ConnectionWrapper con3 = pool_.checkOut();
+        assertFalse(con3.isClosed());
+        assertEquals(0, pool_.getFreePoolSize());
     }
 
     /**
@@ -426,7 +429,7 @@ public class ConnectionPoolImplTest extends S2TestCase {
     public void testMaxWait() throws Exception {
         ((ConnectionPoolImpl) pool_).setMaxPoolSize(1);
         ((ConnectionPoolImpl) pool_).setMaxWait(0L);
-        Connection con = pool_.checkOut();
+        pool_.checkOut();
         try {
             pool_.checkOut();
             fail();
