@@ -306,12 +306,16 @@ public class ConnectionPoolImplTest extends S2TestCase {
         ((ConnectionPoolImpl) pool_).setMinPoolSize(1);
         ((ConnectionPoolImpl) pool_).setTimeout(1);
         ConnectionWrapper con1 = pool_.checkOut();
+        Connection pc1 = ((ConnectionWrapperImpl) con1).getPhysicalConnection();
         ConnectionWrapper con2 = pool_.checkOut();
+        Connection pc2 = ((ConnectionWrapperImpl) con2).getPhysicalConnection();
         pool_.checkIn(con1);
         pool_.checkIn(con2);
         assertEquals(2, pool_.getFreePoolSize());
         Thread.sleep(2000);
         assertEquals(1, pool_.getFreePoolSize());
+        assertTrue(pc1.isClosed());
+        assertFalse(pc2.isClosed());
         ConnectionWrapper con3 = pool_.checkOut();
         assertFalse(con3.isClosed());
         assertEquals(0, pool_.getFreePoolSize());

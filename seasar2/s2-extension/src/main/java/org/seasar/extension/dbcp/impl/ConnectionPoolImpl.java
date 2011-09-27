@@ -566,16 +566,13 @@ public class ConnectionPoolImpl implements ConnectionPool {
 
         public void expired() {
             synchronized (ConnectionPoolImpl.this) {
-                if (freePool.size() > minPoolSize) {
-                    freePool.remove(this);
+                if (freePool.size() <= minPoolSize) {
+                    return;
                 }
+                freePool.remove(this);
             }
             synchronized (this) {
-                if (timeoutTask_ != null) {
-                    timeoutTask_.cancel();
-                    timeoutTask_ = null;
-                }
-                if (freePool.size() > minPoolSize && connectionWrapper_ != null) {
+                if (connectionWrapper_ != null) {
                     connectionWrapper_.closeReally();
                     connectionWrapper_ = null;
                 }
