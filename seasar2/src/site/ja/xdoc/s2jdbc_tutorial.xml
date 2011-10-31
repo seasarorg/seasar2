@@ -769,8 +769,8 @@ selectBySql(EmployeeDto.class, "... id = ? or name = ?", 1, "SCOTT")
 		<section name="SQLによるマップで返す複数件検索">
 			<p>
 				SQLを使って結果をマップで返すには、
-				selectBySql()の最初の引数をRowMap.classにします。
-				RowMapはMap&lt;String, Object&gt;なクラスで、 存在しないキーにアクセスすると
+				selectBySql()の最初の引数をBeanMap.classにします。
+				BeanMapはMap&lt;String, Object&gt;なクラスで、 存在しないキーにアクセスすると
 				例外が発生します。 キーの値は、AAA_BBBのような'_'記法の値ををaaaBbbのようなキャメル記法に
 				変換したものです。
 			</p>
@@ -781,9 +781,9 @@ selectBySql(EmployeeDto.class, "... id = ? or name = ?", 1, "SCOTT")
 private static final String LABEL_VALUE =
     "select name as label, id as value from employee";
 ...
-List<RowMap> results =
-    jdbcManager.selectBySql(RowMap.class, LABEL_VALUE).getResultList();
-for (RowMap m : results) {
+List<BeanMap> results =
+    jdbcManager.selectBySql(BeanMap.class, LABEL_VALUE).getResultList();
+for (BeanMap m : results) {
     System.out.println(m);
 }
 ]]></source>
