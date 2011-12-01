@@ -204,7 +204,9 @@ public class HotdeployHttpSession implements HttpSession {
      * 
      * @author koichik
      */
-    public static class SerializedObjectHolder {
+    public static class SerializedObjectHolder implements Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         /** セッションオブジェクトをシリアライズしたバイト列です。 */
         protected byte[] bytes;
