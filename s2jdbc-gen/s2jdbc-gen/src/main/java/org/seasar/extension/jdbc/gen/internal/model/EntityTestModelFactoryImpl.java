@@ -202,6 +202,9 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         if (clazz == Time.class) {
             return "Time.valueOf(\"12:00:00\")";
         }
+        if (clazz == byte[].class) {
+            return "new byte[0]";
+        }
         throw new IllegalArgumentException("propertyClass");
     }
 
@@ -266,14 +269,15 @@ public class EntityTestModelFactoryImpl implements EntityTestModelFactory {
         }
         NamesModel namesModel = entityTestModel.getNamesModel();
         if (namesModel != null) {
-            String namesClassName = ClassUtil.concatName(namesModel
-                    .getPackageName(), namesModel.getShortClassName());
+            String namesClassName = ClassUtil
+                    .concatName(namesModel.getPackageName(),
+                            namesModel.getShortClassName());
             classModelSupport.addStaticImportName(entityTestModel,
                     namesClassName);
         }
         for (PropertyMeta propertyMeta : entityMeta.getIdPropertyMetaList()) {
-            classModelSupport.addImportName(entityTestModel, propertyMeta
-                    .getPropertyClass());
+            classModelSupport.addImportName(entityTestModel,
+                    propertyMeta.getPropertyClass());
         }
     }
 

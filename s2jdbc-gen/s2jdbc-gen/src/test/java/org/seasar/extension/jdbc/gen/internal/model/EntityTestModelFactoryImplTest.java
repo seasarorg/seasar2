@@ -169,8 +169,8 @@ public class EntityTestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Calender() {
-        assertEquals("Calendar.getInstance()", factory
-                .getExpression(Calendar.class));
+        assertEquals("Calendar.getInstance()",
+                factory.getExpression(Calendar.class));
     }
 
     /**
@@ -178,8 +178,8 @@ public class EntityTestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_sqlDate() {
-        assertEquals("Date.valueOf(\"2008-01-01\")", factory
-                .getExpression(java.sql.Date.class));
+        assertEquals("Date.valueOf(\"2008-01-01\")",
+                factory.getExpression(java.sql.Date.class));
     }
 
     /**
@@ -187,8 +187,8 @@ public class EntityTestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Time() {
-        assertEquals("Time.valueOf(\"12:00:00\")", factory
-                .getExpression(Time.class));
+        assertEquals("Time.valueOf(\"12:00:00\")",
+                factory.getExpression(Time.class));
     }
 
     /**
@@ -196,7 +196,15 @@ public class EntityTestModelFactoryImplTest {
      */
     @Test
     public void testGetIdExpression_Timestamp() {
-        assertEquals("Timestamp.valueOf(\"2008-01-01 12:00:00\")", factory
-                .getExpression(Timestamp.class));
+        assertEquals("Timestamp.valueOf(\"2008-01-01 12:00:00\")",
+                factory.getExpression(Timestamp.class));
+    }
+
+    /**
+     * 
+     */
+    @Test
+    public void testGetIdExpression_bytes() {
+        assertEquals("new byte[0]", factory.getExpression(byte[].class));
     }
 }
