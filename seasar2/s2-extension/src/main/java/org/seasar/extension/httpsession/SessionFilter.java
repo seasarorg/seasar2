@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.seasar.framework.container.S2Container;
 import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
+import org.seasar.framework.util.BooleanConversionUtil;
+import org.seasar.framework.util.StringUtil;
 
 /**
  * セッションの状態をデータベースに格納するためのFilterです。
@@ -37,9 +39,40 @@ import org.seasar.framework.container.factory.SingletonS2ContainerFactory;
  */
 public class SessionFilter implements Filter {
 
+    /** web.xmlに設定する初期化パラメータのクッキー名 */
+    public static final String INIT_PARAM_COOKIE_NAME = "cookieName";
+
+    /** web.xmlに設定する初期化パラメータのクッキーの有効期限 */
+    public static final String INIT_PARAM_COOKIE_MAX_AGE = "cookieMaxAge";
+
+    /** web.xmlに設定する初期化パラメータのクッキーのパス */
+    public static final String INIT_PARAM_COOKIE_PATH = "cookiePath";
+
+    /** web.xmlに設定する初期化パラメータのクッキーのセキュア属性 */
+    public static final String INIT_PARAM_COOKIE_SECURE = "cookieSecure";
+
     private SessionStateManager sessionStateManager;
 
     public void init(FilterConfig config) throws ServletException {
+        String cookieName = config.getInitParameter(INIT_PARAM_COOKIE_NAME);
+        if (StringUtil.isNotEmpty(cookieName)) {
+            SessionIdUtil.cookieName = cookieName;
+        }
+
+        String cookieMaxAge = config.getInitParameter(INIT_PARAM_COOKIE_MAX_AGE);
+        if (StringUtil.isNotEmpty(cookieMaxAge)) {
+            SessionIdUtil.cookieMaxAge = Integer.parseInt(cookieMaxAge);
+        }
+
+        String cookiePath = config.getInitParameter(INIT_PARAM_COOKIE_PATH);
+        if (StringUtil.isNotEmpty(cookiePath)) {
+            SessionIdUtil.cookiePath = cookiePath;
+        }
+
+        String cookieSecure = config.getInitParameter(INIT_PARAM_COOKIE_SECURE);
+        if (StringUtil.isNotEmpty(cookieSecure)) {
+            SessionIdUtil.cookieSecure = BooleanConversionUtil.toBoolean(cookieSecure);
+        }
     }
 
     public void destroy() {

@@ -37,6 +37,14 @@ public class SessionIdUtil {
 
     private static final String PART_OF_URI = ";" + SESSION_ID_KEY + "=";
 
+    static String cookieName = SESSION_ID_KEY;
+
+    static int cookieMaxAge = -1;
+
+    static String cookiePath = null;
+
+    static Boolean cookieSecure = null;
+
     /**
      * Cookieからセッション識別子を取り出します。
      * 
@@ -120,9 +128,17 @@ public class SessionIdUtil {
         if (request.isRequestedSessionIdFromCookie()) {
             return;
         }
-        Cookie cookie = new Cookie(SESSION_ID_KEY, sessionId);
-        String path = request.getContextPath();
-        cookie.setPath(StringUtil.isEmpty(path) ? "/" : path);
+        Cookie cookie = new Cookie(cookieName, sessionId);
+        if (StringUtil.isNotEmpty(cookiePath)) {
+            cookie.setPath(cookiePath);
+        } else {
+            String path = request.getContextPath();
+            cookie.setPath(StringUtil.isEmpty(path) ? "/" : path);
+        }
+        cookie.setMaxAge(cookieMaxAge);
+        if (cookieSecure != null) {
+            cookie.setSecure(cookieSecure.booleanValue());
+        }
         response.addCookie(cookie);
     }
 }

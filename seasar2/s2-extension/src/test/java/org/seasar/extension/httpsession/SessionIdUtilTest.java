@@ -105,7 +105,10 @@ public class SessionIdUtilTest extends TestCase {
         assertNotNull(cookies);
         assertEquals(1, cookies.length);
         Cookie cookie = cookies[0];
+        assertEquals(SessionIdUtil.SESSION_ID_KEY, cookie.getName());
         assertEquals("/example", cookie.getPath());
+        assertEquals(-1, cookie.getMaxAge());
+        assertEquals(false, cookie.getSecure());
     }
 
     /**
@@ -124,7 +127,43 @@ public class SessionIdUtilTest extends TestCase {
         assertNotNull(cookies);
         assertEquals(1, cookies.length);
         Cookie cookie = cookies[0];
+        assertEquals(SessionIdUtil.SESSION_ID_KEY, cookie.getName());
         assertEquals("/", cookie.getPath());
+        assertEquals(-1, cookie.getMaxAge());
+        assertEquals(false, cookie.getSecure());
+    }
+
+    /**
+     * 
+     */
+    public void testWriteCookieWithOptions() {
+        try {
+            SessionIdUtil.cookieName = "MY_SESSION_ID";
+            SessionIdUtil.cookieMaxAge = 3600;
+            SessionIdUtil.cookiePath = "/";
+            SessionIdUtil.cookieSecure = Boolean.TRUE;
+
+            MockServletContextImpl context = new MockServletContextImpl("/example");
+            MockHttpServletRequestImpl request = new MockHttpServletRequestImpl(
+                    context, "hello.html");
+            MockHttpServletResponseImpl response = new MockHttpServletResponseImpl(
+                    request);
+    
+            SessionIdUtil.writeCookie(request, response, "hoge");
+            Cookie[] cookies = response.getCookies();
+            assertNotNull(cookies);
+            assertEquals(1, cookies.length);
+            Cookie cookie = cookies[0];
+            assertEquals("MY_SESSION_ID", cookie.getName());
+            assertEquals("/", cookie.getPath());
+            assertEquals(3600, cookie.getMaxAge());
+            assertEquals(true, cookie.getSecure());
+        } finally {
+            SessionIdUtil.cookieName = SessionIdUtil.SESSION_ID_KEY;
+            SessionIdUtil.cookieMaxAge = -1;
+            SessionIdUtil.cookiePath = null;
+            SessionIdUtil.cookieSecure = null;
+        }
     }
 
 }

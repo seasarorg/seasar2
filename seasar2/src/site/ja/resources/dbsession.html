@@ -120,6 +120,27 @@ DbSessionFilterはfilterの中で最初に記述してください。
 &lt;filter&gt;
     &lt;filter-name&gt;dbSessionFilter&lt;/filter-name&gt;
     &lt;filter-class&gt;org.seasar.extension.httpsession.SessionFilter&lt;/filter-class&gt;
+
+    &lt;!-- セッションIDを保存するクッキーの名前 (デフォルトは "S2SESSIONID") --&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;cookieName&lt;/param-name&gt;
+        &lt;param-value&gt;MYSESSIONID&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;!-- セッションIDを保存するクッキーの有効期限 (秒単位、デフォルトは -1) --&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;cookieMaxAge&lt;/param-name&gt;
+        &lt;param-value&gt;3600&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;!-- セッションIDを保存するクッキーのパス (デフォルトはコンテキストパスまたは "/") --&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;cookiePath&lt;/param-name&gt;
+        &lt;param-value&gt;/&lt;/param-value&gt;
+    &lt;/init-param&gt;
+    &lt;!-- セッションIDを保存するクッキーのセキュア属性 (デフォルトは false) --&gt;
+    &lt;init-param&gt;
+        &lt;param-name&gt;cookieSecure&lt;/param-name&gt;
+        &lt;param-value&gt;true&lt;/param-value&gt;
+    &lt;/init-param&gt;
 &lt;/filter&gt;
 
 &lt;filter-mapping&gt;
