@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.seasar.extension.sql.Node;
+import org.seasar.extension.sql.node.SqlNode;
 import org.seasar.extension.sql.parser.SqlParserImpl;
 import org.seasar.framework.util.Disposable;
 import org.seasar.framework.util.DisposableUtil;
@@ -34,6 +35,8 @@ import static org.seasar.framework.util.tiger.CollectionsUtil.*;
  * 
  */
 public class NodeCache {
+
+    private static final Node NOT_FOUND = new SqlNode("NOT FOUND");
 
     private static volatile boolean initialized;
 
@@ -84,21 +87,29 @@ public class NodeCache {
             String dbmsSpecificKey = key + "_" + dbmsName;
             node = nodeCache.get(dbmsSpecificKey);
             if (node != null) {
-                return node;
-            }
-            String dbmsSpecificPath = path + "_" + dbmsName;
-            node = createNode(dbmsSpecificPath, allowVariableSql);
-            if (node != null) {
-                return putIfAbsent(nodeCache, dbmsSpecificKey, node);
+                if (node != NOT_FOUND) {
+                    return node;
+                }
+            } else {
+                String dbmsSpecificPath = path + "_" + dbmsName;
+                node = createNode(dbmsSpecificPath, allowVariableSql);
+                if (node != null) {
+                    return putIfAbsent(nodeCache, dbmsSpecificKey, node);
+                }
+                putIfAbsent(nodeCache, dbmsSpecificKey, NOT_FOUND);
             }
         }
         node = nodeCache.get(key);
         if (node != null) {
-            return node;
-        }
-        node = createNode(path, allowVariableSql);
-        if (node != null) {
-            return putIfAbsent(nodeCache, key, node);
+            if (node != NOT_FOUND) {
+                return node;
+            }
+        } else {
+            node = createNode(path, allowVariableSql);
+            if (node != null) {
+                return putIfAbsent(nodeCache, key, node);
+            }
+            putIfAbsent(nodeCache, key, NOT_FOUND);
         }
         return null;
     }
