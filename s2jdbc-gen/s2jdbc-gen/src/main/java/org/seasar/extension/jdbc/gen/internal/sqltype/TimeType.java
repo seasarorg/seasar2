@@ -54,14 +54,35 @@ public class TimeType extends AbstractSqlType {
         if (value == null) {
             ps.setNull(index, Types.TIME);
         } else {
-            ps.setTime(index, TimeConversionUtil.toTime(value, "hh:mm:ss"));
+            ps.setTime(index, toTime(value));
         }
+    }
+
+    /**
+     * 文字列を {@link Time} に変換します。
+     * 
+     * @param value
+     *            変換前の値
+     * @return 変換後の値
+     */
+    protected Time toTime(String value) {
+        return TimeConversionUtil.toTime(value, "HH:mm:ss");
     }
 
     public String getValue(ResultSet resultSet, int index) throws SQLException {
         Time value = resultSet.getTime(index);
-        return value != null ? StringConversionUtil.toString(value, "hh:mm:ss")
-                : null;
+        return value != null ? toString(value) : null;
+    }
+
+    /**
+     * {@link Time} を文字列に変換します。
+     * 
+     * @param value
+     *            変換前の値
+     * @return 変換後の値
+     */
+    protected String toString(Time value) {
+        return StringConversionUtil.toString(value, "HH:mm:ss");
     }
 
 }

@@ -73,15 +73,15 @@ public class TimestampType extends AbstractSqlType {
      * </p>
      * 
      * @param value
-     *            yyyy-MM-dd hh:mm:ss.fffffffff 形式の文字列
+     *            yyyy-MM-dd HH:mm:ss.fffffffff 形式の文字列
      * @return {@link Timestamp}の値
      */
     protected Timestamp toTimestamp(String value) {
         String pattern = null;
         if (value.contains("-")) {
-            pattern = "yyyy-MM-dd hh:mm:ss";
+            pattern = "yyyy-MM-dd HH:mm:ss";
         } else {
-            pattern = "yyyy/MM/dd hh:mm:ss";
+            pattern = "yyyy/MM/dd HH:mm:ss";
         }
         Timestamp timestamp = TimestampConversionUtil.toTimestamp(value,
                 pattern);
