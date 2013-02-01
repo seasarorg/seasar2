@@ -469,6 +469,10 @@ public class ConnectionPoolImpl implements ConnectionPool {
         if (tx != null) {
             txActivePool.remove(tx);
         }
+        releaseInternal(connection);
+    }
+
+    private void releaseInternal(ConnectionWrapper connection) {
         connection.closeReally();
         notify();
     }
@@ -482,7 +486,12 @@ public class ConnectionPoolImpl implements ConnectionPool {
         if (getMaxPoolSize() > 0) {
             try {
                 final Connection pc = con.getPhysicalConnection();
-                pc.setAutoCommit(true);
+                try {
+                    pc.setAutoCommit(true);
+                } catch (SQLException e) {
+                    releaseInternal(con);
+                    throw e;
+                }
                 final ConnectionWrapper newCon = new ConnectionWrapperImpl(
                         con.getXAConnection(), pc, this, null);
                 con.cleanup();
