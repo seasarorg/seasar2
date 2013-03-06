@@ -208,8 +208,9 @@ public class TableDescFactoryImpl implements TableDescFactory {
      * @return 標準名
      */
     protected String buildCanonicalName(TableMeta tableMeta) {
-        return TableUtil.buildCanonicalTableName(dialect, tableMeta
-                .getCatalog(), tableMeta.getSchema(), tableMeta.getName());
+        return TableUtil.buildCanonicalTableName(dialect,
+                tableMeta.getCatalog(), tableMeta.getSchema(),
+                tableMeta.getName());
     }
 
     /**
@@ -224,18 +225,19 @@ public class TableDescFactoryImpl implements TableDescFactory {
      */
     protected void doColumnDesc(EntityMeta entityMeta,
             final TableDesc tableDesc, Table table) {
-        List<ColumnDesc> columnDescList = new ArrayList<ColumnDesc>();
+        List<ColumnDescRef> columnDescRefList = new ArrayList<ColumnDescRef>();
         for (int i = 0; i < entityMeta.getColumnPropertyMetaSize(); i++) {
             PropertyMeta propertyMeta = entityMeta.getColumnPropertyMeta(i);
             ColumnDesc columnDesc = columnDescFactory.getColumnDesc(entityMeta,
                     propertyMeta);
             if (columnDesc != null) {
-                columnDescList.add(columnDesc);
+                columnDescRefList.add(new ColumnDescRef(i, columnDesc));
             }
         }
-        Collections.sort(columnDescList, createColumnDescComparator(tableDesc));
-        for (ColumnDesc columnDesc : columnDescList) {
-            tableDesc.addColumnDesc(columnDesc);
+        Collections.sort(columnDescRefList,
+                createColumnDescRefComparator(tableDesc));
+        for (ColumnDescRef columnDescRef : columnDescRefList) {
+            tableDesc.addColumnDesc(columnDescRef.columnDesc);
         }
     }
 
@@ -398,22 +400,22 @@ public class TableDescFactoryImpl implements TableDescFactory {
      *            テーブル記述
      * @return カラム記述の{@link Comparator}
      */
-    protected Comparator<ColumnDesc> createColumnDescComparator(
+    protected Comparator<ColumnDescRef> createColumnDescRefComparator(
             TableDesc tableDesc) {
         final List<String> pkColumnNameList = new ArrayList<String>();
         if (tableDesc.getPrimaryKeyDesc() != null) {
             PrimaryKeyDesc primaryKeyDesc = tableDesc.getPrimaryKeyDesc();
             pkColumnNameList.addAll(primaryKeyDesc.getColumnNameList());
         }
-        return new Comparator<ColumnDesc>() {
+        return new Comparator<ColumnDescRef>() {
 
-            public int compare(ColumnDesc o1, ColumnDesc o2) {
-                int index1 = pkColumnNameList.indexOf(o1.getName());
-                int index2 = pkColumnNameList.indexOf(o2.getName());
+            public int compare(ColumnDescRef o1, ColumnDescRef o2) {
+                int index1 = pkColumnNameList.indexOf(o1.columnDesc.getName());
+                int index2 = pkColumnNameList.indexOf(o2.columnDesc.getName());
                 int ret = 0;
                 if (index1 < 0) {
                     if (index2 < 0) {
-                        ret = -1;
+                        ret = o1.index - o2.index;
                     } else {
                         ret = 1;
                     }
@@ -427,5 +429,17 @@ public class TableDescFactoryImpl implements TableDescFactory {
                 return ret;
             }
         };
+    }
+
+    private static class ColumnDescRef {
+
+        final int index;
+
+        final ColumnDesc columnDesc;
+
+        ColumnDescRef(int index, ColumnDesc desc) {
+            this.index = index;
+            this.columnDesc = desc;
+        }
     }
 }
