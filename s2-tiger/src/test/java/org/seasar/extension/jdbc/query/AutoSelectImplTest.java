@@ -200,6 +200,111 @@ public class AutoSelectImplTest extends TestCase {
     /**
      * 
      */
+    public void testIncludes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name", "bbb");
+        assertEquals(2, query.includesProperties.size());
+        assertTrue(query.includesProperties.contains("name"));
+        assertTrue(query.includesProperties.contains("bbb"));
+    }
+
+    /**
+     * 
+     */
+    public void testExcludes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.excludes("name", "bbb");
+        assertEquals(2, query.excludesProperties.size());
+        assertTrue(query.excludesProperties.contains("name"));
+        assertTrue(query.excludesProperties.contains("bbb"));
+    }
+
+    /**
+     * 
+     */
+    public void testIsTargetProperty_includes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name");
+        query.includes("lazyName"); // eager()を指定しなくても対象
+
+        EntityMeta aaaMeta = query.prepareEntityMeta(Aaa.class, null);
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("id"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("name"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("lazyName"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("dto"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("bbbId"), null));
+    }
+
+    /**
+     * 
+     */
+    public void testIsTargetProperty_includes_eager() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name");
+        query.eager("lazyName"); // includes()に含まれていないので対象外
+
+        EntityMeta aaaMeta = query.prepareEntityMeta(Aaa.class, null);
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("id"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("name"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("lazyName"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("dto"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("bbbId"), null));
+    }
+
+    /**
+     * 
+     */
+    public void testIsTargetProperty_excludes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.excludes("name");
+        query.eager("lazyName"); // 対象
+
+        EntityMeta aaaMeta = query.prepareEntityMeta(Aaa.class, null);
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("id"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("name"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("lazyName"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("dto"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("bbbId"), null));
+    }
+
+    /**
+     * 
+     */
+    public void testIsTargetProperty_join() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.leftOuterJoin("bbb");
+        query.leftOuterJoin("bbb.ccc");
+        query.includes("name");
+        query.excludes("name"); // includes()に含まれてるので対象
+        query.excludes("dto"); // 対象外
+        query.includes("lazyName"); // eager()しなくても対象
+        query.excludes("bbb");
+        query.includes("bbb.ccc"); // bbbは対象外だが bbb.cccは対象
+        query.eager("bbb.lazyName"); // bbbがexcludes()なのでeager()しても対象外
+
+        EntityMeta aaaMeta = query.prepareEntityMeta(Aaa.class, null);
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("id"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("name"), null));
+        assertTrue(query.isTargetProperty(aaaMeta.getPropertyMeta("lazyName"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("dto"), null));
+        assertFalse(query.isTargetProperty(aaaMeta.getPropertyMeta("bbbId"), null));
+
+        EntityMeta bbbMeta = query.prepareEntityMeta(Bbb.class, null);
+        JoinMeta bbbJoinMeta = query.getJoinMeta(0);
+        assertTrue(query.isTargetProperty(bbbMeta.getPropertyMeta("id"), bbbJoinMeta));
+        assertFalse(query.isTargetProperty(bbbMeta.getPropertyMeta("name"), bbbJoinMeta));
+        assertFalse(query.isTargetProperty(bbbMeta.getPropertyMeta("lazyName"), bbbJoinMeta));
+        assertFalse(query.isTargetProperty(bbbMeta.getPropertyMeta("cccId"), bbbJoinMeta));
+
+        EntityMeta cccMeta = query.prepareEntityMeta(Ccc.class, null);
+        JoinMeta cccJoinMeta = query.getJoinMeta(1);
+        assertTrue(query.isTargetProperty(cccMeta.getPropertyMeta("id"), cccJoinMeta));
+        assertTrue(query.isTargetProperty(cccMeta.getPropertyMeta("name"), cccJoinMeta));
+    }
+
+    /**
+     * 
+     */
     public void testInnerJoin() {
         AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
         query.innerJoin("bbb");
@@ -598,6 +703,61 @@ public class AutoSelectImplTest extends TestCase {
                 idIndexList);
         assertEquals(
                 "T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_",
+                query.selectClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareEntity_selectClause_includes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name", "bbbId");
+        query.prepareCallerClassAndMethodName("getResultList");
+        List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
+                50);
+        List<Integer> idIndexList = new ArrayList<Integer>();
+        EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
+        String tableAlias = query.prepareTableAlias(null);
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
+                idIndexList);
+        assertEquals("T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_",
+                query.selectClause.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareEntity_selectClause_excludes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.excludes("name", "bbbId");
+        query.prepareCallerClassAndMethodName("getResultList");
+        List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
+                50);
+        List<Integer> idIndexList = new ArrayList<Integer>();
+        EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
+        String tableAlias = query.prepareTableAlias(null);
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
+                idIndexList);
+        assertEquals("T1_.ID as C1_, T1_.DTO as C2_", query.selectClause
+                .toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareEntity_selectClause_includesAndExcludes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name", "bbbId");
+        query.excludes("id", "name");
+        query.prepareCallerClassAndMethodName("getResultList");
+        List<PropertyMapper> propertyMapperList = new ArrayList<PropertyMapper>(
+                50);
+        List<Integer> idIndexList = new ArrayList<Integer>();
+        EntityMeta entityMeta = query.prepareEntityMeta(query.baseClass, null);
+        String tableAlias = query.prepareTableAlias(null);
+        query.prepareEntity(entityMeta, null, tableAlias, propertyMapperList,
+                idIndexList);
+        assertEquals("T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_",
                 query.selectClause.toSql());
     }
 
@@ -1119,12 +1279,66 @@ public class AutoSelectImplTest extends TestCase {
      * @throws Exception
      * 
      */
+    public void testPrepareJoin_sql_includes() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name", "bbbId");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T2_.ID as C4_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
+    public void testPrepareJoin_sql_excludes() throws Exception {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.excludes("name", "bbbId");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb"));
+        String expected = "select T1_.ID as C1_, T1_.DTO as C2_, T2_.ID as C3_, T2_.NAME as C4_, T2_.CCC_ID as C5_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * @throws Exception
+     * 
+     */
     public void testPrepareJoin_sql_mappedBy() throws Exception {
         AutoSelectImpl<Bbb> query = new AutoSelectImpl<Bbb>(manager, Bbb.class);
         query.prepareCallerClassAndMethodName("getResultList");
         query.prepareTarget();
         query.prepareJoin(new JoinMeta("aaa"));
         String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T1_.CCC_ID as C3_, T2_.ID as C4_, T2_.NAME as C5_, T2_.BBB_ID as C6_, T2_.DTO as C7_ from BBB T1_ left outer join AAA T2_ on T2_.BBB_ID = T1_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_mappedBy_includes() {
+        AutoSelectImpl<Bbb> query = new AutoSelectImpl<Bbb>(manager, Bbb.class);
+        query.includes("name", "aaa");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("aaa"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T2_.ID as C3_, T2_.NAME as C4_, T2_.BBB_ID as C5_, T2_.DTO as C6_ from BBB T1_ left outer join AAA T2_ on T2_.BBB_ID = T1_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_mappedBy_excludes() {
+        AutoSelectImpl<Bbb> query = new AutoSelectImpl<Bbb>(manager, Bbb.class);
+        query.excludes("name", "aaa");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("aaa"));
+        String expected = "select T1_.ID as C1_, T1_.CCC_ID as C2_, T2_.ID as C3_ from BBB T1_ left outer join AAA T2_ on T2_.BBB_ID = T1_.ID";
         assertEquals(expected, query.toSql());
     }
 
@@ -1139,6 +1353,83 @@ public class AutoSelectImplTest extends TestCase {
         query.prepareJoin(new JoinMeta("bbb"));
         query.prepareJoin(new JoinMeta("bbb.ccc"));
         String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T1_.BBB_ID as C3_, T1_.DTO as C4_, T2_.ID as C5_, T2_.NAME as C6_, T2_.CCC_ID as C7_, T3_.ID as C8_, T3_.NAME as C9_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID left outer join CCC T3_ on T2_.CCC_ID = T3_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_nest_includesAndExcludes() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("name", "bbb.name", "bbb.ccc.name");
+        query.excludes("name", "bbb", "bbb.ccc");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb"));
+        query.prepareJoin(new JoinMeta("bbb.ccc"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T2_.ID as C3_, T2_.NAME as C4_, T3_.ID as C5_, T3_.NAME as C6_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID left outer join CCC T3_ on T2_.CCC_ID = T3_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_nest_includesAndExcludes2() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("id", "name", "bbb", "bbb.ccc");
+        query.excludes("name", "bbb.name", "bbb.ccc.name");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb"));
+        query.prepareJoin(new JoinMeta("bbb.ccc"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T2_.ID as C3_, T2_.CCC_ID as C4_, T3_.ID as C5_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID left outer join CCC T3_ on T2_.CCC_ID = T3_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_nest_includesAndExcludes3() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("id", "name", "bbb");
+        query.excludes("bbb.ccc");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb"));
+        query.prepareJoin(new JoinMeta("bbb.ccc"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T2_.ID as C3_, T2_.NAME as C4_, T2_.CCC_ID as C5_, T3_.ID as C6_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID left outer join CCC T3_ on T2_.CCC_ID = T3_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_nest_includesAndExcludes4() {
+        AutoSelectImpl<Aaa> query = new AutoSelectImpl<Aaa>(manager, Aaa.class);
+        query.includes("id", "name", "bbb", "bbb.ccc");
+        query.excludes("bbb.ccc");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("bbb"));
+        query.prepareJoin(new JoinMeta("bbb.ccc"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T2_.ID as C3_, T2_.NAME as C4_, T2_.CCC_ID as C5_, T3_.ID as C6_, T3_.NAME as C7_ from AAA T1_ left outer join BBB T2_ on T1_.BBB_ID = T2_.ID left outer join CCC T3_ on T2_.CCC_ID = T3_.ID";
+        assertEquals(expected, query.toSql());
+    }
+
+    /**
+     * 
+     */
+    public void testPrepareJoin_sql_nest_includesAndExcludes5() {
+        AutoSelectImpl<Bbb> query = new AutoSelectImpl<Bbb>(manager, Bbb.class);
+        query.includes("id", "name", "aaa");
+        query.excludes("aaa.bbb");
+        query.includes("aaa.bbb.ccc");
+        query.prepareCallerClassAndMethodName("getResultList");
+        query.prepareTarget();
+        query.prepareJoin(new JoinMeta("aaa"));
+        query.prepareJoin(new JoinMeta("aaa.bbb"));
+        query.prepareJoin(new JoinMeta("aaa.bbb.ccc"));
+        String expected = "select T1_.ID as C1_, T1_.NAME as C2_, T2_.ID as C3_, T2_.NAME as C4_, T2_.BBB_ID as C5_, T2_.DTO as C6_, T3_.ID as C7_, T4_.ID as C8_, T4_.NAME as C9_ from BBB T1_ left outer join AAA T2_ on T2_.BBB_ID = T1_.ID left outer join BBB T3_ on T2_.BBB_ID = T3_.ID left outer join CCC T4_ on T3_.CCC_ID = T4_.ID";
         assertEquals(expected, query.toSql());
     }
 

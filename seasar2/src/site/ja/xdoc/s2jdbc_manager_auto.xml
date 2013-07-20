@@ -66,6 +66,12 @@
 							<a href="#排他制御">排他制御</a>
 						</li>
 						<li>
+							<a href="#指定したプロパティのみを検索結果に含める">指定したプロパティのみを検索結果に含める</a>
+						</li>
+						<li>
+							<a href="#指定したプロパティを検索結果から除外する">指定したプロパティを検索結果から除外する</a>
+						</li>
+						<li>
 							<a href="#指定したプロパティをフェッチ対象にする">指定したプロパティをフェッチ対象にする</a>
 						</li>
 						<li>
@@ -650,7 +656,9 @@ List<Department> results =
         .leftOuterJoin("employee.address")
         .getResultList();
 ]]></source>
-				<p>結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、 いくつでもネストすることが可能です。</p>
+				<p>
+					結合は、多対一関連、一対多関連、一対一関連のどれでも可能で、 いくつでもネストすることが可能です。
+				</p>
 			</subsection>
 
 			<subsection name="検索条件">
@@ -1484,10 +1492,217 @@ jdbcManager
 				<p>排他制御とページングを組み合わせることはできません。</p>
 			</subsection>
 
+			<subsection name="指定したプロパティのみを検索結果に含める">
+				<p>
+					指定したプロパティのみを検索結果に含める場合は、
+					<code>includes()</code>
+					を使います。
+					ただし、
+					<code>@Id</code>
+					アノテーションが付けられたプロパティは無条件で検索結果に含まれます。					
+					不要なプロパティを検索結果から除外することで、
+					データベースから転送されるデータ量やJVMのメモリ使用量を減らすことができます。
+				</p>
+				<source><![CDATA[
+Employee result = 
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", id)
+        .includes("id", "name")
+        .getSingleResult();
+]]></source>
+				<p>
+					次のように結合するエンティティのプロパティを指定することもできます。
+				</p>
+				<source><![CDATA[
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .leftOuterJoin("department")
+        .leftOuterJoin("department.address")
+        .includes("id", "name", "department.name", "department.address.id")
+        .getResultList();
+]]></source>
+				<p>
+					結合するエンティティへの関連プロパティを指定した場合、
+					関連先のエンティティが持つプロパティはすべて検索結果に含まれます。
+					ただし、関連先のエンティティが持つプロパティが
+					<a href="#指定したプロパティを検索結果から除外する">
+						<code>excludes()</code>
+					</a>
+					に指定された場合、そのプロパティは検索結果から除外されます。
+				</p>
+				<p>
+					次の例では、関連プロパティ
+					<code>department</code>
+					が
+					<code>includes()</code>
+					に指定されているため、
+					<code>Department</code>
+					エンティティの持つ各プロパティが取得されます。
+					ただし、
+					<code>excludes()</code>
+					に
+					<code>department.name</code>
+					が指定されているため、
+					<code>Department</code>
+					の
+					<code>name</code>
+					プロパティは取得されません。
+				</p>
+				<source><![CDATA[
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .leftOuterJoin("department")
+        .leftOuterJoin("department.address")
+        .includes("id", "name", "department")
+        .excludes("department.name")
+        .getResultList();
+]]></source>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						を指定したプロパティを
+						<code>includes()</code>
+						に指定すると、そのプロパティを
+						<a href="#指定したプロパティをフェッチ対象にする">
+							<code>eager()</code>
+						</a>
+						で指定していなくても検索結果に含まれます。
+					</p>
+					<p>
+						ただし、
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						を指定したプロパティそのものではなく、そのプロパティを含むエンティティへの関連プロパティを
+						<code>includes()</code>
+						に指定した場合は、その関連先エンティティに含まれている
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						のプロパティは、
+						<a href="#指定したプロパティをフェッチ対象にする">
+							<code>eager()</code>
+						</a>
+						で指定されたものだけが検索結果に含まれます。
+					</p>
+				</div>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<code>includes()</code>
+						または
+						<code>excludes()</code>
+						を指定して取得したインスタンスを更新に使用する場合、
+						更新時に同様の
+						<a href="#指定したプロパティのみを更新対象にする">
+							<code>includes()</code>
+						</a>
+						を指定しないと検索結果に含めなかったカラムがすべて空の値で更新されます。
+						<a href="#nullの項目を更新しない">
+							<code>excludesNull()</code>
+						</a>
+						や
+						<a href="#変更のあったプロパティのみを更新対象にする">
+							<code>changedFrom()</code>
+						</a>
+						を指定して更新対象外にすることも可能です。
+					</p>
+				</div>
+			</subsection>
+
+			<subsection name="指定したプロパティを検索結果から除外する">
+				<p>
+					指定したプロパティを検索結果から除外する場合は、
+					<code>excludes()</code>
+					を使います。
+					ただし、
+					<code>@Id</code>
+					アノテーションが付けられたプロパティは無条件で検索結果に含まれます。
+					不要なプロパティを検索結果から除外することで、
+					データベースから転送されるデータ量やJVMのメモリ使用量を減らすことができます。
+					<code>includes()</code>
+					に同じプロパティを指定した場合、
+					<code>includes()</code>
+					の指定が優先されます。
+				</p>
+				<source><![CDATA[
+Employee result = 
+    jdbcManager
+        .from(Employee.class)
+        .where("id = ?", id)
+        .excludes("id", "name")
+        .getSingleResult();
+]]></source>
+				<p>
+					次のように結合するエンティティのプロパティを指定することもできます。
+				</p>
+				<source><![CDATA[
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .leftOuterJoin("department")
+        .leftOuterJoin("department.address")
+        .excludes("id", "name", "department.name", "department.address.id")
+        .getResultList();
+]]></source>
+				<p>
+					次のように結合するエンティティへの関連プロパティを指定した場合、
+					関連先のエンティティが持つプロパティはすべて検索結果から除外されます。
+				</p>
+				<source><![CDATA[
+List<Employee> results = 
+    jdbcManager
+        .from(Employee.class)
+        .leftOuterJoin("department")
+        .leftOuterJoin("department.address")
+        .excludes("id", "name", "department")
+        .getResultList();
+]]></source>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						を指定したプロパティや、そのプロパティを含むエンティティへの関連プロパティを
+						<code>excludes()</code>
+						に指定すると、そのプロパティを
+						<a href="#指定したプロパティをフェッチ対象にする">
+							<code>eager()</code>
+						</a>
+						で指定していても検索結果には含まれません。
+					</p>
+				</div>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<code>includes()</code>
+						または
+						<code>excludes()</code>
+						を指定して取得したインスタンスを更新に使用する場合、
+						更新時に同様の
+						<a href="#指定したプロパティのみを更新対象にする">
+							<code>includes()</code>
+						</a>
+						または
+						<a href="#指定したプロパティを更新対象から除外する">
+							<code>excludes()</code>
+						</a>
+						を指定しないと検索結果に含めなかったカラムがすべて空の値で更新されます。
+						<a href="#nullの項目を更新しない">
+							<code>excludesNull()</code>
+						</a>
+						や
+						<a href="#変更のあったプロパティのみを更新対象にする">
+							<code>changedFrom()</code>
+						</a>
+						を指定して更新対象外にすることも可能です。
+					</p>
+				</div>
+			</subsection>
+
 			<subsection name="指定したプロパティをフェッチ対象にする">
 				<p>
 					<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
-					を指定したプロパティをフェッチ対象にするには、
+					を指定したプロパティをフェッチ対象にする (検索結果に含む) には、
 					<code>eager(CharSequence... propertyNames)</code>
 					を使います。
 					関連先のプロパティを指定する場合は、
@@ -1501,6 +1716,79 @@ List<Employee> results =
         .eager("largeDto")
         .getResultList();
 ]]></source>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<code>eager()</code>
+						と
+						<a href="#指定したプロパティのみを検索結果に含める">
+							<code>includes()</code>
+						</a>
+						/
+						<a href="#指定したプロパティを検索結果から除外する">
+							<code>excludes()</code>
+						</a>
+						は、同時に使わないことを推奨します。
+					</p>
+					<p>
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						が指定されたプロパティを
+						<a href="#指定したプロパティのみを検索結果に含める">
+							<code>includes()</code>
+						</a>
+						に指定すると、そのプロパティを
+						<code>eager()</code>
+						で指定しなくても検索結果に含まれます。
+						そのため、
+						<a href="#指定したプロパティのみを検索結果に含める">
+							<code>includes()</code>
+						</a>
+						を使えば
+						<code>eager()</code>
+						を使う必要はありません。
+					</p>
+				</div>
+				<div class="caution">
+					<div>注意点</div>
+					<p>
+						<code>eager()</code>
+						は、
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						の指定を打ち消す効果があります。その後で
+						<a href="#指定したプロパティのみを検索結果に含める">
+							<code>includes()</code>
+						</a>
+						/
+						<a href="#指定したプロパティを検索結果から除外する">
+							<code>excludes()</code>
+						</a>
+						が適用されます。
+					</p>
+					<p>
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						を指定したプロパティを
+						<code>eager()</code>
+						に指定しても、
+						<a href="#指定したプロパティのみを検索結果に含める">
+							<code>includes()</code>
+						</a>
+						の指定がある場合は、そのプロパティまたは、そのプロパティを含むエンティティへの関連プロパティが
+						<a href="#指定したプロパティのみを検索結果に含める">
+							<code>includes()</code>
+						</a>
+						に含まれていないと検索結果には含まれません。
+					</p>
+					<p>
+						<a href="s2jdbc_entity.html#フェッチ対象外定義">フェッチ対象外定義</a>
+						を指定したプロパティを
+						<code>eager()</code>
+						に指定しても、そのプロパティまたは、そのプロパティを含むエンティティへの関連プロパティが
+						<a href="#指定したプロパティを検索結果から除外する">
+							<code>excludes()</code>
+						</a>
+						に含まれていると検索結果には含まれません。
+					</p>
+				</div>
 			</subsection>
 
 			<subsection name="ページング">
@@ -1769,7 +2057,7 @@ int count =
 					<a href="s2jdbc_entity.html#バージョン定義">バージョン定義</a>
 					を参照してください。
 				</p>
-				<div class="catucion">
+				<div class="caution">
 					<div>注意点</div>
 					<p>
 						<a href="s2jdbc_entity.html#識別子定義">識別子定義</a>

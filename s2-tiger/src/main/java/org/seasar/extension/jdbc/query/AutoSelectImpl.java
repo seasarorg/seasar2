@@ -110,6 +110,18 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
     protected String entityName;
 
     /**
+     * select句へ追加するプロパティ
+     */
+    protected final Set<String> includesProperties = CollectionsUtil
+            .newHashSet();
+
+    /**
+     * select句から除外するプロパティ
+     */
+    protected final Set<String> excludesProperties = CollectionsUtil
+            .newHashSet();
+
+    /**
      * select句です。
      */
     protected SelectClause selectClause = new SelectClause();
@@ -235,6 +247,16 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      */
     public AutoSelectImpl(JdbcManagerImplementor jdbcManager, Class<T> baseClass) {
         super(jdbcManager, baseClass);
+    }
+
+    public AutoSelect<T> includes(final CharSequence... propertyNames) {
+        includesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
+        return this;
+    }
+
+    public AutoSelect<T> excludes(final CharSequence... propertyNames) {
+        excludesProperties.addAll(Arrays.asList(toStringArray(propertyNames)));
+        return this;
     }
 
     public AutoSelect<T> innerJoin(CharSequence name) {
@@ -457,8 +479,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
         } else {
             for (int i = 0; i < em.getPropertyMetaSize(); i++) {
                 PropertyMeta pm = em.getPropertyMeta(i);
-                if (pm.isTransient() || pm.isRelationship()
-                        || isLazy(pm, joinMeta)) {
+                if (pm.isTransient() || pm.isRelationship()) {
+                    continue;
+                }
+                if (!isTargetProperty(pm, joinMeta)) {
                     continue;
                 }
                 selectClause.addSql(tableAlias, pm.getColumnMeta().getName());
@@ -471,6 +495,44 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
                 ++selectListIndex;
             }
         }
+    }
+
+    /**
+     * select句に追加するプロパティなら{@literal true}を返します。
+     * 
+     * @param propertyMeta
+     *            プロパティメタデータ
+     * @param joinMeta
+     *            結合メタデータ
+     * @return select句に追加するプロパティなら{@literal true}
+     */
+    protected boolean isTargetProperty(final PropertyMeta propertyMeta,
+            final JoinMeta joinMeta) {
+        final boolean lazy = isLazy(propertyMeta, joinMeta);
+        if (propertyMeta.isId()) {
+            return true;
+        }
+        if (includesProperties.isEmpty() && excludesProperties.isEmpty()) {
+            return !lazy;
+        }
+        String propertyName = propertyMeta.getName();
+        if (joinMeta != null) {
+            propertyName = joinMeta.getName() + "." + propertyName;
+        }
+        boolean relationship = false;
+        int index = propertyName.length();
+        while (index != -1) {
+            propertyName = propertyName.substring(0, index);
+            if (includesProperties.contains(propertyName)) {
+                return !relationship || !lazy;
+            }
+            if (excludesProperties.contains(propertyName)) {
+                return false;
+            }
+            relationship = true;
+            index = propertyName.lastIndexOf(".");
+        }
+        return includesProperties.isEmpty() && !lazy;
     }
 
     /**

@@ -32,6 +32,24 @@ import org.seasar.extension.jdbc.parameter.Parameter;
 public interface AutoSelect<T> extends Select<T, AutoSelect<T>> {
 
     /**
+     * 指定のプロパティのみを検索結果に含めます。
+     * 
+     * @param propertyNames
+     *            検索結果に含めるプロパティ名の配列
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> includes(CharSequence... propertyNames);
+
+    /**
+     * 指定のプロパティを検索結果から除外します。
+     * 
+     * @param propertyNames
+     *            検索結果から除外するプロパティ名の配列
+     * @return このインスタンス自身
+     */
+    AutoSelect<T> excludes(CharSequence... propertyNames);
+
+    /**
      * 内部結合するプロパティを指定します。
      * <p>
      * 指定したエンティティはフェッチされます。
