@@ -1724,10 +1724,6 @@ List<Employee> results =
 						<a href="#指定したプロパティのみを検索結果に含める">
 							<code>includes()</code>
 						</a>
-						/
-						<a href="#指定したプロパティを検索結果から除外する">
-							<code>excludes()</code>
-						</a>
 						は、同時に使わないことを推奨します。
 					</p>
 					<p>
@@ -1743,7 +1739,7 @@ List<Employee> results =
 						<a href="#指定したプロパティのみを検索結果に含める">
 							<code>includes()</code>
 						</a>
-						を使えば
+						を使う場合は
 						<code>eager()</code>
 						を使う必要はありません。
 					</p>

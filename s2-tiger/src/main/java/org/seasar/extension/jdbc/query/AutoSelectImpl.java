@@ -508,10 +508,10 @@ public class AutoSelectImpl<T> extends AbstractSelect<T, AutoSelect<T>>
      */
     protected boolean isTargetProperty(final PropertyMeta propertyMeta,
             final JoinMeta joinMeta) {
-        final boolean lazy = isLazy(propertyMeta, joinMeta);
         if (propertyMeta.isId()) {
             return true;
         }
+        final boolean lazy = isLazy(propertyMeta, joinMeta);
         if (includesProperties.isEmpty() && excludesProperties.isEmpty()) {
             return !lazy;
         }
