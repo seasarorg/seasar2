@@ -27,6 +27,7 @@ public class ValueTypesTest extends TestCase {
 
     @Override
     protected void tearDown() throws Exception {
+        ValueTypes.setEnumDefaultValueType(EnumOrdinalType.class);
         ValueTypes.clear();
         super.tearDown();
     }
@@ -88,13 +89,6 @@ public class ValueTypesTest extends TestCase {
         EnumType enumType = (EnumType) valueType;
         assertEquals(MyEnum.ONE, enumType.toEnum("ONE"));
         assertSame(valueType, ValueTypes.getValueType(MyEnum.class));
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void tearDownEnum_CustomValueType() throws Exception {
-        ValueTypes.setEnumDefaultValueType(EnumOrdinalType.class);
     }
 
     /**
