@@ -1,2 +1,7 @@
 /build
 /target
+/src/main/java/examples/entity/
+!/src/main/java/examples/entity/JobType.java
+/src/main/java/examples/service/
+/src/test/java/examples/entity/
+/src/test/java/examples/service/
