@@ -74,7 +74,7 @@ public class JndiContext implements Context {
 
     public void bind(final String name, final Object obj)
             throws NamingException {
-        bind(JndiResourceLocator.resolveName(name).split("."), obj);
+        bind(JndiResourceLocator.resolveName(name).split("\\."), obj);
     }
 
     public void close() throws NamingException {
