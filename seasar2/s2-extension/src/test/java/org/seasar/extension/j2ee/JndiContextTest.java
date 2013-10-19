@@ -23,7 +23,7 @@ import org.seasar.extension.unit.S2TestCase;
 
 /**
  * @author koichik
- *
+ * 
  */
 public class JndiContextTest extends S2TestCase {
 
@@ -45,6 +45,16 @@ public class JndiContextTest extends S2TestCase {
         assertNotNull("1", ctx_.lookup("java:comp/env/jdbc/dataSource"));
         assertNotNull("2", ctx_.lookup("java:comp/env/j2ee/jdbc/dataSource"));
         assertNotNull("3", ctx_.lookup("java:comp/UserTransaction"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testBind() throws Exception {
+        include("bind.dicon");
+        Object obj = new Object();
+        ctx_.bind("bind.Hoge", obj);
+        assertNotNull(ctx_.lookup("bind/Hoge"));
     }
 
     protected void setUp() throws Exception {
