@@ -97,6 +97,29 @@
 		</section>
 		<section name="News">
 			<dl>
+				<dt>2013/10/19</dt>
+				<dd>
+					<div>
+						Seasar2 2.4.47 をリリースしました．
+						(
+						<a href="downloads.html">ダウンロード</a>
+						)
+						(
+						<a href="http://www.seasar.org/wiki/index.php?ChangeLog%2FSeasar#f39eb043">Change Log</a>
+						)
+						(
+						<a href="http://www.seasar.org/wiki/index.php?SeasarUpdateOperationLog#e63264f4">移行ガイド</a>
+						)
+					</div>
+				</dd>
+				<dt>2013/10/19</dt>
+				<dd>
+					<div>
+						ソースコードのリポジトリを
+						<a href="https://github.com/seasarorg/seasar2">GitHub</a>
+						へ移行しました。
+					</div>
+				</dd>
 				<dt>2012/05/19</dt>
 				<dd>
 					<div>
