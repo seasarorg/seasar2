@@ -240,8 +240,8 @@
 
   <!-- Environment Settings -->
   <issueManagement>
-    <system>JIRA</system>
-    <url><![CDATA[https://www.seasar.org/issues/browse/CONTAINER]]></url>
+    <system>GitHub</system>
+    <url>https://github.com/seasarorg/seasar2/issues</url>
   </issueManagement>
   <mailingLists>
     <mailingList>
@@ -267,9 +267,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://www.seasar.org/svn/s2container/trunk/seasar2/</connection>
-    <developerConnection>scm:svn:https://www.seasar.org/svn/s2container/trunk/seasar2/</developerConnection>
-    <url>http://svn.seasar.org/browse/?root=s2container</url>
+    <connection>scm:git:git@github.com:seasarorg/seasar2.git</connection>
+    <developerConnection>scm:git:git@github.com:seasarorg/seasar2.git</developerConnection>
+    <url>git@github.com:seasarorg/seasar2.git</url>
   </scm>
   <repositories>
     <repository>
