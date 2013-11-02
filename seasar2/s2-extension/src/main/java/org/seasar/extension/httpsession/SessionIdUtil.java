@@ -35,8 +35,6 @@ public class SessionIdUtil {
      */
     public static final String SESSION_ID_KEY = "S2SESSIONID";
 
-    private static final String PART_OF_URI = ";" + SESSION_ID_KEY + "=";
-
     static String cookieName = SESSION_ID_KEY;
 
     static int cookieMaxAge = -1;
@@ -59,7 +57,7 @@ public class SessionIdUtil {
         }
         for (int i = 0; i < cookies.length; i++) {
             Cookie cookie = cookies[i];
-            if (cookie.getName().equals(SESSION_ID_KEY)) {
+            if (cookie.getName().equals(cookieName)) {
                 return cookie.getValue();
             }
         }
@@ -74,12 +72,13 @@ public class SessionIdUtil {
      * @return セッション識別子
      */
     public static String getSessionIdFromURL(HttpServletRequest request) {
+        String partOfUri = ";" + cookieName + "=";
         String uri = request.getRequestURI();
-        int index = uri.lastIndexOf(PART_OF_URI);
+        int index = uri.lastIndexOf(partOfUri);
         if (index < 0) {
             return null;
         }
-        uri = uri.substring(index + PART_OF_URI.length());
+        uri = uri.substring(index + partOfUri.length());
         int index2 = uri.indexOf('?');
         if (index2 < 0) {
             return uri;
@@ -104,11 +103,12 @@ public class SessionIdUtil {
         if (session == null) {
             return url;
         }
+        String partOfUri = ";" + cookieName + "=";
         int index = url.indexOf('?');
         if (index < 0) {
-            return url + PART_OF_URI + session.getId();
+            return url + partOfUri + session.getId();
         } else {
-            return url.substring(0, index) + PART_OF_URI + session.getId()
+            return url.substring(0, index) + partOfUri + session.getId()
                     + url.substring(index);
         }
     }
