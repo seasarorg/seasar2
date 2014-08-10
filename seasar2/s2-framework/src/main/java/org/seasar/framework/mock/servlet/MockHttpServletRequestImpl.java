@@ -16,8 +16,11 @@
 package org.seasar.framework.mock.servlet;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -74,6 +77,8 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
     private Map attributes = new HashMap();
 
     private String characterEncoding = "ISO-8859-1";
+
+    private byte[] content;
 
     private int contentLength;
 
@@ -440,17 +445,22 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
     /**
      * @see javax.servlet.ServletRequest#setCharacterEncoding(java.lang.String)
      */
-    public void setCharacterEncoding(String characterEncoding)
-            throws UnsupportedEncodingException {
-
+    public void setCharacterEncoding(String characterEncoding) {
         this.characterEncoding = characterEncoding;
+    }
+
+    /**
+     * @see org.seasar.framework.mock.servlet.MockHttpServletRequest#setContent(byte[])
+     */
+    public void setContent(byte[] content) {
+        this.content = content;
     }
 
     /**
      * @see javax.servlet.ServletRequest#getContentLength()
      */
     public int getContentLength() {
-        return contentLength;
+        return (this.content != null ? this.content.length : this.contentLength);
     }
 
     public void setContentLength(int contentLength) {
@@ -472,7 +482,12 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
      * @see javax.servlet.ServletRequest#getInputStream()
      */
     public ServletInputStream getInputStream() throws IOException {
-        throw new UnsupportedOperationException();
+        if (this.content != null) {
+            return new MockServletInputStreamImpl(new ByteArrayInputStream(
+                    this.content));
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -590,11 +605,22 @@ public class MockHttpServletRequestImpl implements MockHttpServletRequest {
     }
 
     /**
-     * 
      * @see javax.servlet.ServletRequest#getReader()
      */
     public BufferedReader getReader() throws IOException {
-        throw new UnsupportedOperationException();
+        if (this.content != null) {
+            InputStream sourceStream = new ByteArrayInputStream(this.content);
+            Reader sourceReader;
+            if (this.characterEncoding != null) {
+                sourceReader = new InputStreamReader(sourceStream,
+                        this.characterEncoding);
+            } else {
+                sourceReader = new InputStreamReader(sourceStream);
+            }
+            return new BufferedReader(sourceReader);
+        } else {
+            return null;
+        }
     }
 
     /**
