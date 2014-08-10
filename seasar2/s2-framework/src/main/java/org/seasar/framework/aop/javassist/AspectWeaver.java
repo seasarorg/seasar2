@@ -62,6 +62,11 @@ public class AspectWeaver {
     public static final String SUFFIX_INVOKE_SUPER_METHOD = "$$invokeSuperMethod$$";
 
     /**
+     * エンハンスされる{@link MethodInvocation}のメソッド部とインデックスの区切り文字。
+     */
+    public static final String SEPARATOR_METHOD_INVOCATION_CLASS = "$$";
+
+    /**
      * エンハンスされるクラス名の {@link Set}
      */
     protected static final Set enhancedClassNames = Collections
@@ -215,7 +220,8 @@ public class AspectWeaver {
      */
     public String getMethodInvocationClassName(final Method method) {
         return enhancedClassName + SUFFIX_METHOD_INVOCATION_CLASS
-                + method.getName() + methodInvocationClassList.size();
+                + method.getName() + SEPARATOR_METHOD_INVOCATION_CLASS
+                + methodInvocationClassList.size();
     }
 
     /**

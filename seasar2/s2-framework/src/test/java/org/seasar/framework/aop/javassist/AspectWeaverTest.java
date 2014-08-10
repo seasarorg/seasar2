@@ -69,7 +69,21 @@ public class AspectWeaverTest extends TestCase {
                 .getMethod("hashCode", null));
         assertTrue("1", name1
                 .startsWith("$$java.lang.Object$$EnhancedByS2AOP$$"));
-        assertTrue("2", name1.endsWith("hashCode0"));
+        assertTrue("2", name1.endsWith("hashCode$$0"));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSetInterceptor() throws Exception {
+        AspectWeaver weaver = new AspectWeaver(OrdinalMethods.class, null);
+        for (int i = 1; i <= 10; ++i) {
+            weaver.setInterceptors(
+                    OrdinalMethods.class.getMethod("test" + i, null),
+                    new MethodInterceptor[0]);
+        }
+        weaver.setInterceptors(OrdinalMethods.class.getMethod("test", null),
+                new MethodInterceptor[0]);
     }
 
     /**
@@ -219,4 +233,74 @@ public class AspectWeaverTest extends TestCase {
         }
 
     }
+    /**
+    *
+    */
+   public static class OrdinalMethods {
+       /**
+        * 
+        */
+       public void test1() {
+       };
+
+       /**
+        * 
+        */
+       public void test2() {
+       };
+
+       /**
+        * 
+        */
+       public void test3() {
+       };
+
+       /**
+        * 
+        */
+       public void test4() {
+       };
+
+       /**
+        * 
+        */
+       public void test5() {
+       };
+
+       /**
+        * 
+        */
+       public void test6() {
+       };
+
+       /**
+        * 
+        */
+       public void test7() {
+       };
+
+       /**
+        * 
+        */
+       public void test8() {
+       };
+
+       /**
+        * 
+        */
+       public void test9() {
+       };
+
+       /**
+        * 
+        */
+       public void test10() {
+       };
+
+       /**
+        * 
+        */
+       public void test() {
+       };
+   }
 }
