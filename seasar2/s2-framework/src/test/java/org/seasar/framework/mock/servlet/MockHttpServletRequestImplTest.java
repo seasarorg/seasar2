@@ -17,6 +17,9 @@ package org.seasar.framework.mock.servlet;
 
 import junit.framework.TestCase;
 
+import org.seasar.framework.util.InputStreamUtil;
+import org.seasar.framework.util.ReaderUtil;
+
 /**
  * @author higa
  *
@@ -47,6 +50,18 @@ public class MockHttpServletRequestImplTest extends TestCase {
         assertEquals("8", "222", values[1]);
         assertEquals("9", "333", values[2]);
         assertEquals("10", "444", values[3]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public void testSetContent() throws Exception {
+        String content = "aaa";
+        request_.setContent(content.getBytes());
+        assertEquals("1", content.length(), request_.getContentLength());
+        assertEquals("2", content,
+                new String(InputStreamUtil.getBytes(request_.getInputStream())));
+        assertEquals("3", content, ReaderUtil.readText(request_.getReader()));
     }
 
     protected void setUp() throws Exception {

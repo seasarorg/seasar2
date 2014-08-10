@@ -28,6 +28,13 @@ import javax.servlet.http.HttpServletRequest;
 public interface MockHttpServletRequest extends HttpServletRequest {
 
     /**
+     * コンテンツを設定します。
+     * 
+     * @param content
+     */
+    void setContent(byte[] content);
+
+    /**
      * パラメータを追加します。
      * 
      * @param name
