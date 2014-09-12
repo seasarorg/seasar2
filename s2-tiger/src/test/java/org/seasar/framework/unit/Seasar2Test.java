@@ -47,6 +47,7 @@ import org.junit.runner.RunWith;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.seasar.extension.dataset.DataSet;
 import org.seasar.extension.dataset.DataTable;
@@ -611,6 +612,170 @@ public class Seasar2Test extends TestCase {
         assertTrue(result.wasSuccessful());
         assertEquals(3, count);
         assertEquals("112439", log);
+    }
+
+    /**
+     * 
+     */
+    @RunWith(Parameterized.class)
+    public static class ParameterizedJUnitOrderTest {
+
+        /**
+         * 
+         */
+        @BeforeClass
+        public static void a() {
+            log += "a";
+        }
+
+        /**
+         * 
+         */
+        @AfterClass
+        public static void b() {
+            log += "b";
+        }
+
+        /**
+         * 
+         */
+        @Before
+        public void c() {
+            log += "c";
+        }
+
+        /**
+         * 
+         */
+        @After
+        public void d() {
+            log += "d";
+        }
+
+        /**
+         * @return 
+         */
+        @Parameters
+        public static Collection<?> parameters() {
+            return Arrays
+                    .asList(new Object[][] { { 1, 1 }, { 2, 4 }, { 3, 9 } });
+        }
+
+        private int a;
+
+        private int b;
+
+        /**
+         * @param a 
+         * @param b 
+         */
+        public ParameterizedJUnitOrderTest(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+
+        /**
+         * 
+         */
+        @Test
+        public void aaa() {
+            log += String.format("(%s:%s,%s)", count, a, b);
+            count++;
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testParameterizedJUnitOrder() {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(ParameterizedJUnitOrderTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(3, count);
+        assertEquals("ac(0:1,1)dc(1:2,4)dc(2:3,9)db", log);
+    }
+
+    /**
+     * 
+     */
+    @RunWith(Seasar2.class)
+    public static class ParameterizedS2JUnitOrderTest {
+
+        /**
+         * 
+         */
+        @BeforeClass
+        public static void a() {
+            log += "a";
+        }
+
+        /**
+         * 
+         */
+        @AfterClass
+        public static void b() {
+            log += "b";
+        }
+
+        /**
+         * 
+         */
+        @Before
+        public void c() {
+            log += "c";
+        }
+
+        /**
+         * 
+         */
+        @After
+        public void d() {
+            log += "d";
+        }
+
+        /**
+         * @return 
+         */
+        @Parameters
+        public static Collection<?> parameters() {
+            return Arrays
+                    .asList(new Object[][] { { 1, 1 }, { 2, 4 }, { 3, 9 } });
+        }
+
+        private int a;
+
+        private int b;
+
+        /**
+         * @param a 
+         * @param b 
+         */
+        public ParameterizedS2JUnitOrderTest(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+
+        /**
+         * 
+         */
+        @Test
+        public void aaa() {
+            log += String.format("(%s:%s,%s)", count, a, b);
+            count++;
+        }
+    }
+
+    /**
+     * 
+     */
+    public void testParameterizedS2JUnitOrder() {
+        JUnitCore core = new JUnitCore();
+        Result result = core.run(ParameterizedS2JUnitOrderTest.class);
+        printFailures(result.getFailures());
+        assertTrue(result.wasSuccessful());
+        assertEquals(3, count);
+        assertEquals("@RunWith(Parameterized.class)と同じ結果になるはず", "ac(0:1,1)dc(1:2,4)dc(2:3,9)db", log);
     }
 
     /**
