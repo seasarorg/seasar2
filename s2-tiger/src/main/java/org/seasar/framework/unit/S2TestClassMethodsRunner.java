@@ -96,8 +96,8 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
      */
     protected void runMethods(final RunNotifier notifier) {
         if (testMethods.isEmpty()) {
-            notifier.testAborted(getDescription(), new Exception(
-                    "No runnable methods"));
+            RunNotifierCompatibility.testAborted(notifier,
+                    getDescription(), new Exception("No runnable methods"));
         }
         for (final Method method : testMethods) {
             invokeTestMethod(method, notifier);
@@ -228,10 +228,12 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
         try {
             test = createTest();
         } catch (final InvocationTargetException e) {
-            notifier.testAborted(methodDescription(method), e.getCause());
+            RunNotifierCompatibility.testAborted(notifier,
+                    methodDescription(method), e.getCause());
             return;
         } catch (final Exception e) {
-            notifier.testAborted(methodDescription(method), e);
+            RunNotifierCompatibility.testAborted(notifier,
+                    methodDescription(method), e);
             return;
         }
         createMethodRunner(test, method, notifier).run();
