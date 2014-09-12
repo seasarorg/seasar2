@@ -81,16 +81,26 @@ public class S2TestClassMethodsRunner extends Runner implements Filterable,
     public void run(final RunNotifier notifier) {
         try {
             runBefores(notifier);
-            if (testMethods.isEmpty()) {
-                notifier.testAborted(getDescription(), new Exception(
-                        "No runnable methods"));
-            }
-            for (final Method method : testMethods) {
-                invokeTestMethod(method, notifier);
-            }
+            runMethods(notifier);
         } catch (final FailedBefore e) {
         } finally {
             runAfters(notifier);
+        }
+    }
+
+    /**
+     * テストメソッド群を実行します。
+     *
+     * @param notifier
+     *            ノティファイアー
+     */
+    protected void runMethods(final RunNotifier notifier) {
+        if (testMethods.isEmpty()) {
+            notifier.testAborted(getDescription(), new Exception(
+                    "No runnable methods"));
+        }
+        for (final Method method : testMethods) {
+            invokeTestMethod(method, notifier);
         }
     }
 
