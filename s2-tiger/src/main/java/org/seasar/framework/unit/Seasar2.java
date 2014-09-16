@@ -180,11 +180,11 @@ public class Seasar2 extends Runner implements Filterable, Sortable {
     }
 
     public void filter(final Filter filter) throws NoTestsRemainException {
-        filter.apply(delegate);
+        FilterCompatibility.apply(filter, delegate);
     }
 
     public void sort(final Sorter sorter) {
-        sorter.apply(delegate);
+        SorterCompatibility.apply(sorter, delegate);
     }
 
     /**
