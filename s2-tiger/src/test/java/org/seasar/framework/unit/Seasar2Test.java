@@ -1021,9 +1021,9 @@ public class Seasar2Test extends TestCase {
     /**
      * 
      */
-    public void PreparationTypeTest() {
+    public void testPreparationTypeTest() {
         JUnitCore core = new JUnitCore();
-        Result result = core.run(PreparationType.class);
+        Result result = core.run(PreparationTypeTest.class);
         printFailures(result.getFailures());
         assertTrue(result.wasSuccessful());
         assertTrue(log.contains("a"));
