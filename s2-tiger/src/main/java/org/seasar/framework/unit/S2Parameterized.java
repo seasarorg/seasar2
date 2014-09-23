@@ -23,6 +23,7 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 
 import org.junit.internal.runners.CompositeRunner;
+import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 
 import static org.junit.Assert.*;
@@ -73,6 +74,12 @@ public class S2Parameterized extends S2TestClassRunner {
             assertEquals(1, constructors.length);
             return constructors[0];
         }
+
+        @Override
+        public void run(final RunNotifier notifier) {
+            runMethods(notifier);
+        }
+
     }
 
     /**
@@ -130,6 +137,16 @@ public class S2Parameterized extends S2TestClassRunner {
             }
             throw new Exception("No public static parameters method on class "
                     + getName());
+        }
+
+        @Override
+        public void run(final RunNotifier notifier) {
+            new S2TestClassMethodsRunner(klass) {
+                @Override
+                protected void runMethods(final RunNotifier notifier) {
+                    runChildren(notifier);
+                }
+            }.run(notifier);
         }
     }
 
