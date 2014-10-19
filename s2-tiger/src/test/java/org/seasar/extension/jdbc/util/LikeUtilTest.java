@@ -22,6 +22,12 @@ import junit.framework.TestCase;
  */
 public class LikeUtilTest extends TestCase {
 
+    @Override
+    protected void tearDown() throws Exception {
+        LikeUtil.setWildcardPattern(null);
+        LikeUtil.setWildcardReplacementPattern(null);
+    }
+
     /**
      * 
      */
@@ -37,9 +43,33 @@ public class LikeUtilTest extends TestCase {
     /**
      * 
      */
+    public void testContainsWildcard_modifiedPattern() {
+        LikeUtil.setWildcardPatternAsString("[%_]");
+
+        assertFalse(LikeUtil.containsWildcard("aaa"));
+        assertFalse(LikeUtil.containsWildcard("$"));
+        assertTrue(LikeUtil.containsWildcard("%"));
+        assertTrue(LikeUtil.containsWildcard("_"));
+        assertFalse(LikeUtil.containsWildcard("％"));
+        assertFalse(LikeUtil.containsWildcard("＿"));
+    }
+
+    /**
+     * 
+     */
     public void testEscapeWildcard() {
         assertEquals("aaa", LikeUtil.escapeWildcard("aaa"));
         assertEquals("a$$a$%a$_a$％a$＿a", LikeUtil.escapeWildcard("a$a%a_a％a＿a"));
+    }
+
+    /**
+     * 
+     */
+    public void testEscapeWildcard_modifiedPaattern() {
+        LikeUtil.setWildcardReplacementPatternAsString("[$%_]");
+
+        assertEquals("aaa", LikeUtil.escapeWildcard("aaa"));
+        assertEquals("a$$a$%a$_a％a＿a", LikeUtil.escapeWildcard("a$a%a_a％a＿a"));
     }
 
 }

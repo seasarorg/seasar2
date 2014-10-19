@@ -37,6 +37,85 @@ public class LikeUtil {
     protected static final char WILDCARD_ESCAPE_CHAR = '$';
 
     /**
+     * LIKE 述語で指定される検索条件中のワイルドカードのパターン
+     * 
+     * @see #WILDCARD_PATTERN
+     * */
+    protected static Pattern wildcardPattern;
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターン
+     * 
+     * @see #WILDCARD_REPLACEMENT_PATTERN
+     * */
+    protected static Pattern wildcardReplacementPattern;
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードのパターンを返します。
+     * 
+     * @return LIKE 述語で指定される検索条件中のワイルドカードのパターン
+     */
+    public static Pattern getWildcardPattern() {
+        if (wildcardPattern == null) {
+            return WILDCARD_PATTERN;
+        }
+        return wildcardPattern;
+    }
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードのパターンを設定します。
+     * 
+     * @param pattern
+     *            LIKE 述語で指定される検索条件中のワイルドカードのパターン
+     */
+    public static void setWildcardPattern(final Pattern pattern) {
+        wildcardPattern = pattern;
+    }
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードのパターンを文字列で設定します。
+     * 
+     * @param pattern
+     *            LIKE 述語で指定される検索条件中のワイルドカードのパターン文字列
+     */
+    public static void setWildcardPatternAsString(final String pattern) {
+        setWildcardPattern(Pattern.compile(pattern));
+    }
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターンを返します。
+     * 
+     * @return LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターン
+     */
+    public static Pattern getWildcardReplacementPattern() {
+        if (wildcardReplacementPattern == null) {
+            return WILDCARD_REPLACEMENT_PATTERN;
+        }
+        return wildcardReplacementPattern;
+    }
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターンを設定します。
+     * 
+     * @param pattern
+     *            LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターン
+     */
+    public static void setWildcardReplacementPattern(final Pattern pattern) {
+        wildcardReplacementPattern = pattern;
+    }
+
+    /**
+     * LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターンを文字列で設定します。
+     * 
+     * @param pattern
+     *            LIKE 述語で指定される検索条件中のワイルドカードを置換するためのパターン文字列
+     */
+    public static void setWildcardReplacementPatternAsString(
+            final String pattern) {
+        setWildcardReplacementPattern(Pattern.compile(pattern));
+    }
+
+    /**
      * LIKE述語で使用される検索条件のワイルドカードが含まれていれば<code>true</code>を返します。
      * 
      * @param likeCondition
@@ -44,7 +123,7 @@ public class LikeUtil {
      * @return LIKE述語で使用される検索条件のワイルドカードが含まれていれば<code>true</code>
      */
     public static boolean containsWildcard(final String likeCondition) {
-        final Matcher matcher = WILDCARD_PATTERN.matcher(likeCondition);
+        final Matcher matcher = getWildcardPattern().matcher(likeCondition);
         return matcher.find();
     }
 
@@ -56,7 +135,7 @@ public class LikeUtil {
      * @return ワイルドカードを<code>'$'</code>でエスケープした文字列
      */
     public static String escapeWildcard(final String likeCondition) {
-        final Matcher matcher = WILDCARD_REPLACEMENT_PATTERN
+        final Matcher matcher = getWildcardReplacementPattern()
                 .matcher(likeCondition);
         return matcher.replaceAll("\\$$0");
     }
