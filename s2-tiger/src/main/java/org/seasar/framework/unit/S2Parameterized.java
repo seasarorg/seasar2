@@ -20,9 +20,20 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
-import org.junit.internal.runners.CompositeRunner;
+import org.junit.runner.Description;
+import org.junit.runner.Runner;
+import org.junit.runner.manipulation.Filter;
+import org.junit.runner.manipulation.Filterable;
+import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runner.manipulation.Sortable;
+import org.junit.runner.manipulation.Sorter;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -82,12 +93,88 @@ public class S2Parameterized extends S2TestClassRunner {
 
     }
 
+    /*
+     * copy from: org.junit.internal.runners.CompositeRunner @JUnit4.4
+     *
+     * JUnit license: Eclipse Public License - v 1.0
+     * https://github.com/junit-team/junit/blob/master/LICENSE-junit.txt
+     */
+    static class MyCompositeRunner extends Runner implements Filterable,
+            Sortable {
+
+        private final List<Runner> fRunners = new ArrayList<Runner>();
+
+        private final String fName;
+
+        public MyCompositeRunner(final String name) {
+            fName = name;
+        }
+
+        @Override
+        public void run(final RunNotifier notifier) {
+            runChildren(notifier);
+        }
+
+        protected void runChildren(final RunNotifier notifier) {
+            for (final Runner each : fRunners)
+                each.run(notifier);
+        }
+
+        @Override
+        public Description getDescription() {
+            final Description spec = Description.createSuiteDescription(fName);
+            for (final Runner runner : fRunners)
+                spec.addChild(runner.getDescription());
+            return spec;
+        }
+
+        public List<Runner> getRunners() {
+            return fRunners;
+        }
+
+        public void addAll(final List<? extends Runner> runners) {
+            fRunners.addAll(runners);
+        }
+
+        public void add(final Runner runner) {
+            fRunners.add(runner);
+        }
+
+        public void filter(final Filter filter) throws NoTestsRemainException {
+            for (final Iterator<Runner> iter = fRunners.iterator(); iter
+                    .hasNext();) {
+                final Runner runner = iter.next();
+                if (filter.shouldRun(runner.getDescription()))
+                    filter.apply(runner);
+                else
+                    iter.remove();
+            }
+        }
+
+        protected String getName() {
+            return fName;
+        }
+
+        public void sort(final Sorter sorter) {
+            Collections.sort(fRunners, new Comparator<Runner>() {
+
+                public int compare(final Runner o1, final Runner o2) {
+                    return sorter.compare(o1.getDescription(),
+                            o2.getDescription());
+                }
+            });
+            for (final Runner each : fRunners) {
+                sorter.apply(each);
+            }
+        }
+    }
+
     /**
      * {@link Parameters}が注釈されたすべてのメソッドを実行するランナーです。
      * 
      * @author taedium
      */
-    public static class RunAllParameterMethods extends CompositeRunner {
+    public static class RunAllParameterMethods extends MyCompositeRunner {
 
         private final Class<?> klass;
 

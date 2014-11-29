@@ -73,10 +73,10 @@ public class S2TestClassRunner extends Runner implements Filterable, Sortable {
     }
 
     public void filter(Filter filter) throws NoTestsRemainException {
-        filter.apply(delegate);
+        FilterCompatibility.apply(filter, delegate);
     }
 
     public void sort(Sorter sorter) {
-        sorter.apply(delegate);
+        SorterCompatibility.apply(sorter, delegate);
     }
 }
