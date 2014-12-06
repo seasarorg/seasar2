@@ -32,4 +32,18 @@ public class TimestampConversionUtilTest extends TestCase {
         assertEquals("yyyy/MM/dd HH:mm:ss", TimestampConversionUtil
                 .getPattern(Locale.JAPANESE));
     }
+    
+    public void testToTimestamp() {
+        Locale defaultLocale = Locale.getDefault();
+        
+        Locale.setDefault(Locale.JAPANESE);
+        assertEquals("2014-12-13 14:15:16.0", TimestampConversionUtil
+                .toTimestamp("2014/12/13 14:15:16").toString());
+        
+        Locale.setDefault(Locale.ENGLISH);
+        assertEquals("2014-12-13 14:15:16.0", TimestampConversionUtil
+                .toTimestamp("12/13/2014 14:15:16").toString());
+        
+        Locale.setDefault(defaultLocale);
+    }
 }
