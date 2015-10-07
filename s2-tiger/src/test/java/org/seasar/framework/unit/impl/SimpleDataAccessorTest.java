@@ -15,6 +15,7 @@
  */
 package org.seasar.framework.unit.impl;
 
+import java.io.File;
 import java.math.BigDecimal;
 
 import org.seasar.extension.dataset.DataRow;
@@ -23,6 +24,7 @@ import org.seasar.extension.dataset.DataTable;
 import org.seasar.extension.dataset.impl.DataSetImpl;
 import org.seasar.extension.dataset.impl.SqlWriter;
 import org.seasar.framework.unit.S2TigerTestCase;
+import org.seasar.framework.util.ResourceUtil;
 
 /**
  * @author taedium
@@ -38,6 +40,14 @@ public class SimpleDataAccessorTest extends S2TigerTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         include(getClass().getSimpleName() + ".dicon");
+    }
+
+    @Override
+    public void tearDownBeforeUnbindFields() throws Throwable {
+        String targetName = getTargetName();
+        if ("WriteXls".equals(targetName)) {
+            tearDownBeforeUnbindFieldsWriteXls();
+        }
     }
 
     /**
@@ -155,6 +165,20 @@ public class SimpleDataAccessorTest extends S2TigerTestCase {
         accessor.writeXls("aaa.xls", dataSet);
         DataSet dataSet2 = accessor.readXls("aaa.xls");
         assertEquals("1", dataSet, dataSet2);
+    }
+
+    /**
+     * 
+     * @throws Throwable
+     */
+    public void tearDownBeforeUnbindFieldsWriteXls() throws Throwable {
+        File dir = ResourceUtil.getBuildDir(accessor.getClass());
+        File file = new File(dir, accessor.convertPath("aaa.xls"));
+        // The process cannot delete the file without System.gc()
+        // because it is being used by another process.
+        // See https://bz.apache.org/bugzilla/show_bug.cgi?id=58480
+        System.gc();
+        file.delete();
     }
 
     /**
