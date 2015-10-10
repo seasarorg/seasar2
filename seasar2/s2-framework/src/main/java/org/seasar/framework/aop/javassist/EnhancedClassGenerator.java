@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the Seasar Foundation and the Others.
+ * Copyright 2004-2015 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 
 import org.seasar.framework.aop.InterType;
+import org.seasar.framework.util.MethodUtil;
 
 /**
  * コンポーネントのバイトコードをエンハンスするクラスです。
@@ -75,8 +76,8 @@ public class EnhancedClassGenerator extends AbstractGenerator {
      */
     public void createTargetMethod(final Method method,
             final String methodInvocationClassName) {
-        createMethod(enhancedClass, method, createTargetMethodSource(method,
-                methodInvocationClassName));
+        createMethod(enhancedClass, method,
+                createTargetMethodSource(method, methodInvocationClassName));
     }
 
     /**
@@ -87,9 +88,9 @@ public class EnhancedClassGenerator extends AbstractGenerator {
      */
     public void createInvokeSuperMethod(final Method method,
             final String invokeSuperMethodName) {
-        createMethod(enhancedClass, method.getModifiers(), method
-                .getReturnType(), invokeSuperMethodName, method
-                .getParameterTypes(), method.getExceptionTypes(),
+        createMethod(enhancedClass, method.getModifiers(),
+                method.getReturnType(), invokeSuperMethodName,
+                method.getParameterTypes(), method.getExceptionTypes(),
                 createInvokeSuperMethodSource(method));
     }
 
@@ -201,6 +202,12 @@ public class EnhancedClassGenerator extends AbstractGenerator {
      * @return superクラスのメソッドを呼び出すためのソースコード
      */
     public static String createInvokeSuperMethodSource(final Method method) {
+        if (MethodUtil.isDefaultMethod(method)) {
+            System.out.println("{" + "return ($r) " + method.getDeclaringClass().getName()
+                    + ".super." + method.getName() + "($$);" + "}");
+            return "{" + "return ($r) " + method.getDeclaringClass().getName()
+                    + ".super." + method.getName() + "($$);" + "}";
+        }
         return "{" + "return ($r) super." + method.getName() + "($$);" + "}";
     }
 

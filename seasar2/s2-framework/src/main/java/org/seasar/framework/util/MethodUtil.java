@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the Seasar Foundation and the Others.
+ * Copyright 2004-2015 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,9 +30,11 @@ import org.seasar.framework.exception.InvocationTargetRuntimeException;
  */
 public class MethodUtil {
 
-    private static final Method IS_BRIDGE_METHOD = getIsBridgeMethod();
+    private static final Method IS_BRIDGE_METHOD = getMethod("isBridge");
 
-    private static final Method IS_SYNTHETIC_METHOD = getIsSyntheticMethod();
+    private static final Method IS_SYNTHETIC_METHOD = getMethod("isSynthetic");
+
+    private static final Method IS_DEFAULT_METHOD = getMethod("isDefault");
 
     /**
      * ReflectUtilのクラス名です。
@@ -236,17 +238,23 @@ public class MethodUtil {
                 .booleanValue();
     }
 
-    private static Method getIsBridgeMethod() {
-        try {
-            return Method.class.getMethod("isBridge", null);
-        } catch (final NoSuchMethodException e) {
-            return null;
+    /**
+     * デフォルトメソッドかどうか返します。
+     * 
+     * @param method
+     * @return デフォルトメソッドかどうか
+     */
+    public static boolean isDefaultMethod(final Method method) {
+        if (IS_DEFAULT_METHOD == null) {
+            return false;
         }
+        return ((Boolean) MethodUtil.invoke(IS_DEFAULT_METHOD, method, null))
+                .booleanValue();
     }
 
-    private static Method getIsSyntheticMethod() {
+    private static Method getMethod(final String name) {
         try {
-            return Method.class.getMethod("isSynthetic", null);
+            return Method.class.getMethod(name, null);
         } catch (final NoSuchMethodException e) {
             return null;
         }

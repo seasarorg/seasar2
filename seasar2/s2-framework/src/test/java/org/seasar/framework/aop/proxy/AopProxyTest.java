@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 the Seasar Foundation and the Others.
+ * Copyright 2004-2015 the Seasar Foundation and the Others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
@@ -31,6 +32,8 @@ import org.seasar.framework.aop.Pointcut;
 import org.seasar.framework.aop.impl.AspectImpl;
 import org.seasar.framework.aop.impl.PointcutImpl;
 import org.seasar.framework.aop.interceptors.TraceInterceptor;
+import org.seasar.framework.util.ClassUtil;
+import org.seasar.framework.util.MethodUtil;
 import org.seasar.framework.util.SerializeUtil;
 
 /**
@@ -116,6 +119,30 @@ public class AopProxyTest extends TestCase {
                 new Aspect[] { aspect });
         Hello proxy = (Hello) aopProxy.create();
         assertEquals("1", "hoge", proxy.greeting());
+    }
+
+    /**
+     * Java8で追加されたデフォルトメソッドに対するインターセプタのテスト
+     * 
+     * @throws Exception
+     */
+    public void testDefaultMethod() throws Exception {
+        if (!MethodUtil.isDefaultMethod(ClassUtil.getMethod(Iterator.class,
+                "remove", null))) {
+            // Java7以前はスキップ
+            return;
+        }
+        System.out.println("before default test");
+        try {
+            Aspect aspect = new AspectImpl(new TraceInterceptor());
+            AopProxy aopProxy = new AopProxy(Iterator.class,
+                    new Aspect[] { aspect });
+            Iterator proxy = (Iterator) aopProxy.create();
+            proxy.remove();
+        } catch (UnsupportedOperationException expected) {
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     /**
