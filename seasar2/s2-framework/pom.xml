@@ -98,9 +98,9 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.javassist</groupId>
+      <groupId>jboss</groupId>
       <artifactId>javassist</artifactId>
-      <version>3.19.0-GA</version>
+      <version>3.4.ga</version>
       <type>jar</type>
     </dependency>
     <dependency>
