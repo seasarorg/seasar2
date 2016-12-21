@@ -40,7 +40,7 @@ public class TimestampConversionUtil {
      * @return {@link Timestamp}
      */
     public static Timestamp toTimestamp(Object o) {
-        return toTimestamp(o, null);
+        return toTimestamp(o, getPattern(Locale.getDefault()));
     }
 
     /**
